@@ -1,0 +1,53 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="khelpcenter" version="14">
+<MenuBar>
+ <Menu name="file" noMerge="1">
+    <text>&amp;File</text>
+    <Action name="printFrame" group="print" />
+    <Action name="show_search_stderr" />
+    <Separator />
+    <Action name="file_quit"/> 
+ </Menu>
+ <Menu name="edit" noMerge="1">
+  <text>&amp;Edit</text>
+  <Action name="copy_text" />
+  <Separator />
+  <Action name="selectAll" />
+  <Separator />
+  <Action name="find" />
+ </Menu>
+ <Menu name="view" noMerge="1">
+  <text>&amp;View</text>
+  <Action name="viewDocumentSource" />
+  <Action name="setEncoding" />
+ </Menu>
+ <Menu name="go_web">
+  <text>&amp;Go</text>
+  <Action name="prevPage" />
+  <Action name="nextPage" />
+  <Separator />
+  <Action name="back" />
+  <Action name="forward" />
+  <Separator />
+  <Action name="lastsearch" />
+ </Menu>
+ <Menu name="settings">
+  <Action name="configure_fonts" append="save_merge"/>
+  <Action name="build_index" append="save_merge"/>
+ </Menu>
+</MenuBar>
+<ToolBar name="mainToolBar" noMerge="1">
+ <text>Main Toolbar</text>
+ <Action name="go_home" />
+ <Action name="back" />
+ <Action name="forward" />
+ <Separator />
+ <Action name="printFrame" />
+ <Separator /> 
+ <Action name="copy_text" />
+ <Action name="find" /> 
+ <Separator />
+ <Action name="incFontSizes" />
+ <Action name="decFontSizes" />
+</ToolBar>
+</kpartgui>

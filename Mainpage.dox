@@ -1,0 +1,12 @@
+/** @mainpage
+*   KDE Base API Dox.
+*
+* KDEBase is the SVN module with the "basic applications" needed 
+* for KDE. These include startkde (a shell script to start the whole
+* desktop), kdesktop (the desktop), konqueror (the browser and file-
+* manager) and lots of other things. Nearly none of it has dox.
+*
+* KWin -- the window manager -- does have dox, as do some of
+* kate's -- the text editor part -- libraries.
+*
+*/

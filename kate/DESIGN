@@ -1,0 +1,13 @@
+KateApp                 
+  - KatePluginManager
+    one plugin manager per app
+  
+  - KateDocManager
+    one doc manager per app
+  
+  - KateMainWindow
+    mutliple mainwindows per app possible
+      
+      - KateViewManager
+        one view manager per mainwin
+       

@@ -1,0 +1,134 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>PreferencesWidgetBase</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>PreferencesWidgetBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>409</width>
+            <height>366</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>AppDock Preferences</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QPushButton" row="3" column="2">
+            <property name="name">
+                <cstring>PushButton1</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;OK</string>
+            </property>
+            <property name="on">
+                <bool>false</bool>
+            </property>
+            <property name="default">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="KEditListBox" row="1" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>klebDockApps</cstring>
+            </property>
+            <property name="title">
+                <string>Applications to Dock</string>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="2" column="0" rowspan="1" colspan="4">
+            <property name="name">
+                <cstring>GroupBox1</cstring>
+            </property>
+            <property name="title">
+                <string>Entry Details</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Name:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>leName</cstring>
+                    </property>
+                </widget>
+                <widget class="QLabel" row="1" column="0">
+                    <property name="name">
+                        <cstring>TextLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Command &amp;line:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>urlCommandLine</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit" row="0" column="1">
+                    <property name="name">
+                        <cstring>leName</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Specify a short name for the application.</string>
+                    </property>
+                </widget>
+                <widget class="KURLRequester" row="1" column="1">
+                    <property name="name">
+                        <cstring>urlCommandLine</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Specify a path to the application. This may include startup parameters. You can use the folder icon to select the application.</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QPushButton" row="3" column="3">
+            <property name="name">
+                <cstring>PushButton2</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Cancel</string>
+            </property>
+        </widget>
+        <spacer row="3" column="1">
+            <property name="name">
+                <cstring>Spacer2</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+    </grid>
+</widget>
+<includes>
+    <include location="local" impldecl="in implementation">kdialog.h</include>
+</includes>
+<layoutdefaults spacing="3" margin="6"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>keditlistbox.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

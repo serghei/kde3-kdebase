@@ -1,0 +1,18 @@
+[General]
+NumTasks=4
+
+[Task0]
+Name=Consult Manuals
+DesktopFile=Help.desktop
+
+[Task1]
+Name=Find Files
+DesktopFile=Kfind.desktop
+
+[Task2]
+Name=Adjust Settings
+DesktopFile=KControl.desktop
+
+[Task3]
+Name=Browse My Files
+DesktopFile=Home.desktop

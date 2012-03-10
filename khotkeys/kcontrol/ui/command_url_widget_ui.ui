@@ -1,0 +1,66 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>KHotKeys::Command_url_widget_ui</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>Command_url_widget_ui</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>649</width>
+            <height>361</height>
+        </rect>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout2</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>command_url_label</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Command/URL to execute:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>command_url_lineedit</cstring>
+                    </property>
+                </widget>
+                <widget class="KURLRequester">
+                    <property name="name">
+                        <cstring>command_url_lineedit</cstring>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </vbox>
+</widget>
+<slots>
+    <slot access="protected" specifier="pure virtual">browse_pressed()</slot>
+</slots>
+<includes>
+    <include location="global" impldecl="in implementation">kdialog.h</include>
+</includes>
+<layoutdefaults spacing="6" margin="11"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kurlrequester.h</includehint>
+    <includehint>klineedit.h</includehint>
+    <includehint>kpushbutton.h</includehint>
+</includehints>
+</UI>

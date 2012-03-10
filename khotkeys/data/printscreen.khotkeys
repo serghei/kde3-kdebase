@@ -1,0 +1,198 @@
+[Data]
+DataCount=1
+
+[Data_1]
+Comment=This group contains actions that are set up by default.
+Comment[bg]=Тази група съдържа действия, които са зададени по подразбирани.
+Comment[ca]=Aquest grup conté accions que s'han establert per omissió.
+Comment[csb]=Na grëpa zamëkô dzejania jaczé są ùstôwióné domëslno.
+Comment[da]=Denne gruppe indeholder handlinger som er indstillede som standard.
+Comment[de]=Diese Gruppe enthält in der Voreinstellung aktivierte Aktionen.
+Comment[el]=Η ομάδα αυτή περιέχει ενέργειες που είναι προκαθορισμένα καθορισμένες.
+Comment[eo]=Ĉi tiu grupo enhavas agojn antaŭdifinitajn defaŭlte.
+Comment[es]=Este grupo contiene acciones que están configuradas por omisión.
+Comment[et]=See grupp sisaldab vaikimisi määratud toiminguid.
+Comment[fr]=Ce groupe contient des actions définies par défaut.
+Comment[fy]=Dizze groep befettet aksjes dy standert ynsteld binne. 
+Comment[hr]=Ova grupa sadrži zadano definirane aktivnosti.
+Comment[hu]=Ez a csoport tartalmazza az alapértelmezett műveleteket.
+Comment[is]=Þessi hópur inniheldur aðgerðir sem eru sjálfgefið uppsettar.
+Comment[it]=Questo gruppo contiene azioni che sono attive in modo predefinito.
+Comment[ja]=このグループにはデフォルトで設定されているアクションが含まれています。
+Comment[km]=ក្រុម​នេះ​មាន​សកម្មភាព​ដែល​ត្រូវ​បាន​កំណត់​ដោយ​លំនាំដើម ។
+Comment[ko]=이 그룹은 기본값으로 설정되어 있는 동작을 포함합니다.
+Comment[nds]=Disse Koppel bargt vörinstellt Akschonen.
+Comment[nl]=Deze groep bevat handelingen die standaard zijn ingesteld.
+Comment[pl]=Ta grupa zawiera akcje, które są domyślnie ustawione.
+Comment[pt]=Este grupo contém as acções que estão configuradas por omissão.
+Comment[pt_BR]=Este grupo contém ações que, por padrão, estão configuradas.
+Comment[ru]=Группа действий по умолчанию.
+Comment[sk]=Táto skupina obsahuje akcie, ktoré sú štandardne nastavené.
+Comment[sr]=Ова група садржи радње које су подразумевано намештене.
+Comment[sr@Latn]=Ova grupa sadrži radnje koje su podrazumevano nameštene.
+Comment[sv]=Gruppen innehåller åtgärder som normalt är förinställda.
+Comment[uk]=Ця група містить типові налаштовані дії.
+Comment[wa]=Ci groupe a des accions ki sont prémetowes.
+Comment[zh_TW]=此群組包含了預先設定好的動作。
+DataCount=1
+Enabled=true
+Name=Preset Actions
+Name[bg]=Фиксирани действия
+Name[ca]=Accions preestablertes
+Name[cs]=Přednastavené činnosti
+Name[csb]=Domëslné dzejania
+Name[da]=Forudindstillede handlinger
+Name[de]=Voreingestellte Aktionen
+Name[el]=Προκαθορισμένες ενέργειες
+Name[eo]=Antaŭdifintaj Agoj
+Name[es]=Acciones preconfiguradas
+Name[et]=Eelmääratud toimingud
+Name[fr]=Actions prédéfinies
+Name[fy]=Foarynstelde aksjes
+Name[hr]=Unaprijed zadane aktivnosti
+Name[hu]=Beállított műveletek
+Name[is]=Forsniðnar aðgerðir
+Name[it]=Azioni predefinite
+Name[ja]=プリセットアクション
+Name[km]=កំណង់​សកម្មភាព​ជា​មុន
+Name[ko]=미리 정의된 동작
+Name[nb]=Forhåndshandlinger
+Name[nds]=Vörinstellt Akschonen
+Name[nl]=Voorgedefinieerde acties
+Name[pa]=ਪ੍ਰੀ-ਸੈੱਟ ਕਾਰਵਾਈਆਂ
+Name[pl]=Predefiniowane czynności
+Name[pt]=Acções Predefinidas
+Name[pt_BR]=Ações Predefinidas
+Name[ro]=Acțiuni presetate
+Name[ru]=Примеры действий
+Name[sk]=Prednastavené akcie
+Name[sr]=Преподешене акције
+Name[sr@Latn]=Prepodešene akcije
+Name[sv]=Förinställda åtgärder
+Name[tg]=Мисолҳои амалиёт
+Name[tr]=Eylemleri Kaydet
+Name[uk]=Наперед налаштовані дії
+Name[wa]=Prémetowès accions
+Name[zh_TW]=預先設定動作
+SystemGroup=0
+Type=ACTION_DATA_GROUP
+AllowMerge=true
+
+[Data_1Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_1]
+Comment=Launches KSnapShot when PrintScrn is pressed.
+Comment[bg]=Стартиране на KSnapShot при натискане на клавиша "PrintScrn"
+Comment[ca]=Executa el KSnapShot que es prem la tecla ImprPant.
+Comment[csb]=Włącziwô KSnapShot czedë wcësniãti je PrintScrn.
+Comment[da]=Starter Ksnapshot når Prt Sc trykkes ned.
+Comment[de]=Startet KSnapShot wenn "Bildschirm Drucken" gedrückt wurde.
+Comment[el]=Εκτέλεση του KSnapShot όταν πατηθεί το PrintScrn.
+Comment[eo]=Lanĉas KSnapShot (Ekranfotilon) kiam vi premas la "Printi Ekranon" klavon.
+Comment[es]=Lanza KSnapShot cuando se pulsa la tecla ImprPant.
+Comment[et]=Käivitab PrintSrcni vajutamisel KSnapShoti.
+Comment[fr]=Lancement de KSnapShot lorsque l'on appuie sur « Imprim Écran ».
+Comment[fy]=Set útein mei KSnapShot as PrintScrn yndrukt wurdt.
+Comment[hr]=Pokreće aplikaciju KSnapShot nakon pritiska tipke PrintScrn.
+Comment[hu]=Elindítja a KSnapshotot a PrintScreen billentyű lenyomásakor.
+Comment[is]=Ræsir KSnapShot þegar ýtt er á PrintScrn lykilinn.
+Comment[it]=Avvia KSnapShot quando viene premuto il tasto Stamp.
+Comment[ja]=PrintScrn を押して KSnapShot を起動します。
+Comment[km]=ចាប់​ផ្ដើម KSnapShot នៅ​ពេល​ចុច​គ្រាប់​ចុច​បោះពុម្ព​អេក្រង់ ។
+Comment[ko]=PrintScrn 키가 눌렸을 때 KSnapShot을 실행합니다.
+Comment[nds]=Röppt "KSnapShot" op, wenn Een de "PrintScreen"-Tast drückt.
+Comment[nl]=KSnapShot starten wanneer PrintScreen wordt ingedrukt.
+Comment[pl]=Uruchamia KSnapShot, kiedy naciśnięty jest klawisz PrintScrn.
+Comment[pt]=Lança o KSnapShot quando carregar no PrintScrn.
+Comment[pt_BR]=Lança o KSnapShot quando PrintScrn é pressionada.
+Comment[ru]=Запуск KSnapShot при нажатии кнопки PrintScreen.
+Comment[sk]=Spúšťa KSnapShot pri stlačení PrintScrn
+Comment[sr]=Покреће KSnapShot када се притисне тастер PrintScrn.
+Comment[sr@Latn]=Pokreće KSnapShot kada se pritisne taster PrintScrn.
+Comment[sv]=Startar Ksnapshot när Prt Sc trycks ner.
+Comment[uk]=Запускає KSnapShot, коли натиснути PrintScrn.
+Comment[wa]=Lance KWaitroulêye cwand PrintScrn est tchôkî.
+Comment[zh_TW]=按下 PrintScreen 鍵時叫出 KSnapShot。
+Enabled=true
+Name=PrintScreen
+Name[bg]=Печат на екрана
+Name[ca]=Impressió de pantalla
+Name[de]=Bildschirm Drucken
+Name[eo]=Printi Ekranon
+Name[es]=Imprimir la pantalla
+Name[fr]=Impression écran
+Name[fy]=print foarbyld
+Name[is]=PrentaSkjá
+Name[it]=Stamp
+Name[km]=បោះពុម្ព​អេក្រង់
+Name[nb]=Skriv skjermdump
+Name[nds]=Schirmfoto
+Name[pa]=ਸਕਰੀਨ-ਛਾਪੋ
+Name[pl]=Zrzut ekranu
+Name[pt]=Imprimir o Ecrã
+Name[ro]=Imprimă ecram
+Name[ru]=Снимок экрана
+Name[sv]=Skriv ut skärmen
+Name[te]=తెర ప్రచురించు
+Name[tg]=Сурати экран
+Name[uk]=Знімок екрану
+Type=COMMAND_URL_SHORTCUT_ACTION_DATA
+
+[Data_1_1Actions]
+ActionsCount=1
+
+[Data_1_1Actions0]
+CommandURL=ksnapshot
+Type=COMMAND_URL
+
+[Data_1_1Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_1Triggers]
+Comment=Simple_action
+Comment[bg]=Обикновено_действие
+Comment[cs]=Jednoduchá akce
+Comment[csb]=Prostô_akcëja
+Comment[da]=Simpel_handling
+Comment[de]=Einfache_Aktion
+Comment[el]=Απλή ενέργεια
+Comment[eo]=Simpla_ago
+Comment[es]=Acción sencilla
+Comment[et]=Lihtne toiming
+Comment[fy]=Ienfâldige_aksje
+Comment[hr]=Jednostavna aktivnost
+Comment[hu]=Egyszerű_művelet
+Comment[is]=Einföld aðgerð
+Comment[it]=Azione_semplice
+Comment[km]=សកម្ម​ភាព​គំរូ
+Comment[nb]=Enkel_handling
+Comment[nds]=Eenfach_Akschoon
+Comment[nl]=Eenvoudige_handeling
+Comment[pa]=ਸਧਾਰਨ ਕਾਰਵਾਈ
+Comment[pl]=Prosta akcja
+Comment[pt]=Acção Simples
+Comment[pt_BR]=Ação_simples
+Comment[ro]=Acțiune simplă
+Comment[ru]=Простое действие
+Comment[sk]=Jednoduchá_akcia
+Comment[sl]=Preprosto_dejanje
+Comment[sr]=Једноставна радња
+Comment[sr@Latn]=Jednostavna radnja
+Comment[sv]=Enkel åtgärd
+Comment[tg]=Амалиёти оддӣ
+Comment[tr]=Basit_eylem
+Comment[uk]=Проста_дія
+Comment[wa]=Simpe_accion
+Comment[zh_TW]=簡易動作
+TriggersCount=1
+
+[Data_1_1Triggers0]
+Key=Print
+Type=SHORTCUT
+
+[Main]
+Version=2
+ImportId=printscreen

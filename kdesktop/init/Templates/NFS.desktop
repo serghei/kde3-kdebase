@@ -1,0 +1,7 @@
+[Desktop Entry]
+MountPoint=
+Dev=
+ReadOnly=false
+Type=FSDevice
+Icon=nfs_mount
+UnmountIcon=nfs_unmount

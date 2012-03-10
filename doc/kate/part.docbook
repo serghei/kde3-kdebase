@@ -1,0 +1,671 @@
+<chapter id="kate-part">
+<chapterinfo>
+<authorgroup>
+<author>&Anders.Lund; &Anders.Lund.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+</chapterinfo>
+<title>Working with the &kate; editor</title>
+
+<sect1 id="kate-part-overview">
+
+<title>Overview</title>
+
+<para>The &kate; editor is the editing area of the &kate; window. This
+editor is also used by &kwrite;, and it can be used in &konqueror; for
+displaying text files from your local computer, or from the
+network.</para>
+
+<para>The editor is composed of the following components:</para>
+
+<variablelist>
+
+<varlistentry>
+<term>The editing area</term>
+<listitem><para>This is where the text of your document is located.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>The Scroll bars</term>
+<listitem>
+<para>The scroll bars indicate the  position of the visible part of
+the document text, and can be used to move around the
+document. Dragging the scrollbars will not cause the insertion cursor
+to be moved.</para>
+<para>The scroll bars are displayed and hidden as required.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>The Icon Border</term>
+<listitem>
+<para>The icon border is a small pane on the left side of the editor,
+displaying a small icon next to marked lines.</para>
+<para>You can set or remove a <link
+linkend="kate-part-bookmarks">bookmark</link> in a visible line by
+clicking the &LMB; in the icon border next to that line.</para>
+<para>The display of the icon border can be toggled using the
+<menuchoice><guimenu>View</guimenu> <guimenuitem>Show Icon
+Border</guimenuitem></menuchoice> menu item.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>The Line Numbers Pane</term>
+<listitem>
+<para>The Line numbers pane shows the line numbers of all visible
+lines in the document.</para>
+<para>The display of the Line Numbers Pane can be toggled using the
+<menuchoice><guimenu>View</guimenu> <guimenuitem>Show Line
+Numbers</guimenuitem></menuchoice> menu item.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>The Folding Pane</term>
+<listitem>
+<para>The folding pane allows you to collapse or expand foldable blocks
+of lines. The calculation of the foldable regions are done according to
+rules in the syntax highlight definition for the document.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<itemizedlist>
+<title>Also in this Chapter:</title>
+<listitem><para><link linkend="kate-part-navigation">Navigating in the
+Text</link> </para></listitem>
+<listitem><para><link linkend="kate-part-selection">Working with the
+Selection</link></para></listitem>
+<listitem><para><link linkend="kate-part-copy-and-paste">Copying and
+Pasting Text</link></para></listitem>
+<listitem><para><link linkend="kate-part-find-replace">Finding and
+Replacing Text</link></para></listitem>
+<listitem><para><link linkend="kate-part-bookmarks">Using
+Bookmarks</link></para></listitem>
+<listitem><para><link linkend="kate-part-auto-wrap">Automatically
+Wrapping Text</link></para></listitem>
+<listitem><para><link linkend="kate-part-autoindent">Using automatic indenting</link></para></listitem>
+</itemizedlist>
+
+</sect1>
+
+<sect1 id="kate-part-navigation">
+<title>Navigating in the Text</title>
+
+<para>Moving around in the text in &kate; is like in most graphical text
+editors. You move the cursor using the arrow keys and the
+<keycap>Page Up</keycap>, <keycap>Page Down</keycap>, <keycap>Home</keycap> and
+<keycap>End</keycap> keys in combination with the <keycap>Ctrl</keycap> and
+<keycap>Shift</keycap> modifiers. The <keycap>Shift</keycap> key is always used
+to generate a selection, while the <keycap>Ctrl</keycap> key have different
+effects on different keys:
+<itemizedlist>
+<listitem><para>For the <keycap>Up</keycap> and <keycap>Down</keycap> keys it
+means scroll rather than move the cursor.</para></listitem>
+<listitem><para>For the <keycap>Left</keycap> and <keycap>Right</keycap>
+keys it means skip words rather than characters.</para></listitem>
+<listitem><para>for the <keycap>Page Up</keycap> and <keycap>Page Down</keycap>
+keys it means move to the visible edge of the view rather than browse.</para>
+</listitem>
+<listitem><para>For the <keycap>Home</keycap> and <keycap>End</keycap> keys it
+means move to the beginning or end of the document rather than the beginning or
+end of the line.</para></listitem>
+</itemizedlist>
+</para>
+
+<para>&kate; also provides you with a way to quickly jump to a matching brace
+or paranthese: Place the cursor on the inside of a parenthese or brace
+character, and press <keycombo><keycap>Ctrl</keycap><keycap>6</keycap></keycombo>
+to jump to the matching parenthese or brace.</para>
+
+<para>In addition you can use
+<link linkend="kate-part-bookmarks">bookmarks</link> to quickly jump to
+positions that you define on your own.</para>
+
+</sect1>
+
+<sect1 id="kate-part-selection">
+<title>Working with the Selection</title>
+
+<para>There are two basic ways of selecting text in &kate;: using the
+mouse, and using the keyboard.</para>
+
+<para>To select using the mouse, hold down the &LMB; while dragging
+the mouse cursor from where the selection should start, to the desired
+end point. The text gets selected as you drag.</para>
+
+<para>Double-clicking a word will select that word.</para>
+
+<para>Triple-clicking in a line will select the entire line.</para>
+
+<para>If &Shift; is held down while clicking, text will be
+selected:</para>
+
+<itemizedlist>
+<listitem><para>If nothing is already selected, from the text cursor
+position to the mouse cursor position.</para></listitem>
+<listitem><para>If there is a selection, from and including that
+selection to the mouse cursor position</para></listitem>
+</itemizedlist>
+
+<note>
+<para>When selecting text by dragging the mouse, the
+selected text is copied to the clipboard, and can be pasted by
+clicking the middle mouse button in the editor, or in any other
+application to which you want to paste the text.
+</para>
+</note>
+
+<para>To select using the keyboard, hold down the &Shift; key while
+using the navigation keys (The Arrow keys, <keycap>Page Up</keycap>,
+<keycap>Page Down</keycap>, <keycap>Home</keycap> and
+<keycap>End</keycap>, possibly in combination with &Ctrl; to extend
+the move of the text cursor).</para>
+
+<para>See also the section <link
+linkend="kate-part-navigation">Navigating in the Text</link> in this
+Chapter.</para>
+
+<para>To <action>Copy</action> the current selection, use the
+<menuchoice><guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem></menuchoice> menu item or the keyboard
+shortcut (defaults to <keycombo
+action="simul">&Ctrl;<keycap>C</keycap></keycombo>).</para>
+
+<para>To <action>Deselect</action> the current selection, use the
+<menuchoice><guimenu>Edit</guimenu>
+<guimenuitem>Deselect</guimenuitem></menuchoice> menu item, or the
+keyboard shortcut (default is <keycombo
+action="simul">&Ctrl;&Shift;<keycap>A</keycap></keycombo>), or click
+with the &LMB; in the editor.</para>
+
+<sect2 id="kate-part-selection-block">
+<title>Using Block Selection</title>
+
+<para>When Block Selection is enabled, you can make <quote>vertical
+selections</quote> in the text, meaning selecting limited columns from
+multiple lines. This is handy for working with tab separated lines for
+example.</para>
+
+<para>Block Selection can be toggled using the
+<menuchoice><guimenu>Edit</guimenu> <guimenuitem>Toggle Block
+Selection</guimenuitem></menuchoice> menu item. The default keyboard
+shortcut is <keycap>F4</keycap></para>
+
+</sect2>
+
+<sect2 id="kate-part-seleciton-overwrite">
+
+<title>Using Overwrite Selection</title>
+
+<para>If Overwrite Selection is enabled, typing or pasting text into
+the selection will cause the selected text to be replaced. If not
+enabled, new text will be added at the position of the text
+cursor.</para>
+
+<para>Overwrite Selection is enabled by default.</para>
+
+<para>To change the setting for this option, use the <link
+linkend="config-dialog-editor-cursor-selection">Select Page</link> of the <link
+linkend="config-dialog">Configuration Dialog</link>.</para>
+
+</sect2>
+
+<sect2 id="kate-part-selection-persistent">
+
+<title>Using Persistent Selection</title>
+
+<para>When Persistent selection is enabled, typing characters or
+moving the cursor will not cause the Selection to become
+deselected. This means that you can move the cursor away from the
+selection and type text.</para>
+
+<para>Persistent Selection is disabled by default.</para>
+
+<para>Persistent Selection can be enabled in the <link
+linkend="config-dialog-editor-cursor-selection">Select Page</link> of the <link
+linkend="config-dialog">Configuration Dialog</link>.</para>
+
+<warning>
+<para>If Persistent Selection and Overwrite Selection are both
+enabled, typing or pasting text when the text cursor is inside the
+selection will cause it to be replaced and deselected.</para>
+</warning>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="kate-part-copy-and-paste">
+
+<title>Copying and Pasting Text</title>
+
+<para>To copy text, select it and use the
+<menuchoice><guimenu>Edit</guimenu>
+<guimenuitem>Copy</guimenuitem></menuchoice> menu item. Additionally,
+selecting text with the mouse will cause selected text to be copied to
+the X selection.</para>
+
+<para>To paste the text currently in the clipboard, use the
+<menuchoice>
+<guimenu>Edit</guimenu><guimenuitem>Paste</guimenuitem></menuchoice>
+menu item.</para>
+
+<para>Additionally, text selected with the mouse may be pasted by
+clicking the <mousebutton>middle</mousebutton> mouse button at the
+desired position.</para>
+
+<tip>
+<para>If you are using the &kde; desktop, you can retrieve earlier
+copied text from any application using the &klipper; icon in the
+&kicker; icon tray.</para>
+</tip>
+
+</sect1>
+
+<sect1 id="kate-part-find-replace">
+<title>Finding and Replacing Text</title>
+
+<sect2 id="find-replace-dialog">
+<title>The <guilabel>Find Text</guilabel> and <guilabel>Replace
+Text</guilabel> Dialogs</title>
+
+
+<para>The Find and Replace Text dialogs in &kate; are very much the
+same, except the Replace Text dialog offers the means of entering a
+replacement string along with a few extra options.</para>
+
+<para>The dialogs offer the following common options:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Text to Find</guilabel></term>
+<listitem><para>This is where to enter the search string. The interpretation of the string
+depends on some of the options described below.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Regular Expression</guilabel></term>
+<listitem>
+<para>If checked, the search string is interpreted as a regular
+expression. A button for using a graphical tool to create or edit the
+expression will be enabled.</para>
+<para>See <link linkend="regular-expressions">Regular
+Expressions</link> for more on these.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Case Insensitive</guilabel></term>
+<listitem>
+<para>If enabled, the search will be case insensitive.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Whole Words Only</guilabel></term>
+<listitem>
+<para>If checked, the search will only match if there is a word
+boundary at both ends of the string matching, meaning not an
+alphanumeric character - either some other visible character or a line
+end.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>From cursor</guilabel></term>
+<listitem>
+<para>If checked, the search will start at cursor position, otherwise it will
+start at the beginning of the first line in the document.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Find Backwards</guilabel></term>
+<listitem>
+<para>If checked, the search will look for the first match above the
+starting point, either cursor position or the beginning of the
+document, if the <guilabel>From Beginning</guilabel> option is
+enabled.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>The <guilabel>Replace Text</guilabel> Dialog offers some
+additional options:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Replace With</guilabel></term>
+<listitem><para>This is where to enter the replacement
+string.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Selected Text</guilabel></term>
+<listitem>
+<para>This option is disabled if no text is selected, or if the
+<guilabel>Prompt on Replace</guilabel>
+option is enabled. If checked, all matches of the search string within
+the selected text will be replaced with the replace string.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Prompt on Replace</guilabel></term>
+<listitem><para>If checked, a small dialog will prompt you for what to
+do for each time a match is found. It offers the following options:
+<variablelist>
+
+<varlistentry>
+<term><guibutton>Yes</guibutton></term>
+<listitem><para>Activate this to replace the current match (which is
+selected in the editor).</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>No</guibutton></term>
+<listitem><para>Activate to skip the current match, and try to find another one.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>All</guibutton></term>
+<listitem><para>Activate to cancel prompting, and just replace all
+matches.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Close</guibutton></term>
+<listitem><para>Activate this to skip the current match and end the
+searching.</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<note>
+<para>There is currently no way to use minimal matching when searching
+for a regular expression. This will be added in a future version of
+&kate;</para>
+</note>
+
+</sect2>
+
+<sect2 id="finding-text">
+<title>Finding Text</title>
+
+<para>To find text, launch the <guilabel>Find Text</guilabel> Dialog
+with <keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo>or
+from the <menuchoice><guimenu>Edit</guimenu>
+<guimenuitem>Find...</guimenuitem></menuchoice> menu item, enter a
+search string, set the <link
+linkend="find-replace-dialog">options</link> as desired and hit
+<guibutton>Ok</guibutton>. If the search was started at cursor position and no
+match was found before reaching the end (or beginning if you are searching
+backward) of the document, you will be asked if you want to wrap the search.
+</para>
+
+<para>If a match is found it is selected and the <guilabel>Find
+Text</guilabel> Dialog is hidden, but stay tuned, finding further
+matches is very easy:</para>
+
+<para>To find the next match in the search direction, use the
+<menuchoice><guimenu>Edit</guimenu> <guimenuitem>Find
+Next</guimenuitem></menuchoice> command or press
+<keycap>F3</keycap>.</para>
+
+<para>To find the next match in the opposite direction, use the
+<menuchoice><guimenu>Edit</guimenu> <guimenuitem>Find
+Previous</guimenuitem></menuchoice> command or press <keycombo
+action="simul">&Shift;<keycap>F3</keycap></keycombo>.</para>
+
+<para>If no match is found before reaching the document end (or beginning if you
+are searching backward) , you will be asked if you want to wrap the search.
+</para>
+
+</sect2>
+
+<sect2>
+<title>Replacing Text</title>
+
+<para>To replace text, launch the <guilabel>Replace text</guilabel>
+Dialog using the <menuchoice><guimenu>Edit</guimenu>
+<guimenuitem>Replace</guimenuitem></menuchoice> command, or the
+<keycombo action="simul">&Ctrl;<keycap>R</keycap></keycombo> shortcut,
+enter a search string and optionally a replace string (if the replace
+string is empty, each match will be removed), set
+the <link linkend="find-replace-dialog">options</link> as desired and
+hit the <guibutton>Ok</guibutton> button.</para>
+
+<tip>
+<para>If you are using a regular expression to find the text to replace, you can
+employ backreferences to reuse text captured in parenthesized subpatterns of the expression.</para>
+<para>See <xref linkend="regular-expressions"/><!-- xref to reg-exp appendix --> for more
+on those.</para>
+</tip>
+
+<tip><para>You can do <command>find</command>, <command>replace</command> and
+<command>ifind</command> (incremental search) from the
+<link linkend="advanced-editing-tools-commandline">command line</link>.</para>
+</tip>
+
+</sect2>
+
+</sect1>
+
+<sect1 id="kate-part-bookmarks">
+<title>Using Bookmarks</title>
+
+<para>The bookmarks feature allows you to mark certain lines, to be
+able to easily find them again.</para>
+
+<para>You can set or remove a bookmark in a line in two ways:</para>
+
+<itemizedlist>
+<listitem>
+<para>Move the insertion cursor to the line and activate the
+<menuchoice><guimenu>Bookmarks</guimenu><guimenuitem>Toggle
+Bookmark</guimenuitem></menuchoice> (<keycombo
+action="simul">&Ctrl;<keycap>B</keycap></keycombo>) command.</para>
+</listitem>
+<listitem>
+<para>Click in the Icon Border next to the line.</para>
+</listitem>
+</itemizedlist>
+
+
+<para>Bookmarks are available in the <guimenu>Bookmarks</guimenu>
+menu. The individual bookmarks are available as menu items, labeled
+with the line number of the line with the bookmark, and the first few
+characters of the text in the line. To move the insertion cursor to
+the beginning of a bookmarked line, open the menu and select the
+bookmark.</para>
+
+<para>To quickly move between bookmarks or to the next/previous bookmark,
+use the <menuchoice><guimenu>Bookmarks</guimenu><guimenuitem>Next</guimenuitem>
+</menuchoice> (<keycombo action="simul"><keycap>Ctrl</keycap>
+<keycap>Page Down</keycap></keycombo>)  or <menuchoice>
+<guimenu>Bookmarks</guimenu><guimenuitem>Previous</guimenuitem></menuchoice>
+(<keycombo action="simul"><keycap>Ctrl</keycap><keycap>Page Up</keycap>
+</keycombo>) commands.</para>
+
+</sect1>
+
+<sect1 id="kate-part-auto-wrap">
+
+<title>Automatically Wrapping text</title>
+
+<para>This feature allows you to have the text formatted in a very simple way: the text will be wrapped,
+so that no lines exceed a maximum number of characters per line, unless there is a longer string of
+non-whitespace characters.</para>
+
+<para>To enable/disable it, check/uncheck the <guibutton>Word Wrap</guibutton> checkbox in the
+<link linkend="config-dialog-editor-edit">edit page</link> of the <link linkend="config-dialog">configuration dialog</link>.</para>
+
+<para>To set the maximum line width (maximum characters per line), use the
+<link linkend="config-dialog-editor-wrap-words-at"><guibutton>Wrap Words At</guibutton></link>
+option in the <link linkend="config-dialog-editor-edit">edit page</link> of the <link linkend="config-dialog">configuration
+dialog</link>.</para>
+
+<para>If enabled,
+it has the following effects:
+
+<itemizedlist>
+<listitem><para>While typing, the editor will automatically insert a hard line break after
+the last whitespace character at a position before the maximum line width is reached.</para></listitem>
+<listitem><para>While loading a document, the editor will wrap the text in a similar way, so that
+no lines are longer than the maximum line width, if they contain any whitespace allowing that.</para></listitem>
+</itemizedlist>
+
+</para>
+
+<note><para>There is currently no way to set word wrap for document types, or even to enable or disable
+the feature on document level. This will be fixed in a future version of &kate;</para></note>
+
+</sect1>
+
+<sect1 id="kate-part-autoindent">
+<title>Using automatic indenting</title>
+
+<para>&kate;s editor component supports a variation of autoindenting modes,
+designed for different text formats. You can pick from the available modes using
+the <menuchoice><guimenu>Tools</guimenu><guisubmenu>Indentation</guisubmenu></menuchoice>
+menu. The autoindent modules also provides a function
+<menuchoice><guimenu>Tools</guimenu><guimenuitem>Align</guimenuitem></menuchoice>
+which will recalculate the indentation of the selected or current line. Thus,
+you may reindent your entire document by selecting all the text and activating
+that action.</para>
+
+<para>All the indent modes use the indentation related settings in the active
+document.</para>
+
+<tip><para>You can set all sorts of configuration variables, including
+those related to indentation using <link linkend="config-variables">Document
+Variables</link> and <link linkend="config-dialog-editor-filetypes">File
+types</link>.</para></tip>
+
+<variablelist>
+
+<title>Available Autoindent Modes</title>
+
+<varlistentry>
+<term>None</term>
+<listitem><para>Selecting this mode turns automatic indenting off entirely.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Normal</term>
+<listitem><para>This indenter simply keeps the indentation similar to the
+previous line with any content other than whitespace. You can combine this
+with using the indent and unindent actions for indenting to your own taste.
+</para></listitem>
+</varlistentry>
+
+<varlistentry><term>C Style</term>
+<listitem><para>An indenter for C and similar languages, such as
+C++, C#, java, javascript and so on. This indenter will not work with scripting
+languages such as Perl or PHP.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>SS C Style</term>
+<listitem><para>An alternative indenter for C and similar languages, with the
+same constraints.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Python Style</term>
+<listitem><para>An indenter specifically for the python scripting language.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>XML</term>
+<listitem><para>A very nice XML auto-indenter. However tempting, do not try to
+use this with HTML other than XHTML, because it fails with the old style
+HTML tags (open tags like for example &lt;br&gt;)</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Variable Indenter</term>
+<listitem>
+
+<note>
+<para>The variable indenter is experimental, and may change behavior or
+disappear in future versions.</para>
+</note>
+
+<para>
+The variable indenter is special in that it can be configured using variables in
+the document (or in a filetype configuration). The followwing variables are
+read:
+
+<variablelist>
+<varlistentry>
+<term>var-indent-indent-after</term>
+<listitem>
+<para>A regular expression which will cause a line to
+be indented by one unit, if the first non-whitespace-only line above matches.
+var-indent-indent: A regular expression, which will cause a matching line
+to be indented by one unit.</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>var-indent-unindent</term>
+<listitem>
+<para>A regular expression which will cause the line to be
+unindented by one unit if matching.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>var-indent-triggerchars</term>
+<listitem>
+<para>A list of characters that should cause the
+indention to be recalculated immediately when typed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>var-indent-handle-couples</term>
+<listitem>
+<para>A list of parenthese sets to handle. Any combination
+of 'parens' 'braces' and 'brackets'. Each set type is handled
+the following way: If there are unmatched opening instances on the above line,
+one indent unit is added, if there are unmatched closing instances on the
+current line, one indent unit is removed.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><literal>var-indent-couple-attribute</literal></term>
+<listitem>
+<para>When looking for unmatched couple openings/closings,
+only characters with this attribute are considered. The value must be the
+attribute name from the syntax xml file, for example "Symbol". If it's not
+specified, attribute 0 is used (usually 'Normal Text').</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+</chapter>

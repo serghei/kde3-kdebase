@@ -1,0 +1,17 @@
+[Desktop Entry]
+Type=Service
+Name=Voila
+Name[bn]=ভয়লা
+Name[hi]=वाइला
+Name[ne]=भोइला
+Name[pa]=ਵੋਈਲਾ
+Name[ta]=வாய்லா
+Name[te]=వొయిలా
+Name[th]=เวยลา
+Name[vi]=Tra Voila
+Name[wa]=Voilà
+ServiceTypes=SearchProvider
+Keys=voila
+Query=http://search.ke.voila.fr/S/voila?lg=fr&profil=geeks&rtype=kw&bhv=web_mondial&rdata=\\{@}
+Query[ja]=http://search.ke.voila.fr/S/voila?lg=fr&profil=geeks&rtype=kw&bhv=web_mondial&rdata=\\\\{@}
+Query[sk]=http://search.ke.voila.fr/S/voila?lg=fr&profil=geeks&rtype=kw&bhv=web_mondial&rdata=\\{@

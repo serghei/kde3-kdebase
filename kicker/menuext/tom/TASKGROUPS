@@ -1,0 +1,49 @@
+Task Groups
+===========
+Tasks are grouped into common families of functionality. These groups are then
+stored in a standard KDE configuration file. The General category in the
+config file defines the icon (Icon), user visible name (Name), the number
+of tasks in the group (NumTasks) and optionally whether or not it is hidden
+(Hidden).
+
+For each task there is a numbered section in the file in the form TaskN. Each
+section contains the user visible name for the task (Name), the associated
+.desktop file and optionally whether or not it is hidden (Hidden).
+
+An example file can be found below.
+
+Alternatives
+============
+Alternative formats are possible, including making it more like the servicemenu
+.desktop format or the new virtual menu freedesktop.org draft standard. Here are
+the pros and cons of each of these options:
+
+servicemenu style:
+ o CONS: no extra flexibility, still have to do most checking manually
+ o PROS: familiar format
+
+virtual menu style:
+ o CONS: it's XML and that's way more trouble that we need to go through, and it
+         isn't really designed with this sort of menu in mind
+ o PROS: it's becoming a standard for desktop menus
+
+
+Example
+=======
+[General]
+Icon=konqueror
+Name=Internet
+NumTasks=3
+Hidden=true
+
+[Task0]
+Name=Browse the web
+DesktopFile=applications/konqbrowser.desktop
+
+[Task1]
+Name=EMail
+DesktopFile=Internet/KMail.desktop
+
+[Task2]
+Name=VNC
+DesktopFile=Internet/keystone.desktop

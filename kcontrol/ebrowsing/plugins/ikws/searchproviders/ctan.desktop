@@ -1,0 +1,54 @@
+[Desktop Entry]
+Keys=ctan
+Name=CTAN - Comprehensive TeX Archive Network
+Name[af]=CTAN - Omvattende Tex Argief Netwerk
+Name[bn]=CTAN - কমপ্রিহেনসিভ টেক আর্কাইভ নেটওয়ার্ক
+Name[bs]=CTAN - Mreža sveobuhvatne TeX arhive
+Name[ca]=CTAN - Xarxa extensa d'arxius TeX
+Name[csb]=CTAN - archiwa TeX-a
+Name[cy]=CTAN - Rhwydwaith Archif Cynhwysfawr TeX
+Name[da]=CTAN - omfattende TeX-arkivnetværk
+Name[de]=CTAN - Umfassendes TeX-Archiv
+Name[el]=CTAN - Περιεκτικό δίκτυο αρχειοθήκης TeX
+Name[eo]=CTAN - Ampleksa TeX-arĥiv-reto
+Name[es]=CTAN - Red de archivos TeX comprensivos
+Name[eu]=CTAN - TeX fitxategi sare ulergarria
+Name[fa]=CTAN - شبکۀ وسیع بایگانی TeX
+Name[fr]=CTAN (Comprehensive TeX Archive Network)
+Name[hi]=CTAN - कॉम्प्रेहेंसिव टीईएक्स आर्काइव नेटवर्क
+Name[hr]=CTAN - TeX mreža sveobuhvatne arhive
+Name[kk]=CTAN - TeX архив желісі
+Name[lt]=CTAN – Visapusiško TeX Archyvo Tinklas
+Name[lv]=CTAN - Visaptverošs TeX Arhīvu Tīkls
+Name[mk]=CTAN - Обемна мрежа со TeX архиви
+Name[mn]=CTAN - Өргөн хүрээтэй TeX-Архив
+Name[ms]=CTAN - Rangkaian Arkib TeX Komprehensif
+Name[mt]=CTAN - Databażi komprensiv ta' arkivji TeX
+Name[nb]=CTAN -– TeX-arkiv: «Comprehensive TeX Archive Network»
+Name[ne]=CTAN - व्यापक TeX सङ्ग्रह सञ्जाल
+Name[nn]=CTAN – TeX-arkiv: «Comprehensive TeX Archive Network»
+Name[nso]=Kgokagano ya Polokelo ya TeX ya Kelelo ya Godimo
+Name[pa]=CTAN - ਪੈਰਾ TeX ਆਰਚੀਵ ਨੈੱਟਵਰਕ
+Name[pl]=CTAN - archiwum TeX-a
+Name[pt_BR]=CTAN
+Name[ro]=CTAN - Arhiva completă de programe TeX
+Name[ru]=CTAN - архив TeX
+Name[rw]=CTAN - Urusobemiyoboro rw'Ubushyinguro TeX Rwuzuye
+Name[se]=CTAN – TeX-vuorká: «Comprehensive TeX Archive Network»
+Name[sl]=CPAN - Omrežje obsežnega arhiva za TeX
+Name[ta]=CTAN - முழுமையான TeX ஆவண வலைப்பின்னல்
+Name[tg]=CTAN -Шабакаи ҳаматарафаи архиви TeX 
+Name[tr]=CTAN - Detaylı TeX Arşiv Ağı
+Name[tt]=CTAN - TeX Tuplamalar Çeltäre
+Name[uk]=CTAN - Всеосяжна мережа архівів TeX
+Name[uz]=CTAN - TeX boʻyicha mukammal arxiv tarmogʻi
+Name[uz@cyrillic]=CTAN - TeX бўйича мукаммал архив тармоғи
+Name[ven]=CTAN - Vhudavhidzani ha Mbeazwakale ya TeX Vhupfalaho
+Name[vi]=CTAN - Mạng lưới lưu trữ TeX đầy đủ
+Name[xh]=CTAN - Enomxholo TeX Indawo yokugcina Yomsebenzi womnatha
+Name[zh_TW]=CTAN - 全面的 Tex 收集網路
+Query=http://tug.ctan.org/cgi-bin/filenameSearch.py?action=/search/&filename=\\{ at }
+Query[ja]=http://tug.ctan.org/tools/filenamesearch.py?action=/search/&filename=\\\\{ at }
+Query[tg]=http://tug.ctan.org/cgi-bin/filenameSearch.py?action=/search/&filename=\\{ аз }
+ServiceTypes=SearchProvider
+Type=Service

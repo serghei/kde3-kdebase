@@ -1,0 +1,8 @@
+if test "x$with_composite" != "xno"; then
+  KDE_CHECK_HEADERS(X11/extensions/Xdamage.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+  KDE_CHECK_HEADERS(X11/extensions/Xcomposite.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+  KDE_CHECK_HEADERS(X11/extensions/Xrender.h,,compile_kompmgr=no,[#include <X11/Xlib.h>])
+else
+  compile_kompmgr=no
+fi
+AM_CONDITIONAL(include_kompmgr, test x"$compile_kompmgr" != x"no" )

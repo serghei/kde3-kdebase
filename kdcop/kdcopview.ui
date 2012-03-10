@@ -1,0 +1,149 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>kdcopview</class>
+<author>Ian Reinhart Geiser geiseri@kde.org</author>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>kdcopview</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>392</width>
+            <height>356</height>
+        </rect>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="KListViewSearchLine" row="0" column="1">
+            <property name="name">
+                <cstring>kListViewSearchLine1</cstring>
+            </property>
+        </widget>
+        <widget class="QLabel" row="0" column="0">
+                <property name="name">
+                <cstring>textLabel1</cstring>
+                </property>
+            <property name="text">
+                <string>&amp;Search:</string>
+                    </property>
+            <property name="buddy" stdset="0">
+                <cstring>kListViewSearchLine1</cstring>
+                    </property>
+        </widget>
+        <widget class="QSplitter" row="1" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>splitter8</cstring>
+                    </property>
+                    <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <widget class="KDCOPListView">
+                <property name="name">
+                    <cstring>lv</cstring>
+                    </property>
+                </widget>
+            <widget class="QLayoutWidget">
+                <property name="name">
+                    <cstring>layout18</cstring>
+                </property>
+                <grid>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                <widget class="QLabel" row="0" column="1">
+                    <property name="name">
+                        <cstring>l_replyType</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>3</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="frameShape">
+                        <enum>NoFrame</enum>
+                    </property>
+                    <property name="frameShadow">
+                        <enum>Raised</enum>
+                    </property>
+                    <property name="text">
+                        <string>none</string>
+                    </property>
+                    <property name="indent">
+                        <number>0</number>
+                    </property>
+                </widget>
+                    <widget class="KListBox" row="1" column="0" rowspan="1" colspan="2">
+                        <property name="name">
+                            <cstring>lb_replyData</cstring>
+                        </property>
+                    </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>0</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                    <property name="text">
+                        <string>Returned data type:</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        </widget>
+    </grid>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>KDCOPListView</class>
+        <header location="local">kdcoplistview.h</header>
+        <sizehint>
+            <width>100</width>
+            <height>100</height>
+        </sizehint>
+        <container>1</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="PNG" length="1077">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000003fc49444154388d8d95bf8b1d5518869fbbb9c237b2c133b291195cc91d8c901123b901c10d0ae6a260162d526c1348a3a90ca952064208e4afd0d804d204d20436c5425218660b8b142bb98bcd2cba700e66e17cc5ca7cc5c5b59899bb2e3639301ccecc99f7bcf37c3f66505515fdb879e7f28106c33040004390d75a6799e3eead07835e6b5055153f3dbc76b0f9a4e6bbeb374810c4a59846001a8c04f9ffbc6fb008b667f85033ad6b4298b2b29273f5cabdc11060f359cdb5eb37c88a12f581b8eb4916419c302e0bc06318513da186b807588a9981b50ef334073336373d57afc0e0c2d7d9c1eab7d728f2028d4abd5b532c6794e3827c048d050c8f99875e3c18f59610438199b557348c861802e21a861a201141a3e2773de5a982d54b63d46abc5698edd0980711404804b2cc906c8aeed4bcfce51ca6862460114484103c43c3104989bb9ee254cee46289d78a697880598d0f0e9a04882449827382732d029729c5e715d38d73a86f0030031086209846f2e594c9c5926815d3700f5563ba51e243cb0e1130431c141f45ca158f19e499a1238f698e598374fb16ba2390148c9a3a3c2204a37af81f51dacde32f857cd4307d9ef362a3681d02c5190fd23b6ef58622024079dae1b542f1d4bf1698a5479c4ed64ac69f0a6635eb78eaed02b71cc94bc59c918f14f5d2398605ebf2c5f018010de0778e3a9d7c3366f2c50a82c30cc65f05c008bf15edd9805b8e80748e8585f67617746b2b69ee1463fc59c9e4c24a6b1c0594171b0e4168acaf3fc88b2ea1a5b539676ca6883820993b2dcf66ac5e1a236244ad31f3448dc4d0174782aab4e29d4e5f300b3de32e84385700463e1256afe424a2789ba2566356230e266b119701d2e0b20ea6b9b677747ac33963f5886b133c1f41d4b60798f398295e3dceb587a72ee1fc5a4483ce194fb7928eb11e326e307c00b3402246f9491b88f5fb4abd33e5e9e3c8d3fb393bdb74a81a9c335ce63b0c73b873c6c39e71bd05e2eaf6f346707eada67af821eb3fa6f316593dce893e52ae84ae77d0f50a87df7647181f7b6fd9ddfee0e4c7d8fe1be83f7f723c0fcccc182e1af9fbaf9037e1f8db4a9acd4897f63971728fa1f4a22032c46cc6e23bc6eecb04b31936d396b10f757bd0f302cc28c6be7bc9c8c7f53ca5e4d0d03c5ffbcc9434301a837fd6b23e76e66c76fb6f9d311c24eccf0cfd23e5d55f43d2b780453b2a6ac0106606d12fb1b39d72e2dd7da282fa25767e4fd0bd86a5a561fb07f9fe87d583cc1524ce1d561c4656186916c9ce18346ddcc2961035254cdb369a9581fc54c3f439780f1a947b3fafb77f90950b399bcf3cceda3cb46e9ebe00911c7b725862fd73c4c08cb8d9ee830655253bdd0671505515fdb879e7f241083aafbc3e835e679d6570f7d6a3417fe75f216c6016a81220570000000049454e44ae426082</data>
+    </image>
+</images>
+<includes>
+    <include location="global" impldecl="in implementation">kdialog.h</include>
+</includes>
+<layoutdefaults spacing="6" margin="11"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>klistviewsearchline.h</includehint>
+    <includehint>kdcoplistview.h</includehint>
+    <includehint>klistbox.h</includehint>
+</includehints>
+</UI>

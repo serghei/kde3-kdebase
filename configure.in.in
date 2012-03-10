@@ -1,0 +1,276 @@
+#MIN_CONFIG
+
+KDE_ENABLE_HIDDEN_VISIBILITY
+
+dnl PAM, shadow passwords, libcrypt
+KDE_PASSWDLIBS
+
+DEF_PAM_SERVICE(kdm, kdm, KDM)
+DEF_PAM_SERVICE(kcp, kcheckpass, KCHECKPASS)
+DEF_PAM_SERVICE(kss, kscreensaver, KSCREENSAVER)
+
+dnl Checks for header files.
+AC_HEADER_DIRENT
+AC_HEADER_STDC
+AC_CHECK_HEADERS(sys/time.h crypt.h \
+	sys/select.h sys/ioctl.h sys/stropts.h stropts.h termio.h termios.h sys/termios.h \
+	lastlog.h sys/socket.h sys/sockio.h \
+	sys/m_wait.h ncurses.h paths.h login_cap.h syslog.h \
+	sys/wait.h sys/ucred.h sys/mount.h floatingpoint.h fstab.h mntent.h \
+	Alib.h libutil.h util.h time.h limits.h vfork.h string.h float.h \
+	math.h nan.h ieeefp.h
+)
+AC_CHECK_HEADER(pty.h)
+AC_CHECK_FUNC(ptsname,,)
+
+
+dnl Checks for Alib on HP-UX (added by deller, Apr 29 1999)
+AC_CHECK_LIB(Alib, main, [LIBALIB="-lAlib"]) dnl HP-UX network audio server
+AC_SUBST(LIBALIB)
+
+dnl Checks for RPC functions
+AC_CHECK_FUNC(clnttcp_create, , [
+  AC_CHECK_LIB(nsl, clnttcp_create, [LIBRPC="-lnsl"])])
+AC_SUBST(LIBRPC)
+
+dnl Check for ossaudio on NetBSD
+AC_CHECK_LIB(ossaudio, main, [LIBOSSAUDIO="-lossaudio"])
+AC_SUBST(LIBOSSAUDIO)
+
+dnl Check for AIX stuff
+AC_CHECK_LIB(cfg, main, [LIBCFG="-lcfg"]) dnl for AIX
+AC_SUBST(LIBCFG)
+AC_CHECK_LIB(odm, main, [LIBODM="-lodm"]) dnl for AIX
+AC_SUBST(LIBODM)
+
+dnl SMB checks moved to their own configure.in.in
+
+kde_have_setupterm=yes
+AC_CHECK_LIB(curses, setupterm, [LIBCURSES=-lcurses],
+  AC_CHECK_LIB(ncurses, setupterm, [LIBCURSES=-lncurses],
+    AC_CHECK_LIB(mytinfo, setupterm, [LIBCURSES=-lmytinfo],
+       kde_have_setupterm=no)))
+
+AC_SUBST(LIBCURSES)
+
+if test "$kde_have_setupterm" = "yes"; then
+  AC_DEFINE_UNQUOTED(HAVE_SETUPTERM, 1, [Define if you have setupterm in -l(n)curses])
+fi
+
+AC_CHECK_FUNC(res_init, ,
+  AC_CHECK_LIB(resolv, res_init, [LIBRESOLV="-lresolv"], , $LIBSOCKET)) dnl for Sun
+
+AC_SUBST(LIBRESOLV)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_LANG_CPLUSPLUS
+AC_HEADER_TIME
+
+dnl check if the compiler has bool
+AC_CHECK_BOOL
+AC_LANG_C
+AC_C_LONG_DOUBLE
+AC_TYPE_GETGROUPS
+
+dnl for libsmb
+AC_CHECK_SIZEOF(char,1)
+AC_CHECK_SIZEOF(short,2)
+AC_CHECK_SIZEOF(int,4)
+AC_CHECK_SIZEOF(long,4)
+AC_C_BIGENDIAN
+
+AC_CHECK_FUNCS(socket powl sqrtl strdup getdtablesize setpgid nice seteuid vsyslog initgroups setgroups getgroups grantpt pw_encrypt setpriority getpt unlockpt ptsname waitpid getpassphrase)
+AC_CHECK_MKSTEMPS
+AC_CHECK_SETENV
+AC_CHECK_UNSETENV
+AC_CHECK_GETDOMAINNAME
+AC_CHECK_GETHOSTNAME
+AC_CHECK_USLEEP
+AC_CHECK_RANDOM
+AC_CHECK_S_ISSOCK
+AC_CHECK_KDEMAXPATHLEN
+AC_MSG_CHECKING([if it's safe to enable UTMP])
+
+case "$host_os" in
+linux*) utmp_support=yes;
+     ;;
+freebsd*) utmp_support=yes;
+     ;;
+kfreebsd*-gnu) utmp_support=yes;
+     ;;
+*) utmp_support=no;
+esac
+
+AC_MSG_RESULT($utmp_support)
+
+if test "$utmp_support" = yes; then
+   AC_DEFINE_UNQUOTED(UTMP_SUPPORT, 1, [Define if you want to use utmp entries])
+fi
+
+AC_CHECK_UTMP_FILE
+
+dnl Checks for Solaris' libkstat
+kde_have_kstat=yes
+AC_CHECK_LIB(kstat, kstat_open, [LIBKSTAT=-lkstat], kde_have_kstat=no)
+AC_SUBST(LIBKSTAT)
+if test "$kde_have_kstat" = "yes"; then
+  AC_DEFINE(HAVE_KSTAT, 1, [Defines if you have Solaris' libkstat])
+fi
+
+dnl Checks for libdevinfo (Solaris 7 and later)
+dnl since the library is available on earlier Solaris releases (but
+dnl with a completely different and undocumented interface),
+dnl we have to verfy that the required header is present as well
+AC_CHECK_HEADER(libdevinfo.h,
+	kde_have_libdevinfo_h=yes,
+	kde_have_libdevinfo_h=no)
+if test "$kde_have_libdevinfo_h" = "yes"; then
+   kde_have_libdevinfo_lib=yes
+   AC_CHECK_LIB(devinfo, di_init, [LIBDEVINFO=-ldevinfo], kde_have_libdevinfo_lib=no)
+   if test "$kde_have_libdevinfo_lib" = "yes"; then
+      AC_DEFINE(HAVE_LIBDEVINFO_H, 1, [Defines if you have libdevinfo of Solaris 7 or later])
+      AC_SUBST(LIBDEVINFO)
+   fi
+fi
+
+dnl check for java
+KDE_CHECK_JAVA_DIR
+
+dnl check for an md5sum implementation. the GNU versions
+dnl produce different output from the FreeBSD / Solaris 
+dnl versions, so MD5SUM_CUT shows how to retrieve the
+dnl checksum from the output.
+MD5SUM_CUT="-f 1"
+AC_PATH_PROGS(MD5SUM, [md5sum gmd5sum], [])
+if test -z "$MD5SUM" ; then
+  AC_PATH_PROG(MD5SUM, [md5], [])
+  if test -z "$MD5SUM" ; then
+    AC_PATH_PROG(MD5SUM, [md5], [], [/sbin])
+  fi
+  if test -z "$MD5SUM" ; then
+    AC_MSG_WARN([No md5sum, gmd5sum, or md5 was found. The fish IOSlave cannot be compiled.])
+    # Will fail anyway, but in a better way than a blank command.
+    MD5SUM="md5sum"
+    MD5SUM_CUT="-f 1"
+  else
+    MD5SUM_CUT="-f 4"
+  fi
+fi
+AC_SUBST(MD5SUM_CUT)
+
+dnl -----  Checks for X11 extensions -----
+ac_save_ldflags="$LDFLAGS"
+LDFLAGS="$X_LDFLAGS"
+
+dnl --- XTEST check
+XTESTLIB=
+KDE_CHECK_HEADER(X11/extensions/XTest.h,
+    [AC_CHECK_LIB( Xtst, XTestFakeKeyEvent,
+	[AC_DEFINE(HAVE_XTEST, 1, [Define if you have the XTest extension])
+	 XTESTLIB=-lXtst],
+	, [ $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS ])
+    ])
+AC_SUBST(XTESTLIB)
+
+dnl --- XKB check
+KDE_CHECK_HEADER(X11/XKBlib.h,
+    [AC_CHECK_LIB( X11, XkbLockModifiers,
+	[AC_DEFINE(HAVE_XKB, 1, [Define if you have the XKB extension])],
+	, [ $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS ])
+     AC_CHECK_LIB( X11, XkbSetPerClientControls,
+	[AC_DEFINE(HAVE_XKBSETPERCLIENTCONTROLS, 1, [Define if you have XkbSetPerClientControls])],
+	, [ $X_PRE_LIBS -lXext -lX11 $X_EXTRA_LIBS ])
+    ], [], [#include <X11/Xlib.h>])
+
+dnl --- Xcursor check (not technically an extension)
+KDE_CHECK_HEADERS(X11/Xcursor/Xcursor.h,
+    [KDE_CHECK_LIB(Xcursor, XcursorSupportsARGB, [
+	LIB_XCURSOR=-lXcursor
+	AC_DEFINE_UNQUOTED(HAVE_XCURSOR, 1, [Define to 1 if you have Xcursor])
+    ], [ LIB_XCURSOR= ], [ $X_PRE_LIBS -lX11 $X_EXTRA_LIBS ])],
+    [ LIB_XCURSOR= ], [#include <X11/Xlib.h>])
+AC_SUBST(LIB_XCURSOR)
+AM_CONDITIONAL(have_xcursor, test "$LIB_XCURSOR" = -lXcursor)
+
+dnl XRender check
+KDE_CHECK_HEADER(X11/extensions/Xrender.h, [xrender_h=yes], [xrender_h=no])
+if test "$xrender_h" = yes; then
+  KDE_CHECK_LIB(Xrender, XRenderComposite, [
+    LIB_XRENDER=-lXrender
+    AC_DEFINE_UNQUOTED(HAVE_XRENDER, 1, [Defined if your system has XRender support])
+  ], [], -lXext -lX11 $X_EXTRA_LIBS)
+else
+  LIB_XRENDER=
+fi
+AC_SUBST(LIB_XRENDER)
+
+LDFLAGS="$ac_save_ldflags"
+dnl ----- end of X11 extension checks -----
+
+
+CXXFLAGS="$CXXFLAGS $KDE_DEFAULT_CXXFLAGS"
+
+KDE_INIT_DOXYGEN([KDE base API Reference], [Version $VERSION])
+
+dnl Ok, kdebase has _sooo_ many Makefiles, that the check for uniqueness
+dnl of those filenames in the list of the files (done by autoconf macros
+dnl itself) is taking more that nine minutes (!).  For kdebase only we take
+dnl out that test.  (matz@kde.org)
+m4_define([_AC_CONFIG_UNIQUE], [])dnl
+
+AH_VERBATIM(_osf_stuff, [
+#if !defined(HAVE_SETEUID)
+#define seteuid(_eu) setresuid(-1, _eu, -1)
+#endif
+])
+
+AH_VERBATIM(_broken_xkb, [
+#if defined(__osf__) || defined(__APPLE__)
+#define AVOID_XKB                 /* for konsole to avoid XKB and XTEST */
+#endif
+])
+
+dnl this is for kdm and kcontrol
+KDE_EXPAND_MAKEVAR(KDE_CONFDIR, kde_confdir)
+AC_DEFINE_UNQUOTED(KDE_CONFDIR, "$KDE_CONFDIR", [KDE's configuration directory])
+KDE_EXPAND_MAKEVAR(KDE_DATADIR, kde_datadir)
+AC_DEFINE_UNQUOTED(KDE_DATADIR, "$KDE_DATADIR", [KDE's static data directory])
+KDE_EXPAND_MAKEVAR(KDE_BINDIR, kde_bindir)
+AC_DEFINE_UNQUOTED(KDE_BINDIR, "$KDE_BINDIR", [KDE's binaries directory])
+AC_SUBST(KDE_BINDIR)
+
+dnl libart is used by kdm, kcontrol and thumbnails code in kioslaves
+KDE_FIND_PATH(libart2-config, LIBART_CONFIG, [${prefix}/bin ${exec_prefix}/bin /usr/local/bin /opt/local/bin], [
+  AC_MSG_WARN([Could not find libart anywhere, check http://www.levien.com/libart/])
+])
+
+if test -n "$LIBART_CONFIG"; then
+  vers=`$LIBART_CONFIG --version 2>/dev/null | awk 'BEGIN { FS = "."; } { printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
+  if test -n "$vers" && test "$vers" -ge 2003008
+  then
+     LIBART_LIBS="`$LIBART_CONFIG --libs`"
+     LIBART_RPATH=
+     for args in $LIBART_LIBS; do
+	  case $args in
+	    -L*)
+  	       LIBART_RPATH="$LIBART_RPATH $args"
+ 	       ;;
+          esac
+     done
+     LIBART_RPATH=`echo $LIBART_RPATH | sed -e "s/-L/-R/g"`
+     LIBART_CFLAGS="`$LIBART_CONFIG --cflags`"
+
+     AC_DEFINE_UNQUOTED(HAVE_LIBART, 1, [Defines if your system has the libart library])
+  else
+     AC_MSG_WARN([You need at least libart 2.3.8])
+  fi
+fi
+
+
+AC_SUBST(LIBART_LIBS)
+AC_SUBST(LIBART_CFLAGS)
+AC_SUBST(LIBART_RPATH)
+
+AC_ARG_WITH([composite],
+  AC_HELP_STRING([--without-composite], [Disable Xcomposite support (default: check)]) )
+

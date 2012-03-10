@@ -1,0 +1,41 @@
+[1]
+Description=(Default) Disable focus stealing prevention for XV
+Description[bg]=(По подразбиране) Изключване открадването на фокуса за XV
+Description[ca]=(Omissió) Desactiva la prevenció del robatori de focus pel XV
+Description[da]=(Standard) Deaktivér forhindring af at stjæle fokus for XV
+Description[de]=(Voreinstellung) Vorbeugung gegen Fokusverlust für XV
+Description[el]=(Προκαθορισμένο) Απενεργοποίηση αποτροπής κλεψίματος εστίασης για το XV
+Description[eo]=(Defaŭlta) Malebligu la preventon de fokus-elprenado por XV
+Description[es]=(Predefinido) Deshabilitar la prevención de robo del foco para XV
+Description[et]=(Vaikimisi) keelatakse XV fookuse röövimise vältimine
+Description[fr]=(Défaut) Désactive le vol du focus pour XV
+Description[fy]=(standert) Foarkomme fan ôfpakke fan toetseboerdfokus foar XV
+Description[hr]=(Zadano) Onemogući sprečavanje preuzimanja fokusa za XV
+Description[hu]=(Alapértelmezés) A fókuszelvételi védelem kikapcsolása az XV-nél
+Description[is]=(Sjálfgefið) Aftengja vörn gegn fókusþjófnaði fyrir XV
+Description[it]=(Predefinita) Disabilita la prevenzione della cattura del fuoco per XV
+Description[ja]=(デフォルト) XV のフォーカス移動防止を無効にする
+Description[km]=(លំនាំដើម) បិទ​ការ​ផ្ដោតអារម្មណ៍ ដោយ​លួច​ការពារ​សម្រាប់ XV
+Description[ko]=(기본값) XV의 초점 뺏아가기 막기 사용하지 않기
+Description[nb]=(Standard) Slå av fokusoverstyring fra XV
+Description[nds]=(Standard) För XV de Fokusverleer-Schuul utmaken
+Description[nl]=(Standaard) Voorkomen van afpakken toetsenbordfocus voor XV
+Description[pl]=(Domyślne) wyłączenie przechwytywania aktywności dla XV
+Description[pt]=(Predefinido) Desactivar a prevenção de roubo do primeiro plano do XV
+Description[pt_BR]=(Padrão) Desativa prevenção de roubo de foco para o XV
+Description[ru]=(по умолчанию) отключить предотвращение потери для XV
+Description[sk]=(Štandard) Znemožniť kradnutie aktivity okna XV
+Description[sl]=(privzeto) Onemogoči preprečevanje kraje fokusa za XV
+Description[sr]=(Подразумевано) Искључи спречавање преузимања фокуса за XV
+Description[sr@Latn]=(Podrazumevano) Isključi sprečavanje preuzimanja fokusa za XV
+Description[sv]=(Förval) Inaktivera möjlighet att förhindra stöld av fokus för XV
+Description[wa]=(Prémetou) Dismete li hapaedje di focus po XV
+Description[zh_TW]=（預設）為 XV 關閉避免焦點被偷的功能
+fsplevel=0
+fsplevelrule=2
+wmclass=^xv .*
+wmclasscomplete=true
+wmclassmatch=3
+
+[General]
+count=1

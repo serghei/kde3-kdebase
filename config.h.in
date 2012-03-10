@@ -1,0 +1,972 @@
+/* config.h.in.  Generated from configure.in by autoheader.  */
+
+/* define if you have KTH Kerberos IV and AFS */
+#undef AFS
+
+/* Define if the system uses a BSD-style init */
+#undef BSD_INIT
+
+/* Define if the system has no getutent */
+#undef BSD_UTMP
+
+/* media HAL backend compilation */
+#undef COMPILE_HALBACKEND
+
+/* media linux cd polling compilation */
+#undef COMPILE_LINUXCDPOLLING
+
+/* Define if covariant return in virtual methods works */
+#undef COVARIANT_RETURN_BROKEN
+
+/* Define the unix domain path for dbus system bus */
+#undef DBUS_SYSTEM_BUS
+
+/* Use su or sudo */
+#undef DEFAULT_SUPER_USER_COMMAND
+
+/* Define the system's entropy device */
+#undef DEV_RANDOM
+
+/* Define to the type of elements in the array set by `getgroups'. Usually
+   this is either `int' or `gid_t'. */
+#undef GETGROUPS_T
+
+/* Define if kdm should be built with XDMAUTH support */
+#undef HASXDMAUTH
+
+/* Define to 1 if you have the <Alib.h> header file. */
+#undef HAVE_ALIB_H
+
+/* Define to 1 if you have the `arc4random' function. */
+#undef HAVE_ARC4RANDOM
+
+/* Defined for arts support in khotkeys */
+#undef HAVE_ARTS
+
+/* Define to 1 if you have the `auth_timeok' function. */
+#undef HAVE_AUTH_TIMEOK
+
+/* You _must_ have bool */
+#undef HAVE_BOOL
+
+/* Define to 1 if you have the <Carbon/Carbon.h> header file. */
+#undef HAVE_CARBON_CARBON_H
+
+/* Define if you have the CoreAudio API */
+#undef HAVE_COREAUDIO
+
+/* Define to 1 if you have the <crt_externs.h> header file. */
+#undef HAVE_CRT_EXTERNS_H
+
+/* Defines if your system has the crypt function */
+#undef HAVE_CRYPT
+
+/* Define to 1 if you have the <crypt.h> header file. */
+#undef HAVE_CRYPT_H
+
+/* Define to 1 if you have the <devinfo.h> header file. */
+#undef HAVE_DEVINFO_H
+
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_DIRENT_H
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if dns-sd is available */
+#undef HAVE_DNSSD
+
+/* Define if you have DPMS support */
+#undef HAVE_DPMS
+
+/* Define if you have the DPMSCapable prototype in <X11/extensions/dpms.h> */
+#undef HAVE_DPMSCAPABLE_PROTO
+
+/* Define if you have the DPMSInfo prototype in <X11/extensions/dpms.h> */
+#undef HAVE_DPMSINFO_PROTO
+
+/* Define if you have OpenEXR */
+#undef HAVE_EXR
+
+/* Define to 1 if you have the <floatingpoint.h> header file. */
+#undef HAVE_FLOATINGPOINT_H
+
+/* Define to 1 if you have the <float.h> header file. */
+#undef HAVE_FLOAT_H
+
+/* Defines if your system has the libfontconfig library */
+#undef HAVE_FONTCONFIG
+
+/* Defines if you have FontEnc */
+#undef HAVE_FONT_ENC
+
+/* Define if you have FreeType2 library */
+#undef HAVE_FREETYPE2
+
+/* Define to 1 if you have the <fstab.h> header file. */
+#undef HAVE_FSTAB_H
+
+/* Define if you have getdomainname */
+#undef HAVE_GETDOMAINNAME
+
+/* Define if you have the getdomainname prototype */
+#undef HAVE_GETDOMAINNAME_PROTO
+
+/* Define to 1 if you have the `getdtablesize' function. */
+#undef HAVE_GETDTABLESIZE
+
+/* Define to 1 if you have the `getgroups' function. */
+#undef HAVE_GETGROUPS
+
+/* Define if you have gethostname */
+#undef HAVE_GETHOSTNAME
+
+/* Define if you have the gethostname prototype */
+#undef HAVE_GETHOSTNAME_PROTO
+
+/* Define to 1 if you have the `getifaddrs' function. */
+#undef HAVE_GETIFADDRS
+
+/* Define to 1 if you have the `getnameinfo' function. */
+#undef HAVE_GETNAMEINFO
+
+/* Define to 1 if you have the `getpassphrase' function. */
+#undef HAVE_GETPASSPHRASE
+
+/* Define to 1 if you have the `getpeereid' function. */
+#undef HAVE_GETPEEREID
+
+/* Define to 1 if you have the `getpt' function. */
+#undef HAVE_GETPT
+
+/* Define to 1 if you have the `getttyent' function. */
+#undef HAVE_GETTTYENT
+
+/* Define to 1 if you have the `getusershell' function. */
+#undef HAVE_GETUSERSHELL
+
+/* Defines if you have GL (Mesa, OpenGL, ...) */
+#undef HAVE_GL
+
+/* Define if you have glXChooseVisual() */
+#undef HAVE_GLXCHOOSEVISUAL
+
+/* Define to 1 if you have the `grantpt' function. */
+#undef HAVE_GRANTPT
+
+/* Define to 1 if you have the <ieeefp.h> header file. */
+#undef HAVE_IEEEFP_H
+
+/* Define to 1 if you have the `initgroups' function. */
+#undef HAVE_INITGROUPS
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `isastream' function. */
+#undef HAVE_ISASTREAM
+
+/* Defines if you have Solaris' libkstat */
+#undef HAVE_KSTAT
+
+/* Define to 1 if you have the <lastlog.h> header file. */
+#undef HAVE_LASTLOG_H
+
+/* Defines if your system has the libart library */
+#undef HAVE_LIBART
+
+/* Defines if you have libdevinfo of Solaris 7 or later */
+#undef HAVE_LIBDEVINFO_H
+
+/* Define if you have libjpeg */
+#undef HAVE_LIBJPEG
+
+/* Define if you have LDAP libraries */
+#undef HAVE_LIBLDAP
+
+/* Define if you have libpng */
+#undef HAVE_LIBPNG
+
+/* Define if you have a working libpthread (will enable threaded code) */
+#undef HAVE_LIBPTHREAD
+
+/* Define if you have cyrus-sasl2 libraries */
+#undef HAVE_LIBSASL2
+
+/* Define to 1 if you have the `smbclient' library (-lsmbclient). */
+#undef HAVE_LIBSMBCLIENT
+
+/* Defined if you have libusb */
+#undef HAVE_LIBUSB
+
+/* Define to 1 if you have the <libutil.h> header file. */
+#undef HAVE_LIBUTIL_H
+
+/* Define if you have libz */
+#undef HAVE_LIBZ
+
+/* Define to 1 if you have the <limits.h> header file. */
+#undef HAVE_LIMITS_H
+
+/* Define to 1 if you have the <linux/raw.h> header file. */
+#undef HAVE_LINUX_RAW_H
+
+/* Define to 1 if you have the <login_cap.h> header file. */
+#undef HAVE_LOGIN_CAP_H
+
+/* Define to 1 if you have the `login_getclass' function. */
+#undef HAVE_LOGIN_GETCLASS
+
+/* Define to 1 if the type `long double' works and has more range or precision
+   than `double'. */
+#undef HAVE_LONG_DOUBLE
+
+/* Define to 1 if the type `long double' works and has more range or precision
+   than `double'. */
+#undef HAVE_LONG_DOUBLE_WIDER
+
+/* Define if you have long long as datatype */
+#undef HAVE_LONG_LONG
+
+/* Define to 1 if you have the <math.h> header file. */
+#undef HAVE_MATH_H
+
+/* Define to 1 if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Define to 1 if you have the `mkstemp' function. */
+#undef HAVE_MKSTEMP
+
+/* Define if you have mkstemps */
+#undef HAVE_MKSTEMPS
+
+/* Define if you have the mkstemps prototype */
+#undef HAVE_MKSTEMPS_PROTO
+
+/* Define to 1 if you have the <mntent.h> header file. */
+#undef HAVE_MNTENT_H
+
+/* Define to 1 if you have the <nan.h> header file. */
+#undef HAVE_NAN_H
+
+/* Define to 1 if you have the <ncurses.h> header file. */
+#undef HAVE_NCURSES_H
+
+/* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
+#undef HAVE_NDIR_H
+
+/* Define to 1 if you have the `nice' function. */
+#undef HAVE_NICE
+
+/* Define if your system needs _NSGetEnviron to set up the environment */
+#undef HAVE_NSGETENVIRON
+
+/* Define if you have OpenSSL < 0.9.6 */
+#undef HAVE_OLD_SSL_API
+
+/* Defines whether we can use the openpty() function */
+#undef HAVE_OPENPTY
+
+/* Defines if you have PAM (Pluggable Authentication Modules) */
+#undef HAVE_PAM
+
+/* Define if your PAM headers are in pam/ instead of security/ */
+#undef HAVE_PAM_PAM_APPL_H
+
+/* Define to 1 if you have the <paths.h> header file. */
+#undef HAVE_PATHS_H
+
+/* Define to 1 if you have the `powl' function. */
+#undef HAVE_POWL
+
+/* Defines whether /proc/`pid`/cwd exists */
+#undef HAVE_PROC_CWD
+
+/* Define to 1 if you have the `ptsname' function. */
+#undef HAVE_PTSNAME
+
+/* Define to 1 if you have the <pty.h> header file. */
+#undef HAVE_PTY_H
+
+/* Define to 1 if you have the `pw_encrypt' function. */
+#undef HAVE_PW_ENCRYPT
+
+/* Define if you have random */
+#undef HAVE_RANDOM
+
+/* Define if you have the random prototype */
+#undef HAVE_RANDOM_PROTO
+
+/* Define if you have res_init */
+#undef HAVE_RES_INIT
+
+/* Define if you have the res_init prototype */
+#undef HAVE_RES_INIT_PROTO
+
+/* Define to 1 if you have the <sasl.h> header file. */
+#undef HAVE_SASL_H
+
+/* Define to 1 if you have the <sasl/sasl.h> header file. */
+#undef HAVE_SASL_SASL_H
+
+/* Define to 1 if you have the <sensors/sensors.h> header file. */
+#undef HAVE_SENSORS_SENSORS_H
+
+/* Define if you have setenv */
+#undef HAVE_SETENV
+
+/* Define if you have the setenv prototype */
+#undef HAVE_SETENV_PROTO
+
+/* Define to 1 if you have the `seteuid' function. */
+#undef HAVE_SETEUID
+
+/* Define to 1 if you have the `setgroups' function. */
+#undef HAVE_SETGROUPS
+
+/* Define to 1 if you have the `setlogin' function. */
+#undef HAVE_SETLOGIN
+
+/* Define to 1 if you have the `setpgid' function. */
+#undef HAVE_SETPGID
+
+/* Define to 1 if you have the `setpriority' function. */
+#undef HAVE_SETPRIORITY
+
+/* Define to 1 if you have the `setproctitle' function. */
+#undef HAVE_SETPROCTITLE
+
+/* Define if you have setupterm in -l(n)curses */
+#undef HAVE_SETUPTERM
+
+/* Define to 1 if you have the `setusercontext' function. */
+#undef HAVE_SETUSERCONTEXT
+
+/* Define if you have a STL implementation by SGI */
+#undef HAVE_SGI_STL
+
+/* Define if you use shadow passwords */
+#undef HAVE_SHADOW
+
+/* Define to 1 if you have the `sigaction' function. */
+#undef HAVE_SIGACTION
+
+/* Define to 1 if you have the `sigset' function. */
+#undef HAVE_SIGSET
+
+/* Define to 1 if you have the `snprintf' function. */
+#undef HAVE_SNPRINTF
+
+/* Define to 1 if you have the `socket' function. */
+#undef HAVE_SOCKET
+
+/* Define to 1 if you have the `sqrtl' function. */
+#undef HAVE_SQRTL
+
+/* Define if you have srandom */
+#undef HAVE_SRANDOM
+
+/* Define if you have the srandom prototype */
+#undef HAVE_SRANDOM_PROTO
+
+/* If we are going to use OpenSSL */
+#undef HAVE_SSL
+
+/* Define to 1 if you have the `statvfs' function. */
+#undef HAVE_STATVFS
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strdup' function. */
+#undef HAVE_STRDUP
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define if you have strlcat */
+#undef HAVE_STRLCAT
+
+/* Define if you have the strlcat prototype */
+#undef HAVE_STRLCAT_PROTO
+
+/* Define if you have strlcpy */
+#undef HAVE_STRLCPY
+
+/* Define if you have the strlcpy prototype */
+#undef HAVE_STRLCPY_PROTO
+
+/* Define to 1 if you have the `strnlen' function. */
+#undef HAVE_STRNLEN
+
+/* Define to 1 if you have the <stropts.h> header file. */
+#undef HAVE_STROPTS_H
+
+/* Define to 1 if `pw_expire' is member of `struct passwd'. */
+#undef HAVE_STRUCT_PASSWD_PW_EXPIRE
+
+/* Define to 1 if `sin_len' is member of `struct sockaddr_in'. */
+#undef HAVE_STRUCT_SOCKADDR_IN_SIN_LEN
+
+/* Define to 1 if `sa_len' is member of `struct sockaddr'. */
+#undef HAVE_STRUCT_SOCKADDR_SA_LEN
+
+/* Define if you have the struct ucred */
+#undef HAVE_STRUCT_UCRED
+
+/* Define to 1 if `ut_user' is member of `struct utmp'. */
+#undef HAVE_STRUCT_UTMP_UT_USER
+
+/* Define to 1 if you have the `sysinfo' function. */
+#undef HAVE_SYSINFO
+
+/* Define to 1 if you have the <syslog.h> header file. */
+#undef HAVE_SYSLOG_H
+
+/* Define to 1 if you have the <sys/bitypes.h> header file. */
+#undef HAVE_SYS_BITYPES_H
+
+/* Define to 1 if you have the <sys/dir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_DIR_H
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/loadavg.h> header file. */
+#undef HAVE_SYS_LOADAVG_H
+
+/* Define to 1 if you have the <sys/mount.h> header file. */
+#undef HAVE_SYS_MOUNT_H
+
+/* Define to 1 if you have the <sys/m_wait.h> header file. */
+#undef HAVE_SYS_M_WAIT_H
+
+/* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
+   */
+#undef HAVE_SYS_NDIR_H
+
+/* Define to 1 if you have the <sys/raw.h> header file. */
+#undef HAVE_SYS_RAW_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/socket.h> header file. */
+#undef HAVE_SYS_SOCKET_H
+
+/* Define to 1 if you have the <sys/sockio.h> header file. */
+#undef HAVE_SYS_SOCKIO_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/stropts.h> header file. */
+#undef HAVE_SYS_STROPTS_H
+
+/* Define to 1 if you have the <sys/termios.h> header file. */
+#undef HAVE_SYS_TERMIOS_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/ucred.h> header file. */
+#undef HAVE_SYS_UCRED_H
+
+/* Define to 1 if you have the <sys/wait.h> header file. */
+#undef HAVE_SYS_WAIT_H
+
+/* Define if sys/stat.h declares S_ISSOCK. */
+#undef HAVE_S_ISSOCK
+
+/* Define to 1 if you have the <termios.h> header file. */
+#undef HAVE_TERMIOS_H
+
+/* Define to 1 if you have the <termio.h> header file. */
+#undef HAVE_TERMIO_H
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unlockpt' function. */
+#undef HAVE_UNLOCKPT
+
+/* Define if you have unsetenv */
+#undef HAVE_UNSETENV
+
+/* Define if you have the unsetenv prototype */
+#undef HAVE_UNSETENV_PROTO
+
+/* Define if you have usleep */
+#undef HAVE_USLEEP
+
+/* Define if you have the usleep prototype */
+#undef HAVE_USLEEP_PROTO
+
+/* Define to 1 if you have the <util.h> header file. */
+#undef HAVE_UTIL_H
+
+/* Define if the system uses extended utmp */
+#undef HAVE_UTMPX
+
+/* Define to 1 if you have the <vfork.h> header file. */
+#undef HAVE_VFORK_H
+
+/* Define to 1 if you have the `vsnprintf' function. */
+#undef HAVE_VSNPRINTF
+
+/* Define to 1 if you have the `vsyslog' function. */
+#undef HAVE_VSYSLOG
+
+/* Define to 1 if you have the `waitpid' function. */
+#undef HAVE_WAITPID
+
+/* Define to 1 if you have the <X11/extensions/Xcomposite.h> header file. */
+#undef HAVE_X11_EXTENSIONS_XCOMPOSITE_H
+
+/* Define to 1 if you have the <X11/extensions/Xdamage.h> header file. */
+#undef HAVE_X11_EXTENSIONS_XDAMAGE_H
+
+/* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
+#undef HAVE_X11_EXTENSIONS_XRANDR_H
+
+/* Define to 1 if you have the <X11/extensions/Xrender.h> header file. */
+#undef HAVE_X11_EXTENSIONS_XRENDER_H
+
+/* Define to 1 if you have the <X11/Xcursor/Xcursor.h> header file. */
+#undef HAVE_X11_XCURSOR_XCURSOR_H
+
+/* Define if you have the XComposite extension */
+#undef HAVE_XCOMPOSITE
+
+/* Define to 1 if you have Xcursor */
+#undef HAVE_XCURSOR
+
+/* Define if you have the xf86misc extension */
+#undef HAVE_XF86MISC
+
+/* Define if you have XF86MiscSetGrabKeysState() */
+#undef HAVE_XF86MISCSETGRABKEYSSTATE
+
+/* Define if you have the XFixes extension */
+#undef HAVE_XFIXES
+
+/* Defines if you have Xft */
+#undef HAVE_XFT
+
+/* Define if you have the Xinerama extension */
+#undef HAVE_XINERAMA
+
+/* Define if you have the XKB extension */
+#undef HAVE_XKB
+
+/* Define if you have XkbSetPerClientControls */
+#undef HAVE_XKBSETPERCLIENTCONTROLS
+
+/* Defined if your system has XRender support */
+#undef HAVE_XRENDER
+
+/* Define if you have the XScreenSaver extension */
+#undef HAVE_XSCREENSAVER
+
+/* Define if you have the XTest extension */
+#undef HAVE_XTEST
+
+/* Define to 1 if you have the `_IceTransNoListen' function. */
+#undef HAVE__ICETRANSNOLISTEN
+
+/* Define if kdm should use Kerberos 5 for Xauth cookies. */
+#undef K5AUTH
+
+/* The PAM service to be used by kcheckpass */
+#undef KCHECKPASS_PAM_SERVICE
+
+/* Suffix for lib directories */
+#undef KDELIBSUFF
+
+/* Define a safe value for MAXPATHLEN */
+#undef KDEMAXPATHLEN
+
+/* KDE's binaries directory */
+#undef KDE_BINDIR
+
+/* KDE's configuration directory */
+#undef KDE_CONFDIR
+
+/* KDE's static data directory */
+#undef KDE_DATADIR
+
+/* Use mallinfo field hblkhd */
+#undef KDE_MALLINFO_FIELD_hblkhd
+
+/* Use mallinfo field uordblks */
+#undef KDE_MALLINFO_FIELD_uordblks
+
+/* Use mallinfo field usmblks */
+#undef KDE_MALLINFO_FIELD_usmblks
+
+/* mallinfo() is available in <malloc.h> */
+#undef KDE_MALLINFO_MALLOC
+
+/* mallinfo() is available in <stdlib.h> */
+#undef KDE_MALLINFO_STDLIB
+
+/* The PAM service to be used by kdm */
+#undef KDM_PAM_SERVICE
+
+/* Define if kdm should use Kerberos IV */
+#undef KERBEROS
+
+/* define if you have Kerberos IV */
+#undef KRB4
+
+/* The PAM service to be used by kscreensaver */
+#undef KSCREENSAVER_PAM_SERVICE
+
+/* Define if the libbz2 functions need the BZ2_ prefix */
+#undef NEED_BZ2_PREFIX
+
+/* Define if kdm should not use AFS */
+#undef NO_AFS
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define if your PAM support takes non-const arguments (Solaris) */
+#undef PAM_MESSAGE_NONCONST
+
+/* Define where your java executable is */
+#undef PATH_JAVA
+
+/* Define if kdm should use Sun's secure RPC for Xauth cookies. */
+#undef SECURE_RPC
+
+/* The size of `char', as computed by sizeof. */
+#undef SIZEOF_CHAR
+
+/* The size of `char *', as computed by sizeof. */
+#undef SIZEOF_CHAR_P
+
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `short', as computed by sizeof. */
+#undef SIZEOF_SHORT
+
+/* The size of `size_t', as computed by sizeof. */
+#undef SIZEOF_SIZE_T
+
+/* The size of `unsigned long', as computed by sizeof. */
+#undef SIZEOF_UNSIGNED_LONG
+
+/* Define to 1 if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
+
+/* Path for the usb.ids file to use */
+#undef USBIDS_FILE
+
+/* Define if kdm should use shadow passwords */
+#undef USESHADOW
+
+/* Define if kdm should use PAM */
+#undef USE_PAM
+
+/* Define if kdm should be built with syslog support */
+#undef USE_SYSLOG
+
+/* Define the file for utmp entries */
+#undef UTMP
+
+/* Define if you want to use utmp entries */
+#undef UTMP_SUPPORT
+
+/* Version number of package */
+#undef VERSION
+
+/* Defined if compiling without arts */
+#undef WITHOUT_ARTS
+
+/* Build kdm with built-in xconsole */
+#undef WITH_KDM_XCONSOLE
+
+/* Define to 1 if your processor stores words with the most significant byte
+   first (like Motorola and SPARC, unlike Intel and VAX). */
+#undef WORDS_BIGENDIAN
+
+/* X binaries directory */
+#undef XBINDIR
+
+/* Define if kdm should be built with XDMCP support */
+#undef XDMCP
+
+/* X libraries directory */
+#undef XLIBDIR
+
+/* Defined if your system has XRandR support */
+#undef XRANDR_SUPPORT
+
+/*
+ * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system
+ * headers and I'm too lazy to write a configure test as long as only
+ * unixware is related
+ */
+#ifdef _UNIXWARE
+#define HAVE_BOOLEAN
+#endif
+
+
+
+/*
+ * AIX defines FD_SET in terms of bzero, but fails to include <strings.h>
+ * that defines bzero.
+ */
+
+#if defined(_AIX)
+#include <strings.h>
+#endif
+
+
+
+#if defined(HAVE_NSGETENVIRON) && defined(HAVE_CRT_EXTERNS_H)
+# include <sys/time.h>
+# include <crt_externs.h>
+# define environ (*_NSGetEnviron())
+#endif
+
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+
+#if !defined(HAVE_GETDOMAINNAME_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <sys/types.h>
+		int getdomainname (char *, size_t);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_GETHOSTNAME_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int gethostname (char *, unsigned int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_MKSTEMPS_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int mkstemps(char *, int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_RANDOM_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+long int random(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_RES_INIT_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int res_init(void);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_SETENV_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int setenv (const char *, const char *, int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_SRANDOM_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+void srandom(unsigned int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_STRLCAT_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned long strlcat(char*, const char*, unsigned long);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_STRLCPY_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+unsigned long strlcpy(char*, const char*, unsigned long);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_UNSETENV_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+void unsetenv (const char *);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#if !defined(HAVE_USLEEP_PROTO)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int usleep (unsigned int);
+#ifdef __cplusplus
+}
+#endif
+#endif
+
+
+
+#ifndef HAVE_S_ISSOCK
+#define HAVE_S_ISSOCK
+#define S_ISSOCK(mode) (1==0)
+#endif
+
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
+
+
+/*
+ * On HP-UX, the declaration of vsnprintf() is needed every time !
+ */
+
+#if !defined(HAVE_VSNPRINTF) || defined(hpux)
+#if __STDC__
+#include <stdarg.h>
+#include <stdlib.h>
+#else
+#include <varargs.h>
+#endif
+#ifdef __cplusplus
+extern "C"
+#endif
+int vsnprintf(char *str, size_t n, char const *fmt, va_list ap);
+#ifdef __cplusplus
+extern "C"
+#endif
+int snprintf(char *str, size_t n, char const *fmt, ...);
+#endif
+
+
+/* define to 1 if -fvisibility is supported */
+#undef __KDE_HAVE_GCC_VISIBILITY
+
+
+#if defined(__SVR4) && !defined(__svr4__)
+#define __svr4__ 1
+#endif
+
+
+
+#if defined(__osf__) || defined(__APPLE__)
+#define AVOID_XKB                 /* for konsole to avoid XKB and XTEST */
+#endif
+
+
+
+#if !defined(HAVE_SETEUID)
+#define seteuid(_eu) setresuid(-1, _eu, -1)
+#endif
+
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef gid_t
+
+/* type to use in place of socklen_t if not defined */
+#undef kde_socklen_t
+
+/* type to use in place of socklen_t if not defined (deprecated, use
+   kde_socklen_t) */
+#undef ksize_t
+
+/* Define to `int' if <sys/types.h> doesn't define. */
+#undef uid_t

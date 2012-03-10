@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>kapplication.h</include>
+  <kcfgfile arg="true"/>
+  <group name="General">
+    <entry name="Type" type="Enum">
+      <label>Clock type</label>
+      <choices>
+        <choice name="Plain"/>
+        <choice name="Digital"/>
+        <choice name="Analog"/>
+        <choice name="Fuzzy"/>
+      </choices>
+      <default>Digital</default>
+    </entry>
+  </group>
+  <group name="Date">
+    <entry name="DateForegroundColor" type="Color" key="Foreground_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().text()</default>
+    </entry>
+    <entry name="DateBackgroundColor" type="Color" key="Background_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().background()</default>
+    </entry>
+    <entry name="DateFont" type="Font" key="Font">
+      <label>Font for the clock.</label>
+      <code>
+QFont defFont=KGlobalSettings::generalFont();
+defFont.setPointSize(8);
+      </code>
+      <default code="true">defFont</default>
+    </entry>
+  </group>
+  <group name="Plain">
+    <entry name="PlainShowSeconds" type="Bool" key="Show_Seconds">
+      <label>Show seconds.</label>
+      <default>false</default>
+    </entry>
+    <entry name="PlainShowDate" type="Bool" key="Show_Date">
+      <label>Show date.</label>
+      <default>true</default>
+    </entry>
+    <entry name="PlainShowDayOfWeek" type="Bool" key="Show_DayOfWeek">
+      <label>Show day of week.</label>
+      <default>false</default>
+    </entry>
+    <entry name="PlainShowFrame" type="Bool" key="Show_Frame">
+      <label>Show frame.</label>
+      <default>false</default>
+    </entry>
+    <entry name="PlainFont" type="Font" key="Font">
+      <label>Font for the clock.</label>
+      <code>
+defFont=KGlobalSettings::generalFont();
+defFont.setPointSize(8);
+defFont.setBold(true);
+      </code>
+      <default code="true">defFont</default>
+    </entry>
+    <entry name="PlainForegroundColor" type="Color" key="Foreground_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().text()</default>
+    </entry>
+    <entry name="PlainBackgroundColor" type="Color" key="Background_Color">
+      <label>Background color.</label>
+      <default code="true">KApplication::palette().active().background()</default>
+    </entry>
+  </group>
+  <group name="Digital">
+    <entry name="DigitalShowSeconds" type="Bool" key="Show_Seconds">
+      <label>Show seconds.</label>
+      <default>false</default>
+    </entry>
+    <entry name="DigitalShowDate" type="Bool" key="Show_Date">
+      <label>Show date.</label>
+      <default>false</default>
+    </entry>
+    <entry name="DigitalShowDayOfWeek" type="Bool" key="Show_DayOfWeek">
+      <label>Show day of week.</label>
+      <default>false</default>
+    </entry>
+    <entry name="DigitalShowFrame" type="Bool" key="Show_Frame">
+      <label>Show frame.</label>
+      <default>false</default>
+    </entry>
+    <entry name="DigitalForegroundColor" type="Color" key="Foreground_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().text()</default>
+    </entry>
+    <entry name="DigitalBackgroundColor" type="Color" key="Background_Color">
+      <label>Background color.</label>
+      <default code="true">KApplication::palette().active().background()</default>
+    </entry>
+    <entry name="DigitalShadowColor" type="Color" key="Shadow_Color">
+      <label>Shadow color.</label>
+      <default code="true">KApplication::palette().active().mid()</default>
+    </entry>
+    <entry name="DigitalBlink" type="Bool" key="Blink">
+      <label>Blink</label>
+      <default>false</default>
+    </entry>
+    <entry name="DigitalLCDStyle" type="Bool" key="LCD_Style">
+      <label>LCD Style</label>
+      <default>false</default>
+    </entry>
+  </group>
+  <group name="Analog">
+    <entry name="AnalogShowSeconds" type="Bool" key="Show_Seconds">
+      <label>Show seconds.</label>
+      <default>true</default>
+    </entry>
+    <entry name="AnalogShowDate" type="Bool" key="Show_Date">
+      <label>Show date.</label>
+      <default>false</default>
+    </entry>
+    <entry name="AnalogShowDayOfWeek" type="Bool" key="Show_DayOfWeek">
+      <label>Show day of week.</label>
+      <default>false</default>
+    </entry>
+    <entry name="AnalogShowFrame" type="Bool" key="Show_Frame">
+      <label>Show frame.</label>
+      <default>false</default>
+    </entry>
+    <entry name="AnalogForegroundColor" type="Color" key="Foreground_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().text()</default>
+    </entry>
+    <entry name="AnalogBackgroundColor" type="Color" key="Background_Color">
+      <label>Background color.</label>
+      <default code="true">KApplication::palette().active().background()</default>
+    </entry>
+    <entry name="AnalogShadowColor" type="Color" key="Shadow_Color">
+      <label>Shadow color.</label>
+      <default code="true">KApplication::palette().active().mid()</default>
+    </entry>
+    <entry name="AnalogLCDStyle" type="Bool" key="LCD_Style">
+      <label>LCD Style</label>
+      <default>true</default>
+    </entry>
+    <entry name="AnalogAntialias" type="Int" key="Antialias">
+      <label>Anti-Alias factor</label>
+      <default>0</default>
+    </entry>
+  </group>
+  <group name="Fuzzy">
+    <entry name="FuzzyShowDate" type="Bool" key="Show_Date">
+      <label>Show date.</label>
+      <default>true</default>
+    </entry>
+    <entry name="FuzzyShowDayOfWeek" type="Bool" key="Show_DayOfWeek">
+      <label>Show day of week.</label>
+      <default>false</default>
+    </entry>
+    <entry name="FuzzyShowFrame" type="Bool" key="Show_Frame">
+      <label>Show frame.</label>
+      <default>false</default>
+    </entry>
+    <entry name="FuzzyFont" type="Font" key="Font">
+      <label>Font for the clock.</label>
+      <code>
+defFont=KGlobalSettings::generalFont();
+      </code>
+      <default code="true">defFont</default>
+    </entry>
+    <entry name="FuzzyForegroundColor" type="Color" key="Foreground_Color">
+      <label>Foreground color.</label>
+      <default code="true">KApplication::palette().active().text()</default>
+    </entry>
+    <entry name="FuzzyBackgroundColor" type="Color" key="Background_Color">
+      <label>Background color.</label>
+      <default code="true">KApplication::palette().active().background()</default>
+    </entry>
+    <entry name="Fuzzyness" type="Int">
+      <label>Fuzzyness</label>
+      <default>1</default>
+    </entry>
+  </group>
+  <group name="Calendar">
+    <entry name="CalendarFullWindow" type="Bool" key="FullWindow">
+      <label>Show window frame</label>
+      <default>true</default>
+    </entry>
+    <entry name="CalendarSize" type="Size" key="Size">
+      <label>Default size of the calendar</label>
+    </entry>
+  </group>
+</kcfg>

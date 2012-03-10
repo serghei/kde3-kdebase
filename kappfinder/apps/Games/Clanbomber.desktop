@@ -1,0 +1,25 @@
+[Desktop Entry]
+Exec=clanbomber
+Icon=clanbomber
+Name=Clanbomber
+Name[af]=Klanbommer
+Name[bn]=ক্ল্যান-বোম্বার
+Name[eo]=Bombanto
+Name[fr]=ClanBomber
+Name[hi]=क्लैनबॉम्बर
+Name[hu]=Bombarakó
+Name[ja]=Clan ボンバー
+Name[km]=យន្តហោះ​ទម្លាក់​គ្រាប់បែក
+Name[ne]=क्लान बम्बर
+Name[pa]=ਕਲਾਨ ਬੰਬਰ
+Name[sk]=ClanBomber
+Name[sv]=Klanbombare
+Name[ta]=க்ளான்பாம்பர்
+Name[te]=క్లాన్ బాంబర్
+Name[th]=ClanBomber
+Name[zh_CN]=炸弹人
+Name[zh_TW]=Clanbomber 炸彈超人
+Name[zu]=Umqhumisi wesigodi
+Path=
+Terminal=true
+Type=Application

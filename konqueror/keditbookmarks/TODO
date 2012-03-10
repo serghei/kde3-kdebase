@@ -1,0 +1,120 @@
+toolbar is not updating on save in editor
+editor does not have undo after save
+deleting folders from the quick actions menu is b0rked
+
+(#1)
+68161 : Favicons are lost on upgrade 
+   - nothing to do with bookmarks, but, no idea where to put it,
+     so, whatever, i'll handle it anyways...
+     
+   - problem: .kde/share/cache/favicons moved to .kde/`hostname`-cache/favicons
+
+   - fix: either 1) a symlink, 2) upgrade path
+
+67635 : Bookmarks toolbar edits don't take effect until restart 
+   - completely unable to confirm, and can't recall fixing this in the past.. umm..
+
+67614 : abort bookmark's context menu causes bookmark to load 
+   - can't reproduce... maybe a new / old qt bug...
+
+67686 : bookmark bar first displayed empty 
+   - can't reproduce, maybe need to check from an empty .kde, thus no previous
+
+67958 : bookmark toolbar intermittenly disappears 
+   - maybe just another dup of tokoe's bug
+
+67685 : crash often kills bookmarks AND backup 
+   - how the heck does a crash wipe the bookmarks.xml in the first place?
+     well, whatever. i admit this can be improved, but only through new i18n's
+     so thats not going to happen until i get permission for 3.2.1...
+
+somehow multi selected deletes are broken again:
+   no longer crashes, but doesn't select current well
+   TODO note added to program, quite a difficult problem...
+a selected folder only takes one click to get a rename???
+tbcache: don't create a tbcache file when its gonna be empty in any case!!!
+historymgr: get dirtyness working for the kbookmarkmap
+proper readonly support - rmb should work but things should be disabled?  no addbookmark, etc.
+general xbel bug: http://bugzilla.gnome.org/show_bug.cgi?id=69702
+
+possible qt bug:
+   multi selection deletion then shift down selects roots
+   valgrind doesn't show anything either
+   logging all the setSelected calls i can see doesn't help
+
+STUFF FROM BEINERI:
+
+   And the "Cancel" entries in the "Bookmark" menus looks strange too. How about
+   a KMail-like progress bar (in a status bar?) with an "X" button to stop them?
+   And "Advanced Add Bookmark" doesn't work for "Add Bookmark" in context menu?
+
+---
+
+   Btw, I think when you have no tab and call "Bookmarks Tabs as Folder..."
+   it should not only create a folder but bookmark the current page within
+   the folder unconditional if it's a tab or not. :-)
+
+CHECKS
+------
+
+valgrind report:
+
+on startup:
+   ==31246== Conditional jump or move depends on uninitialised value(s)
+   ==31246==    at 0x4026A4DF: KEBListViewItem::paintCell(QPainter*, QColorGroup const&, int, int, int) (listview.cpp:786)
+   ==31246==    by 0x40FD9CA7: QListView::drawContentsOffset(QPainter*, int, int, int, int, int, int) (qlistview.cpp:2905)
+   ==31246==    by 0x41013A5D: QScrollView::viewportPaintEvent(QPaintEvent*) (qscrollview.cpp:1702)
+   ==31246==    by 0x407E7051: KListView::viewportPaintEvent(QPaintEvent*) (klistview.cpp:1872)
+   ==31246==
+   ==31246== Conditional jump or move depends on uninitialised value(s)
+   ==31246==    at 0x4026A4E4: KEBListViewItem::paintCell(QPainter*, QColorGroup const&, int, int, int) (listview.cpp:786)
+   ==31246==    by 0x40FD9CA7: QListView::drawContentsOffset(QPainter*, int, int, int, int, int, int) (qlistview.cpp:2905)
+   ==31246==    by 0x41013A5D: QScrollView::viewportPaintEvent(QPaintEvent*) (qscrollview.cpp:1702)
+   ==31246==    by 0x407E7051: KListView::viewportPaintEvent(QPaintEvent*) (klistview.cpp:1872)
+   ==31246==
+   ==31246== Conditional jump or move depends on uninitialised value(s)
+   ==31246==    at 0x4026A4E8: KEBListViewItem::paintCell(QPainter*, QColorGroup const&, int, int, int) (listview.cpp:786)
+   ==31246==    by 0x40FD9CA7: QListView::drawContentsOffset(QPainter*, int, int, int, int, int, int) (qlistview.cpp:2905)
+   ==31246==    by 0x41013A5D: QScrollView::viewportPaintEvent(QPaintEvent*) (qscrollview.cpp:1702)
+   ==31246==    by 0x407E7051: KListView::viewportPaintEvent(QPaintEvent*) (klistview.cpp:1872)
+   ==31246==
+
+lots of crap when using file->open
+
+with memcheck
+   ==20415== 420 bytes in 14 blocks are definitely lost in loss record 107 of 146
+   ==20415==    at 0x40029B01: __builtin_new (in /usr/lib/valgrind/vgskin_memcheck.so)
+   ==20415==    by 0x40029B6C: operator new(unsigned) (in /usr/lib/valgrind/vgskin_memcheck.so)
+   ==20415==    by 0x402669AA: KEBListView::itemList() (listview.cpp:682)
+   ==20415==    by 0x402634EA: ListView::selectedItems() const (qptrlist.h:157)
+
+   
+DONE TESTING:
+------------
+
+   favicon and status check updates:
+      removal of items while checks are happening
+      program exit with checks and updates are still going on
+   random deletion of all items - TODO
+
+THINGS FOR 3.3+
+------------------
+
+tools:
+   recursive 404 finder
+   duplicate finder
+
+basic gui:
+   split view stuff - including filtered views
+   need to get keyboard shortcut changes working somehow (wheels)
+   have to get dynamic filtering (e.g sorting, pruning),
+
+main bookmark config:
+   make the keditbookmarks prefs persistant
+   and make a simple include selector using
+   for example kautoconfig, including a 
+   simple dynamic menu config gui
+
+bookmarklets: add some examples!
+
+tips dialog - fixes bugs - shortcuts for keyboard selection are wierd

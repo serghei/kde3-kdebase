@@ -1,0 +1,1354 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+"dtd/kdex.dtd" [
+  <!ENTITY kappname "&ksplash;">
+  <!ENTITY package "kdebase">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE">
+]>
+
+<book lang="&language;">
+
+<bookinfo>
+<title>The &ksplash; Handbook</title>
+
+<authorgroup>
+<author>
+&Teemu.Rytilahti; &Teemu.Rytilahti.mail;
+</author>
+
+<othercredit role="developer">
+&Brian.C.Ledbetter; &Brian.C.Ledbetter.mail;
+</othercredit>
+
+<othercredit role="developer">
+&Ravikiran.Rajagopal; &Ravikiran.Rajagopal.mail;
+</othercredit>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+</authorgroup>
+
+<copyright>
+<year>2003</year>
+<holder>Teemu Rytilahti</holder>
+</copyright>
+<copyright>
+<year>2003-04</year>
+<holder>Ravikiran Rajagopal</holder>
+</copyright>
+<legalnotice>&FDLNotice;</legalnotice>
+
+<date>2003-01-10</date>
+<releaseinfo>1.01.00</releaseinfo>
+
+<abstract>
+<para>
+&ksplash; is a nice splash screen that shows the progress of an
+application that is loading.</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdebase</keyword>
+<keyword>ksplash</keyword>
+<keyword>ksplashml</keyword>
+<keyword>splashscreen</keyword>
+<keyword>eye candy</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>&ksplash; is a nice splash screen that shows the progress of an
+application that is loading. Please report any problems or feature
+requests to the &kde; mailing lists. The principal features of
+&ksplash;:
+</para>
+<simplelist>
+<member>Themeable</member>
+<member>Uses plugins for complete customizability</member>
+<member>Can be used by any application that uses DCOP</member>
+</simplelist>
+
+<para>
+This handbook will show you how to create themes for use with plugins
+that are already available. If none of the plugins available satisfy
+your tastes, you can learn how to customize the appearance of
+&ksplash; completely by writing a plugin in C++.
+</para>
+</chapter>
+
+<chapter id="using-themes">
+<title>Using themes</title>
+
+<para>To use themes from <ulink
+url="http://www.kde-look.org">KDE-Look</ulink>, extract them to
+<filename>~/.kde/share/apps/ksplash/Themes/</filename> for a single user, or
+to
+<filename>$<envar>KDEDIR</envar>/share/apps/ksplash/Themes/</filename>
+to make them available to all users of your system.</para>
+
+<para>You can also use the <guilabel>Splash Screen</guilabel> module under
+<guilabel>Appearance</guilabel> in the &kde; control center to do this
+automatically.</para>
+
+<sect1 id="using-kcontrol-module">
+<title>Using the &kcontrol; Module</title>
+
+<para>This module allows you to install, test and remove &ksplash;
+themes.</para>
+
+<para>Down the side of the module is a list of currently available
+&ksplash; themes.  As you select one, a preview will display in the main
+part of the window.  When you have selected the one you wish to use, press
+<guibutton>OK</guibutton> or <guibutton>Apply</guibutton>.  Press
+<guibutton>Cancel</guibutton> to exit the module without making changes, and
+<guibutton>Defaults</guibutton> to restore the system default splash
+screen.</para>
+
+<para>To install new modules, press <guibutton>Add...</guibutton>, and
+find the theme on your computer.  You do not have to unpack theme files, you
+can safely select the compressed theme file.  Installing a theme does not
+make it the theme in use until you select it in the list and press either
+<guibutton>OK</guibutton> or <guibutton>Apply</guibutton>.</para>
+
+<para>Although you can see a preview of the splash screen, you may like to
+see how it looks in real use, for instance to see what the animation looks
+like.  You can test themes by selecting them in the list and clicking the
+<guibutton>Test</guibutton> button.</para>
+
+<para>You can also remove themes you no longer wish to use, by selecting
+them and pressing the <guibutton>Remove</guibutton> button.  Note that your
+user account may not have the right to remove themes installed system-wide.
+It is also recommended you do not uninstall the <guilabel>Default</guilabel>
+splash screen.</para>
+
+</sect1>
+
+</chapter>
+
+<chapter id="themes">
+<title>How to make themes for &ksplash;</title>
+<sect1 id="themes-general">
+<title>General</title>
+<para>Making your own themes for &ksplash; is easy. After you have
+finished your themes you can post them on the <ulink
+url="http://www.kde-look.org">KDE-Look</ulink> so that others can use
+it.</para>
+
+<sect2 id="theme-syntax">
+<title>Identifying your theme</title>
+
+<para>Let us create a theme called <literal>MyCoolTheme</literal>. For
+the theme to be recognized by &ksplash;, it should be stored in a
+folder called <filename class="directory">MyCoolTheme</filename>
+under <filename
+class="directory">~/.kde/apps/ksplash/Themes/</filename>. It should
+have a file called <filename>Theme.rc</filename>, containing the
+settings of the theme. You can specify large numbers of special things
+to theme, change the plugin engine to use, and so on. You do not have
+to use all the settings available; usually, the settings have an
+acceptable default value. The basic syntax for entries in the
+<filename>Theme.rc</filename> file is <literal>[option] =
+[value]</literal> You can find the definitions of the various options
+in the following sections.</para>
+
+<example>
+<title>Simple <filename>Theme.rc</filename> file</title>
+<programlisting>
+[KSplash Theme: MyCoolTheme]
+Name = MyCoolTheme
+Description = A nice theme using XpLike engine
+Version = 1.0
+Author = Real Name &lt;realmail@mail.com&gt;
+## Use the XpLike engine for this theme.
+Engine = XpLike
+Show Icon = false
+Welcome Text = Loading KDE
+</programlisting>
+</example>
+
+<para>After specifying the name, the description and the author of the
+theme, you should first choose a theme engine (also known as a
+plugin). Then, you can customize various features of the theme engine
+by assigning key-value pairs as in the example file above.</para>
+
+<important>
+<para>Ensure that the name of the directory that contains the theme files
+(<filename class="directory">~/.kde/apps/ksplash/Themes/MyCoolTheme</filename>
+in this example) and the identifier (<literal>[KSplash Theme:
+MyCoolTheme]</literal> in this example) of the theme in the
+<filename>Theme.rc</filename> file are identical. Otherwise, &ksplash; will not
+recognize the theme.</para>
+</important>
+
+</sect2>
+
+<sect2 id="theme-files">
+<title>Background files</title>
+
+<para>When &ksplash; starts, it tries to find a background image for
+your current screen resolution, if the theme engine uses one. The
+background image file should be named in the following format:
+<filename>Background-<replaceable>WWWxHHH</replaceable>.png</filename>.</para>
+
+<para>For example, you might use a file called
+<filename>Background-1024x768</filename>. If the background image for
+your screen resolution cannot be found, it tries to resize the
+original <filename>Background.png</filename> or the file specified in
+<filename>Theme.rc</filename> to suit the current resolution. Resizing
+on-the-fly will certainly take some time, so you should provide
+background images for at least the following sizes: 1280x1024, 1024x768
+and 800x600.</para>
+</sect2>
+</sect1>
+
+<sect1 id="theme-engines">
+<title>Options for Theme Engines</title>
+
+<sect2 id="default-themes">
+<title>Default Theme</title>
+<table>
+<title>Default Theme Options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<!-- Statusbar -->
+<row>
+<entry>Always Show Progress</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether loading progress should be shown. Default is
+true.</entry>
+</row>
+<row>
+<entry>Label Foreground</entry>
+<entry>[color]</entry>
+<entry>Determines what color to use for the statusbar text. Default is #FFFFFF (white).</entry>
+</row>
+<!-- Misc. things -->
+<row>
+<entry>Icons Flashing</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should <quote>flash</quote>. Default is true.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2 id="standard-themes">
+<title>Standard Theme</title>
+<table>
+<title>Standard Theme Options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<!-- Statusbar -->
+<row>
+<entry>Statusbar Position</entry>
+<entry>[top/bottom]</entry>
+<entry>Toggles the position of the statusbar on the screen. Default is
+bottom.</entry>
+</row>
+<row>
+<entry>Statusbar Visible</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether the statusbar should be shown. Default is true.</entry>
+</row>
+<row>
+<entry>Progress Visible</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether loading progress should be shown. Default is
+true.</entry>
+</row>
+<!-- Fonts -->
+<row>
+<entry>Statusbar Font</entry>
+<entry>[fontname]</entry>
+<entry>The font used in statusbar. Default is Helvetica.</entry>
+</row>
+<row>
+<entry>Statusbar Font Size</entry>
+<entry>[size]</entry>
+<entry>The font size for the statusbar. Default is 16.</entry>
+</row>
+<row>
+<entry>Statusbar Font Bold</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether the statusbar font should be bold. Default is
+true.</entry>
+</row>
+<row>
+<entry>Statusbar Font Italic</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether the statusbar font should be italic. Default is
+false.</entry>
+</row>
+<!-- Misc. things -->
+<row>
+<entry>Statusbar Foreground</entry>
+<entry>[color]</entry>
+<entry>The foreground color of statusbar. Default is white.</entry>
+</row>
+<row>
+<entry>Statusbar Background</entry>
+<entry>[color]</entry>
+<entry>The background color of statusbar. Default is black.</entry>
+</row>
+<row>
+<entry>Statusbar Icon</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether the statusbar should have an icon.</entry>
+</row>
+<row>
+<entry>Icons Visible</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should be visible. Default is true.</entry>
+</row>
+<row>
+<entry>Icons Jumping</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should be jumping. Default is true.</entry>
+</row>
+<row>
+<entry>Icon Position</entry>
+<entry>[0-3,10-13]</entry>
+<entry>Position where the icons are shown. Default is bottom-left.</entry>
+</row>
+<row>
+<entry>Splash Screen</entry>
+<entry>[name]</entry>
+<entry>Changes the splash screen image that is shown.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2 id="redmond-themes">
+<title>Redmond theme</title>
+<table>
+<title>Redmond theme options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<!-- Main elements -->
+<row>
+<entry>Background Image</entry>
+<entry>[filename]</entry>
+<entry>User defined background image to use.</entry>
+</row>
+<row>
+<entry>User Icon</entry>
+<entry>[Iconname]</entry>
+<entry>Name of standard icon to show for user. Default is
+<constant>go</constant>.</entry>
+</row>
+<row>
+<entry>Welcome Text</entry>
+<entry>[text]</entry>
+<entry>Text shown in splash screen. Default is "Welcome".</entry>
+</row>
+<row>
+<entry>Username Text</entry>
+<entry>[text]</entry>
+<entry>Text shown instead of user's real name.</entry>
+</row>
+<!-- Positioning elements -->
+<row>
+<entry>Welcome Text Position</entry>
+<entry>[x,y]</entry>
+<entry>Position on the screen where the Welcome Text is shown.</entry>
+</row>
+<row>
+<entry>Username Text Position</entry>
+<entry>[x,y]</entry>
+<entry>Position on the screen where the username is shown.</entry>
+</row>
+<row>
+<entry>Action Text Position</entry>
+<entry>[x,y]</entry>
+<entry>Position on the screen where the current action is shown.</entry>
+</row>
+<row>
+<entry>Icon Position</entry>
+<entry>[x,y]</entry>
+<entry>Position on the screen where the user icon is shown.</entry>
+</row>
+<!-- Show to show.. -->
+<row>
+<entry>Show Welcome Text</entry>
+<entry>[true/false]</entry>
+<entry>Toggles showing of welcome text. Default is true.</entry>
+</row>
+<row>
+<entry>Show Welcome Shadow</entry>
+<entry>[true/false]</entry>
+<entry>Toggles showing of welcome text's shadow. Default is true.</entry>
+</row>
+<row>
+<entry>Show Username</entry>
+<entry>[true/false]</entry>
+<entry>Toggles showing of username. Default is true.</entry>
+</row>
+<row>
+<entry>Show Action</entry>
+<entry>[true/false]</entry>
+<entry>Toggles showing of action currently being performed. Default is
+true.</entry>
+</row>
+<row>
+<entry>Show Icon</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icon should be shown. Default is true</entry>
+</row>
+<row>
+<entry>Use KDM User Icon</entry>
+<entry>[true/false]</entry>
+<entry>Show user's login icon. Default is true.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2 id="macx-themes">
+<title>MacX Theme</title>
+<table>
+<title>MacX Theme Options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<row>
+<entry>Icon Size Minimum</entry>
+<entry>[size]</entry>
+<entry>Assign the minimum size for icons. Default is 16.</entry>
+</row>
+<row>
+<entry>Icon Size Maximum</entry>
+<entry>[size]</entry>
+<entry>Assign the maximum size for icons. Default is 64.</entry>
+</row>
+<row>
+<entry>Optimized Icon Rendering</entry>
+<entry>[true/false]</entry>
+<entry>Optimize icon rendering. Default is true.</entry>
+</row>
+<row>
+<entry>Progress Bar Visible</entry>
+<entry>[true/false]</entry>
+<entry>Default is true.</entry>
+</row>
+<row>
+<entry>Progress Bar Position</entry>
+<entry>[top/bottom]</entry>
+<entry>Toggles whether statusbar should be in bottom or top. Default is
+bottom.</entry>
+</row>
+<row>
+<entry>Icons Jumping</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should be jumping. Default is false.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2 id="mac-classic-themes">
+<title>MacClassic Theme</title>
+<table>
+<title>MacClassic Theme Options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<row>
+<entry>Icon Position</entry>
+<entry>[0-3,10-13]</entry>
+<entry>Position of the icons on the screen. Default is bottom left.</entry>
+</row>
+<row>
+<entry>Icons Jumping</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should be jumping. Default is false.</entry>
+</row>
+<row>
+<entry>Icons Visible</entry>
+<entry>[true/false]</entry>
+<entry>Indicates whether icons should be visible. Default is true.</entry>
+</row>
+<row>
+<entry>Splash Screen</entry>
+<entry>[name]</entry>
+<entry>Changes the splash screen image that is shown.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+
+<sect2 id="themes-2k">
+<title>2k theme</title>
+<table>
+<title>2k theme options</title>
+<tgroup cols="3">
+<tbody>
+<row>
+<entry>Name</entry>
+<entry>Argument</entry>
+<entry>Explanation</entry>
+</row>
+<row>
+<entry>Title Background Color</entry>
+<entry>[color]</entry>
+<entry>The background color of title. Default is dark blue.</entry>
+</row>
+<row>
+<entry>Title Foreground Color</entry>
+<entry>[color]</entry>
+<entry>The foreground color of title. Default is white.</entry>
+</row>
+<row>
+<entry>Status Text Color</entry>
+<entry>[color]</entry>
+<entry>The color of status texts. Default is the same as Title Background
+Color.</entry>
+</row>
+<row>
+<entry>Rotator Color 1</entry>
+<entry>[color]</entry>
+<entry>Defines the color of rotator 1. Default is dark blue.</entry>
+</row>
+<row>
+<entry>Rotator Color 2</entry>
+<entry>[color]</entry>
+<entry>Defines the color of rotator 2. Default is cyan.</entry>
+</row>
+<row>
+<entry>Rotator Speed</entry>
+<entry>[value]</entry>
+<entry>Defines the speed of the rotator. Default is 30.</entry>
+</row>
+<row>
+<entry>Window Title</entry>
+<entry>[text]</entry>
+<entry>Specifies the title text of the window.</entry>
+</row>
+<row>
+<entry>Logo File</entry>
+<entry>[filename]</entry>
+<entry>Defines the logo used.</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</sect2>
+</sect1>
+</chapter>
+
+<chapter id="from-other-applications">
+<title>Using &ksplash; From Within Your Own Application</title>
+
+<para> In this chapter, we describe a simple method for using
+&ksplash; as the splash screen for your &kde; application. If you do
+not develop applications for &kde;, you can skip this chapter.</para>
+
+<sect1 id="basic-other-reqs">
+<title>Basic Requirements</title>
+
+<para> Your &kde; application must be &DCOP;-aware. &DCOP; is the &kde;
+technology used to communicate between applications. If you use the
+standard <ulink url="http://developer.kde.org">&kde; application
+framework</ulink>, this is taken care of automatically. For
+information about &DCOP; and related &kde; technologies, please visit
+the <ulink url="http://developer.kde.org">&kde; developers'
+corner</ulink>.</para>
+</sect1>
+
+<sect1 id="other-using">
+<title>Starting &ksplash;</title>
+
+<para>Before your application starts its computation intensive work,
+or before it starts loading plugins, &etc;, invoke &ksplash; as
+follows:</para>
+
+<programlisting>
+DCOPClient *c = kapp-&gt;dcopClient();
+QString error;
+QCString KSplashName;
+int pid = 0;
+QStringList args;
+args &lt;&lt; "--theme=MyCoolTheme" &lt;&lt; "--managed";
+if (kapp-&gt;startServiceByDesktopName("ksplash", args, &amp;error,
+&amp;KSplashName, &amp;pid))
+{
+  KMessageBox::sorry(0, error, "Unable to invoke KSplash");
+  // Some error processing here.
+}
+</programlisting>
+
+<para>We will assume that there is only one instance of &ksplash;
+running. Other cases are slightly more complex. Please see the &DCOP;
+documentation for further details.</para>
+</sect1>
+
+<sect1 id="show-messages">
+<title>Showing messages</title>
+
+<para>Before you show any messages, you need to set up the number of
+steps you will show. For example, the &kde; startup procedure uses 7
+steps.</para>
+
+<programlisting>
+    QByteArray data;
+    QDataStream arg(data,IO_WriteOnly);
+    arg &lt;&lt; someNumber;
+    if (!(c-&gt;send(KSplashName, "KSplashIface", "setStartupItemCount(int)",
+data))
+      // Some error processing here.
+</programlisting>
+
+<para>Whenever you want to display a message with or without an icon, use</para>
+
+<programlisting>
+    arg &lt;&lt; QString("iconName") &lt;&lt; QString("programName") &lt;&lt;
+QString("Some description");
+    if (!(c-&gt;send(KSplashName, "KSplashIface",
+"programStarted(QString,QString,QString)", data))
+    {
+      // Some error processing here.
+    }
+</programlisting>
+
+<para> Each time you call <constant>programStarted</constant>, the
+steps completed is incremented. When your program has finished its
+startup, do the following to make the splash screen go away:</para>
+
+<programlisting>
+    if (!(c-&gt;send(KSplashName, "KSplashIface", "startupComplete()", data))
+    {
+      // Some error processing here.
+    }
+</programlisting>
+
+<para>That's it! You don't need anything more to take advantage of all
+that &ksplash; has to offer you.</para>
+
+</sect1>
+</chapter>
+
+<!-- FIXME: Better to leave this out until it's written, or the translators -->
+<!-- will have to still translate it ... -->
+
+<chapter id="wrplugins">
+<title>Writing new &ksplash; plugins</title>
+
+<para>Writing new &ksplash; plugins is not difficult. In this chapter, we will
+write
+a simple plugin that will emulate the splash screen of a well known operating
+system. This
+tutorial assumes that you know the basics of C++, and a little bit of KDE/Qt
+programming.</para>
+
+<sect1 id="basic-requirements">
+<title>Basic Requirements</title>
+<para>
+We will create a plugin called <literal>2k</literal>. The plugin name is used in
+various
+places, and is important that you consistently use it so that the plugin is
+recognized by
+&ksplash;. &ksplash; plugins are actually dynamically loadable libraries with
+the following
+naming convention:
+</para>
+<simplelist>
+<member>The library should be named as
+<filename>ksplash+lowercasethemename</filename>. For our
+theme, it will be <filename>ksplash2k</filename>.</member>
+<member>It should have a corresponding desktop file which is named as
+<filename>ksplash+lowercasethemename.desktop</filename>. For our theme, it will
+be
+<filename>ksplash2k.desktop</filename>. </member>
+<member>Finally, the object that is returned by the library should be a class
+which is named
+<literal>Theme+themename</literal>. For our example, it will be
+<literal>Theme2k</literal>.</member>
+</simplelist>
+<para>Do not worry about it if you don't understand all of the above. We will
+consider each
+of those points in detail later. The other very important detail is that the
+plugin class
+should be derived from <literal>ThemeEngine</literal>.
+</para>
+</sect1>
+<sect1 id="skeleton">
+<title>Building the skeleton framework</title>
+<para>We will use the &kde; application framework which will take care of
+building the plugin
+and will provide us with platform independence without any work on our part. To
+do that,
+make sure you have the <filename>kdesdk</filename> package installed. Run the
+command
+<literal>kapptemplate</literal> to produce an application named "2k". It will
+create a
+toplevel folder which contains generic files such as AUTHORS, &etc;. We are most
+interested
+in the subfolder called <filename class="directory">2k</filename>. Go into that
+subfolder
+and delete all the files there. Now we have the skeleton we require.
+</para>
+<para>
+The next step is to create a <filename>.desktop</filename> file which, when
+installed, will
+tell &ksplash; that our plugin is available. Consistent with the naming
+conventions laid out
+in <link linkend="basic-requirements">the preceding section</link>,
+create a file called
+<filename>ksplash2k.desktop</filename> in that folder. It should contain the
+following lines:
+</para>
+<programlisting>
+<literal>
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Comment=KSplash Plugin
+Name=KSplash2k
+ServiceTypes=KSplash/Plugin
+X-KDE-Library=ksplash2k
+X-KSplash-Default=true
+X-KSplash-PluginName=2k
+X-KSplash-ObjectName=Theme2k
+</literal>
+</programlisting>
+<para>
+The <literal>Encoding</literal>, <literal>Type</literal>,
+<literal>Comment</literal> and
+<literal>ServiceTypes</literal> are the same for all plugins. The plugin name
+and the library
+name follow the conventions noted earlier. The entry
+<literal>X-KSplash-Default</literal> takes
+a boolean value which determines whether it is shown in the control panel
+configuration
+module by default. Except for some very rare cases, it should be
+<constant>true</constant>.
+</para>
+</sect1>
+<sect1 id="headerfile">
+<title>Declaration of plugin class</title>
+<para>Now that we have the preliminary work done, let us get into the actual fun
+part - creating
+a class that will provide the behavior we want. While we are free to make this
+class do
+almost anything we want it to do, there are a few restrictions.</para>
+<orderedlist>
+<listitem><para>Plugin classes must inherit the <constant>ThemeEngine</constant>
+class.</para></listitem>
+<listitem><para>Plugin classes must be named according to the rule:
+<classname>Theme+PluginName</classname>.</para></listitem>
+<listitem><para>Plugin classes should provide a <literal>static</literal>
+function called <function>names</function>
+that returns a list of names by which it can be invoked.</para></listitem>
+<listitem><para>If the plugin can be configured in the control center module, it
+should provide a
+<literal>ThemeEngineConfig</literal>-based class for the
+configuration.</para></listitem>
+<listitem><para>Plugin classes must override at least one of the virtual
+functions <function>slotSetText</function>,
+<function>slotSetPixmap</function>, <function>slotUpdateProgress</function> and
+<function>slotUpdateSteps</function> to make it usable.</para></listitem>
+<listitem><para>The constructor should take the form
+<literal>ThemeEngine( QWidget *parent, const char *name, const QStringList
+&amp;args )</literal>
+so that it can be used with
+<classname>KGenericFactory</classname>.</para></listitem>
+</orderedlist>
+<para>The last requirement may seem complicated, but, as we will see later,  by
+adding a single
+line to your source files, you can usually ignore it.</para>
+</sect1>
+<sect1 id="headercode">
+<title>Code for the header file</title>
+<para>Given the constaints, we will now see what the header file
+<filename>theme2k.h</filename> looks
+like this:</para>
+<example>
+<title>Listing for <filename>theme2k.h</filename></title>
+<programlisting>
+#ifndef __THEME2K_H__
+#define __THEME2K_H__
+
+#include &lt;qlabel.h&gt;
+#include &lt;qwidget.h&gt;
+
+#include &lt;kdialogbase.h&gt;
+#include &lt;kpixmap.h&gt;
+#include &lt;ksplash/themeengine.h&gt;
+
+class RotWidget;
+
+class Cfg2k: public ThemeEngineConfig
+{
+  Q_OBJECT
+public:
+  Cfg2k( KConfig * );
+};
+
+class ObjKsTheme;
+class Theme2k: public ThemeEngine
+{
+  Q_OBJECT
+public:
+  Theme2k( QWidget *, const char *, const QStringList&amp; );
+
+  inline const QString name()
+  {
+    return( QString("KSplash2k") );
+  }
+  inline const KDialogBase *config( KConfig *kc )
+  {
+    return new Cfg2k( kc );
+  }
+  static QStringList names()
+  {
+    QStringList Names;
+    Names &lt;&lt; "KSplash2k";
+    Names &lt;&lt; "ks2k";
+    Names &lt;&lt; "2k";
+    Names &lt;&lt; "2000";
+    return( Names );
+  };
+
+public slots:
+  inline void slotSetText( const QString&amp; s )
+  {
+    if( mText &amp;&amp; mText-&gt;text() != s ) mText-&gt;setText( s );
+  };
+
+private:
+  void initUi();
+  void readSettings();
+
+  QLabel *mText;
+  RotWidget *mRotator;
+  QColor mTBgColor, mTFgColor, mRotColor1, mRotColor2, mStatusColor;
+  int mRotSpeed;
+  QString mWndTitle, mLogoFile;
+};
+
+#endif
+</programlisting>
+</example>
+<para>Let us analyze the listing above. The <classname>Theme2k</classname> class
+satisfies
+the naming conventions, and is inherited from
+<classname>ThemeEngine</classname>. It provides
+a <methodname>Theme2k::names()</methodname>, and has a constructor that takes
+the required
+parameters: <function>Theme2k( QWidget *, const char *, const QStringList&amp;
+);</function>
+and also provides a simple <methodname>Theme2k::slotSetText()</methodname>
+method. For the moment,
+do not worry about the <classname>RotWidget</classname> class. It is a small
+widget that provides
+some eye candy for the user. Our plugin is very simple and does not display any
+icons or show
+a progressbar. If you would like to display icons, override the
+<function>slotSetPixmap</function>
+function. Similar functions exist for setting the progressbar range
+(<function>slotUpdateSteps</function>)
+and incrementing(<function>slotUpdateProgress</function>) the current step.
+</para>
+</sect1>
+<sect1 id="Implementation">
+<title>Implementation of the plugin</title>
+<para>We will examine only the relevant parts of the implementation. For a
+listing of the whole
+implementation, please see the appendix. The first thing we will do is to get
+the library
+requirement out of the way:</para>
+<example>
+<title>Library requirement</title>
+<programlisting>
+K_EXPORT_COMPONENT_FACTORY( ksplash2k, KGenericFactory&lt;Theme2k&gt; );
+</programlisting>
+</example>
+<para> The macro <constant>K_EXPORT_COMPONENT_FACTORY</constant> is declared in
+<filename>kgenericfactory.h</filename>. Onwards to the constructor!
+Since this is a very simple plugin, the constructor is pretty
+straightforward.</para>
+<example>
+<title>Plugin constructor</title>
+<programlisting>
+Theme2k::Theme2k( QWidget *parent, const char *name, const QStringList &amp;args
+ )
+    :ThemeEngine( parent, name, args )
+{
+  readSettings();
+  initUi();
+}
+</programlisting>
+</example>
+<para>The method <function>readSettings()</function> illustrates the
+proper way to obtain your theme settings. (You do want people to use your
+plugins
+in their themes, don't you?)</para>
+<example>
+<title>Obtaining theme settings</title>
+<programlisting>
+void Theme2k::readSettings()
+{
+  if( !mTheme )
+    return;
+
+  KConfig *cfg = mTheme-&gt;themeConfig();
+  if( !cfg )
+    return;
+
+  cfg-&gt;setGroup( QString("KSplash Theme: %1").arg(mTheme-&gt;theme()) );
+
+  QColor DefaultTBgColor( Qt::darkBlue );
+  QColor DefaultTFgColor( Qt::white );
+
+  mTBgColor = cfg-&gt;readColorEntry( "Title Background Color",
+&amp;DefaultTBgColor );
+  mTFgColor = cfg-&gt;readColorEntry( "Title Foreground Color",
+&amp;DefaultTFgColor );
+  mStatusColor = cfg-&gt;readColorEntry("Status Text Color", &amp;mTBgColor );
+
+  QColor DefaultRot1( Qt::darkBlue );
+  QColor DefaultRot2( Qt::cyan );
+  mRotColor1 = cfg-&gt;readColorEntry( "Rotator Color 1", &amp;DefaultRot1 );
+  mRotColor2 = cfg-&gt;readColorEntry( "Rotator Color 2", &amp;DefaultRot2 );
+
+  mRotSpeed = cfg-&gt;readNumEntry( "Rotator Speed", 30 );
+  mWndTitle = cfg-&gt;readEntry( "Window Title", i18n("Please wait...") );
+  mLogoFile = cfg-&gt;readEntry( "Logo File", QString::null );
+}
+</programlisting>
+</example>
+<para>Since we like our users, we provide sensible defaults for parameters that
+are not
+present in the theme file. Note that we should always set our group to "KSplash
+Theme: themename"
+to remain compatible with future theme specifications. The
+<function>initUI()</function> method is
+not very interesting, as it merely builds up the widgets. Please see the
+appendix for details.
+</para>
+</sect1>
+<sect1 id="compilingfile">
+<title>Compiling the plugin</title>
+<para>Since we decided to use the &kde; framework for compiling the plugin, we
+need to create a
+<filename>Makefile.am</filename>. It should look like this:</para>
+<example>
+<title>Listing of <filename>Makefile.am</filename></title>
+<programlisting>
+INCLUDES = $(all_includes)
+
+kde_module_LTLIBRARIES = ksplash2k.la
+
+ksplash2k_la_SOURCES = theme2k.cpp rotwidget.cpp
+ksplash2k_la_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+ksplash2k_la_LIBADD = $(LIB_KDEUI) -lksplashthemes
+
+METASOURCES = AUTO
+
+noinst_HEADERS	= theme2k.h rotwidget.h
+
+servicesdir = $(kde_servicesdir)
+services_DATA = ksplash2k.desktop
+
+themedir = $(kde_datadir)/ksplash/Themes/2k
+theme_DATA = Theme.rc Preview.png
+</programlisting>
+</example>
+<para>For more information on writing <filename>Makefile.am</filename> files for
+&kde;, please see
+the &kde; developers' <ulink
+url="http://developer.kde.org/documentation/other/makefile_am_howto.html">
+website</ulink>.
+The only thing of note is that we provide a default theme based on this plugin,
+and provide
+a preview image for it. As a matter of courtesy to your users, you should
+provide an example
+<filename>Theme.rc</filename> file illustrating the use of the various
+options.</para>
+</sect1>
+</chapter>
+
+<chapter id="faq">
+<title>Questions and Answers</title>
+
+&reporting.bugs;
+&updating.documentation;
+
+<qandaset id="faqlist">
+<qandaentry>
+<question>
+<para>I can't find any themes that work in &ksplash;. Why is that?</para>
+</question>
+<answer>
+<para>You probably don't have the correct plugins for the theme. The
+plugins are in the <literal>kde-artwork</literal> package. Download
+and install it, and try then again.</para>
+</answer>
+</qandaentry>
+<qandaentry>
+<question>
+<para>What is file <filename>Theme.rc</filename> and how do I make one?</para>
+</question>
+<answer>
+<para>
+<filename>Theme.rc</filename> is the file where you can specify a
+theme's settings. For more information, take a look at <link
+linkend="themes">How to make themes for &ksplash;</link>.
+</para>
+</answer>
+</qandaentry>
+</qandaset>
+</chapter>
+
+<chapter id="credits">
+<title>Credits and License</title>
+
+<para>&ksplash;</para>
+
+<para>Program Copyright &copy; 2003 &Ravikiran.Rajagopal;
+&Ravikiran.Rajagopal.mail;</para>
+
+<itemizedlist>
+<title>Contributors</title>
+<listitem><para>&Brian.C.Ledbetter; &Brian.C.Ledbetter.mail;</para>
+</listitem>
+</itemizedlist>
+
+<para>Documentation Copyright &copy; 2003 &Teemu.Rytilahti;
+&Teemu.Rytilahti.mail;</para>
+
+&underFDL;               <!-- FDL: do not remove -->
+&underGPL;        	 <!-- GPL License -->
+
+</chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="requirements">
+<title>Requirements</title>
+
+<para>In order to successfully use &ksplash;, you need &kde; version 3.2 or
+higher. Some themes may require specific plugins. If a theme does not
+work, please contact the theme author to find out where to obtain the
+appropriate plugin.</para>
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and Installation</title>
+
+&install.compile.documentation;
+
+</sect1>
+</appendix>
+<appendix id="srccode">
+<title>Source code</title>
+<sect1 id="theme2kcpp">
+<title>Listing of <filename>theme2k.cpp</filename></title>
+<programlisting>
+#include &lt;qlabel.h&gt;
+#include &lt;qwidget.h&gt;
+
+#include &lt;kapplication.h&gt;
+#include &lt;kconfig.h&gt;
+#include &lt;kdebug.h&gt;
+#include &lt;kdialogbase.h&gt;
+#include &lt;kgenericfactory.h&gt;
+#include &lt;kglobalsettings.h&gt;
+#include &lt;klocale.h&gt;
+#include &lt;ksplash/objkstheme.h&gt;
+#include &lt;kstandarddirs.h&gt;
+
+#include "rotwidget.h"
+#include "theme2k.h"
+#include "theme2k.moc"
+
+K_EXPORT_COMPONENT_FACTORY( ksplash2k, KGenericFactory&lt;Theme2k&gt; );
+
+Cfg2k::Cfg2k( KConfig * )
+{}
+
+Theme2k::Theme2k( QWidget *parent, const char *name, const QStringList &amp;args
+ )
+    :ThemeEngine( parent, name, args )
+{
+  readSettings();
+  initUi();
+}
+
+void Theme2k::initUi()
+{
+  QVBox *vbox = new QVBox( this );
+  vbox-&gt;setFrameShape( QFrame::WinPanel );
+  vbox-&gt;setFrameShadow( QFrame::Raised );
+
+  QHBox *labelBox = new QHBox( vbox );
+  labelBox-&gt;setPalette( mTBgColor );
+  labelBox-&gt;setMargin( 1 );
+  QLabel *lbl = new QLabel( mWndTitle, labelBox );
+  lbl-&gt;setFont( QFont( "Arial", 12, QFont::Bold ) );
+  lbl-&gt;setPaletteForegroundColor( mTFgColor );
+
+  QLabel *logo = new QLabel( vbox );
+  logo-&gt;setPalette( Qt::white );
+
+  QString px( locate( "appdata", mTheme-&gt;themeDir() +
+(mLogoFile.isNull()?QString("/Logo.png"):mLogoFile) ) );
+  if (px.isNull())
+    px = locate("appdata","Themes/Default/splash_top.png");
+  if( !px.isNull() )
+  {
+    QPixmap pix( px );
+    logo-&gt;setPixmap( pix );
+  }
+  else
+  {
+    logo-&gt;setText( "&lt;B&gt;KDE&lt;/B&gt;2000" );
+    logo-&gt;setAlignment( AlignCenter|AlignVCenter );
+  }
+
+  mRotator = new RotWidget( vbox, mRotColor1, mRotColor2, mRotSpeed );
+
+  QHBox *hbox = new QHBox( vbox );
+  labelBox-&gt;setSpacing( 4 );
+  labelBox-&gt;setMargin( 4 );
+
+  mText = new QLabel( hbox );
+  mText-&gt;setPaletteForegroundColor( mStatusColor );
+  mText-&gt;setPaletteBackgroundColor( mTFgColor );
+  mText-&gt;setText( mWndTitle );
+  mText-&gt;setFixedHeight( 48 );
+
+  setFixedSize( vbox-&gt;sizeHint() );
+  QRect rect(KGlobalSettings::splashScreenDesktopGeometry());
+  move( rect.x() + (rect.width() - size().width())/2,
+        rect.y() + (rect.height() - size().height())/2 );
+}
+
+void Theme2k::readSettings()
+{
+  if( !mTheme )
+    return;
+
+  KConfig *cfg = mTheme-&gt;themeConfig();
+  if( !cfg )
+    return;
+
+  cfg-&gt;setGroup( QString("KSplash Theme: %1").arg(mTheme-&gt;theme()) );
+
+  QColor DefaultTBgColor( Qt::darkBlue );
+  QColor DefaultTFgColor( Qt::white );
+
+  mTBgColor = cfg-&gt;readColorEntry( "Title Background Color",
+&amp;DefaultTBgColor );
+  mTFgColor = cfg-&gt;readColorEntry( "Title Foreground Color",
+&amp;DefaultTFgColor );
+  mStatusColor = cfg-&gt;readColorEntry("Status Text Color", &amp;mTBgColor );
+
+  QColor DefaultRot1( Qt::darkBlue );
+  QColor DefaultRot2( Qt::cyan );
+  mRotColor1 = cfg-&gt;readColorEntry( "Rotator Color 1", &amp;DefaultRot1 );
+  mRotColor2 = cfg-&gt;readColorEntry( "Rotator Color 2", &amp;DefaultRot2 );
+
+  mRotSpeed = cfg-&gt;readNumEntry( "Rotator Speed", 30 );
+  mWndTitle = cfg-&gt;readEntry( "Window Title", i18n("Please wait...") );
+  mLogoFile = cfg-&gt;readEntry( "Logo File", QString::null );
+}
+</programlisting>
+</sect1>
+<sect1 id="rotwidgeth">
+<title>Listing of <filename>rotwidget.h</filename></title>
+<programlisting>
+#ifndef 	__ROTWIDGET_H__
+#define 	__ROTWIDGET_H__
+
+#include &lt;qlabel.h&gt;
+#include &lt;qtimer.h&gt;
+#include &lt;qwidget.h&gt;
+
+#include &lt;kdialogbase.h&gt;
+#include &lt;kpixmap.h&gt;
+
+/**
+ * @short Display a rotating-gradient widget.
+ */
+class 	RotWidget: public QWidget
+{
+  Q_OBJECT
+public:
+  RotWidget( QWidget *, const QColor&amp;, const QColor&amp;, int );
+  ~RotWidget();
+
+private slots:
+  void stepEvent();
+
+protected:
+  void	preparePixmap( int );
+  void	paintEvent( QPaintEvent * );
+  void	resizeEvent( QResizeEvent * );
+
+  QColor m_color1, m_color2;
+  int m_step, m_speed;
+  QTimer *m_stepTimer;
+
+  QList&lt;KPixmap&gt; m_stepPixmap;
+};
+
+#endif
+</programlisting>
+</sect1>
+<sect1 id="rotwidgetcpp">
+<title>Listing of <filename>rotwidget.cpp</filename></title>
+<programlisting>
+#include &lt;kdebug.h&gt;
+#include &lt;kdialogbase.h&gt;
+#include &lt;kpixmapeffect.h&gt;
+
+#include &lt;qlabel.h&gt;
+#include &lt;qpainter.h&gt;
+#include &lt;qwidget.h&gt;
+
+#include "rotwidget.h"
+#include "rotwidget.moc"
+
+RotWidget::RotWidget( QWidget *parent, const QColor&amp; c1, const QColor&amp;
+c2, int sp )
+    :QWidget(parent), m_color1(c1), m_color2(c2), m_step(0), m_speed(sp)
+{
+  if( (m_speed &lt;= 0) || (m_speed &gt; 20) )
+    m_speed = 1;
+  setFixedHeight( 6 );
+
+  for( int i = 0; i &lt;= width(); i++ )
+    preparePixmap( i );
+
+  m_stepTimer = new QTimer( this );
+  connect(m_stepTimer, SIGNAL(timeout()), this, SLOT(stepEvent()));
+  m_stepTimer-&gt;start( 50 );
+}
+
+RotWidget::~RotWidget()
+{
+}
+
+void RotWidget::stepEvent()
+{
+  // This is inefficient as we create too many pixmaps, optimize later.
+  m_step += m_speed;
+  if( m_step &gt; width() )
+    m_step = 0;
+  repaint( true );
+}
+
+// Todo: Optimize drawing.
+void RotWidget::paintEvent( QPaintEvent *pe )
+{
+  QPainter p;
+  p.begin( this );
+
+  QRect r = pe-&gt;rect();
+
+  if( m_stepPixmap.at( m_step ) )
+    bitBlt( this, r.x(), r.y(), m_stepPixmap.at( m_step ), r.x(), r.y(),
+r.width(), r.height() );
+  else
+    p.fillRect( rect(), Qt::black );
+  p.end();
+}
+
+void RotWidget::resizeEvent( QResizeEvent *re )
+{
+  m_stepPixmap.clear();
+  for( int i = 0; i &lt;= re-&gt;size().width(); i++ )
+    preparePixmap( i );
+}
+
+void RotWidget::preparePixmap( int step )
+{
+  if( step &lt; 0 )
+    return;
+
+  // Explicitly draw our first pixmap. The rest we will bitBlt() from here.
+  if( step == 0 )
+  {
+    KPixmap tmp; tmp.resize( size().width() / 2, size().height() );
+    KPixmap tmp2(tmp);
+    KPixmapEffect::gradient( tmp, m_color1, m_color2,
+KPixmapEffect::HorizontalGradient );
+    KPixmapEffect::gradient( tmp2, m_color2, m_color1,
+KPixmapEffect::HorizontalGradient );
+    KPixmap *px = new KPixmap( size() );
+    QPainter p;
+    p.begin( px );
+    p.drawPixmap( 0, 0, tmp );
+    p.drawPixmap( size().width()/2, 0, tmp2 );
+    p.end();
+    m_stepPixmap.append( px );
+  }
+  else if( m_stepPixmap.at( step-1 ) )
+  {
+    QPixmap *prev = m_stepPixmap.at( step-1 );
+    QPixmap next; next.resize( size() );
+    // convert
+    // prev = "[------------]"
+    // to
+    // next = "------------]["
+    bitBlt( &amp;next, 0, 0, prev, 1, 0, prev-&gt;width()-1, prev-&gt;height()
+);
+    bitBlt( &amp;next, width()-1, 0, prev, 0, 0, 1, prev-&gt;height() );
+    KPixmap *n = new KPixmap( next );
+    m_stepPixmap.append( n );
+  }
+}
+</programlisting>
+</sect1>
+</appendix>
+
+&documentation.index;
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

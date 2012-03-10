@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+"dtd/kdex.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article lang="&language;">
+<articleinfo>
+<authorgroup>
+<author>&Craig.Drummond; &Craig.Drummond.Mail;</author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2003-10-22</date>
+<releaseinfo>3.2</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KControl</keyword>
+<keyword>fonts</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="fontinst">
+<title>Font Installer</title>
+
+<para>This module is responsible for installing (and uninstalling)
+fonts. The installer will configure X (X.org, XFree86), XRender,
+(anti-aliasing), fontconfig, and <application>Ghostscript</application> (printing),
+for any TrueType
+(<literal role="extension">.ttf</literal>) and Type1 (<literal
+role="extension">.pfa</literal>, <literal
+role="extension">.pfb</literal>) fonts that you care to install -
+bitmap (<literal role="extension">.bdf</literal>, <literal
+role="extension">.pcf</literal>) fonts will also be installed, but
+these can only used by X.</para>
+
+<para>When the module is started by a normal (non-root) user, then the
+settings will refer to their personal configuration, and installed
+fonts will be available to them only. For <systemitem
+class="username">root</systemitem>, the settings will usually refer to
+the system-wide configuration, and as such any installed fonts should
+be available to all users.</para>
+<para>If you install fonts as a normal user and notice the fonts used for 
+display (and for print preview) do not match those of the printed output
+- then you should re-install the fonts system-wide (i.e. as <systemitem
+class="username">root</systemitem>). This can occur because when printing
+the output is sent to a printer queue - and when the system comes to actually
+send the information to the printer, it is running as a different user (usually
+<systemitem class="username">lp</systemitem>), and cannot find the font files.</para>
+<para>To install fonts, simply select the "Add Fonts" button - this will
+produce a file dialog, then just locate the fonts to install. Likewise, to
+remove a font, simply highlight a font and press the "Delete" button.</para>
+<sect2 id="using-konqueror">
+<title>Using Konqueror</title>
+<para>You can also use Konqueror to install fonts via drag-and-drop.
+To do this just type <ulink url="fonts:/">fonts:/</ulink> into Konqueror's Location bar.</para>
+<para>As a normal (non-root) user, this will produce 2 top-level folders:</para>
+<orderedlist>
+<listitem>
+<para><ulink url="fonts:/Personal">Personal</ulink> - this will display your personal fonts.</para>
+</listitem>
+<listitem>
+<para><ulink url="fonts:/System">System</ulink> - this will display the system wide fonts. If you drag-n-drop a font
+on to the folders here, you will be asked for the root password in order
+to install the font.</para>
+</listitem>
+</orderedlist>
+<para>If you drop a font over <ulink url="fonts:/">fonts:/</ulink>, then you will be asked whether this
+should go into "Personal", or "System".</para>
+<para>As root, just the contents of the system font folder will be displayed
+- as root does not have any "personal" fonts.</para>
+</sect2>
+</sect1>
+</article>

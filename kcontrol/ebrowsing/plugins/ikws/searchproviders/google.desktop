@@ -1,0 +1,31 @@
+[Desktop Entry]
+Type=Service
+Name=Google
+Name[bn]=গুগল্
+Name[csb]=Google - szëkôrz starnów WWW
+Name[fa]=گوگل
+Name[he]=גוגל
+Name[hi]=गूगल
+Name[mn]=Гооглэ
+Name[ne]=गुगल
+Name[pl]=Google - wyszukiwarka stron WWW
+Name[ta]=கூகுல்
+Name[te]=గూగుల్
+Name[th]=กูเกิ้ล
+ServiceTypes=SearchProvider
+Keys=gg,google
+Query=http://www.google.com/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[de]=http://www.google.de/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[en_GB]=http://www.google.co.uk/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[fi]=http://www.google.fi/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[fr]=http://www.google.fr/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[he]=http://www.google.co.il/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[it]=http://www.google.it/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[nb]=http://www.google.no/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[ne]=http://www.google.com/search?q=\\{@}ie=UTF-8&oe=UTF-8
+Query[nl]=http://www.google.nl/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[nn]=http://www.google.com/search?hl=nn&q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[pt]=http://www.google.pt/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[wa]=http://www.google.be/search?q=\\{@}&ie=UTF-8&oe=UTF-8
+Query[zh_TW]=http://www.google.com.tw/search?q=\\{@}&ie=UTF-8&oe=UTF-8&hl=zh-TW
+Charset=utf8

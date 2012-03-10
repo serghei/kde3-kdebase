@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Service
+Name=Excite
+Name[bn]=এক্সসাইট
+Name[csb]=Excite - szëkôrz starnów WWW
+Name[eo]=Ekscito
+Name[hi]=एक्साइट
+Name[ne]=उत्तेजना
+Name[nso]=Thabisa
+Name[pa]=ਐਕਸਾਟੀ
+Name[pl]=Excite - wyszukiwarka stron WWW
+Name[rw]=Gusembura
+Name[ss]=Jabulisa
+Name[ta]=ஆச்சர்யம்
+Name[te]=ఎక్సైట్
+Name[ven]=Takadza
+Name[vi]=Tra Excite
+Name[zu]=Jabulisa
+ServiceTypes=SearchProvider
+Keys=ex,excite
+Query=http://search.excite.com/search.gw?search=\\{@}
+Query[en_GB]=http://www.excite.co.uk/search/web/results?q=\\{@}&c=web

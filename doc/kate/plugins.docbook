@@ -1,0 +1,28 @@
+<chapter id="plugins">
+
+<chapterinfo>
+<authorgroup>
+<author>&Anders.Lund; &Anders.Lund.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+</chapterinfo>
+
+<title>Working with Plug-ins</title>
+
+<para>Kate is using two different forms of plug-ins, namely plug-ins for the
+&kate; application and plug-ins for the &kate; editor component. The latter are
+available to any application using the editor component, such as KDevelop,
+Quanta, Kile, Kwrite and many others, while application plug-ins are specific
+to the &kate; application.</para>
+
+<para>You can enable both types of plug-ins in the <link
+linkend="configuring-kate-configdialog">configuration dialog</link>, which also
+provides access to additional configuration options for plug-ins that requires
+that.</para>
+
+<para>There are many plugins for various purposes available in the kdeaddons
+module, and you can search the web for more. A few plugins are shipped with the
+editor component, for doing word completion, automatic bookmarks, insert files,
+thesaurus and word spell checking and incremental search.</para>
+
+</chapter>

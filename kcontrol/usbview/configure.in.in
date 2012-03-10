@@ -1,0 +1,16 @@
+case "$host" in
+  *-*-linux*|*-*-freebsd*|*-*-kfreebsd*-gnu)
+	FOUND_USBVIEW=yes
+	;;
+esac
+
+AM_CONDITIONAL(include_kcontrol_usbview, test "$FOUND_USBVIEW" = "yes")
+
+AC_ARG_WITH([usbids], AC_HELP_STRING([--with-usbids=PATH], [Use the usb.ids file at the specified path, instead of the local copy]))
+
+if test "x$with_usbids" != "x" && test "x$with_usbids" != "xno"; then
+  AC_DEFINE_UNQUOTED(USBIDS_FILE, "$with_usbids", [Path for the usb.ids file to use])
+  dont_install_usbids="yes"
+fi
+
+AM_CONDITIONAL(install_usbids, test "x$dont_install_usbids" != "xyes")

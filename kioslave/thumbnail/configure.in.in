@@ -1,0 +1,14 @@
+AC_ARG_WITH(openexr,
+  [AC_HELP_STRING(--with-openexr,
+    [enable support for OpenEXR @<:@default=check@:>@])],
+  [], with_openexr=check)
+
+if test "x$with_openexr" != xno; then
+  KDE_FIND_LIBEXR
+
+  if test "x$with_openexr" != xcheck && test -z "$LIB_EXR"; then
+    AC_MSG_ERROR([--with-openexr was given, but test for OpenEXR failed])
+  fi
+fi
+
+AM_CONDITIONAL(include_EXR_MODULES, test -n "$LIB_EXR")

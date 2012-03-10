@@ -1,0 +1,6 @@
+# Code generation options for kconfig_compiler
+File=clockapplet.kcfg
+ClassName=Prefs
+Singleton=false
+Mutators=Type,CalendarSize,CalendarFullWindow,DateBackgroundColor,PlainBackgroundColor,AnalogBackgroundColor,FuzzyBackgroundColor,DigitalBackgroundColor
+# MemberVariables=public

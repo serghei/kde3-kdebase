@@ -1,0 +1,344 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>AnalogWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>AnalogWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>524</width>
+            <height>307</height>
+        </rect>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>ButtonGroup2_3_2</cstring>
+            </property>
+            <property name="title">
+                <string>Display</string>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>kcfg_AnalogShowDate</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Dat&amp;e</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>kcfg_AnalogShowSeconds</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Seco&amp;nds</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>kcfg_AnalogShowDayOfWeek</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Da&amp;y of week</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>kcfg_AnalogShowFrame</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Frame</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer20</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>40</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </hbox>
+        </widget>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>groupBox1</cstring>
+            </property>
+            <property name="title">
+                <string>Time</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>layout9</cstring>
+                    </property>
+                    <grid>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="KColorButton" row="2" column="1">
+                            <property name="name">
+                                <cstring>kcfg_AnalogBackgroundColor</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="KColorButton" row="1" column="1">
+                            <property name="name">
+                                <cstring>kcfg_AnalogShadowColor</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="0" column="0">
+                            <property name="name">
+                                <cstring>foregroundAnalogLabel</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Foreground color:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>kcfg_AnalogForegroundColor</cstring>
+                            </property>
+                        </widget>
+                        <spacer row="1" column="2">
+                            <property name="name">
+                                <cstring>spacer13</cstring>
+                            </property>
+                            <property name="orientation">
+                                <enum>Horizontal</enum>
+                            </property>
+                            <property name="sizeType">
+                                <enum>Expanding</enum>
+                            </property>
+                            <property name="sizeHint">
+                                <size>
+                                    <width>16</width>
+                                    <height>20</height>
+                                </size>
+                            </property>
+                        </spacer>
+                        <widget class="QLabel" row="2" column="0">
+                            <property name="name">
+                                <cstring>backgroundAnalogLabel</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Background color:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>kcfg_AnalogBackgroundColor</cstring>
+                            </property>
+                        </widget>
+                        <widget class="KColorButton" row="0" column="1">
+                            <property name="name">
+                                <cstring>kcfg_AnalogForegroundColor</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel" row="1" column="0">
+                            <property name="name">
+                                <cstring>shadowAnalogLabel</cstring>
+                            </property>
+                            <property name="enabled">
+                                <bool>false</bool>
+                            </property>
+                            <property name="text">
+                                <string>Shadow color:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>kcfg_AnalogShadowColor</cstring>
+                            </property>
+                        </widget>
+                    </grid>
+                </widget>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>TextLabel1_3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Antialias:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>kcfg_AnalogAntialias</cstring>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="0" column="1">
+                    <item>
+                        <property name="text">
+                            <string>None</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>Low Quality</string>
+                        </property>
+                    </item>
+                    <item>
+                        <property name="text">
+                            <string>High Quality</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>kcfg_AnalogAntialias</cstring>
+                    </property>
+                    <property name="currentItem">
+                        <number>0</number>
+                    </property>
+                </widget>
+                <spacer row="0" column="2">
+                    <property name="name">
+                        <cstring>Spacer18_2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>310</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QCheckBox" row="1" column="0" rowspan="1" colspan="3">
+                    <property name="name">
+                        <cstring>kcfg_AnalogLCDStyle</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;LCD look</string>
+                    </property>
+                    <property name="checked">
+                        <bool>true</bool>
+                    </property>
+                </widget>
+                <spacer row="3" column="2">
+                    <property name="name">
+                        <cstring>spacer54</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>50</height>
+                        </size>
+                    </property>
+                </spacer>
+            </grid>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+</customwidgets>
+<connections>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>foregroundAnalogLabel</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>backgroundAnalogLabel</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>shadowAnalogLabel</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>kcfg_AnalogForegroundColor</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>kcfg_AnalogShadowColor</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>kcfg_AnalogLCDStyle</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>kcfg_AnalogBackgroundColor</receiver>
+        <slot>setDisabled(bool)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>kcfg_AnalogShowDate</tabstop>
+    <tabstop>kcfg_AnalogShowSeconds</tabstop>
+    <tabstop>kcfg_AnalogShowFrame</tabstop>
+    <tabstop>kcfg_AnalogAntialias</tabstop>
+    <tabstop>kcfg_AnalogLCDStyle</tabstop>
+    <tabstop>kcfg_AnalogForegroundColor</tabstop>
+    <tabstop>kcfg_AnalogShadowColor</tabstop>
+    <tabstop>kcfg_AnalogBackgroundColor</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">kdialog.h</include>
+    <include location="local" impldecl="in implementation">kfontrequester.h</include>
+</includes>
+<layoutdefaults spacing="3" margin="6"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+</includehints>
+</UI>

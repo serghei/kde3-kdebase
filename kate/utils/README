@@ -1,0 +1,29 @@
+README for libkateutils
+
+Contents:
+* What it is
+* Maintainer
+
+What it is
+==========
+
+This library is a container for classes that may be usefull for
+Kate and for kate plugins. If you have a class that you think would
+be usefull for other plugins, ask the maintainer of this library
+to put it here.
+
+If you find a class in a plugin (ore even elsewhere) that you need to
+copy in order to use it inside kate or a kate plugin, consider debating with
+the author of that class to move it here.
+
+To fit in, the class must be generic enough that it can be usefull for
+many purposes.
+
+Apart from the convenience (and avoided copies of code) putting classes in this
+library will help us maintain a common feel of how kate works. 
+
+Maintainer
+==========
+
+This library was started in july 2002 and is maintained by
+Anders Lund <anders@alweb.dk>

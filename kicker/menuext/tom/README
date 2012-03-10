@@ -1,0 +1,65 @@
+What is TOM?
+============
+TOM stands for Task Oriented Menu and is a work in progress that will become a
+viable alternative to the current KMenu. Its goals include:
+
+ o Be task oriented
+ o Be simple and clear to use
+ o Create a smaller but usable menu
+ o Limited configurability through sensible defaults
+ o Have all configuration needs built right into the menu, including:
+   o Editor dialogs that can be called up from entries in the menu
+   o Context menus accessed by RMB clicking on a task for powerusers
+ o Allow locking down of menus through immutable settings
+   o Obeys Kicker and KDE Kiosk settings
+   o By making the TOM group of kickerrc immutable all config is removed
+   o By making a task group's rc file immutable, config options are removed
+ o Not require any modifications to the KDE menu system (applnk, etc)
+
+
+What is a "Task Oriented Menu"?
+================================
+A task oriented menu displays it's entries as "things to do" (or tasks) rather
+than simply listing all items that are available. Each of these tasks has an
+application or command associated with it, and this associated command can be
+changed without changing the task name or placement within the menu. The tasks
+are grouped by function and may map to programs, documents or actions.
+
+
+Todo list
+=========
+Editor dialogs
+Make the Destination entries work (only Run A Command is done)
+Populate and track Recent Applications menu entries
+  o Application launching should be caught somewhere in the KDE libs, ala
+    Recent Documents
+Writing out of config files to reflect runtime changes (deleted entries, etc)
+  o This requires keeping track of the config files used in creating the menu
+KDEDIR merging
+  o KDEDIRS are already consulted for taskgroups, but groups of the same name
+    should be merged
+Sane merging of menuext entries
+  o "Recent" items should go into the recent section
+    o Replace TOM's builin recent docs with the menuext version?
+    o Create a Recent Applications menuext?
+  o Add a way to quickly add/remove menuext items from TOM
+    (ala "Modify These Tasks")
+Check for updates on launch and bring them down/install them if they exist
+  o this includes new apps installed on the local box showing up in the menu
+  o "Get cool stuff" integration?
+Further refinement of wording / ordering in main menu (a perpetual TODO ;)
+Creation of real-world task groups
+Support plugins which can add arbitrary functionality to the menu
+
+
+Debate list
+===========
+What should be the default task entry format be:
+    a) Task Name
+    b) Task Name (App Name)
+    c) App Name (Task Name)  <-- silly option =)
+Should "Run A Command..." be replaced by an inline combobox?
+    Pros: It's more obvious and will work even if kdesktop is gone. The widget
+          is already written (in tom.cc)
+    Cons: It makes it stand out too much over other entries, takes up more room
+          and isn't as powerful as the full minicli

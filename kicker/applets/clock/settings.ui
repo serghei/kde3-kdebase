@@ -1,0 +1,515 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>SettingsWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>SettingsWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>605</width>
+            <height>639</height>
+        </rect>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QTabWidget">
+            <property name="name">
+                <cstring>tabs</cstring>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Appearance</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout14</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLabel">
+                                <property name="name">
+                                    <cstring>TextLabel1</cstring>
+                                </property>
+                                <property name="frameShape">
+                                    <enum>NoFrame</enum>
+                                </property>
+                                <property name="frameShadow">
+                                    <enum>Plain</enum>
+                                </property>
+                                <property name="text">
+                                    <string>Clock type:</string>
+                                </property>
+                                <property name="buddy" stdset="0">
+                                    <cstring>clockCombo</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QComboBox">
+                                <item>
+                                    <property name="text">
+                                        <string>Plain Clock</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Digital Clock</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Analog Clock</string>
+                                    </property>
+                                </item>
+                                <item>
+                                    <property name="text">
+                                        <string>Fuzzy Clock</string>
+                                    </property>
+                                </item>
+                                <property name="name">
+                                    <cstring>kcfg_Type</cstring>
+                                </property>
+                                <property name="sizePolicy">
+                                    <sizepolicy>
+                                        <hsizetype>5</hsizetype>
+                                        <vsizetype>0</vsizetype>
+                                        <horstretch>0</horstretch>
+                                        <verstretch>0</verstretch>
+                                    </sizepolicy>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>Spacer2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QWidgetStack">
+                        <property name="name">
+                            <cstring>widgetStack</cstring>
+                        </property>
+                        <property name="lineWidth">
+                            <number>0</number>
+                        </property>
+                        <widget class="QWidget">
+                            <property name="name">
+                                <cstring>page</cstring>
+                            </property>
+                            <attribute name="id">
+                                <number>0</number>
+                            </attribute>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <property name="margin">
+                                    <number>0</number>
+                                </property>
+                                <widget class="QButtonGroup">
+                                    <property name="name">
+                                        <cstring>ButtonGroup2_3_2_2</cstring>
+                                    </property>
+                                    <property name="title">
+                                        <string>Display</string>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QCheckBox">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainShowDate</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Dat&amp;e</string>
+                                            </property>
+                                            <property name="checked">
+                                                <bool>true</bool>
+                                            </property>
+                                        </widget>
+                                        <widget class="QCheckBox">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainShowSeconds</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>&amp;Seconds</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QCheckBox">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainShowDayOfWeek</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Da&amp;y of week</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QCheckBox">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainShowFrame</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>&amp;Frame</string>
+                                            </property>
+                                        </widget>
+                                        <spacer>
+                                            <property name="name">
+                                                <cstring>spacer14</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>20</width>
+                                                    <height>20</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                    </hbox>
+                                </widget>
+                                <widget class="QGroupBox">
+                                    <property name="name">
+                                        <cstring>groupBox2</cstring>
+                                    </property>
+                                    <property name="title">
+                                        <string>Time</string>
+                                    </property>
+                                    <grid>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel" row="2" column="0">
+                                            <property name="name">
+                                                <cstring>TextLabel1_3_3_2</cstring>
+                                            </property>
+                                            <property name="sizePolicy">
+                                                <sizepolicy>
+                                                    <hsizetype>4</hsizetype>
+                                                    <vsizetype>1</vsizetype>
+                                                    <horstretch>0</horstretch>
+                                                    <verstretch>0</verstretch>
+                                                </sizepolicy>
+                                            </property>
+                                            <property name="text">
+                                                <string>Font:</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLabel" row="1" column="0" rowspan="1" colspan="2">
+                                            <property name="name">
+                                                <cstring>TextLabel1_2_3_4_3_2</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string>Background color:</string>
+                                            </property>
+                                            <property name="buddy" stdset="0">
+                                                <cstring>kcfg_PlainBackgroundColor</cstring>
+                                            </property>
+                                        </widget>
+                                        <widget class="KColorButton" row="1" column="2">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainBackgroundColor</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                        </widget>
+                                        <widget class="KColorButton" row="0" column="2">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainForegroundColor</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLabel" row="0" column="0" rowspan="1" colspan="2">
+                                            <property name="name">
+                                                <cstring>TextLabel1_4_3_2_2</cstring>
+                                            </property>
+                                            <property name="enabled">
+                                                <bool>true</bool>
+                                            </property>
+                                            <property name="text">
+                                                <string>Foreground color:</string>
+                                            </property>
+                                            <property name="buddy" stdset="0">
+                                                <cstring>kcfg_PlainForegroundColor</cstring>
+                                            </property>
+                                        </widget>
+                                        <spacer row="0" column="3">
+                                            <property name="name">
+                                                <cstring>spacer17</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Horizontal</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>230</width>
+                                                    <height>20</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                        <widget class="KFontRequester" row="2" column="1" rowspan="1" colspan="3">
+                                            <property name="name">
+                                                <cstring>kcfg_PlainFont</cstring>
+                                            </property>
+                                        </widget>
+                                        <spacer row="3" column="3">
+                                            <property name="name">
+                                                <cstring>spacer6</cstring>
+                                            </property>
+                                            <property name="orientation">
+                                                <enum>Vertical</enum>
+                                            </property>
+                                            <property name="sizeType">
+                                                <enum>Expanding</enum>
+                                            </property>
+                                            <property name="sizeHint">
+                                                <size>
+                                                    <width>20</width>
+                                                    <height>20</height>
+                                                </size>
+                                            </property>
+                                        </spacer>
+                                    </grid>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </widget>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>dateBox</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Date</string>
+                        </property>
+                        <grid>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="KColorButton" row="1" column="1">
+                                <property name="name">
+                                    <cstring>kcfg_DateBackgroundColor</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="0" column="0">
+                                <property name="name">
+                                    <cstring>textLabel1_3</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Foreground color:</string>
+                                </property>
+                            </widget>
+                            <widget class="KColorButton" row="0" column="1">
+                                <property name="name">
+                                    <cstring>kcfg_DateForegroundColor</cstring>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QLabel" row="1" column="0">
+                                <property name="name">
+                                    <cstring>textLabel2</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Background color:</string>
+                                </property>
+                            </widget>
+                            <spacer row="0" column="2">
+                                <property name="name">
+                                    <cstring>spacer15</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>343</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QLayoutWidget" row="2" column="0" rowspan="1" colspan="3">
+                                <property name="name">
+                                    <cstring>layout2</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel4</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Font:</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="KFontRequester">
+                                        <property name="name">
+                                            <cstring>kcfg_DateFont</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>7</hsizetype>
+                                                <vsizetype>5</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </grid>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer6_2</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>100</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>&amp;Timezones</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="KListView">
+                        <column>
+                            <property name="text">
+                                <string>City</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
+                        <column>
+                            <property name="text">
+                                <string>Comment</string>
+                            </property>
+                            <property name="clickable">
+                                <bool>true</bool>
+                            </property>
+                            <property name="resizable">
+                                <bool>true</bool>
+                            </property>
+                        </column>
+                        <property name="name">
+                            <cstring>tzListView</cstring>
+                        </property>
+                        <property name="toolTip" stdset="0">
+                            <string></string>
+                        </property>
+                        <property name="whatsThis" stdset="0">
+                            <string>A list of timezones known to your system. Press the middle mouse button on the clock in the taskbar and it shows you the time in the selected cities.</string>
+                        </property>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+</customwidgets>
+<tabstops>
+    <tabstop>tabs</tabstop>
+    <tabstop>kcfg_Type</tabstop>
+    <tabstop>kcfg_PlainShowDate</tabstop>
+    <tabstop>kcfg_PlainShowSeconds</tabstop>
+    <tabstop>kcfg_PlainShowFrame</tabstop>
+    <tabstop>kcfg_PlainForegroundColor</tabstop>
+    <tabstop>kcfg_PlainBackgroundColor</tabstop>
+    <tabstop>kcfg_DateBackgroundColor</tabstop>
+    <tabstop>kcfg_DateForegroundColor</tabstop>
+    <tabstop>kcfg_DateFont</tabstop>
+    <tabstop>tzListView</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">kdialog.h</include>
+    <include location="local" impldecl="in implementation">kfontrequester.h</include>
+</includes>
+<slots>
+    <slot>configureType()</slot>
+</slots>
+<layoutdefaults spacing="3" margin="6"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kfontrequester.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kcolorbutton.h</includehint>
+    <includehint>kfontrequester.h</includehint>
+    <includehint>klistview.h</includehint>
+</includehints>
+</UI>

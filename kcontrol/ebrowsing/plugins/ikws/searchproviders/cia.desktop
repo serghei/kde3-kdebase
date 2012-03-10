@@ -1,0 +1,45 @@
+[Desktop Entry]
+Hidden=false
+Keys=cia
+Name=CIA World Factbook
+Name[af]=CIA Wêreld Feiteboek
+Name[bn]=সি-আই-এ ওয়ার্ল্ড ফ্যাক্টবুক
+Name[cs]=Světová kniha faktů CIA
+Name[csb]=Swiatowé wëdarzenia CIA (CIA World Factbook)
+Name[da]=CIA Bog over verdens fakta
+Name[el]=Παγκόσμιο βιβλίο γεγονότων της CIA
+Name[eo]=CIA Monda faktlibro
+Name[es]=Libro del estado del mundo de la CIA
+Name[eu]=CIA World Fact Book
+Name[fy]=CIA Wrâld Feitboek
+Name[hr]=CIA činjenice iz svijeta
+Name[id]=Buku Fakta Dunia CIA
+Name[it]=World Fact Book della CIA
+Name[ka]=CIA მსოფლიო ფაქტები
+Name[km]=សៀវភៅ​ការ​ពិត​នៃ​ពិភពលោក​របស់ CIA
+Name[ko]=CIA 월드 팩트 북
+Name[lt]=CŽV pasaulio faktų knyga
+Name[ms]=Buku Fakta Dunia CIA
+Name[ne]=CIA वर्ल्ड फ्याक्टबुक
+Name[pa]=CIA ਸੰਸਾਰ ਜਾਣਕਾਰੀ ਕਿਤਾਬ
+Name[pl]=Światowe wydarzenia CIA (CIA World Factbook)
+Name[pt_BR]=CIA World Fact Book
+Name[ro]=CIA World Fact Book
+Name[ru]=Всемирная книга фактов (ЦРУ)
+Name[se]=CIA:a máilbmediehtogirji
+Name[sk]=CIA svetová kniha faktov
+Name[sr]=Књига светских чињеница CIA-е
+Name[sr@Latn]=Knjiga svetskih činjenica CIA-e
+Name[sv]=CIA-världsfaktabok
+Name[tg]=CIA Ҷаҳонӣ китоби аслан 
+Name[tr]=CIA Dünya Gerçekleri Kitabı
+Name[uk]=Світова книга фактів ЦРУ
+Name[vi]=Sách sự thật Thế giới CIA
+Query=http://www.google.com/search?q=allintitle%3A\\{@}+world+factbook+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+Query[fi]=http://www.google.fi/search?q=allintitle%3A\\{@}+world+factbook+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+Query[he]=http://www.google.co.il/search?q=allintitle%3A\\{@}+world+factbook+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+Query[ja]=http://www.google.com/search?q=allintitle%3A\\{@}+world+fact+book+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+Query[nds]=http://www.google.com/search?q=allintitle%3A\\{@}+world+fact+book+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+Query[th]=http://www.google.com/search?q=allintitle%3A\\{@}+world+fact+book+site%3Awww.cia.gov&ie=UTF-8&btnI=I%27m+Feeling+Lucky
+ServiceTypes=SearchProvider
+Type=Service

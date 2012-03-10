@@ -1,0 +1,62 @@
+dnl Check for "struct ucred"
+AC_MSG_CHECKING("struct ucred")
+AC_TRY_COMPILE(
+[
+  #define _GNU_SOURCE 1
+  #include <sys/socket.h>
+],
+[
+  struct ucred red;
+],  have_ucred=yes
+  , have_ucred=no
+)
+if test "$have_ucred" = "yes"; then
+    AC_DEFINE(HAVE_STRUCT_UCRED, 1, [Define if you have the struct ucred])
+    AC_MSG_RESULT(yes)
+else
+    AC_MSG_RESULT(no)
+fi
+
+dnl Check for the group "nogroup" or "nobody" Use -2 otherwise.
+AC_MSG_CHECKING(nogroup)
+AC_TRY_RUN([
+    #include <grp.h>
+    #include <sys/types.h>
+
+    int main() 
+    {
+	struct group *grp = getgrnam("nogroup");
+	if (grp) return 0;
+	return 1;
+    }
+], nogroup=nogroup, 
+AC_TRY_RUN([
+    #include <grp.h>
+    #include <sys/types.h>
+
+    int main() 
+    {
+	struct group *grp = getgrnam("nobody");
+	if (grp) return 0;
+	return 1;
+    }
+], nogroup=nobody, 
+nogroup=65534, nogroup=65534), nogroup=65534)
+AC_MSG_RESULT($nogroup)
+AC_SUBST(nogroup)
+AC_CHECK_FUNCS(getpeereid)
+
+AC_ARG_WITH(sudo-kdesu-backend,
+	    AC_HELP_STRING([--with-sudo-kdesu-backend],
+			   [use sudo as backend for kdesu (default is su)]),
+[
+    if test x$withval = xyes; then
+        use_kdesu_backend="sudo"
+    else
+        use_kdesu_backend="su"
+    fi
+],
+    use_kdesu_backend="su"
+)
+
+AC_DEFINE_UNQUOTED(DEFAULT_SUPER_USER_COMMAND, "$use_kdesu_backend", [Use su or sudo])

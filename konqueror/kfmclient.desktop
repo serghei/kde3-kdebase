@@ -1,0 +1,22 @@
+[Desktop Entry]
+# This desktop file is the one used by KApplication::invokeBrowser
+Type=Application
+Exec=kfmclient openURL %u
+Icon=konqueror
+Terminal=false
+InitialPreference=9
+NoDisplay=true
+Name=Konqueror
+Name[bn]=কনকরার
+Name[eo]=Konkeranto
+Name[hi]=कॉन्करर
+Name[lv]=Iekarotājs
+Name[mn]=Конкюрор
+Name[ne]=कन्क्वेरर
+Name[pa]=ਕੋਨਕਿਉਰੋਰ
+Name[ta]=கான்கொரர்
+Name[te]=కాంకెరర్
+Name[th]=คอนเควอร์เรอร์
+X-DCOP-ServiceType=None
+Categories=Qt;KDE;System;
+X-KDE-HasTempFileOption=true

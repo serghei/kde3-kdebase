@@ -1,0 +1,201 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+"dtd/kdex.dtd" [
+ <!ENTITY midi-kcontrol SYSTEM "midi.docbook">
+ <!ENTITY % addindex "IGNORE">
+ <!ENTITY % English "INCLUDE"> <!-- change language only here -->
+]>
+
+<article lang="&language;">
+<articleinfo>
+
+<authorgroup>
+<author>&Mike.McBride;</author>
+<author>&Jost.Schenck;</author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+	
+<date>2005-02-20</date>
+<releaseinfo>3.4</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>KControl</keyword>
+<keyword>sound server</keyword>
+<keyword>sound</keyword>
+<keyword>aRts</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="sndserver">
+<title>Sound System</title>
+
+<para>This control module is used to configure the settings for the
+&arts; sound server (the &kde; sound server).</para>
+
+<sect2 id="sndserver-general">
+<title>&arts;</title>
+
+<para>The top option, labeled <guilabel>Enable the sound system</guilabel>,
+enables (or disables) the &arts; sound server entirely.</para>
+
+<tip>
+<para>You can find out more about &arts; in general by typing
+<userinput>help:/artsbuilder</userinput> into the &konqueror; location
+bar, or by finding the &arts-builder; documentation in &khelpcenter;.
+</para>
+</tip>
+
+<para>The rest of the panel consists of options for the &arts;
+sound server.</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Enable networked sound</guilabel></term>
+<listitem>
+<para>If this option is enabled, then sound requests from the network
+will be honored by the sound server.  If this option is disabled, the sound
+server will only honor requests from the local computer.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Run with the highest possible priority (realtime priority)</guilabel></term>
+<listitem><para>Enabling this option will give the sound server priority over
+other applications, which will help alleviate any problems delivering
+uninterrupted sound.</para>
+<note><para>This option may require permissions you do not have as a regular
+user.</para>
+<para>This option also relies on certain real time support from your
+system which may not be available.</para>
+<para>If you do not have the necessary permissions, or your system does
+not have the real time support necessary, enabling this option will not
+cause problems.</para></note></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Sound buffer:</guilabel></term>
+<listitem><para>This slider determines how quickly the sound server can use your
+computer's resources.  The faster the response time, the higher the
+<acronym>CPU</acronym> load will be.</para>
+<tip><para>I would recommend that you start with the sound server set at
+250 ms, and use &kde; for a while.  If you notice that the sound does
+not work correctly, increase the responsiveness one step at a time until
+the problems disappear.</para></tip>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Auto-suspend if idle after:</guilabel></term>
+<listitem>
+<para>Normally &arts; locks the sound card device, so that other
+applications cannot use it.  If you enable this option, then if &arts;
+has been idle for the amount of time you set, it will suspend itself,
+allowing any application access to the sound hardware.  If &arts;
+receives another request, it will unsuspend, and continue as normal.
+Enabling this option may cause a small delay when you start an &arts;
+application.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>At the bottom of this page are two buttons to allow you to test your
+settings, labelled <guibutton>Test Sound</guibutton> and <guilabel>Test
+MIDI</guilabel> respectively.</para>
+
+</sect2>
+
+<sect2 id="sndserver-soundio">
+<title>Hardware</title>
+
+<para>The first option you can configure in the
+<guilabel>Hardware</guilabel> panel is <guilabel>Select the audio
+device:</guilabel>.  It tells &arts; which sound system to use for input and
+output of sound. Current choices are <acronym>ALSA</acronym> (Advanced
+&Linux; Sound Architecture), <acronym>OSS</acronym> (Open Sound System),
+<acronym>ESD</acronym> (Enlightenment Sound Daemon), no audio at all and
+autodetect. In most cases <quote>Autodetect</quote> will be perfect for
+you.</para>
+
+<para>Other options are:</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Full duplex</guilabel></term>
+<listitem><para>This option allows the sound server to play and record sound at
+the same time.  This option should be enabled if you use applications (such as
+Internet telephones) which require simultaneous record and
+playback.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Use custom sampling rate:</guilabel></term>
+<listitem>
+<para>Normally, the sound server defaults to using a sampling rate of
+44100 Hz (<acronym>CD</acronym> quality), which is supported on almost all
+hardware. If you are using certain Yamaha soundcards, you might need to
+configure this to 48000 Hz here; if you are using old SoundBlaster cards, like
+SoundBlaster Pro, you might need to change this to 22050 Hz. All other values
+are possible too and may make sense in certain contexts (&ie; professional
+studio equipment).</para> 
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Quality:</guilabel></term>
+<listitem>
+<para>These settings allow you to configure the quality of the sounds that
+will be played.</para>
+<tip>
+<para>Note that a higher sound quality causes a higher <acronym>CPU</acronym>
+usage.</para>
+<para>If you find sound is slow, or using too much
+<acronym>CPU</acronym>, try reducing this setting.</para>
+</tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Override device location:</guilabel></term>
+<listitem>
+<para>Normally, the sound server defaults to using the device called
+<filename class="devicefile">/dev/dsp</filename> for sound output. This
+should work in most cases. An exception is, for instance, if you are using
+devfs, then you should use <filename
+class="devicefile">/dev/sound/dsp</filename> instead. Other alternatives
+are things like <filename class="devicefile">/dev/dsp0</filename> or
+<filename class="devicefile">/dev/dsp1</filename> if you have a
+soundcard that supports multiple outputs or you have multiple
+soundcards.</para>
+<tip>
+<para>If you often use non-&arts; aware applications, and you have a
+soundcard that supports it, try setting &arts; to use a different
+device than <filename class="devicefile">/dev/dsp</filename>.  This
+way, other applications will be able to use the default device, while
+&arts; is still running, without giving any error messages.</para>
+</tip>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Other custom options:</guilabel></term>
+<listitem><para>There are some options offered by
+&arts; which may not be available in this control module, so you can add
+command line options here which will be passed directly to
+<application>artsd</application>. The options will be appended, so they
+will override the choices made in the
+<acronym>GUI</acronym>. To see the possible choices, open a &konsole;
+window, and type <userinput><command>artsd</command>
+<option>-h</option></userinput>.</para>
+</listitem>
+</varlistentry>
+
+
+</variablelist>
+
+</sect2>
+
+&midi-kcontrol;
+
+</sect1>
+
+</article>

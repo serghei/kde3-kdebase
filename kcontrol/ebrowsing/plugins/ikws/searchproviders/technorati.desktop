@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+Name=Technorati
+Name[bn]=টেক্‌নোক্রেটি
+Name[csb]=Technorati - blodżi
+Name[lt]=Technorati paieška
+Name[ne]=टेक्नोरती
+Name[vi]=Tra từ Kĩ thuật bằng Technorati
+ServiceTypes=SearchProvider
+Keys=tr,technorati
+Query=http://technorati.com/cosmos/search.html?sourceid=kde-search&url=\\{@}
+Query[ja]=http://technorati.com/cosmos/search.html?sourceid=kde-search&url=\\\\{@}
+Query[ne]=http://technorati.com/cosmos/search.html?sourceid=kde-searchurl=\\{@}
+Charset=utf8

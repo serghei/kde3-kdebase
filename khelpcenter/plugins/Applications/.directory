@@ -1,0 +1,60 @@
+[KDE Desktop Entry]
+
+Name=Application Manuals
+Name[bg]=Ръководства на аплети
+Name[ca]=Manuals de les aplicacions
+Name[cs]=Příručky aplikací
+Name[csb]=Pòdrãczniczi aplikacëjów
+Name[cy]=Llawlyfrau Cymhwysiad
+Name[da]=Programmanualer
+Name[de]=Handbücher zu Programmen
+Name[el]=Εγχειρίδια εφαρμογής
+Name[eo]=Manlibroj de Aplikaĵoj
+Name[es]=Manuales de las aplicaciones
+Name[et]=Rakenduste käsiraamatud
+Name[fo]=Forritshandbøkur
+Name[fr]=Manuels des applications
+Name[hi]=अनुप्रयोग निर्देशिका
+Name[hr]=Priručnici aplikacija
+Name[hu]=Alkalmazások kézikönyvei
+Name[is]=Handbækur forrita
+Name[it]=Manuali applicazione
+Name[ja]=アプリケーションマニュアル
+Name[km]=សៀវភៅ​​កម្មវិធី
+Name[ko]=프로그램 사용 설명서
+Name[lo]=ແອບຟີເຄຊັ້ນ
+Name[lt]=Programų vadovai
+Name[lv]=Programmu rokasgrāmatas
+Name[mn]=Програмын гарын авлага
+Name[mt]=Manwali tal-Programmi
+Name[nb]=Håndbok miniprogrammer
+Name[nds]=Programmhandböker
+Name[nl]=Programmahandboeken
+Name[nn]=Programmanualar
+Name[nso]=Di-Manual tsa Tshomiso
+Name[pl]=Podręczniki programów
+Name[pt]=Manuais das Aplicações
+Name[pt_BR]=Manuais de Aplicativos
+Name[ro]=Manualele aplicațiilor
+Name[ru]=Руководства приложений
+Name[sk]=Aplikačné manuály
+Name[sl]=Priročniki za programe
+Name[sr]=Упутства за програме
+Name[sr@Latn]=Uputstva za programe
+Name[sv]=Programhandböcker
+Name[tg]=Дастури барномаҳо
+Name[th]=คู่มือแอพพลิเคชั่น
+Name[tr]=Uygulama Kılavuzları
+Name[uk]=Підручники програм
+Name[ven]=Apulikhesheni
+Name[wa]=Esplikêyes do programe
+Name[xh]=Isicelo Sesandla
+Name[zh_TW]=應用程式手冊
+Name[zu]=Izincwadi zesandla Zomyaleli
+
+X-DOC-Weight=-500
+
+X-KDE-KHelpcenter-Special=apps
+
+X-DOC-DocumentType=text/docbook
+X-DOC-Identifier=kde_application_manuals

@@ -1,0 +1,13 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="khtmlkttsdplugin" library="libkhtmlkttsdplugin" version="2" >
+	<MenuBar>
+		<Menu name="tools">
+		<Text>&amp;Tools</Text>
+			<Action name="tools_kttsd"/>
+		</Menu>
+	</MenuBar>
+	<ToolBar name="Speech Toolbar" hidden="true">
+		<Action name="tools_kttsd"/>
+	</ToolBar>
+</kpartgui>
+

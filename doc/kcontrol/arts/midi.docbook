@@ -1,0 +1,24 @@
+<sect2 id="midi">
+<sect2info>
+<authorgroup>
+<author>&Mike.McBride; &Mike.McBride.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+</sect2info>
+<title><acronym>MIDI</acronym> Configuration</title>
+
+<para>This section is used to determine which <acronym>MIDI</acronym> device
+&kde; should use. You can also install a <acronym>MIDI</acronym> wrapper around
+the device if you want.</para>
+
+<para>The use of this module is simple.  Click once on the
+<acronym>MIDI</acronym> device that you would like to use from the
+list.</para>
+
+<para>If you want to use a <acronym>MIDI</acronym> mapper, simply mark
+the checkbox below the list labeled <guilabel>Use MIDI
+Mapper</guilabel>.  This will allow you to select the map in the text
+box below.  You can click on the folder icon to browse your filesystem
+to find the map if you need it.</para>
+
+</sect2>

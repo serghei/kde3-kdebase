@@ -1,0 +1,7 @@
+[Desktop Entry]
+MountPoint=
+Dev=
+ReadOnly=false
+Type=FSDevice
+Icon=mo_mount
+UnmountIcon=mo_unmount

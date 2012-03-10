@@ -1,0 +1,23 @@
+[Desktop Entry]
+Name=Socks
+Name[af]=Socks'
+Name[bn]=সকস (Socks)
+Name[da]=Sokler
+Name[et]=Pesad
+Name[eu]=Sock-ak
+Name[hi]=सॉक्स
+Name[hr]=Priključci
+Name[hu]=SOCKS
+Name[km]=រន្ធ
+Name[mn]=Нүхнүүд
+Name[ne]=सक्स
+Name[pa]=ਸਾਕਸ
+Name[rw]=Sokisi
+Name[ta]=துளைகள்
+Name[te]=సాక్స్
+Type=Application
+Icon=proxy
+Exec=kcmshell proxy
+X-KDE-ModuleType=Library
+X-KDE-Library=kio
+X-KDE-FactoryName=proxy

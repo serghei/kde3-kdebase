@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KSplash/Plugin
+
+[PropertyDef::X-KSplash-PluginName]
+Type=QString
+
+[PropertyDef::X-KSplash-ObjectName]
+Type=QString
+
+[PropertyDef::X-KSplash-Default]
+Type=bool

@@ -1,0 +1,89 @@
+[Desktop Entry]
+Type=Service
+Name=Google Groups
+Name[af]=Google Groepe
+Name[ar]=مجموعات Google
+Name[az]=Google Qroupları
+Name[be]=Групы Google
+Name[bn]=গুগল্ গ্রুপস
+Name[br]=Stroladoù Google
+Name[bs]=Google Grupe
+Name[ca]=Grups a Google
+Name[cs]=Google - diskuzní skupiny
+Name[csb]=Google - archiwa diskùsjowëch karnów
+Name[cy]=Grwpiau Google
+Name[da]=Google-grupper
+Name[de]=Google-Newsgruppen
+Name[el]=Ομάδες του Google
+Name[eo]=Forumserĉo ĉe "Google"
+Name[es]=Grupos de Google
+Name[et]=Google uudisegrupid
+Name[eu]=Google taldeak
+Name[fa]=گروههای گوگل
+Name[fi]=Googlen keskusteluryhmät
+Name[fr]=Groupes Google
+Name[fy]=Google Diskusjegroepen
+Name[ga]=Grúpaí Google
+Name[gl]=Grupos de Google
+Name[he]=קבוצות גוגל
+Name[hi]=गूगल समूह
+Name[hr]=Google Grupe
+Name[is]=Google - Ráðstefnur
+Name[it]=Google gruppi
+Name[ja]=Google グループ
+Name[ka]=Google ჯგუფები
+Name[kk]=Google топтары
+Name[km]=ក្រុម Google
+Name[ko]=Google 그룹스
+Name[lt]=Google grupės
+Name[lv]=Google Grupas
+Name[mk]=Google-групи
+Name[mn]=Гооглэ-Мэдээлэл
+Name[ms]=Kumpulan Google
+Name[mt]=Gruppi Google
+Name[nb]=Google-grupper
+Name[ne]=गुगल समूह
+Name[nl]=Google Groepen
+Name[nso]=Dihlopha tsa Google
+Name[pa]=Google ਗਰੁੱਪ
+Name[pl]=Google - archiwum grup dyskusyjnych
+Name[pt]=Grupos do Google
+Name[pt_BR]=Grupos do Google
+Name[ro]=Grupuri Google
+Name[ru]=Группы Google
+Name[rw]=Amatsinda Google
+Name[sk]=Diskusné skupiny Google
+Name[sl]=Skupine Google
+Name[sr]=Google-ове групе
+Name[sr@Latn]=Google-ove grupe
+Name[ss]=Emacembu ye Google 
+Name[sv]=Google-grupper
+Name[ta]=கூகுல் குழுக்கள்
+Name[te]=గూగుల్ గుంపులు
+Name[tg]=Гурӯҳҳои Google
+Name[th]=กลุ่มข่าวกูเกิ้ล
+Name[tr]=Google Grupları
+Name[tt]=Google Törkemnäre
+Name[uk]=Групи Google
+Name[uz]=Google - Guruhlar
+Name[uz@cyrillic]=Google - Гуруҳлар
+Name[ven]=Tshigwada tsha Google
+Name[vi]=Nhóm Google
+Name[wa]=Groupes Google
+Name[xh]=Amaqela e Google
+Name[zh_CN]=Google 兴趣组
+Name[zh_TW]=Google 群組
+Name[zu]=Amaqembu e-Google
+ServiceTypes=SearchProvider
+Keys=ggg,groups,dj,deja
+Query=http://groups.google.com/groups?oi=djq&as_q=\\{@}
+Query[en_GB]=http://groups.google.co.uk/groups?oi=djq&as_q=\\{@}
+Query[fr]=http://groups.google.fr/groups?oi=djq&as_q=\\{@}
+Query[he]=http://groups.google.co.il/groups?oi=djq&as_q=\\{@}
+Query[nb]=http://groups.google.no/groups?hl=nn&oi=djq&as_q=\\{@}
+Query[ne]=http://groups.google.com/groups?oi=djqas_q=\\{@}
+Query[nl]=http://groups.google.nl/groups?oi=djq&as_q=\\{@}
+Query[nn]=http://groups.google.com/groups?hl=nn&oi=djq&as_q=\\{@}
+Query[pt]=http://groups.google.pt/groups?oi=djq&as_q=\\{@}
+Query[wa]=http://groups.google.be/groups?oi=djq&as_q=\\{@}
+Query[zh_TW]=http://groups.google.com.tw/groups?oi=djq&as_q=\\{@}

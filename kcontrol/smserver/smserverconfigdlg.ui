@@ -1,0 +1,248 @@
+<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<class>SMServerConfigDlg</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>SMServerConfigDlg</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>325</width>
+            <height>366</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Session Manager</string>
+    </property>
+    <property name="layoutMargin" stdset="0">
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QGroupBox">
+            <property name="name">
+                <cstring>topBox</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="title">
+                <string>General</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>confirmLogoutCheck</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Conf&amp;irm logout</string>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Check this option if you want the session manager to display a logout confirmation dialog box.</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>offerShutdownCheck</cstring>
+                    </property>
+                    <property name="text">
+                        <string>O&amp;ffer shutdown options</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>loginGroup</cstring>
+            </property>
+            <property name="title">
+                <string>On Login</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>&lt;ul&gt;
+&lt;li&gt;&lt;b&gt;Restore previous session:&lt;/b&gt; Will save all applications running on exit and restore them when they next start up&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Restore manually saved session: &lt;/b&gt; Allows the session to be saved at any time via "Save Session" in the K-Menu. This means the currently started applications will reappear when they next start up.&lt;/li&gt;
+&lt;li&gt;&lt;b&gt;Start with an empty session:&lt;/b&gt; Do not save anything. Will come up with an empty desktop on next start.&lt;/li&gt;
+&lt;/ul&gt;</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>previousSessionRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Restore &amp;previous session</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>savedSessionRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Restore &amp;manually saved session</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>emptySessionRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Start with an empty &amp;session</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>sdGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Default Shutdown Option</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Here you can choose what should happen by default when you log out. This only has meaning, if you logged in through KDM.</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>logoutRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;End current session</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>haltRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Turn off computer</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>rebootRadio</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Restart computer</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>advancedGroup</cstring>
+            </property>
+            <property name="title">
+                <string>Advanced</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Applications to be e&amp;xcluded from sessions:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>excludeLineedit</cstring>
+                    </property>
+                </widget>
+                <widget class="KLineEdit">
+                    <property name="name">
+                        <cstring>excludeLineedit</cstring>
+                    </property>
+                    <property name="whatsThis" stdset="0">
+                        <string>Here you can enter a comma-separated list of applications that should not be saved in sessions, and therefore will not be started when restoring a session. For example 'xterm,xconsole'.</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>bottomSpacer</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Expanding</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>130</height>
+                </size>
+            </property>
+        </spacer>
+    </vbox>
+</widget>
+<connections>
+    <connection>
+        <sender>confirmLogoutCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>loginGroup</sender>
+        <signal>clicked(int)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>sdGroup</sender>
+        <signal>clicked(int)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>excludeLineedit</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>offerShutdownCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>sdGroup</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>offerShutdownCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in implementation">kdialog.h</include>
+</includes>
+<slots>
+    <slot>configChanged()</slot>
+</slots>
+<layoutdefaults spacing="3" margin="6"/>
+<layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+</UI>

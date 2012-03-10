@@ -1,0 +1,387 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>PropertiesPageGUI</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>PropertiesPageGUI</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>527</width>
+            <height>476</height>
+        </rect>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout17</cstring>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupbox_generic</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Generic Mount Options</string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout15</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_ro</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Read only</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Mount the file system read-only.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_quiet</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Quiet</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Attempts to chown or chmod files do not return errors, although they fail. Use with caution!</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_sync</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Synchronous</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>All I/O to the file system should be done synchronously.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_atime</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Access time updates</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Update inode access time for each access.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout14</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>textLabel3</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Mountpoint:</string>
+                                            </property>
+                                            <property name="buddy" stdset="0">
+                                                <cstring>option_mountpoint</cstring>
+                                            </property>
+                                            <property name="whatsThis" stdset="0">
+                                                <string>Under what directory this file system shall be mounted. Please note that there is no guarantee that the system will respect your wish. For one the directory has to be below /media - and it does not yet have to exist.</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLineEdit">
+                                            <property name="name">
+                                                <cstring>option_mountpoint</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string></string>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_automount</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Mount automatically</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Mount this file system automatically.</string>
+                                    </property>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QGroupBox">
+                    <property name="name">
+                        <cstring>groupbox_specific</cstring>
+                    </property>
+                    <property name="title">
+                        <string>Filesystem Specific Mount Options</string>
+                    </property>
+                    <vbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLayoutWidget">
+                            <property name="name">
+                                <cstring>layout11</cstring>
+                            </property>
+                            <vbox>
+                                <property name="name">
+                                    <cstring>unnamed</cstring>
+                                </property>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_flush</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Flushed IO</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Always flush all data to the hot plug devices immediately and don't cache it.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_utf8</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>UTF-8 charset</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>UTF8 is the filesystem safe 8-bit encoding of Unicode that is used by the console. It can be be enabled for the filesystem with this option.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QCheckBox">
+                                    <property name="name">
+                                        <cstring>option_uid</cstring>
+                                    </property>
+                                    <property name="text">
+                                        <string>Mount as user</string>
+                                    </property>
+                                    <property name="whatsThis" stdset="0">
+                                        <string>Mount this file system as user.</string>
+                                    </property>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout7</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>text_journaling</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Journaling:</string>
+                                            </property>
+                                            <property name="buddy" stdset="0">
+                                                <cstring>option_journaling</cstring>
+                                            </property>
+                                            <property name="whatsThis" stdset="0">
+                                                <string>&lt;h2&gt;Specifies  the journalling mode for file data. Metadata is always journaled. &lt;/h2&gt;
+           
+&lt;h3&gt;&lt;b&gt;All Data&lt;/b&gt;&lt;/h3&gt;
+           All  data  is  committed into the journal prior to being written into the main file system. This is the slowest variant with the highest data security.
+
+&lt;h3&gt;&lt;b&gt;Ordered&lt;/b&gt;&lt;/h3&gt;
+           All data is forced directly out to the main  file system prior to its metadata being committed to the journal.
+
+&lt;h3&gt;&lt;b&gt;Write Back&lt;/b&gt;&lt;/h3&gt;
+           Data ordering is not preserved - data may be written into the main file system after its metadata has been committed to the journal.  This is rumoured to  be the  highest-throughput option.  It guarantees internal file system integrity,  however it can allow old data to appear in files after  a  crash  and  journal recovery.</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QComboBox">
+                                            <item>
+                                                <property name="text">
+                                                    <string>All Data</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Ordered</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Write Back</string>
+                                                </property>
+                                            </item>
+                                            <property name="name">
+                                                <cstring>option_journaling</cstring>
+                                            </property>
+                                            <property name="whatsThis" stdset="0">
+                                                <string>&lt;h2&gt;Specifies  the journalling mode for file data. Metadata is always journaled. &lt;/h2&gt;
+           
+&lt;h3&gt;&lt;b&gt;All Data&lt;/b&gt;&lt;/h3&gt;
+           All  data  is  committed into the journal prior to being written into the main file system. This is the slowest variant with the highest data security.
+
+&lt;h3&gt;&lt;b&gt;Ordered&lt;/b&gt;&lt;/h3&gt;
+           All data is forced directly out to the main  file system prior to its metadata being committed to the journal.
+
+&lt;h3&gt;&lt;b&gt;Write Back&lt;/b&gt;&lt;/h3&gt;
+           Data ordering is not preserved - data may be written into the main file system after its metadata has been committed to the journal.  This is rumoured to  be the  highest-throughput option.  It guarantees internal file system integrity,  however it can allow old data to appear in files after  a  crash  and  journal recovery.</string>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout14</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>text_shortname</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Short names:</string>
+                                            </property>
+                                            <property name="buddy" stdset="0">
+                                                <cstring>option_shortname</cstring>
+                                            </property>
+                                            <property name="whatsThis" stdset="0">
+                                                <string>&lt;h2&gt;Defines  the  behaviour  for  creation and display of filenames which fit into 8.3 characters. If a long name for a file exists, it will always be preferred display.&lt;/h2&gt;
+
+&lt;h3&gt;&lt;b&gt;Lower&lt;/b&gt;&lt;/h3&gt;
+Force the short name to lower case upon display; store a long name when the short name is not all upper case.
+
+&lt;h3&gt;&lt;b&gt;Windows 95&lt;/b&gt;&lt;/h3&gt;
+Force the short name to upper case upon display; store a long name when the short name is not all upper case.
+
+&lt;h3&gt;&lt;b&gt;Windows NT&lt;/b&gt;&lt;/h3&gt;
+Display the shortname as is; store a long name when the short name is not all lower case or all upper case.
+
+&lt;h3&gt;&lt;b&gt;Mixed&lt;/b&gt;&lt;/h3&gt;
+Display the short name as is; store a long name when the short name is not all upper case.</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QComboBox">
+                                            <item>
+                                                <property name="text">
+                                                    <string>Lower</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Windows 95</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Windows NT</string>
+                                                </property>
+                                            </item>
+                                            <item>
+                                                <property name="text">
+                                                    <string>Mixed</string>
+                                                </property>
+                                            </item>
+                                            <property name="name">
+                                                <cstring>option_shortname</cstring>
+                                            </property>
+                                            <property name="whatsThis" stdset="0">
+                                                <string>&lt;h2&gt;Defines  the  behaviour  for  creation and display of filenames which fit into 8.3 characters. If a long name for a file exists, it will always be preferred display.&lt;/h2&gt;
+
+&lt;h3&gt;&lt;b&gt;Lower&lt;/b&gt;&lt;/h3&gt;
+Force the short name to lower case upon display; store a long name when the short name is not all upper case.
+
+&lt;h3&gt;&lt;b&gt;Windows 95&lt;/b&gt;&lt;/h3&gt;
+Force the short name to upper case upon display; store a long name when the short name is not all upper case.
+
+&lt;h3&gt;&lt;b&gt;Windows NT&lt;/b&gt;&lt;/h3&gt;
+Display the shortname as is; store a long name when the short name is not all lower case or all upper case.
+
+&lt;h3&gt;&lt;b&gt;Mixed&lt;/b&gt;&lt;/h3&gt;
+Display the short name as is; store a long name when the short name is not all upper case.</string>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                            </vbox>
+                        </widget>
+                    </vbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>label_filesystem</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Filesystem: iso9660</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>spacer1</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Vertical</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </vbox>
+        </widget>
+    </hbox>
+</widget>
+<connections>
+    <connection>
+        <sender>option_ro</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>PropertiesPageGUI</receiver>
+        <slot>changedSlot()</slot>
+    </connection>
+</connections>
+<variables>
+    <variable>bool m_hasChanged;</variable>
+</variables>
+<signals>
+    <signal>changed()</signal>
+</signals>
+<slots>
+    <slot access="protected">changedSlot()</slot>
+</slots>
+<functions>
+    <function returnType="bool">hasChanged()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

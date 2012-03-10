@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+Name=Alexa
+Name[bn]=অ্যালেক্সা
+Name[eo]=Aleksa
+Name[hi]=अलेक्सा
+Name[lo]=ສຸວັນທອງ 
+Name[ne]=एलेक्सा
+Name[pa]=ਅਲੀਕਸਾ
+Name[ta]=அலெக்சா
+Name[te]=ఎలెక్సా
+ServiceTypes=SearchProvider
+Keys=al,alexa
+Query=http://info.alexa.com/search?q=\\{@}

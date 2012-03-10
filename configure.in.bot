@@ -1,0 +1,25 @@
+dnl put here things which have to be done as very last part of configure
+
+if test "d58a0606ed616820de291d594602665d" '!=' `echo fnord | $MD5SUM | cut -d ' ' $MD5SUM_CUT` ; then
+  echo ""
+  echo "Your md5 program ( $MD5SUM | cut -d ' ' $MD5SUM_CUT ) produces broken output."
+  echo "The fish:// IOSlave may not function correctly."
+  echo ""
+fi
+
+if test "$EXRSTATUS" = "no"; then
+  echo ""
+  echo "No OpenEXR Libraries were found"
+  echo "Install the OpenEXR package (from http://www.openexr.org)"
+  echo "if you want EXR image format support"
+  echo ""
+fi
+
+if test "$EXRSTATUS" = "old"; then
+  echo ""
+  echo "OpenEXR libraries were found, but at least version 1.1.0 is required"
+  echo "Install a newer OpenEXR package (from http://www.openexr.org)"
+  echo "if you want EXR image format support"
+  echo ""
+fi
+

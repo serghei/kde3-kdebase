@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Service
+Name=AustroNaut
+Name[af]=Ruimtevaarder
+Name[bn]=অস্ট্রো-নট
+Name[eo]=Aŭstronaŭto
+Name[hi]=आस्ट्रोनॉट
+Name[ne]=एस्ट्रोनट
+Name[pa]=ਅਸਟਰੋਨਾਊਟ
+Name[sv]=Astronaut
+Name[ta]=ஆஸ்ட்ரோநட்
+Name[te]=ఆస్ట్రొనాట్
+Name[zu]=Umuntu wasemkhathini
+ServiceTypes=SearchProvider
+Keys=austro,austronaut
+Query=http://austronaut.at/page.php?begriff=\{@}&wo=at
+Query[ko]=http://austronaut.at/page.php?begriff=\\{@}&wo=at
+Query[ne]=http://austronaut.at/page.php?begriff=\{@}wo=at
