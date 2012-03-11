@@ -1,4 +1,0 @@
-if test -z "$RUN_KAPPFINDER"; then
-  RUN_KAPPFINDER="no"
-fi
-AC_SUBST(RUN_KAPPFINDER)
