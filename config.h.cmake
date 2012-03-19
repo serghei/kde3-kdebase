@@ -93,6 +93,9 @@
 // kdm, kcheckpass, kdesktop
 #cmakedefine HAVE_PAM 1
 
+// kxkb, kdm, khotkeys
+#cmakedefine HAVE_XTEST 1
+
 // kcheckpass
 #cmakedefine KCHECKPASS_PAM_SERVICE "@KCHECKPASS_PAM_SERVICE@"
 

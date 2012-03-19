@@ -47,7 +47,7 @@ kde_add_executable( kdm_greet AUTOMOC
     kdm_greet.c kdmconfig.cpp kdmclock.cpp kconsole.cpp
     kfdialog.cpp kgdialog.cpp kchooser.cpp kgverify.cpp
     kdmshutdown.cpp kgreeter.cpp kgapp.cpp
-  LINK kdmthemer-static kdeui-shared Xtst
+  LINK kdmthemer-static kdeui-shared ${XTEST_LIBRARIES}
   DESTINATION ${BIN_INSTALL_DIR}
 )
 

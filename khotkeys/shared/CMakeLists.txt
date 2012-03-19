@@ -32,6 +32,6 @@ set( ${target}_SRCS
 kde_add_library( ${target} SHARED AUTOMOC
   SOURCES ${${target}_SRCS}
   VERSION 1.0.0
-  LINK kio-shared
+  LINK kio-shared ${XTEST_LIBRARIES}
   DESTINATION ${LIB_INSTALL_DIR}
 )

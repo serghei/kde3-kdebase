@@ -54,6 +54,10 @@ if( WITH_PAM AND (BUILD_KCHECKPASS OR BUILD_KDM) )
   endif( )
 endif( )
 
+# xtst
+if( WITH_XTST AND (BUILD_KXKB OR BUILD_KDM OR BUILD_KHOTKEYS) )
+  kde_search_module( XTEST xtst )
+endif( )
 
 # hal (ksmserver, kioslaves)
 if( WITH_HAL )
