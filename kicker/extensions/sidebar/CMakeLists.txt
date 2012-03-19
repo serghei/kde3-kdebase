@@ -9,9 +9,7 @@
 #
 #################################################
 
-if( NOT BUILD_LIBKONQ )
-  include( "${TDE_CMAKE_DIR}/libkonq.cmake" )
-endif( NOT BUILD_LIBKONQ )
+kde_import( libkonq )
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}

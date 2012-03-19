@@ -11,10 +11,7 @@
 
 project( konqueror )
 
-if( NOT BUILD_LIBKONQ )
-  include( "${TDE_CMAKE_DIR}/libkonq.cmake" )
-endif( NOT BUILD_LIBKONQ )
-
+kde_import( libkonq )
 
 add_definitions(
   -D_LARGEFILE64_SOURCE
