@@ -9,6 +9,8 @@
 #
 #################################################
 
+include( CheckCSourceRuns )
+
 check_c_source_runs( "
   class A { public: virtual A* me(); };
   class X { public: int x; virtual void ff() {}; };
