@@ -11,7 +11,6 @@
 
 project( libkonq )
 
-
 add_subdirectory( pics )
 add_subdirectory( favicons )
 
@@ -19,9 +18,8 @@ include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${KDE_INCLUDE_DIR}
-  ${QT_INCLUDE_DIR}
-  ${ARTS_INCLUDE_DIRS}
   ${KDE_INCLUDE_DIR}/arts
+  ${QT_INCLUDE_DIR}
 )
 
 
