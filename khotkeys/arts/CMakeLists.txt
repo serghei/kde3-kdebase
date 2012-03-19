@@ -10,10 +10,6 @@
 #################################################
 
 if( WITH_ARTS )
-  pkg_search_module( ARTS arts )
-  if( NOT ARTS_FOUND )
-    kde_message_fatal( "aRts is required, but not found on your system" )
-  endif( )
   set( HAVE_ARTS 1 CACHE INTERNAL "" FORCE )
 endif( )
 
