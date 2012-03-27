@@ -66,6 +66,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qtimer.h>
 #include <qregexp.h>
 
+#include <dbus/qdbusconnection.h>
+#include <dbus/qdbusdata.h>
+#include <dbus/qdbuserror.h>
+#include <dbus/qdbusmessage.h>
+#include <dbus/qdbusproxy.h>
+#include <dbus/qdbusvariant.h>
+
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
@@ -80,11 +87,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <dmctl.h>
 #include <kdebug.h>
 #include <knotifyclient.h>
+#include <kmessagebox.h>
 
 #include "server.h"
 #include "global.h"
 #include "shutdowndlg.h"
 #include "client.h"
+
+#define DBUS_UPOWER_SERVICE       "org.freedesktop.UPower"
+#define DBUS_UPOWER_PATH          "/org/freedesktop/UPower"
+#define DBUS_UPOWER_INTERFACE     "org.freedesktop.UPower"
+#define DBUS_PROPERTIES_INTERFACE "org.freedesktop.DBus.Properties"
+
 
 void KSMServer::logout( int confirm, int sdtype, int sdmode )
 {
@@ -122,10 +136,62 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
         (confirm == KApplication::ShutdownConfirmYes) ? false :
        (confirm == KApplication::ShutdownConfirmNo) ? true :
                   !config->readBoolEntry( "confirmLogout", true );
-    bool maysd = false;
-    if (config->readBoolEntry( "offerShutdown", true ) && DM().canShutdown())
-        maysd = true;
-    if (!maysd) {
+
+    bool mayShutdown = (config->readBoolEntry( "offerShutdown", true ) && DM().canShutdown());
+    bool maySuspend = config->readBoolEntry( "offerSuspend", true );
+    bool mayHibernate = config->readBoolEntry( "offerHibernate", true );
+    bool lockBeforeSuspendHibernate = config->readBoolEntry( "lockBeforeSuspendHibernate", true );
+
+    // FIXME At this moment we can't query for SuspendAllowed/HibernateAllowed because
+    //       we haven't support for ConsoleKit yet
+
+    // query upower for suspend/hibernate capability
+    QDBusConnection dbusConnection;
+    if( maySuspend || mayHibernate ) {
+
+        dbusConnection = QDBusConnection::addConnection(QDBusConnection::SystemBus);
+
+        if( dbusConnection.isConnected() ) {
+
+            // can suspend?
+            if( maySuspend ) {
+                QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
+                dbusMessage << QDBusData::fromString(DBUS_UPOWER_INTERFACE) << QDBusData::fromString("CanSuspend");
+
+                QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
+
+                if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+                    maySuspend = dbusReply[0].toVariant().value.toBool();
+                else {
+                    maySuspend = false;
+                    kdDebug() << "[dbus/upower] CanSuspend: " << dbusConnection.lastError().message() << "\n";
+                }
+            }
+
+            // can hibernate?
+            if( mayHibernate ) {
+                QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
+                dbusMessage << QDBusData::fromString(DBUS_UPOWER_INTERFACE) << QDBusData::fromString("CanHibernate");
+
+                QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
+
+                if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+                    mayHibernate = dbusReply[0].toVariant().value.toBool();
+                else {
+                    mayHibernate = false;
+                    kdDebug() << "[dbus/upower] CanHibernate: " << dbusConnection.lastError().message() << "\n";
+                }
+            }
+
+        } else { // cannot connect to D-Bus
+
+            maySuspend = mayHibernate = false;
+            kdDebug() << "[dbus] " << dbusConnection.lastError().message() << "\n";
+
+        }
+    }
+
+    if (!(mayShutdown || maySuspend || mayHibernate)) {
         if (sdtype != KApplication::ShutdownTypeNone &&
             sdtype != KApplication::ShutdownTypeDefault &&
             logoutConfirmed)
@@ -142,7 +208,7 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
     if ( !logoutConfirmed ) {
         KSMShutdownFeedback::start(); // make the screen gray
         logoutConfirmed =
-            KSMShutdownDlg::confirmShutdown( maysd, sdtype, bopt );
+            KSMShutdownDlg::confirmShutdown( mayShutdown, maySuspend, mayHibernate, sdtype, bopt );
         // ###### We can't make the screen remain gray while talking to the apps,
         // because this prevents interaction ("do you want to save", etc.)
         // TODO: turn the feedback widget into a list of apps to be closed,
@@ -150,7 +216,27 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
         KSMShutdownFeedback::stop(); // make the screen become normal again
     }
 
-    if ( logoutConfirmed ) {
+    if ( logoutConfirmed && ( KApplication::ShutdownTypeSuspend == sdtype || KApplication::ShutdownTypeHibernate == sdtype ) ) {
+
+        QString operation = ( KApplication::ShutdownTypeSuspend == sdtype ? "Suspend" : "Hibernate" );
+        QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, operation);
+
+        // we need reply only to catch errors
+        dbusConnection.sendWithReply(dbusMessage);
+
+        if( dbusConnection.lastError().type() != 0 ) {
+            QString error = dbusConnection.lastError().message();
+            if( KApplication::ShutdownTypeSuspend == sdtype )
+                KMessageBox::error(0, i18n("Unable to suspend the machine.\nReason: %1").arg(error), i18n("Suspend error"));
+            else
+                KMessageBox::error(0, i18n("Unable to hibernate the machine.\nReason: %1").arg(error), i18n("Hibernate error"));
+        } else if( lockBeforeSuspendHibernate ) {
+            // NOTE: we have locking there because we won't lock the desktop
+            //       in case of suspend/hibernate error
+            DCOPRef("kdesktop", "KScreensaverIface").send("lock");
+        }
+
+    } else if ( logoutConfirmed ) {
 
 	shutdownType = sdtype;
 	shutdownMode = sdmode;

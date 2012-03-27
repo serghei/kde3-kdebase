@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SMServerConfigDlg</class>
 <widget class="QWidget">
     <property name="name">
@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>325</width>
-            <height>366</height>
+            <width>357</width>
+            <height>574</height>
         </rect>
     </property>
     <property name="caption">
@@ -50,6 +50,9 @@
                     <property name="text">
                         <string>Conf&amp;irm logout</string>
                     </property>
+                    <property name="accel">
+                        <string>Alt+I</string>
+                    </property>
                     <property name="whatsThis" stdset="0">
                         <string>Check this option if you want the session manager to display a logout confirmation dialog box.</string>
                     </property>
@@ -60,6 +63,45 @@
                     </property>
                     <property name="text">
                         <string>O&amp;ffer shutdown options</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+F</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>offerSuspendCheck</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Offer &amp;suspend option</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+S</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>offerHibernateCheck</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Offer &amp;hibernate option</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+H</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>lockBeforeSuspendHibernateCheck</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Lock session before suspend/hibernate</string>
+                    </property>
+                    <property name="accel">
+                        <string>Alt+L</string>
                     </property>
                 </widget>
             </vbox>
@@ -127,23 +169,51 @@
                         <cstring>logoutRadio</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;End current session</string>
+                        <string>Logout</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>suspendRadio</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Suspend</string>
+                    </property>
+                </widget>
+                <widget class="QRadioButton">
+                    <property name="name">
+                        <cstring>hibernateRadio</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
+                    <property name="text">
+                        <string>Hibernate</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">
                     <property name="name">
                         <cstring>haltRadio</cstring>
                     </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
                     <property name="text">
-                        <string>&amp;Turn off computer</string>
+                        <string>Shutdown</string>
                     </property>
                 </widget>
                 <widget class="QRadioButton">
                     <property name="name">
                         <cstring>rebootRadio</cstring>
                     </property>
+                    <property name="enabled">
+                        <bool>false</bool>
+                    </property>
                     <property name="text">
-                        <string>&amp;Restart computer</string>
+                        <string>Reboot</string>
                     </property>
                 </widget>
             </vbox>
@@ -199,6 +269,8 @@
         </spacer>
     </vbox>
 </widget>
+<customwidgets>
+</customwidgets>
 <connections>
     <connection>
         <sender>confirmLogoutCheck</sender>
@@ -227,11 +299,59 @@
     <connection>
         <sender>offerShutdownCheck</sender>
         <signal>toggled(bool)</signal>
-        <receiver>sdGroup</receiver>
+        <receiver>haltRadio</receiver>
         <slot>setEnabled(bool)</slot>
     </connection>
     <connection>
         <sender>offerShutdownCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>rebootRadio</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>offerSuspendCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>suspendRadio</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+      <sender>offerSuspendCheck</sender>
+      <signal>toggled(bool)</signal>
+      <receiver>SMServerConfigDlg</receiver>
+      <slot>offerSuspendOrHibernateChanged()</slot>
+    </connection>
+    <connection>
+        <sender>offerHibernateCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>hibernateRadio</receiver>
+        <slot>setEnabled(bool)</slot>
+    </connection>
+    <connection>
+      <sender>offerHibernateCheck</sender>
+      <signal>toggled(bool)</signal>
+      <receiver>SMServerConfigDlg</receiver>
+      <slot>offerSuspendOrHibernateChanged()</slot>
+    </connection>
+    <connection>
+        <sender>offerShutdownCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>offerSuspendCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>offerHibernateCheck</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>SMServerConfigDlg</receiver>
+        <slot>configChanged()</slot>
+    </connection>
+    <connection>
+        <sender>lockBeforeSuspendHibernateCheck</sender>
         <signal>toggled(bool)</signal>
         <receiver>SMServerConfigDlg</receiver>
         <slot>configChanged()</slot>
@@ -242,7 +362,11 @@
 </includes>
 <slots>
     <slot>configChanged()</slot>
+    <slot>offerSuspendOrHibernateChanged()</slot>
 </slots>
 <layoutdefaults spacing="3" margin="6"/>
 <layoutfunctions spacing="KDialog::spacingHint" margin="KDialog::marginHint"/>
+<includehints>
+    <includehint>klineedit.h</includehint>
+</includehints>
 </UI>

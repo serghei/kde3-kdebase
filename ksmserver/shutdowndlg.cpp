@@ -86,7 +86,7 @@ void KSMShutdownFeedback::slotPaintEffect()
 //////
 
 KSMShutdownDlg::KSMShutdownDlg( QWidget* parent,
-                                bool maysd, KApplication::ShutdownType sdtype )
+                                bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType sdtype )
   : QDialog( parent, 0, TRUE, WType_Popup ), targets(0)
     // this is a WType_Popup on purpose. Do not change that! Not
     // having a popup here has severe side effects.
@@ -125,15 +125,35 @@ KSMShutdownDlg::KSMShutdownDlg( QWidget* parent,
     buttonlay->addStretch( 1 );
 
     // End session
-    KPushButton* btnLogout = new KPushButton( KGuiItem( i18n("&End Current Session"), "undo"), frame );
+    KPushButton* btnLogout = new KPushButton( KGuiItem( i18n("&Logout"), "undo"), frame );
     QFont btnFont = btnLogout->font();
     buttonlay->addWidget( btnLogout );
     connect(btnLogout, SIGNAL(clicked()), SLOT(slotLogout()));
 
+    // Suspend computer
+    if ( maySuspend ) {
+        KPushButton* btnSuspend = new KPushButton( KGuiItem( i18n("&Suspend"), "suspend"), frame );
+        btnSuspend->setFont( btnFont );
+        buttonlay->addWidget( btnSuspend );
+        connect(btnSuspend, SIGNAL(clicked()), SLOT(slotSuspend()));
+        if ( sdtype == KApplication::ShutdownTypeSuspend )
+            btnSuspend->setFocus();
+    }
+
+    // Hibernate computer
+    if ( mayHibernate ) {
+        KPushButton* btnHibernate = new KPushButton( KGuiItem( i18n("&Hibernate"), "hibernate"), frame );
+        btnHibernate->setFont( btnFont );
+        buttonlay->addWidget( btnHibernate );
+        connect(btnHibernate, SIGNAL(clicked()), SLOT(slotHibernate()));
+        if ( sdtype == KApplication::ShutdownTypeHibernate )
+            btnHibernate->setFocus();
+    }
+
     if (maysd) {
 
         // Shutdown
-        KPushButton* btnHalt = new KPushButton( KGuiItem( i18n("&Turn Off Computer"), "exit"), frame );
+        KPushButton* btnHalt = new KPushButton( KGuiItem( i18n("Shut&down"), "exit"), frame );
         btnHalt->setFont( btnFont );
         buttonlay->addWidget( btnHalt );
         connect(btnHalt, SIGNAL(clicked()), SLOT(slotHalt()));
@@ -141,7 +161,7 @@ KSMShutdownDlg::KSMShutdownDlg( QWidget* parent,
             btnHalt->setFocus();
 
         // Reboot
-        KSMDelayedPushButton* btnReboot = new KSMDelayedPushButton( KGuiItem( i18n("&Restart Computer"), "reload"), frame );
+        KSMDelayedPushButton* btnReboot = new KSMDelayedPushButton( KGuiItem( i18n("&Reboot"), "reload"), frame );
         btnReboot->setFont( btnFont );
         buttonlay->addWidget( btnReboot );
 
@@ -190,6 +210,19 @@ void KSMShutdownDlg::slotLogout()
     accept();
 }
 
+void KSMShutdownDlg::slotSuspend()
+{
+    m_bootOption = QString::null;
+    m_shutdownType = KApplication::ShutdownTypeSuspend;
+    accept();
+}
+
+void KSMShutdownDlg::slotHibernate()
+{
+    m_bootOption = QString::null;
+    m_shutdownType = KApplication::ShutdownTypeHibernate;
+    accept();
+}
 
 void KSMShutdownDlg::slotReboot()
 {
@@ -216,12 +249,12 @@ void KSMShutdownDlg::slotHalt()
 }
 
 
-bool KSMShutdownDlg::confirmShutdown( bool maysd, KApplication::ShutdownType& sdtype, QString& bootOption )
+bool KSMShutdownDlg::confirmShutdown( bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType& sdtype, QString& bootOption )
 {
     kapp->enableStyles();
     KSMShutdownDlg* l = new KSMShutdownDlg( 0,
                                             //KSMShutdownFeedback::self(),
-                                            maysd, sdtype );
+                                            maysd, maySuspend, mayHibernate, sdtype );
 
     // Show dialog (will save the background in showEvent)
     QSize sh = l->sizeHint();

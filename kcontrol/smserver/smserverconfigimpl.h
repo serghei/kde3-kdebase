@@ -33,6 +33,7 @@ public:
 public slots: // Public slots
   /** No descriptions */
   void configChanged();
+  void offerSuspendOrHibernateChanged();
 signals: // Signals
   /** No descriptions */
   void changed();

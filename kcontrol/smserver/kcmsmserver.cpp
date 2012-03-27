@@ -67,9 +67,18 @@ void SMServerConfig::load(bool useDefaults )
   c->setReadDefaults( useDefaults );
   c->setGroup("General");
   dialog->confirmLogoutCheck->setChecked(c->readBoolEntry("confirmLogout", true));
+
   bool en = c->readBoolEntry("offerShutdown", true);
   dialog->offerShutdownCheck->setChecked(en);
-  dialog->sdGroup->setEnabled(en);
+
+  en = c->readBoolEntry("offerSuspend", true);
+  dialog->offerSuspendCheck->setChecked(en);
+
+  en = c->readBoolEntry("offerHibernate", true);
+  dialog->offerHibernateCheck->setChecked(en);
+
+  en = c->readBoolEntry("lockBeforeSuspendHibernate", true);
+  dialog->lockBeforeSuspendHibernateCheck->setChecked(en);
 
   QString s = c->readEntry( "loginMode" );
   if ( s == "default" )
@@ -80,6 +89,12 @@ void SMServerConfig::load(bool useDefaults )
       dialog->previousSessionRadio->setChecked(true);
 
   switch (c->readNumEntry("shutdownType", int(KApplication::ShutdownTypeNone))) {
+  case int(KApplication::ShutdownTypeSuspend):
+    dialog->suspendRadio->setChecked(true);
+    break;
+  case int(KApplication::ShutdownTypeHibernate):
+    dialog->hibernateRadio->setChecked(true);
+    break;
   case int(KApplication::ShutdownTypeHalt):
     dialog->haltRadio->setChecked(true);
     break;
@@ -103,6 +118,9 @@ void SMServerConfig::save()
   c->setGroup("General");
   c->writeEntry( "confirmLogout", dialog->confirmLogoutCheck->isChecked());
   c->writeEntry( "offerShutdown", dialog->offerShutdownCheck->isChecked());
+  c->writeEntry( "offerSuspend", dialog->offerSuspendCheck->isChecked());
+  c->writeEntry( "offerHibernate", dialog->offerHibernateCheck->isChecked());
+  c->writeEntry( "lockBeforeSuspendHibernate", dialog->lockBeforeSuspendHibernateCheck->isChecked());
   QString s = "restorePreviousLogout";
   if ( dialog->emptySessionRadio->isChecked() )
       s = "default";
@@ -111,11 +129,15 @@ void SMServerConfig::save()
   c->writeEntry( "loginMode", s );
 
   c->writeEntry( "shutdownType",
-                 dialog->haltRadio->isChecked() ?
-                   int(KApplication::ShutdownTypeHalt) :
-                   dialog->rebootRadio->isChecked() ?
-                     int(KApplication::ShutdownTypeReboot) :
-                     int(KApplication::ShutdownTypeNone));
+                 dialog->suspendRadio->isChecked() && dialog->suspendRadio->isEnabled() ?
+                   int(KApplication::ShutdownTypeSuspend) :
+                   dialog->hibernateRadio->isChecked() && dialog->hibernateRadio->isEnabled() ?
+                     int(KApplication::ShutdownTypeHibernate) :
+                     dialog->haltRadio->isChecked() && dialog->haltRadio->isEnabled() ?
+                       int(KApplication::ShutdownTypeHalt) :
+                       dialog->rebootRadio->isChecked() && dialog->rebootRadio->isEnabled() ?
+                         int(KApplication::ShutdownTypeReboot) :
+                         int(KApplication::ShutdownTypeNone));
   c->writeEntry("excludeApps", dialog->excludeLineedit->text());
   c->sync();
   delete c;

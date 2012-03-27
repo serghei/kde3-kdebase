@@ -35,5 +35,5 @@ kde_add_kdeinit_executable( ksmserver AUTOMOC
   SOURCES
     main.cpp server.cpp shutdowndlg.cpp legacy.cpp startup.cpp
     shutdown.cpp client.cpp KSMServerInterface.skel server.skel
-  LINK dmctl-static kdeui-shared
+  LINK dmctl-static kdeui-shared kdedbus-shared
 )

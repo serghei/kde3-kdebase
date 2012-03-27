@@ -15,6 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <qcheckbox.h>
+
 #include "smserverconfigimpl.h"
 #include "smserverconfigimpl.moc"
 
@@ -27,5 +29,11 @@ SMServerConfigImpl::~SMServerConfigImpl(){
 void SMServerConfigImpl::configChanged(){
 
  emit changed();
+
+}
+
+void SMServerConfigImpl::offerSuspendOrHibernateChanged(){
+
+  lockBeforeSuspendHibernateCheck->setEnabled(offerSuspendCheck->isChecked() || offerHibernateCheck->isChecked());
 
 }
