@@ -19,8 +19,7 @@ install( FILES
 
 install( PROGRAMS
     ${CMAKE_CURRENT_BINARY_DIR}/khc_htdig.pl khc_htsearch.pl
-    ${CMAKE_CURRENT_BINARY_DIR}/khc_docbookdig.pl khc_beagle_search.pl
-     khc_mansearch.pl  khc_beagle_index.pl
+    ${CMAKE_CURRENT_BINARY_DIR}/khc_docbookdig.pl khc_mansearch.pl
   DESTINATION ${BIN_INSTALL_DIR} )
 
 install( FILES
