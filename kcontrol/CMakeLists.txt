@@ -63,7 +63,7 @@ if( BUILD_KCONTROL )
   add_subdirectory( xinerama )
   add_subdirectory( display )
   add_subdirectory( kthememanager )
-#  add_subdirectory( kfontinst )
+  add_subdirectory( kfontinst )
   add_subdirectory( access )
 
   kde_conditional_add_subdirectory( WITH_SAMBA samba )
