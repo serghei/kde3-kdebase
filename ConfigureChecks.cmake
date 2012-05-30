@@ -121,8 +121,8 @@ if( WITH_XDAMAGE )
 endif( )
 
 
-# xext (kwin/kompmgr)
-if( WITH_XEXT )
+# xext (kwin/kompmgr/kdesktop)
+if( WITH_XEXT OR BUILD_KDESKTOP )
   pkg_search_module( XEXT xext )
   if( NOT XEXT_FOUND )
     kde_message_fatal( "xext is required, but was not found on your system" )
