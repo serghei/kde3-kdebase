@@ -11,8 +11,8 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_BINARY_DIR}/kioslave/media/libmediacommon
-  ${CMAKE_SOURCE_DIR}/kioslave/media/libmediacommon
+  ${CMAKE_CURRENT_BINARY_DIR}/../libmediacommon
+  ${CMAKE_CURRENT_SOURCE_DIR}/../libmediacommon
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
 )

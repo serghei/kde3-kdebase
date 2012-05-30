@@ -11,7 +11,7 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/kioslave/media/libmediacommon
+  ${CMAKE_CURRENT_SOURCE_DIR}/../libmediacommon
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
 )
@@ -19,14 +19,8 @@ include_directories(
 
 ##### kio_media_mounthelper (executable) ########
 
-set( target kio_media_mounthelper )
-
-set( ${target}_SRCS
-  kio_media_mounthelper.cpp decryptdialog.ui
-)
-
-kde_add_executable( ${target} AUTOMOC
-  SOURCES ${${target}_SRCS}
+kde_add_executable( kio_media_mounthelper AUTOMOC
+  SOURCES kio_media_mounthelper.cpp
   LINK mediacommon-static kio-shared
   DESTINATION ${BIN_INSTALL_DIR}
 )

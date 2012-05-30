@@ -13,7 +13,7 @@ check_include_file( "sys/statvfs.h" HAVE_STATVFS )
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_SOURCE_DIR}/kioslave/media/libmediacommon
+  ${CMAKE_CURRENT_SOURCE_DIR}/../libmediacommon
   ${CMAKE_BINARY_DIR}
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
