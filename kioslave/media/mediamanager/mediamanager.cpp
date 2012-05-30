@@ -32,6 +32,10 @@
 
 #include "fstabbackend.h"
 
+#ifdef COMPILE_UDISKS2BACKEND
+#include "udisks2backend.h"
+#endif // COMPILE_UDISKS2BACKEND
+
 #ifdef COMPILE_HALBACKEND
 #include "halbackend.h"
 #endif //COMPILE_HALBACKEND
@@ -77,8 +81,28 @@ void MediaManager::loadBackends()
     }
 
     mp_removableBackend = 0L;
+    m_udisks2backend = 0L;
     m_halbackend = 0L;
     m_fstabbackend = 0L;
+
+#ifdef COMPILE_UDISKS2BACKEND
+    if ( MediaManagerSettings::self()->uDisks2BackendEnabled() )
+    {
+        m_udisks2backend = new UDisks2Backend(m_mediaList);
+        if( m_udisks2backend->initialize() )
+        {
+            m_backends.append( m_udisks2backend );
+            // No need to load something else...
+            m_mediaList.blockSignals(false);
+            return;
+        }
+        else
+        {
+            delete m_udisks2backend;
+            m_udisks2backend = 0;
+        }
+    }
+#endif // COMPILE_UDISKS2BACKEND
 
 #ifdef COMPILE_HALBACKEND
     if ( MediaManagerSettings::self()->halBackendEnabled() )
@@ -208,6 +232,11 @@ bool MediaManager::setMountoptions(const QString &name, const QStringList &optio
 
 QString MediaManager::mount(const QString &name)
 {
+#ifdef COMPILE_UDISKS2BACKEND
+    if (!m_udisks2backend)
+        return i18n("Feature only available with UDisks2");
+    return m_udisks2backend->mount(name);
+#else
 #ifdef COMPILE_HALBACKEND
     if (!m_halbackend)
         return i18n("Feature only available with HAL");
@@ -217,10 +246,16 @@ QString MediaManager::mount(const QString &name)
         return i18n("Feature only available with HAL");
     return m_fstabbackend->mount( name );
 #endif
+#endif
 }
 
 QString MediaManager::unmount(const QString &name)
 {
+#ifdef COMPILE_UDISKS2BACKEND
+    if (!m_udisks2backend)
+        return i18n("Feature only available with UDisks2");
+    return m_udisks2backend->unmount(name);
+#else
 #ifdef COMPILE_HALBACKEND
     if (!m_halbackend)
         return i18n("Feature only available with HAL");
@@ -229,6 +264,7 @@ QString MediaManager::unmount(const QString &name)
     if ( !m_fstabbackend ) // lying :)
         return i18n("Feature only available with HAL");
     return m_fstabbackend->unmount( name );
+#endif
 #endif
 }
 

@@ -9,13 +9,10 @@
 #
 #################################################
 
-# FIXME there is no support for HAL and linuxcdpolling yet
-
-
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_BINARY_DIR}/kioslave/media/libmediacommon
-  ${CMAKE_SOURCE_DIR}/kioslave/media/libmediacommon
+  ${CMAKE_CURRENT_BINARY_DIR}/../libmediacommon
+  ${CMAKE_CURRENT_SOURCE_DIR}/../libmediacommon
   ${CMAKE_BINARY_DIR}
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
@@ -30,31 +27,23 @@ install( FILES mediamanager.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kded )
 
 ##### kded_mediamanager (module) ################
 
-set( target kded_mediamanager )
+if( WITH_UDISKS2 )
+  set_source_files_properties( mediamanager.cpp PROPERTIES COMPILE_FLAGS "-DCOMPILE_UDISKS2BACKEND" )
+  set( KDEDBUS_LIBRARY kdedbus-shared )
+  list( APPEND backends udisks2backend.cpp )
+endif( )
 
 if( WITH_HAL )
-  set( ${target}_SRCS
-    mediamanager.cpp mediamanager.skel medialist.cpp
-    backendbase.cpp fstabbackend.cpp removablebackend.cpp
-    mediadirnotify.cpp mediadirnotify.skel
-    halbackend.cpp linuxcdpolling.cpp
-  )
-
-  kde_add_kpart( ${target} AUTOMOC
-    SOURCES ${${target}_SRCS}
-    LINK mediacommon-static kdeinit_kded-shared ${HAL_LIBRARIES} -lhal-storage ${DBUS_TQT_LIBRARIES}
-    DESTINATION ${PLUGIN_INSTALL_DIR}
-  )
-else( )
-  set( ${target}_SRCS
-    mediamanager.cpp mediamanager.skel medialist.cpp
-    backendbase.cpp fstabbackend.cpp removablebackend.cpp
-    mediadirnotify.cpp mediadirnotify.skel
-  )
-
-  kde_add_kpart( ${target} AUTOMOC
-    SOURCES ${${target}_SRCS}
-    LINK mediacommon-static kdeinit_kded-shared
-    DESTINATION ${PLUGIN_INSTALL_DIR}
-  )
+  list( APPEND backends halbackend.cpp )
 endif( )
+
+kde_add_kpart( kded_mediamanager AUTOMOC
+  SOURCES
+    mediamanager.cpp mediamanager.skel medialist.cpp
+    backendbase.cpp fstabbackend.cpp removablebackend.cpp
+    mediadirnotify.cpp mediadirnotify.skel ${backends}
+  LINK
+    mediacommon-static kdeinit_kded-shared
+    ${KDEDBUS_LIBRARY} ${HAL_LIBRARIES}
+  DESTINATION ${PLUGIN_INSTALL_DIR}
+)

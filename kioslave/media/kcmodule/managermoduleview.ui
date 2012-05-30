@@ -12,10 +12,24 @@
             <height>480</height>
         </rect>
     </property>
+    <property name="caption">
+        <string>ManagerModuleView</string>
+    </property>
     <vbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
+        <widget class="QCheckBox">
+            <property name="name">
+                <cstring>kcfg_UDisks2BackendEnabled</cstring>
+            </property>
+            <property name="text">
+                <string>Enable UDisks2 backend</string>
+            </property>
+            <property name="whatsThis" stdset="0">
+                <string>Select this if you want to enable the UDisks2 (http://www.freedesktop.org/wiki/Software/udisks) support.</string>
+            </property>
+        </widget>
         <widget class="QCheckBox">
             <property name="name">
                 <cstring>kcfg_HalBackendEnabled</cstring>
@@ -62,7 +76,7 @@
             <property name="sizeHint">
                 <size>
                     <width>21</width>
-                    <height>360</height>
+                    <height>320</height>
                 </size>
             </property>
         </spacer>

@@ -1,5 +1,5 @@
 /* This file is part of the KDE Project
-   Copyright (c) 2005 Kévin Ottens <ervin ipsquad net>
+   Copyright (c) 2005 Kï¿½vin Ottens <ervin ipsquad net>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -35,19 +35,26 @@ ManagerModule::ManagerModule( QWidget* parent, const char* name )
 
 	addConfig(  MediaManagerSettings::self(), view );
 
+#ifndef COMPILE_UDISKS2BACKEND
+	QString udisks2_text = view->kcfg_UDisks2BackendEnabled->text();
+	udisks2_text += " ("+i18n("No support for UDisks2 on this system")+")";
+	view->kcfg_UDisks2BackendEnabled->setText( udisks2_text );
+	view->kcfg_UDisks2BackendEnabled->setEnabled( false );
+#endif
+
 #ifndef COMPILE_HALBACKEND
 	QString hal_text = view->kcfg_HalBackendEnabled->text();
 	hal_text += " ("+i18n("No support for HAL on this system")+")";
 	view->kcfg_HalBackendEnabled->setText( hal_text );
-#endif
 	view->kcfg_HalBackendEnabled->setEnabled( false );
+#endif
 
 #ifndef COMPILE_LINUXCDPOLLING
 	QString poll_text = view->kcfg_CdPollingEnabled->text();
 	poll_text += " ("+i18n("No support for CD polling on this system")+")";
 	view->kcfg_CdPollingEnabled->setText( poll_text );
-#endif
 	view->kcfg_CdPollingEnabled->setEnabled( false );
+#endif
 
 	load();
 }

@@ -1,5 +1,5 @@
 /* This file is part of the KDE Project
-   Copyright (c) 2004 Kévin Ottens <ervin ipsquad net>
+   Copyright (c) 2004 Kï¿½vin Ottens <ervin ipsquad net>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -28,6 +28,7 @@
 #include "removablebackend.h"
 #include "mediadirnotify.h"
 
+class UDisks2Backend;
 class HALBackend;
 class FstabBackend;
 
@@ -82,6 +83,7 @@ private:
 	MediaList m_mediaList;
 	QValueList<BackendBase*> m_backends;
 	RemovableBackend *mp_removableBackend;
+	UDisks2Backend *m_udisks2backend;
 	HALBackend *m_halbackend;
 	MediaDirNotify m_dirNotify;
 	FstabBackend *m_fstabbackend;

@@ -4,6 +4,11 @@
 <kcfg>
   <kcfgfile name="mediamanagerrc"/>
   <group name="Global">
+    <entry name="UDisks2BackendEnabled" type="Bool">
+      <label>Enable UDisks2 backend</label>
+      <whatsthis>When UDisks2 support is enabled, KDE will use it to gather information on the storage media available in your system.</whatsthis>
+      <default>true</default>
+    </entry>
     <entry name="HalBackendEnabled" type="Bool">
       <label>Enable HAL backend</label>
       <whatsthis>When HAL (Hardware Abstraction Layer) support is enabled, KDE will use it to gather information on the storage media available in your system.</whatsthis>

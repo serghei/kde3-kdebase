@@ -11,8 +11,8 @@
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_BINARY_DIR}/kioslave/media/libmediacommon
-  ${CMAKE_SOURCE_DIR}/kioslave/media/libmediacommon
+  ${CMAKE_CURRENT_BINARY_DIR}/../libmediacommon
+  ${CMAKE_CURRENT_SOURCE_DIR}/../libmediacommon
   ${CMAKE_BINARY_DIR}
   ${KDE_INCLUDE_DIR}
   ${QT_INCLUDE_DIR}
@@ -26,16 +26,15 @@ install( FILES media.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 
 ##### kcm_media (module) ########################
 
-set( target kcm_media )
+if( WITH_UDISKS2 )
+  set_source_files_properties( managermodule.cpp PROPERTIES COMPILE_FLAGS "-DCOMPILE_UDISKS2BACKEND" )
+endif( )
 
-set( ${target}_SRCS
-  notifiermodule.cpp notifiermoduleview.ui serviceconfigdialog.cpp
-  serviceview.ui mimetypelistboxitem.cpp managermodule.cpp
-  managermoduleview.ui main.cpp
-)
-
-kde_add_kpart( ${target} AUTOMOC
-  SOURCES ${${target}_SRCS}
+kde_add_kpart( kcm_media AUTOMOC
+  SOURCES
+    notifiermodule.cpp notifiermoduleview.ui serviceconfigdialog.cpp
+    serviceview.ui mimetypelistboxitem.cpp managermodule.cpp
+    managermoduleview.ui main.cpp
   LINK mediacommon-static kio-shared
   DESTINATION ${PLUGIN_INSTALL_DIR}
 )
