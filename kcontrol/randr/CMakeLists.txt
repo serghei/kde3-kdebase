@@ -44,6 +44,6 @@ kde_add_executable( krandrtray AUTOMOC
   SOURCES
     main.cpp krandrtray.cpp krandrapp.cpp
     krandrpassivepopup.cpp
-  LINK randrinternal-static kutils-shared
+  LINK randrinternal-static kutils-shared ${XRANDR_LIBRARIES}
   DESTINATION ${BIN_INSTALL_DIR}
 )
