@@ -48,6 +48,7 @@ public:
 
     bool toBool() const;
     int toInt() const;
+    Q_INT64 toInt64() const;
     QString toString() const;
     QStringList toStringList() const;
     QDBusObjectPath toObjectPath() const;
@@ -99,6 +100,7 @@ private:
     QString m_device;
     QString m_label;
     QString m_fsType;
+    Q_INT64 m_size;
 
     // filesystem interface
     bool m_filesystem;
@@ -149,6 +151,19 @@ inline QString qDBusByteListToString(const QDBusData &data)
 }
 
 
+QString qHumanReadableSize(Q_INT64 size)
+{
+    const char *units[] = { "B", "KiB", "MiB", "GiB", "TiB", "PiB" };
+    int mod = 1024;
+
+    int i;
+    for(i = 0; size > mod && i < 5; i++)
+        size /= mod;
+
+    return QString("%1%2").arg(size).arg(units[i]);
+}
+
+
 
 /***** class Property ******************************/
 
@@ -170,6 +185,14 @@ int Property::toInt() const
     if(QDBusData::UInt32 == m_data.type())
         return m_data.toUInt32();
     return m_data.toInt32();
+}
+
+
+Q_INT64 Property::toInt64() const
+{
+    if(QDBusData::UInt64 == m_data.type())
+        return m_data.toUInt64();
+    return m_data.toInt64();
 }
 
 
@@ -285,6 +308,7 @@ Medium *Object::createMountableMedium()
     Q_ASSERT(drive);
 
     QString name = (m_label.isEmpty() ? QString(m_device).section('/', -1, -1) : m_label);
+    QString label = m_label;
 
     QString mimeType;
     QString iconName;
@@ -297,16 +321,22 @@ Medium *Object::createMountableMedium()
             mimeType = "media/dvd";
         else
             mimeType = "media/cdrom";
+        if(label.isEmpty())
+            label = i18n("Optical Media");
     }
 
     // removable media
     else if(drive->m_removable) {
         mimeType = "media/removable";
+        if(label.isEmpty())
+            label = i18n("Removable Media");
     }
 
     // other media
     else {
         mimeType = "media/hdd";
+        if(label.isEmpty())
+            label = i18n("Hard Disk");
     }
 
     if("thumb" == drive->m_media)
@@ -331,8 +361,11 @@ Medium *Object::createMountableMedium()
     if(!iconName.isEmpty())
         iconName += (m_mounted ? "_mount" : "_unmount");
 
+    if(m_label.isEmpty())
+        label = QString("%1 %2 (%3)").arg(qHumanReadableSize(m_size)).arg(label).arg(name);
+
     Medium *medium = new Medium(path(), name);
-    medium->setLabel(name);
+    medium->setLabel(label);
     medium->mountableState(m_device, m_mountPoint, m_fsType, m_mounted);
     medium->setMimeType(mimeType);
     medium->setIconName(iconName);
@@ -435,6 +468,10 @@ void Object::propertiesChanged(const QString &interface, const QDBusDataMap<QStr
             }
             else if("IdType" == propertyName)
                 m_fsType = propertyValue.toString();
+            else if("Size" == propertyName) {
+                m_size = propertyValue.toInt64();
+                mediumNeedUpdate = true;
+            }
         }
 
         // properties of filesystem
