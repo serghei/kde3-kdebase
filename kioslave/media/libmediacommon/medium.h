@@ -1,5 +1,5 @@
 /* This file is part of the KDE Project
-   Copyright (c) 2004 Kévin Ottens <ervin ipsquad net>
+   Copyright (c) 2004 KÃ©vin Ottens <ervin ipsquad net>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -27,7 +27,7 @@
 class Medium
 {
 public:
-	typedef QValueList<const Medium> List;
+	typedef QValueList<Medium> List;
 
 	static const uint ID = 0;
 	static const uint NAME = 1;
@@ -89,7 +89,7 @@ private:
 	QStringList m_properties;
 	mutable bool m_halmounted;
 	
-friend class QValueListNode<const Medium>;
+friend class QValueListNode<Medium>;
 };
 
 namespace MediaManagerUtils {
