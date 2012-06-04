@@ -66,6 +66,9 @@ public:
     Object(ObjectManager *objectManager, const QDBusObjectPath &objectPath, const QDBusConnection &dbusConnection);
     ~Object();
 
+    QString mount();
+    QString unmount(bool force);
+
     bool isEmpty() const { return m_interfaces.isEmpty(); }
 
     void addInterfaces(const QDBusDataMap<QString> &interfaces);
@@ -249,6 +252,47 @@ Object::~Object()
 }
 
 
+QString Object::mount()
+{
+    QMap<QString, QDBusVariant> options;
+
+    QValueList<QDBusData> params;
+    params << QDBusData::fromStringKeyMap(QDBusDataMap<QString>(options));
+
+    QDBusError error;
+    QDBusData response;
+
+    if(!callMethod("org.freedesktop.UDisks2.Filesystem", "Mount", params, response, error))
+      return i18n("Unable to mount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
+
+    return QString::null;
+}
+
+
+QString Object::unmount(bool force)
+{
+    QMap<QString, QDBusVariant> options;
+
+    if(force) {
+        QDBusVariant force;
+        force.value = QDBusData::fromBool(true);
+        force.signature = force.value.buildDBusSignature();
+        options["force"] = force;
+    }
+
+    QValueList<QDBusData> params;
+    params << QDBusData::fromStringKeyMap(QDBusDataMap<QString>(options));
+
+    QDBusError error;
+    QDBusData response;
+
+    if(!callMethod("org.freedesktop.UDisks2.Filesystem", "Unmount", params, response, error))
+      return i18n("Unable to unmount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
+
+    return QString::null;
+}
+
+
 void Object::addInterfaces(const QDBusDataMap<QString> &interfaces)
 {
     for(QDBusDataMap<QString>::const_iterator it = interfaces.begin(); it != interfaces.end(); ++it) {
@@ -423,6 +467,8 @@ bool Object::checkMediaAvailability()
     // media is not available anymore
     else {
         m_objectManager->m_mediaList.removeMedium(path(), true);
+        if(m_mounted)
+            unmount(true);
     }
 
     m_mediaAvailable = mediaAvailable;
@@ -651,18 +697,7 @@ QString UDisks2Backend::mount(const QString &name)
     if(!obj)
         return i18n("No such udisks2 object in cache: %1").arg(name);
 
-    QMap<QString, QDBusVariant> options;
-
-    QValueList<QDBusData> params;
-    params << QDBusData::fromStringKeyMap(QDBusDataMap<QString>(options));
-
-    QDBusError error;
-    QDBusData response;
-
-    if(!obj->callMethod("org.freedesktop.UDisks2.Filesystem", "Mount", params, response, error))
-      return i18n("Unable to mount medium \"%1\".\nReason: %2").arg(medium->label()).arg(error.message());
-
-   return QString::null;
+   return obj->mount();
 }
 
 
@@ -676,16 +711,5 @@ QString UDisks2Backend::unmount(const QString &name)
     if(!obj)
         return i18n("No such udisks2 object in cache: %1").arg(name);
 
-    QMap<QString, QDBusVariant> options;
-
-    QValueList<QDBusData> params;
-    params << QDBusData::fromStringKeyMap(QDBusDataMap<QString>(options));
-
-    QDBusError error;
-    QDBusData response;
-
-    if(!obj->callMethod("org.freedesktop.UDisks2.Filesystem", "Unmount", params, response, error))
-      return i18n("Unable to unmount medium \"%1\".\nReason: %2").arg(medium->label()).arg(error.message());
-
-   return QString::null;
+   return obj->unmount(false);
 }
