@@ -569,7 +569,9 @@ QString KSshProcess::getLine() {
         // If we still don't have anything in our buffer so there must
         // not be anything on the pty or stderr. Setup a select()
         // to wait for some data from SSH.
-        if( buffer.empty() ) {
+        // Hack around select() failure on newer systems
+        unsigned long milliseconds = 0;
+        while ((buffer.size() == 0) && (milliseconds < (60*1000))) {
             //kdDebug(KSSHPROC) << "KSshProcess::getLine(): " <<
             //    "Line buffer empty, calling select() to wait for data." << endl;
             int errfd = ssh.stderrFd();
@@ -616,14 +618,18 @@ QString KSshProcess::getLine() {
             // had data on it first.
             if( FD_ISSET(ptyfd, &rfds) ) {
                 ptyLine = ssh.readLineFromPty(false);
-                buffer.prepend(QString(ptyLine));
+                if (ptyLine.size() > 0) {
+                    buffer.prepend(QString(ptyLine));
+                }
                 //kdDebug(KSSHPROC) << "KSshProcess::getLine(): "
                 //    "line from pty -" << ptyLine  << endl;
             }
-            
+
             if( FD_ISSET(errfd, &rfds) ) {
                 errLine = ssh.readLineFromStderr(false);
-                buffer.prepend(QString(errLine));
+                if (errLine.size() > 0) {
+                    buffer.prepend(QString(errLine));
+                }
                 //kdDebug(KSSHPROC) << "KSshProcess::getLine(): "
                 //    "line from err -" << errLine << endl;
             }
@@ -637,7 +643,11 @@ QString KSshProcess::getLine() {
                 kdDebug(KSSHPROC) << "KSshProcess::getLine(): "
                     "Exception on std err file descriptor." << endl;
             }
-            
+
+            if (buffer.size() == 0) {
+                milliseconds++;
+                usleep(1000);
+            }
         }
     }
    
