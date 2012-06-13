@@ -24,6 +24,6 @@ include_directories(
 kde_add_library( kfontinst SHARED
   SOURCES Misc.cpp FcEngine.cpp
   VERSION 0.0.0
-  LINK kio-shared ${XFT_LIBRARIES} ${FONTCONFIG_LIBRARIES}
+  LINK kio-shared ${XFT_LIBRARIES} ${FONTCONFIG_LIBRARIES} ${FREETYPE_LIBRARIES}
   DESTINATION ${LIB_INSTALL_DIR}
 )
