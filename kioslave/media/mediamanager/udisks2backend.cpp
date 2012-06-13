@@ -77,6 +77,7 @@ public:
     bool callMethod(const QString &interface, const QString &method, const QValueList<QDBusData> &params, QDBusData &response, QDBusError &error);
 
 private:
+    Medium *createLoopMedium();
     Medium *createMountableMedium();
     Medium *createBlankOrAudioMedium();
     bool checkMediaAvailability();
@@ -88,6 +89,9 @@ private:
     QStringList m_interfaces;
 
     bool m_mediaAvailable;
+
+    // loop interface
+    bool m_loop;
 
     // drive interface
     bool m_optical;
@@ -236,6 +240,7 @@ Object::Object(ObjectManager *objectManager, const QDBusObjectPath &objectPath, 
     setPath(objectPath);
 
     m_mediaAvailable = false;
+    m_loop = false;
     m_optical = false;
     m_opticalBlank = false;
     m_opticalAudio = false;
@@ -343,6 +348,34 @@ bool Object::callMethod(const QString &interface, const QString &method, const Q
 
     response = reply.front();
     return true;
+}
+
+
+Medium *Object::createLoopMedium()
+{
+    QString name = (m_label.isEmpty() ? QString(m_device).section('/', -1, -1) : m_label);
+    QString label = m_label;
+
+    QString mimeType;
+    QString iconName;
+
+    mimeType = ("iso9660" == m_fsType ? "media/cdrom" : "media/hdd");
+
+    if(label.isEmpty())
+        label = i18n("Loop Device");
+
+    mimeType += (m_mounted ? "_mounted" : "_unmounted");
+
+    if(m_label.isEmpty())
+        label = QString("%1 %2 (%3)").arg(qHumanReadableSize(m_size)).arg(label).arg(name);
+
+    Medium *medium = new Medium(path(), name);
+    medium->setLabel(label);
+    medium->mountableState(m_device, m_mountPoint, m_fsType, m_mounted);
+    medium->setMimeType(mimeType);
+    medium->setIconName(iconName);
+
+    return medium;
 }
 
 
@@ -460,7 +493,7 @@ bool Object::checkMediaAvailability()
 
     // media become available
     if(mediaAvailable) {
-        Medium *medium = (m_mountable && m_filesystem ? createMountableMedium() : createBlankOrAudioMedium());
+        Medium *medium = (m_mountable && m_filesystem ? (m_loop ? createLoopMedium() : createMountableMedium()) : createBlankOrAudioMedium());
         m_objectManager->m_mediaList.addMedium(medium, m_objectManager->allowNotification);
     }
 
@@ -504,8 +537,12 @@ void Object::propertiesChanged(const QString &interface, const QDBusDataMap<QStr
         else if("org.freedesktop.UDisks2.Block" == interface) {
             if("IdUsage" == propertyName)
                 m_mountable = ("filesystem" == propertyValue.toString());
-            else if("Drive" == propertyName)
+            else if("Drive" == propertyName) {
                 m_drive = propertyValue.toObjectPath();
+                // if the block device haven't a drive,
+                // we assume that is a loop device
+                m_loop = ("/" == m_drive);
+            }
             else if("PreferredDevice" == propertyName)
                 m_device = propertyValue.toString();
             else if("IdLabel" == propertyName) {
@@ -536,7 +573,7 @@ void Object::propertiesChanged(const QString &interface, const QDBusDataMap<QStr
         return;
 
     if(mediumNeedUpdate) {
-        Medium *medium = (m_mountable && m_filesystem ? createMountableMedium() : createBlankOrAudioMedium());
+        Medium *medium = (m_mountable && m_filesystem ? (m_loop ? createLoopMedium() : createMountableMedium()) : createBlankOrAudioMedium());
         m_objectManager->m_mediaList.changeMediumState(*medium, false);
         delete medium;
     }
