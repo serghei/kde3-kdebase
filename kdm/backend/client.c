@@ -83,6 +83,10 @@ extern int loginsuccess( const char *User, const char *Host, const char *Tty, ch
 #endif
 #include <signal.h>
 
+#ifdef WITH_CONSOLE_KIT
+#include "consolekit.h"
+#endif
+
 /*
  * Session data, mostly what struct verify_info was for
  */
@@ -1121,8 +1125,13 @@ static int removeSession;
 static int removeCreds;
 #endif
 
+#ifdef WITH_CONSOLE_KIT
+int
+StartClient( const char *ck_session_cookie )
+#else
 int
 StartClient()
+#endif
 {
 	const char *home, *sessargs, *desksess;
 	char **env, *xma;
@@ -1217,6 +1226,11 @@ StartClient()
 #if !defined(USE_PAM) && !defined(_AIX) && defined(KERBEROS)
 	if (krbtkfile[0] != '\0')
 		env = setEnv( env, "KRBTKFILE", krbtkfile );
+#endif
+#ifdef WITH_CONSOLE_KIT
+	if (ck_session_cookie != NULL) {
+		env = setEnv ( env, "XDG_SESSION_COOKIE", ck_session_cookie );
+	}
 #endif
 	userEnviron = inheritEnv( env, envvars );
 	env = systemEnv( p->pw_name );

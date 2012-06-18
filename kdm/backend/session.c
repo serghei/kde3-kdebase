@@ -45,6 +45,10 @@ from the copyright holder.
 #include <ctype.h>
 #include <signal.h>
 
+#ifdef WITH_CONSOLE_KIT
+#include "consolekit.h"
+#endif
+
 struct display *td;
 const char *td_setup = "auto";
 
@@ -530,6 +534,10 @@ ManageSession( struct display *d )
 	int ex, cmd;
 	volatile int clientPid = 0;
 	volatile Time_t tdiff = 0;
+#ifdef WITH_CONSOLE_KIT
+	char *ck_session_cookie;
+#endif
+
 
 	td = d;
 	Debug( "ManageSession %s\n", d->name );
@@ -626,7 +634,12 @@ ManageSession( struct display *d )
 	if (td_setup)
 		SetupDisplay( td_setup );
 
+#ifdef WITH_CONSOLE_KIT
+	ck_session_cookie = open_ck_session (getpwnam(curuser), d);
+	if (!(clientPid = StartClient(ck_session_cookie))) {
+#else
 	if (!(clientPid = StartClient())) {
+#endif
 		LogError( "Client start failed\n" );
 		SessionExit( EX_NORMAL ); /* XXX maybe EX_REMANAGE_DPY? -- enable in dm.c! */
 	}
@@ -648,6 +661,14 @@ ManageSession( struct display *d )
 				catchTerm( SIGTERM );
 		}
 	}
+
+#ifdef WITH_CONSOLE_KIT
+	if (ck_session_cookie != NULL) {
+		close_ck_session (ck_session_cookie);
+		free (ck_session_cookie);
+	}
+#endif
+
 	/*
 	 * Sometimes the Xsession somehow manages to exit before
 	 * a server crash is noticed - so we sleep a bit and wait

@@ -924,6 +924,9 @@ manage( struct sockaddr *from, int fromlen, int length, int fd )
 			}
 			d->clientAddr = clientAddress;
 			d->connectionType = connectionType;
+			d->remoteHost = NetworkAddressToHostname (pdpy->connectionType,
+			                             &pdpy->connectionAddress);
+
 			XdmcpDisposeARRAY8( &clientPort );
 			if (pdpy->fileAuthorization) {
 				d->authorizations = (Xauth **)Malloc( sizeof(Xauth *) );

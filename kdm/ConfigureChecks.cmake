@@ -131,6 +131,10 @@ if( WITH_XDMCP )
 endif()
 
 
+# dbus-1
+kde_conditional_search_module( WITH_CONSOLE_KIT DBUS dbus-1 )
+
+
 if( WITH_PAM )
 
   set( USE_PAM 1 CACHE INTERNAL "" FORCE )

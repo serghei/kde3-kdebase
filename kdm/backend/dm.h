@@ -476,7 +476,11 @@ char **GRecvArgv( void );
 #define GCONV_BINARY  5
 typedef char *(*GConvFunc)( int what, const char *prompt );
 int Verify( GConvFunc gconv, int rootok );
+#ifdef WITH_CONSOLE_KIT
+int StartClient( const char *ck_session_cookie );
+#else
 int StartClient( void );
+#endif
 void SessionExit( int status ) ATTR_NORETURN;
 int ReadDmrc( void );
 extern char **userEnviron, **systemEnviron;
