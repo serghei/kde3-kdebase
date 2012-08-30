@@ -1,0 +1,21 @@
+[Protocol]
+exec=kio_rar
+protocol=rar
+mimetype=application/x-rar
+input=none
+output=filesystem
+listing=Name,Size,Type,Date,Access,
+reading=true
+deleting=true
+Icon=tgz
+Description=A kioslave for RAR archives
+Description[bg]=kioslave за RAR архиви
+Description[br]=Ur c'hioslave evit an dielloù RAR
+Description[da]=En kioslave for RAR-arkiver
+Description[es]=Un kioslave para archivos RAR
+Description[ga]=kioslave le haghaidh cartlanna RAR
+Description[it]=Un kioslave per archivi RAR
+Description[pt]=Um 'kioslave' para pacotes RAR
+Description[sv]=En I/O-slav för RAR-arkiv
+Description[xx]=xxA kioslave for RAR archivesxx
+Class=:local

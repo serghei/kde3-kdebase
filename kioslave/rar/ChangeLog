@@ -1,0 +1,24 @@
+0.6
+Add a class to handle RAR archives
+Speedups
+
+0.5
+Fix several bugs
+Implement error messages
+Implement translations
+Implement put, rename and delete functions
+
+0.4
+Speedups
+
+0.3
+Support to rar program
+When you click UP in the root directory of RAR archive, the kioslave redirects to file:/ kioslave
+Initial support to copy function
+Several bugs fixed
+
+0.2
+Now, kio_rar handles directories correctly
+
+0.1
+Initial release.

@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Service
+Name=Rar Info
+Name[bg]=Информация за Rar
+Name[br]=Titouroù Rar
+Name[da]=RAR-info
+Name[es]=Información de Rar
+Name[ga]=Eolas faoi Rar
+Name[pt]=Informação do Rar
+Name[sv]=RAR-info
+Name[xx]=xxRar Infoxx
+ServiceTypes=KFilePlugin
+X-KDE-Library=kfile_rar
+MimeType=application/x-rar
+PreferredGroups=RarInfo
+PreferredItems=Solid,Lock,Auth Info,Directories,Files,Unpacked,Ratio

@@ -1,0 +1,2 @@
+A kioslave for RAR archives.
+This is a very basic kioslave that supports RAR archives. Only listing, reading and deleting files actions is currently support. It depends on unrar or rar to handle the archives.
