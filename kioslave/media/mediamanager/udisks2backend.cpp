@@ -19,6 +19,7 @@
 
 #include <qdict.h>
 #include <qeventloop.h>
+#include <qtimer.h>
 
 #include <dbus/qdbusconnection.h>
 #include <dbus/qdbuserror.h>
@@ -83,6 +84,7 @@ public:
 
 private slots:
     void callMethodCallback(const QDBusMessage &message);
+    void forceUnmount();
 
 private:
     Medium *createLoopMedium();
@@ -384,6 +386,12 @@ void Object::callMethodCallback(const QDBusMessage &message)
 }
 
 
+void Object::forceUnmount()
+{
+    unmount(true);
+}
+
+
 Medium *Object::createLoopMedium()
 {
     QString name = (m_label.isEmpty() ? QString(m_device).section('/', -1, -1) : m_label);
@@ -534,7 +542,8 @@ bool Object::checkMediaAvailability()
     else {
         m_objectManager->m_mediaList.removeMedium(path(), true);
         if(m_mounted)
-            unmount(true);
+            // delay the unmount to avoid recursive D-BUS dispatching (which falling into endless loop)
+            QTimer::singleShot(0, this, SLOT(forceUnmount()));
     }
 
     m_mediaAvailable = mediaAvailable;
