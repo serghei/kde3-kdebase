@@ -18,6 +18,7 @@
 */
 
 #include <qdict.h>
+#include <qeventloop.h>
 
 #include <dbus/qdbusconnection.h>
 #include <dbus/qdbuserror.h>
@@ -31,6 +32,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kapplication.h>
 
 #include "udisks2backend.h"
 
@@ -62,6 +64,9 @@ private:
 
 
 class Object : public QDBusProxy {
+
+    Q_OBJECT
+
 public:
     Object(ObjectManager *objectManager, const QDBusObjectPath &objectPath, const QDBusConnection &dbusConnection);
     ~Object();
@@ -75,6 +80,9 @@ public:
     void removeInterfaces(const QValueList<QDBusData> &interfaces);
 
     bool callMethod(const QString &interface, const QString &method, const QValueList<QDBusData> &params, QDBusData &response, QDBusError &error);
+
+private slots:
+    void callMethodCallback(const QDBusMessage &message);
 
 private:
     Medium *createLoopMedium();
@@ -113,6 +121,9 @@ private:
     bool m_filesystem;
     bool m_mounted;
     QString m_mountPoint;
+
+    // async method
+    QDBusMessage callbackResponse;
 };
 
 
@@ -234,7 +245,7 @@ QDBusObjectPath Property::toObjectPath() const
 
 
 Object::Object(ObjectManager *objectManager, const QDBusObjectPath &objectPath, const QDBusConnection &dbusConnection)
-    : QDBusProxy(dbusConnection), m_objectManager(objectManager)
+    : QDBusProxy(dbusConnection, 0, "UDisks2::Object"), m_objectManager(objectManager)
 {
     setService("org.freedesktop.UDisks2");
     setPath(objectPath);
@@ -268,7 +279,7 @@ QString Object::mount()
     QDBusData response;
 
     if(!callMethod("org.freedesktop.UDisks2.Filesystem", "Mount", params, response, error))
-      return i18n("Unable to mount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
+        return i18n("Unable to mount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
 
     return QString::null;
 }
@@ -292,7 +303,7 @@ QString Object::unmount(bool force)
     QDBusData response;
 
     if(!callMethod("org.freedesktop.UDisks2.Filesystem", "Unmount", params, response, error))
-      return i18n("Unable to unmount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
+        return i18n("Unable to unmount \"%1\".\nReason: %2").arg(m_device).arg(error.message());
 
     return QString::null;
 }
@@ -335,19 +346,41 @@ void Object::removeInterfaces(const QValueList<QDBusData> &interfaces)
 }
 
 
+// this method emulate a blocking function,
+// but it uses asynchronous DBUS calls (with callback)
 bool Object::callMethod(const QString &interface, const QString &method, const QValueList<QDBusData> &params, QDBusData &response, QDBusError &error)
 {
-    QDBusProxy proxy(service(), path(), interface, connection());
+    QDBusMessage message = QDBusMessage::methodCall(service(), path(), interface, method);
+    message += params;
 
-    QDBusMessage reply = proxy.sendWithReply(method, params);
+    // wait as long as necessary
+    // this is necessary for example for interaction with polkit agent
+    message.setTimeout(QDBusMessage::NoTimeout);
+
+    int id = connection().sendWithAsyncReply(message, this, SLOT(callMethodCallback(const QDBusMessage&)));
+    if(0 == id) {
+        error = connection().lastError();
+        return false;
+    }
+
+    // FIXME: potential race condition?
+    kapp->eventLoop()->enterLoop();
+    QDBusMessage reply = callbackResponse;
+
     if(reply.count() != 1 || reply.type() != QDBusMessage::ReplyMessage) {
-        error = proxy.lastError();
+        error = reply.error();
         if(QDBusError::InvalidError != error.type())
             return false;
     }
 
-    response = reply.front();
     return true;
+}
+
+
+void Object::callMethodCallback(const QDBusMessage &message)
+{
+    callbackResponse = message;
+    kapp->eventLoop()->exitLoop();
 }
 
 
@@ -750,3 +783,6 @@ QString UDisks2Backend::unmount(const QString &name)
 
    return obj->unmount(false);
 }
+
+
+#include "udisks2backend.cpp.moc"
