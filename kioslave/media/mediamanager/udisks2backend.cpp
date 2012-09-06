@@ -31,9 +31,11 @@
 #include <dbus/qdbusproxy.h>
 #include <dbus/qdbusvariant.h>
 
+#include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kapplication.h>
+#include <kmdcodec.h>
 
 #include "udisks2backend.h"
 
@@ -71,6 +73,8 @@ class Object : public QDBusProxy {
 public:
     Object(ObjectManager *objectManager, const QDBusObjectPath &objectPath, const QDBusConnection &dbusConnection);
     ~Object();
+
+    QString uuid() const { return m_uuid; }
 
     QString mount();
     QString unmount(bool force);
@@ -116,6 +120,7 @@ private:
     QDBusObjectPath m_drive;
     QString m_device;
     QString m_label;
+    QString m_uuid;
     QString m_fsType;
     Q_INT64 m_size;
 
@@ -140,7 +145,7 @@ public:
     ObjectManager(MediaList &mediaList);
     bool initialize();
 
-    Object *findObject(const QString &path) { return m_objects.find(path); }
+    Object *findObjectByUUID(const QString &uuid);
 
 protected:
     void handleDBusSignal(const QDBusMessage &message);
@@ -410,7 +415,7 @@ Medium *Object::createLoopMedium()
     if(m_label.isEmpty())
         label = QString("%1 %2 (%3)").arg(qHumanReadableSize(m_size)).arg(label).arg(name);
 
-    Medium *medium = new Medium(path(), name);
+    Medium *medium = new Medium(m_uuid, name);
     medium->setLabel(label);
     medium->mountableState(m_device, m_mountPoint, m_fsType, m_mounted);
     medium->setMimeType(mimeType);
@@ -482,7 +487,7 @@ Medium *Object::createMountableMedium()
     if(m_label.isEmpty())
         label = QString("%1 %2 (%3)").arg(qHumanReadableSize(m_size)).arg(label).arg(name);
 
-    Medium *medium = new Medium(path(), name);
+    Medium *medium = new Medium(m_uuid, name);
     medium->setLabel(label);
     medium->mountableState(m_device, m_mountPoint, m_fsType, m_mounted);
     medium->setMimeType(mimeType);
@@ -515,7 +520,7 @@ Medium *Object::createBlankOrAudioMedium()
         mimeType = "media/audiocd";
     }
 
-    Medium *medium = new Medium(path(), name);
+    Medium *medium = new Medium(m_uuid, name);
     medium->setLabel(name);
     medium->unmountableState("");
     medium->setMimeType(mimeType);
@@ -534,13 +539,21 @@ bool Object::checkMediaAvailability()
 
     // media become available
     if(mediaAvailable) {
+        // no uuid, generate a fake one
+        if(m_uuid.isEmpty()) {
+            QString dataForFakeUUID = m_label + m_media + m_fsType + QString::number(m_size);
+            KMD5 context(dataForFakeUUID.ascii());
+            m_uuid = "FAKE-UUID-" + context.hexDigest();
+        }
+
         Medium *medium = (m_mountable && m_filesystem ? (m_loop ? createLoopMedium() : createMountableMedium()) : createBlankOrAudioMedium());
         m_objectManager->m_mediaList.addMedium(medium, m_objectManager->allowNotification);
     }
 
     // media is not available anymore
     else {
-        m_objectManager->m_mediaList.removeMedium(path(), true);
+        m_objectManager->m_mediaList.removeMedium(m_uuid, true);
+        m_uuid = QString::null;
         if(m_mounted)
             // delay the unmount to avoid recursive D-BUS dispatching (which falling into endless loop)
             QTimer::singleShot(0, this, SLOT(forceUnmount()));
@@ -590,6 +603,20 @@ void Object::propertiesChanged(const QString &interface, const QDBusDataMap<QStr
             else if("IdLabel" == propertyName) {
                 m_label = propertyValue.toString();
                 mediumNeedUpdate = true;
+            }
+            else if("IdUUID" == propertyName) {
+                // uuid has changed while the media is available, we need to recreate the Medium object
+                // this situation occur for example when a partition is reformatted
+                if(m_mediaAvailable) {
+                    // the uuid is probably permanently lost, remove it from mediamanagerc
+                    KConfig cfg("mediamanagerrc");
+                    cfg.setGroup("UserLabels");
+                    cfg.deleteEntry(m_uuid);
+
+                    m_objectManager->m_mediaList.removeMedium(m_uuid, true);
+                    m_mediaAvailable = false;
+                }
+                m_uuid = propertyValue.toString();
             }
             else if("IdType" == propertyName)
                 m_fsType = propertyValue.toString();
@@ -698,6 +725,19 @@ bool ObjectManager::initialize()
 }
 
 
+Object *ObjectManager::findObjectByUUID(const QString &uuid)
+{
+    QDictIterator<Object> it(m_objects);
+    while(it.current()) {
+        if(uuid == it.current()->uuid())
+            return it.current();
+        ++it;
+    }
+
+    return NULL;
+}
+
+
 void ObjectManager::handleDBusSignal(const QDBusMessage &message)
 {
     if((service().startsWith(":") && service() != message.sender()) || path() != message.path() || interface() != message.interface())
@@ -772,7 +812,7 @@ QString UDisks2Backend::mount(const QString &name)
     if(!medium)
         return i18n("No such medium: %1").arg(name);
 
-    UDisks2::Object *obj = d->findObject(name);
+    UDisks2::Object *obj = d->findObjectByUUID(name);
     if(!obj)
         return i18n("No such udisks2 object in cache: %1").arg(name);
 
@@ -786,7 +826,7 @@ QString UDisks2Backend::unmount(const QString &name)
     if(!medium)
         return i18n("No such medium: %1").arg(name);
 
-    UDisks2::Object *obj = d->findObject(name);
+    UDisks2::Object *obj = d->findObjectByUUID(name);
     if(!obj)
         return i18n("No such udisks2 object in cache: %1").arg(name);
 
