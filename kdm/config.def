@@ -42,7 +42,7 @@
 # define HALT_CMD	"/usr/sbin/halt"
 # define REBOOT_CMD	"/usr/sbin/reboot"
 #else
-# define HALT_CMD	"/sbin/halt"
+# define HALT_CMD	"/sbin/halt -p"
 # define REBOOT_CMD	"/sbin/reboot"
 #endif
 
