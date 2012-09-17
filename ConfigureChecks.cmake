@@ -67,6 +67,8 @@ if( WITH_HAL )
   endif( )
 endif( )
 
+# xrandr (kpowermanager, kcontrol)
+kde_conditional_search_module( WITH_XRANDR XRANDR xrandr )
 
 # xrender (kdesktop, konsole, kcontrol, kicker, kwin)
 if( WITH_XRENDER OR BUILD_KDESKTOP OR BUILD_KONSOLE OR BUILD_KCONTROL OR BUILD_KICKER )
@@ -147,6 +149,8 @@ if( BUILD_NSPLUGINS )
   endif( )
 endif( )
 
+# upower-glib
+kde_conditional_search_module( BUILD_KPOWERMANAGER UPOWER_GLIB upower-glib )
 
 # kde_socklen_t
 if( BUILD_KIOSLAVES OR BUILD_KSYSGUARD )

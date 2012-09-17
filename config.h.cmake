@@ -3,6 +3,9 @@
 // konsole
 #cmakedefine HAVE_PROC_CWD 1
 
+// kpowermanager, kcontrol/randr
+#cmakedefine HAVE_XRANDR 1
+
 // kdesktop, konsole, kcontrol, kicker
 #cmakedefine HAVE_XRENDER 1
 

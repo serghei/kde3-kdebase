@@ -45,16 +45,6 @@ else( )
 endif( )
 
 
-##### check for Xrandr ##########################
-
-if( WITH_XRANDR )
-  pkg_search_module( XRANDR xrandr )
-  if( NOT XRANDR_FOUND )
-    kde_message_fatal( "xrandr is required, but was not found on your system" )
-  endif( )
-endif( )
-
-
 ##### check for libusb ##########################
 
 if( WITH_LIBUSB )

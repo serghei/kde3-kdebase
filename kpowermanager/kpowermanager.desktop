@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Plugin
+Comment=KDE3 Power Manager
+Name=KPowerManager
+Name[en]=KPowerManager
+Icon=kpowermanager
+X-KDE-Library=kpowermanager_panelapplet
+X-KDE-UniqueApplet=true
