@@ -164,7 +164,7 @@ ssize_t POP3Protocol::myRead(void *data, ssize_t len)
     memcpy(data, readBuffer, copyLen);
     readBufferLen -= copyLen;
     if (readBufferLen)
-      memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
+      memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
     return copyLen;
   }
   waitForResponse(600);
@@ -183,7 +183,7 @@ ssize_t POP3Protocol::myReadLine(char *data, ssize_t len)
       data[copyLen] = '\0';
       readBufferLen -= copyLen;
       if (readBufferLen)
-        memcpy(readBuffer, &readBuffer[copyLen], readBufferLen);
+        memmove(readBuffer, &readBuffer[copyLen], readBufferLen);
       return copyLen;
     }
     waitForResponse(600);
