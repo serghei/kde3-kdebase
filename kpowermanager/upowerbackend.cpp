@@ -16,6 +16,8 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+#define UPOWER_ENABLE_DEPRECATED 1
+
 #include <upower.h>
 #include <qtimer.h>
 #include <kdebug.h>
