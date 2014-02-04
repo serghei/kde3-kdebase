@@ -1,6 +1,6 @@
 #################################################
 #
-#  (C) 2010-2012 Serghei Amelian
+#  (C) 2010-2014 Serghei Amelian
 #  serghei (DOT) amelian (AT) gmail.com
 #
 #  Improvements and feedback are welcome
@@ -9,6 +9,8 @@
 #
 #################################################
 
+configure_file( kde.desktop.cmake kde.desktop @ONLY )
+
 install( FILES
     gnome.desktop 9wm.desktop aewm++.desktop aewm.desktop
     afterstep.desktop amaterus.desktop amiwm.desktop
@@ -16,6 +18,7 @@ install( FILES
     ctwm.desktop cwwm.desktop enlightenment.desktop
     evilwm.desktop fluxbox.desktop flwm.desktop fvwm.desktop
     fvwm95.desktop golem.desktop icewm.desktop ion.desktop
+    ${CMAKE_CURRENT_BINARY_DIR}/kde.desktop
     larswm.desktop lwm.desktop matchbox.desktop metacity.desktop
     mwm.desktop olvwm.desktop olwm.desktop openbox.desktop
     oroborus.desktop phluid.desktop pwm.desktop qvwm.desktop
