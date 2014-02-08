@@ -87,6 +87,11 @@ check_c_source_runs( "
   }
 " HONORS_SOCKET_PERMS )
 
+if( NOT HONORS_SOCKET_PERMS )
+    # This should affect only BSD < 4.4 and Solaris < 2.7.
+    message(FATAL_ERROR "System does not honor file permissions on UNIX domain sockets.")
+endif( )
+
 if( CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME MATCHES Darwin OR CMAKE_SYSTEM_NAME MATCHES GNU/FreeBSD )
     unset( HAVE_UTMPX )
     unset( HAVE_LASTLOGX )
