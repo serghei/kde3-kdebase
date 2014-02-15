@@ -75,6 +75,7 @@ class KDE_EXPORT Command_url_action
     protected:
         QTimer timeout;
     private:
+        bool substituteAndHandleSpecial( QString& cmd );
         QString _command_url;
     };
     
