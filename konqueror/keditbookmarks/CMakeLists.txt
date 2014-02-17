@@ -21,7 +21,7 @@ include_directories(
 ##### other data ################################
 
 install( FILES keditbookmarksui.rc keditbookmarks-genui.rc DESTINATION ${DATA_INSTALL_DIR}/keditbookmarks )
-install( FILES uninstall.desktop DESTINATION ${APPS_INSTALL_DIR}/Internet/keditbookmarks.desktop )
+install( FILES uninstall.desktop DESTINATION ${APPS_INSTALL_DIR}/Internet RENAME keditbookmarks.desktop )
 install( FILES keditbookmarks.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 kde_install_icons( )
 
