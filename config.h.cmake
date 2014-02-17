@@ -155,6 +155,7 @@
 
 // ksmserver
 #cmakedefine DBUS_SYSTEM_BUS "@WITH_DBUS_SYSTEM_BUS@"
+#cmakedefine WITH_LOGIND 1
 
 // ksplashml
 #cmakedefine HAVE_XINERAMA 1

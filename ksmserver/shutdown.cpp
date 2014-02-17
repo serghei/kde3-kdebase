@@ -94,11 +94,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "shutdowndlg.h"
 #include "client.h"
 
+#ifdef WITH_LOGIND
+#define DBUS_UPOWER_SERVICE       "org.freedesktop.login1"
+#define DBUS_UPOWER_PATH          "/org/freedesktop/login1"
+#define DBUS_UPOWER_INTERFACE     "org.freedesktop.login1.Manager"
+#else
 #define DBUS_UPOWER_SERVICE       "org.freedesktop.UPower"
 #define DBUS_UPOWER_PATH          "/org/freedesktop/UPower"
 #define DBUS_UPOWER_INTERFACE     "org.freedesktop.UPower"
 #define DBUS_PROPERTIES_INTERFACE "org.freedesktop.DBus.Properties"
-
+#endif
 
 void KSMServer::logout( int confirm, int sdtype, int sdmode )
 {
@@ -155,13 +160,21 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
             // can suspend?
             if( maySuspend ) {
+#ifdef WITH_LOGIND
+                QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, "CanSuspend");
+#else
                 QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
                 dbusMessage << QDBusData::fromString(DBUS_UPOWER_INTERFACE) << QDBusData::fromString("CanSuspend");
+#endif
 
                 QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
 
                 if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+#ifdef WITH_LOGIND
+                    maySuspend = ("yes" == dbusReply[0].toString());
+#else
                     maySuspend = dbusReply[0].toVariant().value.toBool();
+#endif
                 else {
                     maySuspend = false;
                     kdDebug() << "[dbus/upower] CanSuspend: " << dbusConnection.lastError().message() << "\n";
@@ -170,13 +183,21 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
             // can hibernate?
             if( mayHibernate ) {
+#ifdef WITH_LOGIND
+                QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, "CanHibernate");
+#else
                 QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_PROPERTIES_INTERFACE, "Get");
                 dbusMessage << QDBusData::fromString(DBUS_UPOWER_INTERFACE) << QDBusData::fromString("CanHibernate");
+#endif
 
                 QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
 
                 if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+#ifdef WITH_LOGIND
+                    mayHibernate = ("yes" == dbusReply[0].toString());
+#else
                     mayHibernate = dbusReply[0].toVariant().value.toBool();
+#endif
                 else {
                     mayHibernate = false;
                     kdDebug() << "[dbus/upower] CanHibernate: " << dbusConnection.lastError().message() << "\n";
@@ -220,6 +241,10 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
         QString operation = ( KApplication::ShutdownTypeSuspend == sdtype ? "Suspend" : "Hibernate" );
         QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, operation);
+
+#ifdef WITH_LOGIND
+        dbusMessage << QDBusData::fromBool(false);
+#endif
 
         // we need reply only to catch errors
         dbusConnection.sendWithReply(dbusMessage);

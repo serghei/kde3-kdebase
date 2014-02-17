@@ -46,6 +46,7 @@ option( WITH_I8K "Enable Dell laptop support (ksysguard)" ${WITH_ALL_FEATURES} )
 option( WITH_SUDO_KDESU_BACKEND "Use sudo as backend for kdesu (default is su)" ${WITH_ALL_FEATURES} )
 option( WITH_UDISKS2 "Enable UDisks2 support" ${WITH_ALL_FEATURES} )
 option( WITH_CONSOLE_KIT "Enable consolekit support in kdm" ${WITH_ALL_FEATURES} )
+option( WITH_LOGIND "Use systemd-logind for suspend/hibernate (instead upower)" ${WITH_ALL_FEATURES} )
 
 # obsolete options
 option( WITH_HAL "Enable HAL support" OFF )
