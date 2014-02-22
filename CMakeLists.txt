@@ -10,7 +10,10 @@
 ################################################
 
 cmake_minimum_required( VERSION 2.8 )
-cmake_policy( SET CMP0022 NEW )
+
+if( NOT CMAKE_VERSION VERSION_LESS 2.8.12 )
+  cmake_policy( SET CMP0022 NEW )
+endif ( )
 
 
 ##### general package setup #####################
