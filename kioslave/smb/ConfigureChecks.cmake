@@ -9,13 +9,4 @@
 #
 #################################################
 
-check_include_file( libsmbclient.h HAVE_LIBSMBCLIENT_H )
-
-if( HAVE_LIBSMBCLIENT_H )
-  set( SMBCLIENT_LIBRARIES smbclient )
-  check_library_exists( ${SMBCLIENT_LIBRARIES} smbc_new_context "" HAVE_SMBCLIENT )
-endif( )
-
-if( NOT HAVE_LIBSMBCLIENT_H OR NOT HAVE_SMBCLIENT )
-  kde_message_fatal( "smbclient is required, but was not found on your system." )
-endif( )
+kde_search_module( SMBCLIENT smbclient )
