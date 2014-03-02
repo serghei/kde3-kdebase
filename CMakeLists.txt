@@ -167,6 +167,8 @@ if( BUILD_STARTKDE )
   install( PROGRAMS startkde DESTINATION ${BIN_INSTALL_DIR} )
 endif()
 
+install( PROGRAMS kde3 DESTINATION ${BIN_INSTALL_DIR} )
+
 
 ##### write configure files #####################
 
