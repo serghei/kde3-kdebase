@@ -15,6 +15,10 @@ if( NOT CMAKE_VERSION VERSION_LESS 2.8.12 )
   cmake_policy( SET CMP0022 NEW )
 endif ( )
 
+if( NOT CMAKE_VERSION VERSION_LESS 3.0 )
+  cmake_policy( SET CMP0026 OLD )
+  cmake_policy( SET CMP0046 OLD )
+endif ( )
 
 ##### general package setup #####################
 
