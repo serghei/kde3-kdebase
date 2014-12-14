@@ -1,6 +1,6 @@
 #################################################
 #
-#  (C) 2012 Serghei Amelian
+#  (C) 2012-2014 Serghei Amelian
 #  serghei (DOT) amelian (AT) gmail.com
 #
 #  Improvements and feedback are welcome
@@ -35,8 +35,12 @@ if( WITH_XRANDR )
 	set( backlight_SRC backlight.cpp )
 endif( )
 
+if( WITH_LOGIND )
+    set( KDEDBUS_LIBRARY kdedbus-shared )
+endif( )
+
 kde_add_kpart( kpowermanager_panelapplet AUTOMOC
   SOURCES panelapplet.cpp upowerbackend.cpp tooltip.cpp ${backlight_SRC}
-  LINK kickermain-shared ${XRANDR_LIBRARIES} ${UPOWER_GLIB_LIBRARIES}
+  LINK kickermain-shared ${KDEDBUS_LIBRARY} ${XRANDR_LIBRARIES} ${UPOWER_GLIB_LIBRARIES}
   DESTINATION ${PLUGIN_INSTALL_DIR}
 )

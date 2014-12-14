@@ -150,7 +150,10 @@ if( BUILD_NSPLUGINS )
 endif( )
 
 # upower-glib
-kde_conditional_search_module( BUILD_KPOWERMANAGER UPOWER_GLIB upower-glib )
+if( BUILD_KPOWERMANAGER )
+	kde_search_module( UPOWER_GLIB upower-glib )
+	check_library_exists( upower-glib up_client_enumerate_devices_sync "" HAVE_UP_CLIENT_ENUMERATE_DEVICES_SYNC )
+endif( )
 
 # kde_socklen_t
 if( BUILD_KIOSLAVES OR BUILD_KSYSGUARD )

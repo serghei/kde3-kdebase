@@ -47,9 +47,9 @@ static QString qBatteryStatusToText(int state)
         case PowerSources::Battery::Discharging:
             return i18n("discharging");
         case PowerSources::Battery::Empty:
-            return i18n("Empty");
+            return i18n("empty");
         case PowerSources::Battery::FullCharged:
-            return i18n("full charged");
+            return i18n("fully charged");
         case PowerSources::Battery::PendingCharge:
             return i18n("pending charge");
         case PowerSources::Battery::PendingDischarge:
