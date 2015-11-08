@@ -20,6 +20,11 @@ if( NOT CMAKE_VERSION VERSION_LESS 3.0 )
   cmake_policy( SET CMP0046 OLD )
 endif ( )
 
+if( NOT CMAKE_VERSION VERSION_LESS 3.1 )
+  cmake_policy( SET CMP0054 NEW )
+endif ( )
+
+
 ##### general package setup #####################
 
 project( kdebase )
