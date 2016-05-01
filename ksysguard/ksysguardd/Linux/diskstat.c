@@ -163,11 +163,11 @@ int updateDiskStat( void )
         continue;
 
       memset( disk_info, 0, sizeof( DiskInfo ) );
-      strlcpy( disk_info->device, mnt_info->mnt_fsname, sizeof( disk_info->device ) );
+      snprintf( disk_info->device, sizeof( disk_info->device ), "%s", mnt_info->mnt_fsname );
       if ( !strcmp( mnt_info->mnt_dir, "/" ) )
-        strlcpy( disk_info->mntpnt, "/root", sizeof( disk_info->mntpnt ) );
+        snprintf( disk_info->mntpnt, sizeof( disk_info->mntpnt ), "%s", "/root" );
       else
-				strlcpy( disk_info->mntpnt, mnt_info->mnt_dir, sizeof( disk_info->mntpnt ) );
+                snprintf( disk_info->mntpnt, sizeof( disk_info->mntpnt ), "%s", mnt_info->mnt_dir );
 
       disk_info->blocks = fs_info.f_blocks;
       disk_info->bfree = fs_info.f_bfree;

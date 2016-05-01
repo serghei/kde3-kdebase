@@ -38,6 +38,6 @@ include_directories(
 
 kde_add_executable( ksysguardd AUTOMOC
   SOURCES Command.c conf.c ksysguardd.c PWUIDCache.c
-  LINK ccont-static ksysguardd-static ${KDE_LIBRARY_DIR}/libkdefakes_nonpic.a
+  LINK ccont-static ksysguardd-static
   DESTINATION ${BIN_INSTALL_DIR}
 )
