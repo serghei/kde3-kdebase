@@ -9,12 +9,6 @@
 #
 #################################################
 
-include( CheckIncludeFile )
-include( CheckFunctionExists )
-include( CheckLibraryExists )
-include( FindPkgConfig )
-
-
 # find kdelibs
 # FIXME should be more flexibile
 set( CMAKE_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/share/cmake" )
@@ -27,6 +21,12 @@ if( NOT EXISTS "${CMAKE_MODULE_PATH}/FindKDE3.cmake" )
       "####################################################################\n" )
 endif( )
 include( FindKDE3 )
+
+
+include( CheckIncludeFile )
+include( CheckFunctionExists )
+include( CheckLibraryExists )
+include( FindPkgConfig )
 
 
 # termios.h (kdm, kioslave)
