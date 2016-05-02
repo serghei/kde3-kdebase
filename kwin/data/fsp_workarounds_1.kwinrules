@@ -37,5 +37,12 @@ wmclass=^xv .*
 wmclasscomplete=true
 wmclassmatch=3
 
+[2]
+Description=(Default) Disable focus stealing prevention for KDE3 PolkitAgent
+fsplevel=0
+fsplevelrule=2
+windowrole=kde3-polkitagent-authenticationdialog
+windowrolematch=1
+
 [General]
-count=1
+count=2

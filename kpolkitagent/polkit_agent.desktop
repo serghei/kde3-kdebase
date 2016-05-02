@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=KDEDModule
+X-KDE-ModuleType=Library
+X-KDE-Library=polkit_agent
+X-KDE-FactoryName=polkit_agent
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=false
+Name=Polkit Authentication Agent
