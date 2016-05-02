@@ -30,45 +30,45 @@
 #include "konsolebookmarkmenu.h"
 #include "konsolebookmarkhandler.h"
 
-KonsoleBookmarkHandler::KonsoleBookmarkHandler( Konsole *konsole, bool toplevel )
-    : QObject( konsole, "KonsoleBookmarkHandler" ),
-      KBookmarkOwner(),
-      m_konsole( konsole )
+KonsoleBookmarkHandler::KonsoleBookmarkHandler(Konsole *konsole, bool toplevel)
+    : QObject(konsole, "KonsoleBookmarkHandler"), KBookmarkOwner(), m_konsole(konsole)
 {
-    m_menu = new KPopupMenu( konsole, "bookmark menu" );
+    m_menu = new KPopupMenu(konsole, "bookmark menu");
 
     // KDE3.5 - Konsole's bookmarks are now in konsole/bookmarks.xml
     // TODO: Consider removing for KDE4
-    QString new_bm_file = locateLocal( "data", "konsole/bookmarks.xml" );
-    if ( !QFile::exists( new_bm_file ) ) {
-        QString old_bm_file = locateLocal( "data", "kfile/bookmarks.xml" );
-        if ( QFile::exists( old_bm_file ) )
-            // We want sync here... 
-            if ( !KIO::NetAccess::copy( KURL( old_bm_file ), 
-                                   KURL ( new_bm_file ), 0 ) ) {
-                kdWarning()<<KIO::NetAccess::lastErrorString()<<endl;
+    QString new_bm_file = locateLocal("data", "konsole/bookmarks.xml");
+    if(!QFile::exists(new_bm_file))
+    {
+        QString old_bm_file = locateLocal("data", "kfile/bookmarks.xml");
+        if(QFile::exists(old_bm_file))
+            // We want sync here...
+            if(!KIO::NetAccess::copy(KURL(old_bm_file), KURL(new_bm_file), 0))
+            {
+                kdWarning() << KIO::NetAccess::lastErrorString() << endl;
             }
     }
 
-    m_file = locate( "data", "konsole/bookmarks.xml" );
-    if ( m_file.isEmpty() )
-        m_file = locateLocal( "data", "konsole/bookmarks.xml" );
+    m_file = locate("data", "konsole/bookmarks.xml");
+    if(m_file.isEmpty())
+        m_file = locateLocal("data", "konsole/bookmarks.xml");
 
-    KBookmarkManager *manager = KBookmarkManager::managerForFile( m_file, false);
+    KBookmarkManager *manager = KBookmarkManager::managerForFile(m_file, false);
     manager->setEditorOptions(kapp->caption(), false);
-    manager->setUpdate( true );
-    manager->setShowNSBookmarks( false );
-    
-    connect( manager, SIGNAL( changed(const QString &, const QString &) ),
-             SLOT( slotBookmarksChanged(const QString &, const QString &) ) );
+    manager->setUpdate(true);
+    manager->setShowNSBookmarks(false);
 
-    if (toplevel) {
-        m_bookmarkMenu = new KonsoleBookmarkMenu( manager, this, m_menu,
-                                            konsole->actionCollection(), true );
-    } else {
-        m_bookmarkMenu = new KonsoleBookmarkMenu( manager, this, m_menu,
-                                            NULL, false /* Not toplevel */
-					    ,false      /* No 'Add Bookmark' */);
+    connect(manager, SIGNAL(changed(const QString &, const QString &)), SLOT(slotBookmarksChanged(const QString &, const QString &)));
+
+    if(toplevel)
+    {
+        m_bookmarkMenu = new KonsoleBookmarkMenu(manager, this, m_menu, konsole->actionCollection(), true);
+    }
+    else
+    {
+        m_bookmarkMenu = new KonsoleBookmarkMenu(manager, this, m_menu, NULL, false /* Not toplevel */
+                                                 ,
+                                                 false /* No 'Add Bookmark' */);
     }
 }
 
@@ -85,17 +85,16 @@ QString KonsoleBookmarkHandler::currentURL() const
 QString KonsoleBookmarkHandler::currentTitle() const
 {
     const KURL &u = m_konsole->baseURL();
-    if (u.isLocalFile())
+    if(u.isLocalFile())
     {
-       QString path = u.path();
-       path = KShell::tildeExpand(path);
-       return path;
+        QString path = u.path();
+        path = KShell::tildeExpand(path);
+        return path;
     }
     return u.prettyURL();
 }
 
-void KonsoleBookmarkHandler::slotBookmarksChanged( const QString &,
-                                                   const QString &)
+void KonsoleBookmarkHandler::slotBookmarksChanged(const QString &, const QString &)
 {
     // This is called when someone changes bookmarks in konsole....
     m_bookmarkMenu->slotBookmarksChanged("");

@@ -1,28 +1,28 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/* 
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
  * the License at http://www.mozilla.org/MPL/
- * 
+ *
  * Software distributed under the License is distributed on an "AS
  * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
- * 
+ *
  * The Original Code is the Netscape Portable Runtime (NSPR).
- * 
+ *
  * The Initial Developer of the Original Code is Netscape
- * Communications Corporation.  Portions created by Netscape are 
+ * Communications Corporation.  Portions created by Netscape are
  * Copyright (C) 1998-2000 Netscape Communications Corporation.  All
  * Rights Reserved.
- * 
+ *
  * Contributor(s):
- * 
+ *
  * Alternatively, the contents of this file may be used under the
  * terms of the GNU General Public License Version 2 or later (the
- * "GPL"), in which case the provisions of the GPL are applicable 
- * instead of those above.  If you wish to allow use of your 
+ * "GPL"), in which case the provisions of the GPL are applicable
+ * instead of those above.  If you wish to allow use of your
  * version of this file only under the terms of the GPL and not to
  * allow others to use your version of this file under the MPL,
  * indicate your decision by deleting the provisions above and
@@ -92,8 +92,7 @@ typedef PRIntn intn;
  * uint
  */
 
-#if !defined(XP_BEOS) && !defined(VMS) \
-    && !defined(XP_UNIX) || defined(NTO)
+#if !defined(XP_BEOS) && !defined(VMS) && !defined(XP_UNIX) || defined(NTO)
 typedef PRUintn uint;
 #endif
 
@@ -137,8 +136,7 @@ typedef PRUint8 uint8;
  * int64
  */
 
-#if !defined(XP_BEOS) && !defined(VMS) \
-    && !defined(_PR_AIX_HAVE_BSD_INT_TYPES)
+#if !defined(XP_BEOS) && !defined(VMS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES)
 typedef PRInt64 int64;
 #endif
 
@@ -146,10 +144,8 @@ typedef PRInt64 int64;
  * int32
  */
 
-#if !defined(XP_BEOS) && !defined(VMS) \
-    && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
-    && !defined(HPUX)
-#if !defined(WIN32) || !defined(_WINSOCK2API_)  /* defines its own "int32" */
+#if !defined(XP_BEOS) && !defined(VMS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) && !defined(HPUX)
+#if !defined(WIN32) || !defined(_WINSOCK2API_) /* defines its own "int32" */
 #if !defined(XP_MAC) && !defined(_WIN32) && !defined(XP_OS2) && !defined(NTO)
 typedef PRInt32 int32;
 #else
@@ -162,9 +158,7 @@ typedef long int32;
  * int16
  */
 
-#if !defined(XP_BEOS) && !defined(VMS) \
-    && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
-    && !defined(HPUX)
+#if !defined(XP_BEOS) && !defined(VMS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) && !defined(HPUX)
 typedef PRInt16 int16;
 #endif
 
@@ -172,9 +166,7 @@ typedef PRInt16 int16;
  * int8
  */
 
-#if !defined(XP_BEOS) && !defined(VMS) \
-    && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) \
-    && !defined(HPUX)
+#if !defined(XP_BEOS) && !defined(VMS) && !defined(_PR_AIX_HAVE_BSD_INT_TYPES) && !defined(HPUX)
 typedef PRInt8 int8;
 #endif
 
@@ -185,9 +177,9 @@ typedef PRWord prword_t;
 
 
 /* Re: prbit.h */
-#define TEST_BIT	PR_TEST_BIT
-#define SET_BIT		PR_SET_BIT
-#define CLEAR_BIT	PR_CLEAR_BIT
+#define TEST_BIT PR_TEST_BIT
+#define SET_BIT PR_SET_BIT
+#define CLEAR_BIT PR_CLEAR_BIT
 
 /* Re: prarena.h->plarena.h */
 #define PRArena PLArena
@@ -240,11 +232,11 @@ typedef PRWord prword_t;
 #define PR_CompareValues PL_CompareValues
 
 #if defined(XP_MAC)
-#ifndef TRUE				/* Mac standard is lower case true */
-	#define TRUE 1
+#ifndef TRUE /* Mac standard is lower case true */
+#define TRUE 1
 #endif
-#ifndef FALSE				/* Mac standard is lower case false */
-	#define FALSE 0
+#ifndef FALSE /* Mac standard is lower case false */
+#define FALSE 0
 #endif
 #endif
 

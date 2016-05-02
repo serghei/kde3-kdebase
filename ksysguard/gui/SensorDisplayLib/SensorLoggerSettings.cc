@@ -22,56 +22,54 @@
 
 #include <klocale.h>
 
-SensorLoggerSettings::SensorLoggerSettings( QWidget *parent, const char *name )
-    : KDialogBase( parent, name, true, i18n( "Sensor Logger Settings" ),
-      Ok|Apply|Cancel, Ok, true )
+SensorLoggerSettings::SensorLoggerSettings(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Sensor Logger Settings"), Ok | Apply | Cancel, Ok, true)
 {
-  m_settingsWidget = new SensorLoggerSettingsWidget( this, "m_settingsWidget" );
-  setMainWidget( m_settingsWidget );
+    m_settingsWidget = new SensorLoggerSettingsWidget(this, "m_settingsWidget");
+    setMainWidget(m_settingsWidget);
 }
 
 QString SensorLoggerSettings::title()
 {
-  return m_settingsWidget->title();
+    return m_settingsWidget->title();
 }
 
 QColor SensorLoggerSettings::foregroundColor()
 {
-  return m_settingsWidget->foregroundColor();
+    return m_settingsWidget->foregroundColor();
 }
 
 QColor SensorLoggerSettings::backgroundColor()
 {
-  return m_settingsWidget->backgroundColor();
+    return m_settingsWidget->backgroundColor();
 }
 
 QColor SensorLoggerSettings::alarmColor()
 {
-  return m_settingsWidget->alarmColor();
+    return m_settingsWidget->alarmColor();
 }
 
-void SensorLoggerSettings::setTitle( const QString &title )
+void SensorLoggerSettings::setTitle(const QString &title)
 {
-  m_settingsWidget->setTitle( title );
+    m_settingsWidget->setTitle(title);
 }
 
-void SensorLoggerSettings::setBackgroundColor( const QColor &c )
+void SensorLoggerSettings::setBackgroundColor(const QColor &c)
 {
-  m_settingsWidget->setBackgroundColor( c );
+    m_settingsWidget->setBackgroundColor(c);
 }
 
-void SensorLoggerSettings::setForegroundColor( const QColor &c )
+void SensorLoggerSettings::setForegroundColor(const QColor &c)
 {
-  m_settingsWidget->setForegroundColor( c );
+    m_settingsWidget->setForegroundColor(c);
 }
 
-void SensorLoggerSettings::setAlarmColor( const QColor &c )
+void SensorLoggerSettings::setAlarmColor(const QColor &c)
 {
-  m_settingsWidget->setAlarmColor( c );
+    m_settingsWidget->setAlarmColor(c);
 }
 
 #include "SensorLoggerSettings.moc"
 
 /* vim: et sw=2 ts=2
 */
-

@@ -28,141 +28,140 @@
 #include "objkstheme.h"
 #include "objkstheme.moc"
 
-ObjKsTheme::ObjKsTheme( const QString& theme )
-  :mActiveTheme (theme), mThemeDir("/"), mThemeConfig (0L), mThemePrefix( "Themes/" ), d(0)
+ObjKsTheme::ObjKsTheme(const QString &theme) : mActiveTheme(theme), mThemeDir("/"), mThemeConfig(0L), mThemePrefix("Themes/"), d(0)
 {
-  // Get Xinerama config.
-  KConfig *config = kapp->config();
-  config->setGroup( "Xinerama" );
-  QDesktopWidget *desktop = kapp->desktop();
-  mXineramaScreen = config->readNumEntry("KSplashScreen", desktop->primaryScreen());
+    // Get Xinerama config.
+    KConfig *config = kapp->config();
+    config->setGroup("Xinerama");
+    QDesktopWidget *desktop = kapp->desktop();
+    mXineramaScreen = config->readNumEntry("KSplashScreen", desktop->primaryScreen());
 
-  // For Xinerama, let's put the mouse on the first head.  Otherwise it could appear anywhere!
-  if (desktop->isVirtualDesktop() && mXineramaScreen != -2)
-  {
-    QRect rect = desktop->screenGeometry( mXineramaScreen );
-    if (!rect.contains(QCursor::pos()))
-      QCursor::setPos(rect.center());
-  }
+    // For Xinerama, let's put the mouse on the first head.  Otherwise it could appear anywhere!
+    if(desktop->isVirtualDesktop() && mXineramaScreen != -2)
+    {
+        QRect rect = desktop->screenGeometry(mXineramaScreen);
+        if(!rect.contains(QCursor::pos()))
+            QCursor::setPos(rect.center());
+    }
 
-  // Does the active theme exist?
-  if( !loadThemeRc( mActiveTheme, false ) )
-    if( !loadLocalConfig( mActiveTheme, false ) )
-      if( !loadThemeRc( "Default", false ) )
-        loadLocalConfig( "Default", true ); //force: we need some defaults
-  loadCmdLineArgs(KCmdLineArgs::parsedArgs());
-  mThemePrefix += ( mActiveTheme + "/" );
+    // Does the active theme exist?
+    if(!loadThemeRc(mActiveTheme, false))
+        if(!loadLocalConfig(mActiveTheme, false))
+            if(!loadThemeRc("Default", false))
+                loadLocalConfig("Default", true); // force: we need some defaults
+    loadCmdLineArgs(KCmdLineArgs::parsedArgs());
+    mThemePrefix += (mActiveTheme + "/");
 }
 
 ObjKsTheme::~ObjKsTheme()
 {
 }
 
-bool ObjKsTheme::loadThemeRc( const QString& activeTheme, bool force )
+bool ObjKsTheme::loadThemeRc(const QString &activeTheme, bool force)
 {
-  //kdDebug() << "ObjKsTheme::loadThemeRc: " << activeTheme << endl;
-  QString prefix("Themes/");
-  QString themeFile;
-  KConfig *cf = 0L;
+    // kdDebug() << "ObjKsTheme::loadThemeRc: " << activeTheme << endl;
+    QString prefix("Themes/");
+    QString themeFile;
+    KConfig *cf = 0L;
 
-  // Try our best to find a theme file.
-  themeFile = locate( "appdata", prefix + activeTheme + "/" + QString("Theme.rc") );
-  themeFile = themeFile.isEmpty() ? locate("appdata",prefix+activeTheme+"/"+QString("Theme.RC")):themeFile;
-  themeFile = themeFile.isEmpty() ? locate("appdata",prefix+activeTheme+"/"+QString("theme.rc")):themeFile;
-  themeFile = themeFile.isEmpty() ? locate("appdata",prefix+activeTheme+"/"+activeTheme+QString(".rc")):themeFile;
+    // Try our best to find a theme file.
+    themeFile = locate("appdata", prefix + activeTheme + "/" + QString("Theme.rc"));
+    themeFile = themeFile.isEmpty() ? locate("appdata", prefix + activeTheme + "/" + QString("Theme.RC")) : themeFile;
+    themeFile = themeFile.isEmpty() ? locate("appdata", prefix + activeTheme + "/" + QString("theme.rc")) : themeFile;
+    themeFile = themeFile.isEmpty() ? locate("appdata", prefix + activeTheme + "/" + activeTheme + QString(".rc")) : themeFile;
 
-  if( !themeFile.isEmpty() )
-     cf = new KConfig( themeFile );
+    if(!themeFile.isEmpty())
+        cf = new KConfig(themeFile);
 
-  if( cf )
-  {
-    mActiveTheme = activeTheme;
-    mThemeDir = prefix + activeTheme+"/";
-    if( loadKConfig( cf, activeTheme, force ) )
+    if(cf)
     {
-      mThemeConfig = cf;
-      return true;
+        mActiveTheme = activeTheme;
+        mThemeDir = prefix + activeTheme + "/";
+        if(loadKConfig(cf, activeTheme, force))
+        {
+            mThemeConfig = cf;
+            return true;
+        }
+        else
+            delete cf;
     }
-    else
-      delete cf;
-  }
-  return false;
+    return false;
 }
 
-bool ObjKsTheme::loadLocalConfig( const QString& activeTheme, bool force )
+bool ObjKsTheme::loadLocalConfig(const QString &activeTheme, bool force)
 {
-  //kdDebug() << "ObjKsTheme::loadLocalConfig" << endl;
-  KConfig *cfg = kapp->config();
-  return( loadKConfig( cfg, activeTheme, force ) );
+    // kdDebug() << "ObjKsTheme::loadLocalConfig" << endl;
+    KConfig *cfg = kapp->config();
+    return (loadKConfig(cfg, activeTheme, force));
 }
 
 // ObjKsConfig::loadKConfig(): Load our settings from a KConfig object.
-bool ObjKsTheme::loadKConfig( KConfig *cfg, const QString& activeTheme, bool force )
+bool ObjKsTheme::loadKConfig(KConfig *cfg, const QString &activeTheme, bool force)
 {
-  //kdDebug() << "ObjKsTheme::loadKConfig" << endl;
-  if( !cfg )
-    return false;
+    // kdDebug() << "ObjKsTheme::loadKConfig" << endl;
+    if(!cfg)
+        return false;
 
-  // Themes are always stored in the group [KSplash Theme: ThemeName],
-  // and ThemeName should always be the same name as the themedir, if any.
-  // If we can't find this theme group, then we can't load.
-  if( !cfg->hasGroup( QString("KSplash Theme: %1").arg(activeTheme) ) && !force )
-    return false;
+    // Themes are always stored in the group [KSplash Theme: ThemeName],
+    // and ThemeName should always be the same name as the themedir, if any.
+    // If we can't find this theme group, then we can't load.
+    if(!cfg->hasGroup(QString("KSplash Theme: %1").arg(activeTheme)) && !force)
+        return false;
 
-  cfg->setGroup( QString("KSplash Theme: %1").arg(activeTheme) );
-  mThemeConfig = cfg;
+    cfg->setGroup(QString("KSplash Theme: %1").arg(activeTheme));
+    mThemeConfig = cfg;
 
-  mThemeEngine = cfg->readEntry( "Engine", "Default" );
+    mThemeEngine = cfg->readEntry("Engine", "Default");
 
-  m_icons.clear();
-  m_icons.append( cfg->readEntry( "Icon1", "filetypes" ) );
-  m_icons.append( cfg->readEntry( "Icon2", "exec" ) );
-  m_icons.append( cfg->readEntry( "Icon3", "key_bindings" ) );
-  m_icons.append( cfg->readEntry( "Icon4", "window_list" ) );
-  m_icons.append( cfg->readEntry( "Icon5", "desktop" ) );
-  m_icons.append( cfg->readEntry( "Icon6", "style" ) );
-  m_icons.append( cfg->readEntry( "Icon7", "kcmsystem" ) );
-  m_icons.append( cfg->readEntry( "Icon8", "go" ) );
+    m_icons.clear();
+    m_icons.append(cfg->readEntry("Icon1", "filetypes"));
+    m_icons.append(cfg->readEntry("Icon2", "exec"));
+    m_icons.append(cfg->readEntry("Icon3", "key_bindings"));
+    m_icons.append(cfg->readEntry("Icon4", "window_list"));
+    m_icons.append(cfg->readEntry("Icon5", "desktop"));
+    m_icons.append(cfg->readEntry("Icon6", "style"));
+    m_icons.append(cfg->readEntry("Icon7", "kcmsystem"));
+    m_icons.append(cfg->readEntry("Icon8", "go"));
 
-  m_text.clear();
-  m_text.append( cfg->readEntry( "Message1", i18n("Setting up interprocess communication") ) );
-  m_text.append( cfg->readEntry( "Message2", i18n("Initializing system services") ) );
-  m_text.append( cfg->readEntry( "Message3", i18n("Initializing peripherals") ) );
-  m_text.append( cfg->readEntry( "Message4", i18n("Loading the window manager") ) );
-  m_text.append( cfg->readEntry( "Message5", i18n("Loading the desktop") ) );
-  m_text.append( cfg->readEntry( "Message6", i18n("Loading the panel") ) );
-  m_text.append( cfg->readEntry( "Message7", i18n("Restoring session") ) );
-  m_text.append( cfg->readEntry( "Message8", i18n("KDE is up and running") ) );
+    m_text.clear();
+    m_text.append(cfg->readEntry("Message1", i18n("Setting up interprocess communication")));
+    m_text.append(cfg->readEntry("Message2", i18n("Initializing system services")));
+    m_text.append(cfg->readEntry("Message3", i18n("Initializing peripherals")));
+    m_text.append(cfg->readEntry("Message4", i18n("Loading the window manager")));
+    m_text.append(cfg->readEntry("Message5", i18n("Loading the desktop")));
+    m_text.append(cfg->readEntry("Message6", i18n("Loading the panel")));
+    m_text.append(cfg->readEntry("Message7", i18n("Restoring session")));
+    m_text.append(cfg->readEntry("Message8", i18n("KDE is up and running")));
 
-  return true;
+    return true;
 }
 
 /*
  * ObjKsTheme::loadCmdLineArgs(): Handle any overrides which the user might have
  * specified.
  */
-void ObjKsTheme::loadCmdLineArgs( KCmdLineArgs *args )
+void ObjKsTheme::loadCmdLineArgs(KCmdLineArgs *args)
 {
 
-  mManagedMode = args->isSet( "managed" );
-  mTesting = args->isSet("test");
-  mLoColor = ( QPixmap::defaultDepth() <= 8 );
-  QString theme = args->getOption( "theme" );
-  if( theme != mActiveTheme && !theme.isNull() )
-    if( loadThemeRc( theme, false ) )
-      mActiveTheme = theme;
-  //args->clear();
+    mManagedMode = args->isSet("managed");
+    mTesting = args->isSet("test");
+    mLoColor = (QPixmap::defaultDepth() <= 8);
+    QString theme = args->getOption("theme");
+    if(theme != mActiveTheme && !theme.isNull())
+        if(loadThemeRc(theme, false))
+            mActiveTheme = theme;
+    // args->clear();
 }
 
-QString ObjKsTheme::locateThemeData( const QString &resource )
+QString ObjKsTheme::locateThemeData(const QString &resource)
 {
-  if ( !mLoColor )
-    return locate( "appdata", mThemePrefix+resource );
-  else
-  {
-    QString res = locate( "appdata", mThemePrefix+"locolor/"+resource );
-    if ( res.isEmpty() )
-      res = locate( "appdata", mThemePrefix+resource );
-    return res;
-  }
+    if(!mLoColor)
+        return locate("appdata", mThemePrefix + resource);
+    else
+    {
+        QString res = locate("appdata", mThemePrefix + "locolor/" + resource);
+        if(res.isEmpty())
+            res = locate("appdata", mThemePrefix + resource);
+        return res;
+    }
 }

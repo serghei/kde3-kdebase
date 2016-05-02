@@ -21,20 +21,20 @@
 #ifndef KSG_DISKSTAT_H
 #define KSG_DISKSTAT_H
 
-void initDiskStat( struct SensorModul* );
-void exitDiskStat( void );
+void initDiskStat(struct SensorModul *);
+void exitDiskStat(void);
 
-int updateDiskStat( void );
-void checkDiskStat( void );
+int updateDiskStat(void);
+void checkDiskStat(void);
 
-void printDiskStat( const char* );
-void printDiskStatInfo( const char* );
+void printDiskStat(const char *);
+void printDiskStatInfo(const char *);
 
-void printDiskStatUsed( const char* );
-void printDiskStatUsedInfo( const char* );
-void printDiskStatFree( const char* );
-void printDiskStatFreeInfo( const char* );
-void printDiskStatPercent( const char* );
-void printDiskStatPercentInfo( const char* );
+void printDiskStatUsed(const char *);
+void printDiskStatUsedInfo(const char *);
+void printDiskStatFree(const char *);
+void printDiskStatFreeInfo(const char *);
+void printDiskStatPercent(const char *);
+void printDiskStatPercentInfo(const char *);
 
 #endif

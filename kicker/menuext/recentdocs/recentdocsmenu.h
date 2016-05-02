@@ -29,27 +29,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class QStringList;
 class QPoint;
 
-class RecentDocsMenu : public KPanelMenu
-{
-	Q_OBJECT
+class RecentDocsMenu : public KPanelMenu {
+    Q_OBJECT
 
 public:
-	RecentDocsMenu(QWidget* parent, const char* name, const QStringList &/*args*/);
+    RecentDocsMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
     ~RecentDocsMenu();
-	void initialize();
+    void initialize();
 
 protected slots:
-	void slotClearHistory();
-	void slotExec(int id);
+    void slotClearHistory();
+    void slotExec(int id);
     void slotAboutToShow();
 
 protected:
-	void mousePressEvent(QMouseEvent* e);
-	void mouseMoveEvent(QMouseEvent* e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
 
 private:
-	QStringList _fileList;
-	QPoint _mouseDown;
+    QStringList _fileList;
+    QPoint _mouseDown;
 };
 
 #endif // RECENTDOCSMENU_H

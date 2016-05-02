@@ -74,10 +74,10 @@
  */
 static int x_errhandler(Display *dpy, XErrorEvent *error)
 {
-  char errstr[256];
-  XGetErrorText(dpy, error->error_code, errstr, 256);
-  kdDebug(1430) << "Detected X Error: " << errstr << endl;
-  return 1;
+    char errstr[256];
+    XGetErrorText(dpy, error->error_code, errstr, 256);
+    kdDebug(1430) << "Detected X Error: " << errstr << endl;
+    return 1;
 }
 
 /*
@@ -93,14 +93,14 @@ static QCString g_dcopId;
  */
 void parseCommandLine(int argc, char *argv[])
 {
-   for (int i=0; i<argc; i++)
-   {
-      if (!strcmp(argv[i], "-dcopid") && (i+1 < argc))
-      {
-         g_dcopId = argv[i+1];
-         i++;
-      }
-   }
+    for(int i = 0; i < argc; i++)
+    {
+        if(!strcmp(argv[i], "-dcopid") && (i + 1 < argc))
+        {
+            g_dcopId = argv[i + 1];
+            i++;
+        }
+    }
 }
 
 #if QT_VERSION < 0x030100
@@ -110,7 +110,7 @@ static bool g_quit = false;
 
 void quitXt()
 {
-   g_quit = true;
+    g_quit = true;
 }
 
 
@@ -121,27 +121,27 @@ void quitXt()
 
 struct SocketNot
 {
-  int fd;
-  QObject *obj;
-  XtInputId id;
+    int fd;
+    QObject *obj;
+    XtInputId id;
 };
 
-QPtrList<SocketNot> _notifiers[3];
+QPtrList< SocketNot > _notifiers[3];
 
 /**
  * socketCallback - send event to the socket notifier
  *
  */
-void socketCallback(void *client_data, int* /*source*/, XtInputId* /*id*/)
+void socketCallback(void *client_data, int * /*source*/, XtInputId * /*id*/)
 {
-  kdDebug(1430) << "-> socketCallback( client_data=" << client_data << " )" << endl;
+    kdDebug(1430) << "-> socketCallback( client_data=" << client_data << " )" << endl;
 
-  QEvent event( QEvent::SockAct );
-  SocketNot *socknot = (SocketNot *)client_data;
-  kdDebug(1430) << "obj=" << (void*)socknot->obj << endl;
-  QApplication::sendEvent( socknot->obj, &event );
+    QEvent event(QEvent::SockAct);
+    SocketNot *socknot = (SocketNot *)client_data;
+    kdDebug(1430) << "obj=" << (void *)socknot->obj << endl;
+    QApplication::sendEvent(socknot->obj, &event);
 
-  kdDebug(1430) << "<- socketCallback" << endl;
+    kdDebug(1430) << "<- socketCallback" << endl;
 }
 
 
@@ -151,162 +151,180 @@ void socketCallback(void *client_data, int* /*source*/, XtInputId* /*id*/)
  * the original one in Qt. I hope this works with every dynamic library loader on any OS.
  *
  */
-extern bool qt_set_socket_handler( int, int, QObject *, bool );
-bool qt_set_socket_handler( int sockfd, int type, QObject *obj, bool enable )
+extern bool qt_set_socket_handler(int, int, QObject *, bool);
+bool qt_set_socket_handler(int sockfd, int type, QObject *obj, bool enable)
 {
-  if ( sockfd < 0 || type < 0 || type > 2 || obj == 0 ) {
+    if(sockfd < 0 || type < 0 || type > 2 || obj == 0)
+    {
 #if defined(CHECK_RANGE)
-      qWarning( "QSocketNotifier: Internal error" );
+        qWarning("QSocketNotifier: Internal error");
 #endif
-      return FALSE;
-  }
+        return FALSE;
+    }
 
-  XtPointer inpMask = 0;
+    XtPointer inpMask = 0;
 
-  switch (type) {
-  case QSocketNotifier::Read:      inpMask = (XtPointer)XtInputReadMask; break;
-  case QSocketNotifier::Write:     inpMask = (XtPointer)XtInputWriteMask; break;
-  case QSocketNotifier::Exception: inpMask = (XtPointer)XtInputExceptMask; break;
-  default: return FALSE;
-  }
+    switch(type)
+    {
+        case QSocketNotifier::Read:
+            inpMask = (XtPointer)XtInputReadMask;
+            break;
+        case QSocketNotifier::Write:
+            inpMask = (XtPointer)XtInputWriteMask;
+            break;
+        case QSocketNotifier::Exception:
+            inpMask = (XtPointer)XtInputExceptMask;
+            break;
+        default:
+            return FALSE;
+    }
 
-  if (enable) {
-      SocketNot *sn = new SocketNot;
-      sn->obj = obj;
-      sn->fd = sockfd;
+    if(enable)
+    {
+        SocketNot *sn = new SocketNot;
+        sn->obj = obj;
+        sn->fd = sockfd;
 
-      if( _notifiers[type].isEmpty() ) {
-          _notifiers[type].insert( 0, sn );
-      } else {
-          SocketNot *p = _notifiers[type].first();
-          while ( p && p->fd > sockfd )
-              p = _notifiers[type].next();
+        if(_notifiers[type].isEmpty())
+        {
+            _notifiers[type].insert(0, sn);
+        }
+        else
+        {
+            SocketNot *p = _notifiers[type].first();
+            while(p && p->fd > sockfd)
+                p = _notifiers[type].next();
 
 #if defined(CHECK_STATE)
-          if ( p && p->fd==sockfd ) {
-              static const char *t[] = { "read", "write", "exception" };
-              qWarning( "QSocketNotifier: Multiple socket notifiers for "
-                        "same socket %d and type %s", sockfd, t[type] );
-          }
+            if(p && p->fd == sockfd)
+            {
+                static const char *t[] = {"read", "write", "exception"};
+                qWarning(
+                    "QSocketNotifier: Multiple socket notifiers for "
+                    "same socket %d and type %s",
+                    sockfd, t[type]);
+            }
 #endif
-          if ( p )
-              _notifiers[type].insert( _notifiers[type].at(), sn );
-          else
-              _notifiers[type].append( sn );
-      }
+            if(p)
+                _notifiers[type].insert(_notifiers[type].at(), sn);
+            else
+                _notifiers[type].append(sn);
+        }
 
-      sn->id = XtAppAddInput( g_appcon, sockfd, inpMask, socketCallback, sn );
+        sn->id = XtAppAddInput(g_appcon, sockfd, inpMask, socketCallback, sn);
+    }
+    else
+    {
 
-  } else {
+        SocketNot *sn = _notifiers[type].first();
+        while(sn && !(sn->obj == obj && sn->fd == sockfd))
+            sn = _notifiers[type].next();
+        if(!sn) // not found
+            return FALSE;
 
-      SocketNot *sn = _notifiers[type].first();
-      while ( sn && !(sn->obj == obj && sn->fd == sockfd) )
-          sn = _notifiers[type].next();
-      if ( !sn )				// not found
-          return FALSE;
+        XtRemoveInput(sn->id);
+        _notifiers[type].remove();
+    }
 
-      XtRemoveInput( sn->id );
-      _notifiers[type].remove();
-  }
-
-  return TRUE;
+    return TRUE;
 }
 #endif
 
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     // nspluginviewer is a helper app, it shouldn't do session management at all
-   setenv( "SESSION_MANAGER", "", 1 );
+    setenv("SESSION_MANAGER", "", 1);
 
-   // trap X errors
-   kdDebug(1430) << "1 - XSetErrorHandler" << endl;
-   XSetErrorHandler(x_errhandler);
-   setvbuf( stderr, NULL, _IONBF, 0 );
+    // trap X errors
+    kdDebug(1430) << "1 - XSetErrorHandler" << endl;
+    XSetErrorHandler(x_errhandler);
+    setvbuf(stderr, NULL, _IONBF, 0);
 
-   kdDebug(1430) << "2 - parseCommandLine" << endl;
-   parseCommandLine(argc, argv);
+    kdDebug(1430) << "2 - parseCommandLine" << endl;
+    parseCommandLine(argc, argv);
 
 #if QT_VERSION < 0x030100
-   // Create application
-   kdDebug(1430) << "3 - XtToolkitInitialize" << endl;
-   XtToolkitInitialize();
-   g_appcon = XtCreateApplicationContext();
-   Display *dpy = XtOpenDisplay(g_appcon, NULL, "nspluginviewer", "nspluginviewer",
-                                0, 0, &argc, argv);
+    // Create application
+    kdDebug(1430) << "3 - XtToolkitInitialize" << endl;
+    XtToolkitInitialize();
+    g_appcon = XtCreateApplicationContext();
+    Display *dpy = XtOpenDisplay(g_appcon, NULL, "nspluginviewer", "nspluginviewer", 0, 0, &argc, argv);
 
-   _notifiers[0].setAutoDelete( TRUE );
-   _notifiers[1].setAutoDelete( TRUE );
-   _notifiers[2].setAutoDelete( TRUE );
+    _notifiers[0].setAutoDelete(TRUE);
+    _notifiers[1].setAutoDelete(TRUE);
+    _notifiers[2].setAutoDelete(TRUE);
 
-   kdDebug(1430) << "4 - KXtApplication app" << endl;
-   KLocale::setMainCatalogue("nsplugin");
-   KXtApplication app(dpy, argc, argv, "nspluginviewer");
+    kdDebug(1430) << "4 - KXtApplication app" << endl;
+    KLocale::setMainCatalogue("nsplugin");
+    KXtApplication app(dpy, argc, argv, "nspluginviewer");
 #else
-   kdDebug(1430) << "3 - create QXtEventLoop" << endl;
-   QXtEventLoop integrator( "nspluginviewer" );
-   parseCommandLine(argc, argv);
-   KLocale::setMainCatalogue("nsplugin");
+    kdDebug(1430) << "3 - create QXtEventLoop" << endl;
+    QXtEventLoop integrator("nspluginviewer");
+    parseCommandLine(argc, argv);
+    KLocale::setMainCatalogue("nsplugin");
 
-   kdDebug(1430) << "4 - create KApplication" << endl;
-   KApplication app( argc,  argv, "nspluginviewer" );
-   GlibEvents glibevents;
+    kdDebug(1430) << "4 - create KApplication" << endl;
+    KApplication app(argc, argv, "nspluginviewer");
+    GlibEvents glibevents;
 #endif
 
-   {
-      KConfig cfg("kcmnspluginrc", true);
-      cfg.setGroup("Misc");
-      int v = KCLAMP(cfg.readNumEntry("Nice Level", 0), 0, 19);
-      if (v > 0) {
-         nice(v);
-      }
-      v = cfg.readNumEntry("Max Memory", 0);
-      if (v > 0) {
-         rlimit rl;
-         memset(&rl, 0, sizeof(rl));
-         if (0 == getrlimit(RLIMIT_AS, &rl)) {
-            rl.rlim_cur = kMin(v, int(rl.rlim_max));
-            setrlimit(RLIMIT_AS, &rl);
-         }
-      }
-   }
+    {
+        KConfig cfg("kcmnspluginrc", true);
+        cfg.setGroup("Misc");
+        int v = KCLAMP(cfg.readNumEntry("Nice Level", 0), 0, 19);
+        if(v > 0)
+        {
+            nice(v);
+        }
+        v = cfg.readNumEntry("Max Memory", 0);
+        if(v > 0)
+        {
+            rlimit rl;
+            memset(&rl, 0, sizeof(rl));
+            if(0 == getrlimit(RLIMIT_AS, &rl))
+            {
+                rl.rlim_cur = kMin(v, int(rl.rlim_max));
+                setrlimit(RLIMIT_AS, &rl);
+            }
+        }
+    }
 
-   // initialize the dcop client
-   kdDebug(1430) << "5 - app.dcopClient" << endl;
-   DCOPClient *dcop = app.dcopClient();
-   if (!dcop->attach())
-   {
-      KMessageBox::error(NULL,
-                            i18n("There was an error connecting to the Desktop "
-                                 "communications server. Please make sure that "
-                                 "the 'dcopserver' process has been started, and "
-                                 "then try again."),
-                            i18n("Error Connecting to DCOP Server"));
-      exit(1);
-   }
+    // initialize the dcop client
+    kdDebug(1430) << "5 - app.dcopClient" << endl;
+    DCOPClient *dcop = app.dcopClient();
+    if(!dcop->attach())
+    {
+        KMessageBox::error(NULL, i18n("There was an error connecting to the Desktop "
+                                      "communications server. Please make sure that "
+                                      "the 'dcopserver' process has been started, and "
+                                      "then try again."),
+                           i18n("Error Connecting to DCOP Server"));
+        exit(1);
+    }
 
-   kdDebug(1430) << "6 - dcop->registerAs" << endl;
-   if (g_dcopId)
-      g_dcopId = dcop->registerAs( g_dcopId, false );
-   else
-      g_dcopId = dcop->registerAs("nspluginviewer");
+    kdDebug(1430) << "6 - dcop->registerAs" << endl;
+    if(g_dcopId)
+        g_dcopId = dcop->registerAs(g_dcopId, false);
+    else
+        g_dcopId = dcop->registerAs("nspluginviewer");
 
-   dcop->setNotifications(true);
+    dcop->setNotifications(true);
 
-   // create dcop interface
-   kdDebug(1430) << "7 - new NSPluginViewer" << endl;
-   NSPluginViewer *viewer = new NSPluginViewer( "viewer", 0 );
+    // create dcop interface
+    kdDebug(1430) << "7 - new NSPluginViewer" << endl;
+    NSPluginViewer *viewer = new NSPluginViewer("viewer", 0);
 
-   // start main loop
+// start main loop
 #if QT_VERSION < 0x030100
-   kdDebug(1430) << "8 - XtAppProcessEvent" << endl;
-   while (!g_quit)
-     XtAppProcessEvent( g_appcon, XtIMAll);
+    kdDebug(1430) << "8 - XtAppProcessEvent" << endl;
+    while(!g_quit)
+        XtAppProcessEvent(g_appcon, XtIMAll);
 #else
-   kdDebug(1430) << "8 - app.exec()" << endl;
-   app.exec();
+    kdDebug(1430) << "8 - app.exec()" << endl;
+    app.exec();
 #endif
 
-   // delete viewer
-   delete viewer;
+    // delete viewer
+    delete viewer;
 }

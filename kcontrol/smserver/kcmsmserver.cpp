@@ -33,18 +33,18 @@
 #include "kcmsmserver.h"
 #include "smserverconfigimpl.h"
 
-typedef KGenericFactory<SMServerConfig, QWidget > SMSFactory;
-K_EXPORT_COMPONENT_FACTORY (kcm_smserver, SMSFactory("kcmsmserver") )
+typedef KGenericFactory< SMServerConfig, QWidget > SMSFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_smserver, SMSFactory("kcmsmserver"))
 
-SMServerConfig::SMServerConfig( QWidget *parent, const char* name, const QStringList & )
-  : KCModule (SMSFactory::instance(), parent, name)
+SMServerConfig::SMServerConfig(QWidget *parent, const char *name, const QStringList &) : KCModule(SMSFactory::instance(), parent, name)
 {
-    setQuickHelp( i18n("<h1>Session Manager</h1>"
-    " You can configure the session manager here."
-    " This includes options such as whether or not the session exit (logout)"
-    " should be confirmed, whether the session should be restored again when logging in"
-    " and whether the computer should be automatically shut down after session"
-    " exit by default."));
+    setQuickHelp(
+        i18n("<h1>Session Manager</h1>"
+             " You can configure the session manager here."
+             " This includes options such as whether or not the session exit (logout)"
+             " should be confirmed, whether the session should be restored again when logging in"
+             " and whether the computer should be automatically shut down after session"
+             " exit by default."));
 
     QVBoxLayout *topLayout = new QVBoxLayout(this);
     dialog = new SMServerConfigImpl(this);
@@ -53,104 +53,102 @@ SMServerConfig::SMServerConfig( QWidget *parent, const char* name, const QString
     dialog->show();
     topLayout->add(dialog);
     load();
-
 }
 
 void SMServerConfig::load()
 {
-	load( false );
+    load(false);
 }
 
-void SMServerConfig::load(bool useDefaults )
+void SMServerConfig::load(bool useDefaults)
 {
-  KConfig *c = new KConfig("ksmserverrc", false, false);
-  c->setReadDefaults( useDefaults );
-  c->setGroup("General");
-  dialog->confirmLogoutCheck->setChecked(c->readBoolEntry("confirmLogout", true));
+    KConfig *c = new KConfig("ksmserverrc", false, false);
+    c->setReadDefaults(useDefaults);
+    c->setGroup("General");
+    dialog->confirmLogoutCheck->setChecked(c->readBoolEntry("confirmLogout", true));
 
-  bool en = c->readBoolEntry("offerShutdown", true);
-  dialog->offerShutdownCheck->setChecked(en);
+    bool en = c->readBoolEntry("offerShutdown", true);
+    dialog->offerShutdownCheck->setChecked(en);
 
-  en = c->readBoolEntry("offerSuspend", true);
-  dialog->offerSuspendCheck->setChecked(en);
+    en = c->readBoolEntry("offerSuspend", true);
+    dialog->offerSuspendCheck->setChecked(en);
 
-  en = c->readBoolEntry("offerHibernate", true);
-  dialog->offerHibernateCheck->setChecked(en);
+    en = c->readBoolEntry("offerHibernate", true);
+    dialog->offerHibernateCheck->setChecked(en);
 
-  en = c->readBoolEntry("lockBeforeSuspendHibernate", true);
-  dialog->lockBeforeSuspendHibernateCheck->setChecked(en);
+    en = c->readBoolEntry("lockBeforeSuspendHibernate", true);
+    dialog->lockBeforeSuspendHibernateCheck->setChecked(en);
 
-  QString s = c->readEntry( "loginMode" );
-  if ( s == "default" )
-      dialog->emptySessionRadio->setChecked(true);
-  else if ( s == "restoreSavedSession" )
-      dialog->savedSessionRadio->setChecked(true);
-  else // "restorePreviousLogout"
-      dialog->previousSessionRadio->setChecked(true);
+    QString s = c->readEntry("loginMode");
+    if(s == "default")
+        dialog->emptySessionRadio->setChecked(true);
+    else if(s == "restoreSavedSession")
+        dialog->savedSessionRadio->setChecked(true);
+    else // "restorePreviousLogout"
+        dialog->previousSessionRadio->setChecked(true);
 
-  switch (c->readNumEntry("shutdownType", int(KApplication::ShutdownTypeNone))) {
-  case int(KApplication::ShutdownTypeSuspend):
-    dialog->suspendRadio->setChecked(true);
-    break;
-  case int(KApplication::ShutdownTypeHibernate):
-    dialog->hibernateRadio->setChecked(true);
-    break;
-  case int(KApplication::ShutdownTypeHalt):
-    dialog->haltRadio->setChecked(true);
-    break;
-  case int(KApplication::ShutdownTypeReboot):
-    dialog->rebootRadio->setChecked(true);
-    break;
-  default:
-    dialog->logoutRadio->setChecked(true);
-    break;
-  }
-  dialog->excludeLineedit->setText( c->readEntry("excludeApps"));
+    switch(c->readNumEntry("shutdownType", int(KApplication::ShutdownTypeNone)))
+    {
+        case int(KApplication::ShutdownTypeSuspend):
+            dialog->suspendRadio->setChecked(true);
+            break;
+        case int(KApplication::ShutdownTypeHibernate):
+            dialog->hibernateRadio->setChecked(true);
+            break;
+        case int(KApplication::ShutdownTypeHalt):
+            dialog->haltRadio->setChecked(true);
+            break;
+        case int(KApplication::ShutdownTypeReboot):
+            dialog->rebootRadio->setChecked(true);
+            break;
+        default:
+            dialog->logoutRadio->setChecked(true);
+            break;
+    }
+    dialog->excludeLineedit->setText(c->readEntry("excludeApps"));
 
-  delete c;
+    delete c;
 
-  emit changed(useDefaults);
+    emit changed(useDefaults);
 }
 
 void SMServerConfig::save()
 {
-  KConfig *c = new KConfig("ksmserverrc", false, false);
-  c->setGroup("General");
-  c->writeEntry( "confirmLogout", dialog->confirmLogoutCheck->isChecked());
-  c->writeEntry( "offerShutdown", dialog->offerShutdownCheck->isChecked());
-  c->writeEntry( "offerSuspend", dialog->offerSuspendCheck->isChecked());
-  c->writeEntry( "offerHibernate", dialog->offerHibernateCheck->isChecked());
-  c->writeEntry( "lockBeforeSuspendHibernate", dialog->lockBeforeSuspendHibernateCheck->isChecked());
-  QString s = "restorePreviousLogout";
-  if ( dialog->emptySessionRadio->isChecked() )
-      s = "default";
-  else if ( dialog->savedSessionRadio->isChecked() )
-      s = "restoreSavedSession";
-  c->writeEntry( "loginMode", s );
+    KConfig *c = new KConfig("ksmserverrc", false, false);
+    c->setGroup("General");
+    c->writeEntry("confirmLogout", dialog->confirmLogoutCheck->isChecked());
+    c->writeEntry("offerShutdown", dialog->offerShutdownCheck->isChecked());
+    c->writeEntry("offerSuspend", dialog->offerSuspendCheck->isChecked());
+    c->writeEntry("offerHibernate", dialog->offerHibernateCheck->isChecked());
+    c->writeEntry("lockBeforeSuspendHibernate", dialog->lockBeforeSuspendHibernateCheck->isChecked());
+    QString s = "restorePreviousLogout";
+    if(dialog->emptySessionRadio->isChecked())
+        s = "default";
+    else if(dialog->savedSessionRadio->isChecked())
+        s = "restoreSavedSession";
+    c->writeEntry("loginMode", s);
 
-  c->writeEntry( "shutdownType",
-                 dialog->suspendRadio->isChecked() && dialog->suspendRadio->isEnabled() ?
-                   int(KApplication::ShutdownTypeSuspend) :
-                   dialog->hibernateRadio->isChecked() && dialog->hibernateRadio->isEnabled() ?
-                     int(KApplication::ShutdownTypeHibernate) :
-                     dialog->haltRadio->isChecked() && dialog->haltRadio->isEnabled() ?
-                       int(KApplication::ShutdownTypeHalt) :
-                       dialog->rebootRadio->isChecked() && dialog->rebootRadio->isEnabled() ?
-                         int(KApplication::ShutdownTypeReboot) :
-                         int(KApplication::ShutdownTypeNone));
-  c->writeEntry("excludeApps", dialog->excludeLineedit->text());
-  c->sync();
-  delete c;
+    c->writeEntry("shutdownType", dialog->suspendRadio->isChecked() && dialog->suspendRadio->isEnabled()
+                                      ? int(KApplication::ShutdownTypeSuspend)
+                                      : dialog->hibernateRadio->isChecked() && dialog->hibernateRadio->isEnabled()
+                                            ? int(KApplication::ShutdownTypeHibernate)
+                                            : dialog->haltRadio->isChecked() && dialog->haltRadio->isEnabled()
+                                                  ? int(KApplication::ShutdownTypeHalt)
+                                                  : dialog->rebootRadio->isChecked() && dialog->rebootRadio->isEnabled()
+                                                        ? int(KApplication::ShutdownTypeReboot)
+                                                        : int(KApplication::ShutdownTypeNone));
+    c->writeEntry("excludeApps", dialog->excludeLineedit->text());
+    c->sync();
+    delete c;
 
-  // update the k menu if necessary
-  QByteArray data;
-  kapp->dcopClient()->send( "kicker", "kicker", "configure()", data );
+    // update the k menu if necessary
+    QByteArray data;
+    kapp->dcopClient()->send("kicker", "kicker", "configure()", data);
 }
 
 void SMServerConfig::defaults()
 {
-	load( true );
+    load(true);
 }
 
 #include "kcmsmserver.moc"
-

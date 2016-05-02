@@ -28,20 +28,19 @@ class KProcess;
   This class implements an ioslave for viewing CGI script output without the
   need to run a web server.
 */
-class CgiProtocol : public KIO::SlaveBase
-{
-  public:
-    CgiProtocol( const QCString &pool, const QCString &app );
+class CgiProtocol : public KIO::SlaveBase {
+public:
+    CgiProtocol(const QCString &pool, const QCString &app);
     virtual ~CgiProtocol();
 
-    virtual void get( const KURL& url );
+    virtual void get(const KURL &url);
 
-//    virtual void mimetype( const KURL& url );
+    //    virtual void mimetype( const KURL& url );
 
-  protected:
-//    QCString errorMessage();
+protected:
+    //    QCString errorMessage();
 
-  private:
+private:
     QStringList mCgiPaths;
 };
 

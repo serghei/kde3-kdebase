@@ -22,68 +22,65 @@
 #include <qobject.h>
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 
 class View;
 
 /**
  * Interface to the viewmanager
  */
-class KDE_EXPORT ViewManager : public QObject
-{
-  friend class PrivateViewManager;
+class KDE_EXPORT ViewManager : public QObject {
+    friend class PrivateViewManager;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Construtor, should not interest, internal usage
      */
-    ViewManager (void *viewManager);
-    
+    ViewManager(void *viewManager);
+
     /**
      * Desctructor
      */
-    virtual ~ViewManager ();
-      
-  public slots: /*these are slots for kjs*/
-    /**
-     * Returns a pointer to the currently active view
-     * @return View active view
-     */
-    Kate::View *activeView ();
+    virtual ~ViewManager();
+
+public slots: /*these are slots for kjs*/
+              /**
+               * Returns a pointer to the currently active view
+               * @return View active view
+               */
+    Kate::View *activeView();
 
     /**
      * Activates the view with the corresponding documentNumber
      * @param documentNumber the document's number
      */
-    void activateView ( uint documentNumber );
+    void activateView(uint documentNumber);
 
     /**
      * Opens the file pointed to by URL
      * @param url url to the file
      */
-    void openURL (const KURL &url);     
- 
-  #undef signals
-  #define signals public
-  signals:
-  #undef signals
-  #define signals protected   
+    void openURL(const KURL &url);
+
+#undef signals
+#define signals public
+signals:
+#undef signals
+#define signals protected
 
     /**
      * Active view has changed
      */
-    void viewChanged ();
-    
-  private:
+    void viewChanged();
+
+private:
     /**
      * REALLY PRIVATE ;)
      */
     class PrivateViewManager *d;
 };
-
 }
 
 #endif

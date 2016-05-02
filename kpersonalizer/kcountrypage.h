@@ -28,30 +28,29 @@ class KFindLanguage;
   *@author Ralf Nolden
   */
 
-class KCountryPage : public KCountryPageDlg  {
-	Q_OBJECT
+class KCountryPage : public KCountryPageDlg {
+    Q_OBJECT
 public:
-	KCountryPage(QWidget *parent=0, const char *name=0);
-	~KCountryPage();
+    KCountryPage(QWidget *parent = 0, const char *name = 0);
+    ~KCountryPage();
 
-	void loadCountryList(KLanguageButton *combo);
-	void fillLanguageMenu(KLanguageButton *combo);
-	/** No descriptions */
-	bool save(KLanguageButton *comboCountry, KLanguageButton *comboLang);
+    void loadCountryList(KLanguageButton *combo);
+    void fillLanguageMenu(KLanguageButton *combo);
+    /** No descriptions */
+    bool save(KLanguageButton *comboCountry, KLanguageButton *comboLang);
 
-	/** we need this to decide, if we need to restart kp */
-	bool b_savedLanguageChanged;
-	bool b_startedLanguageChanged;
+    /** we need this to decide, if we need to restart kp */
+    bool b_savedLanguageChanged;
+    bool b_startedLanguageChanged;
 
 private:
-	QStringList langs;
-	QString s_oldlocale;
-	KFindLanguage *flang;
+    QStringList langs;
+    QString s_oldlocale;
+    KFindLanguage *flang;
 
 private slots: // Private slots
-	void setLangForCountry(const QString &);
-	void setLanguageChanged();
-
+    void setLangForCountry(const QString &);
+    void setLanguageChanged();
 };
 
 #endif

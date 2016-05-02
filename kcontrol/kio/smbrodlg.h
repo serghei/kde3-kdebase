@@ -29,27 +29,26 @@
 
 class KComboBox;
 
-class SMBRoOptions : public KCModule
-{
-   Q_OBJECT
-   public:
-      SMBRoOptions(QWidget *parent = 0);
-      ~SMBRoOptions();
+class SMBRoOptions : public KCModule {
+    Q_OBJECT
+public:
+    SMBRoOptions(QWidget *parent = 0);
+    ~SMBRoOptions();
 
-      virtual void load();
-      virtual void save();
-      virtual void defaults();
-      QString quickHelp() const;
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    QString quickHelp() const;
 
-   private slots:
-      void changed();
+private slots:
+    void changed();
 
-   private:
-      QLineEdit *m_userLe;
-      QLineEdit *m_passwordLe;
-//      QLineEdit *m_workgroupLe; //currently unused, Alex
-//      QCheckBox *m_showHiddenShares; //currently unused, Alex
-//      KComboBox *m_encodingList; //currently unused
+private:
+    QLineEdit *m_userLe;
+    QLineEdit *m_passwordLe;
+    //      QLineEdit *m_workgroupLe; //currently unused, Alex
+    //      QCheckBox *m_showHiddenShares; //currently unused, Alex
+    //      KComboBox *m_encodingList; //currently unused
 };
 
 #endif

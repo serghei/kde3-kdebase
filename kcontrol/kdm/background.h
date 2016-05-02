@@ -20,11 +20,10 @@ class KGlobalBackgroundSettings;
 class QCheckBox;
 class QLabel;
 
-class KBackground: public QWidget
-{
+class KBackground : public QWidget {
     Q_OBJECT
 public:
-    KBackground(QWidget *parent=0, const char *name=0);
+    KBackground(QWidget *parent = 0, const char *name = 0);
     ~KBackground();
 
     void load();
@@ -36,6 +35,7 @@ signals:
 
 private slots:
     void slotEnableChanged();
+
 private:
     void init();
     void apply();

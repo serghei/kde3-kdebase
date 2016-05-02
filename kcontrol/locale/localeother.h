@@ -31,40 +31,39 @@ class QComboBox;
 
 class KLocale;
 
-class KLocaleConfigOther : public QWidget
-{
-  Q_OBJECT
+class KLocaleConfigOther : public QWidget {
+    Q_OBJECT
 
 public:
-  KLocaleConfigOther(KLocale *locale, QWidget *parent = 0, const char *name = 0);
-  virtual ~KLocaleConfigOther();
+    KLocaleConfigOther(KLocale *locale, QWidget *parent = 0, const char *name = 0);
+    virtual ~KLocaleConfigOther();
 
-  void save();
+    void save();
 
 public slots:
-  /**
-   * Loads all settings from the current locale into the current widget.
-   */
-  void slotLocaleChanged();
-  /**
-   * Retranslate all objects owned by this object using the current locale.
-   */
-  void slotTranslate();
+    /**
+     * Loads all settings from the current locale into the current widget.
+     */
+    void slotLocaleChanged();
+    /**
+     * Retranslate all objects owned by this object using the current locale.
+     */
+    void slotTranslate();
 
 signals:
-  void localeChanged();
+    void localeChanged();
 
 private slots:
-  void slotPageSizeChanged(int i);
-  void slotMeasureSystemChanged(int i);
+    void slotPageSizeChanged(int i);
+    void slotMeasureSystemChanged(int i);
 
 private:
-  KLocale *m_locale;
+    KLocale *m_locale;
 
-  QLabel *m_labMeasureSystem;
-  QComboBox *m_combMeasureSystem;
-  QLabel *m_labPageSize;
-  QComboBox *m_combPageSize;
+    QLabel *m_labMeasureSystem;
+    QComboBox *m_combMeasureSystem;
+    QLabel *m_labPageSize;
+    QComboBox *m_combPageSize;
 };
 
 #endif

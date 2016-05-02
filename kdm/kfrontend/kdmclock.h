@@ -27,26 +27,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <qframe.h>
 
 class KdmClock : public QFrame {
-	Q_OBJECT
-	typedef QFrame inherited;
+    Q_OBJECT
+    typedef QFrame inherited;
 
-  public:
-	KdmClock( QWidget *parent=0, const char *name=0 );
+public:
+    KdmClock(QWidget *parent = 0, const char *name = 0);
 
-  protected:
-	virtual void showEvent( QShowEvent * );
-	virtual void paintEvent( QPaintEvent * );
+protected:
+    virtual void showEvent(QShowEvent *);
+    virtual void paintEvent(QPaintEvent *);
 
-  private slots:
-	void timeout();
+private slots:
+    void timeout();
 
-  private:
-	QBrush mBackgroundBrush;
-	QFont  mFont;
-	bool   mSecond;
-	bool   mDigital;
-	bool   mDate;
-	bool   mBorder;
+private:
+    QBrush mBackgroundBrush;
+    QFont mFont;
+    bool mSecond;
+    bool mDigital;
+    bool mDate;
+    bool mBorder;
 };
 
 #endif

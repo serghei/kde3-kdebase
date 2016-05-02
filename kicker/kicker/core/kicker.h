@@ -36,8 +36,7 @@ class KWinModule;
 class PanelKMenu;
 class PanelPopupButton;
 
-class Kicker : public KUniqueApplication
-{
+class Kicker : public KUniqueApplication {
     Q_OBJECT
     K_DCOP
 
@@ -45,35 +44,36 @@ public:
     Kicker();
     ~Kicker();
 
-k_dcop:
-    void configure();
+    k_dcop : void configure();
     void quit();
     void restart();
-    void addExtension( const QString &desktopFile );
-    void popupKMenu( const QPoint &globalPos );
+    void addExtension(const QString &desktopFile);
+    void popupKMenu(const QPoint &globalPos);
     void clearQuickStartMenu();
-    bool highlightMenuItem( const QString &menuId );
+    bool highlightMenuItem(const QString &menuId);
     void showKMenu();
     void toggleShowDesktop();
     bool desktopShowing();
-    void showConfig(const QString& config, int page = -1);
+    void showConfig(const QString &config, int page = -1);
     void showTaskBarConfig();
     void configureMenubar();
     // return the region on the desktop, which is not covered by panels
     // and therefore allowed to be used by icons placed on the desktop
     QRect desktopIconsArea(int screen) const;
 
-k_dcop_signals:
-    void desktopIconsAreaChanged(QRect area, int screen);
+    k_dcop_signals : void desktopIconsAreaChanged(QRect area, int screen);
 
 public:
-    static Kicker* the();
-    KDirWatch* fileWatcher();
-    KWinModule* kwinModule();
+    static Kicker *the();
+    KDirWatch *fileWatcher();
+    KWinModule *kwinModule();
 
     bool isImmutable() const;
     bool isKioskImmutable() const;
-    bool canAddContainers() const { return m_canAddContainers && !isImmutable(); }
+    bool canAddContainers() const
+    {
+        return m_canAddContainers && !isImmutable();
+    }
 
     static QStringList configModules(bool controlCenter);
 
@@ -110,7 +110,7 @@ signals:
 
 private slots:
     void configDialogFinished();
-    void slotSettingsChanged( int );
+    void slotSettingsChanged(int);
     void slotRestart();
     void slotDesktopResized();
     void slotStyleChanged();
@@ -121,11 +121,11 @@ private slots:
 private:
     static void crashHandler(int signal);
 
-    KGlobalAccel*  keys;
-    KWinModule*    m_kwinModule;
-    KCMultiDialog* m_configDialog;
-    bool           m_canAddContainers;
-    QPoint         m_insertionPoint;
+    KGlobalAccel *keys;
+    KWinModule *m_kwinModule;
+    KCMultiDialog *m_configDialog;
+    bool m_canAddContainers;
+    QPoint m_insertionPoint;
 };
 
 #endif

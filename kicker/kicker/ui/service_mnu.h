@@ -41,32 +41,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  * @author Rik Hemsley <rik@kde.org>
  */
 
-typedef QMap<int, KSycocaEntry::Ptr> EntryMap;
-typedef QValueVector<QPopupMenu*> PopupMenuList;
+typedef QMap< int, KSycocaEntry::Ptr > EntryMap;
+typedef QValueVector< QPopupMenu * > PopupMenuList;
 
-class KDE_EXPORT PanelServiceMenu : public KPanelMenu
-{
+class KDE_EXPORT PanelServiceMenu : public KPanelMenu {
     Q_OBJECT
 
 public:
-    PanelServiceMenu(const QString & label, const QString & relPath,
-                     QWidget* parent  = 0, const char* name = 0,
-                     bool addmenumode = false,
+    PanelServiceMenu(const QString &label, const QString &relPath, QWidget *parent = 0, const char *name = 0, bool addmenumode = false,
                      const QString &insertInlineHeader = QString::null);
 
     virtual ~PanelServiceMenu();
 
-    QString relPath() { return relPath_; }
+    QString relPath()
+    {
+        return relPath_;
+    }
 
-    void setExcludeNoDisplay( bool flag );
+    void setExcludeNoDisplay(bool flag);
 
     virtual void showMenu();
-    bool highlightMenuItem( const QString &menuId );
+    bool highlightMenuItem(const QString &menuId);
     void selectFirstItem();
 
 private:
-    void fillMenu( KServiceGroup::Ptr &_root, KServiceGroup::List &_list,
-        const QString &_relPath, int & id );
+    void fillMenu(KServiceGroup::Ptr &_root, KServiceGroup::List &_list, const QString &_relPath, int &id);
 
 protected slots:
     virtual void initialize();
@@ -78,17 +77,15 @@ protected slots:
     void slotDragObjectDestroyed();
 
     // for use in Add Applicaton To Panel
-    virtual void addNonKDEApp() {}
+    virtual void addNonKDEApp()
+    {
+    }
 
 protected:
-    void insertMenuItem(KService::Ptr & s, int nId, int nIndex = -1,
-                        const QStringList *suppressGenericNames=0,
+    void insertMenuItem(KService::Ptr &s, int nId, int nIndex = -1, const QStringList *suppressGenericNames = 0,
                         const QString &aliasname = QString::null);
-    virtual PanelServiceMenu * newSubMenu(const QString & label,
-                                          const QString & relPath,
-                                          QWidget * parent, const char * name,
-                                          const QString & _inlineHeader =
-                                                QString::null);
+    virtual PanelServiceMenu *newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                         const QString &_inlineHeader = QString::null);
 
     virtual void mousePressEvent(QMouseEvent *);
     virtual void mouseReleaseEvent(QMouseEvent *);
@@ -97,8 +94,14 @@ protected:
     virtual void dragLeaveEvent(QDragLeaveEvent *);
     virtual void updateRecentlyUsedApps(KService::Ptr &s);
     void activateParent(const QString &child);
-    int serviceMenuStartId() { return 4242; }
-    int serviceMenuEndId() { return 5242; }
+    int serviceMenuStartId()
+    {
+        return 4242;
+    }
+    int serviceMenuEndId()
+    {
+        return 5242;
+    }
     virtual void clearSubmenus();
     void doInitialize();
 
@@ -109,7 +112,7 @@ protected:
     bool loaded_;
     bool excludeNoDisplay_;
     QString insertInlineHeader_;
-    QPopupMenu * opPopup_;
+    QPopupMenu *opPopup_;
     bool clearOnClose_;
     bool addmenumode_;
     QPoint startPos_;
@@ -119,11 +122,19 @@ private slots:
     void slotContextMenu(int);
 
 private:
-    enum ContextMenuEntry { AddItemToPanel, EditItem, AddMenuToPanel, EditMenu,
-                            AddItemToDesktop, AddMenuToDesktop, PutIntoRunDialog };
-    KPopupMenu* popupMenu_;
-    KSycocaEntry* contextKSycocaEntry_;
+    enum ContextMenuEntry
+    {
+        AddItemToPanel,
+        EditItem,
+        AddMenuToPanel,
+        EditMenu,
+        AddItemToDesktop,
+        AddMenuToDesktop,
+        PutIntoRunDialog
+    };
+    KPopupMenu *popupMenu_;
+    KSycocaEntry *contextKSycocaEntry_;
     void readConfig();
- };
+};
 
 #endif // SERVICE_MENU_H

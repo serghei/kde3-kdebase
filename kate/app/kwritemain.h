@@ -28,51 +28,58 @@
 
 #include <kdialogbase.h>
 
-namespace KTextEditor { class EditorChooser; }
+namespace KTextEditor {
+class EditorChooser;
+}
 
 class KAction;
 class KToggleAction;
 class KSelectAction;
 class KRecentFilesAction;
 
-class KWrite : public KParts::MainWindow
-{
-  Q_OBJECT
+class KWrite : public KParts::MainWindow {
+    Q_OBJECT
 
-  public:
+public:
     KWrite(KTextEditor::Document * = 0L);
     ~KWrite();
 
     void loadURL(const KURL &url);
 
-    KTextEditor::View *view() const { return m_view; }
+    KTextEditor::View *view() const
+    {
+        return m_view;
+    }
 
-    static bool noWindows () { return winList.isEmpty(); }
+    static bool noWindows()
+    {
+        return winList.isEmpty();
+    }
 
-  private:
+private:
     void setupActions();
     void setupStatusBar();
 
     bool queryClose();
 
-    void dragEnterEvent( QDragEnterEvent * );
-    void dropEvent( QDropEvent * );
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
 
-  public slots:
+public slots:
     void slotNew();
-    void slotFlush ();
+    void slotFlush();
     void slotOpen();
-    void slotOpen( const KURL& url);
+    void slotOpen(const KURL &url);
     void newView();
     void toggleStatusBar();
     void editKeys();
     void editToolbars();
     void changeEditor();
 
-  private slots:
+private slots:
     void slotNewToolbarConfig();
 
-  public slots:
+public slots:
     void printNow();
     void printDlg();
 
@@ -81,56 +88,55 @@ class KWrite : public KParts::MainWindow
 
     void slotDropEvent(QDropEvent *);
 
-    void slotEnableActions( bool enable );
+    void slotEnableActions(bool enable);
 
     /**
      * adds a changed URL to the recent files
      */
     void slotFileNameChanged();
 
-  //config file functions
-  public:
-    void readConfig (KConfig *);
-    void writeConfig (KConfig *);
+    // config file functions
+public:
+    void readConfig(KConfig *);
+    void writeConfig(KConfig *);
 
-    void readConfig ();
-    void writeConfig ();
+    void readConfig();
+    void writeConfig();
 
-  //session management
-  public:
-    void restore(KConfig *,int);
+    // session management
+public:
+    void restore(KConfig *, int);
     static void restore();
 
-  private:
+private:
     void readProperties(KConfig *);
     void saveProperties(KConfig *);
     void saveGlobalProperties(KConfig *);
 
-  private:
-    KTextEditor::View * m_view;
+private:
+    KTextEditor::View *m_view;
 
-    KRecentFilesAction * m_recentFiles;
-    KToggleAction * m_paShowPath;
-    KToggleAction * m_paShowStatusBar;
+    KRecentFilesAction *m_recentFiles;
+    KToggleAction *m_paShowPath;
+    KToggleAction *m_paShowStatusBar;
 
     QString encoding;
 
-    static QPtrList<KTextEditor::Document> docList;
-    static QPtrList<KWrite> winList;
+    static QPtrList< KTextEditor::Document > docList;
+    static QPtrList< KWrite > winList;
 };
 
-class KWriteEditorChooser: public KDialogBase
-{
-  Q_OBJECT
+class KWriteEditorChooser : public KDialogBase {
+    Q_OBJECT
 
-  public:
+public:
     KWriteEditorChooser(QWidget *parent);
     virtual ~KWriteEditorChooser();
 
-  private:
+private:
     KTextEditor::EditorChooser *m_chooser;
 
-  protected slots:
+protected slots:
     void slotOk();
 };
 

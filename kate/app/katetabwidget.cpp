@@ -22,140 +22,142 @@
 
 #include <qtabbar.h>
 
-//BEGIN KateTabWidget
+// BEGIN KateTabWidget
 
-KateTabWidget::KateTabWidget(QWidget* parent, const char* name)
- : KTabWidget(parent,name)
- , m_visibility (ShowWhenMoreThanOneTab)
+KateTabWidget::KateTabWidget(QWidget *parent, const char *name) : KTabWidget(parent, name), m_visibility(ShowWhenMoreThanOneTab)
 {
-  tabBar()->hide();
+    tabBar()->hide();
 
-  setHoverCloseButton(true);
+    setHoverCloseButton(true);
 
-  connect(this, SIGNAL(closeRequest(QWidget*)), this, SLOT(closeTab(QWidget*)));
+    connect(this, SIGNAL(closeRequest(QWidget *)), this, SLOT(closeTab(QWidget *)));
 }
 
 KateTabWidget::~KateTabWidget()
 {
 }
 
-void KateTabWidget::closeTab(QWidget* w)
+void KateTabWidget::closeTab(QWidget *w)
 {
-  w->close();
+    w->close();
 }
 
-void KateTabWidget::addTab ( QWidget * child, const QString & label )
+void KateTabWidget::addTab(QWidget *child, const QString &label)
 {
-  KTabWidget::addTab(child,label);
-  showPage(child);
-  maybeShow();
+    KTabWidget::addTab(child, label);
+    showPage(child);
+    maybeShow();
 }
 
-void KateTabWidget::addTab ( QWidget * child, const QIconSet & iconset, const QString & label )
+void KateTabWidget::addTab(QWidget *child, const QIconSet &iconset, const QString &label)
 {
-  KTabWidget::addTab(child,iconset,label);
-  showPage(child);
-  maybeShow();
+    KTabWidget::addTab(child, iconset, label);
+    showPage(child);
+    maybeShow();
 }
 
-void KateTabWidget::addTab ( QWidget * child, QTab * tab )
+void KateTabWidget::addTab(QWidget *child, QTab *tab)
 {
-  KTabWidget::addTab(child,tab);
-  showPage(child);
-  maybeShow();
+    KTabWidget::addTab(child, tab);
+    showPage(child);
+    maybeShow();
 }
 
-void KateTabWidget::insertTab ( QWidget * child, const QString & label, int index)
+void KateTabWidget::insertTab(QWidget *child, const QString &label, int index)
 {
-  KTabWidget::insertTab(child,label,index);
-  showPage(child);
-  maybeShow();
-  tabBar()->repaint();
+    KTabWidget::insertTab(child, label, index);
+    showPage(child);
+    maybeShow();
+    tabBar()->repaint();
 }
 
-void KateTabWidget::insertTab ( QWidget * child, const QIconSet & iconset, const QString & label, int index )
+void KateTabWidget::insertTab(QWidget *child, const QIconSet &iconset, const QString &label, int index)
 {
-  KTabWidget::insertTab(child,iconset,label,index);
-  showPage(child);
-  maybeShow();
-  tabBar()->repaint();
+    KTabWidget::insertTab(child, iconset, label, index);
+    showPage(child);
+    maybeShow();
+    tabBar()->repaint();
 }
 
-void KateTabWidget::insertTab ( QWidget * child, QTab * tab, int index)
+void KateTabWidget::insertTab(QWidget *child, QTab *tab, int index)
 {
-  KTabWidget::insertTab(child,tab,index);
-  showPage(child);
-  maybeShow();
-  tabBar()->repaint();
+    KTabWidget::insertTab(child, tab, index);
+    showPage(child);
+    maybeShow();
+    tabBar()->repaint();
 }
 
-void KateTabWidget::removePage ( QWidget * w )
+void KateTabWidget::removePage(QWidget *w)
 {
-  KTabWidget::removePage(w);
-  maybeShow();
+    KTabWidget::removePage(w);
+    maybeShow();
 }
 
 void KateTabWidget::maybeShow()
 {
-  switch (m_visibility)
-  {
-    case AlwaysShowTabs:
-      tabBar()->show();
+    switch(m_visibility)
+    {
+        case AlwaysShowTabs:
+            tabBar()->show();
 
-      // show/hide corner widgets
-      if (count() == 0)
-        setCornerWidgetVisibility(false);
-      else
-        setCornerWidgetVisibility(true);
+            // show/hide corner widgets
+            if(count() == 0)
+                setCornerWidgetVisibility(false);
+            else
+                setCornerWidgetVisibility(true);
 
-      break;
+            break;
 
-    case ShowWhenMoreThanOneTab:
-      if (count()<2) tabBar()->hide();
-      else tabBar()->show();
+        case ShowWhenMoreThanOneTab:
+            if(count() < 2)
+                tabBar()->hide();
+            else
+                tabBar()->show();
 
-      // show/hide corner widgets
-      if (count() < 2)
-        setCornerWidgetVisibility(false);
-      else
-        setCornerWidgetVisibility(true);
+            // show/hide corner widgets
+            if(count() < 2)
+                setCornerWidgetVisibility(false);
+            else
+                setCornerWidgetVisibility(true);
 
-      break;
+            break;
 
-    case NeverShowTabs:
-      tabBar()->hide();
-      break;
-  }
+        case NeverShowTabs:
+            tabBar()->hide();
+            break;
+    }
 }
 
 void KateTabWidget::setCornerWidgetVisibility(bool visible)
 {
-  // there are two corner widgets: on TopLeft and on TopTight!
+    // there are two corner widgets: on TopLeft and on TopTight!
 
-  if (cornerWidget(Qt::TopLeft) ) {
-    if (visible)
-      cornerWidget(Qt::TopLeft)->show();
-    else
-      cornerWidget(Qt::TopLeft)->hide();
-  }
+    if(cornerWidget(Qt::TopLeft))
+    {
+        if(visible)
+            cornerWidget(Qt::TopLeft)->show();
+        else
+            cornerWidget(Qt::TopLeft)->hide();
+    }
 
-  if (cornerWidget(Qt::TopRight) ) {
-    if (visible)
-      cornerWidget(Qt::TopRight)->show();
-    else
-      cornerWidget(Qt::TopRight)->hide();
-  }
+    if(cornerWidget(Qt::TopRight))
+    {
+        if(visible)
+            cornerWidget(Qt::TopRight)->show();
+        else
+            cornerWidget(Qt::TopRight)->hide();
+    }
 }
 
-void KateTabWidget::setTabWidgetVisibility( TabWidgetVisibility visibility )
+void KateTabWidget::setTabWidgetVisibility(TabWidgetVisibility visibility)
 {
-  m_visibility = visibility;
-  maybeShow();
+    m_visibility = visibility;
+    maybeShow();
 }
 
-KateTabWidget::TabWidgetVisibility KateTabWidget::tabWidgetVisibility( ) const
+KateTabWidget::TabWidgetVisibility KateTabWidget::tabWidgetVisibility() const
 {
-  return m_visibility;
+    return m_visibility;
 }
 
-//END KateTabWidget
+// END KateTabWidget

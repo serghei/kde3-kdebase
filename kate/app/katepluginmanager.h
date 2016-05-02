@@ -31,58 +31,62 @@
 #include <qobject.h>
 #include <qvaluelist.h>
 
-class KatePluginInfo
-{
-  public:
+class KatePluginInfo {
+public:
     bool load;
     KService::Ptr service;
     Kate::Plugin *plugin;
 };
 
-typedef QValueList<KatePluginInfo> KatePluginList;
+typedef QValueList< KatePluginInfo > KatePluginList;
 
-class KatePluginManager : public QObject
-{
-  Q_OBJECT
+class KatePluginManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     KatePluginManager(QObject *parent);
     ~KatePluginManager();
 
     static KatePluginManager *self();
 
-    Kate::PluginManager *pluginManager () const { return m_pluginManager; };
+    Kate::PluginManager *pluginManager() const
+    {
+        return m_pluginManager;
+    };
 
-    void loadAllEnabledPlugins ();
-    void unloadAllPlugins ();
+    void loadAllEnabledPlugins();
+    void unloadAllPlugins();
 
-    void enableAllPluginsGUI (KateMainWindow *win);
-    void disableAllPluginsGUI (KateMainWindow *win);
+    void enableAllPluginsGUI(KateMainWindow *win);
+    void disableAllPluginsGUI(KateMainWindow *win);
 
-    void loadConfig ();
-    void writeConfig ();
+    void loadConfig();
+    void writeConfig();
 
-    void loadPlugin (KatePluginInfo *item);
-    void unloadPlugin (KatePluginInfo *item);
+    void loadPlugin(KatePluginInfo *item);
+    void unloadPlugin(KatePluginInfo *item);
 
-    void enablePluginGUI (KatePluginInfo *item, KateMainWindow *win);
-    void enablePluginGUI (KatePluginInfo *item);
+    void enablePluginGUI(KatePluginInfo *item, KateMainWindow *win);
+    void enablePluginGUI(KatePluginInfo *item);
 
-    void disablePluginGUI (KatePluginInfo *item, KateMainWindow *win);
-    void disablePluginGUI (KatePluginInfo *item);
+    void disablePluginGUI(KatePluginInfo *item, KateMainWindow *win);
+    void disablePluginGUI(KatePluginInfo *item);
 
-    inline KatePluginList & pluginList () { return m_pluginList; };
+    inline KatePluginList &pluginList()
+    {
+        return m_pluginList;
+    };
 
-    Kate::Plugin *plugin (const QString &name);
-    bool pluginAvailable (const QString &name);
+    Kate::Plugin *plugin(const QString &name);
+    bool pluginAvailable(const QString &name);
 
-    Kate::Plugin *loadPlugin (const QString &name, bool permanent=true);
-    void unloadPlugin (const QString &name, bool permanent=true);
+    Kate::Plugin *loadPlugin(const QString &name, bool permanent = true);
+    void unloadPlugin(const QString &name, bool permanent = true);
 
-  private:
+private:
     Kate::PluginManager *m_pluginManager;
 
-    void setupPluginList ();
+    void setupPluginList();
 
     KatePluginList m_pluginList;
 };

@@ -25,7 +25,7 @@
 #include <qwidget.h>
 #include <qstringlist.h>
 
-#include <kapplication.h>	// for logout parameters
+#include <kapplication.h> // for logout parameters
 
 class KURL;
 class QCloseEvent;
@@ -40,17 +40,16 @@ class KDIconView;
 class Minicli;
 class KActionCollection;
 
-class KRootWidget : public QObject
-{
+class KRootWidget : public QObject {
     Q_OBJECT
 public:
-   KRootWidget();
-   bool eventFilter( QObject *, QEvent * e );
+    KRootWidget();
+    bool eventFilter(QObject *, QEvent *e);
 signals:
-   void wheelRolled( int delta );
-   void colorDropEvent( QDropEvent* e );
-   void imageDropEvent( QDropEvent* e );
-   void newWallpaper( const KURL& url );
+    void wheelRolled(int delta);
+    void colorDropEvent(QDropEvent *e);
+    void imageDropEvent(QDropEvent *e);
+    void newWallpaper(const KURL &url);
 };
 
 /**
@@ -58,155 +57,168 @@ signals:
  * It handles the background, the screensaver and all the rest of the global stuff.
  * The icon view is a child widget of KDesktop.
  */
-class KDesktop : public QWidget, virtual public KDesktopIface
-{
-  Q_OBJECT
+class KDesktop : public QWidget, virtual public KDesktopIface {
+    Q_OBJECT
 
 public:
+    enum WheelDirection
+    {
+        Forward = 0,
+        Reverse
+    };
 
-  enum WheelDirection { Forward = 0, Reverse };
+    KDesktop(bool x_root_hack, bool wait_for_kded);
+    ~KDesktop();
 
-  KDesktop(bool x_root_hack, bool wait_for_kded );
-  ~KDesktop();
+    // Implementation of the DCOP interface
+    virtual void rearrangeIcons();
+    virtual void lineupIcons();
+    virtual void selectAll();
+    virtual void unselectAll();
+    virtual void refreshIcons();
+    virtual QStringList selectedURLs();
 
-  // Implementation of the DCOP interface
-  virtual void rearrangeIcons();
-  virtual void lineupIcons();
-  virtual void selectAll();
-  virtual void unselectAll();
-  virtual void refreshIcons();
-  virtual QStringList selectedURLs();
+    virtual void configure();
+    virtual void popupExecuteCommand();
+    virtual void popupExecuteCommand(const QString &content);
+    virtual void refresh();
+    virtual void logout();
+    virtual void clearCommandHistory();
+    virtual void runAutoStart();
 
-  virtual void configure();
-  virtual void popupExecuteCommand();
-  virtual void popupExecuteCommand(const QString& content);
-  virtual void refresh();
-  virtual void logout();
-  virtual void clearCommandHistory();
-  virtual void runAutoStart();
+    virtual void switchDesktops(int delta);
 
-  virtual void switchDesktops( int delta );
+    virtual void desktopIconsAreaChanged(const QRect &area, int screen);
 
-  virtual void desktopIconsAreaChanged(const QRect &area, int screen);
+    void logout(KApplication::ShutdownConfirm confirm, KApplication::ShutdownType sdtype);
 
-  void logout( KApplication::ShutdownConfirm confirm, KApplication::ShutdownType sdtype );
+    KWinModule *kwinModule() const
+    {
+        return m_pKwinmodule;
+    }
 
-  KWinModule* kwinModule() const { return m_pKwinmodule; }
+    // The action collection of the active widget
+    KActionCollection *actionCollection();
 
-  // The action collection of the active widget
-  KActionCollection *actionCollection();
+    // The URL (for the File/New menu)
+    KURL url() const;
 
-  // The URL (for the File/New menu)
-  KURL url() const;
-
-  // ## hack ##
-  KDIconView *iconView() const { return m_pIconView; }
+    // ## hack ##
+    KDIconView *iconView() const
+    {
+        return m_pIconView;
+    }
 
 private slots:
-  /** Background is ready. */
-  void backgroundInitDone();
+    /** Background is ready. */
+    void backgroundInitDone();
 
-  /** Activate the desktop. */
-  void slotStart();
+    /** Activate the desktop. */
+    void slotStart();
 
-  /** Activate crash recovery. */
-  void slotUpAndRunning();
+    /** Activate crash recovery. */
+    void slotUpAndRunning();
 
-  /** Reconfigures */
-  void slotConfigure();
+    /** Reconfigures */
+    void slotConfigure();
 
-  /** Show minicli,. the KDE command line interface */
-  void slotExecuteCommand();
+    /** Show minicli,. the KDE command line interface */
+    void slotExecuteCommand();
 
-  /** Show taskmanager (calls KSysGuard with --showprocesses option) */
-  void slotShowTaskManager();
+    /** Show taskmanager (calls KSysGuard with --showprocesses option) */
+    void slotShowTaskManager();
 
-  void slotShowWindowList();
+    void slotShowWindowList();
 
-  void slotSwitchUser();
+    void slotSwitchUser();
 
-  void slotLogout();
-  void slotLogoutNoCnf();
-  void slotHaltNoCnf();
-  void slotRebootNoCnf();
+    void slotLogout();
+    void slotLogoutNoCnf();
+    void slotHaltNoCnf();
+    void slotRebootNoCnf();
 
-  /** Connected to KSycoca */
-  void slotDatabaseChanged();
+    /** Connected to KSycoca */
+    void slotDatabaseChanged();
 
-  void slotShutdown();
-  void slotSettingsChanged(int);
-  void slotIconChanged(int);
+    void slotShutdown();
+    void slotSettingsChanged(int);
+    void slotIconChanged(int);
 
-  /** set the vroot atom for e.g. xsnow */
-  void slotSetVRoot();
+    /** set the vroot atom for e.g. xsnow */
+    void slotSetVRoot();
 
-  /** Connected to KDIconView */
-  void handleImageDropEvent( QDropEvent * );
-  void handleColorDropEvent( QDropEvent * );
-  void slotNewWallpaper(const KURL &url);
+    /** Connected to KDIconView */
+    void handleImageDropEvent(QDropEvent *);
+    void handleColorDropEvent(QDropEvent *);
+    void slotNewWallpaper(const KURL &url);
 
-  /** Connected to KDIconView and KRootWidget  */
-  void slotSwitchDesktops(int delta);
+    /** Connected to KDIconView and KRootWidget  */
+    void slotSwitchDesktops(int delta);
 
-  // when there seems to be no kicker, we have to get desktopIconsArea from kwinModule
-  void slotNoKicker();
+    // when there seems to be no kicker, we have to get desktopIconsArea from kwinModule
+    void slotNoKicker();
 
 protected:
-  void initConfig();
-  void initRoot();
+    void initConfig();
+    void initRoot();
 
-  virtual void closeEvent(QCloseEvent *e);
+    virtual void closeEvent(QCloseEvent *e);
 
-  virtual bool isVRoot() { return set_vroot; }
-  virtual void setVRoot( bool enable );
+    virtual bool isVRoot()
+    {
+        return set_vroot;
+    }
+    virtual void setVRoot(bool enable);
 
-  virtual bool isIconsEnabled() { return m_bDesktopEnabled; }
-  virtual void setIconsEnabled( bool enable );
-  virtual bool event ( QEvent * e );
+    virtual bool isIconsEnabled()
+    {
+        return m_bDesktopEnabled;
+    }
+    virtual void setIconsEnabled(bool enable);
+    virtual bool event(QEvent *e);
 
 private slots:
-  void desktopResized();
+    void desktopResized();
 
 private:
+    KGlobalAccel *keys;
 
-  KGlobalAccel *keys;
+    KWinModule *m_pKwinmodule;
 
-  KWinModule* m_pKwinmodule;
+    KBackgroundManager *bgMgr;
 
-  KBackgroundManager* bgMgr;
+    KDIconView *m_pIconView;
+    KRootWidget *m_pRootWidget;
 
-  KDIconView *m_pIconView;
-  KRootWidget *m_pRootWidget;
+    Minicli *m_miniCli;
 
-  Minicli *m_miniCli;
+    StartupId *startup_id;
+    bool set_vroot;
 
-  StartupId* startup_id;
-  bool set_vroot;
+    /** Set to true until start() has been called */
+    bool m_bInit;
 
-  /** Set to true until start() has been called */
-  bool m_bInit;
+    /** Wait for kded to finish building database? */
+    bool m_bWaitForKded;
 
-  /** Wait for kded to finish building database? */
-  bool m_bWaitForKded;
+    /** Desktop enabled / disabled **/
+    bool m_bDesktopEnabled;
 
-  /** Desktop enabled / disabled **/
-  bool m_bDesktopEnabled;
+    /** Whether or not to switch desktops when mouse wheel is rolled */
+    bool m_bWheelSwitchesWorkspace;
 
-  /** Whether or not to switch desktops when mouse wheel is rolled */
-  bool m_bWheelSwitchesWorkspace;
+    QTimer *m_waitForKicker;
 
-  QTimer *m_waitForKicker;
+    /** Default mouse wheel direction (Fwd means mwheel up switches to
+        lower desktop)
+    */
+    static const WheelDirection m_eDefaultWheelDirection = Forward;
 
-  /** Default mouse wheel direction (Fwd means mwheel up switches to
-      lower desktop)
-  */
-  static const WheelDirection m_eDefaultWheelDirection = Forward;
+    /** Mouse wheel/desktop switching direction */
+    static WheelDirection m_eWheelDirection;
 
-  /** Mouse wheel/desktop switching direction */
-  static WheelDirection m_eWheelDirection;
-
-  /** Possible values for "kdesktoprc"->"Mouse Buttons"->"WheelDirection" */
-  static const char* m_wheelDirectionStrings[2];
+    /** Possible values for "kdesktoprc"->"Mouse Buttons"->"WheelDirection" */
+    static const char *m_wheelDirectionStrings[2];
 };
 
 #endif

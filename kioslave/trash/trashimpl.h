@@ -34,8 +34,7 @@
  * Implementation of all low-level operations done by kio_trash
  * The structure of the trash directory follows the freedesktop.org standard <TODO URL>
  */
-class TrashImpl : public QObject
-{
+class TrashImpl : public QObject {
     Q_OBJECT
 public:
     TrashImpl();
@@ -47,29 +46,29 @@ public:
     /// Create info for a file to be trashed
     /// Returns trashId and fileId
     /// The caller is then responsible for actually trashing the file
-    bool createInfo( const QString& origPath, int& trashId, QString& fileId );
+    bool createInfo(const QString &origPath, int &trashId, QString &fileId);
 
     /// Delete info file for a file to be trashed
     /// Usually used for undoing what createInfo did if trashing failed
-    bool deleteInfo( int trashId, const QString& fileId );
+    bool deleteInfo(int trashId, const QString &fileId);
 
     /// Moving a file or directory into the trash. The ids come from createInfo.
-    bool moveToTrash( const QString& origPath, int trashId, const QString& fileId );
+    bool moveToTrash(const QString &origPath, int trashId, const QString &fileId);
 
     /// Moving a file or directory out of the trash. The ids come from createInfo.
-    bool moveFromTrash( const QString& origPath, int trashId, const QString& fileId, const QString& relativePath );
+    bool moveFromTrash(const QString &origPath, int trashId, const QString &fileId, const QString &relativePath);
 
     /// Copying a file or directory into the trash. The ids come from createInfo.
-    bool copyToTrash( const QString& origPath, int trashId, const QString& fileId );
+    bool copyToTrash(const QString &origPath, int trashId, const QString &fileId);
 
     /// Copying a file or directory out of the trash. The ids come from createInfo.
-    bool copyFromTrash( const QString& origPath, int trashId, const QString& fileId, const QString& relativePath );
+    bool copyFromTrash(const QString &origPath, int trashId, const QString &fileId, const QString &relativePath);
 
     /// Create a top-level trashed directory
-    //bool mkdir( int trashId, const QString& fileId, int permissions );
+    // bool mkdir( int trashId, const QString& fileId, int permissions );
 
     /// Get rid of a trashed file
-    bool del( int trashId, const QString& fileId );
+    bool del(int trashId, const QString &fileId);
 
     /// Empty trash, i.e. delete all trashed files
     bool emptyTrash();
@@ -77,37 +76,44 @@ public:
     /// Return true if the trash is empty
     bool isEmpty() const;
 
-    struct TrashedFileInfo {
-        int trashId; // for the url
-        QString fileId; // for the url
-        QString physicalPath; // for stat'ing etc.
-        QString origPath; // from info file
+    struct TrashedFileInfo
+    {
+        int trashId;            // for the url
+        QString fileId;         // for the url
+        QString physicalPath;   // for stat'ing etc.
+        QString origPath;       // from info file
         QDateTime deletionDate; // from info file
     };
     /// List trashed files
-    typedef QValueList<TrashedFileInfo> TrashedFileInfoList;
+    typedef QValueList< TrashedFileInfo > TrashedFileInfoList;
     TrashedFileInfoList list();
 
     /// Return the info for a given trashed file
-    bool infoForFile( int trashId, const QString& fileId, TrashedFileInfo& info );
+    bool infoForFile(int trashId, const QString &fileId, TrashedFileInfo &info);
 
     /// Return the physicalPath for a given trashed file - helper method which
     /// encapsulates the call to infoForFile. Don't use if you need more info from TrashedFileInfo.
-    QString physicalPath( int trashId, const QString& fileId, const QString& relativePath );
+    QString physicalPath(int trashId, const QString &fileId, const QString &relativePath);
 
     /// Move data from the old trash system to the new one
     void migrateOldTrash();
 
     /// KIO error code
-    int lastErrorCode() const { return m_lastErrorCode; }
-    QString lastErrorMessage() const { return m_lastErrorMessage; }
+    int lastErrorCode() const
+    {
+        return m_lastErrorCode;
+    }
+    QString lastErrorMessage() const
+    {
+        return m_lastErrorMessage;
+    }
 
-    QStrList listDir( const QString& physicalPath );
+    QStrList listDir(const QString &physicalPath);
 
-    static KURL makeURL( int trashId, const QString& fileId, const QString& relativePath );
-    static bool parseURL( const KURL& url, int& trashId, QString& fileId, QString& relativePath );
+    static KURL makeURL(int trashId, const QString &fileId, const QString &relativePath);
+    static bool parseURL(const KURL &url, int &trashId, QString &fileId, QString &relativePath);
 
-    typedef QMap<int, QString> TrashDirMap;
+    typedef QMap< int, QString > TrashDirMap;
     /// @internal This method is for TestTrash only. Home trash is included (id 0).
     TrashDirMap trashDirectories() const;
     /// @internal This method is for TestTrash only. No entry with id 0.
@@ -115,38 +121,38 @@ public:
 
 private:
     /// Helper method. Moves a file or directory using the appropriate method.
-    bool move( const QString& src, const QString& dest );
-    bool copy( const QString& src, const QString& dest );
+    bool move(const QString &src, const QString &dest);
+    bool copy(const QString &src, const QString &dest);
     /// Helper method. Tries to call ::rename(src,dest) and does error handling.
-    bool directRename( const QString& src, const QString& dest );
+    bool directRename(const QString &src, const QString &dest);
 
     void fileAdded();
     void fileRemoved();
 
     // Warning, returns error code, not a bool
-    int testDir( const QString& name ) const;
-    void error( int e, const QString& s );
+    int testDir(const QString &name) const;
+    void error(int e, const QString &s);
 
-    bool readInfoFile( const QString& infoPath, TrashedFileInfo& info, int trashId );
+    bool readInfoFile(const QString &infoPath, TrashedFileInfo &info, int trashId);
 
-    QString infoPath( int trashId, const QString& fileId ) const;
-    QString filesPath( int trashId, const QString& fileId ) const;
+    QString infoPath(int trashId, const QString &fileId) const;
+    QString filesPath(int trashId, const QString &fileId) const;
 
     /// Find the trash dir to use for a given file to delete, based on original path
-    int findTrashDirectory( const QString& origPath );
+    int findTrashDirectory(const QString &origPath);
 
-    QString trashDirectoryPath( int trashId ) const;
-    QString topDirectoryPath( int trashId ) const;
+    QString trashDirectoryPath(int trashId) const;
+    QString topDirectoryPath(int trashId) const;
 
-    bool synchronousDel( const QString& path, bool setLastErrorCode, bool isDir );
+    bool synchronousDel(const QString &path, bool setLastErrorCode, bool isDir);
 
     void scanTrashDirectories() const;
 
-    int idForTrashDirectory( const QString& trashDir ) const;
-    bool initTrashDirectory( const QCString& trashDir_c ) const;
-    bool checkTrashSubdirs( const QCString& trashDir_c ) const;
-    QString trashForMountPoint( const QString& topdir, bool createIfNeeded ) const;
-    static QString makeRelativePath( const QString& topdir, const QString& path );
+    int idForTrashDirectory(const QString &trashDir) const;
+    bool initTrashDirectory(const QCString &trashDir_c) const;
+    bool checkTrashSubdirs(const QCString &trashDir_c) const;
+    QString trashForMountPoint(const QString &topdir, bool createIfNeeded) const;
+    static QString makeRelativePath(const QString &topdir, const QString &path);
 
 private slots:
     void jobFinished(KIO::Job *job);
@@ -157,14 +163,19 @@ private:
     int m_lastErrorCode;
     QString m_lastErrorMessage;
 
-    enum { InitToBeDone, InitOK, InitError } m_initStatus;
+    enum
+    {
+        InitToBeDone,
+        InitOK,
+        InitError
+    } m_initStatus;
 
     // A "trash directory" is a physical directory on disk,
     // e.g. $HOME/.local/share/Trash/$uid or /mnt/foo/.Trash/$uid
     // It has an id (number) and a path.
     // The home trash has id 0.
     mutable TrashDirMap m_trashDirectories; // id -> path of trash directory
-    mutable TrashDirMap m_topDirectories; // id -> $topdir of partition
+    mutable TrashDirMap m_topDirectories;   // id -> $topdir of partition
     mutable int m_lastId;
     dev_t m_homeDevice;
     mutable bool m_trashDirectoriesScanned;

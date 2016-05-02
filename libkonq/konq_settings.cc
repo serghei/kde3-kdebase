@@ -29,7 +29,8 @@
 
 struct KonqFMSettingsPrivate
 {
-    KonqFMSettingsPrivate() {
+    KonqFMSettingsPrivate()
+    {
         showPreviewsInFileTips = true;
         m_renameIconDirectly = false;
     }
@@ -40,121 +41,124 @@ struct KonqFMSettingsPrivate
     int m_iconTextWidth;
 };
 
-//static
-KonqFMSettings * KonqFMSettings::s_pSettings = 0L;
+// static
+KonqFMSettings *KonqFMSettings::s_pSettings = 0L;
 
-//static
-KonqFMSettings * KonqFMSettings::settings()
+// static
+KonqFMSettings *KonqFMSettings::settings()
 {
-  if (!s_pSettings)
-  {
-    KConfig *config = KGlobal::config();
-    KConfigGroupSaver cgs(config, "FMSettings");
-    s_pSettings = new KonqFMSettings(config);
-  }
-  return s_pSettings;
+    if(!s_pSettings)
+    {
+        KConfig *config = KGlobal::config();
+        KConfigGroupSaver cgs(config, "FMSettings");
+        s_pSettings = new KonqFMSettings(config);
+    }
+    return s_pSettings;
 }
 
-//static
+// static
 void KonqFMSettings::reparseConfiguration()
 {
-  if (s_pSettings)
-  {
-    KConfig *config = KGlobal::config();
-    KConfigGroupSaver cgs(config, "FMSettings");
-    s_pSettings->init( config );
-  }
+    if(s_pSettings)
+    {
+        KConfig *config = KGlobal::config();
+        KConfigGroupSaver cgs(config, "FMSettings");
+        s_pSettings->init(config);
+    }
 }
 
-KonqFMSettings::KonqFMSettings( KConfig * config )
+KonqFMSettings::KonqFMSettings(KConfig *config)
 {
-  d = new KonqFMSettingsPrivate;
-  init( config );
+    d = new KonqFMSettingsPrivate;
+    init(config);
 }
 
 KonqFMSettings::~KonqFMSettings()
 {
-  delete d;
+    delete d;
 }
 
-void KonqFMSettings::init( KConfig * config )
+void KonqFMSettings::init(KConfig *config)
 {
-  // Fonts and colors
-  m_standardFont = config->readFontEntry( "StandardFont" );
+    // Fonts and colors
+    m_standardFont = config->readFontEntry("StandardFont");
 
-  m_normalTextColor = KGlobalSettings::textColor();
-  m_normalTextColor = config->readColorEntry( "NormalTextColor", &m_normalTextColor );
-  m_highlightedTextColor = KGlobalSettings::highlightedTextColor();
-  m_highlightedTextColor = config->readColorEntry( "HighlightedTextColor", &m_highlightedTextColor );
-  m_itemTextBackground = config->readColorEntry( "ItemTextBackground" );
+    m_normalTextColor = KGlobalSettings::textColor();
+    m_normalTextColor = config->readColorEntry("NormalTextColor", &m_normalTextColor);
+    m_highlightedTextColor = KGlobalSettings::highlightedTextColor();
+    m_highlightedTextColor = config->readColorEntry("HighlightedTextColor", &m_highlightedTextColor);
+    m_itemTextBackground = config->readColorEntry("ItemTextBackground");
 
-  d->m_iconTextWidth = config->readNumEntry( "TextWidth", DEFAULT_TEXTWIDTH );
-  if ( d->m_iconTextWidth == DEFAULT_TEXTWIDTH )
-    d->m_iconTextWidth = QFontMetrics(m_standardFont).width("0000000000");
+    d->m_iconTextWidth = config->readNumEntry("TextWidth", DEFAULT_TEXTWIDTH);
+    if(d->m_iconTextWidth == DEFAULT_TEXTWIDTH)
+        d->m_iconTextWidth = QFontMetrics(m_standardFont).width("0000000000");
 
-  m_iconTextHeight = config->readNumEntry( "TextHeight", 0 );
-  if ( m_iconTextHeight == 0 ) {
-    if ( config->readBoolEntry( "WordWrapText", true ) )
-      m_iconTextHeight = DEFAULT_TEXTHEIGHT;
-    else
-      m_iconTextHeight = 1;
-  }
-  m_bWordWrapText = ( m_iconTextHeight > 1 );
+    m_iconTextHeight = config->readNumEntry("TextHeight", 0);
+    if(m_iconTextHeight == 0)
+    {
+        if(config->readBoolEntry("WordWrapText", true))
+            m_iconTextHeight = DEFAULT_TEXTHEIGHT;
+        else
+            m_iconTextHeight = 1;
+    }
+    m_bWordWrapText = (m_iconTextHeight > 1);
 
-  m_underlineLink = config->readBoolEntry( "UnderlineLinks", DEFAULT_UNDERLINELINKS );
-  d->m_renameIconDirectly = config->readBoolEntry( "RenameIconDirectly", DEFAULT_RENAMEICONDIRECTLY );
-  m_fileSizeInBytes = config->readBoolEntry( "DisplayFileSizeInBytes", DEFAULT_FILESIZEINBYTES );
-  m_iconTransparency = config->readNumEntry( "TextpreviewIconOpacity", DEFAULT_TEXTPREVIEW_ICONTRANSPARENCY );
-  if ( m_iconTransparency < 0 || m_iconTransparency > 255 )
-      m_iconTransparency = DEFAULT_TEXTPREVIEW_ICONTRANSPARENCY;
+    m_underlineLink = config->readBoolEntry("UnderlineLinks", DEFAULT_UNDERLINELINKS);
+    d->m_renameIconDirectly = config->readBoolEntry("RenameIconDirectly", DEFAULT_RENAMEICONDIRECTLY);
+    m_fileSizeInBytes = config->readBoolEntry("DisplayFileSizeInBytes", DEFAULT_FILESIZEINBYTES);
+    m_iconTransparency = config->readNumEntry("TextpreviewIconOpacity", DEFAULT_TEXTPREVIEW_ICONTRANSPARENCY);
+    if(m_iconTransparency < 0 || m_iconTransparency > 255)
+        m_iconTransparency = DEFAULT_TEXTPREVIEW_ICONTRANSPARENCY;
 
-  // Behaviour
-  m_alwaysNewWin = config->readBoolEntry( "AlwaysNewWin", FALSE );
+    // Behaviour
+    m_alwaysNewWin = config->readBoolEntry("AlwaysNewWin", FALSE);
 
-  m_homeURL = config->readPathEntry("HomeURL", "~");
+    m_homeURL = config->readPathEntry("HomeURL", "~");
 
-  m_showFileTips = config->readBoolEntry("ShowFileTips", true);
-  d->showPreviewsInFileTips = config->readBoolEntry("ShowPreviewsInFileTips", true);
-  m_numFileTips = config->readNumEntry("FileTipsItems", 6);
+    m_showFileTips = config->readBoolEntry("ShowFileTips", true);
+    d->showPreviewsInFileTips = config->readBoolEntry("ShowPreviewsInFileTips", true);
+    m_numFileTips = config->readNumEntry("FileTipsItems", 6);
 
-  m_embedMap = config->entryMap( "EmbedSettings" );
+    m_embedMap = config->entryMap("EmbedSettings");
 
-  /// true if QString::localeAwareCompare is case sensitive (it usually isn't, when LC_COLLATE is set)
-  d->localeAwareCompareIsCaseSensitive = QString( "a" ).localeAwareCompare( "B" ) > 0; // see #40131
+    /// true if QString::localeAwareCompare is case sensitive (it usually isn't, when LC_COLLATE is set)
+    d->localeAwareCompareIsCaseSensitive = QString("a").localeAwareCompare("B") > 0; // see #40131
 }
 
-bool KonqFMSettings::shouldEmbed( const QString & serviceType ) const
+bool KonqFMSettings::shouldEmbed(const QString &serviceType) const
 {
     // First check in user's settings whether to embed or not
     // 1 - in the mimetype file itself
-    KServiceType::Ptr serviceTypePtr = KServiceType::serviceType( serviceType );
+    KServiceType::Ptr serviceTypePtr = KServiceType::serviceType(serviceType);
     bool hasLocalProtocolRedirect = false;
-    if ( serviceTypePtr )
+    if(serviceTypePtr)
     {
-        hasLocalProtocolRedirect = !serviceTypePtr->property( "X-KDE-LocalProtocol" ).toString().isEmpty();
-        QVariant autoEmbedProp = serviceTypePtr->property( "X-KDE-AutoEmbed" );
-        if ( autoEmbedProp.isValid() )
+        hasLocalProtocolRedirect = !serviceTypePtr->property("X-KDE-LocalProtocol").toString().isEmpty();
+        QVariant autoEmbedProp = serviceTypePtr->property("X-KDE-AutoEmbed");
+        if(autoEmbedProp.isValid())
         {
             bool autoEmbed = autoEmbedProp.toBool();
             kdDebug(1203) << "X-KDE-AutoEmbed set to " << (autoEmbed ? "true" : "false") << endl;
             return autoEmbed;
-        } else
+        }
+        else
             kdDebug(1203) << "No X-KDE-AutoEmbed, looking for group" << endl;
     }
     // 2 - in the configuration for the group if nothing was found in the mimetype
     QString serviceTypeGroup = serviceType.left(serviceType.find("/"));
     kdDebug(1203) << "KonqFMSettings::shouldEmbed : serviceTypeGroup=" << serviceTypeGroup << endl;
-    if ( serviceTypeGroup == "inode" || serviceTypeGroup == "Browser" || serviceTypeGroup == "Konqueror" )
-        return true; //always embed mimetype inode/*, Browser/* and Konqueror/*
-    QMap<QString, QString>::ConstIterator it = m_embedMap.find( QString::fromLatin1("embed-")+serviceTypeGroup );
-    if ( it != m_embedMap.end() ) {
+    if(serviceTypeGroup == "inode" || serviceTypeGroup == "Browser" || serviceTypeGroup == "Konqueror")
+        return true; // always embed mimetype inode/*, Browser/* and Konqueror/*
+    QMap< QString, QString >::ConstIterator it = m_embedMap.find(QString::fromLatin1("embed-") + serviceTypeGroup);
+    if(it != m_embedMap.end())
+    {
         kdDebug(1203) << "KonqFMSettings::shouldEmbed: " << it.data() << endl;
         return it.data() == QString::fromLatin1("true");
     }
     // 3 - if no config found, use default.
     // Note: if you change those defaults, also change kcontrol/filetypes/typeslistitem.cpp !
     // Embedding is false by default except for image/* and for zip, tar etc.
-    if ( serviceTypeGroup == "image" || hasLocalProtocolRedirect )
+    if(serviceTypeGroup == "image" || hasLocalProtocolRedirect)
         return true;
     return false;
 }
@@ -169,13 +173,14 @@ bool KonqFMSettings::renameIconDirectly() const
     return d->m_renameIconDirectly;
 }
 
-int KonqFMSettings::caseSensitiveCompare( const QString& a, const QString& b ) const
+int KonqFMSettings::caseSensitiveCompare(const QString &a, const QString &b) const
 {
-    if ( d->localeAwareCompareIsCaseSensitive ) {
-        return a.localeAwareCompare( b );
+    if(d->localeAwareCompareIsCaseSensitive)
+    {
+        return a.localeAwareCompare(b);
     }
     else // can't use localeAwareCompare, have to fallback to normal QString compare
-        return a.compare( b );
+        return a.compare(b);
 }
 
 int KonqFMSettings::iconTextWidth() const

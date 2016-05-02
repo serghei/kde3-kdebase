@@ -4,5 +4,5 @@
 
 int main()
 {
-  return execlp( "ksysguard", "ksysguard", "--showprocesses", 0 );
+    return execlp("ksysguard", "ksysguard", "--showprocesses", 0);
 }

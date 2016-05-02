@@ -34,34 +34,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KPanelApplet;
 class KickerPluginManager;
 
-class AppletProxy : public QObject, DCOPObject
-{
+class AppletProxy : public QObject, DCOPObject {
     Q_OBJECT
 
 public:
-    AppletProxy(QObject* parent, const char* name = 0);
+    AppletProxy(QObject *parent, const char *name = 0);
     ~AppletProxy();
 
-    void loadApplet(const QString& desktopFile, const QString& configFile);
-    KPanelApplet* loadApplet(const AppletInfo& info);
-    void dock(const QCString& callbackID);
+    void loadApplet(const QString &desktopFile, const QString &configFile);
+    KPanelApplet *loadApplet(const AppletInfo &info);
+    void dock(const QCString &callbackID);
     void showStandalone();
 
-    bool process(const QCString &fun, const QByteArray &data,
-		 QCString& replyType, QByteArray &replyData);
+    bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 protected slots:
     void slotUpdateLayout();
     void slotRequestFocus();
-    void slotApplicationRemoved(const QCString&);
+    void slotApplicationRemoved(const QCString &);
 
 private:
-    void repaintApplet(QWidget* widget);
+    void repaintApplet(QWidget *widget);
 
-    AppletInfo          *_info;
-    KPanelApplet        *_applet;
-    QCString             _callbackID;
-    QPixmap              _bg;
+    AppletInfo *_info;
+    KPanelApplet *_applet;
+    QCString _callbackID;
+    QPixmap _bg;
 };
 
 #endif

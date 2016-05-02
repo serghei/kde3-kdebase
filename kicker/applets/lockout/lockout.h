@@ -10,25 +10,23 @@
 class QBoxLayout;
 class QToolButton;
 
-class Lockout : public KPanelApplet
-{
+class Lockout : public KPanelApplet {
     Q_OBJECT
 
 public:
-    Lockout( const QString& configFile,
-	     QWidget *parent = 0, const char *name = 0 );
+    Lockout(const QString &configFile, QWidget *parent = 0, const char *name = 0);
     ~Lockout();
 
     int widthForHeight(int height) const;
     int heightForWidth(int width) const;
 
 protected:
-    virtual void mousePressEvent( QMouseEvent * );
-    virtual void mouseMoveEvent( QMouseEvent * );
-    virtual void mouseReleaseEvent( QMouseEvent * );
-    virtual void mouseDoubleClickEvent( QMouseEvent * );
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void mouseReleaseEvent(QMouseEvent *);
+    virtual void mouseDoubleClickEvent(QMouseEvent *);
 
-    virtual bool eventFilter( QObject *, QEvent * );
+    virtual bool eventFilter(QObject *, QEvent *);
 
 private slots:
     void lock();
@@ -40,8 +38,8 @@ private slots:
     void slotIconChanged();
 
 private:
-    void propagateMouseEvent( QMouseEvent * );
-    void checkLayout( int height ) const;
+    void propagateMouseEvent(QMouseEvent *);
+    void checkLayout(int height) const;
 
     SimpleButton *lockButton, *logoutButton;
     QBoxLayout *layout;

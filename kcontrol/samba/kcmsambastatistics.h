@@ -22,7 +22,7 @@
  */
 #ifndef kcmsambastatistics_h_included
 #define kcmsambastatistics_h_included
- 
+
 #include <qwidget.h>
 #include <qptrlist.h>
 
@@ -35,72 +35,70 @@ class QPushButton;
 
 class KConfig;
 
-class SmallLogItem
-{
- public:
-  SmallLogItem():name(""),count(0){};
-  SmallLogItem(QString n):name(n),count(1){};
-  QString name;
-  int count;
-};
-
-class LogItem
-{
- public:
-  LogItem():name(""), accessed(),count(0) {};
-  LogItem(QString n, QString a):name(n), accessed(), count(1)
-	{
-	  accessed.setAutoDelete(TRUE);
-	  accessed.append(new SmallLogItem(a));
-	};
-  QString name;
-  //QStrList accessedBy;
-  QPtrList<SmallLogItem> accessed;
-  int count;
-  SmallLogItem* itemInList(QString name);
-  void addItem (QString host);
-};
-
-class SambaLog
-{
- public:
-  SambaLog()
-	{
-	  items.setAutoDelete(TRUE);
-	};
-  QPtrList<LogItem> items;
-  void addItem (QString share, QString host);
-  void printItems();
- private:
-  LogItem* itemInList(QString name);
-};
-
-class StatisticsView: public QWidget
-{
-  Q_OBJECT
+class SmallLogItem {
 public:
-  StatisticsView(QWidget *parent=0, KConfig *config=0, const char *name=0);
-  virtual ~StatisticsView() {};
-  void saveSettings() {};
-  void loadSettings() {};
-  public slots:
-	void setListInfo(QListView *list, int nrOfFiles, int nrOfConnections);
+    SmallLogItem() : name(""), count(0){};
+    SmallLogItem(QString n) : name(n), count(1){};
+    QString name;
+    int count;
+};
+
+class LogItem {
+public:
+    LogItem() : name(""), accessed(), count(0){};
+    LogItem(QString n, QString a) : name(n), accessed(), count(1)
+    {
+        accessed.setAutoDelete(TRUE);
+        accessed.append(new SmallLogItem(a));
+    };
+    QString name;
+    // QStrList accessedBy;
+    QPtrList< SmallLogItem > accessed;
+    int count;
+    SmallLogItem *itemInList(QString name);
+    void addItem(QString host);
+};
+
+class SambaLog {
+public:
+    SambaLog()
+    {
+        items.setAutoDelete(TRUE);
+    };
+    QPtrList< LogItem > items;
+    void addItem(QString share, QString host);
+    void printItems();
+
 private:
-  KConfig *configFile;
-  QListView *dataList;
-  QListView* viewStatistics;
-  QLabel* connectionsL, *filesL;
-  QComboBox* eventCb;
-  QLabel* eventL;
-  QLineEdit* serviceLe;
-  QLabel* serviceL;
-  QLineEdit* hostLe;
-  QLabel* hostL;
-  QPushButton* calcButton, *clearButton;
-  QCheckBox* expandedInfoCb, *expandedUserCb;
-  int connectionsCount, filesCount, calcCount;
+    LogItem *itemInList(QString name);
+};
+
+class StatisticsView : public QWidget {
+    Q_OBJECT
+public:
+    StatisticsView(QWidget *parent = 0, KConfig *config = 0, const char *name = 0);
+    virtual ~StatisticsView(){};
+    void saveSettings(){};
+    void loadSettings(){};
+public slots:
+    void setListInfo(QListView *list, int nrOfFiles, int nrOfConnections);
+
+private:
+    KConfig *configFile;
+    QListView *dataList;
+    QListView *viewStatistics;
+    QLabel *connectionsL, *filesL;
+    QComboBox *eventCb;
+    QLabel *eventL;
+    QLineEdit *serviceLe;
+    QLabel *serviceL;
+    QLineEdit *hostLe;
+    QLabel *hostL;
+    QPushButton *calcButton, *clearButton;
+    QCheckBox *expandedInfoCb, *expandedUserCb;
+    int connectionsCount, filesCount, calcCount;
 private slots:
-	void clearStatistics();
-  void calculate();
+    void clearStatistics();
+    void calculate();
 };
 #endif // main_included

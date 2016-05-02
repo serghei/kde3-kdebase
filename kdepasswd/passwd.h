@@ -16,24 +16,29 @@
  * A C++ API to passwd.
  */
 
-class PasswdProcess
-    : public PtyProcess
-{
+class PasswdProcess : public PtyProcess {
 public:
-    PasswdProcess(QCString user=0);
+    PasswdProcess(QCString user = 0);
     ~PasswdProcess();
 
-    enum Errors { PasswdNotFound=1, PasswordIncorrect, PasswordNotGood };
+    enum Errors
+    {
+        PasswdNotFound = 1,
+        PasswordIncorrect,
+        PasswordNotGood
+    };
 
     int checkCurrent(const char *oldpass);
-    int exec(const char *oldpass, const char *newpass, int check=0);
+    int exec(const char *oldpass, const char *newpass, int check = 0);
 
-    QCString error() { return m_Error; }
+    QCString error()
+    {
+        return m_Error;
+    }
 
 private:
-    bool isPrompt(QCString line, const char *word=0L);
-    int ConversePasswd(const char *oldpass, const char *newpass,
-	    int check);
+    bool isPrompt(QCString line, const char *word = 0L);
+    int ConversePasswd(const char *oldpass, const char *newpass, int check);
 
     QCString m_User, m_Error;
     bool bOtherUser;

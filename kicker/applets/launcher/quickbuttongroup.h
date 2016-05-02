@@ -13,10 +13,10 @@
 #include "quickbutton.h"
 
 
-class QuickButtonGroup: virtual public EasyVector< QuickButton* > {
+class QuickButtonGroup : virtual public EasyVector< QuickButton * > {
 public:
-    QuickButtonGroup(const EasyVector< QuickButton* > &kv):EasyVector< QuickButton* >(kv){};
-    QuickButtonGroup():EasyVector< QuickButton* >(){};
+    QuickButtonGroup(const EasyVector< QuickButton * > &kv) : EasyVector< QuickButton * >(kv){};
+    QuickButtonGroup() : EasyVector< QuickButton * >(){};
     Index findDescriptor(const QString &desc);
 
     void show();
@@ -28,33 +28,49 @@ public:
 };
 
 QuickButtonGroup::Index QuickButtonGroup::findDescriptor(const QString &desc)
-{   return findProperty(desc, std::mem_fun(&QuickButton::url));}
+{
+    return findProperty(desc, std::mem_fun(&QuickButton::url));
+}
 
 inline void QuickButtonGroup::setUpdatesEnabled(bool enable)
-{   for (QuickButtonGroup::iterator i=begin();i!=end();++i) {
+{
+    for(QuickButtonGroup::iterator i = begin(); i != end(); ++i)
+    {
         (*i)->setUpdatesEnabled(enable);
-        if (enable) { (*i)->update();}
+        if(enable)
+        {
+            (*i)->update();
+        }
     }
 }
 
 inline void QuickButtonGroup::show()
-{   std::for_each(begin(),end(),std::mem_fun(&QWidget::show));}
+{
+    std::for_each(begin(), end(), std::mem_fun(&QWidget::show));
+}
 
 inline void QuickButtonGroup::hide()
-{   std::for_each(begin(),end(),std::mem_fun(&QWidget::hide));}
+{
+    std::for_each(begin(), end(), std::mem_fun(&QWidget::hide));
+}
 
 inline void QuickButtonGroup::setDragging(bool drag)
-{   std::for_each(begin(),end(),std::bind2nd(std::mem_fun(&QuickButton::setDragging),drag));}
+{
+    std::for_each(begin(), end(), std::bind2nd(std::mem_fun(&QuickButton::setDragging), drag));
+}
 
 inline void QuickButtonGroup::setEnableDrag(bool enable)
-{   std::for_each(begin(),end(),std::bind2nd(std::mem_fun(&QuickButton::setEnableDrag),enable));}
+{
+    std::for_each(begin(), end(), std::bind2nd(std::mem_fun(&QuickButton::setEnableDrag), enable));
+}
 
 inline void QuickButtonGroup::deleteContents()
-{   for (QuickButtonGroup::iterator i=begin();i!=end();++i) {
-        delete (*i);
-        (*i)=0;
+{
+    for(QuickButtonGroup::iterator i = begin(); i != end(); ++i)
+    {
+        delete(*i);
+        (*i) = 0;
     }
 }
 
 #endif
-

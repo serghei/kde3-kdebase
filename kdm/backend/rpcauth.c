@@ -45,45 +45,44 @@ from the copyright holder.
 #include <rpc/key_prot.h>
 
 /*ARGSUSED*/
-void
-SecureRPCInitAuth( unsigned short name_len ATTR_UNUSED,
-                   const char *name ATTR_UNUSED )
+void SecureRPCInitAuth(unsigned short name_len ATTR_UNUSED, const char *name ATTR_UNUSED)
 {
 }
 
-Xauth *
-SecureRPCGetAuth( unsigned short namelen, const char *name )
+Xauth *SecureRPCGetAuth(unsigned short namelen, const char *name)
 {
-	Xauth *new;
-	char key[MAXNETNAMELEN+1];
+    Xauth *new;
+    char key[MAXNETNAMELEN + 1];
 
-	new = (Xauth *)Malloc( sizeof(*new) );
-	if (!new)
-		return (Xauth *)0;
-	new->family = FamilyWild;
-	new->address_length = 0;
-	new->address = 0;
-	new->number_length = 0;
-	new->number = 0;
+    new = (Xauth *)Malloc(sizeof(*new));
+    if(!new)
+        return (Xauth *)0;
+    new->family = FamilyWild;
+    new->address_length = 0;
+    new->address = 0;
+    new->number_length = 0;
+    new->number = 0;
 
-	getnetname( key );
-	Debug( "system netname %s\n", key );
-	new->data_length = strlen( key );
-	new->data = (char *)Malloc( new->data_length );
-	if (!new->data) {
-		free( (char *)new );
-		return (Xauth *)0;
-	}
-	new->name = (char *)Malloc( namelen );
-	if (!new->name) {
-		free( (char *)new->data );
-		free( (char *)new );
-		return (Xauth *)0;
-	}
-	memmove( new->name, name, namelen );
-	new->name_length = namelen;
-	memmove( new->data, key, new->data_length );
-	return new;
+    getnetname(key);
+    Debug("system netname %s\n", key);
+    new->data_length = strlen(key);
+    new->data = (char *)Malloc(new->data_length);
+    if(!new->data)
+    {
+        free((char *)new);
+        return (Xauth *)0;
+    }
+    new->name = (char *)Malloc(namelen);
+    if(!new->name)
+    {
+        free((char *)new->data);
+        free((char *)new);
+        return (Xauth *)0;
+    }
+    memmove(new->name, name, namelen);
+    new->name_length = namelen;
+    memmove(new->data, key, new->data_length);
+    return new;
 }
 
 #endif

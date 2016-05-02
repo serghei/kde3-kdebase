@@ -33,29 +33,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class KPanelExtension;
 
-class ExtensionProxy : public QObject, DCOPObject
-{
+class ExtensionProxy : public QObject, DCOPObject {
     Q_OBJECT
 
 public:
-    ExtensionProxy(QObject* parent, const char* name = 0);
+    ExtensionProxy(QObject *parent, const char *name = 0);
     ~ExtensionProxy();
 
-    void loadExtension(const QCString& desktopFile, const QCString& configFile);
-    KPanelExtension* loadExtension(const AppletInfo& info);
-    void dock(const QCString& callbackID);
+    void loadExtension(const QCString &desktopFile, const QCString &configFile);
+    KPanelExtension *loadExtension(const AppletInfo &info);
+    void dock(const QCString &callbackID);
 
-    bool process(const QCString &fun, const QByteArray &data,
-		 QCString& replyType, QByteArray &replyData);
+    bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 protected slots:
     void slotUpdateLayout();
-    void slotApplicationRemoved(const QCString&);
+    void slotApplicationRemoved(const QCString &);
 
 private:
-    AppletInfo          *_info;
-    KPanelExtension     *_extension;
-    QCString             _callbackID;
+    AppletInfo *_info;
+    KPanelExtension *_extension;
+    QCString _callbackID;
 };
 
 #endif

@@ -32,29 +32,31 @@
 SocketSecurity::SocketSecurity(int sockfd)
 {
     ksocklen_t len = sizeof(struct ucred);
-    if (getsockopt(sockfd, SOL_SOCKET, SO_PEERCRED, &cred, &len) < 0) {
-	kdError() << "getsockopt(SO_PEERCRED) " << perror << endl;
-	return;
+    if(getsockopt(sockfd, SOL_SOCKET, SO_PEERCRED, &cred, &len) < 0)
+    {
+        kdError() << "getsockopt(SO_PEERCRED) " << perror << endl;
+        return;
     }
 
     ok = true;
 }
 
 #else
-# if defined(HAVE_GETPEEREID)
+#if defined(HAVE_GETPEEREID)
 SocketSecurity::SocketSecurity(int sockfd)
 {
     uid_t euid;
     gid_t egid;
-    if (getpeereid(sockfd, &euid, &egid) == 0) {
-	cred.uid = euid;
-	cred.gid = egid;
-	cred.pid = -1;
-	ok = true;
+    if(getpeereid(sockfd, &euid, &egid) == 0)
+    {
+        cred.uid = euid;
+        cred.gid = egid;
+        cred.pid = -1;
+        ok = true;
     }
 }
 
-# else
+#else
 
 
 /**
@@ -65,7 +67,8 @@ SocketSecurity::SocketSecurity(int sockfd)
 {
     static bool warned_him = FALSE;
 
-    if (!warned_him) {
+    if(!warned_him)
+    {
         kdWarning() << "Using void socket security. Please add support for your" << endl;
         kdWarning() << "platform to kdesu/kdesud/secure.cpp" << endl;
         warned_him = TRUE;
@@ -76,5 +79,5 @@ SocketSecurity::SocketSecurity(int sockfd)
     ok = true;
 }
 
-# endif
+#endif
 #endif

@@ -29,136 +29,120 @@
 
 #include "trashapplet.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-	KDE_EXPORT KPanelApplet* init( QWidget *parent, const QString& configFile)
-	{
-		KGlobal::locale()->insertCatalogue("trashapplet");
-		return new TrashApplet(configFile, KPanelApplet::Normal,
-			KPanelApplet::About, parent, "trashapplet");
-	}
+    KGlobal::locale()->insertCatalogue("trashapplet");
+    return new TrashApplet(configFile, KPanelApplet::Normal, KPanelApplet::About, parent, "trashapplet");
+}
 }
 
-TrashApplet::TrashApplet(const QString& configFile, Type type, int actions, QWidget *parent, const char *name)
-	: KPanelApplet(configFile, type, actions, parent, name), mButton(0)
+TrashApplet::TrashApplet(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelApplet(configFile, type, actions, parent, name), mButton(0)
 {
-	mButton = new TrashButton(this);
+    mButton = new TrashButton(this);
 
-	if (!parent)
-		setBackgroundMode(X11ParentRelative);
+    if(!parent)
+        setBackgroundMode(X11ParentRelative);
 
-	mButton->setPanelPosition(position());
-	
-	setAcceptDrops(true);
+    mButton->setPanelPosition(position());
 
-	mpDirLister = new KDirLister();
+    setAcceptDrops(true);
 
-	connect( mpDirLister, SIGNAL( clear() ),
-	         this, SLOT( slotClear() ) );
-	connect( mpDirLister, SIGNAL( completed() ),
-	         this, SLOT( slotCompleted() ) );
-	connect( mpDirLister, SIGNAL( deleteItem( KFileItem * ) ),
-	         this, SLOT( slotDeleteItem( KFileItem * ) ) );
+    mpDirLister = new KDirLister();
 
-	mpDirLister->openURL("trash:/");
+    connect(mpDirLister, SIGNAL(clear()), this, SLOT(slotClear()));
+    connect(mpDirLister, SIGNAL(completed()), this, SLOT(slotCompleted()));
+    connect(mpDirLister, SIGNAL(deleteItem(KFileItem *)), this, SLOT(slotDeleteItem(KFileItem *)));
+
+    mpDirLister->openURL("trash:/");
 }
 
 TrashApplet::~TrashApplet()
 {
-	// disconnect the dir lister before quitting so as not to crash
-	// on kicker exit
-	disconnect( mpDirLister, SIGNAL( clear() ),
-	            this, SLOT( slotClear() ) );
-	delete mpDirLister;
-	KGlobal::locale()->removeCatalogue("trashapplet");
+    // disconnect the dir lister before quitting so as not to crash
+    // on kicker exit
+    disconnect(mpDirLister, SIGNAL(clear()), this, SLOT(slotClear()));
+    delete mpDirLister;
+    KGlobal::locale()->removeCatalogue("trashapplet");
 }
 
 void TrashApplet::about()
 {
-	KAboutData data("trashapplet",
-	                I18N_NOOP("Trash Applet"),
-	                "1.0",
-	                I18N_NOOP("\"trash:/\" ioslave frontend applet"),
-	                KAboutData::License_GPL_V2,
-	                "(c) 2004, Kevin Ottens");
+    KAboutData data("trashapplet", I18N_NOOP("Trash Applet"), "1.0", I18N_NOOP("\"trash:/\" ioslave frontend applet"), KAboutData::License_GPL_V2,
+                    "(c) 2004, Kevin Ottens");
 
-	data.addAuthor("Kevin \'ervin\' Ottens",
-	               I18N_NOOP("Maintainer"),
-	               "ervin ipsquad net",
-	               "http://ervin.ipsquad.net");
+    data.addAuthor("Kevin \'ervin\' Ottens", I18N_NOOP("Maintainer"), "ervin ipsquad net", "http://ervin.ipsquad.net");
 
-	KAboutApplication dialog(&data);
-	dialog.exec();
+    KAboutApplication dialog(&data);
+    dialog.exec();
 }
 
-int TrashApplet::widthForHeight( int height ) const
+int TrashApplet::widthForHeight(int height) const
 {
-	if ( !mButton )
-	{
-		return height;
-	}
+    if(!mButton)
+    {
+        return height;
+    }
 
-	return mButton->widthForHeight( height );
+    return mButton->widthForHeight(height);
 }
 
-int TrashApplet::heightForWidth( int width ) const
+int TrashApplet::heightForWidth(int width) const
 {
-	if ( !mButton )
-	{
-		return width;
-	}
+    if(!mButton)
+    {
+        return width;
+    }
 
-	return mButton->heightForWidth( width );
+    return mButton->heightForWidth(width);
 }
 
-void TrashApplet::resizeEvent( QResizeEvent * )
+void TrashApplet::resizeEvent(QResizeEvent *)
 {
-	if (!mButton)
-	{
-		return;
-	}
+    if(!mButton)
+    {
+        return;
+    }
 
-	int size = 1;
+    int size = 1;
 
-	size = std::max( size, 
-			 orientation() == Qt::Vertical ?
-			 	mButton->heightForWidth( width() ) :
-				mButton->widthForHeight( height() ) );
+    size = std::max(size, orientation() == Qt::Vertical ? mButton->heightForWidth(width()) : mButton->widthForHeight(height()));
 
-	
-	if(orientation() == Vertical)
-	{
-		mButton->resize( width(), size );
-	}
-	else
-	{
-		mButton->resize( size, height() );
-	}
+
+    if(orientation() == Vertical)
+    {
+        mButton->resize(width(), size);
+    }
+    else
+    {
+        mButton->resize(size, height());
+    }
 }
 
 void TrashApplet::slotClear()
 {
-	kdDebug()<<"MediaApplet::slotClear"<<endl;
+    kdDebug() << "MediaApplet::slotClear" << endl;
 
-	mButton->setItemCount(0);
+    mButton->setItemCount(0);
 }
 
 void TrashApplet::slotCompleted()
 {
-	mCount = mpDirLister->items(KDirLister::AllItems).count();
-	mButton->setItemCount( mCount );
+    mCount = mpDirLister->items(KDirLister::AllItems).count();
+    mButton->setItemCount(mCount);
 }
 
 void TrashApplet::slotDeleteItem(KFileItem *)
 {
-	mCount--;
-	mButton->setItemCount( mCount );
+    mCount--;
+    mButton->setItemCount(mCount);
 }
 
 
 void TrashApplet::positionChange(Position p)
 {
-	mButton->setPanelPosition(p);
+    mButton->setPanelPosition(p);
 }
 
 

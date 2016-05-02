@@ -31,24 +31,29 @@ class PanelServiceMenu;
 /**
  * Button that contains a Service menu
  */
-class ServiceMenuButton : public PanelPopupButton
-{
+class ServiceMenuButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    ServiceMenuButton( const QString& relPath, QWidget* parent );
-    ServiceMenuButton( const KConfigGroup& config, QWidget* parent );
+    ServiceMenuButton(const QString &relPath, QWidget *parent);
+    ServiceMenuButton(const KConfigGroup &config, QWidget *parent);
 
-    void saveConfig( KConfigGroup& config ) const;
+    void saveConfig(KConfigGroup &config) const;
 
 protected:
-    void initialize( const QString& relPath );
-    virtual QString tileName() { return "Browser"; }
-    virtual QString defaultIcon() const { return "folder"; }
+    void initialize(const QString &relPath);
+    virtual QString tileName()
+    {
+        return "Browser";
+    }
+    virtual QString defaultIcon() const
+    {
+        return "folder";
+    }
     virtual void startDrag();
     virtual void initPopup();
 
-    PanelServiceMenu* topMenu;
+    PanelServiceMenu *topMenu;
 };
 
 #endif

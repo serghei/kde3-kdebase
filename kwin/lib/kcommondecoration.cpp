@@ -38,12 +38,8 @@
 #include "kcommondecoration.h"
 #include "kcommondecoration.moc"
 
-KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
-    : KDecoration (bridge, factory),
-        m_previewWidget(0),
-        btnHideMinWidth(200),
-        btnHideLastWidth(0),
-        closing(false)
+KCommonDecoration::KCommonDecoration(KDecorationBridge *bridge, KDecorationFactory *factory)
+    : KDecoration(bridge, factory), m_previewWidget(0), btnHideMinWidth(200), btnHideLastWidth(0), closing(false)
 {
     // sizeof(...) is calculated at compile time
     memset(m_button, 0, sizeof(KCommonDecorationButton *) * NumButtons);
@@ -51,15 +47,18 @@ KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFacto
 
 KCommonDecoration::~KCommonDecoration()
 {
-    for (int n=0; n<NumButtons; n++) {
-        if (m_button[n]) delete m_button[n];
+    for(int n = 0; n < NumButtons; n++)
+    {
+        if(m_button[n])
+            delete m_button[n];
     }
     delete m_previewWidget;
 }
 
 bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
 {
-    switch (behaviour) {
+    switch(behaviour)
+    {
         case DB_MenuClose:
             return false;
 
@@ -75,7 +74,8 @@ bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int KCommonDecoration::layoutMetric(LayoutMetric lm, bool, const KCommonDecorationButton *) const
 {
-    switch (lm) {
+    switch(lm)
+    {
         case LM_BorderLeft:
         case LM_BorderRight:
         case LM_BorderBottom:
@@ -114,19 +114,20 @@ void KCommonDecoration::init()
     // for flicker-free redraws
     widget()->setBackgroundMode(NoBackground);
 
-    widget()->installEventFilter( this );
+    widget()->installEventFilter(this);
 
     resetLayout();
 
-    connect(this, SIGNAL(keepAboveChanged(bool) ), SLOT(keepAboveChange(bool) ) );
-    connect(this, SIGNAL(keepBelowChanged(bool) ), SLOT(keepBelowChange(bool) ) );
+    connect(this, SIGNAL(keepAboveChanged(bool)), SLOT(keepAboveChange(bool)));
+    connect(this, SIGNAL(keepBelowChanged(bool)), SLOT(keepBelowChange(bool)));
 
     updateCaption();
 }
 
-void KCommonDecoration::reset( unsigned long changed )
+void KCommonDecoration::reset(unsigned long changed)
 {
-    if (changed & SettingButtons) {
+    if(changed & SettingButtons)
+    {
         resetLayout();
         widget()->update();
     }
@@ -143,14 +144,12 @@ void KCommonDecoration::updateCaption()
     widget()->update();
 }
 
-void KCommonDecoration::borders( int& left, int& right, int& top, int& bottom ) const
+void KCommonDecoration::borders(int &left, int &right, int &top, int &bottom) const
 {
     left = layoutMetric(LM_BorderLeft);
     right = layoutMetric(LM_BorderRight);
     bottom = layoutMetric(LM_BorderBottom);
-    top = layoutMetric(LM_TitleHeight) +
-            layoutMetric(LM_TitleEdgeTop) +
-            layoutMetric(LM_TitleEdgeBottom);
+    top = layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleEdgeBottom);
 
     updateLayout(); // TODO!! don't call everytime we are in ::borders
 }
@@ -162,7 +161,8 @@ void KCommonDecoration::updateLayout() const
     r.coords(&r_x, &r_y, &r_x2, &r_y2);
 
     // layout preview widget
-    if (m_previewWidget) {
+    if(m_previewWidget)
+    {
         const int borderLeft = layoutMetric(LM_BorderLeft);
         const int borderRight = layoutMetric(LM_BorderRight);
         const int borderBottom = layoutMetric(LM_BorderBottom);
@@ -170,65 +170,79 @@ void KCommonDecoration::updateLayout() const
         const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
         const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
 
-        int left = r_x+borderLeft;
-        int top = r_y+titleEdgeTop+titleHeight+titleEdgeBottom;
-        int width = r_x2-borderRight-left+1;
-        int height = r_y2-borderBottom-top+1;
+        int left = r_x + borderLeft;
+        int top = r_y + titleEdgeTop + titleHeight + titleEdgeBottom;
+        int width = r_x2 - borderRight - left + 1;
+        int height = r_y2 - borderBottom - top + 1;
         m_previewWidget->setGeometry(left, top, width, height);
-        moveWidget(left,top, m_previewWidget);
+        moveWidget(left, top, m_previewWidget);
         resizeWidget(width, height, m_previewWidget);
     }
 
     // resize buttons...
-    for (int n=0; n<NumButtons; n++) {
-        if (m_button[n]) {
-            QSize newSize = QSize(layoutMetric(LM_ButtonWidth, true, m_button[n]),
-                                  layoutMetric(LM_ButtonHeight, true, m_button[n]) );
-            if (newSize != m_button[n]->size() )
+    for(int n = 0; n < NumButtons; n++)
+    {
+        if(m_button[n])
+        {
+            QSize newSize = QSize(layoutMetric(LM_ButtonWidth, true, m_button[n]), layoutMetric(LM_ButtonHeight, true, m_button[n]));
+            if(newSize != m_button[n]->size())
                 m_button[n]->setSize(newSize);
         }
     }
 
     // layout buttons
     int y = r_y + layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_ButtonMarginTop);
-    if (m_buttonsLeft.count() > 0) {
+    if(m_buttonsLeft.count() > 0)
+    {
         const int buttonSpacing = layoutMetric(LM_ButtonSpacing);
         int x = r_x + layoutMetric(LM_TitleEdgeLeft);
-        for (ButtonContainer::const_iterator it = m_buttonsLeft.begin(); it != m_buttonsLeft.end(); ++it) {
+        for(ButtonContainer::const_iterator it = m_buttonsLeft.begin(); it != m_buttonsLeft.end(); ++it)
+        {
             bool elementLayouted = false;
-            if (*it) {
-                if (!(*it)->isHidden() ) {
-                    moveWidget(x,y, *it);
-                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );
+            if(*it)
+            {
+                if(!(*it)->isHidden())
+                {
+                    moveWidget(x, y, *it);
+                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast< KCommonDecorationButton * >(*it));
                     elementLayouted = true;
                 }
-            } else {
-                x+= layoutMetric(LM_ExplicitButtonSpacer);
+            }
+            else
+            {
+                x += layoutMetric(LM_ExplicitButtonSpacer);
                 elementLayouted = true;
             }
-            if (elementLayouted && it != m_buttonsLeft.end() )
+            if(elementLayouted && it != m_buttonsLeft.end())
                 x += buttonSpacing;
         }
     }
 
-    if (m_buttonsRight.count() > 0) {
-        const int titleEdgeRightLeft = r_x2-layoutMetric(LM_TitleEdgeRight)+1;
+    if(m_buttonsRight.count() > 0)
+    {
+        const int titleEdgeRightLeft = r_x2 - layoutMetric(LM_TitleEdgeRight) + 1;
 
         const int buttonSpacing = layoutMetric(LM_ButtonSpacing);
         int x = titleEdgeRightLeft - buttonContainerWidth(m_buttonsRight);
-        for (ButtonContainer::const_iterator it = m_buttonsRight.begin(); it != m_buttonsRight.end(); ++it) {
+        for(ButtonContainer::const_iterator it = m_buttonsRight.begin(); it != m_buttonsRight.end(); ++it)
+        {
             bool elementLayouted = false;
-            if (*it) {
-                if (!(*it)->isHidden() ) {
-                    moveWidget(x,y, *it);
-                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast<KCommonDecorationButton*>(*it) );;
+            if(*it)
+            {
+                if(!(*it)->isHidden())
+                {
+                    moveWidget(x, y, *it);
+                    x += layoutMetric(LM_ButtonWidth, true, ::qt_cast< KCommonDecorationButton * >(*it));
+                    ;
                     elementLayouted = true;
                 }
-            } else {
+            }
+            else
+            {
                 x += layoutMetric(LM_ExplicitButtonSpacer);
                 elementLayouted = true;
             }
-            if (elementLayouted && it != m_buttonsRight.end() )
+            if(elementLayouted && it != m_buttonsRight.end())
                 x += buttonSpacing;
         }
     }
@@ -236,20 +250,24 @@ void KCommonDecoration::updateLayout() const
 
 void KCommonDecoration::updateButtons() const
 {
-    for (int n=0; n<NumButtons; n++)
-        if (m_button[n]) m_button[n]->update();
+    for(int n = 0; n < NumButtons; n++)
+        if(m_button[n])
+            m_button[n]->update();
 }
 
 void KCommonDecoration::resetButtons() const
 {
-    for (int n=0; n<NumButtons; n++)
-        if (m_button[n]) m_button[n]->reset(KCommonDecorationButton::ManualReset);
+    for(int n = 0; n < NumButtons; n++)
+        if(m_button[n])
+            m_button[n]->reset(KCommonDecorationButton::ManualReset);
 }
 
 void KCommonDecoration::resetLayout()
 {
-    for (int n=0; n<NumButtons; n++) {
-        if (m_button[n]) {
+    for(int n = 0; n < NumButtons; n++)
+    {
+        if(m_button[n])
+        {
             delete m_button[n];
             m_button[n] = 0;
         }
@@ -261,25 +279,22 @@ void KCommonDecoration::resetLayout()
     m_previewWidget = 0;
 
     // shown instead of the window contents in decoration previews
-    if(isPreview() ) {
-        m_previewWidget = new QLabel(i18n("%1 is the name of window decoration style", "<center><b>%1 preview</b></center>").arg(visibleName() ), widget());
+    if(isPreview())
+    {
+        m_previewWidget =
+            new QLabel(i18n("%1 is the name of window decoration style", "<center><b>%1 preview</b></center>").arg(visibleName()), widget());
         m_previewWidget->show();
     }
 
-    addButtons(m_buttonsLeft,
-               options()->customButtonPositions() ? options()->titleButtonsLeft() : defaultButtonsLeft(),
-               true);
-    addButtons(m_buttonsRight,
-               options()->customButtonPositions() ? options()->titleButtonsRight() : defaultButtonsRight(),
-               false);
+    addButtons(m_buttonsLeft, options()->customButtonPositions() ? options()->titleButtonsLeft() : defaultButtonsLeft(), true);
+    addButtons(m_buttonsRight, options()->customButtonPositions() ? options()->titleButtonsRight() : defaultButtonsRight(), false);
 
     updateLayout();
 
     const int minTitleBarWidth = 35;
-    btnHideMinWidth = buttonContainerWidth(m_buttonsLeft,true) + buttonContainerWidth(m_buttonsRight,true) +
-            layoutMetric(LM_TitleEdgeLeft,false) + layoutMetric(LM_TitleEdgeRight,false) +
-            layoutMetric(LM_TitleBorderLeft,false) + layoutMetric(LM_TitleBorderRight,false) +
-            minTitleBarWidth;
+    btnHideMinWidth = buttonContainerWidth(m_buttonsLeft, true) + buttonContainerWidth(m_buttonsRight, true) + layoutMetric(LM_TitleEdgeLeft, false)
+                      + layoutMetric(LM_TitleEdgeRight, false) + layoutMetric(LM_TitleBorderLeft, false) + layoutMetric(LM_TitleBorderRight, false)
+                      + minTitleBarWidth;
     btnHideLastWidth = 0;
 }
 
@@ -300,174 +315,201 @@ int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer,
     int shownElementsCount = 0;
 
     int w = 0;
-    for (ButtonContainer::const_iterator it = btnContainer.begin(); it != btnContainer.end(); ++it) {
-        if (*it) {
-            if (countHidden || !(*it)->isHidden() ) {
+    for(ButtonContainer::const_iterator it = btnContainer.begin(); it != btnContainer.end(); ++it)
+    {
+        if(*it)
+        {
+            if(countHidden || !(*it)->isHidden())
+            {
                 w += (*it)->width();
                 ++shownElementsCount;
             }
-        } else {
+        }
+        else
+        {
             w += explicitSpacer;
             ++shownElementsCount;
         }
     }
-    w += layoutMetric(LM_ButtonSpacing)*(shownElementsCount-1);
+    w += layoutMetric(LM_ButtonSpacing) * (shownElementsCount - 1);
 
     return w;
 }
 
-void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString& s, bool isLeft)
+void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString &s, bool isLeft)
 {
-    if (s.length() > 0) {
-        for (unsigned n=0; n < s.length(); n++) {
+    if(s.length() > 0)
+    {
+        for(unsigned n = 0; n < s.length(); n++)
+        {
             KCommonDecorationButton *btn = 0;
-            switch (s[n]) {
-              case 'M': // Menu button
-                  if (!m_button[MenuButton]){
-                      btn = createButton(MenuButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Menu") );
-                      btn->setRealizeButtons(LeftButton|RightButton);
-                      connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
-                      connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
+            switch(s[n])
+            {
+                case 'M': // Menu button
+                    if(!m_button[MenuButton])
+                    {
+                        btn = createButton(MenuButton);
+                        if(!btn)
+                            break;
+                        btn->setTipText(i18n("Menu"));
+                        btn->setRealizeButtons(LeftButton | RightButton);
+                        connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
+                        connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
 
-                      m_button[MenuButton] = btn;
-                  }
-                  break;
-              case 'S': // OnAllDesktops button
-                  if (!m_button[OnAllDesktopsButton]){
-                      btn = createButton(OnAllDesktopsButton);
-                      if (!btn) break;
-                      const bool oad = isOnAllDesktops();
-                      btn->setTipText(oad?i18n("Not on all desktops"):i18n("On all desktops") );
-                      btn->setToggleButton(true);
-                      btn->setOn( oad );
-                      connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
+                        m_button[MenuButton] = btn;
+                    }
+                    break;
+                case 'S': // OnAllDesktops button
+                    if(!m_button[OnAllDesktopsButton])
+                    {
+                        btn = createButton(OnAllDesktopsButton);
+                        if(!btn)
+                            break;
+                        const bool oad = isOnAllDesktops();
+                        btn->setTipText(oad ? i18n("Not on all desktops") : i18n("On all desktops"));
+                        btn->setToggleButton(true);
+                        btn->setOn(oad);
+                        connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
 
-                      m_button[OnAllDesktopsButton] = btn;
-                  }
-                  break;
-              case 'H': // Help button
-                  if ((!m_button[HelpButton]) && providesContextHelp()){
-                      btn = createButton(HelpButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Help") );
-                      connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
+                        m_button[OnAllDesktopsButton] = btn;
+                    }
+                    break;
+                case 'H': // Help button
+                    if((!m_button[HelpButton]) && providesContextHelp())
+                    {
+                        btn = createButton(HelpButton);
+                        if(!btn)
+                            break;
+                        btn->setTipText(i18n("Help"));
+                        connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
 
-                      m_button[HelpButton] = btn;
-                  }
-                  break;
-              case 'I': // Minimize button
-                  if ((!m_button[MinButton]) && isMinimizable()){
-                      btn = createButton(MinButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Minimize") );
-                      connect(btn, SIGNAL(clicked()), SLOT(minimize()));
+                        m_button[HelpButton] = btn;
+                    }
+                    break;
+                case 'I': // Minimize button
+                    if((!m_button[MinButton]) && isMinimizable())
+                    {
+                        btn = createButton(MinButton);
+                        if(!btn)
+                            break;
+                        btn->setTipText(i18n("Minimize"));
+                        connect(btn, SIGNAL(clicked()), SLOT(minimize()));
 
-                      m_button[MinButton] = btn;
-                  }
-                  break;
-              case 'A': // Maximize button
-                  if ((!m_button[MaxButton]) && isMaximizable()){
-                      btn = createButton(MaxButton);
-                      if (!btn) break;
-                      btn->setRealizeButtons(LeftButton|MidButton|RightButton);
-                      const bool max = maximizeMode()==MaximizeFull;
-                      btn->setTipText(max?i18n("Restore"):i18n("Maximize") );
-                      btn->setToggleButton(true);
-                      btn->setOn( max );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
+                        m_button[MinButton] = btn;
+                    }
+                    break;
+                case 'A': // Maximize button
+                    if((!m_button[MaxButton]) && isMaximizable())
+                    {
+                        btn = createButton(MaxButton);
+                        if(!btn)
+                            break;
+                        btn->setRealizeButtons(LeftButton | MidButton | RightButton);
+                        const bool max = maximizeMode() == MaximizeFull;
+                        btn->setTipText(max ? i18n("Restore") : i18n("Maximize"));
+                        btn->setToggleButton(true);
+                        btn->setOn(max);
+                        connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
 
-                      m_button[MaxButton] = btn;
-                  }
-                  break;
-              case 'X': // Close button
-                  if ((!m_button[CloseButton]) && isCloseable()){
-                      btn = createButton(CloseButton);
-                      if (!btn) break;
-                      btn->setTipText(i18n("Close") );
-                      connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
+                        m_button[MaxButton] = btn;
+                    }
+                    break;
+                case 'X': // Close button
+                    if((!m_button[CloseButton]) && isCloseable())
+                    {
+                        btn = createButton(CloseButton);
+                        if(!btn)
+                            break;
+                        btn->setTipText(i18n("Close"));
+                        connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
 
-                      m_button[CloseButton] = btn;
-                  }
-                  break;
-              case 'F': // AboveButton button
-                  if (!m_button[AboveButton]){
-                      btn = createButton(AboveButton);
-                      if (!btn) break;
-                      bool above = keepAbove();
-                      btn->setTipText(above?i18n("Do not keep above others"):i18n("Keep above others") );
-                      btn->setToggleButton(true);
-                      btn->setOn( above );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
+                        m_button[CloseButton] = btn;
+                    }
+                    break;
+                case 'F': // AboveButton button
+                    if(!m_button[AboveButton])
+                    {
+                        btn = createButton(AboveButton);
+                        if(!btn)
+                            break;
+                        bool above = keepAbove();
+                        btn->setTipText(above ? i18n("Do not keep above others") : i18n("Keep above others"));
+                        btn->setToggleButton(true);
+                        btn->setOn(above);
+                        connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
 
-                      m_button[AboveButton] = btn;
-                  }
-                  break;
-              case 'B': // BelowButton button
-                  if (!m_button[BelowButton]){
-                      btn = createButton(BelowButton);
-                      if (!btn) break;
-                      bool below = keepBelow();
-                      btn->setTipText(below?i18n("Do not keep below others"):i18n("Keep below others") );
-                      btn->setToggleButton(true);
-                      btn->setOn( below );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
+                        m_button[AboveButton] = btn;
+                    }
+                    break;
+                case 'B': // BelowButton button
+                    if(!m_button[BelowButton])
+                    {
+                        btn = createButton(BelowButton);
+                        if(!btn)
+                            break;
+                        bool below = keepBelow();
+                        btn->setTipText(below ? i18n("Do not keep below others") : i18n("Keep below others"));
+                        btn->setToggleButton(true);
+                        btn->setOn(below);
+                        connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
 
-                      m_button[BelowButton] = btn;
-                  }
-                  break;
-              case 'L': // Shade button
-                  if ((!m_button[ShadeButton]) && isShadeable()){
-                      btn = createButton(ShadeButton);
-                      if (!btn) break;
-                      bool shaded = isSetShade();
-                      btn->setTipText(shaded?i18n("Unshade"):i18n("Shade") );
-                      btn->setToggleButton(true);
-                      btn->setOn( shaded );
-                      connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
+                        m_button[BelowButton] = btn;
+                    }
+                    break;
+                case 'L': // Shade button
+                    if((!m_button[ShadeButton]) && isShadeable())
+                    {
+                        btn = createButton(ShadeButton);
+                        if(!btn)
+                            break;
+                        bool shaded = isSetShade();
+                        btn->setTipText(shaded ? i18n("Unshade") : i18n("Shade"));
+                        btn->setToggleButton(true);
+                        btn->setOn(shaded);
+                        connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
 
-                      m_button[ShadeButton] = btn;
-                  }
-                  break;
-              case '_': // Spacer item
-                  btnContainer.append(0);
+                        m_button[ShadeButton] = btn;
+                    }
+                    break;
+                case '_': // Spacer item
+                    btnContainer.append(0);
             }
 
 
-            if (btn) {
+            if(btn)
+            {
                 btn->setLeft(isLeft);
-                btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn),layoutMetric(LM_ButtonHeight, true, btn)) );
+                btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn), layoutMetric(LM_ButtonHeight, true, btn)));
                 btn->show();
                 btnContainer.append(btn);
             }
-
         }
     }
 }
 
 void KCommonDecoration::calcHiddenButtons()
 {
-    if (width() == btnHideLastWidth)
+    if(width() == btnHideLastWidth)
         return;
 
     btnHideLastWidth = width();
 
-    //Hide buttons in the following order:
-    KCommonDecorationButton* btnArray[] = { m_button[HelpButton], m_button[ShadeButton], m_button[BelowButton],
-        m_button[AboveButton], m_button[OnAllDesktopsButton], m_button[MaxButton],
-        m_button[MinButton], m_button[MenuButton], m_button[CloseButton] };
-    const int buttonsCount = sizeof( btnArray ) / sizeof( btnArray[ 0 ] );
+    // Hide buttons in the following order:
+    KCommonDecorationButton *btnArray[] = {m_button[HelpButton],  m_button[ShadeButton],         m_button[BelowButton],
+                                           m_button[AboveButton], m_button[OnAllDesktopsButton], m_button[MaxButton],
+                                           m_button[MinButton],   m_button[MenuButton],          m_button[CloseButton]};
+    const int buttonsCount = sizeof(btnArray) / sizeof(btnArray[0]);
 
     int current_width = width();
     int count = 0;
 
     // Hide buttons
-    while (current_width < btnHideMinWidth && count < buttonsCount)
+    while(current_width < btnHideMinWidth && count < buttonsCount)
     {
-        if (btnArray[count] ) {
+        if(btnArray[count])
+        {
             current_width += btnArray[count]->width();
-            if (btnArray[count]->isVisible() )
+            if(btnArray[count]->isVisible())
                 btnArray[count]->hide();
         }
         count++;
@@ -475,9 +517,10 @@ void KCommonDecoration::calcHiddenButtons()
     // Show the rest of the buttons...
     for(int i = count; i < buttonsCount; i++)
     {
-        if (btnArray[i] ) {
+        if(btnArray[i])
+        {
 
-            if (! btnArray[i]->isHidden() )
+            if(!btnArray[i]->isHidden())
                 break; // all buttons shown...
 
             btnArray[i]->show();
@@ -487,34 +530,31 @@ void KCommonDecoration::calcHiddenButtons()
 
 void KCommonDecoration::show()
 {
-    if (decorationBehaviour(DB_ButtonHide) )
+    if(decorationBehaviour(DB_ButtonHide))
         calcHiddenButtons();
     widget()->show();
 }
 
-void KCommonDecoration::resize( const QSize& s )
+void KCommonDecoration::resize(const QSize &s)
 {
-    widget()->resize( s );
+    widget()->resize(s);
 }
 
 QSize KCommonDecoration::minimumSize() const
 {
     const int minWidth = QMAX(layoutMetric(LM_TitleEdgeLeft), layoutMetric(LM_BorderLeft))
-            +QMAX(layoutMetric(LM_TitleEdgeRight), layoutMetric(LM_BorderRight))
-            +layoutMetric(LM_TitleBorderLeft)+layoutMetric(LM_TitleBorderRight);
+                         + QMAX(layoutMetric(LM_TitleEdgeRight), layoutMetric(LM_BorderRight)) + layoutMetric(LM_TitleBorderLeft)
+                         + layoutMetric(LM_TitleBorderRight);
     return QSize(minWidth,
-                 layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)
-                         +layoutMetric(LM_TitleEdgeBottom)
-                         +layoutMetric(LM_BorderBottom) );
+                 layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeBottom) + layoutMetric(LM_BorderBottom));
 }
 
 void KCommonDecoration::maximizeChange()
 {
-    if( m_button[MaxButton] ) {
-        m_button[MaxButton]->setOn( maximizeMode()==MaximizeFull);
-        m_button[MaxButton]->setTipText( (maximizeMode()!=MaximizeFull) ?
-                i18n("Maximize")
-            : i18n("Restore"));
+    if(m_button[MaxButton])
+    {
+        m_button[MaxButton]->setOn(maximizeMode() == MaximizeFull);
+        m_button[MaxButton]->setTipText((maximizeMode() != MaximizeFull) ? i18n("Maximize") : i18n("Restore"));
         m_button[MaxButton]->reset(KCommonDecorationButton::StateChange);
     }
     updateWindowShape();
@@ -523,30 +563,28 @@ void KCommonDecoration::maximizeChange()
 
 void KCommonDecoration::desktopChange()
 {
-    if ( m_button[OnAllDesktopsButton] ) {
-        m_button[OnAllDesktopsButton]->setOn( isOnAllDesktops() );
-        m_button[OnAllDesktopsButton]->setTipText( isOnAllDesktops() ?
-                i18n("Not on all desktops")
-            : i18n("On all desktops"));
+    if(m_button[OnAllDesktopsButton])
+    {
+        m_button[OnAllDesktopsButton]->setOn(isOnAllDesktops());
+        m_button[OnAllDesktopsButton]->setTipText(isOnAllDesktops() ? i18n("Not on all desktops") : i18n("On all desktops"));
         m_button[OnAllDesktopsButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
 void KCommonDecoration::shadeChange()
 {
-    if ( m_button[ShadeButton] ) {
+    if(m_button[ShadeButton])
+    {
         bool shaded = isSetShade();
-        m_button[ShadeButton]->setOn( shaded );
-        m_button[ShadeButton]->setTipText( shaded ?
-                i18n("Unshade")
-            : i18n("Shade"));
+        m_button[ShadeButton]->setOn(shaded);
+        m_button[ShadeButton]->setTipText(shaded ? i18n("Unshade") : i18n("Shade"));
         m_button[ShadeButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
 void KCommonDecoration::iconChange()
 {
-    if (m_button[MenuButton])
+    if(m_button[MenuButton])
     {
         m_button[MenuButton]->update();
         m_button[MenuButton]->reset(KCommonDecorationButton::IconChange);
@@ -566,77 +604,78 @@ void KCommonDecoration::captionChange()
 
 void KCommonDecoration::keepAboveChange(bool above)
 {
-    if (m_button[AboveButton])
+    if(m_button[AboveButton])
     {
         m_button[AboveButton]->setOn(above);
-        m_button[AboveButton]->setTipText( above?i18n("Do not keep above others"):i18n("Keep above others") );
+        m_button[AboveButton]->setTipText(above ? i18n("Do not keep above others") : i18n("Keep above others"));
         m_button[AboveButton]->reset(KCommonDecorationButton::StateChange);
     }
 
-    if (m_button[BelowButton] && m_button[BelowButton]->isOn())
+    if(m_button[BelowButton] && m_button[BelowButton]->isOn())
     {
         m_button[BelowButton]->setOn(false);
-        m_button[BelowButton]->setTipText( i18n("Keep below others") );
+        m_button[BelowButton]->setTipText(i18n("Keep below others"));
         m_button[BelowButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
 void KCommonDecoration::keepBelowChange(bool below)
 {
-    if (m_button[BelowButton])
+    if(m_button[BelowButton])
     {
         m_button[BelowButton]->setOn(below);
-        m_button[BelowButton]->setTipText( below?i18n("Do not keep below others"):i18n("Keep below others") );
+        m_button[BelowButton]->setTipText(below ? i18n("Do not keep below others") : i18n("Keep below others"));
         m_button[BelowButton]->reset(KCommonDecorationButton::StateChange);
     }
 
-    if (m_button[AboveButton] && m_button[AboveButton]->isOn())
+    if(m_button[AboveButton] && m_button[AboveButton]->isOn())
     {
         m_button[AboveButton]->setOn(false);
-        m_button[AboveButton]->setTipText( i18n("Keep above others") );
+        m_button[AboveButton]->setTipText(i18n("Keep above others"));
         m_button[AboveButton]->reset(KCommonDecorationButton::StateChange);
     }
 }
 
 void KCommonDecoration::slotMaximize()
 {
-    if (m_button[MaxButton])
+    if(m_button[MaxButton])
     {
-        maximize(m_button[MaxButton]->lastMousePress() );
+        maximize(m_button[MaxButton]->lastMousePress());
     }
 }
 
 void KCommonDecoration::slotShade()
 {
-    setShade( !isSetShade() );
+    setShade(!isSetShade());
 }
 
 void KCommonDecoration::slotKeepAbove()
 {
-    setKeepAbove(!keepAbove() );
+    setKeepAbove(!keepAbove());
 }
 
 void KCommonDecoration::slotKeepBelow()
 {
-    setKeepBelow(!keepBelow() );
+    setKeepBelow(!keepBelow());
 }
 
 void KCommonDecoration::menuButtonPressed()
 {
-    static QTime* t = NULL;
-    static KCommonDecoration* lastClient = NULL;
-    if (t == NULL)
+    static QTime *t = NULL;
+    static KCommonDecoration *lastClient = NULL;
+    if(t == NULL)
         t = new QTime;
-    bool dbl = (lastClient==this && t->elapsed() <= QApplication::doubleClickInterval());
+    bool dbl = (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval());
     lastClient = this;
     t->start();
-    if (!dbl || !decorationBehaviour(DB_MenuClose) ) {
+    if(!dbl || !decorationBehaviour(DB_MenuClose))
+    {
         QRect menuRect = m_button[MenuButton]->rect();
         QPoint menutop = m_button[MenuButton]->mapToGlobal(menuRect.topLeft());
-        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight())+QPoint(0,2);
-        KDecorationFactory* f = factory();
+        QPoint menubottom = m_button[MenuButton]->mapToGlobal(menuRect.bottomRight()) + QPoint(0, 2);
+        KDecorationFactory *f = factory();
         showWindowMenu(QRect(menutop, menubottom));
-        if( !f->exists( this )) // 'this' was deleted
+        if(!f->exists(this)) // 'this' was deleted
             return;
         m_button[MenuButton]->setDown(false);
     }
@@ -650,9 +689,9 @@ void KCommonDecoration::menuButtonReleased()
         closeWindow();
 }
 
-void KCommonDecoration::resizeEvent(QResizeEvent */*e*/)
+void KCommonDecoration::resizeEvent(QResizeEvent * /*e*/)
 {
-    if (decorationBehaviour(DB_ButtonHide) )
+    if(decorationBehaviour(DB_ButtonHide))
         calcHiddenButtons();
 
     updateLayout();
@@ -660,7 +699,7 @@ void KCommonDecoration::resizeEvent(QResizeEvent */*e*/)
     updateWindowShape();
     // FIXME: don't update() here! this would result in two paintEvent()s
     // because there is already "something" else triggering the repaint...
-//     widget()->update();
+    //     widget()->update();
 }
 
 void KCommonDecoration::moveWidget(int x, int y, QWidget *widget) const
@@ -669,8 +708,8 @@ void KCommonDecoration::moveWidget(int x, int y, QWidget *widget) const
     int oldX = p.y();
     int oldY = p.x();
 
-    if (x!=oldX || y!=oldY)
-        widget->move(x,y);
+    if(x != oldX || y != oldY)
+        widget->move(x, y);
 }
 
 void KCommonDecoration::resizeWidget(int w, int h, QWidget *widget) const
@@ -679,32 +718,32 @@ void KCommonDecoration::resizeWidget(int w, int h, QWidget *widget) const
     int oldW = s.width();
     int oldH = s.height();
 
-    if (w!=oldW || h!=oldH)
-        widget->resize(w,h);
+    if(w != oldW || h != oldH)
+        widget->resize(w, h);
 }
 
 void KCommonDecoration::mouseDoubleClickEvent(QMouseEvent *e)
 {
-    if( e->button() != LeftButton )
+    if(e->button() != LeftButton)
         return;
 
-    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
+    int tb = layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeBottom);
     // when shaded, react on double clicks everywhere to make it easier to unshade. otherwise
     // react only on double clicks in the title bar region...
-    if (isSetShade() || e->pos().y() <= tb )
+    if(isSetShade() || e->pos().y() <= tb)
         titlebarDblClickOperation();
 }
 
 void KCommonDecoration::wheelEvent(QWheelEvent *e)
 {
-    int tb = layoutMetric(LM_TitleEdgeTop)+layoutMetric(LM_TitleHeight)+layoutMetric(LM_TitleEdgeBottom);
-    if (isSetShade() || e->pos().y() <= tb )
-        titlebarMouseWheelOperation( e->delta());
+    int tb = layoutMetric(LM_TitleEdgeTop) + layoutMetric(LM_TitleHeight) + layoutMetric(LM_TitleEdgeBottom);
+    if(isSetShade() || e->pos().y() <= tb)
+        titlebarMouseWheelOperation(e->delta());
 }
 
 KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point) const
 {
-    const int corner = 18+3*layoutMetric(LM_BorderBottom, false)/2;
+    const int corner = 18 + 3 * layoutMetric(LM_BorderBottom, false) / 2;
     Position pos = PositionCenter;
 
     QRect r = widget()->rect();
@@ -713,7 +752,7 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
     int p_x = point.x();
     int p_y = point.y();
     const int borderLeft = layoutMetric(LM_BorderLeft);
-//     const int borderRight = layoutMetric(LM_BorderRight);
+    //     const int borderRight = layoutMetric(LM_BorderRight);
     const int borderBottom = layoutMetric(LM_BorderBottom);
     const int titleHeight = layoutMetric(LM_TitleHeight);
     const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
@@ -721,44 +760,54 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
     const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
     const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);
 
-    const int borderBottomTop = r_y2-borderBottom+1;
-    const int borderLeftRight = r_x+borderLeft-1;
-//     const int borderRightLeft = r_x2-borderRight+1;
-    const int titleEdgeLeftRight = r_x+titleEdgeLeft-1;
-    const int titleEdgeRightLeft = r_x2-titleEdgeRight+1;
-    const int titleEdgeBottomBottom = r_y+titleEdgeTop+titleHeight+titleEdgeBottom-1;
-    const int titleEdgeTopBottom = r_y+titleEdgeTop-1;
+    const int borderBottomTop = r_y2 - borderBottom + 1;
+    const int borderLeftRight = r_x + borderLeft - 1;
+    //     const int borderRightLeft = r_x2-borderRight+1;
+    const int titleEdgeLeftRight = r_x + titleEdgeLeft - 1;
+    const int titleEdgeRightLeft = r_x2 - titleEdgeRight + 1;
+    const int titleEdgeBottomBottom = r_y + titleEdgeTop + titleHeight + titleEdgeBottom - 1;
+    const int titleEdgeTopBottom = r_y + titleEdgeTop - 1;
 
-    if (p_y <= titleEdgeTopBottom) {
-        if (p_x <= r_x+corner)
+    if(p_y <= titleEdgeTopBottom)
+    {
+        if(p_x <= r_x + corner)
             pos = PositionTopLeft;
-        else if (p_x >= r_x2-corner)
+        else if(p_x >= r_x2 - corner)
             pos = PositionTopRight;
         else
             pos = PositionTop;
-    } else if (p_y <= titleEdgeBottomBottom) {
-        if (p_x <= titleEdgeLeftRight)
+    }
+    else if(p_y <= titleEdgeBottomBottom)
+    {
+        if(p_x <= titleEdgeLeftRight)
             pos = PositionTopLeft;
-        else if (p_x >= titleEdgeRightLeft)
+        else if(p_x >= titleEdgeRightLeft)
             pos = PositionTopRight;
         else
             pos = PositionCenter; // title bar
-    } else if (p_y < borderBottomTop) {
-        if      (p_y < r_y2-corner) {
-            if (p_x <= borderLeftRight)
+    }
+    else if(p_y < borderBottomTop)
+    {
+        if(p_y < r_y2 - corner)
+        {
+            if(p_x <= borderLeftRight)
                 pos = PositionLeft;
             else
                 pos = PositionRight;
-        } else {
-            if (p_x <= borderLeftRight)
+        }
+        else
+        {
+            if(p_x <= borderLeftRight)
                 pos = PositionBottomLeft;
             else
                 pos = PositionBottomRight;
         }
-    } else if(p_y >= borderBottomTop) {
-        if (p_x <= r_x+corner)
+    }
+    else if(p_y >= borderBottomTop)
+    {
+        if(p_x <= r_x + corner)
             pos = PositionBottomLeft;
-        else if (p_x >= r_x2-corner)
+        else if(p_x >= r_x2 - corner)
             pos = PositionBottomRight;
         else
             pos = PositionBottom;
@@ -770,25 +819,29 @@ KCommonDecoration::Position KCommonDecoration::mousePosition(const QPoint &point
 void KCommonDecoration::updateWindowShape()
 {
     // don't mask the widget...
-    if (!decorationBehaviour(DB_WindowMask) )
+    if(!decorationBehaviour(DB_WindowMask))
         return;
 
     int w = widget()->width();
     int h = widget()->height();
 
-    bool tl=true,tr=true,bl=true,br=true; // is there a transparent rounded corner in top-left? etc
+    bool tl = true, tr = true, bl = true, br = true; // is there a transparent rounded corner in top-left? etc
 
-    QDesktopWidget *desktop=KApplication::desktop();
+    QDesktopWidget *desktop = KApplication::desktop();
     // no transparent rounded corners if this window corner lines up with a screen corner
-    for(int screen=0; screen < desktop->numScreens(); ++screen)
+    for(int screen = 0; screen < desktop->numScreens(); ++screen)
     {
         QRect fullscreen(desktop->screenGeometry(screen));
         QRect window = geometry();
 
-        if(window.topLeft()    == fullscreen.topLeft() ) tl = false;
-        if(window.topRight()   == fullscreen.topRight() ) tr = false;
-        if(window.bottomLeft() == fullscreen.bottomLeft() ) bl = false;
-        if(window.bottomRight()== fullscreen.bottomRight() ) br = false;
+        if(window.topLeft() == fullscreen.topLeft())
+            tl = false;
+        if(window.topRight() == fullscreen.topRight())
+            tr = false;
+        if(window.bottomLeft() == fullscreen.bottomLeft())
+            bl = false;
+        if(window.bottomRight() == fullscreen.bottomRight())
+            br = false;
     }
 
     QRegion mask(0, 0, w, h);
@@ -803,7 +856,7 @@ void KCommonDecoration::updateWindowShape()
     {
         mask -= cornerShape(WC_TopRight);
     }
-        // Remove top-left corner.
+    // Remove top-left corner.
     if(bl)
     {
         mask -= cornerShape(WC_BottomLeft);
@@ -814,43 +867,42 @@ void KCommonDecoration::updateWindowShape()
         mask -= cornerShape(WC_BottomRight);
     }
 
-    setMask( mask );
+    setMask(mask);
 }
 
-bool KCommonDecoration::eventFilter( QObject* o, QEvent* e )
+bool KCommonDecoration::eventFilter(QObject *o, QEvent *e)
 {
-    if( o != widget())
+    if(o != widget())
         return false;
-    switch( e->type())
+    switch(e->type())
     {
         case QEvent::Resize:
-            resizeEvent(static_cast<QResizeEvent*>(e) );
+            resizeEvent(static_cast< QResizeEvent * >(e));
             return true;
         case QEvent::Paint:
-            paintEvent( static_cast< QPaintEvent* >( e ));
+            paintEvent(static_cast< QPaintEvent * >(e));
             return true;
         case QEvent::MouseButtonDblClick:
-            mouseDoubleClickEvent( static_cast< QMouseEvent* >( e ));
+            mouseDoubleClickEvent(static_cast< QMouseEvent * >(e));
             return true;
         case QEvent::MouseButtonPress:
-            processMousePressEvent( static_cast< QMouseEvent* >( e ));
+            processMousePressEvent(static_cast< QMouseEvent * >(e));
             return true;
         case QEvent::Wheel:
-            wheelEvent( static_cast< QWheelEvent* >( e ));
+            wheelEvent(static_cast< QWheelEvent * >(e));
             return true;
         default:
             return false;
     }
 }
 
-const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask
-        | NET::ToolbarMask | NET::MenuMask | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask
-        | NET::UtilityMask | NET::SplashMask;
+const int SUPPORTED_WINDOW_TYPES_MASK = NET::NormalMask | NET::DesktopMask | NET::DockMask | NET::ToolbarMask | NET::MenuMask
+                                        | NET::DialogMask /*| NET::OverrideMask*/ | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask;
 
 bool KCommonDecoration::isToolWindow() const
 {
-    NET::WindowType type = windowType( SUPPORTED_WINDOW_TYPES_MASK );
-    return ((type==NET::Toolbar)||(type==NET::Utility)||(type==NET::Menu));
+    NET::WindowType type = windowType(SUPPORTED_WINDOW_TYPES_MASK);
+    return ((type == NET::Toolbar) || (type == NET::Utility) || (type == NET::Menu));
 }
 
 QRect KCommonDecoration::titleRect() const
@@ -864,20 +916,15 @@ QRect KCommonDecoration::titleRect() const
     const int titleBorderLeft = layoutMetric(LM_TitleBorderLeft);
     const int titleBorderRight = layoutMetric(LM_TitleBorderRight);
     const int ttlHeight = layoutMetric(LM_TitleHeight);
-    const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
-    return QRect(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft, r_y+titleEdgeTop,
-              r_x2-titleEdgeRight-buttonsRightWidth()-titleBorderRight-(r_x+titleEdgeLeft+buttonsLeftWidth()+titleBorderLeft),
-              titleEdgeBottomBottom-(r_y+titleEdgeTop) );
+    const int titleEdgeBottomBottom = r_y + titleEdgeTop + ttlHeight + titleEdgeBottom - 1;
+    return QRect(r_x + titleEdgeLeft + buttonsLeftWidth() + titleBorderLeft, r_y + titleEdgeTop,
+                 r_x2 - titleEdgeRight - buttonsRightWidth() - titleBorderRight - (r_x + titleEdgeLeft + buttonsLeftWidth() + titleBorderLeft),
+                 titleEdgeBottomBottom - (r_y + titleEdgeTop));
 }
 
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent, const char *name)
-    : QButton(parent->widget(), name),
-        m_decoration(parent),
-        m_type(type),
-        m_realizeButtons(LeftButton),
-        m_lastMouse(NoButton),
-        m_isLeft(true)
+    : QButton(parent->widget(), name), m_decoration(parent), m_type(type), m_realizeButtons(LeftButton), m_lastMouse(NoButton), m_isLeft(true)
 {
     setCursor(ArrowCursor);
 }
@@ -913,7 +960,8 @@ void KCommonDecorationButton::setRealizeButtons(int btns)
 
 void KCommonDecorationButton::setSize(const QSize &s)
 {
-    if (!m_size.isValid() || s != size() ) {
+    if(!m_size.isValid() || s != size())
+    {
         m_size = s;
 
         setFixedSize(m_size);
@@ -926,9 +974,10 @@ QSize KCommonDecorationButton::sizeHint() const
     return m_size;
 }
 
-void KCommonDecorationButton::setTipText(const QString &tip) {
-    QToolTip::remove(this );
-    QToolTip::add(this, tip );
+void KCommonDecorationButton::setTipText(const QString &tip)
+{
+    QToolTip::remove(this);
+    QToolTip::add(this, tip);
 }
 
 void KCommonDecorationButton::setToggleButton(bool toggle)
@@ -939,28 +988,27 @@ void KCommonDecorationButton::setToggleButton(bool toggle)
 
 void KCommonDecorationButton::setOn(bool on)
 {
-    if (on != isOn() ) {
+    if(on != isOn())
+    {
         QButton::setOn(on);
         reset(StateChange);
     }
 }
 
-void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
+void KCommonDecorationButton::mousePressEvent(QMouseEvent *e)
 {
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(), (e->button() & m_realizeButtons) ? LeftButton : NoButton, e->state());
 
     QButton::mousePressEvent(&me);
 }
 
-void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
+void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent *e)
 {
     m_lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), e->globalPos(),
-                   (e->button()&m_realizeButtons)?LeftButton:NoButton, e->state());
+    QMouseEvent me(e->type(), e->pos(), e->globalPos(), (e->button() & m_realizeButtons) ? LeftButton : NoButton, e->state());
 
     QButton::mouseReleaseEvent(&me);
 }

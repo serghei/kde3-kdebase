@@ -32,68 +32,56 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ShutUpCompiler;
 
-class UserRectSel : public QWidget
-{
-  Q_OBJECT
+class UserRectSel : public QWidget {
+    Q_OBJECT
 
+public:
+    class PanelStrut {
     public:
-        class PanelStrut
+        PanelStrut() : m_screen(-1), m_pos(KPanelExtension::Bottom), m_alignment(KPanelExtension::LeftTop)
         {
-            public:
-                PanelStrut()
-                    : m_screen(-1),
-                      m_pos(KPanelExtension::Bottom),
-                      m_alignment(KPanelExtension::LeftTop)
-                {
-                }
+        }
 
-                PanelStrut(const QRect& rect, int XineramaScreen,
-                           KPanelExtension::Position pos,
-                           KPanelExtension::Alignment alignment)
-                    : m_rect(rect),
-                      m_screen(XineramaScreen),
-                      m_pos(pos),
-                      m_alignment(alignment)
-                {
-                }
+        PanelStrut(const QRect &rect, int XineramaScreen, KPanelExtension::Position pos, KPanelExtension::Alignment alignment)
+            : m_rect(rect), m_screen(XineramaScreen), m_pos(pos), m_alignment(alignment)
+        {
+        }
 
-                bool operator==(const PanelStrut& rhs)
-                {
-                    return m_screen == rhs.m_screen &&
-                           m_pos == rhs.m_pos &&
-                           m_alignment == rhs.m_alignment;
-                }
+        bool operator==(const PanelStrut &rhs)
+        {
+            return m_screen == rhs.m_screen && m_pos == rhs.m_pos && m_alignment == rhs.m_alignment;
+        }
 
-                bool operator!=(const PanelStrut& rhs)
-                {
-                    return !(*this == rhs);
-                }
+        bool operator!=(const PanelStrut &rhs)
+        {
+            return !(*this == rhs);
+        }
 
-                QRect m_rect;
-                int m_screen;
-                KPanelExtension::Position m_pos;
-                KPanelExtension::Alignment m_alignment;
-        };
+        QRect m_rect;
+        int m_screen;
+        KPanelExtension::Position m_pos;
+        KPanelExtension::Alignment m_alignment;
+    };
 
-        typedef QValueVector<PanelStrut> RectList;
-        static PanelStrut select(const RectList& rects, const QPoint& _offset, const QColor& color);
+    typedef QValueVector< PanelStrut > RectList;
+    static PanelStrut select(const RectList &rects, const QPoint &_offset, const QColor &color);
 
-    protected:
-        void mouseReleaseEvent(QMouseEvent *);
-        void mouseMoveEvent(QMouseEvent *);
+protected:
+    void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 
-    private:
-        UserRectSel(const RectList& rects, const QPoint& _offset, const QColor& color);
-        ~UserRectSel();
-        void paintCurrent();
+private:
+    UserRectSel(const RectList &rects, const QPoint &_offset, const QColor &color);
+    ~UserRectSel();
+    void paintCurrent();
 
-        const RectList rectangles;
-        PanelStrut current;
-        QPoint offset;
-        QWidget *_frame[8];
-        QColor _color;
+    const RectList rectangles;
+    PanelStrut current;
+    QPoint offset;
+    QWidget *_frame[8];
+    QColor _color;
 
-        friend class ShutUpCompiler;
+    friend class ShutUpCompiler;
 };
 
 #endif

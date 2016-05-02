@@ -25,55 +25,65 @@
 #include <kconfig.h>
 #include <kcmodule.h>
 
-class DesktopBehavior : public DesktopBehaviorBase
-{
-        Q_OBJECT
+class DesktopBehavior : public DesktopBehaviorBase {
+    Q_OBJECT
 public:
-        DesktopBehavior(KConfig *config, QWidget *parent = 0L, const char *name = 0L );
-        virtual void load();
-        virtual void load( bool useDefaults );
-        virtual void save();
-        virtual void defaults();
-        virtual QString quickHelp() const;
-        friend class DesktopBehaviorPreviewItem;
-	friend class DesktopBehaviorMediaItem;
+    DesktopBehavior(KConfig *config, QWidget *parent = 0L, const char *name = 0L);
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
+    virtual QString quickHelp() const;
+    friend class DesktopBehaviorPreviewItem;
+    friend class DesktopBehaviorMediaItem;
 
 signals:
-        void changed();
+    void changed();
 
 private slots:
-        void enableChanged();
-	void comboBoxChanged();
-	void editButtonPressed();
+    void enableChanged();
+    void comboBoxChanged();
+    void editButtonPressed();
 
 private:
-        KConfig *g_pConfig;
+    KConfig *g_pConfig;
 
-	void fillMediaListView();
-	void saveMediaListView();
+    void fillMediaListView();
+    void saveMediaListView();
 
-        // Combo for the menus
-        void fillMenuCombo( QComboBox * combo );
+    // Combo for the menus
+    void fillMenuCombo(QComboBox *combo);
 
-        typedef enum { NOTHING = 0, WINDOWLISTMENU, DESKTOPMENU, APPMENU, BOOKMARKSMENU=12 } menuChoice;
-        bool m_bHasMedia;
+    typedef enum { NOTHING = 0, WINDOWLISTMENU, DESKTOPMENU, APPMENU, BOOKMARKSMENU = 12 } menuChoice;
+    bool m_bHasMedia;
 };
 
-class DesktopBehaviorModule : public KCModule
-{
-        Q_OBJECT
+class DesktopBehaviorModule : public KCModule {
+    Q_OBJECT
 
 public:
-        DesktopBehaviorModule(KConfig *config, QWidget *parent = 0L, const char *name = 0L );
-        virtual void load() { m_behavior->load(); emit KCModule::changed( false ); }
-        virtual void save() { m_behavior->save(); emit KCModule::changed( false ); }
-        virtual void defaults() { m_behavior->defaults(); emit KCModule::changed( true ); }
+    DesktopBehaviorModule(KConfig *config, QWidget *parent = 0L, const char *name = 0L);
+    virtual void load()
+    {
+        m_behavior->load();
+        emit KCModule::changed(false);
+    }
+    virtual void save()
+    {
+        m_behavior->save();
+        emit KCModule::changed(false);
+    }
+    virtual void defaults()
+    {
+        m_behavior->defaults();
+        emit KCModule::changed(true);
+    }
 
 private slots:
-        void changed();
+    void changed();
 
 private:
-        DesktopBehavior* m_behavior;
+    DesktopBehavior *m_behavior;
 };
 
 #endif

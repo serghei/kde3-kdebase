@@ -23,32 +23,31 @@
 
 #include "installer.h"
 
-class KSplashThemeMgr : public KCModule
-{
+class KSplashThemeMgr : public KCModule {
 public:
-  KSplashThemeMgr( QWidget *parent, const char *name, const QStringList &/*unused*/);
-  ~KSplashThemeMgr();
+    KSplashThemeMgr(QWidget *parent, const char *name, const QStringList & /*unused*/);
+    ~KSplashThemeMgr();
 
-  QString quickHelp() const;
+    QString quickHelp() const;
 
-  virtual void init();
-  virtual void save();
-  virtual void load();
-  virtual void defaults();
+    virtual void init();
+    virtual void save();
+    virtual void load();
+    virtual void defaults();
 
 private:
-  SplashInstaller *mInstaller;
+    SplashInstaller *mInstaller;
 };
 
 typedef KGenericFactory< KSplashThemeMgr, QWidget > KSplashThemeMgrFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_ksplashthemes, KSplashThemeMgrFactory("ksplashthemes") )
+K_EXPORT_COMPONENT_FACTORY(kcm_ksplashthemes, KSplashThemeMgrFactory("ksplashthemes"))
 
 // -----------------------------------------------------------------------------------------
 
-KSplashThemeMgr::KSplashThemeMgr( QWidget *parent, const char *name, const QStringList &)
-  : KCModule( KSplashThemeMgrFactory::instance(), parent, name ), mInstaller(new SplashInstaller(this))
+KSplashThemeMgr::KSplashThemeMgr(QWidget *parent, const char *name, const QStringList &)
+    : KCModule(KSplashThemeMgrFactory::instance(), parent, name), mInstaller(new SplashInstaller(this))
 {
-  init();
+    init();
 
 #if 0
   QHBoxLayout *box = new QHBoxLayout(this);
@@ -56,50 +55,46 @@ KSplashThemeMgr::KSplashThemeMgr( QWidget *parent, const char *name, const QStri
   box->addWidget(tab);
   tab->addTab( mInstaller, i18n("&Theme Installer") );
 #else
-  QHBoxLayout *box = new QHBoxLayout(this, 0, 0);
-  box->addWidget(mInstaller);
+    QHBoxLayout *box = new QHBoxLayout(this, 0, 0);
+    box->addWidget(mInstaller);
 #endif
-  connect( mInstaller, SIGNAL(changed(bool)), SIGNAL(changed(bool)) );
-  KAboutData *about = new KAboutData( "kcmksplash"
-                                      ,I18N_NOOP("KDE splash screen theme manager")
-                                      ,"0.1"
-                                      ,0
-                                      ,KAboutData::License_GPL
-                                      ,I18N_NOOP("(c) 2003 KDE developers") );
-  about->addAuthor("Ravikiran Rajagopal", 0, "ravi@ee.eng.ohio-state.edu");
-  about->addCredit("Brian Ledbetter", I18N_NOOP("Original KSplash/ML author"), "brian@shadowcom.net");
-  about->addCredit(I18N_NOOP("KDE Theme Manager authors" ), I18N_NOOP("Original installer code") );
-  // Once string freeze is over, replace second argument with "Icon"
-  about->addCredit("Hans Karlsson", 0, "karlsson.h@home.se" );
-  setAboutData(about);
+    connect(mInstaller, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
+    KAboutData *about = new KAboutData("kcmksplash", I18N_NOOP("KDE splash screen theme manager"), "0.1", 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2003 KDE developers"));
+    about->addAuthor("Ravikiran Rajagopal", 0, "ravi@ee.eng.ohio-state.edu");
+    about->addCredit("Brian Ledbetter", I18N_NOOP("Original KSplash/ML author"), "brian@shadowcom.net");
+    about->addCredit(I18N_NOOP("KDE Theme Manager authors"), I18N_NOOP("Original installer code"));
+    // Once string freeze is over, replace second argument with "Icon"
+    about->addCredit("Hans Karlsson", 0, "karlsson.h@home.se");
+    setAboutData(about);
 }
 
 KSplashThemeMgr::~KSplashThemeMgr()
 {
-  // Do not delete the installer as it is now owned by the tab widget.
+    // Do not delete the installer as it is now owned by the tab widget.
 }
 
 QString KSplashThemeMgr::quickHelp() const
 {
-  return i18n("<h1>Splash Screen Theme Manager </h1> Install and view splash screen themes.");
+    return i18n("<h1>Splash Screen Theme Manager </h1> Install and view splash screen themes.");
 }
 
 void KSplashThemeMgr::init()
 {
-  KGlobal::dirs()->addResourceType("ksplashthemes", KStandardDirs::kde_default("data") + "ksplash/Themes");
+    KGlobal::dirs()->addResourceType("ksplashthemes", KStandardDirs::kde_default("data") + "ksplash/Themes");
 }
 
 void KSplashThemeMgr::save()
 {
-  mInstaller->save();
+    mInstaller->save();
 }
 
 void KSplashThemeMgr::load()
 {
-  mInstaller->load();
+    mInstaller->load();
 }
 
 void KSplashThemeMgr::defaults()
 {
-  mInstaller->defaults();
+    mInstaller->defaults();
 }

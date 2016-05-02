@@ -20,15 +20,14 @@ class QLabel;
 class QDialog;
 class QProgressBar;
 
-class AutoLogout : public QDialog
-{
+class AutoLogout : public QDialog {
     Q_OBJECT
 
 public:
     AutoLogout(LockProcess *parent);
     ~AutoLogout();
     virtual void show();
- 
+
 protected:
     virtual void timerEvent(QTimerEvent *);
 
@@ -36,16 +35,15 @@ private slots:
     void slotActivity();
 
 private:
-    void        updateInfo(int);
-    QFrame      *frame;
+    void updateInfo(int);
+    QFrame *frame;
     QGridLayout *frameLayout;
-    QLabel      *mStatusLabel;
-    int         mCountdownTimerId;
-    int         mRemaining;
-    QTimer      countDownTimer;
+    QLabel *mStatusLabel;
+    int mCountdownTimerId;
+    int mRemaining;
+    QTimer countDownTimer;
     QProgressBar *mProgressRemaining;
     void logout();
 };
 
 #endif
-

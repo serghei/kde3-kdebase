@@ -29,47 +29,36 @@
 class NaughtyProcessMonitor;
 class QPushButton;
 
-class NaughtyApplet : public KPanelApplet
-{
-  Q_OBJECT
+class NaughtyApplet : public KPanelApplet {
+    Q_OBJECT
 
-  public:
-
-    NaughtyApplet
-      (
-       const QString & configFile,
-       Type t = Normal,
-       int actions = 0,
-       QWidget * parent = 0,
-       const char * name = 0
-      );
+public:
+    NaughtyApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
 
     ~NaughtyApplet();
 
     virtual int widthForHeight(int h) const;
     virtual int heightForWidth(int w) const;
 
-  signals:
+signals:
 
     void layoutChanged();
 
-  protected slots:
+protected slots:
 
-    void slotWarn(ulong pid, const QString & name);
+    void slotWarn(ulong pid, const QString &name);
     void slotLoad(uint);
     void slotPreferences();
 
-  protected:
-
+protected:
     virtual void about();
     virtual void preferences();
     virtual void loadSettings();
     virtual void saveSettings();
 
-  private:
-
-    NaughtyProcessMonitor * monitor_;
-    SimpleButton * button_;
+private:
+    NaughtyProcessMonitor *monitor_;
+    SimpleButton *button_;
     QStringList ignoreList_;
 };
 

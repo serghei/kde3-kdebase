@@ -20,24 +20,24 @@
 #ifndef KSG_ACPI_H
 #define KSG_ACPI_H
 
-void initAcpi( struct SensorModul* );
-void exitAcpi( void );
+void initAcpi(struct SensorModul *);
+void exitAcpi(void);
 
-int updateAcpi( void );
+int updateAcpi(void);
 
-void initAcpiBattery( struct SensorModul* );
+void initAcpiBattery(struct SensorModul *);
 int updateAcpiBattery(void);
-void printAcpiBatFill( const char* );
-void printAcpiBatFillInfo( const char* );
-void printAcpiBatUsage( const char* );
-void printAcpiBatUsageInfo( const char* );
+void printAcpiBatFill(const char *);
+void printAcpiBatFillInfo(const char *);
+void printAcpiBatUsage(const char *);
+void printAcpiBatUsageInfo(const char *);
 
-void initAcpiThermal( struct SensorModul * );
+void initAcpiThermal(struct SensorModul *);
 int updateAcpiThermal(void);
 void printThermalZoneTemperature(const char *cmd);
 void printThermalZoneTemperatureInfo(const char *cmd);
 
-void initAcpiFan( struct SensorModul * );
+void initAcpiFan(struct SensorModul *);
 int updateAcpiFan(void);
 void printFanState(const char *cmd);
 void printFanStateInfo(const char *cmd);

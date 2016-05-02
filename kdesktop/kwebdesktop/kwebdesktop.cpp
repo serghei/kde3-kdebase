@@ -38,45 +38,39 @@
 
 #include "kwebdesktop.moc"
 
-static KCmdLineOptions options[] =
-{
-  { "+width", I18N_NOOP("Width of the image to create"), 0 },
-  { "+height", I18N_NOOP("Height of the image to create"), 0 },
-  { "+file", I18N_NOOP("File sname where to dump the output in png format"), 0 },
-  { "+[URL]", I18N_NOOP("URL to open (if not specified, it is read from kwebdesktoprc)"), 0 },
-  KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+width", I18N_NOOP("Width of the image to create"), 0},
+                                    {"+height", I18N_NOOP("Height of the image to create"), 0},
+                                    {"+file", I18N_NOOP("File sname where to dump the output in png format"), 0},
+                                    {"+[URL]", I18N_NOOP("URL to open (if not specified, it is read from kwebdesktoprc)"), 0},
+                                    KCmdLineLastOption};
 
-KWebDesktopRun::KWebDesktopRun( KWebDesktop* webDesktop, const KURL & url )
-    : m_webDesktop(webDesktop), m_url(url)
+KWebDesktopRun::KWebDesktopRun(KWebDesktop *webDesktop, const KURL &url) : m_webDesktop(webDesktop), m_url(url)
 {
     kdDebug() << "KWebDesktopRun::KWebDesktopRun starting get" << endl;
-    KIO::Job * job = KIO::get(m_url, false, false);
-    connect( job, SIGNAL( result( KIO::Job *)),
-             this, SLOT( slotFinished(KIO::Job *)));
-    connect( job, SIGNAL( mimetype( KIO::Job *, const QString &)),
-             this, SLOT( slotMimetype(KIO::Job *, const QString &)));
+    KIO::Job *job = KIO::get(m_url, false, false);
+    connect(job, SIGNAL(result(KIO::Job *)), this, SLOT(slotFinished(KIO::Job *)));
+    connect(job, SIGNAL(mimetype(KIO::Job *, const QString &)), this, SLOT(slotMimetype(KIO::Job *, const QString &)));
 }
 
-void KWebDesktopRun::slotMimetype( KIO::Job *job, const QString &_type )
+void KWebDesktopRun::slotMimetype(KIO::Job *job, const QString &_type)
 {
-    KIO::SimpleJob *sjob = static_cast<KIO::SimpleJob *>(job);
+    KIO::SimpleJob *sjob = static_cast< KIO::SimpleJob * >(job);
     // Update our URL in case of a redirection
     m_url = sjob->url();
     QString type = _type; // necessary copy if we plan to use it
     sjob->putOnHold();
     kdDebug() << "slotMimetype : " << type << endl;
 
-    KParts::ReadOnlyPart* part = m_webDesktop->createPart( type );
+    KParts::ReadOnlyPart *part = m_webDesktop->createPart(type);
     // Now open the URL in the part
-    if ( part )
-        part->openURL( m_url );
+    if(part)
+        part->openURL(m_url);
 }
 
-void KWebDesktopRun::slotFinished( KIO::Job * job )
+void KWebDesktopRun::slotFinished(KIO::Job *job)
 {
     // The whole point of all this is to abort silently on error
-    if (job->error())
+    if(job->error())
     {
         kdDebug() << job->errorString() << endl;
         kapp->exit(1);
@@ -84,52 +78,49 @@ void KWebDesktopRun::slotFinished( KIO::Job * job )
 }
 
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
-    KAboutData data( "kwebdesktop", I18N_NOOP("KDE Web Desktop"),
-                     VERSION,
-                     I18N_NOOP("Displays an HTML page as the background of the desktop"),
-                     KAboutData::License_GPL,
-                     "(c) 2000, David Faure <faure@kde.org>" );
-    data.addAuthor( "David Faure", I18N_NOOP("developer and maintainer"), "faure@kde.org" );
+    KAboutData data("kwebdesktop", I18N_NOOP("KDE Web Desktop"), VERSION, I18N_NOOP("Displays an HTML page as the background of the desktop"),
+                    KAboutData::License_GPL, "(c) 2000, David Faure <faure@kde.org>");
+    data.addAuthor("David Faure", I18N_NOOP("developer and maintainer"), "faure@kde.org");
 
-    KCmdLineArgs::init( argc, argv, &data );
+    KCmdLineArgs::init(argc, argv, &data);
 
-    KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
+    KCmdLineArgs::addCmdLineOptions(options); // Add our own options.
 
     KApplication app;
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-    if ( args->count() != 3 && args->count() != 4 )
+    if(args->count() != 3 && args->count() != 4)
     {
-       args->usage();
-       return 1;
+        args->usage();
+        return 1;
     }
     const int width = QCString(args->arg(0)).toInt();
     const int height = QCString(args->arg(1)).toInt();
     QCString imageFile = args->arg(2);
     QString url;
-    if (args->count() == 4)
+    if(args->count() == 4)
         url = QString::fromLocal8Bit(args->arg(3));
 
-    KWebDesktop *webDesktop = new KWebDesktop( 0, imageFile, width, height );
+    KWebDesktop *webDesktop = new KWebDesktop(0, imageFile, width, height);
 
-    if (url.isEmpty())
-      url = KWebDesktopSettings::uRL();
+    if(url.isEmpty())
+        url = KWebDesktopSettings::uRL();
     // Apply uri filter
     KURIFilterData uridata = url;
-    KURIFilter::self()->filterURI( uridata );
+    KURIFilter::self()->filterURI(uridata);
     KURL u = uridata.uri();
 
     // Now start getting, to ensure mimetype and possible connection
-    KWebDesktopRun * run = new KWebDesktopRun( webDesktop, u );
+    KWebDesktopRun *run = new KWebDesktopRun(webDesktop, u);
 
     int ret = app.exec();
 
     KIO::SimpleJob::removeOnHold(); // Kill any slave that was put on hold.
     delete webDesktop;
     delete run;
-    //khtml::Cache::clear();
+    // khtml::Cache::clear();
 
     return ret;
 }
@@ -138,49 +129,50 @@ void KWebDesktop::slotCompleted()
 {
     kdDebug() << "KWebDesktop::slotCompleted" << endl;
     // Dump image to m_imageFile
-    QPixmap snapshot = QPixmap::grabWidget( m_part->widget() );
-    snapshot.save( m_imageFile, "PNG" );
+    QPixmap snapshot = QPixmap::grabWidget(m_part->widget());
+    snapshot.save(m_imageFile, "PNG");
     // And terminate the app.
     kapp->quit();
 }
 
-KParts::ReadOnlyPart* KWebDesktop::createPart( const QString& mimeType )
+KParts::ReadOnlyPart *KWebDesktop::createPart(const QString &mimeType)
 {
     delete m_part;
     m_part = 0;
 
-    KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
-    if ( !mime || mime == KMimeType::defaultMimeTypePtr() )
+    KMimeType::Ptr mime = KMimeType::mimeType(mimeType);
+    if(!mime || mime == KMimeType::defaultMimeTypePtr())
         return 0;
-    if ( mime->is( "text/html" ) || mime->is( "text/xml" ) || mime->is( "application/xhtml+xml" ) )
+    if(mime->is("text/html") || mime->is("text/xml") || mime->is("application/xhtml+xml"))
     {
-        KHTMLPart* htmlPart = new KHTMLPart;
-        htmlPart->widget()->resize(m_width,m_height);
+        KHTMLPart *htmlPart = new KHTMLPart;
+        htmlPart->widget()->resize(m_width, m_height);
 
         htmlPart->setMetaRefreshEnabled(false);
         htmlPart->setJScriptEnabled(false);
         htmlPart->setJavaEnabled(false);
 
-        ((QScrollView *)htmlPart->widget())->setHScrollBarMode( QScrollView::AlwaysOff );
-        ((QScrollView *)htmlPart->widget())->setVScrollBarMode( QScrollView::AlwaysOff );
+        ((QScrollView *)htmlPart->widget())->setHScrollBarMode(QScrollView::AlwaysOff);
+        ((QScrollView *)htmlPart->widget())->setVScrollBarMode(QScrollView::AlwaysOff);
 
-        connect( htmlPart, SIGNAL( completed() ), this, SLOT( slotCompleted() ) );
+        connect(htmlPart, SIGNAL(completed()), this, SLOT(slotCompleted()));
         m_part = htmlPart;
-    } else {
+    }
+    else
+    {
         // Try to find an appropriate viewer component
-        m_part = KParts::ComponentFactory::createPartInstanceFromQuery<KParts::ReadOnlyPart>
-                 ( mimeType, QString::null, 0, 0, this, 0 );
-        if ( !m_part )
+        m_part = KParts::ComponentFactory::createPartInstanceFromQuery< KParts::ReadOnlyPart >(mimeType, QString::null, 0, 0, this, 0);
+        if(!m_part)
             kdWarning() << "No handler found for " << mimeType << endl;
-        else {
+        else
+        {
             kdDebug() << "Loaded " << m_part->className() << endl;
-            connect( m_part, SIGNAL( completed() ),
-                     this, SLOT( slotCompleted() ) );
+            connect(m_part, SIGNAL(completed()), this, SLOT(slotCompleted()));
         }
     }
-    if ( m_part ) {
-        connect( m_part, SIGNAL( canceled(const QString &) ),
-                 this, SLOT( slotCompleted() ) );
+    if(m_part)
+    {
+        connect(m_part, SIGNAL(canceled(const QString &)), this, SLOT(slotCompleted()));
     }
     return m_part;
 }

@@ -27,40 +27,39 @@ namespace KHC {
 class TOC;
 class DocEntry;
 
-class NavigatorItem : public QListViewItem
-{
-  public:
-    NavigatorItem( DocEntry *entry, QListView *parent );
-    NavigatorItem( DocEntry *entry, QListViewItem *parent );
+class NavigatorItem : public QListViewItem {
+public:
+    NavigatorItem(DocEntry *entry, QListView *parent);
+    NavigatorItem(DocEntry *entry, QListViewItem *parent);
 
-    NavigatorItem( DocEntry *entry, QListView *parent,
-                   QListViewItem *after );
-    NavigatorItem( DocEntry *entry, QListViewItem *parent,
-                   QListViewItem *after );
+    NavigatorItem(DocEntry *entry, QListView *parent, QListViewItem *after);
+    NavigatorItem(DocEntry *entry, QListViewItem *parent, QListViewItem *after);
 
     ~NavigatorItem();
 
     DocEntry *entry() const;
 
-    void setAutoDeleteDocEntry( bool );
+    void setAutoDeleteDocEntry(bool);
 
     void updateItem();
 
-    TOC *toc() const { return mToc; }
+    TOC *toc() const
+    {
+        return mToc;
+    }
 
     TOC *createTOC();
-  
-    void setOpen( bool open );
 
-  private:
-    void init( DocEntry * );
-    
+    void setOpen(bool open);
+
+private:
+    void init(DocEntry *);
+
     TOC *mToc;
 
     DocEntry *mEntry;
     bool mAutoDeleteDocEntry;
 };
-
 }
 
 #endif

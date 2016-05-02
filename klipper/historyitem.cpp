@@ -31,15 +31,15 @@
 #include "historyimageitem.h"
 #include "historyurlitem.h"
 
-HistoryItem::HistoryItem() {
-
+HistoryItem::HistoryItem()
+{
 }
 
-HistoryItem::~HistoryItem() {
-
+HistoryItem::~HistoryItem()
+{
 }
 
-HistoryItem* HistoryItem::create( const QMimeSource& aSource )
+HistoryItem *HistoryItem::create(const QMimeSource &aSource)
 {
 #if 0
     int i=0;
@@ -47,55 +47,63 @@ HistoryItem* HistoryItem::create( const QMimeSource& aSource )
         kdDebug() << "format(" << i <<"): " << f << endl;
     }
 #endif
-    if( KURLDrag::canDecode( &aSource )) {
+    if(KURLDrag::canDecode(&aSource))
+    {
         KURL::List urls;
-        QMap<QString,QString> metaData;
-        if( KURLDrag::decode( &aSource, urls, metaData )) {
+        QMap< QString, QString > metaData;
+        if(KURLDrag::decode(&aSource, urls, metaData))
+        {
             // this is from KonqDrag (libkonq)
-            QByteArray a = aSource.encodedData( "application/x-kde-cutselection" );
+            QByteArray a = aSource.encodedData("application/x-kde-cutselection");
             bool cut = !a.isEmpty() && (a.at(0) == '1'); // true if 1
-            return new HistoryURLItem( urls, metaData, cut );
+            return new HistoryURLItem(urls, metaData, cut);
         }
     }
-    if ( QTextDrag::canDecode( &aSource ) ) {
+    if(QTextDrag::canDecode(&aSource))
+    {
         QString text;
-        if( QTextDrag::decode( &aSource, text ))
-            return text.isNull() ? 0 : new HistoryStringItem( text );
+        if(QTextDrag::decode(&aSource, text))
+            return text.isNull() ? 0 : new HistoryStringItem(text);
     }
-    if ( QImageDrag::canDecode( &aSource ) ) {
+    if(QImageDrag::canDecode(&aSource))
+    {
         QPixmap image;
-        if( QImageDrag::decode( &aSource, image ))
-            return image.isNull() ? 0 : new HistoryImageItem( image );
+        if(QImageDrag::decode(&aSource, image))
+            return image.isNull() ? 0 : new HistoryImageItem(image);
     }
     return 0; // Failed.
 }
 
-HistoryItem* HistoryItem::create( QDataStream& aSource ) {
-    if ( aSource.atEnd() ) {
+HistoryItem *HistoryItem::create(QDataStream &aSource)
+{
+    if(aSource.atEnd())
+    {
         return 0;
     }
     QString type;
     aSource >> type;
-    if ( type == "url" ) {
+    if(type == "url")
+    {
         KURL::List urls;
         QMap< QString, QString > metaData;
         int cut;
         aSource >> urls;
         aSource >> metaData;
         aSource >> cut;
-        return new HistoryURLItem( urls, metaData, cut );
+        return new HistoryURLItem(urls, metaData, cut);
     }
-    if ( type == "string" ) {
+    if(type == "string")
+    {
         QString text;
         aSource >> text;
-        return new HistoryStringItem( text );
+        return new HistoryStringItem(text);
     }
-    if ( type == "image" ) {
+    if(type == "image")
+    {
         QPixmap image;
         aSource >> image;
-        return new HistoryImageItem( image );
+        return new HistoryImageItem(image);
     }
     kdWarning() << "Failed to restore history item: Unknown type \"" << type << "\"" << endl;
     return 0;
 }
-

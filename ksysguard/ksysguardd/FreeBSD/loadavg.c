@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
-	Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
-    
+
+    Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -31,66 +31,54 @@ static double LoadAvg[3];
 ================================ public part =================================
 */
 
-void
-initLoadAvg(struct SensorModul* sm)
+void initLoadAvg(struct SensorModul *sm)
 {
-	if (updateLoadAvg() < 0)
-		return;
+    if(updateLoadAvg() < 0)
+        return;
 
-	registerMonitor("cpu/loadavg1", "float", printLoadAvg1,
-					printLoadAvg1Info, sm);
-	registerMonitor("cpu/loadavg5", "float", printLoadAvg5,
-					printLoadAvg5Info, sm);
-	registerMonitor("cpu/loadavg15", "float", printLoadAvg15,
-					printLoadAvg15Info, sm);
+    registerMonitor("cpu/loadavg1", "float", printLoadAvg1, printLoadAvg1Info, sm);
+    registerMonitor("cpu/loadavg5", "float", printLoadAvg5, printLoadAvg5Info, sm);
+    registerMonitor("cpu/loadavg15", "float", printLoadAvg15, printLoadAvg15Info, sm);
 }
 
-void
-exitLoadAvg(void)
+void exitLoadAvg(void)
 {
-	removeMonitor("cpu/loadavg1");
-	removeMonitor("cpu/loadavg5");
-	removeMonitor("cpu/loadavg15");
+    removeMonitor("cpu/loadavg1");
+    removeMonitor("cpu/loadavg5");
+    removeMonitor("cpu/loadavg15");
 }
 
-int
-updateLoadAvg(void)
+int updateLoadAvg(void)
 {
-	return getloadavg(LoadAvg, 3);
+    return getloadavg(LoadAvg, 3);
 }
 
-void
-printLoadAvg1(const char* c)
+void printLoadAvg1(const char *c)
 {
-	fprintf(CurrentClient, "%f\n", LoadAvg[0]);
+    fprintf(CurrentClient, "%f\n", LoadAvg[0]);
 }
 
-void
-printLoadAvg1Info(const char* c)
+void printLoadAvg1Info(const char *c)
 {
-	fprintf(CurrentClient, "Load average 1 min\t0\t0\t\n");
+    fprintf(CurrentClient, "Load average 1 min\t0\t0\t\n");
 }
 
-void
-printLoadAvg5(const char* c)
+void printLoadAvg5(const char *c)
 {
-	fprintf(CurrentClient, "%f\n", LoadAvg[1]);
+    fprintf(CurrentClient, "%f\n", LoadAvg[1]);
 }
 
-void
-printLoadAvg5Info(const char* c)
+void printLoadAvg5Info(const char *c)
 {
-	fprintf(CurrentClient, "Load average 5 min\t0\t0\t\n");
+    fprintf(CurrentClient, "Load average 5 min\t0\t0\t\n");
 }
 
-void
-printLoadAvg15(const char* c)
+void printLoadAvg15(const char *c)
 {
-	fprintf(CurrentClient, "%f\n", LoadAvg[2]);
+    fprintf(CurrentClient, "%f\n", LoadAvg[2]);
 }
 
-void
-printLoadAvg15Info(const char* c)
+void printLoadAvg15Info(const char *c)
 {
-	fprintf(CurrentClient, "Load average 15 min\t0\t0\t\n");
+    fprintf(CurrentClient, "Load average 15 min\t0\t0\t\n");
 }

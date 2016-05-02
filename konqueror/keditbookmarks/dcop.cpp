@@ -37,14 +37,15 @@
 #include <kapplication.h>
 
 
-KBookmarkEditorIface::KBookmarkEditorIface()
-    : QObject(), DCOPObject("KBookmarkEditor") {
-    // connect(KBookmarkNotifier_stub, SIGNAL( updatedAccessMetadata(QString,QString) ), 
+KBookmarkEditorIface::KBookmarkEditorIface() : QObject(), DCOPObject("KBookmarkEditor")
+{
+    // connect(KBookmarkNotifier_stub, SIGNAL( updatedAccessMetadata(QString,QString) ),
     //         this,                   SLOT( slotDcopUpdatedAccessMetadata(QString,QString) ));
     connectDCOPSignal(0, "KBookmarkNotifier", "updatedAccessMetadata(QString,QString)", "slotDcopUpdatedAccessMetadata(QString,QString)", false);
 }
 
-void KBookmarkEditorIface::slotDcopUpdatedAccessMetadata(QString filename, QString url) {
+void KBookmarkEditorIface::slotDcopUpdatedAccessMetadata(QString filename, QString url)
+{
     // evil hack, konqi gets updates by way of historymgr,
     // therefore konqi does'nt want "save" notification,
     // unfortunately to stop konqi getting it is difficult
@@ -55,7 +56,8 @@ void KBookmarkEditorIface::slotDcopUpdatedAccessMetadata(QString filename, QStri
 
     // TODO - i'm not sure this is really true :)
 
-    if (/*KEBApp::self()->modified() &&*/ filename == CurrentMgr::self()->path()) {
+    if(/*KEBApp::self()->modified() &&*/ filename == CurrentMgr::self()->path())
+    {
         kdDebug() << "slotDcopUpdatedAccessMetadata(" << url << ")" << endl;
         // no undo
         CurrentMgr::self()->mgr()->updateAccessMetadata(url, false);

@@ -45,28 +45,31 @@ struct KBackgroundCacheEntry
  * operation. See KBackgroundIface.h for details.
  */
 
-class KBackgroundManager
-    : public QObject,
-      virtual public KBackgroundIface
-{
+class KBackgroundManager : public QObject, virtual public KBackgroundIface {
     Q_OBJECT
 
 public:
-    KBackgroundManager(QWidget *desktop, KWinModule* kwinModule);
+    KBackgroundManager(QWidget *desktop, KWinModule *kwinModule);
     ~KBackgroundManager();
 
     void configure();
     void setCommon(int);
-    bool isCommon() { return m_bCommon; };
+    bool isCommon()
+    {
+        return m_bCommon;
+    };
     void setExport(int);
-    bool isExport() { return m_bExport; };
+    bool isExport()
+    {
+        return m_bExport;
+    };
     void setCache(int, int);
     void setWallpaper(int desk, QString wallpaper, int mode);
     void setWallpaper(QString wallpaper, int mode);
     void setWallpaper(QString wallpaper);
     void changeWallpaper();
     QString currentWallpaper(int desk);
-    void setColor(const QColor & c, bool isColorA = true);
+    void setColor(const QColor &c, bool isColorA = true);
     void setBackgroundEnabled(const bool enable);
     QStringList wallpaperList(int desk);
     QStringList wallpaperFiles(int desk);
@@ -83,7 +86,7 @@ private slots:
     void desktopResized();
     void clearRoot();
     void saveImages();
-    
+
 private:
     void applyCommon(bool common);
     void applyExport(bool _export);
@@ -114,12 +117,12 @@ private:
     QWidget *m_pDesktop;
     QTimer *m_pTimer;
 
-    QPtrVector<KVirtualBGRenderer> m_Renderer;
-    QPtrVector<KBackgroundCacheEntry> m_Cache;
+    QPtrVector< KVirtualBGRenderer > m_Renderer;
+    QPtrVector< KBackgroundCacheEntry > m_Cache;
 
     KWinModule *m_pKwinmodule;
     KPixmapServer *m_pPixmapServer;
-    
+
     unsigned long m_xrootpmap;
 };
 

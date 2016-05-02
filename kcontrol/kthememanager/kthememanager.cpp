@@ -42,55 +42,47 @@
 #include "knewthemedlg.h"
 #include "config.h"
 
-kthememanager::kthememanager( QWidget *parent, const char *name )
-    : KCModule( parent, name ), m_theme( 0 ), m_origTheme( 0 )
+kthememanager::kthememanager(QWidget *parent, const char *name) : KCModule(parent, name), m_theme(0), m_origTheme(0)
 {
 
-    KAboutData *about = new KAboutData("kthememanager", I18N_NOOP("KDE Theme Manager"),
-                                       "0.4", I18N_NOOP("This control module handles installing, removing and "
-                                                        "creating visual KDE themes."),
-                                       KAboutData::License_GPL, "(c) 2003, 2004, 2006 Lukáš Tinkl", 0,
-                                       "http://developer.kde.org/~lukas/kthememanager");
-    setAboutData( about );
+    KAboutData *about =
+        new KAboutData("kthememanager", I18N_NOOP("KDE Theme Manager"), "0.4", I18N_NOOP("This control module handles installing, removing and "
+                                                                                         "creating visual KDE themes."),
+                       KAboutData::License_GPL, "(c) 2003, 2004, 2006 Lukáš Tinkl", 0, "http://developer.kde.org/~lukas/kthememanager");
+    setAboutData(about);
 
-    setQuickHelp( i18n("This control module handles installing, removing and "
-                "creating visual KDE themes."));
+    setQuickHelp(
+        i18n("This control module handles installing, removing and "
+             "creating visual KDE themes."));
 
-    setButtons( KCModule::Default|KCModule::Apply|KCModule::Help );
+    setButtons(KCModule::Default | KCModule::Apply | KCModule::Help);
 
-    setAcceptDrops( true );
+    setAcceptDrops(true);
     init();
 
     QBoxLayout *top = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
     dlg = new KThemeDlg(this);
-    top->addWidget( dlg );
+    top->addWidget(dlg);
 
-    dlg->lvThemes->setColumnWidthMode( 0, QListView::Maximum );
+    dlg->lvThemes->setColumnWidthMode(0, QListView::Maximum);
 
-    connect( ( QObject * )dlg->btnInstall, SIGNAL( clicked() ),
-             this, SLOT( slotInstallTheme() ) );
+    connect((QObject *)dlg->btnInstall, SIGNAL(clicked()), this, SLOT(slotInstallTheme()));
 
-    connect( ( QObject * )dlg->btnRemove, SIGNAL( clicked() ),
-             this, SLOT( slotRemoveTheme() ) );
+    connect((QObject *)dlg->btnRemove, SIGNAL(clicked()), this, SLOT(slotRemoveTheme()));
 
-    connect( ( QObject * )dlg->btnCreate, SIGNAL( clicked() ),
-             this, SLOT( slotCreateTheme() ) );
+    connect((QObject *)dlg->btnCreate, SIGNAL(clicked()), this, SLOT(slotCreateTheme()));
 
-    connect( ( QObject * )dlg->lvThemes, SIGNAL( clicked( QListViewItem * ) ),
-             this, SLOT( slotThemeChanged( QListViewItem * ) ) );
+    connect((QObject *)dlg->lvThemes, SIGNAL(clicked(QListViewItem *)), this, SLOT(slotThemeChanged(QListViewItem *)));
 
-    connect( ( QObject * )dlg->lvThemes, SIGNAL( currentChanged( QListViewItem * ) ),
-             this, SLOT( slotThemeChanged( QListViewItem * ) ) );
+    connect((QObject *)dlg->lvThemes, SIGNAL(currentChanged(QListViewItem *)), this, SLOT(slotThemeChanged(QListViewItem *)));
 
-    connect( this, SIGNAL( filesDropped( const KURL::List& ) ),
-             this, SLOT( updateButton() ) );
+    connect(this, SIGNAL(filesDropped(const KURL::List &)), this, SLOT(updateButton()));
 
-    connect( ( QObject * )dlg->lvThemes, SIGNAL( clicked( QListViewItem * ) ),
-             this, SLOT( updateButton() ) );
+    connect((QObject *)dlg->lvThemes, SIGNAL(clicked(QListViewItem *)), this, SLOT(updateButton()));
 
-    m_origTheme = new KTheme( this, true ); // stores the defaults to get back to
-    m_origTheme->setName( ORIGINAL_THEME );
+    m_origTheme = new KTheme(this, true); // stores the defaults to get back to
+    m_origTheme->setName(ORIGINAL_THEME);
     m_origTheme->createYourself();
 
     load();
@@ -106,23 +98,23 @@ kthememanager::~kthememanager()
 
 void kthememanager::init()
 {
-    KGlobal::dirs()->addResourceType( "themes", KStandardDirs::kde_default("data") +
-                                      "kthememanager/themes/" );
+    KGlobal::dirs()->addResourceType("themes", KStandardDirs::kde_default("data") + "kthememanager/themes/");
 }
 
 void kthememanager::updateButton()
 {
-    QListViewItem * cur = dlg->lvThemes->currentItem();
+    QListViewItem *cur = dlg->lvThemes->currentItem();
     bool enable = (cur != 0);
-    if (enable) {
-        enable = QFile(KGlobal::dirs()->saveLocation( "themes",  cur->text( 0 ) + "/"+ cur->text( 0 )+ ".xml" ,false)).exists() ;
+    if(enable)
+    {
+        enable = QFile(KGlobal::dirs()->saveLocation("themes", cur->text(0) + "/" + cur->text(0) + ".xml", false)).exists();
     }
     dlg->btnRemove->setEnabled(enable);
 }
 
 void kthememanager::load()
 {
-	load( false );
+    load(false);
 }
 
 void kthememanager::load(bool useDefaults)
@@ -132,82 +124,81 @@ void kthememanager::load(bool useDefaults)
     // Load the current theme name
     KConfig conf("kcmthememanagerrc", false, false);
 
-	 conf.setReadDefaults( useDefaults );
+    conf.setReadDefaults(useDefaults);
 
-    conf.setGroup( "General" );
-    QString themeName = conf.readEntry( "CurrentTheme" );
-    QListViewItem * cur =  dlg->lvThemes->findItem( themeName, 0 );
-    if ( cur )
+    conf.setGroup("General");
+    QString themeName = conf.readEntry("CurrentTheme");
+    QListViewItem *cur = dlg->lvThemes->findItem(themeName, 0);
+    if(cur)
     {
-        dlg->lvThemes->setSelected( cur, true );
-        dlg->lvThemes->ensureItemVisible( cur );
-        slotThemeChanged( cur );
+        dlg->lvThemes->setSelected(cur, true);
+        dlg->lvThemes->ensureItemVisible(cur);
+        slotThemeChanged(cur);
     }
 
-	 emit changed( true );
+    emit changed(true);
 }
 
 void kthememanager::defaults()
 {
-	load( true );
+    load(true);
 }
 
 void kthememanager::save()
 {
-    QListViewItem * cur = dlg->lvThemes->currentItem();
+    QListViewItem *cur = dlg->lvThemes->currentItem();
 
-    if ( cur )
+    if(cur)
     {
-        QString themeName = cur->text( 0 );
+        QString themeName = cur->text(0);
 
-        m_theme = new KTheme( this, KGlobal::dirs()->findResource( "themes", themeName + "/" + themeName + ".xml") );
+        m_theme = new KTheme(this, KGlobal::dirs()->findResource("themes", themeName + "/" + themeName + ".xml"));
         m_theme->apply();
 
         // Save the current theme name
         KConfig conf("kcmthememanagerrc", false, false);
-        conf.setGroup( "General" );
-        conf.writeEntry( "CurrentTheme", themeName );
+        conf.setGroup("General");
+        conf.writeEntry("CurrentTheme", themeName);
         conf.sync();
 
         delete m_theme;
         m_theme = 0;
-
     }
 }
 
 void kthememanager::listThemes()
 {
     dlg->lvThemes->clear();
-    dlg->lbPreview->setPixmap( QPixmap() );
+    dlg->lbPreview->setPixmap(QPixmap());
 
-    QStringList themes = KGlobal::dirs()->findAllResources( "themes", "*.xml", true /*recursive*/ );
+    QStringList themes = KGlobal::dirs()->findAllResources("themes", "*.xml", true /*recursive*/);
 
     QStringList::const_iterator it;
 
-    for ( it = themes.begin(); it != themes.end(); ++it )
+    for(it = themes.begin(); it != themes.end(); ++it)
     {
-        KTheme theme( this, ( *it ) );
+        KTheme theme(this, (*it));
         QString name = theme.name();
-        if ( name != ORIGINAL_THEME ) // skip the "original" theme
-            ( void ) new QListViewItem( dlg->lvThemes, name, theme.comment() );
+        if(name != ORIGINAL_THEME) // skip the "original" theme
+            (void)new QListViewItem(dlg->lvThemes, name, theme.comment());
     }
 
     kdDebug() << "Available themes: " << themes << endl;
 }
 
-float kthememanager::getThemeVersion( const QString & themeName )
+float kthememanager::getThemeVersion(const QString &themeName)
 {
-    QStringList themes = KGlobal::dirs()->findAllResources( "themes", "*.xml", true /*recursive*/ );
+    QStringList themes = KGlobal::dirs()->findAllResources("themes", "*.xml", true /*recursive*/);
 
     QStringList::const_iterator it;
 
-    for ( it = themes.begin(); it != themes.end(); ++it )
+    for(it = themes.begin(); it != themes.end(); ++it)
     {
-        KTheme theme( 0L, ( *it ) );
+        KTheme theme(0L, (*it));
         QString name = theme.name();
         bool ok = false;
-        float version = theme.version().toFloat( &ok );
-        if ( name == themeName && ok )
+        float version = theme.version().toFloat(&ok);
+        if(name == themeName && ok)
             return version;
     }
 
@@ -216,25 +207,24 @@ float kthememanager::getThemeVersion( const QString & themeName )
 
 void kthememanager::slotInstallTheme()
 {
-    addNewTheme( KFileDialog::getOpenURL( ":themes", "*.kth|" + i18n("Theme Files"), this,
-                                          i18n( "Select Theme File" ) ) );
+    addNewTheme(KFileDialog::getOpenURL(":themes", "*.kth|" + i18n("Theme Files"), this, i18n("Select Theme File")));
 }
 
-void kthememanager::addNewTheme( const KURL & url )
+void kthememanager::addNewTheme(const KURL &url)
 {
-    if ( url.isValid() )
+    if(url.isValid())
     {
-        QString themeName = QFileInfo( url.fileName() ).baseName();
-        if ( getThemeVersion( themeName ) != -1 ) // theme exists already
+        QString themeName = QFileInfo(url.fileName()).baseName();
+        if(getThemeVersion(themeName) != -1) // theme exists already
         {
-            KTheme::remove( themeName  ); // remove first
+            KTheme::remove(themeName); // remove first
         }
 
         m_theme = new KTheme(this);
-        if ( m_theme->load( url ) )
+        if(m_theme->load(url))
         {
             listThemes();
-            emit changed( true );
+            emit changed(true);
         }
 
         delete m_theme;
@@ -246,16 +236,16 @@ void kthememanager::addNewTheme( const KURL & url )
 void kthememanager::slotRemoveTheme()
 {
     // get the selected item from the listview
-    QListViewItem * cur = dlg->lvThemes->currentItem();
+    QListViewItem *cur = dlg->lvThemes->currentItem();
     // ask and remove it
-    if ( cur )
+    if(cur)
     {
-        QString themeName = cur->text( 0 );
-        if ( KMessageBox::warningContinueCancel( this, "<qt>" + i18n( "Do you really want to remove the theme <b>%1</b>?" ).arg( themeName ),
-                                                 i18n( "Remove Theme" ), KGuiItem( i18n( "&Remove" ), "editdelete" ) )
-             == KMessageBox::Continue )
+        QString themeName = cur->text(0);
+        if(KMessageBox::warningContinueCancel(this, "<qt>" + i18n("Do you really want to remove the theme <b>%1</b>?").arg(themeName),
+                                              i18n("Remove Theme"), KGuiItem(i18n("&Remove"), "editdelete"))
+           == KMessageBox::Continue)
         {
-            KTheme::remove( themeName );
+            KTheme::remove(themeName);
             listThemes();
         }
         updateButton();
@@ -264,52 +254,51 @@ void kthememanager::slotRemoveTheme()
 
 bool kthememanager::themeExist(const QString &_themeName)
 {
-    return ( dlg->lvThemes->findItem( _themeName, 0 )!=0 );
+    return (dlg->lvThemes->findItem(_themeName, 0) != 0);
 }
 
 void kthememanager::slotCreateTheme()
 {
-    KNewThemeDlg dlg( this );
+    KNewThemeDlg dlg(this);
 
     KEMailSettings es;
-    es.setProfile( es.defaultProfileName() );
+    es.setProfile(es.defaultProfileName());
 
-    dlg.setName( i18n( "My Theme" ) );
-    dlg.setAuthor( es.getSetting( KEMailSettings::RealName ) ) ;
-    dlg.setEmail( es.getSetting( KEMailSettings::EmailAddress ) );
-    dlg.setVersion( "0.1" );
+    dlg.setName(i18n("My Theme"));
+    dlg.setAuthor(es.getSetting(KEMailSettings::RealName));
+    dlg.setEmail(es.getSetting(KEMailSettings::EmailAddress));
+    dlg.setVersion("0.1");
 
-    if ( dlg.exec() == QDialog::Accepted )
+    if(dlg.exec() == QDialog::Accepted)
     {
 
         QString themeName = dlg.getName();
-        if ( themeExist(themeName) )
+        if(themeExist(themeName))
         {
-            KMessageBox::information( this, i18n( "Theme %1 already exists." ).arg( themeName ) );
+            KMessageBox::information(this, i18n("Theme %1 already exists.").arg(themeName));
         }
         else
         {
-            if ( getThemeVersion( themeName ) != -1 ) // remove the installed theme first
+            if(getThemeVersion(themeName) != -1) // remove the installed theme first
             {
-                KTheme::remove( themeName );
+                KTheme::remove(themeName);
             }
-            m_theme = new KTheme( this, true );
-            m_theme->setName( dlg.getName() );
-            m_theme->setAuthor( dlg.getAuthor() );
-            m_theme->setEmail( dlg.getEmail() );
-            m_theme->setHomepage( dlg.getHomepage() );
-            m_theme->setComment( dlg.getComment().replace( "\n", "" ) );
-            m_theme->setVersion( dlg.getVersion() );
+            m_theme = new KTheme(this, true);
+            m_theme->setName(dlg.getName());
+            m_theme->setAuthor(dlg.getAuthor());
+            m_theme->setEmail(dlg.getEmail());
+            m_theme->setHomepage(dlg.getHomepage());
+            m_theme->setComment(dlg.getComment().replace("\n", ""));
+            m_theme->setVersion(dlg.getVersion());
 
-            QString result = m_theme->createYourself( true );
-	    m_theme->addPreview();
+            QString result = m_theme->createYourself(true);
+            m_theme->addPreview();
 
-            if ( !result.isEmpty() )
-                KMessageBox::information( this, i18n( "Your theme has been successfully created in %1." ).arg( result ),
-                                          i18n( "Theme Created" ), "theme_created_ok" );
+            if(!result.isEmpty())
+                KMessageBox::information(this, i18n("Your theme has been successfully created in %1.").arg(result), i18n("Theme Created"),
+                                         "theme_created_ok");
             else
-                KMessageBox::error( this, i18n( "An error occurred while creating your theme." ),
-                                    i18n( "Theme Not Created" ) );
+                KMessageBox::error(this, i18n("An error occurred while creating your theme."), i18n("Theme Not Created"));
             delete m_theme;
             m_theme = 0;
 
@@ -318,55 +307,59 @@ void kthememanager::slotCreateTheme()
     }
 }
 
-void kthememanager::slotThemeChanged( QListViewItem * item )
+void kthememanager::slotThemeChanged(QListViewItem *item)
 {
-    if ( item )
+    if(item)
     {
         QString themeName = item->text(0);
-        kdDebug() << "Activated theme: " << themeName  << endl;
+        kdDebug() << "Activated theme: " << themeName << endl;
 
-        QString themeDir = KGlobal::dirs()->findResourceDir( "themes", themeName + "/" + themeName + ".xml") + themeName + "/";
+        QString themeDir = KGlobal::dirs()->findResourceDir("themes", themeName + "/" + themeName + ".xml") + themeName + "/";
 
         QString pixFile = themeDir + themeName + ".preview.png";
 
-        if ( QFile::exists( pixFile ) )
+        if(QFile::exists(pixFile))
         {
-            updatePreview( pixFile );
+            updatePreview(pixFile);
         }
         else
         {
-            dlg->lbPreview->setPixmap( QPixmap() );
-            dlg->lbPreview->setText( i18n( "This theme does not contain a preview." ) );
+            dlg->lbPreview->setPixmap(QPixmap());
+            dlg->lbPreview->setText(i18n("This theme does not contain a preview."));
         }
 
-        KTheme theme( this, themeDir + themeName + ".xml" );
-        QToolTip::remove( dlg->lbPreview );
-        QToolTip::add( dlg->lbPreview, "<qt>" + i18n( "Author: %1<br>Email: %2<br>Version: %3<br>Homepage: %4" )
-                       .arg( theme.author() ).arg( theme.email() )
-                       .arg( theme.version() ).arg( theme.homepage() ) + "</qt>");
+        KTheme theme(this, themeDir + themeName + ".xml");
+        QToolTip::remove(dlg->lbPreview);
+        QToolTip::add(dlg->lbPreview, "<qt>"
+                                          + i18n("Author: %1<br>Email: %2<br>Version: %3<br>Homepage: %4")
+                                                .arg(theme.author())
+                                                .arg(theme.email())
+                                                .arg(theme.version())
+                                                .arg(theme.homepage())
+                                          + "</qt>");
 
-        emit changed( true );
+        emit changed(true);
     }
 }
 
-void kthememanager::dragEnterEvent( QDragEnterEvent * ev )
+void kthememanager::dragEnterEvent(QDragEnterEvent *ev)
 {
-    ev->accept( KURLDrag::canDecode( ev ) );
+    ev->accept(KURLDrag::canDecode(ev));
 }
 
-void kthememanager::dropEvent( QDropEvent * ev )
+void kthememanager::dropEvent(QDropEvent *ev)
 {
     KURL::List urls;
-    if ( KURLDrag::decode( ev, urls ) )
+    if(KURLDrag::decode(ev, urls))
     {
-        emit filesDropped( urls );
+        emit filesDropped(urls);
     }
 }
 
-void kthememanager::slotFilesDropped( const KURL::List & urls )
+void kthememanager::slotFilesDropped(const KURL::List &urls)
 {
-    for ( KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it )
-        addNewTheme( *it );
+    for(KURL::List::ConstIterator it = urls.begin(); it != urls.end(); ++it)
+        addNewTheme(*it);
 }
 
 void kthememanager::queryLNFModules()
@@ -392,34 +385,32 @@ void kthememanager::queryLNFModules()
     dlg->lvDetails->sort();*/
 
     // For now use a static list
-    KIconLoader * il = KGlobal::iconLoader();
-    dlg->btnBackground->setIconSet( il->loadIconSet( "background", KIcon::Desktop, 32 ) );
-    dlg->btnColors->setIconSet( il->loadIconSet( "colorscm", KIcon::Desktop, 32 ) );
-    dlg->btnStyle->setIconSet( il->loadIconSet( "style", KIcon::Desktop, 32 ) );
-    dlg->btnIcons->setIconSet( il->loadIconSet( "icons", KIcon::Desktop, 32 ) );
-    dlg->btnFonts->setIconSet( il->loadIconSet( "fonts", KIcon::Desktop, 32 ) );
-    dlg->btnSaver->setIconSet( il->loadIconSet( "kscreensaver", KIcon::Desktop, 32 ) );
+    KIconLoader *il = KGlobal::iconLoader();
+    dlg->btnBackground->setIconSet(il->loadIconSet("background", KIcon::Desktop, 32));
+    dlg->btnColors->setIconSet(il->loadIconSet("colorscm", KIcon::Desktop, 32));
+    dlg->btnStyle->setIconSet(il->loadIconSet("style", KIcon::Desktop, 32));
+    dlg->btnIcons->setIconSet(il->loadIconSet("icons", KIcon::Desktop, 32));
+    dlg->btnFonts->setIconSet(il->loadIconSet("fonts", KIcon::Desktop, 32));
+    dlg->btnSaver->setIconSet(il->loadIconSet("kscreensaver", KIcon::Desktop, 32));
 }
 
-void kthememanager::updatePreview( const QString & pixFile )
+void kthememanager::updatePreview(const QString &pixFile)
 {
-     kdDebug() << "Preview is in file: " << pixFile << endl;
-     QImage preview( pixFile, "PNG" );
-     if (preview.width()>dlg->lbPreview->contentsRect().width() ||
-         preview.height()>dlg->lbPreview->contentsRect().height() )
-         preview = preview.smoothScale( dlg->lbPreview->contentsRect().size(), QImage::ScaleMin );
-     QPixmap pix;
-     pix.convertFromImage( preview );
-     dlg->lbPreview->setPixmap( pix );
+    kdDebug() << "Preview is in file: " << pixFile << endl;
+    QImage preview(pixFile, "PNG");
+    if(preview.width() > dlg->lbPreview->contentsRect().width() || preview.height() > dlg->lbPreview->contentsRect().height())
+        preview = preview.smoothScale(dlg->lbPreview->contentsRect().size(), QImage::ScaleMin);
+    QPixmap pix;
+    pix.convertFromImage(preview);
+    dlg->lbPreview->setPixmap(pix);
 }
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_kthememanager(QWidget *parent, const char *)
 {
-    KDE_EXPORT KCModule *create_kthememanager(QWidget *parent, const char *)
-    {
-        KGlobal::locale()->insertCatalogue( "kthememanager" );
-        return new kthememanager( parent, "kthememanager" );
-    }
+    KGlobal::locale()->insertCatalogue("kthememanager");
+    return new kthememanager(parent, "kthememanager");
+}
 }
 
 #include "kthememanager.moc"

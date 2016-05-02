@@ -16,91 +16,85 @@
    Boston, MA 02110-1301, USA.
 */
 
- #include "application.h"
+#include "application.h"
 
 #include "plugin.h"
 #include "plugin.moc"
 
 #include <kparts/componentfactory.h>
 
-namespace Kate
-{
+namespace Kate {
 
-  class PrivatePlugin
-  {
-  public:
-    PrivatePlugin ()
+class PrivatePlugin {
+public:
+    PrivatePlugin()
     {
     }
 
-    ~PrivatePlugin ()
+    ~PrivatePlugin()
     {
     }
-  };
+};
 
-  class PrivatePluginViewInterface
-  {
-  public:
-    PrivatePluginViewInterface ()
-    {
-    }
-
-    ~PrivatePluginViewInterface ()
+class PrivatePluginViewInterface {
+public:
+    PrivatePluginViewInterface()
     {
     }
 
-  };
+    ~PrivatePluginViewInterface()
+    {
+    }
+};
 
 unsigned int Plugin::globalPluginNumber = 0;
 unsigned int PluginViewInterface::globalPluginViewInterfaceNumber = 0;
 
-Plugin::Plugin( Application *application, const char *name ) : QObject (application, name )
+Plugin::Plugin(Application *application, const char *name) : QObject(application, name)
 {
-  globalPluginNumber++;
-  myPluginNumber = globalPluginNumber;
+    globalPluginNumber++;
+    myPluginNumber = globalPluginNumber;
 }
 
 Plugin::~Plugin()
 {
 }
 
-unsigned int Plugin::pluginNumber () const
+unsigned int Plugin::pluginNumber() const
 {
-  return myPluginNumber;
+    return myPluginNumber;
 }
 
-Application *Plugin::application () const
+Application *Plugin::application() const
 {
-  return Kate::application();
+    return Kate::application();
 }
 
 PluginViewInterface::PluginViewInterface()
 {
-  globalPluginViewInterfaceNumber++;
-  myPluginViewInterfaceNumber = globalPluginViewInterfaceNumber;
+    globalPluginViewInterfaceNumber++;
+    myPluginViewInterfaceNumber = globalPluginViewInterfaceNumber;
 }
 
 PluginViewInterface::~PluginViewInterface()
 {
 }
 
-unsigned int PluginViewInterface::pluginViewInterfaceNumber () const
+unsigned int PluginViewInterface::pluginViewInterfaceNumber() const
 {
-  return myPluginViewInterfaceNumber;
+    return myPluginViewInterfaceNumber;
 }
 
-Plugin *createPlugin ( const char* libname, Application *application, const char *name, const QStringList &args )
+Plugin *createPlugin(const char *libname, Application *application, const char *name, const QStringList &args)
 {
-  return KParts::ComponentFactory::createInstanceFromLibrary<Plugin>( libname, application, name, args);
+    return KParts::ComponentFactory::createInstanceFromLibrary< Plugin >(libname, application, name, args);
 }
 
-PluginViewInterface *pluginViewInterface (Plugin *plugin)
+PluginViewInterface *pluginViewInterface(Plugin *plugin)
 {
-  if (!plugin)
-    return 0;
+    if(!plugin)
+        return 0;
 
-  return static_cast<PluginViewInterface*>(plugin->qt_cast("Kate::PluginViewInterface"));
+    return static_cast< PluginViewInterface * >(plugin->qt_cast("Kate::PluginViewInterface"));
 }
-
 }
-

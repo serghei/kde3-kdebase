@@ -85,32 +85,28 @@
 #include "kastaskitem.h"
 #include "kasbarextension.h"
 
-#define Icon(x) KGlobal::iconLoader()->loadIcon( x, KIcon::NoGroup, KIcon::SizeMedium )
+#define Icon(x) KGlobal::iconLoader()->loadIcon(x, KIcon::NoGroup, KIcon::SizeMedium)
 
 static const int CHECK_ATTENTION_DELAY = 2000;
 
-KasTaskItem::KasTaskItem( KasTasker *parent, Task::Ptr task )
-    : KasItem( parent ),
-      task_(task),
-      thumbTimer(0),
-      attentionTimer(0)
+KasTaskItem::KasTaskItem(KasTasker *parent, Task::Ptr task) : KasItem(parent), task_(task), thumbTimer(0), attentionTimer(0)
 {
-    setIcon( icon() );
-    setAttention( task->demandsAttention() );
+    setIcon(icon());
+    setAttention(task->demandsAttention());
     updateTask(false);
 
-    connect( task, SIGNAL( changed(bool) ), this, SLOT( updateTask(bool) ) );
-    connect( task, SIGNAL( activated() ), this, SLOT( startAutoThumbnail() ) );
-    connect( task, SIGNAL( deactivated() ), this, SLOT( stopAutoThumbnail() ) );
-    connect( task, SIGNAL( iconChanged() ), this, SLOT( iconChanged() ) );
-    connect( task, SIGNAL( thumbnailChanged() ), this, SLOT( iconChanged() ) );
+    connect(task, SIGNAL(changed(bool)), this, SLOT(updateTask(bool)));
+    connect(task, SIGNAL(activated()), this, SLOT(startAutoThumbnail()));
+    connect(task, SIGNAL(deactivated()), this, SLOT(stopAutoThumbnail()));
+    connect(task, SIGNAL(iconChanged()), this, SLOT(iconChanged()));
+    connect(task, SIGNAL(thumbnailChanged()), this, SLOT(iconChanged()));
 
-    connect( this, SIGNAL(leftButtonClicked(QMouseEvent *)), SLOT(toggleActivateAction()) );
-    connect( this, SIGNAL(rightButtonClicked(QMouseEvent *)), SLOT(showWindowMenuAt(QMouseEvent *) ) );
+    connect(this, SIGNAL(leftButtonClicked(QMouseEvent *)), SLOT(toggleActivateAction()));
+    connect(this, SIGNAL(rightButtonClicked(QMouseEvent *)), SLOT(showWindowMenuAt(QMouseEvent *)));
 
-    attentionTimer = new QTimer( this, "attentionTimer" );
-    connect( attentionTimer, SIGNAL( timeout() ), SLOT( checkAttention() ) );
-    attentionTimer->start( CHECK_ATTENTION_DELAY );
+    attentionTimer = new QTimer(this, "attentionTimer");
+    connect(attentionTimer, SIGNAL(timeout()), SLOT(checkAttention()));
+    attentionTimer->start(CHECK_ATTENTION_DELAY);
 }
 
 KasTaskItem::~KasTaskItem()
@@ -119,78 +115,75 @@ KasTaskItem::~KasTaskItem()
 
 KasTasker *KasTaskItem::kasbar() const
 {
-    return static_cast<KasTasker *> (KasItem::kasbar());
+    return static_cast< KasTasker * >(KasItem::kasbar());
 }
 
 QPixmap KasTaskItem::icon()
 {
-    int sizes[] = { KIcon::SizeEnormous,
-		    KIcon::SizeHuge,
-		    KIcon::SizeLarge,
-		    KIcon::SizeMedium,
-		    KIcon::SizeSmall };
+    int sizes[] = {KIcon::SizeEnormous, KIcon::SizeHuge, KIcon::SizeLarge, KIcon::SizeMedium, KIcon::SizeSmall};
 
-    if ( kasbar()->embedThumbnails() && task_->hasThumbnail() ) {
-	usedIconLoader = true;
+    if(kasbar()->embedThumbnails() && task_->hasThumbnail())
+    {
+        usedIconLoader = true;
 
-	QPixmap thumb = task_->thumbnail();
-	QSize sz = thumb.size();
-	sz.scale( sizes[kasbar()->itemSize()], sizes[kasbar()->itemSize()], QSize::ScaleMin );
+        QPixmap thumb = task_->thumbnail();
+        QSize sz = thumb.size();
+        sz.scale(sizes[kasbar()->itemSize()], sizes[kasbar()->itemSize()], QSize::ScaleMin);
 
-	QImage img = thumb.convertToImage();
-	img = img.smoothScale( sz );
+        QImage img = thumb.convertToImage();
+        img = img.smoothScale(sz);
 
-	bool ok = thumb.convertFromImage( img );
-	if ( ok )
-	    return thumb;
+        bool ok = thumb.convertFromImage(img);
+        if(ok)
+            return thumb;
     }
 
     usedIconLoader = false;
-    QPixmap p = task_->bestIcon( sizes[kasbar()->itemSize()], usedIconLoader );
-    if ( !p.isNull() )
-	return p;
+    QPixmap p = task_->bestIcon(sizes[kasbar()->itemSize()], usedIconLoader);
+    if(!p.isNull())
+        return p;
 
-    return task_->icon( sizes[kasbar()->itemSize()], sizes[kasbar()->itemSize()], true );
+    return task_->icon(sizes[kasbar()->itemSize()], sizes[kasbar()->itemSize()], true);
 }
 
 void KasTaskItem::iconChanged()
 {
     iconHasChanged = true;
-    setIcon( icon() );
+    setIcon(icon());
     update();
 }
 
 void KasTaskItem::checkAttention()
 {
-    setAttention( task_->demandsAttention() );
+    setAttention(task_->demandsAttention());
 }
 
 void KasTaskItem::updateTask(bool geometryChangeOnly)
 {
-    if (geometryChangeOnly)
+    if(geometryChangeOnly)
     {
         return;
     }
 
     bool updates = kasbar()->isUpdatesEnabled();
-    kasbar()->setUpdatesEnabled( false );
+    kasbar()->setUpdatesEnabled(false);
 
-    setProgress( kasbar()->showProgress() ? 0 : -1 );
-    setText( task_->visibleIconicName() );
-    setModified( task_->isModified() );
-    setActive( task_->isActive() );
+    setProgress(kasbar()->showProgress() ? 0 : -1);
+    setText(task_->visibleIconicName());
+    setModified(task_->isModified());
+    setActive(task_->isActive());
 
-    kasbar()->setUpdatesEnabled( updates );
+    kasbar()->setUpdatesEnabled(updates);
     update();
 }
 
-void KasTaskItem::paint( QPainter *p )
+void KasTaskItem::paint(QPainter *p)
 {
-    KasItem::paint( p );
+    KasItem::paint(p);
 
     KasResources *res = resources();
     QColor c = task_->isActive() ? res->activePenColor() : res->inactivePenColor();
-    p->setPen( c );
+    p->setPen(c);
 
     //
     // Overlay the small icon if the icon has changed, we have space,
@@ -199,25 +192,25 @@ void KasTaskItem::paint( QPainter *p )
     // large icons.
     //
     KasTasker *kas = kasbar();
-    bool haveSpace = ( kas->itemSize() != KasBar::Small )
-	          && ( kas->itemSize() != KasBar::Medium );
+    bool haveSpace = (kas->itemSize() != KasBar::Small) && (kas->itemSize() != KasBar::Medium);
 
-    if ( usedIconLoader && iconHasChanged && haveSpace ) {
-	QPixmap pix = icon();
-	int x = (extent() - 4 - pix.width()) / 2;
-	QPixmap overlay = task_->pixmap();
-	p->drawPixmap( x-4+pix.width()-overlay.width(), 18, overlay );
+    if(usedIconLoader && iconHasChanged && haveSpace)
+    {
+        QPixmap pix = icon();
+        int x = (extent() - 4 - pix.width()) / 2;
+        QPixmap overlay = task_->pixmap();
+        p->drawPixmap(x - 4 + pix.width() - overlay.width(), 18, overlay);
     }
 
     //
     // Draw window state.
     //
-    if( task_->isIconified() )
-	paintStateIcon( p, StateIcon );
-    else if ( task_->isShaded() )
-	paintStateIcon( p, StateShaded );
+    if(task_->isIconified())
+        paintStateIcon(p, StateIcon);
+    else if(task_->isShaded())
+        paintStateIcon(p, StateShaded);
     else
-	paintStateIcon( p, StateNormal );
+        paintStateIcon(p, StateNormal);
 
     //
     // Draw desktop number.
@@ -227,25 +220,27 @@ void KasTaskItem::paint( QPainter *p )
     bool oneDesktop = (TaskManager::the()->numberOfDesktops() == 1) ? true : false;
 
     QString deskStr;
-    if ( task_->isOnAllDesktops() )
-	deskStr = i18n( "All" );
+    if(task_->isOnAllDesktops())
+        deskStr = i18n("All");
     else
-	deskStr.setNum( task_->desktop() );
+        deskStr.setNum(task_->desktop());
 
 
-    if ( kas->itemSize() != KasBar::Small ) {
-	// Medium and Large modes
-	if ( !oneDesktop )
-	    p->drawText( extent()-fontMetrics().width(deskStr)-3, 15+fontMetrics().ascent(), deskStr );
+    if(kas->itemSize() != KasBar::Small)
+    {
+        // Medium and Large modes
+        if(!oneDesktop)
+            p->drawText(extent() - fontMetrics().width(deskStr) - 3, 15 + fontMetrics().ascent(), deskStr);
 
-	// Draw document state.
-	if ( kas->showModified() )
-	    paintModified( p );
+        // Draw document state.
+        if(kas->showModified())
+            paintModified(p);
     }
-    else {
-	// Small mode
-	if ( !oneDesktop )
-	    p->drawText( extent()-fontMetrics().width(deskStr)-2, 13+fontMetrics().ascent(), deskStr );
+    else
+    {
+        // Small mode
+        if(!oneDesktop)
+            p->drawText(extent() - fontMetrics().width(deskStr) - 2, 13 + fontMetrics().ascent(), deskStr);
     }
 }
 
@@ -253,60 +248,63 @@ void KasTaskItem::toggleActivateAction()
 {
     hidePopup();
 
-    if ( task_->isActive() && task_->isShaded() ) {
-	task_->setShaded( false );
+    if(task_->isActive() && task_->isShaded())
+    {
+        task_->setShaded(false);
     }
-    else {
-	task_->activateRaiseOrIconify();
+    else
+    {
+        task_->activateRaiseOrIconify();
     }
 }
 
-void KasTaskItem::showWindowMenuAt( QMouseEvent *ev )
+void KasTaskItem::showWindowMenuAt(QMouseEvent *ev)
 {
     hidePopup();
-    showWindowMenuAt( ev->globalPos() );
+    showWindowMenuAt(ev->globalPos());
 }
 
 KasPopup *KasTaskItem::createPopup()
 {
-    KasPopup *pop = new KasTaskPopup( this );
+    KasPopup *pop = new KasTaskPopup(this);
     pop->adjustSize();
     return pop;
 }
 
 void KasTaskItem::dragOverAction()
 {
-    if ( !task_->isOnCurrentDesktop() )
-	task_->toCurrentDesktop();
-    if ( task_->isShaded() )
-	task_->setShaded( false );
-    if ( task_->isIconified() )
-	task_->restore();
-    if ( !task_->isActive() )
-	task_->activate();
+    if(!task_->isOnCurrentDesktop())
+        task_->toCurrentDesktop();
+    if(task_->isShaded())
+        task_->setShaded(false);
+    if(task_->isIconified())
+        task_->restore();
+    if(!task_->isActive())
+        task_->activate();
 }
 
 void KasTaskItem::startAutoThumbnail()
 {
-    if ( thumbTimer )
-	return;
-    if ( !kasbar()->thumbnailsEnabled() )
-	return;
+    if(thumbTimer)
+        return;
+    if(!kasbar()->thumbnailsEnabled())
+        return;
 
-    if ( kasbar()->thumbnailUpdateDelay() > 0 ) {
-	thumbTimer = new QTimer( this, "thumbTimer" );
-	connect( thumbTimer, SIGNAL( timeout() ), SLOT( refreshThumbnail() ) );
+    if(kasbar()->thumbnailUpdateDelay() > 0)
+    {
+        thumbTimer = new QTimer(this, "thumbTimer");
+        connect(thumbTimer, SIGNAL(timeout()), SLOT(refreshThumbnail()));
 
-	thumbTimer->start( kasbar()->thumbnailUpdateDelay() * 1000 );
+        thumbTimer->start(kasbar()->thumbnailUpdateDelay() * 1000);
     }
 
-    QTimer::singleShot( 200, this, SLOT( refreshThumbnail() ) );
+    QTimer::singleShot(200, this, SLOT(refreshThumbnail()));
 }
 
 void KasTaskItem::stopAutoThumbnail()
 {
-    if ( !thumbTimer )
-	return;
+    if(!thumbTimer)
+        return;
 
     delete thumbTimer;
     thumbTimer = 0;
@@ -314,54 +312,53 @@ void KasTaskItem::stopAutoThumbnail()
 
 void KasTaskItem::refreshThumbnail()
 {
-    if ( !kasbar()->thumbnailsEnabled() )
-	return;
-    if ( !task_->isActive() )
-	return;
+    if(!kasbar()->thumbnailsEnabled())
+        return;
+    if(!task_->isActive())
+        return;
 
     // TODO: Check if the popup obscures the window
     KasItem *i = kasbar()->itemUnderMouse();
-    if ( i && i->isShowingPopup() ) {
-	QTimer::singleShot( 200, this, SLOT( refreshThumbnail() ) );
-	return;
+    if(i && i->isShowingPopup())
+    {
+        QTimer::singleShot(200, this, SLOT(refreshThumbnail()));
+        return;
     }
 
-    task_->setThumbnailSize( kasbar()->thumbnailSize() );
+    task_->setThumbnailSize(kasbar()->thumbnailSize());
     task_->updateThumbnail();
 }
 
-void KasTaskItem::showWindowMenuAt( QPoint p )
+void KasTaskItem::showWindowMenuAt(QPoint p)
 {
     TaskRMBMenu *tm = new TaskRMBMenu(task_, true, kasbar());
-    tm->insertItem( i18n("To &Tray" ), this, SLOT( sendToTray() ) );
+    tm->insertItem(i18n("To &Tray"), this, SLOT(sendToTray()));
     tm->insertSeparator();
-    tm->insertItem( i18n("&Kasbar"), kasbar()->contextMenu() );
+    tm->insertItem(i18n("&Kasbar"), kasbar()->contextMenu());
     tm->insertSeparator();
-    tm->insertItem( i18n("&Properties" ), this, SLOT( showPropertiesDialog() ) );
+    tm->insertItem(i18n("&Properties"), this, SLOT(showPropertiesDialog()));
 
     mouseLeave();
     kasbar()->updateMouseOver();
 
-    tm->exec( p );
+    tm->exec(p);
 }
 
 void KasTaskItem::sendToTray()
 {
     QString s;
-    s.setNum( task_->window() );
+    s.setNum(task_->window());
 
     KProcess proc;
     proc << "ksystraycmd";
     proc << "--wid" << s << "--hidden";
 
-    bool ok = proc.start( KProcess::DontCare );
-    if ( !ok ) {
-	kdWarning(1345) << "Unable to launch ksystraycmd" << endl;
-	KPassivePopup::message( i18n("Could Not Send to Tray"),
-				i18n("%1").arg(strerror(errno)),
-				Icon("error"),
-				kasbar() );
-	return;
+    bool ok = proc.start(KProcess::DontCare);
+    if(!ok)
+    {
+        kdWarning(1345) << "Unable to launch ksystraycmd" << endl;
+        KPassivePopup::message(i18n("Could Not Send to Tray"), i18n("%1").arg(strerror(errno)), Icon("error"), kasbar());
+        return;
     }
 
     proc.detach();
@@ -372,25 +369,25 @@ void KasTaskItem::showPropertiesDialog()
     //
     // Create Dialog
     //
-    QDialog *dlg = new QDialog( /*kasbar()*/0L, "task_props", false );
+    QDialog *dlg = new QDialog(/*kasbar()*/ 0L, "task_props", false);
 
     //
     // Title
     //
-    KPopupTitle *title = new KPopupTitle( dlg, "title" );
-    dlg->setCaption( i18n("Task Properties") );
-    title->setText( i18n("Task Properties") );
-    title->setIcon( icon() );
+    KPopupTitle *title = new KPopupTitle(dlg, "title");
+    dlg->setCaption(i18n("Task Properties"));
+    title->setText(i18n("Task Properties"));
+    title->setIcon(icon());
 
     //
     // Tabbed View
     //
-    QTabWidget *tabs = new QTabWidget( dlg );
-    tabs->addTab( createX11Props( tabs ), i18n("General") );
-    tabs->addTab( createTaskProps( task_, tabs ), i18n("Task") );
+    QTabWidget *tabs = new QTabWidget(dlg);
+    tabs->addTab(createX11Props(tabs), i18n("General"));
+    tabs->addTab(createTaskProps(task_, tabs), i18n("Task"));
 
-    tabs->addTab( createTaskProps( this, tabs ), i18n("Item") );
-    tabs->addTab( createTaskProps( kasbar(), tabs, false ), i18n("Bar") );
+    tabs->addTab(createTaskProps(this, tabs), i18n("Item"));
+    tabs->addTab(createTaskProps(kasbar(), tabs, false), i18n("Bar"));
 
 #if 0
     tabs->addTab( createNETProps( tabs ), i18n("NET") );
@@ -399,53 +396,53 @@ void KasTaskItem::showPropertiesDialog()
     //
     // Layout Dialog
     //
-    QVBoxLayout *vbl = new QVBoxLayout( dlg, KDialog::marginHint(), KDialog::spacingHint() );
-    vbl->addWidget( title );
-    vbl->addWidget( tabs );
+    QVBoxLayout *vbl = new QVBoxLayout(dlg, KDialog::marginHint(), KDialog::spacingHint());
+    vbl->addWidget(title);
+    vbl->addWidget(tabs);
 
-    dlg->resize( 470, 500 );
+    dlg->resize(470, 500);
     dlg->show();
-
 }
 
-QWidget *KasTaskItem::createTaskProps( QObject *target, QWidget *parent, bool recursive )
+QWidget *KasTaskItem::createTaskProps(QObject *target, QWidget *parent, bool recursive)
 {
-    QVBox *vb = new QVBox( parent );
-    vb->setSpacing( KDialog::spacingHint() );
-    vb->setMargin( KDialog::marginHint() );
+    QVBox *vb = new QVBox(parent);
+    vb->setSpacing(KDialog::spacingHint());
+    vb->setMargin(KDialog::marginHint());
 
     // Create List View
-    KListView *taskprops = new KListView( vb, "props_view" );
-    taskprops->setResizeMode( QListView::LastColumn );
-    taskprops->addColumn( i18n("Property"), 0 );
-    taskprops->addColumn( i18n("Type"), 0 );
-    taskprops->addColumn( i18n("Value") );
+    KListView *taskprops = new KListView(vb, "props_view");
+    taskprops->setResizeMode(QListView::LastColumn);
+    taskprops->addColumn(i18n("Property"), 0);
+    taskprops->addColumn(i18n("Type"), 0);
+    taskprops->addColumn(i18n("Value"));
 
     // Create List Items
     QMetaObject *mo = target->metaObject();
-    for ( int i = 0; i < mo->numProperties( recursive ); i++ ) {
-	const QMetaProperty *p = mo->property(i, recursive);
+    for(int i = 0; i < mo->numProperties(recursive); i++)
+    {
+        const QMetaProperty *p = mo->property(i, recursive);
 
-	(void) new KListViewItem( taskprops,
-				  p->name(), p->type(),
-				  target->property( p->name() ).toString() );
+        (void)new KListViewItem(taskprops, p->name(), p->type(), target->property(p->name()).toString());
     }
 
     return vb;
 }
 
-QString KasTaskItem::expandMacros( const QString &format, QObject *data )
+QString KasTaskItem::expandMacros(const QString &format, QObject *data)
 {
     QString s = format;
     QRegExp re("\\$(\\w+)");
 
     int pos = 0;
-    while ( pos >= 0 ) {
-        pos = re.search( s, pos );
-        if ( pos >= 0 ) {
-	    QVariant val = data->property( re.cap(1).latin1() );
-	    QString v = val.asString();
-	    s.replace( pos, re.matchedLength(), v );
+    while(pos >= 0)
+    {
+        pos = re.search(s, pos);
+        if(pos >= 0)
+        {
+            QVariant val = data->property(re.cap(1).latin1());
+            QString v = val.asString();
+            s.replace(pos, re.matchedLength(), v);
             pos = pos + v.length();
         }
     }
@@ -453,56 +450,55 @@ QString KasTaskItem::expandMacros( const QString &format, QObject *data )
     return s;
 }
 
-QWidget *KasTaskItem::createX11Props( QWidget *parent )
+QWidget *KasTaskItem::createX11Props(QWidget *parent)
 {
-    QVBox *vb2 = new QVBox( parent );
-    vb2->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Preferred );
-    vb2->setSpacing( KDialog::spacingHint() );
-    vb2->setMargin( KDialog::marginHint() );
+    QVBox *vb2 = new QVBox(parent);
+    vb2->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+    vb2->setSpacing(KDialog::spacingHint());
+    vb2->setMargin(KDialog::marginHint());
 
     // Create View
-    new QLabel( i18n("General"), vb2, "view" );
-    QTextView *tv = new QTextView( vb2 );
+    new QLabel(i18n("General"), vb2, "view");
+    QTextView *tv = new QTextView(vb2);
 
     QString fmt = i18n(
-	"<html>"
-	"<body>"
-	"<b>Name</b>: $name<br>"
-	"<b>Visible name</b>: $visibleName<br>"
-	"<br>"
-	"<b>Iconified</b>: $iconified<br>"
-	"<b>Minimized</b>: $minimized<br>"
-	"<b>Maximized</b>: $maximized<br>"
-	"<b>Shaded</b>: $shaded<br>"
-	"<b>Always on top</b>: $alwaysOnTop<br>"
-	"<br>"
-	"<b>Desktop</b>: $desktop<br>"
-	"<b>All desktops</b>: $onAllDesktops<br>"
-	"<br>"
-	"<b>Iconic name</b>: $iconicName<br>"
-	"<b>Iconic visible name</b>: $visibleIconicName<br>"
-	"<br>"
-	"<b>Modified</b>: $modified<br>"
-	"<b>Demands attention</b>: $demandsAttention<br>"
-	"</body>"
-	"</html>"
-	);
+        "<html>"
+        "<body>"
+        "<b>Name</b>: $name<br>"
+        "<b>Visible name</b>: $visibleName<br>"
+        "<br>"
+        "<b>Iconified</b>: $iconified<br>"
+        "<b>Minimized</b>: $minimized<br>"
+        "<b>Maximized</b>: $maximized<br>"
+        "<b>Shaded</b>: $shaded<br>"
+        "<b>Always on top</b>: $alwaysOnTop<br>"
+        "<br>"
+        "<b>Desktop</b>: $desktop<br>"
+        "<b>All desktops</b>: $onAllDesktops<br>"
+        "<br>"
+        "<b>Iconic name</b>: $iconicName<br>"
+        "<b>Iconic visible name</b>: $visibleIconicName<br>"
+        "<br>"
+        "<b>Modified</b>: $modified<br>"
+        "<b>Demands attention</b>: $demandsAttention<br>"
+        "</body>"
+        "</html>");
 
-    tv->setText( expandMacros( fmt, task_ ) );
-    tv->setWordWrap( QTextEdit::WidgetWidth );
+    tv->setText(expandMacros(fmt, task_));
+    tv->setWordWrap(QTextEdit::WidgetWidth);
 
     return vb2;
 }
 
-QWidget *KasTaskItem::createNETProps( QWidget *parent )
+QWidget *KasTaskItem::createNETProps(QWidget *parent)
 {
-    QVBox *vb3 = new QVBox( parent );
-    vb3->setSpacing( KDialog::spacingHint() );
-    vb3->setMargin( KDialog::marginHint() );
+    QVBox *vb3 = new QVBox(parent);
+    vb3->setSpacing(KDialog::spacingHint());
+    vb3->setMargin(KDialog::marginHint());
 
     // Create View
-    new QLabel( i18n("NET WM Specification Info"), vb3, "view" );
-    new QTextView( vb3 );
+    new QLabel(i18n("NET WM Specification Info"), vb3, "view");
+    new QTextView(vb3);
 
     return vb3;
 }

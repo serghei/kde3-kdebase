@@ -50,295 +50,288 @@
 #include "pass.h"
 #include "chfnprocess.h"
 #include "chfacedlg.h"
-#include "main.h" 
+#include "main.h"
 
-typedef KGenericFactory<KCMUserAccount, QWidget> Factory;
-K_EXPORT_COMPONENT_FACTORY( kcm_useraccount, Factory("useraccount") )
+typedef KGenericFactory< KCMUserAccount, QWidget > Factory;
+K_EXPORT_COMPONENT_FACTORY(kcm_useraccount, Factory("useraccount"))
 
-KCMUserAccount::KCMUserAccount( QWidget *parent, const char *name,
-	const QStringList &)
-	: KCModule( parent, name)
+KCMUserAccount::KCMUserAccount(QWidget *parent, const char *name, const QStringList &) : KCModule(parent, name)
 {
-	QVBoxLayout *topLayout = new QVBoxLayout(this);
-	_mw = new MainWidget(this);
-	topLayout->addWidget( _mw );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    _mw = new MainWidget(this);
+    topLayout->addWidget(_mw);
 
-	connect( _mw->btnChangeFace, SIGNAL(clicked()), SLOT(slotFaceButtonClicked()));
-	connect( _mw->btnChangePassword, SIGNAL(clicked()), SLOT(slotChangePassword()));
-	_mw->btnChangePassword->setGuiItem( KGuiItem( i18n("Change &Password..."), "password" ));
-	
-	connect( _mw->leRealname, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-	connect( _mw->leOrganization, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-	connect( _mw->leEmail, SIGNAL(textChanged(const QString&)), SLOT(changed()));
-	connect( _mw->leSMTP, SIGNAL(textChanged(const QString&)), SLOT(changed()));
+    connect(_mw->btnChangeFace, SIGNAL(clicked()), SLOT(slotFaceButtonClicked()));
+    connect(_mw->btnChangePassword, SIGNAL(clicked()), SLOT(slotChangePassword()));
+    _mw->btnChangePassword->setGuiItem(KGuiItem(i18n("Change &Password..."), "password"));
 
-	_ku = new KUser();
-	_kes = new KEMailSettings();
+    connect(_mw->leRealname, SIGNAL(textChanged(const QString &)), SLOT(changed()));
+    connect(_mw->leOrganization, SIGNAL(textChanged(const QString &)), SLOT(changed()));
+    connect(_mw->leEmail, SIGNAL(textChanged(const QString &)), SLOT(changed()));
+    connect(_mw->leSMTP, SIGNAL(textChanged(const QString &)), SLOT(changed()));
 
-	_mw->lblUsername->setText( _ku->loginName() );
-	_mw->lblUID->setText( QString().number(_ku->uid()) );
+    _ku = new KUser();
+    _kes = new KEMailSettings();
 
-	KAboutData *about = new KAboutData(I18N_NOOP("kcm_useraccount"), 
-		I18N_NOOP("Password & User Information"), 0, 0,
-		KAboutData::License_GPL,
-		I18N_NOOP("(C) 2002, Braden MacDonald, "
-			"(C) 2004 Ravikiran Rajagopal"));
+    _mw->lblUsername->setText(_ku->loginName());
+    _mw->lblUID->setText(QString().number(_ku->uid()));
 
-	about->addAuthor("Frans Englich", I18N_NOOP("Maintainer"), "frans.englich@telia.com");
-	about->addAuthor("Ravikiran Rajagopal", 0, "ravi@kde.org");
-	about->addAuthor("Michael H\303\244ckel", "haeckel@kde.org" );
+    KAboutData *about = new KAboutData(I18N_NOOP("kcm_useraccount"), I18N_NOOP("Password & User Information"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(C) 2002, Braden MacDonald, "
+                                                 "(C) 2004 Ravikiran Rajagopal"));
 
-	about->addAuthor("Braden MacDonald", I18N_NOOP("Face editor"), "bradenm_k@shaw.ca");
-	about->addAuthor("Geert Jansen", I18N_NOOP("Password changer"), "jansen@kde.org", 
-			"http://www.stack.nl/~geertj/");
-	about->addAuthor("Daniel Molkentin");
-	about->addAuthor("Alex Zepeda");
-	about->addAuthor("Hans Karlsson", I18N_NOOP("Icons"), "karlsson.h@home.se");
-	about->addAuthor("Hermann Thomas", I18N_NOOP("Icons"), "h.thomas@gmx.de");
-	setAboutData(about);
+    about->addAuthor("Frans Englich", I18N_NOOP("Maintainer"), "frans.englich@telia.com");
+    about->addAuthor("Ravikiran Rajagopal", 0, "ravi@kde.org");
+    about->addAuthor("Michael H\303\244ckel", "haeckel@kde.org");
 
-	setQuickHelp( i18n("<qt>Here you can change your personal information, which "
-			"will be used in mail programs and word processors, for example. You can "
-			"change your login password by clicking <em>Change Password</em>.</qt>") );
+    about->addAuthor("Braden MacDonald", I18N_NOOP("Face editor"), "bradenm_k@shaw.ca");
+    about->addAuthor("Geert Jansen", I18N_NOOP("Password changer"), "jansen@kde.org", "http://www.stack.nl/~geertj/");
+    about->addAuthor("Daniel Molkentin");
+    about->addAuthor("Alex Zepeda");
+    about->addAuthor("Hans Karlsson", I18N_NOOP("Icons"), "karlsson.h@home.se");
+    about->addAuthor("Hermann Thomas", I18N_NOOP("Icons"), "h.thomas@gmx.de");
+    setAboutData(about);
 
-	addConfig( KCFGPassword::self(), this );
-	load();
+    setQuickHelp(
+        i18n("<qt>Here you can change your personal information, which "
+             "will be used in mail programs and word processors, for example. You can "
+             "change your login password by clicking <em>Change Password</em>.</qt>"));
+
+    addConfig(KCFGPassword::self(), this);
+    load();
 }
 
 void KCMUserAccount::slotChangePassword()
 {
-	KProcess *proc = new KProcess;
-	QString bin = KGlobal::dirs()->findExe("kdepasswd");
-	if ( !bin )
-	{
-		kdDebug() << "kcm_useraccount: kdepasswd was not found." << endl;
-		KMessageBox::sorry ( this, i18n( "A program error occurred: the internal "
-			"program 'kdepasswd' could not be found. You will "
-			"not be able to change your password."));
+    KProcess *proc = new KProcess;
+    QString bin = KGlobal::dirs()->findExe("kdepasswd");
+    if(!bin)
+    {
+        kdDebug() << "kcm_useraccount: kdepasswd was not found." << endl;
+        KMessageBox::sorry(this, i18n("A program error occurred: the internal "
+                                      "program 'kdepasswd' could not be found. You will "
+                                      "not be able to change your password."));
 
-		_mw->btnChangePassword->setEnabled(false);
-		delete proc;
-		return;
-	}
+        _mw->btnChangePassword->setEnabled(false);
+        delete proc;
+        return;
+    }
 
-	*proc << bin << _ku->loginName() ;
-	proc->start(KProcess::DontCare);
+    *proc << bin << _ku->loginName();
+    proc->start(KProcess::DontCare);
 
-	delete proc;
-
+    delete proc;
 }
 
 
 KCMUserAccount::~KCMUserAccount()
 {
-	delete _ku;
-	delete _kes;
+    delete _ku;
+    delete _kes;
 }
 
 void KCMUserAccount::load()
 {
-	_mw->lblUsername->setText(_ku->loginName());
+    _mw->lblUsername->setText(_ku->loginName());
 
-	_kes->setProfile(_kes->defaultProfileName());
+    _kes->setProfile(_kes->defaultProfileName());
 
-	_mw->leRealname->setText( _kes->getSetting( KEMailSettings::RealName ));
-	_mw->leEmail->setText( _kes->getSetting( KEMailSettings::EmailAddress ));
-	_mw->leOrganization->setText( _kes->getSetting( KEMailSettings::Organization ));
-	_mw->leSMTP->setText( _kes->getSetting( KEMailSettings::OutServer ));
+    _mw->leRealname->setText(_kes->getSetting(KEMailSettings::RealName));
+    _mw->leEmail->setText(_kes->getSetting(KEMailSettings::EmailAddress));
+    _mw->leOrganization->setText(_kes->getSetting(KEMailSettings::Organization));
+    _mw->leSMTP->setText(_kes->getSetting(KEMailSettings::OutServer));
 
-	QString _userPicsDir = KCFGUserAccount::faceDir() +  
-		KGlobal::dirs()->resourceDirs("data").last() + "kdm/faces/";
+    QString _userPicsDir = KCFGUserAccount::faceDir() + KGlobal::dirs()->resourceDirs("data").last() + "kdm/faces/";
 
-	QString fs = KCFGUserAccount::faceSource();
-	if (fs == QString::fromLatin1("UserOnly"))
-		_facePerm = userOnly;
-	else if (fs == QString::fromLatin1("PreferUser"))
-		_facePerm = userFirst;
-	else if (fs == QString::fromLatin1("PreferAdmin"))
-		_facePerm = adminFirst;
-	else
-		_facePerm = adminOnly; // Admin Only
+    QString fs = KCFGUserAccount::faceSource();
+    if(fs == QString::fromLatin1("UserOnly"))
+        _facePerm = userOnly;
+    else if(fs == QString::fromLatin1("PreferUser"))
+        _facePerm = userFirst;
+    else if(fs == QString::fromLatin1("PreferAdmin"))
+        _facePerm = adminFirst;
+    else
+        _facePerm = adminOnly; // Admin Only
 
-	if ( _facePerm == adminFirst )
-	{ 	// If the administrator's choice takes preference
-		_facePixmap = QPixmap( _userPicsDir + _ku->loginName() + ".face.icon" );
+    if(_facePerm == adminFirst)
+    { // If the administrator's choice takes preference
+        _facePixmap = QPixmap(_userPicsDir + _ku->loginName() + ".face.icon");
 
-		if ( _facePixmap.isNull() )
-			_facePerm = userFirst;
-		else
-			_mw->btnChangeFace->setPixmap( _facePixmap );
-	}
+        if(_facePixmap.isNull())
+            _facePerm = userFirst;
+        else
+            _mw->btnChangeFace->setPixmap(_facePixmap);
+    }
 
-	if ( _facePerm >= userFirst )
-	{
-		// If the user's choice takes preference
-		_facePixmap = QPixmap( KCFGUserAccount::faceFile() );
+    if(_facePerm >= userFirst)
+    {
+        // If the user's choice takes preference
+        _facePixmap = QPixmap(KCFGUserAccount::faceFile());
 
-		// The user has no face, should we check for the admin's setting?
-		if ( _facePixmap.isNull() && _facePerm == userFirst )
-			_facePixmap = QPixmap( _userPicsDir + _ku->loginName() + ".face.icon" );
+        // The user has no face, should we check for the admin's setting?
+        if(_facePixmap.isNull() && _facePerm == userFirst)
+            _facePixmap = QPixmap(_userPicsDir + _ku->loginName() + ".face.icon");
 
-		if ( _facePixmap.isNull() )
-			_facePixmap = QPixmap( _userPicsDir + KCFGUserAccount::defaultFile() );
+        if(_facePixmap.isNull())
+            _facePixmap = QPixmap(_userPicsDir + KCFGUserAccount::defaultFile());
 
-		_mw->btnChangeFace->setPixmap( _facePixmap );
-	}
-	else if ( _facePerm <= adminOnly )
-	{
-		// Admin only
-		_facePixmap = QPixmap( _userPicsDir + _ku->loginName() + ".face.icon" );
-		if ( _facePixmap.isNull() )
-			_facePixmap = QPixmap( _userPicsDir + KCFGUserAccount::defaultFile() );
-		_mw->btnChangeFace->setPixmap( _facePixmap );
-	}
+        _mw->btnChangeFace->setPixmap(_facePixmap);
+    }
+    else if(_facePerm <= adminOnly)
+    {
+        // Admin only
+        _facePixmap = QPixmap(_userPicsDir + _ku->loginName() + ".face.icon");
+        if(_facePixmap.isNull())
+            _facePixmap = QPixmap(_userPicsDir + KCFGUserAccount::defaultFile());
+        _mw->btnChangeFace->setPixmap(_facePixmap);
+    }
 
-	KCModule::load(); /* KConfigXT */
-
+    KCModule::load(); /* KConfigXT */
 }
 
 void KCMUserAccount::save()
 {
-	KCModule::save(); /* KConfigXT */
+    KCModule::save(); /* KConfigXT */
 
-	/* Save KDE's homebrewn settings */
-	_kes->setSetting( KEMailSettings::RealName, _mw->leRealname->text() );
-	_kes->setSetting( KEMailSettings::EmailAddress, _mw->leEmail->text() );
-	_kes->setSetting( KEMailSettings::Organization, _mw->leOrganization->text() );
-	_kes->setSetting( KEMailSettings::OutServer, _mw->leSMTP->text() );
+    /* Save KDE's homebrewn settings */
+    _kes->setSetting(KEMailSettings::RealName, _mw->leRealname->text());
+    _kes->setSetting(KEMailSettings::EmailAddress, _mw->leEmail->text());
+    _kes->setSetting(KEMailSettings::Organization, _mw->leOrganization->text());
+    _kes->setSetting(KEMailSettings::OutServer, _mw->leSMTP->text());
 
-	/* Save realname to /etc/passwd */
-	if ( _mw->leRealname->isModified() )
-	{
-		QCString password;
-		int ret = KPasswordDialog::getPassword( password, i18n("Please enter "
-			"your password in order to save your settings:"));
+    /* Save realname to /etc/passwd */
+    if(_mw->leRealname->isModified())
+    {
+        QCString password;
+        int ret = KPasswordDialog::getPassword(password, i18n("Please enter "
+                                                              "your password in order to save your settings:"));
 
-		if ( !ret ) 
-		{
-			KMessageBox::sorry( this, i18n("You must enter "
-				"your password in order to change your information."));
-			return;
-		}
+        if(!ret)
+        {
+            KMessageBox::sorry(this, i18n("You must enter "
+                                          "your password in order to change your information."));
+            return;
+        }
 
-		ChfnProcess *proc = new ChfnProcess();
-		ret = proc->exec(password, _mw->leRealname->text().ascii() );
-		if ( ret )
-			{
-			if ( ret == ChfnProcess::PasswordError )
-				KMessageBox::sorry( this, i18n("You must enter a correct password."));
+        ChfnProcess *proc = new ChfnProcess();
+        ret = proc->exec(password, _mw->leRealname->text().ascii());
+        if(ret)
+        {
+            if(ret == ChfnProcess::PasswordError)
+                KMessageBox::sorry(this, i18n("You must enter a correct password."));
 
-			else 
-			{
-				KMessageBox::sorry( this, i18n("An error occurred and your password has "
-							"probably not been changed. The error "
-							"message was:\n%1").arg(proc->error()));
-				kdDebug() << "ChfnProcess->exec() failed. Error code: " << ret 
-					<< "\nOutput:" << proc->error() << endl;
-			}	
-		}	
+            else
+            {
+                KMessageBox::sorry(this, i18n("An error occurred and your password has "
+                                              "probably not been changed. The error "
+                                              "message was:\n%1")
+                                             .arg(proc->error()));
+                kdDebug() << "ChfnProcess->exec() failed. Error code: " << ret << "\nOutput:" << proc->error() << endl;
+            }
+        }
 
-		delete proc;
-	}	
+        delete proc;
+    }
 
-	/* Save the image */
-	if( !_facePixmap.save( KCFGUserAccount::faceFile(), "PNG" ))
-		KMessageBox::error( this, i18n("There was an error saving the image: %1" ).arg(
-			KCFGUserAccount::faceFile()) );
-
+    /* Save the image */
+    if(!_facePixmap.save(KCFGUserAccount::faceFile(), "PNG"))
+        KMessageBox::error(this, i18n("There was an error saving the image: %1").arg(KCFGUserAccount::faceFile()));
 }
 
 void KCMUserAccount::changeFace(const QPixmap &pix)
 {
-  if ( _facePerm < userFirst )
-    return; // If the user isn't allowed to change their face, don't!
+    if(_facePerm < userFirst)
+        return; // If the user isn't allowed to change their face, don't!
 
-  if ( pix.isNull() ) {
-    KMessageBox::sorry( this, i18n("There was an error loading the image.") );
-    return;
-  }
+    if(pix.isNull())
+    {
+        KMessageBox::sorry(this, i18n("There was an error loading the image."));
+        return;
+    }
 
-  _facePixmap = pix;
-  _mw->btnChangeFace->setPixmap( _facePixmap );
-  emit changed( true );
+    _facePixmap = pix;
+    _mw->btnChangeFace->setPixmap(_facePixmap);
+    emit changed(true);
 }
 
 void KCMUserAccount::slotFaceButtonClicked()
 {
-  if ( _facePerm < userFirst )
-  {
-    KMessageBox::sorry( this, i18n("Your administrator has disallowed changing your image.") );
-    return;
-  }
+    if(_facePerm < userFirst)
+    {
+        KMessageBox::sorry(this, i18n("Your administrator has disallowed changing your image."));
+        return;
+    }
 
-  ChFaceDlg* pDlg = new ChFaceDlg( KGlobal::dirs()->resourceDirs("data").last() +
-	"/kdm/pics/users/" );
+    ChFaceDlg *pDlg = new ChFaceDlg(KGlobal::dirs()->resourceDirs("data").last() + "/kdm/pics/users/");
 
-  if ( pDlg->exec() == QDialog::Accepted && !pDlg->getFaceImage().isNull() )
-      changeFace( pDlg->getFaceImage() );
+    if(pDlg->exec() == QDialog::Accepted && !pDlg->getFaceImage().isNull())
+        changeFace(pDlg->getFaceImage());
 
-  delete pDlg;
+    delete pDlg;
 }
 
 /**
  * I merged faceButtonDropEvent into this /Frans
- * The function was called after checking event type and 
+ * The function was called after checking event type and
  * the code is now below that if statement
  */
 bool KCMUserAccount::eventFilter(QObject *, QEvent *e)
 {
-	if (e->type() == QEvent::DragEnter)
-		{
-		QDragEnterEvent *ee = (QDragEnterEvent *) e;
-		ee->accept( KURLDrag::canDecode(ee) );
-		return true;
-	}
+    if(e->type() == QEvent::DragEnter)
+    {
+        QDragEnterEvent *ee = (QDragEnterEvent *)e;
+        ee->accept(KURLDrag::canDecode(ee));
+        return true;
+    }
 
-	if (e->type() == QEvent::Drop)
-	{
-		if ( _facePerm < userFirst )
-		{
-			KMessageBox::sorry( this, i18n("Your administrator "
-				"has disallowed changing your image.") );
-			return true;
-		}
+    if(e->type() == QEvent::Drop)
+    {
+        if(_facePerm < userFirst)
+        {
+            KMessageBox::sorry(this, i18n("Your administrator "
+                                          "has disallowed changing your image."));
+            return true;
+        }
 
-		KURL *url = decodeImgDrop( (QDropEvent *) e, this);
-		if (url)
-		{
-			QString pixPath;
-			KIO::NetAccess::download(*url, pixPath, this);
-			changeFace( QPixmap( pixPath ) );
-			KIO::NetAccess::removeTempFile(pixPath);
-			delete url;
-		}
-		return true;
-	}
-	return false;
+        KURL *url = decodeImgDrop((QDropEvent *)e, this);
+        if(url)
+        {
+            QString pixPath;
+            KIO::NetAccess::download(*url, pixPath, this);
+            changeFace(QPixmap(pixPath));
+            KIO::NetAccess::removeTempFile(pixPath);
+            delete url;
+        }
+        return true;
+    }
+    return false;
 }
 
 inline KURL *KCMUserAccount::decodeImgDrop(QDropEvent *e, QWidget *wdg)
 {
-  KURL::List uris;
+    KURL::List uris;
 
-  if (KURLDrag::decode(e, uris) && (uris.count() > 0))
-  {
-    KURL *url = new KURL(uris.first());
+    if(KURLDrag::decode(e, uris) && (uris.count() > 0))
+    {
+        KURL *url = new KURL(uris.first());
 
-    KImageIO::registerFormats();
-    if( KImageIO::canRead(KImageIO::type(url->fileName())) )
-      return url;
+        KImageIO::registerFormats();
+        if(KImageIO::canRead(KImageIO::type(url->fileName())))
+            return url;
 
-    QStringList qs = QStringList::split('\n', KImageIO::pattern());
-    qs.remove(qs.begin());
+        QStringList qs = QStringList::split('\n', KImageIO::pattern());
+        qs.remove(qs.begin());
 
-    QString msg = i18n( "%1 does not appear to be an image file.\n"
-			  "Please use files with these extensions:\n"
-			  "%2").arg(url->fileName()).arg(qs.join("\n"));
-    KMessageBox::sorry( wdg, msg);
-    delete url;
-  }
-  return 0;
+        QString msg = i18n(
+                          "%1 does not appear to be an image file.\n"
+                          "Please use files with these extensions:\n"
+                          "%2")
+                          .arg(url->fileName())
+                          .arg(qs.join("\n"));
+        KMessageBox::sorry(wdg, msg);
+        delete url;
+    }
+    return 0;
 }
 
 #include "main.moc"
-

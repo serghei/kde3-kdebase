@@ -40,9 +40,12 @@
  *   SMBURLTYPE_WORKGROUP_OR_SERVER - "smb:/mygroup" or "smb:/myserver"
  *   URLTYPE_SHARE_OR_PATH - "smb:/mygroupe/mymachine/myshare/mydir"
  */
-enum SMBUrlType {
-    SMBURLTYPE_UNKNOWN = 0, SMBURLTYPE_ENTIRE_NETWORK = 1,
-    SMBURLTYPE_WORKGROUP_OR_SERVER = 2, SMBURLTYPE_SHARE_OR_PATH = 3
+enum SMBUrlType
+{
+    SMBURLTYPE_UNKNOWN = 0,
+    SMBURLTYPE_ENTIRE_NETWORK = 1,
+    SMBURLTYPE_WORKGROUP_OR_SERVER = 2,
+    SMBURLTYPE_SHARE_OR_PATH = 3
 };
 
 
@@ -53,13 +56,12 @@ enum SMBUrlType {
  * and Handle UserInfo
  * it also check the correctness of the URL
  */
-class SMBUrl : public KURL
-{
+class SMBUrl : public KURL {
 
 
 public:
     SMBUrl();
-    SMBUrl(const KURL & kurl);
+    SMBUrl(const KURL &kurl);
 
     /**
      * Appends the specified file and dir to this SMBUrl
@@ -78,30 +80,45 @@ public:
      */
     SMBUrlType getType() const;
 
-    void setPass( const QString& _txt ) { KURL::setPass(_txt); updateCache(); }
-    void setUser( const QString& _txt ) { KURL::setUser(_txt); updateCache(); }
-    void setHost( const QString& _txt ) { KURL::setHost(_txt); updateCache(); }
+    void setPass(const QString &_txt)
+    {
+        KURL::setPass(_txt);
+        updateCache();
+    }
+    void setUser(const QString &_txt)
+    {
+        KURL::setUser(_txt);
+        updateCache();
+    }
+    void setHost(const QString &_txt)
+    {
+        KURL::setHost(_txt);
+        updateCache();
+    }
 
     /**
      * Returns the workgroup if it given in url
      */
-//    QString getWorkgroup() const;
+    //    QString getWorkgroup() const;
 
     /**
      * Returns path after workgroup
      */
-//    QString getServerShareDir() const;
+    //    QString getServerShareDir() const;
 
-     /**
-     * Return a URL that is suitable for libsmbclient
-     */
-    QCString toSmbcUrl() const { return m_surl; }
+    /**
+    * Return a URL that is suitable for libsmbclient
+    */
+    QCString toSmbcUrl() const
+    {
+        return m_surl;
+    }
 
 private:
     /**
      * Change from QString to QCString (MS Windows's character encoding)
      */
-    QCString fromUnicode( const QString &_str ) const;
+    QCString fromUnicode(const QString &_str) const;
 
     void updateCache();
     QCString m_surl;
@@ -115,4 +132,3 @@ private:
 
 
 #endif
-

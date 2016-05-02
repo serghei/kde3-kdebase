@@ -26,21 +26,18 @@
 class QCheckBox;
 class Medium;
 
-class PropertiesPage : public PropertiesPageGUI
-{
-  Q_OBJECT
+class PropertiesPage : public PropertiesPageGUI {
+    Q_OBJECT
 
 public:
-  PropertiesPage(QWidget* parent, const QString &_id);
-  virtual ~PropertiesPage();
-  
-  bool save();
+    PropertiesPage(QWidget *parent, const QString &_id);
+    virtual ~PropertiesPage();
+
+    bool save();
 
 protected:
-  
-  QMap<QString,QString> options;
-  QString id;
-
+    QMap< QString, QString > options;
+    QString id;
 };
 
 #endif

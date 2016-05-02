@@ -33,7 +33,8 @@
 #include "authenticator.h"
 
 
-struct _PolkitKDE3Authenticator {
+struct _PolkitKDE3Authenticator
+{
     GObject parent_instance;
 
     PolkitAuthority *authority;
@@ -49,17 +50,19 @@ struct _PolkitKDE3Authenticator {
 };
 
 
-struct _PolkitKDE3AuthenticatorClass {
+struct _PolkitKDE3AuthenticatorClass
+{
     GObjectClass parent_class;
 };
 
 
-enum {
+enum
+{
     COMPLETED_SIGNAL,
     LAST_SIGNAL,
 };
 
-static guint _signals[LAST_SIGNAL] = { 0 };
+static guint _signals[LAST_SIGNAL] = {0};
 
 G_DEFINE_TYPE(PolkitKDE3Authenticator, polkit_kde3_authenticator, G_TYPE_OBJECT);
 
@@ -100,23 +103,14 @@ static void polkit_kde3_authenticator_class_init(PolkitKDE3AuthenticatorClass *k
 
     gobject_class->finalize = polkit_kde3_authenticator_finalize;
 
-    _signals[COMPLETED_SIGNAL] = g_signal_new("completed",
-                                              POLKIT_KDE3_TYPE_AUTHENTICATOR,
-                                              G_SIGNAL_RUN_LAST,
-                                              0,                      /* class offset     */
-                                              NULL,                   /* accumulator      */
-                                              NULL,                   /* accumulator data */
-                                              g_cclosure_marshal_generic,
-                                              G_TYPE_NONE,
-                                              2,
-                                              G_TYPE_BOOLEAN,
-                                              G_TYPE_BOOLEAN);
+    _signals[COMPLETED_SIGNAL] = g_signal_new("completed", POLKIT_KDE3_TYPE_AUTHENTICATOR, G_SIGNAL_RUN_LAST, 0, /* class offset     */
+                                              NULL,                                                              /* accumulator      */
+                                              NULL,                                                              /* accumulator data */
+                                              g_cclosure_marshal_generic, G_TYPE_NONE, 2, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
 }
 
 
-static PolkitActionDescription *get_desc_for_action(
-        PolkitAuthority *authority,
-        const QString &action_id)
+static PolkitActionDescription *get_desc_for_action(PolkitAuthority *authority, const QString &action_id)
 {
     GList *action_descs;
     GList *l;
@@ -132,7 +126,7 @@ static PolkitActionDescription *get_desc_for_action(
 
         if(::polkit_action_description_get_action_id(action_desc) == action_id)
         {
-            result = static_cast<PolkitActionDescription*>(g_object_ref(action_desc));
+            result = static_cast< PolkitActionDescription * >(g_object_ref(action_desc));
             goto out;
         }
     }
@@ -145,7 +139,7 @@ out:
 }
 
 
-//static void on_dialog_deleted(GtkWidget *widget,
+// static void on_dialog_deleted(GtkWidget *widget,
 //                   GdkEvent  *event,
 //                   gpointer   user_data)
 //{
@@ -155,35 +149,27 @@ out:
 //}
 
 
-static void on_user_selected(
-        GObject    *object,
-        GParamSpec *pspec,
-        gpointer    user_data)
+static void on_user_selected(GObject *object, GParamSpec *pspec, gpointer user_data)
 {
     PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
 
     /* clear any previous messages */
-//    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), "");
+    //    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), "");
 
     polkit_kde3_authenticator_cancel(authenticator);
     authenticator->new_user_selected = TRUE;
 }
 
 
-PolkitKDE3Authenticator *polkit_kde3_authenticator_new(
-        const gchar     *action_id,
-        const gchar     *message,
-        const gchar     *icon_name,
-        PolkitDetails   *details,
-        const gchar     *cookie,
-        GList           *identities)
+PolkitKDE3Authenticator *polkit_kde3_authenticator_new(const gchar *action_id, const gchar *message, const gchar *icon_name, PolkitDetails *details,
+                                                       const gchar *cookie, GList *identities)
 {
     PolkitKDE3Authenticator *authenticator;
     PolkitActionDescription *action_desc;
     GError *error;
     char **keys;
 
-    QMap<QString,QString> mapDetails;
+    QMap< QString, QString > mapDetails;
     QStringList listUsers;
 
 
@@ -205,17 +191,17 @@ PolkitKDE3Authenticator *polkit_kde3_authenticator_new(
         goto error;
 
     mapDetails.insert(i18n("Action"), action_id);
-    mapDetails.insert(
-                i18n("Vendor"),
-                QString("<a href='%2'>%1</a>")
-                    .arg(::polkit_action_description_get_vendor_name(action_desc))
-                    .arg(polkit_action_description_get_vendor_url(action_desc)));
+    mapDetails.insert(i18n("Vendor"), QString("<a href='%2'>%1</a>")
+                                          .arg(::polkit_action_description_get_vendor_name(action_desc))
+                                          .arg(polkit_action_description_get_vendor_url(action_desc)));
 
     ::g_object_unref(action_desc);
 
-    if(details) {
+    if(details)
+    {
         keys = ::polkit_details_get_keys(details);
-        for(int i = 0; keys[i]; i++) {
+        for(int i = 0; keys[i]; i++)
+        {
             const char *key = keys[i];
             if(::g_str_has_prefix(key, "polkit."))
                 continue;
@@ -225,26 +211,22 @@ PolkitKDE3Authenticator *polkit_kde3_authenticator_new(
         ::g_strfreev(keys);
     }
 
-    for(GList *l = identities; l != NULL; l = l->next) {
+    for(GList *l = identities; l != NULL; l = l->next)
+    {
         PolkitUnixUser *unixUser = POLKIT_UNIX_USER(l->data);
         listUsers << polkit_unix_user_get_name(unixUser);
     }
 
-    authenticator->dialog = new AuthenticationDialog(
-                action_id,
-                icon_name,
-                message,
-                mapDetails,
-                listUsers);
+    authenticator->dialog = new AuthenticationDialog(action_id, icon_name, message, mapDetails, listUsers);
 
-//    g_signal_connect(authenticator->dialog,
-//                      "delete-event",
-//                      G_CALLBACK(on_dialog_deleted),
-//                      authenticator);
-//    g_signal_connect(authenticator->dialog,
-//                      "notify::selected-user",
-//                      G_CALLBACK(on_user_selected),
-//                      authenticator);*/
+    //    g_signal_connect(authenticator->dialog,
+    //                      "delete-event",
+    //                      G_CALLBACK(on_dialog_deleted),
+    //                      authenticator);
+    //    g_signal_connect(authenticator->dialog,
+    //                      "notify::selected-user",
+    //                      G_CALLBACK(on_user_selected),
+    //                      authenticator);*/
 
     return authenticator;
 
@@ -254,11 +236,7 @@ error:
 }
 
 
-static void session_request(
-        PolkitAgentSession *session,
-        const char         *request,
-        gboolean            /*echo_on*/,
-        gpointer            user_data)
+static void session_request(PolkitAgentSession *session, const char *request, gboolean /*echo_on*/, gpointer user_data)
 {
     PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
     AuthenticationDialog *authenticationDialog = authenticator->dialog;
@@ -276,39 +254,30 @@ static void session_request(
 }
 
 
-static void session_show_error(
-        PolkitAgentSession *session,
-        const gchar        *msg,
-        gpointer            user_data)
+static void session_show_error(PolkitAgentSession *session, const gchar *msg, gpointer user_data)
 {
-//    PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
-//    gchar *s;
+    //    PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
+    //    gchar *s;
 
-//    s = g_strconcat("<b>", msg, "</b>", NULL);
-//    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), s);
-//    g_free(s);
+    //    s = g_strconcat("<b>", msg, "</b>", NULL);
+    //    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), s);
+    //    g_free(s);
 }
 
 
-static void session_show_info(
-        PolkitAgentSession *session,
-        const gchar        *msg,
-        gpointer            user_data)
+static void session_show_info(PolkitAgentSession *session, const gchar *msg, gpointer user_data)
 {
-//    PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
-//    gchar *s;
+    //    PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
+    //    gchar *s;
 
-//    s = g_strconcat("<b>", msg, "</b>", NULL);
+    //    s = g_strconcat("<b>", msg, "</b>", NULL);
 
-//    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), s);
-//    g_free(s);
+    //    polkit_kde3_authentication_dialog_set_info_message(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog), s);
+    //    g_free(s);
 }
 
 
-static void session_completed(
-        PolkitAgentSession *session,
-        gboolean            gained_authorization,
-        gpointer            user_data)
+static void session_completed(PolkitAgentSession *session, gboolean gained_authorization, gpointer user_data)
 {
     PolkitKDE3Authenticator *authenticator = POLKIT_KDE3_AUTHENTICATOR(user_data);
 
@@ -324,13 +293,13 @@ static gboolean do_initiate(gpointer user_data)
     PolkitIdentity *identity;
     gint num_tries;
 
-//    if(!polkit_kde3_authentication_dialog_run_until_user_is_selected(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog)))
-//    {
-//        /* user cancelled the dialog */
-//        /*g_debug("User cancelled before selecting a user");*/
-//        authenticator->was_cancelled = TRUE;
-//        goto out;
-//    }
+    //    if(!polkit_kde3_authentication_dialog_run_until_user_is_selected(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog)))
+    //    {
+    //        /* user cancelled the dialog */
+    //        /*g_debug("User cancelled before selecting a user");*/
+    //        authenticator->was_cancelled = TRUE;
+    //        goto out;
+    //    }
 
     authenticator->loop = ::g_main_loop_new(NULL, TRUE);
 
@@ -343,25 +312,13 @@ try_again:
 
     g_object_unref(identity);
 
-    g_signal_connect(authenticator->session,
-                     "request",
-                     G_CALLBACK(session_request),
-                     authenticator);
+    g_signal_connect(authenticator->session, "request", G_CALLBACK(session_request), authenticator);
 
-    g_signal_connect(authenticator->session,
-                     "show-info",
-                     G_CALLBACK(session_show_info),
-                     authenticator);
+    g_signal_connect(authenticator->session, "show-info", G_CALLBACK(session_show_info), authenticator);
 
-    g_signal_connect(authenticator->session,
-                     "show-error",
-                     G_CALLBACK(session_show_error),
-                     authenticator);
+    g_signal_connect(authenticator->session, "show-error", G_CALLBACK(session_show_error), authenticator);
 
-    g_signal_connect(authenticator->session,
-                     "completed",
-                     G_CALLBACK(session_completed),
-                     authenticator);
+    g_signal_connect(authenticator->session, "completed", G_CALLBACK(session_completed), authenticator);
 
 
     ::polkit_agent_session_initiate(authenticator->session);
@@ -380,20 +337,22 @@ try_again:
 
     if(!authenticator->gained_authorization && !authenticator->was_cancelled)
     {
-        if(authenticator->dialog != NULL) {
-//            gchar *s;
+        if(authenticator->dialog != NULL)
+        {
+            //            gchar *s;
 
-//            s = g_strconcat("<b>", _("Authentication Failure"), "</b>", NULL);
-//            polkit_kde3_authentication_dialog_set_info_message(
-//                        POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog),
-//                        s);
-//            g_free(s);
-//            /// gtk_widget_queue_draw(authenticator->dialog);
+            //            s = g_strconcat("<b>", _("Authentication Failure"), "</b>", NULL);
+            //            polkit_kde3_authentication_dialog_set_info_message(
+            //                        POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog),
+            //                        s);
+            //            g_free(s);
+            //            /// gtk_widget_queue_draw(authenticator->dialog);
 
-//            /* shake the dialog to indicate error */
-//            polkit_kde3_authentication_dialog_indicate_error(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog));
+            //            /* shake the dialog to indicate error */
+            //            polkit_kde3_authentication_dialog_indicate_error(POLKIT_KDE3_AUTHENTICATION_DIALOG(authenticator->dialog));
 
-            if(num_tries < 3) {
+            if(num_tries < 3)
+            {
                 g_object_unref(authenticator->session);
                 authenticator->session = NULL;
                 goto try_again;
@@ -402,10 +361,7 @@ try_again:
     }
 
 out:
-    g_signal_emit_by_name(authenticator,
-                           "completed",
-                           authenticator->gained_authorization,
-                           authenticator->was_cancelled);
+    g_signal_emit_by_name(authenticator, "completed", authenticator->gained_authorization, authenticator->was_cancelled);
 
     g_object_unref(authenticator);
 

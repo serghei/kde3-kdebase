@@ -34,46 +34,43 @@ class Config;
 /**
  * Please see the README
  */
-class KCMUserAccount : public KCModule
-{
-	Q_OBJECT
+class KCMUserAccount : public KCModule {
+    Q_OBJECT
 
 public:
-	KCMUserAccount(QWidget* parent, const char* name = "KCMUserAccount",
-		const QStringList& list=QStringList());
-	~KCMUserAccount();
+    KCMUserAccount(QWidget *parent, const char *name = "KCMUserAccount", const QStringList &list = QStringList());
+    ~KCMUserAccount();
 
-	/**
-	 * The user data is loaded from  chfn(/etc/password) and then 
-	 * written back as well as to KDE's own(KEmailSettings).
-	 * The user won't notice this(assuming they change the KDE settings via 
-	 * this KCM) and will make KDE play nice with enviroments which uses 
-	 * /etc/password.
-	 */
-	void load();
+    /**
+     * The user data is loaded from  chfn(/etc/password) and then
+     * written back as well as to KDE's own(KEmailSettings).
+     * The user won't notice this(assuming they change the KDE settings via
+     * this KCM) and will make KDE play nice with enviroments which uses
+     * /etc/password.
+     */
+    void load();
 
-	void save();
+    void save();
 
-	/**
-	 * For the face button
-	 */
-	bool eventFilter(QObject *, QEvent *e);
+    /**
+     * For the face button
+     */
+    bool eventFilter(QObject *, QEvent *e);
 
 private slots:
-	void slotChangePassword();
-	//void configChanged() { emit changed(true); };
-	void slotFaceButtonClicked();
+    void slotChangePassword();
+    // void configChanged() { emit changed(true); };
+    void slotFaceButtonClicked();
 
 private:
-	void changeFace(const QPixmap& pix);
-	inline KURL* decodeImgDrop(QDropEvent *e, QWidget *wdg);
+    void changeFace(const QPixmap &pix);
+    inline KURL *decodeImgDrop(QDropEvent *e, QWidget *wdg);
 
-	KEMailSettings *_kes;
-	KUser *_ku;
-	MainWidget *_mw;
-	FacePerm _facePerm;
-	QPixmap _facePixmap;
-
+    KEMailSettings *_kes;
+    KUser *_ku;
+    MainWidget *_mw;
+    FacePerm _facePerm;
+    QPixmap _facePixmap;
 };
 
 #endif // MAIN_H

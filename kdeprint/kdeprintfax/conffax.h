@@ -25,16 +25,15 @@
 
 class QComboBox;
 
-class ConfFax : public QWidget
-{
+class ConfFax : public QWidget {
 public:
-	ConfFax(QWidget *parent = 0, const char *name = 0);
+    ConfFax(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
+    void load();
+    void save();
 
 private:
-	QComboBox	*m_resolution, *m_pagesize;
+    QComboBox *m_resolution, *m_pagesize;
 };
 
 #endif

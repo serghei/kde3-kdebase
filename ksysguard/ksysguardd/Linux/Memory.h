@@ -22,24 +22,24 @@
 #ifndef KSG_MEMORY_H
 #define KSG_MEMORY_H
 
-void initMemory( struct SensorModul* );
-void exitMemory( void );
+void initMemory(struct SensorModul *);
+void exitMemory(void);
 
-int updateMemory( void );
+int updateMemory(void);
 
-void printMFree( const char* );
-void printMFreeInfo( const char* );
-void printUsed( const char* );
-void printUsedInfo( const char* );
-void printAppl( const char* );
-void printApplInfo( const char* );
-void printBuffers( const char* );
-void printBuffersInfo( const char* );
-void printCached( const char* );
-void printCachedInfo( const char* );
-void printSwapUsed( const char* );
-void printSwapUsedInfo( const char* );
-void printSwapFree( const char* );
-void printSwapFreeInfo( const char* );
+void printMFree(const char *);
+void printMFreeInfo(const char *);
+void printUsed(const char *);
+void printUsedInfo(const char *);
+void printAppl(const char *);
+void printApplInfo(const char *);
+void printBuffers(const char *);
+void printBuffersInfo(const char *);
+void printCached(const char *);
+void printCachedInfo(const char *);
+void printSwapUsed(const char *);
+void printSwapUsedInfo(const char *);
+void printSwapFree(const char *);
+void printSwapFreeInfo(const char *);
 
 #endif

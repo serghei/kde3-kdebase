@@ -15,35 +15,33 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qtimer.h>
 #include <qvaluelist.h>
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
 class Workspace;
 
-class PopupInfo : public QWidget
-    {
+class PopupInfo : public QWidget {
     Q_OBJECT
-    public:
-        PopupInfo( const char *name=0 );
-        ~PopupInfo();
+public:
+    PopupInfo(const char *name = 0);
+    ~PopupInfo();
 
-        void reset();
-        void hide();
-        void showInfo(QString infoString);
+    void reset();
+    void hide();
+    void showInfo(QString infoString);
 
-        void reconfigure();
+    void reconfigure();
 
-    protected:
-        void paintEvent( QPaintEvent* );
-        void paintContents();
+protected:
+    void paintEvent(QPaintEvent *);
+    void paintContents();
 
-    private:
-        QTimer m_delayedHideTimer;
-        int m_delayTime;
-        bool m_show;
-        bool m_shown;
-        QString m_infoString;
-    };
+private:
+    QTimer m_delayedHideTimer;
+    int m_delayTime;
+    bool m_show;
+    bool m_shown;
+    QString m_infoString;
+};
 
 } // namespace
 

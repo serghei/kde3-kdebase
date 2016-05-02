@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -32,49 +32,47 @@ class KURL;
 class QString;
 class WorkSheet;
 
-class Workspace : public QTabWidget
-{
-  Q_OBJECT
+class Workspace : public QTabWidget {
+    Q_OBJECT
 
-  public:
-    Workspace( QWidget* parent, const char* name = 0 );
+public:
+    Workspace(QWidget *parent, const char *name = 0);
     ~Workspace();
 
-    void saveProperties( KConfig* );
-    void readProperties( KConfig* );
+    void saveProperties(KConfig *);
+    void readProperties(KConfig *);
 
     bool saveOnQuit();
 
     void showProcesses();
 
-    WorkSheet *restoreWorkSheet( const QString &fileName,
-                           const QString &newName = QString::null );
-    void deleteWorkSheet( const QString &fileName );
+    WorkSheet *restoreWorkSheet(const QString &fileName, const QString &newName = QString::null);
+    void deleteWorkSheet(const QString &fileName);
 
-  public slots:
+public slots:
     void newWorkSheet();
     void loadWorkSheet();
-    void loadWorkSheet( const KURL& );
+    void loadWorkSheet(const KURL &);
     void saveWorkSheet();
-    void saveWorkSheet( WorkSheet *sheet );
+    void saveWorkSheet(WorkSheet *sheet);
     void saveWorkSheetAs();
-    void saveWorkSheetAs( WorkSheet *sheet );
+    void saveWorkSheetAs(WorkSheet *sheet);
     void deleteWorkSheet();
     void removeAllWorkSheets();
     void cut();
     void copy();
     void paste();
     void configure();
-    void updateCaption( QWidget* );
-    void updateSheetTitle( QWidget* );
+    void updateCaption(QWidget *);
+    void updateSheetTitle(QWidget *);
     void applyStyle();
 
-  signals:
-    void announceRecentURL( const KURL &url );
-    void setCaption( const QString &text, bool modified );
+signals:
+    void announceRecentURL(const KURL &url);
+    void setCaption(const QString &text, bool modified);
 
-  private:
-    QPtrList<WorkSheet> mSheetList;
+private:
+    QPtrList< WorkSheet > mSheetList;
 
     // Directory that was used for the last load/save.
     QString mWorkDir;

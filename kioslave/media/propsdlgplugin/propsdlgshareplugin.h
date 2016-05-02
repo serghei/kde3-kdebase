@@ -22,23 +22,19 @@
 
 #include <kpropertiesdialog.h>
 
-class PropsDlgSharePlugin : public KPropsDlgPlugin
-{
-Q_OBJECT
+class PropsDlgSharePlugin : public KPropsDlgPlugin {
+    Q_OBJECT
 public:
-  PropsDlgSharePlugin( KPropertiesDialog *dlg, const char *, const QStringList & );
-  virtual ~PropsDlgSharePlugin();
-  virtual void applyChanges();
+    PropsDlgSharePlugin(KPropertiesDialog *dlg, const char *, const QStringList &);
+    virtual ~PropsDlgSharePlugin();
+    virtual void applyChanges();
 
 public slots:
-  void slotChanged();
+    void slotChanged();
 
 private:
-  class Private;
-  Private *d;
-    
+    class Private;
+    Private *d;
 };
 
 #endif
-
-

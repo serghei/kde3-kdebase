@@ -36,8 +36,7 @@ class QListViewItem;
 class DCOPClient;
 class KCookiesPolicyDlgUI;
 
-class KCookiesPolicies : public KCModule
-{
+class KCookiesPolicies : public KCModule {
     Q_OBJECT
 
 public:
@@ -49,12 +48,12 @@ public:
     virtual void defaults();
     virtual QString quickHelp() const;
 
-    void addNewPolicy(const QString& domain);
+    void addNewPolicy(const QString &domain);
 
 protected slots:
-    void autoAcceptSessionCookies ( bool );
-    void ignoreCookieExpirationDate ( bool );
-    void cookiesEnabled( bool );
+    void autoAcceptSessionCookies(bool);
+    void ignoreCookieExpirationDate(bool);
+    void cookiesEnabled(bool);
     void configChanged();
 
     void selectionChanged();
@@ -66,16 +65,15 @@ protected slots:
     void addPressed();
 
 private:
-    void updateDomainList(const QStringList& list);
-    bool handleDuplicate( const QString& domain, int );
-    void splitDomainAdvice (const QString& configStr, QString &domain,
-                            KCookieAdvice::Value &advice);
+    void updateDomainList(const QStringList &list);
+    bool handleDuplicate(const QString &domain, int);
+    void splitDomainAdvice(const QString &configStr, QString &domain, KCookieAdvice::Value &advice);
 
 private:
     int d_itemsSelected;
     bool d_configChanged;
-    KCookiesPolicyDlgUI* dlg;
-    QMap<QListViewItem*, const char*> m_pDomainPolicy;
+    KCookiesPolicyDlgUI *dlg;
+    QMap< QListViewItem *, const char * > m_pDomainPolicy;
 };
 
 #endif // __KCOOKIESPOLICIES_H

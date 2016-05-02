@@ -27,44 +27,43 @@
 
 class KMPrinter;
 namespace KIO {
-	class Job;
+class Job;
 }
 
-class KIO_Print : public QObject, public KIO::SlaveBase
-{
-	Q_OBJECT
+class KIO_Print : public QObject, public KIO::SlaveBase {
+    Q_OBJECT
 public:
-	KIO_Print(const QCString& pool, const QCString& app);
+    KIO_Print(const QCString &pool, const QCString &app);
 
-	void listDir(const KURL& url);
-	void get(const KURL& url);
-	void stat(const KURL& url);
+    void listDir(const KURL &url);
+    void get(const KURL &url);
+    void stat(const KURL &url);
 
 protected slots:
-	void slotResult( KIO::Job* );
-	void slotData( KIO::Job*, const QByteArray& );
-	void slotTotalSize( KIO::Job*, KIO::filesize_t );
-	void slotProcessedSize( KIO::Job*, KIO::filesize_t );
+    void slotResult(KIO::Job *);
+    void slotData(KIO::Job *, const QByteArray &);
+    void slotTotalSize(KIO::Job *, KIO::filesize_t);
+    void slotProcessedSize(KIO::Job *, KIO::filesize_t);
 
 private:
-	void listRoot();
-	void listDirDB( const KURL& );
-	void statDB( const KURL& );
-	bool getDBFile( const KURL& );
-	void getDB( const KURL& );
-	void showClassInfo(KMPrinter*);
-	void showPrinterInfo(KMPrinter*);
-	void showSpecialInfo(KMPrinter*);
-	void showData(const QString&);
-	QString locateData(const QString&);
-	void showJobs(KMPrinter *p = 0, bool completed = false);
-	void showDriver(KMPrinter*);
+    void listRoot();
+    void listDirDB(const KURL &);
+    void statDB(const KURL &);
+    bool getDBFile(const KURL &);
+    void getDB(const KURL &);
+    void showClassInfo(KMPrinter *);
+    void showPrinterInfo(KMPrinter *);
+    void showSpecialInfo(KMPrinter *);
+    void showData(const QString &);
+    QString locateData(const QString &);
+    void showJobs(KMPrinter *p = 0, bool completed = false);
+    void showDriver(KMPrinter *);
 
-	bool loadTemplate(const QString& filename, QString& buffer);
+    bool loadTemplate(const QString &filename, QString &buffer);
 
-	QBuffer m_httpBuffer;
-	int     m_httpError;
-	QString m_httpErrorTxt;
+    QBuffer m_httpBuffer;
+    int m_httpError;
+    QString m_httpErrorTxt;
 };
 
 #endif

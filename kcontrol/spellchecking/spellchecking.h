@@ -17,25 +17,24 @@
 */
 
 #ifndef __spellchecking_h__
-#define __spellchecking_h__ 
+#define __spellchecking_h__
 
 #include "kcmodule.h"
 
 class KSpellConfig;
 
-class KSpellCheckingConfig  : public KCModule
-{
-  Q_OBJECT
+class KSpellCheckingConfig : public KCModule {
+    Q_OBJECT
 
- public:
-  KSpellCheckingConfig(QWidget *parent, const char *name, const QStringList &);
+public:
+    KSpellCheckingConfig(QWidget *parent, const char *name, const QStringList &);
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
- protected:
-  KSpellConfig *spellConfig;
+protected:
+    KSpellConfig *spellConfig;
 };
 
 #endif

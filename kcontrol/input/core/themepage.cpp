@@ -44,32 +44,35 @@
 
 
 namespace {
-	// Listview columns
-	enum Columns { NameColumn = 0, DescColumn, /* hidden */ DirColumn };
+// Listview columns
+enum Columns
+{
+    NameColumn = 0,
+    DescColumn,
+    /* hidden */ DirColumn
+};
 }
 
 
-ThemePage::ThemePage( QWidget* parent, const char* name )
-	: QWidget( parent, name )
+ThemePage::ThemePage(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-	QBoxLayout *layout = new QVBoxLayout( this );
-	layout->setAutoAdd( true );
-	layout->setMargin( KDialog::marginHint() );
-	layout->setSpacing( KDialog::spacingHint() );
+    QBoxLayout *layout = new QVBoxLayout(this);
+    layout->setAutoAdd(true);
+    layout->setMargin(KDialog::marginHint());
+    layout->setSpacing(KDialog::spacingHint());
 
-	new QLabel( i18n("Select the cursor theme you want to use:"), this );
+    new QLabel(i18n("Select the cursor theme you want to use:"), this);
 
-	// Create the theme list view
-	listview = new KListView( this );
-	listview->setFullWidth( true );
-	listview->setAllColumnsShowFocus( true );
-	listview->addColumn( i18n("Name") );
-	listview->addColumn( i18n("Description") );
+    // Create the theme list view
+    listview = new KListView(this);
+    listview->setFullWidth(true);
+    listview->setAllColumnsShowFocus(true);
+    listview->addColumn(i18n("Name"));
+    listview->addColumn(i18n("Description"));
 
-	connect( listview, SIGNAL(selectionChanged(QListViewItem*)),
-			SLOT(selectionChanged(QListViewItem*)) );
+    connect(listview, SIGNAL(selectionChanged(QListViewItem *)), SLOT(selectionChanged(QListViewItem *)));
 
-	insertThemes();
+    insertThemes();
 }
 
 
@@ -78,135 +81,132 @@ ThemePage::~ThemePage()
 }
 
 
-void ThemePage::selectionChanged( QListViewItem *item )
+void ThemePage::selectionChanged(QListViewItem *item)
 {
-	selectedTheme = item->text( DirColumn );
-	emit changed( selectedTheme != currentTheme );
+    selectedTheme = item->text(DirColumn);
+    emit changed(selectedTheme != currentTheme);
 }
 
 
 void ThemePage::save()
 {
-	if ( currentTheme == selectedTheme )
-		return;
+    if(currentTheme == selectedTheme)
+        return;
 
-	bool whiteCursor = selectedTheme.right( 5 ) == "White";
-	bool largeCursor = selectedTheme.left( 5 ) == "Large";
+    bool whiteCursor = selectedTheme.right(5) == "White";
+    bool largeCursor = selectedTheme.left(5) == "Large";
 
-	KConfig c( "kcminputrc" );
-	c.setGroup( "Mouse" );
-	c.writeEntry( "LargeCursor", largeCursor );
-	c.writeEntry( "WhiteCursor", whiteCursor );
+    KConfig c("kcminputrc");
+    c.setGroup("Mouse");
+    c.writeEntry("LargeCursor", largeCursor);
+    c.writeEntry("WhiteCursor", whiteCursor);
 
-	currentTheme = selectedTheme;
+    currentTheme = selectedTheme;
 
-	fixCursorFile();
+    fixCursorFile();
 
-	KMessageBox::information( this, i18n("You have to restart KDE for these "
-				"changes to take effect."), i18n("Cursor Settings Changed"),
-				"CursorSettingsChanged" );
+    KMessageBox::information(this, i18n("You have to restart KDE for these "
+                                        "changes to take effect."),
+                             i18n("Cursor Settings Changed"), "CursorSettingsChanged");
 }
 
 void ThemePage::load()
 {
-	load( false );
+    load(false);
 }
 
-void ThemePage::load( bool useDefaults )
+void ThemePage::load(bool useDefaults)
 {
-	bool largeCursor, whiteCursor;
+    bool largeCursor, whiteCursor;
 
-	KConfig c( "kcminputrc" );
+    KConfig c("kcminputrc");
 
-	c.setReadDefaults( useDefaults );
+    c.setReadDefaults(useDefaults);
 
-	c.setGroup( "Mouse" );
-	largeCursor = c.readBoolEntry( "LargeCursor", false );
-	whiteCursor = c.readBoolEntry( "WhiteCursor", false );
+    c.setGroup("Mouse");
+    largeCursor = c.readBoolEntry("LargeCursor", false);
+    whiteCursor = c.readBoolEntry("WhiteCursor", false);
 
-	if ( largeCursor )
-		currentTheme = whiteCursor ? "LargeWhite" : "LargeBlack";
-	else
-		currentTheme = whiteCursor ? "SmallWhite" : "SmallBlack";
+    if(largeCursor)
+        currentTheme = whiteCursor ? "LargeWhite" : "LargeBlack";
+    else
+        currentTheme = whiteCursor ? "SmallWhite" : "SmallBlack";
 
-	selectedTheme = currentTheme;
-	QListViewItem *item = listview->findItem( currentTheme, DirColumn );
-	item->setSelected( true );
+    selectedTheme = currentTheme;
+    QListViewItem *item = listview->findItem(currentTheme, DirColumn);
+    item->setSelected(true);
 }
 
 
 void ThemePage::defaults()
 {
-	load( true );
+    load(true);
 }
 
 
 void ThemePage::insertThemes()
 {
-	KListViewItem *item;
+    KListViewItem *item;
 
-	item = new KListViewItem( listview, i18n("Small black"),
-			i18n("Small black cursors"), "SmallBlack" );
-	item->setPixmap( 0, QPixmap( arrow_small_black_xpm ) );
-	listview->insertItem( item );
+    item = new KListViewItem(listview, i18n("Small black"), i18n("Small black cursors"), "SmallBlack");
+    item->setPixmap(0, QPixmap(arrow_small_black_xpm));
+    listview->insertItem(item);
 
-	item = new KListViewItem( listview, i18n("Large black"),
-			i18n("Large black cursors"), "LargeBlack" );
-	item->setPixmap( 0, QPixmap( arrow_large_black_xpm ) );
-	listview->insertItem( item );
+    item = new KListViewItem(listview, i18n("Large black"), i18n("Large black cursors"), "LargeBlack");
+    item->setPixmap(0, QPixmap(arrow_large_black_xpm));
+    listview->insertItem(item);
 
-	item = new KListViewItem( listview, i18n("Small white"),
-			i18n("Small white cursors"), "SmallWhite" );
-	item->setPixmap( 0, QPixmap( arrow_small_white_xpm ) );
-	listview->insertItem( item );
+    item = new KListViewItem(listview, i18n("Small white"), i18n("Small white cursors"), "SmallWhite");
+    item->setPixmap(0, QPixmap(arrow_small_white_xpm));
+    listview->insertItem(item);
 
-	item = new KListViewItem( listview, i18n("Large white"),
-			i18n("Large white cursors"), "LargeWhite" );
-	item->setPixmap( 0, QPixmap( arrow_large_white_xpm ) );
-	listview->insertItem( item );
+    item = new KListViewItem(listview, i18n("Large white"), i18n("Large white cursors"), "LargeWhite");
+    item->setPixmap(0, QPixmap(arrow_large_white_xpm));
+    listview->insertItem(item);
 }
 
 
 void ThemePage::fixCursorFile()
 {
-	// Make sure we have the 'font' resource dir registered and can find the
-	// override dir.
-	//
-	// Next, if the user wants large cursors, copy the font
-	// cursor_large.pcf.gz to (localkdedir)/share/fonts/override/cursor.pcf.gz.
-	// Else remove the font cursor.pcf.gz from (localkdedir)/share/fonts/override.
-	//
-	// Run mkfontdir to update fonts.dir in that dir.
+    // Make sure we have the 'font' resource dir registered and can find the
+    // override dir.
+    //
+    // Next, if the user wants large cursors, copy the font
+    // cursor_large.pcf.gz to (localkdedir)/share/fonts/override/cursor.pcf.gz.
+    // Else remove the font cursor.pcf.gz from (localkdedir)/share/fonts/override.
+    //
+    // Run mkfontdir to update fonts.dir in that dir.
 
-	KGlobal::dirs()->addResourceType( "font", "share/fonts/" );
-	KIO::mkdir( KURL::fromPathOrURL(QDir::homeDirPath() + "/.fonts/kde-override") );
-	QString overrideDir = QDir::homeDirPath() + "/.fonts/kde-override/";
+    KGlobal::dirs()->addResourceType("font", "share/fonts/");
+    KIO::mkdir(KURL::fromPathOrURL(QDir::homeDirPath() + "/.fonts/kde-override"));
+    QString overrideDir = QDir::homeDirPath() + "/.fonts/kde-override/";
 
-	KURL installedFont;
-	installedFont.setPath( overrideDir + "cursor.pcf.gz" );
+    KURL installedFont;
+    installedFont.setPath(overrideDir + "cursor.pcf.gz");
 
-	if ( currentTheme == "SmallBlack" )
-		KIO::NetAccess::del( installedFont, this );
-	else {
-		KURL source;
+    if(currentTheme == "SmallBlack")
+        KIO::NetAccess::del(installedFont, this);
+    else
+    {
+        KURL source;
 
-		if ( currentTheme == "LargeBlack" )
-			source.setPath( locate("data", "kcminput/cursor_large_black.pcf.gz") );
-		else if ( currentTheme == "LargeWhite" )
-			source.setPath( locate("data", "kcminput/cursor_large_white.pcf.gz") );
-		else if ( currentTheme == "SmallWhite" )
-			source.setPath( locate("data", "kcminput/cursor_small_white.pcf.gz") );
+        if(currentTheme == "LargeBlack")
+            source.setPath(locate("data", "kcminput/cursor_large_black.pcf.gz"));
+        else if(currentTheme == "LargeWhite")
+            source.setPath(locate("data", "kcminput/cursor_large_white.pcf.gz"));
+        else if(currentTheme == "SmallWhite")
+            source.setPath(locate("data", "kcminput/cursor_small_white.pcf.gz"));
 
-		KIO::NetAccess::file_copy( source, installedFont, -1, true );
-	}
+        KIO::NetAccess::file_copy(source, installedFont, -1, true);
+    }
 
-	QString cmd = KGlobal::dirs()->findExe( "mkfontdir" );
-	if ( !cmd.isEmpty() )
-	{
-		KProcess p;
-		p << cmd << overrideDir;
-		p.start(KProcess::Block);
-	}
+    QString cmd = KGlobal::dirs()->findExe("mkfontdir");
+    if(!cmd.isEmpty())
+    {
+        KProcess p;
+        p << cmd << overrideDir;
+        p.start(KProcess::Block);
+    }
 }
 
 // vim: set noet ts=4 sw=4:

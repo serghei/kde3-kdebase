@@ -30,7 +30,7 @@ class KateSessionManager;
 class KateAppDCOPIface;
 
 namespace Kate {
-  class Application;
+class Application;
 }
 
 class KCmdLineArgs;
@@ -39,79 +39,81 @@ class KCmdLineArgs;
  * Kate Application
  * This class represents the core kate application object
  */
-class KDE_EXPORT KateApp : public KApplication
-{
-  Q_OBJECT
+class KDE_EXPORT KateApp : public KApplication {
+    Q_OBJECT
 
-  /**
-   * constructors & accessor to app object + plugin interface for it
-   */
-  public:
+    /**
+     * constructors & accessor to app object + plugin interface for it
+     */
+public:
     /**
      * application constructor
      * @param args parsed command line args
      */
-    KateApp (KCmdLineArgs *args);
+    KateApp(KCmdLineArgs *args);
 
     /**
      * application destructor
      */
-    ~KateApp ();
+    ~KateApp();
 
     /**
      * static accessor to avoid casting ;)
      * @return app instance
      */
-    static KateApp *self ();
+    static KateApp *self();
 
     /**
      * accessor to the Kate::Application plugin interface
      * @return application plugin interface
      */
-    Kate::Application *application ();
+    Kate::Application *application();
 
     /**
      * Returns the current Kate version (X.Y) or (X.Y.Z)
      * @param fullVersion should full version be returned?
      * @return Kate version
      */
-    static QString kateVersion (bool fullVersion = true);
+    static QString kateVersion(bool fullVersion = true);
 
-  /**
-   * kate init
-   */
-  private:
+    /**
+     * kate init
+     */
+private:
     /**
      * restore a old kate session
      */
-    void restoreKate ();
+    void restoreKate();
 
     /**
      * try to start kate
      * @return success, if false, kate should exit
      */
-    bool startupKate ();
+    bool startupKate();
 
-  /**
-   * kate shutdown
-   */
-  public:
+    /**
+     * kate shutdown
+     */
+public:
     /**
      * shutdown kate application
      * @param win mainwindow which is used for dialogs
      */
-    void shutdownKate (KateMainWindow *win);
+    void shutdownKate(KateMainWindow *win);
 
     /**
      * application should exit
      * @return should we exit?
      */
-    bool shouldExit () { return m_shouldExit; }
+    bool shouldExit()
+    {
+        return m_shouldExit;
+    }
 
-  /**
-   * other accessors for global unique instances
-   */
-  public:
+    /**
+     * other accessors for global unique instances
+     */
+public:
     /**
      * accessor to plugin manager
      * @return plugin manager instance
@@ -122,56 +124,56 @@ class KDE_EXPORT KateApp : public KApplication
      * accessor to document manager
      * @return document manager instance
      */
-    KateDocManager *documentManager ();
+    KateDocManager *documentManager();
 
     /**
      * accessor to session manager
      * @return session manager instance
      */
-    KateSessionManager *sessionManager ();
+    KateSessionManager *sessionManager();
 
-  /**
-   * window management
-   */
-  public:
+    /**
+     * window management
+     */
+public:
     /**
      * create a new main window, use given config if any for restore
      * @param sconfig session config object
      * @param sgroup session group for this window
      * @return new constructed main window
      */
-    KateMainWindow *newMainWindow (KConfig *sconfig = 0, const QString &sgroup = "");
+    KateMainWindow *newMainWindow(KConfig *sconfig = 0, const QString &sgroup = "");
 
     /**
      * removes the mainwindow given, DOES NOT DELETE IT
      * @param mainWindow window to remove
      */
-    void removeMainWindow (KateMainWindow *mainWindow);
+    void removeMainWindow(KateMainWindow *mainWindow);
 
     /**
      * give back current active main window
      * can only be 0 at app start or exit
      * @return current active main window
      */
-    KateMainWindow *activeMainWindow ();
+    KateMainWindow *activeMainWindow();
 
     /**
      * give back number of existing main windows
      * @return number of main windows
      */
-    uint mainWindows () const;
+    uint mainWindows() const;
 
     /**
      * give back the window you want
      * @param n window index
      * @return requested main window
      */
-    KateMainWindow *mainWindow (uint n);
+    KateMainWindow *mainWindow(uint n);
 
-  /**
-   * some stuff for the dcop API
-   */
-  public:
+    /**
+     * some stuff for the dcop API
+     */
+public:
     /**
      * open url with given encoding
      * used by kate if --use given
@@ -180,7 +182,7 @@ class KDE_EXPORT KateApp : public KApplication
      * @param isTempFile if set to true and the file is a local file, it will be deleted when the document is closed.
      * @return success
      */
-    bool openURL (const KURL &url, const QString &encoding, bool isTempFile );
+    bool openURL(const KURL &url, const QString &encoding, bool isTempFile);
 
     /**
      * position cursor in current active view
@@ -188,7 +190,7 @@ class KDE_EXPORT KateApp : public KApplication
      * @param column column to set
      * @return success
      */
-    bool setCursor (int line, int column);
+    bool setCursor(int line, int column);
 
     /**
      * helper to handle stdin input
@@ -196,9 +198,9 @@ class KDE_EXPORT KateApp : public KApplication
      * @param text text to fill in the new doc/view
      * @return success
      */
-    bool openInput (const QString &text);
+    bool openInput(const QString &text);
 
-  private:
+private:
     /**
      * kate's command line args
      */
@@ -227,17 +229,17 @@ class KDE_EXPORT KateApp : public KApplication
     /**
      * known main windows
      */
-    QValueList<KateMainWindow*> m_mainWindows;
+    QValueList< KateMainWindow * > m_mainWindows;
 
     /**
      * dcop interface
      */
     KateAppDCOPIface *m_obj;
 
-   /**
-    * should exit flag
-    */
-   bool m_shouldExit;
+    /**
+     * should exit flag
+     */
+    bool m_shouldExit;
 };
 
 #endif

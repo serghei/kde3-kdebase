@@ -48,159 +48,160 @@ Copyright (C) 2000 Matthias Ettrich <ettrich@kde.org>
 
 #include "shutdowndlg.moc"
 
-KSMShutdownFeedback * KSMShutdownFeedback::s_pSelf = 0L;
+KSMShutdownFeedback *KSMShutdownFeedback::s_pSelf = 0L;
 
-KSMShutdownFeedback::KSMShutdownFeedback()
- : QWidget( 0L, "feedbackwidget", WType_Popup ),
-   m_currentY( 0 )
+KSMShutdownFeedback::KSMShutdownFeedback() : QWidget(0L, "feedbackwidget", WType_Popup), m_currentY(0)
 {
-    setBackgroundMode( QWidget::NoBackground );
-    setGeometry( QApplication::desktop()->geometry() );
-    QTimer::singleShot( 10, this, SLOT( slotPaintEffect() ) );
-    m_root.resize( width(), height() );
+    setBackgroundMode(QWidget::NoBackground);
+    setGeometry(QApplication::desktop()->geometry());
+    QTimer::singleShot(10, this, SLOT(slotPaintEffect()));
+    m_root.resize(width(), height());
 }
 
 
 void KSMShutdownFeedback::slotPaintEffect()
 {
-    if ( m_currentY >= height() ) {
-        if ( backgroundMode() == QWidget::NoBackground ) {
-            setBackgroundMode( QWidget::NoBackground );
-            setBackgroundPixmap( m_root );
+    if(m_currentY >= height())
+    {
+        if(backgroundMode() == QWidget::NoBackground)
+        {
+            setBackgroundMode(QWidget::NoBackground);
+            setBackgroundPixmap(m_root);
         }
         return;
     }
 
     KPixmap pixmap;
-    pixmap = QPixmap::grabWindow( qt_xrootwin(), 0, m_currentY, width(), 10 );
+    pixmap = QPixmap::grabWindow(qt_xrootwin(), 0, m_currentY, width(), 10);
     QImage image = pixmap.convertToImage();
-    KImageEffect::blend( Qt::black, image, 0.4 );
-    KImageEffect::toGray( image, true );
-    pixmap.convertFromImage( image );
-    bitBlt( this, 0, m_currentY, &pixmap );
-    bitBlt( &m_root, 0, m_currentY, &pixmap );
+    KImageEffect::blend(Qt::black, image, 0.4);
+    KImageEffect::toGray(image, true);
+    pixmap.convertFromImage(image);
+    bitBlt(this, 0, m_currentY, &pixmap);
+    bitBlt(&m_root, 0, m_currentY, &pixmap);
     m_currentY += 10;
-    QTimer::singleShot( 1, this, SLOT( slotPaintEffect() ) );
+    QTimer::singleShot(1, this, SLOT(slotPaintEffect()));
 }
 
 //////
 
-KSMShutdownDlg::KSMShutdownDlg( QWidget* parent,
-                                bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType sdtype )
-  : QDialog( parent, 0, TRUE, WType_Popup ), targets(0)
-    // this is a WType_Popup on purpose. Do not change that! Not
-    // having a popup here has severe side effects.
+KSMShutdownDlg::KSMShutdownDlg(QWidget *parent, bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType sdtype)
+    : QDialog(parent, 0, TRUE, WType_Popup), targets(0)
+// this is a WType_Popup on purpose. Do not change that! Not
+// having a popup here has severe side effects.
 {
-    QVBoxLayout* vbox = new QVBoxLayout( this );
-    QFrame* frame = new QFrame( this );
-    frame->setFrameStyle( QFrame::StyledPanel | QFrame::Raised );
-    frame->setLineWidth( style().pixelMetric( QStyle::PM_DefaultFrameWidth, frame ) );
-    vbox->addWidget( frame );
-    vbox = new QVBoxLayout( frame, 2 * KDialog::marginHint(),
-                            2 * KDialog::spacingHint() );
+    QVBoxLayout *vbox = new QVBoxLayout(this);
+    QFrame *frame = new QFrame(this);
+    frame->setFrameStyle(QFrame::StyledPanel | QFrame::Raised);
+    frame->setLineWidth(style().pixelMetric(QStyle::PM_DefaultFrameWidth, frame));
+    vbox->addWidget(frame);
+    vbox = new QVBoxLayout(frame, 2 * KDialog::marginHint(), 2 * KDialog::spacingHint());
 
-    QLabel* label = new QLabel( i18n("End Session for \"%1\"").arg(KUser().loginName()), frame );
+    QLabel *label = new QLabel(i18n("End Session for \"%1\"").arg(KUser().loginName()), frame);
     QFont fnt = label->font();
-    fnt.setBold( true );
-    fnt.setPointSize( fnt.pointSize() * 3 / 2 );
-    label->setFont( fnt );
-    vbox->addWidget( label, 0, AlignHCenter );
+    fnt.setBold(true);
+    fnt.setPointSize(fnt.pointSize() * 3 / 2);
+    label->setFont(fnt);
+    vbox->addWidget(label, 0, AlignHCenter);
 
-    QHBoxLayout* hbox = new QHBoxLayout( vbox, 2 * KDialog::spacingHint() );
+    QHBoxLayout *hbox = new QHBoxLayout(vbox, 2 * KDialog::spacingHint());
 
     // konqy
-    QFrame* lfrm = new QFrame( frame );
-    lfrm->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-    hbox->addWidget( lfrm, AlignCenter );
+    QFrame *lfrm = new QFrame(frame);
+    lfrm->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    hbox->addWidget(lfrm, AlignCenter);
 
-    QLabel* icon = new QLabel( lfrm );
-    icon->setPixmap( UserIcon( "shutdownkonq" ) );
-    lfrm->setFixedSize( icon->sizeHint());
-    icon->setFixedSize( icon->sizeHint());
+    QLabel *icon = new QLabel(lfrm);
+    icon->setPixmap(UserIcon("shutdownkonq"));
+    lfrm->setFixedSize(icon->sizeHint());
+    icon->setFixedSize(icon->sizeHint());
 
     // right column (buttons)
-    QVBoxLayout* buttonlay = new QVBoxLayout( hbox, 2 * KDialog::spacingHint() );
-    buttonlay->setAlignment( Qt::AlignHCenter );
+    QVBoxLayout *buttonlay = new QVBoxLayout(hbox, 2 * KDialog::spacingHint());
+    buttonlay->setAlignment(Qt::AlignHCenter);
 
-    buttonlay->addStretch( 1 );
+    buttonlay->addStretch(1);
 
     // End session
-    KPushButton* btnLogout = new KPushButton( KGuiItem( i18n("&Logout"), "undo"), frame );
+    KPushButton *btnLogout = new KPushButton(KGuiItem(i18n("&Logout"), "undo"), frame);
     QFont btnFont = btnLogout->font();
-    buttonlay->addWidget( btnLogout );
+    buttonlay->addWidget(btnLogout);
     connect(btnLogout, SIGNAL(clicked()), SLOT(slotLogout()));
 
     // Suspend computer
-    if ( maySuspend ) {
-        KPushButton* btnSuspend = new KPushButton( KGuiItem( i18n("&Suspend"), "suspend"), frame );
-        btnSuspend->setFont( btnFont );
-        buttonlay->addWidget( btnSuspend );
+    if(maySuspend)
+    {
+        KPushButton *btnSuspend = new KPushButton(KGuiItem(i18n("&Suspend"), "suspend"), frame);
+        btnSuspend->setFont(btnFont);
+        buttonlay->addWidget(btnSuspend);
         connect(btnSuspend, SIGNAL(clicked()), SLOT(slotSuspend()));
-        if ( sdtype == KApplication::ShutdownTypeSuspend )
+        if(sdtype == KApplication::ShutdownTypeSuspend)
             btnSuspend->setFocus();
     }
 
     // Hibernate computer
-    if ( mayHibernate ) {
-        KPushButton* btnHibernate = new KPushButton( KGuiItem( i18n("&Hibernate"), "hibernate"), frame );
-        btnHibernate->setFont( btnFont );
-        buttonlay->addWidget( btnHibernate );
+    if(mayHibernate)
+    {
+        KPushButton *btnHibernate = new KPushButton(KGuiItem(i18n("&Hibernate"), "hibernate"), frame);
+        btnHibernate->setFont(btnFont);
+        buttonlay->addWidget(btnHibernate);
         connect(btnHibernate, SIGNAL(clicked()), SLOT(slotHibernate()));
-        if ( sdtype == KApplication::ShutdownTypeHibernate )
+        if(sdtype == KApplication::ShutdownTypeHibernate)
             btnHibernate->setFocus();
     }
 
-    if (maysd) {
+    if(maysd)
+    {
 
         // Shutdown
-        KPushButton* btnHalt = new KPushButton( KGuiItem( i18n("Shut&down"), "exit"), frame );
-        btnHalt->setFont( btnFont );
-        buttonlay->addWidget( btnHalt );
+        KPushButton *btnHalt = new KPushButton(KGuiItem(i18n("Shut&down"), "exit"), frame);
+        btnHalt->setFont(btnFont);
+        buttonlay->addWidget(btnHalt);
         connect(btnHalt, SIGNAL(clicked()), SLOT(slotHalt()));
-        if ( sdtype == KApplication::ShutdownTypeHalt )
+        if(sdtype == KApplication::ShutdownTypeHalt)
             btnHalt->setFocus();
 
         // Reboot
-        KSMDelayedPushButton* btnReboot = new KSMDelayedPushButton( KGuiItem( i18n("&Reboot"), "reload"), frame );
-        btnReboot->setFont( btnFont );
-        buttonlay->addWidget( btnReboot );
+        KSMDelayedPushButton *btnReboot = new KSMDelayedPushButton(KGuiItem(i18n("&Reboot"), "reload"), frame);
+        btnReboot->setFont(btnFont);
+        buttonlay->addWidget(btnReboot);
 
         connect(btnReboot, SIGNAL(clicked()), SLOT(slotReboot()));
-        if ( sdtype == KApplication::ShutdownTypeReboot )
+        if(sdtype == KApplication::ShutdownTypeReboot)
             btnReboot->setFocus();
 
         int def, cur;
-        if ( DM().bootOptions( rebootOptions, def, cur ) ) {
-	  targets = new QPopupMenu( frame );
-	  if ( cur == -1 )
-	    cur = def;
+        if(DM().bootOptions(rebootOptions, def, cur))
+        {
+            targets = new QPopupMenu(frame);
+            if(cur == -1)
+                cur = def;
 
-	  int index = 0;
-	  for (QStringList::ConstIterator it = rebootOptions.begin(); it != rebootOptions.end(); ++it, ++index)
-	    {
-              QString label = (*it);
-              label=label.replace('&',"&&");
-	      if (index == cur)
-		targets->insertItem( label + i18n("current option in boot loader", " (current)"), index);
-	      else
-		targets->insertItem( label, index );
-	    }
+            int index = 0;
+            for(QStringList::ConstIterator it = rebootOptions.begin(); it != rebootOptions.end(); ++it, ++index)
+            {
+                QString label = (*it);
+                label = label.replace('&', "&&");
+                if(index == cur)
+                    targets->insertItem(label + i18n("current option in boot loader", " (current)"), index);
+                else
+                    targets->insertItem(label, index);
+            }
 
-	  btnReboot->setPopup(targets);
-	  connect( targets, SIGNAL(activated(int)), SLOT(slotReboot(int)) );
-	}
+            btnReboot->setPopup(targets);
+            connect(targets, SIGNAL(activated(int)), SLOT(slotReboot(int)));
+        }
     }
 
-    buttonlay->addStretch( 1 );
+    buttonlay->addStretch(1);
 
     // Separator
-    buttonlay->addWidget( new KSeparator( frame ) );
+    buttonlay->addWidget(new KSeparator(frame));
 
     // Back to Desktop
-    KPushButton* btnBack = new KPushButton( KStdGuiItem::cancel(), frame );
-    buttonlay->addWidget( btnBack );
+    KPushButton *btnBack = new KPushButton(KStdGuiItem::cancel(), frame);
+    buttonlay->addWidget(btnBack);
     connect(btnBack, SIGNAL(clicked()), SLOT(reject()));
-
 }
 
 
@@ -234,7 +235,7 @@ void KSMShutdownDlg::slotReboot()
 
 void KSMShutdownDlg::slotReboot(int opt)
 {
-    if (int(rebootOptions.size()) > opt)
+    if(int(rebootOptions.size()) > opt)
         m_bootOption = rebootOptions[opt];
     m_shutdownType = KApplication::ShutdownTypeReboot;
     accept();
@@ -249,19 +250,18 @@ void KSMShutdownDlg::slotHalt()
 }
 
 
-bool KSMShutdownDlg::confirmShutdown( bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType& sdtype, QString& bootOption )
+bool KSMShutdownDlg::confirmShutdown(bool maysd, bool maySuspend, bool mayHibernate, KApplication::ShutdownType &sdtype, QString &bootOption)
 {
     kapp->enableStyles();
-    KSMShutdownDlg* l = new KSMShutdownDlg( 0,
-                                            //KSMShutdownFeedback::self(),
-                                            maysd, maySuspend, mayHibernate, sdtype );
+    KSMShutdownDlg *l = new KSMShutdownDlg(0,
+                                           // KSMShutdownFeedback::self(),
+                                           maysd, maySuspend, mayHibernate, sdtype);
 
     // Show dialog (will save the background in showEvent)
     QSize sh = l->sizeHint();
     QRect rect = KGlobalSettings::desktopGeometry(QCursor::pos());
 
-    l->move(rect.x() + (rect.width() - sh.width())/2,
-            rect.y() + (rect.height() - sh.height())/2);
+    l->move(rect.x() + (rect.width() - sh.width()) / 2, rect.y() + (rect.height() - sh.height()) / 2);
     bool result = l->exec();
     sdtype = l->m_shutdownType;
     bootOption = l->m_bootOption;
@@ -272,40 +272,37 @@ bool KSMShutdownDlg::confirmShutdown( bool maysd, bool maySuspend, bool mayHiber
     return result;
 }
 
-KSMDelayedPushButton::KSMDelayedPushButton( const KGuiItem &item,
-					    QWidget *parent,
-					    const char *name)
-  : KPushButton( item, parent, name), pop(0), popt(0)
+KSMDelayedPushButton::KSMDelayedPushButton(const KGuiItem &item, QWidget *parent, const char *name) : KPushButton(item, parent, name), pop(0), popt(0)
 {
-  connect(this, SIGNAL(pressed()), SLOT(slotPressed()));
-  connect(this, SIGNAL(released()), SLOT(slotReleased()));
-  popt = new QTimer(this);
-  connect(popt, SIGNAL(timeout()), SLOT(slotTimeout()));
+    connect(this, SIGNAL(pressed()), SLOT(slotPressed()));
+    connect(this, SIGNAL(released()), SLOT(slotReleased()));
+    popt = new QTimer(this);
+    connect(popt, SIGNAL(timeout()), SLOT(slotTimeout()));
 }
 
 void KSMDelayedPushButton::setPopup(QPopupMenu *p)
 {
-  pop = p;
-  setIsMenuButton(p != 0);
+    pop = p;
+    setIsMenuButton(p != 0);
 }
 
 void KSMDelayedPushButton::slotPressed()
 {
-  if (pop)
-    popt->start(QApplication::startDragTime());
+    if(pop)
+        popt->start(QApplication::startDragTime());
 }
 
 void KSMDelayedPushButton::slotReleased()
 {
-  popt->stop();
+    popt->stop();
 }
 
 void KSMDelayedPushButton::slotTimeout()
 {
-  QPoint bl = mapToGlobal(rect().bottomLeft());
-  QWidget *par = (QWidget*)parent();
-  QPoint br = par->mapToGlobal(par->rect().bottomRight());
-  pop->popup( bl );
-  popt->stop();
-  setDown(false);
+    QPoint bl = mapToGlobal(rect().bottomLeft());
+    QWidget *par = (QWidget *)parent();
+    QPoint br = par->mapToGlobal(par->rect().bottomRight());
+    pop->popup(bl);
+    popt->stop();
+    setDown(false);
 }

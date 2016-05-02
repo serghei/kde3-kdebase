@@ -37,57 +37,56 @@ class KConfig;
  *
  * @author Kalle Dalheimer (kalle@kde.org)
  */
-class KDebugDialog : public KAbstractDebugDialog
-{
-  Q_OBJECT
+class KDebugDialog : public KAbstractDebugDialog {
+    Q_OBJECT
 
 public:
-  KDebugDialog( QStringList areaList, QWidget *parent=0, const char *name=0, bool modal=true );
-  virtual ~KDebugDialog();
+    KDebugDialog(QStringList areaList, QWidget *parent = 0, const char *name = 0, bool modal = true);
+    virtual ~KDebugDialog();
 
-  void save();
+    void save();
 
 protected slots:
-  void slotDebugAreaChanged( const QString & );
-  void slotDestinationChanged(int);
+    void slotDebugAreaChanged(const QString &);
+    void slotDestinationChanged(int);
 
 private:
-  QComboBox* pDebugAreas;
-  QGroupBox* pInfoGroup;
-  QLabel* pInfoLabel1;
-  QComboBox* pInfoCombo;
-  QLabel* pInfoLabel2;
-  QLineEdit* pInfoFile;
-  QLabel* pInfoLabel3;
-  QLineEdit* pInfoShow;
-  QGroupBox* pWarnGroup;
-  QLabel* pWarnLabel1;
-  QComboBox* pWarnCombo;
-  QLabel* pWarnLabel2;
-  QLineEdit* pWarnFile;
-  QLabel* pWarnLabel3;
-  QLineEdit* pWarnShow;
-  QGroupBox* pErrorGroup;
-  QLabel* pErrorLabel1;
-  QComboBox* pErrorCombo;
-  QLabel* pErrorLabel2;
-  QLineEdit* pErrorFile;
-  QLabel* pErrorLabel3;
-  QLineEdit* pErrorShow;
-  QGroupBox* pFatalGroup;
-  QLabel* pFatalLabel1;
-  QComboBox* pFatalCombo;
-  QLabel* pFatalLabel2;
-  QLineEdit* pFatalFile;
-  QLabel* pFatalLabel3;
-  QLineEdit* pFatalShow;
+    QComboBox *pDebugAreas;
+    QGroupBox *pInfoGroup;
+    QLabel *pInfoLabel1;
+    QComboBox *pInfoCombo;
+    QLabel *pInfoLabel2;
+    QLineEdit *pInfoFile;
+    QLabel *pInfoLabel3;
+    QLineEdit *pInfoShow;
+    QGroupBox *pWarnGroup;
+    QLabel *pWarnLabel1;
+    QComboBox *pWarnCombo;
+    QLabel *pWarnLabel2;
+    QLineEdit *pWarnFile;
+    QLabel *pWarnLabel3;
+    QLineEdit *pWarnShow;
+    QGroupBox *pErrorGroup;
+    QLabel *pErrorLabel1;
+    QComboBox *pErrorCombo;
+    QLabel *pErrorLabel2;
+    QLineEdit *pErrorFile;
+    QLabel *pErrorLabel3;
+    QLineEdit *pErrorShow;
+    QGroupBox *pFatalGroup;
+    QLabel *pFatalLabel1;
+    QComboBox *pFatalCombo;
+    QLabel *pFatalLabel2;
+    QLineEdit *pFatalFile;
+    QLabel *pFatalLabel3;
+    QLineEdit *pFatalShow;
 
-  QCheckBox* pAbortFatal;
+    QCheckBox *pAbortFatal;
 
 private:
-  // Disallow assignment and copy-construction
-  KDebugDialog( const KDebugDialog& );
-  KDebugDialog& operator= ( const KDebugDialog& );
+    // Disallow assignment and copy-construction
+    KDebugDialog(const KDebugDialog &);
+    KDebugDialog &operator=(const KDebugDialog &);
 };
 
 #endif

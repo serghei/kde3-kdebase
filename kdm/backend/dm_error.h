@@ -38,21 +38,21 @@ authorization.
 
 #include <stdarg.h>
 
-void GDebug( const char *fmt, ... );
-void Debug( const char *fmt, ... );
-void LogInfo( const char *fmt, ... );
-void LogWarn( const char *fmt, ... );
-void LogError( const char *fmt, ... );
-void LogPanic( const char *fmt, ... ) ATTR_NORETURN;
-void LogOutOfMem( void );
-void Panic( const char *mesg ) ATTR_NORETURN;
-void InitErrorLog( const char *errorLogFile );
+void GDebug(const char *fmt, ...);
+void Debug(const char *fmt, ...);
+void LogInfo(const char *fmt, ...);
+void LogWarn(const char *fmt, ...);
+void LogError(const char *fmt, ...);
+void LogPanic(const char *fmt, ...) ATTR_NORETURN;
+void LogOutOfMem(void);
+void Panic(const char *mesg) ATTR_NORETURN;
+void InitErrorLog(const char *errorLogFile);
 #ifdef USE_SYSLOG
-void ReInitErrorLog( void );
+void ReInitErrorLog(void);
 #else
-# define ReInitErrorLog() while(0)
+#define ReInitErrorLog() while(0)
 #endif
-int ASPrintf( char **strp, const char *fmt, ... );
-int VASPrintf( char **strp, const char *fmt, va_list args );
+int ASPrintf(char **strp, const char *fmt, ...);
+int VASPrintf(char **strp, const char *fmt, va_list args);
 
 #endif /* _DM_ERROR_H_ */

@@ -18,26 +18,28 @@ class KQuery;
 class KURL;
 class KfindTabWidget;
 
-class Kfind: public QWidget
-{
+class Kfind : public QWidget {
     Q_OBJECT
 
 public:
-    Kfind(QWidget * parent = 0, const char * name = 0);
+    Kfind(QWidget *parent = 0, const char *name = 0);
     ~Kfind();
 
-    void setURL( const KURL &url );
+    void setURL(const KURL &url);
 
-    void setQuery(KQuery * q) { query = q; }
+    void setQuery(KQuery *q)
+    {
+        query = q;
+    }
     void searchFinished();
 
-    void saveState( QDataStream *stream );
-    void restoreState( QDataStream *stream );
+    void saveState(QDataStream *stream);
+    void restoreState(QDataStream *stream);
 
 public slots:
     void startSearch();
     void stopSearch();
-    //void newSearch();
+    // void newSearch();
     void saveResults();
 
 signals:
@@ -60,5 +62,3 @@ public:
 };
 
 #endif
-
-

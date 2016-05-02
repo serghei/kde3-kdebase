@@ -28,33 +28,32 @@
 class KHelpMenu;
 class KPopupMenu;
 
-class KRandRSystemTray :  public KSystemTray, public RandRDisplay
-{
-	Q_OBJECT
+class KRandRSystemTray : public KSystemTray, public RandRDisplay {
+    Q_OBJECT
 
 public:
-	KRandRSystemTray(QWidget* parent = 0, const char *name = 0);
+    KRandRSystemTray(QWidget *parent = 0, const char *name = 0);
 
-	virtual void contextMenuAboutToShow(KPopupMenu* menu);
+    virtual void contextMenuAboutToShow(KPopupMenu *menu);
 
-	void configChanged();
+    void configChanged();
 
 protected slots:
-	void slotScreenActivated();
-	void slotResolutionChanged(int parameter);
-	void slotOrientationChanged(int parameter);
-	void slotRefreshRateChanged(int parameter);
-	void slotPrefs();
+    void slotScreenActivated();
+    void slotResolutionChanged(int parameter);
+    void slotOrientationChanged(int parameter);
+    void slotRefreshRateChanged(int parameter);
+    void slotPrefs();
 
 protected:
-	void mousePressEvent( QMouseEvent *e );
+    void mousePressEvent(QMouseEvent *e);
 
 private:
-	void populateMenu(KPopupMenu* menu);
+    void populateMenu(KPopupMenu *menu);
 
-	bool m_popupUp;
-	KHelpMenu* m_help;
-	QPtrList<KPopupMenu> m_screenPopups;
+    bool m_popupUp;
+    KHelpMenu *m_help;
+    QPtrList< KPopupMenu > m_screenPopups;
 };
 
 #endif

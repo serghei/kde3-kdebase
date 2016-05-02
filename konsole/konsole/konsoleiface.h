@@ -23,12 +23,12 @@
 
 #include <dcopobject.h>
 
-class KonsoleIface : virtual public DCOPObject
-{
+class KonsoleIface : virtual public DCOPObject {
     K_DCOP
-    k_dcop:
+    k_dcop :
 
-    virtual int sessionCount() = 0;
+        virtual int
+        sessionCount() = 0;
 
     virtual QString currentSession() = 0;
     virtual QString newSession() = 0;

@@ -28,35 +28,34 @@
 
 // for future qttestlib porting :)
 #define VERIFY assert
-#define COMPARE( a, b ) assert( (a) == (b) )
+#define COMPARE(a, b) assert((a) == (b))
 
 void testKonqIconDrag2()
 {
     // Those URLs don't have to exist.
     KURL mediaURL = "media:/hda1/tmp/Mat%C3%A9riel";
     KURL localURL = "file:///tmp/Mat%C3%A9riel";
-    KonqIconDrag2 iconDrag( 0 );
+    KonqIconDrag2 iconDrag(0);
     QIconDragItem item;
-    iconDrag.append( item, QRect( 1, 2, 3, 4 ), QRect( 5, 6, 7, 8 ),
-                     mediaURL.url(), localURL.url() );
+    iconDrag.append(item, QRect(1, 2, 3, 4), QRect(5, 6, 7, 8), mediaURL.url(), localURL.url());
 
 
-    VERIFY( KURLDrag::canDecode( &iconDrag ) );
+    VERIFY(KURLDrag::canDecode(&iconDrag));
     KURL::List lst;
-    KURLDrag::decode( &iconDrag, lst );
-    VERIFY( !lst.isEmpty() );
-    COMPARE( lst.count(), 1 );
+    KURLDrag::decode(&iconDrag, lst);
+    VERIFY(!lst.isEmpty());
+    COMPARE(lst.count(), 1);
     kdDebug() << "lst[0]=" << lst << endl;
     kdDebug() << "mediaURL=" << mediaURL << endl;
-    COMPARE( lst[0].url(), mediaURL.url() );
+    COMPARE(lst[0].url(), mediaURL.url());
 }
 
 int main(int argc, char *argv[])
 {
-  KApplication::disableAutoDcopRegistration();
-  KCmdLineArgs::init( argc, argv, "kurltest", 0, 0, 0, 0 );
-  KApplication app; // GUI needed for QPixmaps
+    KApplication::disableAutoDcopRegistration();
+    KCmdLineArgs::init(argc, argv, "kurltest", 0, 0, 0, 0);
+    KApplication app; // GUI needed for QPixmaps
 
-  testKonqIconDrag2();
-  return 0;
+    testKonqIconDrag2();
+    return 0;
 }

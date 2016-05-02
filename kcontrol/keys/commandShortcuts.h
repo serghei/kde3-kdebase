@@ -32,44 +32,43 @@ class QRadioButton;
 class KKeyButton;
 class QListViewItem;
 
-typedef QPtrList<AppTreeItem> treeItemList;
-typedef QPtrListIterator<AppTreeItem> treeItemListIterator;
+typedef QPtrList< AppTreeItem > treeItemList;
+typedef QPtrListIterator< AppTreeItem > treeItemListIterator;
 
-class CommandShortcutsModule : public QWidget
-{
+class CommandShortcutsModule : public QWidget {
     Q_OBJECT
-    public:
-        CommandShortcutsModule( QWidget *parent = 0, const char *name = 0 );
-        ~CommandShortcutsModule();
+public:
+    CommandShortcutsModule(QWidget *parent = 0, const char *name = 0);
+    ~CommandShortcutsModule();
 
-        void load();
-        void save();
-        void defaults();
-        QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
-    signals:
-        void changed( bool );
+signals:
+    void changed(bool);
 
-    public slots:
-        void showing(QWidget*);
+public slots:
+    void showing(QWidget *);
 
-    protected slots:
-        void commandSelected(const QString&, const QString &, bool);
-        void shortcutChanged(const KShortcut& shortcut);
-        void shortcutRadioToggled(bool remove);
-        void commandDoubleClicked(QListViewItem *item, const QPoint &, int);
-        void launchMenuEditor();
+protected slots:
+    void commandSelected(const QString &, const QString &, bool);
+    void shortcutChanged(const KShortcut &shortcut);
+    void shortcutRadioToggled(bool remove);
+    void commandDoubleClicked(QListViewItem *item, const QPoint &, int);
+    void launchMenuEditor();
 
-    protected:
-        void initGUI();
+protected:
+    void initGUI();
 
-    private:
-        AppTreeView* m_tree;
-        QButtonGroup* m_shortcutBox;
-        QRadioButton* m_noneRadio;
-        QRadioButton* m_customRadio;
-        KKeyButton* m_shortcutButton;
-        treeItemList m_changedItems;
+private:
+    AppTreeView *m_tree;
+    QButtonGroup *m_shortcutBox;
+    QRadioButton *m_noneRadio;
+    QRadioButton *m_customRadio;
+    KKeyButton *m_shortcutButton;
+    treeItemList m_changedItems;
 };
 
 #endif // __COMMAND_SHORTCUTS_MODULE_H

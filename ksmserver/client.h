@@ -27,14 +27,16 @@ Copyright (C) 2000 Matthias Ettrich <ettrich@kde.org>
 
 class KSMListener;
 class KSMConnection;
-class KSMClient
-{
+class KSMClient {
 public:
-    KSMClient( SmsConn );
+    KSMClient(SmsConn);
     ~KSMClient();
 
-    void registerClient( const char* previousId  = 0 );
-    SmsConn connection() const { return smsConn; }
+    void registerClient(const char *previousId = 0);
+    SmsConn connection() const
+    {
+        return smsConn;
+    }
 
     void resetState();
     uint saveYourselfDone : 1;
@@ -42,18 +44,21 @@ public:
     uint waitForPhase2 : 1;
     uint wasPhase2 : 1;
 
-    QPtrList<SmProp> properties;
-    SmProp* property( const char* name ) const;
+    QPtrList< SmProp > properties;
+    SmProp *property(const char *name) const;
 
     QString program() const;
     QStringList restartCommand() const;
     QStringList discardCommand() const;
     int restartStyleHint() const;
     QString userId() const;
-    const char* clientId() { return id ? id : ""; }
+    const char *clientId()
+    {
+        return id ? id : "";
+    }
 
 private:
-    const char* id;
+    const char *id;
     SmsConn smsConn;
 };
 

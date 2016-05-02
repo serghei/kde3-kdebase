@@ -36,44 +36,44 @@ class KonqInfoListViewWidget;
 /**
  * One item in the info list
  */
-class KonqInfoListViewItem : public KonqBaseListViewItem
-{
-   public:
-      /**
-       * Create an item in the tree toplevel representing a file
-       * @param _parent the parent widget, the tree view
-       * @param _fileitem the file item created by KDirLister
-       */
-      KonqInfoListViewItem( KonqInfoListViewWidget *_listViewWidget, KFileItem* _fileitem );
-      /**
-       * Create an item representing a file, inside a directory
-       * @param _treeview the parent tree view  - now unused
-       * @param _parent the parent widget, a directory item in the tree view
-       * @param _fileitem the file item created by KDirLister
-       */
-      KonqInfoListViewItem( KonqInfoListViewWidget *, KonqInfoListViewItem *_parent, KFileItem* _fileitem );
+class KonqInfoListViewItem : public KonqBaseListViewItem {
+public:
+    /**
+     * Create an item in the tree toplevel representing a file
+     * @param _parent the parent widget, the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqInfoListViewItem(KonqInfoListViewWidget *_listViewWidget, KFileItem *_fileitem);
+    /**
+     * Create an item representing a file, inside a directory
+     * @param _treeview the parent tree view  - now unused
+     * @param _parent the parent widget, a directory item in the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqInfoListViewItem(KonqInfoListViewWidget *, KonqInfoListViewItem *_parent, KFileItem *_fileitem);
 
-      virtual ~KonqInfoListViewItem() { }
+    virtual ~KonqInfoListViewItem()
+    {
+    }
 
-      virtual void paintCell( QPainter *_painter, const QColorGroup & cg,
-                              int column, int width, int alignment );
-      virtual void paintFocus( QPainter * _painter, const QColorGroup & cg, const QRect & r );
-      virtual void updateContents();
-      virtual void setDisabled( bool disabled );
+    virtual void paintCell(QPainter *_painter, const QColorGroup &cg, int column, int width, int alignment);
+    virtual void paintFocus(QPainter *_painter, const QColorGroup &cg, const QRect &r);
+    virtual void updateContents();
+    virtual void setDisabled(bool disabled);
 
-      virtual void gotMetaInfo();
+    virtual void gotMetaInfo();
 
-      virtual int compare(QListViewItem *item, int col, bool ascending) const;
+    virtual int compare(QListViewItem *item, int col, bool ascending) const;
 
-   protected:
-      /**
-       * Parent tree view - the info list view widget
-       */
-      KonqInfoListViewWidget* m_ILVWidget;
+protected:
+    /**
+     * Parent tree view - the info list view widget
+     */
+    KonqInfoListViewWidget *m_ILVWidget;
 
-   private:
-      QValueVector<QVariant::Type> m_columnTypes;
-      QValueVector<QVariant> m_columnValues;
+private:
+    QValueVector< QVariant::Type > m_columnTypes;
+    QValueVector< QVariant > m_columnValues;
 };
 
 #endif

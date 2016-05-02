@@ -34,137 +34,135 @@
 #include "global.h"
 
 
-ModuleIconView::ModuleIconView(ConfigModuleList *list, QWidget * parent, const char * name)
-  : KListView(parent, name)
-  , _path(KCGlobal::baseGroup())
-  , _modules(list)
+ModuleIconView::ModuleIconView(ConfigModuleList *list, QWidget *parent, const char *name)
+    : KListView(parent, name), _path(KCGlobal::baseGroup()), _modules(list)
 {
-  setSorting(1, true);
-  addColumn(QString::null);
+    setSorting(1, true);
+    addColumn(QString::null);
 
-  // Needed to enforce a cut of the items label rather than
-  // showing a horizontal scrollbar
-  setResizeMode(LastColumn);
+    // Needed to enforce a cut of the items label rather than
+    // showing a horizontal scrollbar
+    setResizeMode(LastColumn);
 
-  header()->hide();
+    header()->hide();
 
-  // This is intentionally _not_ connected with executed(), since
-  // honoring doubleclick doesn't make any sense here (changed by
-  // large user demand)
-  connect(this, SIGNAL(clicked(QListViewItem*)),
-          this, SLOT(slotItemSelected(QListViewItem*)));
+    // This is intentionally _not_ connected with executed(), since
+    // honoring doubleclick doesn't make any sense here (changed by
+    // large user demand)
+    connect(this, SIGNAL(clicked(QListViewItem *)), this, SLOT(slotItemSelected(QListViewItem *)));
 }
 
 void ModuleIconView::makeSelected(ConfigModule *m)
 {
-  if (!m) return;
+    if(!m)
+        return;
 
-  for (QListViewItem *i = firstChild(); i; i = i->nextSibling())
-  {
-     if(static_cast<ModuleIconItem*>(i)->module() == m)
-     {
-        setSelected(i, true);
-        break;
-     }
-  }
+    for(QListViewItem *i = firstChild(); i; i = i->nextSibling())
+    {
+        if(static_cast< ModuleIconItem * >(i)->module() == m)
+        {
+            setSelected(i, true);
+            break;
+        }
+    }
 }
 
 void ModuleIconView::makeVisible(ConfigModule *m)
 {
-  if (!m) return;
-  QString tmp = _modules->findModule(m);
-  if (tmp.isEmpty())
-     return;
+    if(!m)
+        return;
+    QString tmp = _modules->findModule(m);
+    if(tmp.isEmpty())
+        return;
 
-  _path = tmp;
-  fill();
+    _path = tmp;
+    fill();
 }
 
 void ModuleIconView::fill()
 {
-  clear();
+    clear();
 
-  QPixmap icon;
-  // add our "up" icon if we aren't top level
-  if (_path != KCGlobal::baseGroup())
-  {
-     icon = loadIcon( "back" );
-     // go-back node
-     ModuleIconItem *i = new ModuleIconItem(this, i18n("Back"), icon);
-     i->setOrderNo(0);
-     int last_slash = _path.findRev('/', -2);
-     if (last_slash == -1)
-        i->setTag(QString::null);
-     else
-        i->setTag(_path.left(last_slash+1));
-  }
+    QPixmap icon;
+    // add our "up" icon if we aren't top level
+    if(_path != KCGlobal::baseGroup())
+    {
+        icon = loadIcon("back");
+        // go-back node
+        ModuleIconItem *i = new ModuleIconItem(this, i18n("Back"), icon);
+        i->setOrderNo(0);
+        int last_slash = _path.findRev('/', -2);
+        if(last_slash == -1)
+            i->setTag(QString::null);
+        else
+            i->setTag(_path.left(last_slash + 1));
+    }
 
-  int c = 0;
-  QStringList submenus = _modules->submenus(_path);
-  for (QStringList::Iterator it = submenus.begin(); it != submenus.end(); ++it )
-  {
-     QString path = (*it);
+    int c = 0;
+    QStringList submenus = _modules->submenus(_path);
+    for(QStringList::Iterator it = submenus.begin(); it != submenus.end(); ++it)
+    {
+        QString path = (*it);
 
-     KServiceGroup::Ptr group = KServiceGroup::group(path);
-     if (!group || !group->isValid())
-        continue;
+        KServiceGroup::Ptr group = KServiceGroup::group(path);
+        if(!group || !group->isValid())
+            continue;
 
-     icon = loadIcon( group->icon() );
+        icon = loadIcon(group->icon());
 
-     ModuleIconItem *i = new ModuleIconItem(this, group->caption(), icon);
-     i->setTag(path);
-     i->setOrderNo(++c);
-  }
+        ModuleIconItem *i = new ModuleIconItem(this, group->caption(), icon);
+        i->setTag(path);
+        i->setOrderNo(++c);
+    }
 
-  c = 0;
-  QPtrList<ConfigModule> moduleList = _modules->modules(_path);
-  for (ConfigModule *module=moduleList.first(); module != 0; module=moduleList.next())
-  {
-     icon = loadIcon( module->icon() );
+    c = 0;
+    QPtrList< ConfigModule > moduleList = _modules->modules(_path);
+    for(ConfigModule *module = moduleList.first(); module != 0; module = moduleList.next())
+    {
+        icon = loadIcon(module->icon());
 
-     ModuleIconItem *i = new ModuleIconItem(this, module->moduleName(), icon, module);
-     i->setOrderNo(++c);
-  }
+        ModuleIconItem *i = new ModuleIconItem(this, module->moduleName(), icon, module);
+        i->setOrderNo(++c);
+    }
 }
 
-void ModuleIconView::slotItemSelected(QListViewItem* item)
+void ModuleIconView::slotItemSelected(QListViewItem *item)
 {
-  QApplication::restoreOverrideCursor();
-  if (!item) return;
+    QApplication::restoreOverrideCursor();
+    if(!item)
+        return;
 
-  if (static_cast<ModuleIconItem*>(item)->module())
-  {
-     emit moduleSelected(static_cast<ModuleIconItem*>(item)->module());
-  }
-  else
-  {
-     _path = static_cast<ModuleIconItem*>(item)->tag();
-     fill();
-     setCurrentItem(firstChild());
-  }
+    if(static_cast< ModuleIconItem * >(item)->module())
+    {
+        emit moduleSelected(static_cast< ModuleIconItem * >(item)->module());
+    }
+    else
+    {
+        _path = static_cast< ModuleIconItem * >(item)->tag();
+        fill();
+        setCurrentItem(firstChild());
+    }
 }
 
 void ModuleIconView::keyPressEvent(QKeyEvent *e)
 {
-  if(   e->key() == Key_Return
-     || e->key() == Key_Enter
-     || e->key() == Key_Space)
-  {
-     if (currentItem())
-        slotItemSelected(currentItem());
-  }
-  else
-  {
-     KListView::keyPressEvent(e);
-  }
+    if(e->key() == Key_Return || e->key() == Key_Enter || e->key() == Key_Space)
+    {
+        if(currentItem())
+            slotItemSelected(currentItem());
+    }
+    else
+    {
+        KListView::keyPressEvent(e);
+    }
 }
 
-QPixmap ModuleIconView::loadIcon( const QString &name )
+QPixmap ModuleIconView::loadIcon(const QString &name)
 {
-  QPixmap icon = DesktopIcon( name, KCGlobal::iconSize() );
+    QPixmap icon = DesktopIcon(name, KCGlobal::iconSize());
 
-  if(icon.isNull())
-     icon = DesktopIcon( "folder", KCGlobal::iconSize() );
+    if(icon.isNull())
+        icon = DesktopIcon("folder", KCGlobal::iconSize());
 
-  return icon;
+    return icon;
 }

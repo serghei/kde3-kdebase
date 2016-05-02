@@ -8,9 +8,9 @@
 *****************************************************************************/
 #include <krun.h>
 
-void KThemeDlg::startKonqui( const QString & url )
+void KThemeDlg::startKonqui(const QString &url)
 {
-    (void) new KRun(url);
+    (void)new KRun(url);
 }
 
 
@@ -39,7 +39,7 @@ void KThemeDlg::startIcons()
 
 void KThemeDlg::startFonts()
 {
-   KRun::runCommand("kcmshell kde-fonts");
+    KRun::runCommand("kcmshell kde-fonts");
 }
 
 

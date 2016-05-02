@@ -17,7 +17,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-*/  
+*/
 
 #ifndef __KDMCONV_H__
 #define __KDMCONV_H__
@@ -39,46 +39,43 @@
 #include <pwd.h>
 
 
-class KDMConvenienceWidget : public QWidget
-{
-	Q_OBJECT
+class KDMConvenienceWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	KDMConvenienceWidget(QWidget *parent=0, const char *name=0);
+    KDMConvenienceWidget(QWidget *parent = 0, const char *name = 0);
 
-        void load();
-        void save();
-	void defaults();
-	void makeReadOnly();
+    void load();
+    void save();
+    void defaults();
+    void makeReadOnly();
 
 public slots:
-	void slotClearUsers();
-	void slotAddUsers(const QMap<QString,int> &);
-	void slotDelUsers(const QMap<QString,int> &);
+    void slotClearUsers();
+    void slotAddUsers(const QMap< QString, int > &);
+    void slotDelUsers(const QMap< QString, int > &);
 
 
 signals:
-	void changed( bool state );
+    void changed(bool state);
 
 private slots:
-	void slotPresChanged();
-	void slotChanged();
-	void slotSetAutoUser( const QString &user );
-	void slotSetPreselUser( const QString &user );
-	void slotUpdateNoPassUser( QListViewItem *item );
+    void slotPresChanged();
+    void slotChanged();
+    void slotSetAutoUser(const QString &user);
+    void slotSetPreselUser(const QString &user);
+    void slotUpdateNoPassUser(QListViewItem *item);
 
 private:
-	QGroupBox	*alGroup, *puGroup, *npGroup, *btGroup;
-	QCheckBox	*againcb, *cbarlen, *cbjumppw, *autoLockCheck;
-	QRadioButton	*npRadio, *ppRadio, *spRadio;
-	KComboBox	*userlb, *puserlb;
-	QSpinBox	*delaysb;
-	KListView	*npuserlv;
-	QLabel		*u_label, *d_label, *pu_label, *w_label, *n_label, *pl_label;
-	QString		autoUser, preselUser;
-	QStringList	noPassUsers;
+    QGroupBox *alGroup, *puGroup, *npGroup, *btGroup;
+    QCheckBox *againcb, *cbarlen, *cbjumppw, *autoLockCheck;
+    QRadioButton *npRadio, *ppRadio, *spRadio;
+    KComboBox *userlb, *puserlb;
+    QSpinBox *delaysb;
+    KListView *npuserlv;
+    QLabel *u_label, *d_label, *pu_label, *w_label, *n_label, *pl_label;
+    QString autoUser, preselUser;
+    QStringList noPassUsers;
 };
 
 #endif
-
-

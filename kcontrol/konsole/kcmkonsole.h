@@ -1,5 +1,5 @@
 /***************************************************************************
-                          kcmkonsole.h 
+                          kcmkonsole.h
                              -------------------
     begin                : mar apr 17 16:44:59 CEST 2001
     copyright            : (C) 2001 by Andrea Rizzi
@@ -25,22 +25,21 @@
 class QFont;
 class QStringList;
 
-class KCMKonsole
-	: public KCModule
-{
-	Q_OBJECT
+class KCMKonsole : public KCModule {
+    Q_OBJECT
 
 public:
-	KCMKonsole (QWidget *parent = 0, const char *name = 0, const QStringList& = 0);
-	
-	void load();
-	void load(bool useDefaults);
-	void save();
-	void defaults();
+    KCMKonsole(QWidget *parent = 0, const char *name = 0, const QStringList & = 0);
+
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
+
 private:
-	KCMKonsoleDialog *dialog;
-	bool xonXoffOrig;
-	bool bidiOrig;
+    KCMKonsoleDialog *dialog;
+    bool xonXoffOrig;
+    bool bidiOrig;
 };
 
 #endif

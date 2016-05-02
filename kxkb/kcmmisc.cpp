@@ -50,50 +50,48 @@
 #include "kcmmiscwidget.h"
 #include <X11/Xlib.h>
 
-KeyboardConfig::KeyboardConfig (QWidget * parent, const char *)
-    : KCModule (parent, "kcmlayout")
+KeyboardConfig::KeyboardConfig(QWidget *parent, const char *) : KCModule(parent, "kcmlayout")
 {
-  QString wtstr;
-  QBoxLayout* lay = new QVBoxLayout(this, 0, KDialog::spacingHint());
-  ui = new KeyboardConfigWidget(this, "ui");
-  lay->addWidget(ui);
-  lay->addStretch();
+    QString wtstr;
+    QBoxLayout *lay = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    ui = new KeyboardConfigWidget(this, "ui");
+    lay->addWidget(ui);
+    lay->addStretch();
 
-  ui->click->setRange(0, 100, 10);
-  ui->delay->setRange(100, 5000, 50, false);
-  ui->rate->setRange(0.2, 50, 5, false);
+    ui->click->setRange(0, 100, 10);
+    ui->delay->setRange(100, 5000, 50, false);
+    ui->rate->setRange(0.2, 50, 5, false);
 
-  sliderMax = (int)floor (0.5
-		  + 2*(log(5000)-log(100)) / (log(5000)-log(4999)));
-  ui->delaySlider->setRange(0, sliderMax);
-  ui->delaySlider->setSteps(sliderMax/100, sliderMax/10);
-  ui->delaySlider->setTickInterval(sliderMax/10);
+    sliderMax = (int)floor(0.5 + 2 * (log(5000) - log(100)) / (log(5000) - log(4999)));
+    ui->delaySlider->setRange(0, sliderMax);
+    ui->delaySlider->setSteps(sliderMax / 100, sliderMax / 10);
+    ui->delaySlider->setTickInterval(sliderMax / 10);
 
-  ui->rateSlider->setRange(20, 5000);
-  ui->rateSlider->setSteps(30, 500);
-  ui->rateSlider->setTickInterval(498);
+    ui->rateSlider->setRange(20, 5000);
+    ui->rateSlider->setSteps(30, 500);
+    ui->rateSlider->setTickInterval(498);
 
-  connect(ui->repeatBox, SIGNAL(clicked()), this, SLOT(changed()));
-  connect(ui->delay, SIGNAL(valueChanged(int)), this, SLOT(delaySpinboxChanged(int)));
-  connect(ui->delaySlider, SIGNAL(valueChanged(int)), this, SLOT(delaySliderChanged(int)));
-  connect(ui->rate, SIGNAL(valueChanged(double)), this, SLOT(rateSpinboxChanged(double)));
-  connect(ui->rateSlider, SIGNAL(valueChanged(int)), this, SLOT(rateSliderChanged(int)));
+    connect(ui->repeatBox, SIGNAL(clicked()), this, SLOT(changed()));
+    connect(ui->delay, SIGNAL(valueChanged(int)), this, SLOT(delaySpinboxChanged(int)));
+    connect(ui->delaySlider, SIGNAL(valueChanged(int)), this, SLOT(delaySliderChanged(int)));
+    connect(ui->rate, SIGNAL(valueChanged(double)), this, SLOT(rateSpinboxChanged(double)));
+    connect(ui->rateSlider, SIGNAL(valueChanged(int)), this, SLOT(rateSliderChanged(int)));
 
-  connect(ui->click, SIGNAL(valueChanged(int)), this, SLOT(changed()));
-  connect(ui->numlockGroup, SIGNAL(released(int)), this, SLOT(changed()));
+    connect(ui->click, SIGNAL(valueChanged(int)), this, SLOT(changed()));
+    connect(ui->numlockGroup, SIGNAL(released(int)), this, SLOT(changed()));
 
 #if !defined(HAVE_XTEST) && !defined(HAVE_XKB)
-  ui->numlockGroup->setDisabled( true );
+    ui->numlockGroup->setDisabled(true);
 #endif
 #if !defined(HAVE_XKB) && !defined(HAVE_XF86MISC)
 //  delay->setDisabled( true );
 //  rate->setDisabled( true );
 #endif
-//  lay->addStretch();
-  load();
+    //  lay->addStretch();
+    load();
 }
 
-int  KeyboardConfig::getClick()
+int KeyboardConfig::getClick()
 {
     return ui->click->value();
 }
@@ -113,121 +111,124 @@ void KeyboardConfig::setClick(int v)
 
 int KeyboardConfig::getNumLockState()
 {
-    QButton* selected = ui->numlockGroup->selected();
-    if( selected == NULL )
+    QButton *selected = ui->numlockGroup->selected();
+    if(selected == NULL)
         return 2;
-    int ret = ui->numlockGroup->id( selected );
-    if( ret == -1 )
+    int ret = ui->numlockGroup->id(selected);
+    if(ret == -1)
         ret = 2;
     return ret;
 }
 
-void KeyboardConfig::setNumLockState( int s )
+void KeyboardConfig::setNumLockState(int s)
 {
-    ui->numlockGroup->setButton( s );
+    ui->numlockGroup->setButton(s);
 }
 
 void KeyboardConfig::load()
 {
-  KConfig config("kcminputrc");
+    KConfig config("kcminputrc");
 
-  XKeyboardState kbd;
+    XKeyboardState kbd;
 
-  XGetKeyboardControl(kapp->getDisplay(), &kbd);
+    XGetKeyboardControl(kapp->getDisplay(), &kbd);
 
-  config.setGroup("Keyboard");
-  bool key = config.readBoolEntry("KeyboardRepeating", true);
-  keyboardRepeat = (key ? AutoRepeatModeOn : AutoRepeatModeOff);
-  ui->delay->setValue(config.readNumEntry( "RepeatDelay", 660 ));
-  ui->rate->setValue(config.readDoubleNumEntry( "RepeatRate", 25 ));
-  clickVolume = config.readNumEntry("ClickVolume", kbd.key_click_percent);
-  numlockState = config.readNumEntry( "NumLock", 2 );
+    config.setGroup("Keyboard");
+    bool key = config.readBoolEntry("KeyboardRepeating", true);
+    keyboardRepeat = (key ? AutoRepeatModeOn : AutoRepeatModeOff);
+    ui->delay->setValue(config.readNumEntry("RepeatDelay", 660));
+    ui->rate->setValue(config.readDoubleNumEntry("RepeatRate", 25));
+    clickVolume = config.readNumEntry("ClickVolume", kbd.key_click_percent);
+    numlockState = config.readNumEntry("NumLock", 2);
 
-  setClick(kbd.key_click_percent);
-  setRepeat(kbd.global_auto_repeat, ui->delay->value(), ui->rate->value());
-  setNumLockState( numlockState );
+    setClick(kbd.key_click_percent);
+    setRepeat(kbd.global_auto_repeat, ui->delay->value(), ui->rate->value());
+    setNumLockState(numlockState);
 }
 
 void KeyboardConfig::save()
 {
-  KConfig config("kcminputrc");
+    KConfig config("kcminputrc");
 
-  XKeyboardControl kbd;
+    XKeyboardControl kbd;
 
-  clickVolume = getClick();
-  keyboardRepeat = ui->repeatBox->isChecked() ? AutoRepeatModeOn : AutoRepeatModeOff;
-  numlockState = getNumLockState();
+    clickVolume = getClick();
+    keyboardRepeat = ui->repeatBox->isChecked() ? AutoRepeatModeOn : AutoRepeatModeOff;
+    numlockState = getNumLockState();
 
-  kbd.key_click_percent = clickVolume;
-  kbd.auto_repeat_mode = keyboardRepeat;
-  XChangeKeyboardControl(kapp->getDisplay(),
-                           KBKeyClickPercent | KBAutoRepeatMode,
-                           &kbd);
-  if( keyboardRepeat ) {
-    set_repeatrate(ui->delay->value(), ui->rate->value());
-  }
+    kbd.key_click_percent = clickVolume;
+    kbd.auto_repeat_mode = keyboardRepeat;
+    XChangeKeyboardControl(kapp->getDisplay(), KBKeyClickPercent | KBAutoRepeatMode, &kbd);
+    if(keyboardRepeat)
+    {
+        set_repeatrate(ui->delay->value(), ui->rate->value());
+    }
 
-  config.setGroup("Keyboard");
-  config.writeEntry("ClickVolume",clickVolume);
-  config.writeEntry("KeyboardRepeating", (keyboardRepeat == AutoRepeatModeOn));
-  config.writeEntry("RepeatRate", ui->rate->value() );
-  config.writeEntry("RepeatDelay", ui->delay->value() );
-  config.writeEntry("NumLock", numlockState );
-  config.sync();
+    config.setGroup("Keyboard");
+    config.writeEntry("ClickVolume", clickVolume);
+    config.writeEntry("KeyboardRepeating", (keyboardRepeat == AutoRepeatModeOn));
+    config.writeEntry("RepeatRate", ui->rate->value());
+    config.writeEntry("RepeatDelay", ui->delay->value());
+    config.writeEntry("NumLock", numlockState);
+    config.sync();
 }
 
 void KeyboardConfig::defaults()
 {
     setClick(50);
     setRepeat(true, 660, 25);
-    setNumLockState( 2 );
+    setNumLockState(2);
 }
 
 QString KeyboardConfig::quickHelp() const
 {
-  return QString::null;
+    return QString::null;
 
-  /* "<h1>Keyboard</h1> This module allows you to choose options"
-     " for the way in which your keyboard works. The actual effect of"
-     " setting these options depends upon the features provided by your"
-     " keyboard hardware and the X server on which KDE is running.<p>"
-     " For example, you may find that changing the key click volume"
-     " has no effect because this feature is not available on your system." */
+    /* "<h1>Keyboard</h1> This module allows you to choose options"
+       " for the way in which your keyboard works. The actual effect of"
+       " setting these options depends upon the features provided by your"
+       " keyboard hardware and the X server on which KDE is running.<p>"
+       " For example, you may find that changing the key click volume"
+       " has no effect because this feature is not available on your system." */
 }
 
-void KeyboardConfig::delaySliderChanged (int value) {
-	double alpha  = sliderMax / (log(5000) - log(100));
-	double linearValue = exp (value/alpha + log(100));
+void KeyboardConfig::delaySliderChanged(int value)
+{
+    double alpha = sliderMax / (log(5000) - log(100));
+    double linearValue = exp(value / alpha + log(100));
 
-	ui->delay->setValue((int)floor(0.5 + linearValue));
+    ui->delay->setValue((int)floor(0.5 + linearValue));
 
-	emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
-void KeyboardConfig::delaySpinboxChanged (int value) {
-	double alpha  = sliderMax / (log(5000) - log(100));
-	double logVal = alpha * (log(value)-log(100));
+void KeyboardConfig::delaySpinboxChanged(int value)
+{
+    double alpha = sliderMax / (log(5000) - log(100));
+    double logVal = alpha * (log(value) - log(100));
 
-	ui->delaySlider->setValue ((int)floor (0.5 + logVal));
+    ui->delaySlider->setValue((int)floor(0.5 + logVal));
 
-	emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
-void KeyboardConfig::rateSliderChanged (int value) {
-	ui->rate->setValue(value/100.0);
+void KeyboardConfig::rateSliderChanged(int value)
+{
+    ui->rate->setValue(value / 100.0);
 
-	emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
-void KeyboardConfig::rateSpinboxChanged (double value) {
-	ui->rateSlider->setValue ((int)(value*100));
+void KeyboardConfig::rateSpinboxChanged(double value)
+{
+    ui->rateSlider->setValue((int)(value * 100));
 
-	emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
 void KeyboardConfig::changed()
 {
-  emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
 /*
@@ -277,147 +278,142 @@ DEALINGS IN THE SOFTWARE.
 /* the XKB stuff is based on code created by Oswald Buddenhagen <ossi@kde.org> */
 #ifdef HAVE_XKB
 int xkb_init()
-    {
+{
     int xkb_opcode, xkb_event, xkb_error;
     int xkb_lmaj = XkbMajorVersion;
     int xkb_lmin = XkbMinorVersion;
-    return XkbLibraryVersion( &xkb_lmaj, &xkb_lmin )
-        && XkbQueryExtension( qt_xdisplay(), &xkb_opcode, &xkb_event, &xkb_error,
-			       &xkb_lmaj, &xkb_lmin );
-    }
+    return XkbLibraryVersion(&xkb_lmaj, &xkb_lmin) && XkbQueryExtension(qt_xdisplay(), &xkb_opcode, &xkb_event, &xkb_error, &xkb_lmaj, &xkb_lmin);
+}
 
-unsigned int xkb_mask_modifier( XkbDescPtr xkb, const char *name )
-    {
+unsigned int xkb_mask_modifier(XkbDescPtr xkb, const char *name)
+{
     int i;
-    if( !xkb || !xkb->names )
-	return 0;
-    for( i = 0;
-         i < XkbNumVirtualMods;
-	 i++ )
-	{
-	char* modStr = XGetAtomName( xkb->dpy, xkb->names->vmods[i] );
-	if( modStr != NULL && strcmp(name, modStr) == 0 )
-	    {
-	    unsigned int mask;
-	    XkbVirtualModsToReal( xkb, 1 << i, &mask );
-	    return mask;
-	    }
-	}
-    return 0;
+    if(!xkb || !xkb->names)
+        return 0;
+    for(i = 0; i < XkbNumVirtualMods; i++)
+    {
+        char *modStr = XGetAtomName(xkb->dpy, xkb->names->vmods[i]);
+        if(modStr != NULL && strcmp(name, modStr) == 0)
+        {
+            unsigned int mask;
+            XkbVirtualModsToReal(xkb, 1 << i, &mask);
+            return mask;
+        }
     }
+    return 0;
+}
 
 unsigned int xkb_numlock_mask()
-    {
+{
     XkbDescPtr xkb;
-    if(( xkb = XkbGetKeyboard( qt_xdisplay(), XkbAllComponentsMask, XkbUseCoreKbd )) != NULL )
-	{
-        unsigned int mask = xkb_mask_modifier( xkb, "NumLock" );
-        XkbFreeKeyboard( xkb, 0, True );
+    if((xkb = XkbGetKeyboard(qt_xdisplay(), XkbAllComponentsMask, XkbUseCoreKbd)) != NULL)
+    {
+        unsigned int mask = xkb_mask_modifier(xkb, "NumLock");
+        XkbFreeKeyboard(xkb, 0, True);
         return mask;
-        }
-    return 0;
     }
+    return 0;
+}
 
 int xkb_set_on()
-    {
+{
     unsigned int mask;
-    if( !xkb_init())
+    if(!xkb_init())
         return 0;
     mask = xkb_numlock_mask();
-    if( mask == 0 )
+    if(mask == 0)
         return 0;
-    XkbLockModifiers ( qt_xdisplay(), XkbUseCoreKbd, mask, mask);
+    XkbLockModifiers(qt_xdisplay(), XkbUseCoreKbd, mask, mask);
     return 1;
-    }
+}
 
 int xkb_set_off()
-    {
+{
     unsigned int mask;
-    if( !xkb_init())
+    if(!xkb_init())
         return 0;
     mask = xkb_numlock_mask();
-    if( mask == 0 )
+    if(mask == 0)
         return 0;
-    XkbLockModifiers ( qt_xdisplay(), XkbUseCoreKbd, mask, 0);
+    XkbLockModifiers(qt_xdisplay(), XkbUseCoreKbd, mask, 0);
     return 1;
-    }
+}
 #endif
 
 #ifdef HAVE_XTEST
 int xtest_get_numlock_state()
-    {
+{
     int i;
     int numlock_mask = 0;
     Window dummy1, dummy2;
     int dummy3, dummy4, dummy5, dummy6;
     unsigned int mask;
-    KeyCode numlock_keycode = XKeysymToKeycode( qt_xdisplay(), XK_Num_Lock );
-    if( numlock_keycode == NoSymbol )
+    KeyCode numlock_keycode = XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock);
+    if(numlock_keycode == NoSymbol)
         return 0;
-    XModifierKeymap* map = XGetModifierMapping( qt_xdisplay() );
-    for( i = 0;
-         i < 8;
-         ++i )
-        {
-	if( map->modifiermap[ map->max_keypermod * i ] == numlock_keycode )
-		numlock_mask = 1 << i;
-	}
-    XQueryPointer( qt_xdisplay(), DefaultRootWindow( qt_xdisplay() ), &dummy1, &dummy2,
-        &dummy3, &dummy4, &dummy5, &dummy6, &mask );
-    XFreeModifiermap( map );
-    return mask & numlock_mask;
+    XModifierKeymap *map = XGetModifierMapping(qt_xdisplay());
+    for(i = 0; i < 8; ++i)
+    {
+        if(map->modifiermap[map->max_keypermod * i] == numlock_keycode)
+            numlock_mask = 1 << i;
     }
+    XQueryPointer(qt_xdisplay(), DefaultRootWindow(qt_xdisplay()), &dummy1, &dummy2, &dummy3, &dummy4, &dummy5, &dummy6, &mask);
+    XFreeModifiermap(map);
+    return mask & numlock_mask;
+}
 
 void xtest_change_numlock()
-    {
-    XTestFakeKeyEvent( qt_xdisplay(), XKeysymToKeycode( qt_xdisplay(), XK_Num_Lock ), True, CurrentTime );
-    XTestFakeKeyEvent( qt_xdisplay(), XKeysymToKeycode( qt_xdisplay(), XK_Num_Lock ), False, CurrentTime );
-    }
+{
+    XTestFakeKeyEvent(qt_xdisplay(), XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock), True, CurrentTime);
+    XTestFakeKeyEvent(qt_xdisplay(), XKeysymToKeycode(qt_xdisplay(), XK_Num_Lock), False, CurrentTime);
+}
 
 void xtest_set_on()
-    {
-    if( !xtest_get_numlock_state())
+{
+    if(!xtest_get_numlock_state())
         xtest_change_numlock();
-    }
+}
 
 void xtest_set_off()
-    {
-    if( xtest_get_numlock_state())
+{
+    if(xtest_get_numlock_state())
         xtest_change_numlock();
-    }
+}
 #endif
 
 void numlock_set_on()
-    {
+{
 #ifdef HAVE_XKB
-    if( xkb_set_on())
+    if(xkb_set_on())
         return;
 #endif
 #ifdef HAVE_XTEST
     xtest_set_on();
 #endif
-    }
+}
 
 void numlock_set_off()
-    {
+{
 #ifdef HAVE_XKB
-    if( xkb_set_off())
+    if(xkb_set_off())
         return;
 #endif
 #ifdef HAVE_XTEST
     xtest_set_off();
 #endif
-    }
+}
 
-void numlockx_change_numlock_state( bool set_P )
-    {
-    if( set_P )
+void numlockx_change_numlock_state(bool set_P)
+{
+    if(set_P)
         numlock_set_on();
     else
         numlock_set_off();
-    }
+}
 #else
-void numlockx_change_numlock_state( bool ) {} // dummy
+void numlockx_change_numlock_state(bool)
+{
+} // dummy
 #endif // defined(HAVE_XTEST) || defined(HAVE_XKB)
 
 
@@ -442,75 +438,75 @@ void set_repeatrate(int delay, double rate)
 void set_repeatrate(int delay, double rate)
 {
 #if HAVE_XKB
-  Display* dpy = qt_xdisplay();
-  int xkbmajor = XkbMajorVersion, xkbminor = XkbMinorVersion;
-  int xkbopcode, xkbevent, xkberror;
+    Display *dpy = qt_xdisplay();
+    int xkbmajor = XkbMajorVersion, xkbminor = XkbMinorVersion;
+    int xkbopcode, xkbevent, xkberror;
 
-  if (XkbQueryExtension(dpy, &xkbopcode, &xkbevent, &xkberror, &xkbmajor,
-				&xkbminor)) {
-     XkbDescPtr xkb = XkbAllocKeyboard();
-     if (xkb) {
-        int res = XkbGetControls(dpy, XkbRepeatKeysMask, xkb);
-        xkb->ctrls->repeat_delay = delay;
-        xkb->ctrls->repeat_interval = (int)floor(1000/rate + 0.5);
-        res = XkbSetControls(dpy, XkbRepeatKeysMask, xkb);
-        return;
-     }
-  }
+    if(XkbQueryExtension(dpy, &xkbopcode, &xkbevent, &xkberror, &xkbmajor, &xkbminor))
+    {
+        XkbDescPtr xkb = XkbAllocKeyboard();
+        if(xkb)
+        {
+            int res = XkbGetControls(dpy, XkbRepeatKeysMask, xkb);
+            xkb->ctrls->repeat_delay = delay;
+            xkb->ctrls->repeat_interval = (int)floor(1000 / rate + 0.5);
+            res = XkbSetControls(dpy, XkbRepeatKeysMask, xkb);
+            return;
+        }
+    }
 #endif
-  // Fallback: use the xset utility.
+    // Fallback: use the xset utility.
 
-  // Unfortunately xset does only support int parameters, so
-  // really slow repeat rates cannot be supported this way.
-  // (the FSG Accessibility standard requires support for repeat rates
-  // of several seconds per character)
-  int r;
-  if (rate < 1)
-     r = 1;
-  else
-     r = (int)floor(rate + 0.5);
+    // Unfortunately xset does only support int parameters, so
+    // really slow repeat rates cannot be supported this way.
+    // (the FSG Accessibility standard requires support for repeat rates
+    // of several seconds per character)
+    int r;
+    if(rate < 1)
+        r = 1;
+    else
+        r = (int)floor(rate + 0.5);
 
-  QString exe = KGlobal::dirs()->findExe("xset");
-  if (exe.isEmpty())
-    return;
+    QString exe = KGlobal::dirs()->findExe("xset");
+    if(exe.isEmpty())
+        return;
 
-  KProcess p;
-  p << exe << "r" << "rate" << QString::number(delay) << QString::number(r);
-  
-  p.start(KProcess::Block);
+    KProcess p;
+    p << exe << "r"
+      << "rate" << QString::number(delay) << QString::number(r);
+
+    p.start(KProcess::Block);
 }
 #endif
 
 void KeyboardConfig::init_keyboard()
 {
-	KConfig *config = new KConfig("kcminputrc", true); // Read-only, no globals
-	config->setGroup("Keyboard");
+    KConfig *config = new KConfig("kcminputrc", true); // Read-only, no globals
+    config->setGroup("Keyboard");
 
-	XKeyboardState   kbd;
-	XKeyboardControl kbdc;
+    XKeyboardState kbd;
+    XKeyboardControl kbdc;
 
-	XGetKeyboardControl(kapp->getDisplay(), &kbd);
-	bool key = config->readBoolEntry("KeyboardRepeating", true);
-	kbdc.key_click_percent = config->readNumEntry("ClickVolume", kbd.key_click_percent);
-	kbdc.auto_repeat_mode = (key ? AutoRepeatModeOn : AutoRepeatModeOff);
+    XGetKeyboardControl(kapp->getDisplay(), &kbd);
+    bool key = config->readBoolEntry("KeyboardRepeating", true);
+    kbdc.key_click_percent = config->readNumEntry("ClickVolume", kbd.key_click_percent);
+    kbdc.auto_repeat_mode = (key ? AutoRepeatModeOn : AutoRepeatModeOff);
 
-	XChangeKeyboardControl(kapp->getDisplay(),
-						   KBKeyClickPercent | KBAutoRepeatMode,
-						   &kbdc);
+    XChangeKeyboardControl(kapp->getDisplay(), KBKeyClickPercent | KBAutoRepeatMode, &kbdc);
 
-	if( key ) {
-		int delay_ = config->readNumEntry("RepeatDelay", 250);
-		double rate_ = config->readDoubleNumEntry("RepeatRate", 30);
-		set_repeatrate(delay_, rate_);
-	}
+    if(key)
+    {
+        int delay_ = config->readNumEntry("RepeatDelay", 250);
+        double rate_ = config->readDoubleNumEntry("RepeatRate", 30);
+        set_repeatrate(delay_, rate_);
+    }
 
 
-	int numlockState = config->readNumEntry( "NumLock", 2 );
-	if( numlockState != 2 )
-		numlockx_change_numlock_state( numlockState == 0 );
+    int numlockState = config->readNumEntry("NumLock", 2);
+    if(numlockState != 2)
+        numlockx_change_numlock_state(numlockState == 0);
 
-	delete config;
+    delete config;
 }
 
 #include "kcmmisc.moc"
-

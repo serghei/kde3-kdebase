@@ -21,10 +21,10 @@
 #ifndef KSG_LMSENSORS_H
 #define KSG_LMSENSORS_H
 
-void initLmSensors( struct SensorModul* );
-void exitLmSensors( void );
+void initLmSensors(struct SensorModul *);
+void exitLmSensors(void);
 
-void printLmSensor( const char* );
-void printLmSensorInfo( const char* );
+void printLmSensor(const char *);
+void printLmSensorInfo(const char *);
 
 #endif

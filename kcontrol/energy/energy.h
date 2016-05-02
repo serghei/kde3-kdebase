@@ -26,8 +26,7 @@ extern "C" void init_energy();
 /**
  * The Desktop/Energy tab in kcontrol.
  */
-class KEnergy: public KCModule
-{
+class KEnergy : public KCModule {
     Q_OBJECT
 
 public:
@@ -35,7 +34,7 @@ public:
     ~KEnergy();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 

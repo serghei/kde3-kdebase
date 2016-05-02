@@ -25,37 +25,35 @@
 
 #include "notifieraction.h"
 
-class NotifierServiceAction : public NotifierAction
-{
+class NotifierServiceAction : public NotifierAction {
 public:
-	NotifierServiceAction();
-	virtual QString id() const;
-	virtual void execute(KFileItem &item);
+    NotifierServiceAction();
+    virtual QString id() const;
+    virtual void execute(KFileItem &item);
 
-	virtual void setIconName( const QString &icon );
-	virtual void setLabel( const QString &label );
-	
-	void setService(KDEDesktopMimeType::Service service);
-	KDEDesktopMimeType::Service service() const;
-	
-	void setFilePath(const QString &filePath);
-	QString filePath() const;
-	
-	void setMimetypes(const QStringList &mimetypes);
-	QStringList mimetypes();
-	
-	virtual bool isWritable() const;
-	virtual bool supportsMimetype(const QString &mimetype) const;
+    virtual void setIconName(const QString &icon);
+    virtual void setLabel(const QString &label);
 
-	void save() const;
+    void setService(KDEDesktopMimeType::Service service);
+    KDEDesktopMimeType::Service service() const;
+
+    void setFilePath(const QString &filePath);
+    QString filePath() const;
+
+    void setMimetypes(const QStringList &mimetypes);
+    QStringList mimetypes();
+
+    virtual bool isWritable() const;
+    virtual bool supportsMimetype(const QString &mimetype) const;
+
+    void save() const;
 
 private:
-	void updateFilePath();
+    void updateFilePath();
 
-	KDEDesktopMimeType::Service m_service;
-	QString m_filePath;
-	QStringList m_mimetypes;
+    KDEDesktopMimeType::Service m_service;
+    QString m_filePath;
+    QStringList m_mimetypes;
 };
 
 #endif
-

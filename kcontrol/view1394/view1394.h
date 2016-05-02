@@ -33,35 +33,34 @@
 
 #include <libraw1394/raw1394.h>
 
-class OuiDb
-{
-   public:
-      OuiDb();
-      QString vendor(octlet_t guid);
-   private:
-      QMap<QString, QString> m_vendorIds;
+class OuiDb {
+public:
+    OuiDb();
+    QString vendor(octlet_t guid);
+
+private:
+    QMap< QString, QString > m_vendorIds;
 };
 
-class View1394: public KCModule
-{
-   Q_OBJECT
-   public:
-      View1394(QWidget *parent = 0L, const char *name = 0L);
-      virtual ~View1394();
+class View1394 : public KCModule {
+    Q_OBJECT
+public:
+    View1394(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~View1394();
 
-   public slots: // Public slots
-      void rescanBus();
-      void generateBusReset();
+public slots: // Public slots
+    void rescanBus();
+    void generateBusReset();
 
-   private:
-      View1394Widget *m_view;
-      QValueList<raw1394handle_t> m_handles;
-      QPtrList<QSocketNotifier> m_notifiers;
-      bool readConfigRom(raw1394handle_t handle, nodeid_t nodeid, quadlet_t& firstQuad, quadlet_t& cap, octlet_t& guid);
-      bool m_insideRescanBus;
-      QTimer m_rescanTimer;
-      OuiDb *m_ouiDb;
-   private slots:
-      void callRaw1394EventLoop(int fd);
+private:
+    View1394Widget *m_view;
+    QValueList< raw1394handle_t > m_handles;
+    QPtrList< QSocketNotifier > m_notifiers;
+    bool readConfigRom(raw1394handle_t handle, nodeid_t nodeid, quadlet_t &firstQuad, quadlet_t &cap, octlet_t &guid);
+    bool m_insideRescanBus;
+    QTimer m_rescanTimer;
+    OuiDb *m_ouiDb;
+private slots:
+    void callRaw1394EventLoop(int fd);
 };
 #endif

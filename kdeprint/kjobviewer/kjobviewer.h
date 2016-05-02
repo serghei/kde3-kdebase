@@ -28,30 +28,30 @@ class KMJobViewer;
 class KMTimer;
 class JobTray;
 
-class KJobViewerApp : public KUniqueApplication, public KPReloadObject
-{
-	Q_OBJECT
-	friend class JobTray;
-public:
-	KJobViewerApp();
-	virtual ~KJobViewerApp();
+class KJobViewerApp : public KUniqueApplication, public KPReloadObject {
+    Q_OBJECT
+    friend class JobTray;
 
-	virtual int newInstance();
+public:
+    KJobViewerApp();
+    virtual ~KJobViewerApp();
+
+    virtual int newInstance();
 
 protected:
-	void initialize();
-	void reload();
+    void initialize();
+    void reload();
 
 protected slots:
-	void slotJobsShown(KMJobViewer*, bool);
-	void slotTimer();
-	void slotPrinterChanged(KMJobViewer*, const QString&);
-	void slotViewerDestroyed(KMJobViewer*);
+    void slotJobsShown(KMJobViewer *, bool);
+    void slotTimer();
+    void slotPrinterChanged(KMJobViewer *, const QString &);
+    void slotViewerDestroyed(KMJobViewer *);
 
 private:
-	QDict<KMJobViewer>	m_views;
-	JobTray	*m_tray;
-	KMTimer	*m_timer;
+    QDict< KMJobViewer > m_views;
+    JobTray *m_tray;
+    KMTimer *m_timer;
 };
 
 #endif

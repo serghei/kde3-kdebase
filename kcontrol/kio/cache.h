@@ -26,25 +26,24 @@
 
 class CacheDlgUI;
 
-class KCacheConfigDialog : public KCModule
-{
-  Q_OBJECT
-  
+class KCacheConfigDialog : public KCModule {
+    Q_OBJECT
+
 public:
-  KCacheConfigDialog( QWidget* parent = 0 );
-  ~KCacheConfigDialog() {};
-  
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
-  QString quickHelp() const;
+    KCacheConfigDialog(QWidget *parent = 0);
+    ~KCacheConfigDialog(){};
+
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    QString quickHelp() const;
 
 protected slots:
-  void configChanged();
-  void slotClearCache();
+    void configChanged();
+    void slotClearCache();
 
 private:
-  CacheDlgUI* m_dlg;
+    CacheDlgUI *m_dlg;
 };
 
 #endif // CACHE_H

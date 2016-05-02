@@ -38,34 +38,27 @@
 
 // call for libsmbclient
 //==========================================================================
-void auth_smbc_get_data(const char *server,const char *share,
-                        char *workgroup, int wgmaxlen,
-                        char *username, int unmaxlen,
-                        char *password, int pwmaxlen)
+void auth_smbc_get_data(const char *server, const char *share, char *workgroup, int wgmaxlen, char *username, int unmaxlen, char *password,
+                        int pwmaxlen)
 //==========================================================================
 {
-    G_TheSlave->auth_smbc_get_data(server, share,
-                                   workgroup,wgmaxlen,
-                                   username, unmaxlen,
-                                   password, pwmaxlen);
+    G_TheSlave->auth_smbc_get_data(server, share, workgroup, wgmaxlen, username, unmaxlen, password, pwmaxlen);
 }
 
 //--------------------------------------------------------------------------
-void SMBSlave::auth_smbc_get_data(const char *server,const char *share,
-                                  char *workgroup, int wgmaxlen,
-                                  char *username, int unmaxlen,
-                                  char *password, int pwmaxlen)
+void SMBSlave::auth_smbc_get_data(const char *server, const char *share, char *workgroup, int wgmaxlen, char *username, int unmaxlen, char *password,
+                                  int pwmaxlen)
 //--------------------------------------------------------------------------
 {
-    //check this to see if we "really" need to authenticate...
+    // check this to see if we "really" need to authenticate...
     SMBUrlType t = m_current_url.getType();
-    if( t == SMBURLTYPE_ENTIRE_NETWORK )
+    if(t == SMBURLTYPE_ENTIRE_NETWORK)
     {
         kdDebug(KIO_SMB) << "we don't really need to authenticate for this top level url, returning" << endl;
         return;
     }
-    kdDebug(KIO_SMB) << "AAAAAAAAAAAAAA auth_smbc_get_dat: set user=" << username << ", workgroup=" << workgroup
-                     << " server=" << server << ", share=" << share << endl;
+    kdDebug(KIO_SMB) << "AAAAAAAAAAAAAA auth_smbc_get_dat: set user=" << username << ", workgroup=" << workgroup << " server=" << server
+                     << ", share=" << share << endl;
 
     QString s_server = QString::fromUtf8(server);
     QString s_share = QString::fromUtf8(share);
@@ -87,9 +80,9 @@ void SMBSlave::auth_smbc_get_data(const char *server,const char *share,
 
     kdDebug(KIO_SMB) << "libsmb-auth-callback URL:" << info.url << endl;
 
-    if ( !checkCachedAuthentication( info ) )
+    if(!checkCachedAuthentication(info))
     {
-        if ( m_default_user.isEmpty() )
+        if(m_default_user.isEmpty())
         {
             // ok, we do not know the password. Let's try anonymous before we try for real
             info.username = "anonymous";
@@ -101,8 +94,8 @@ void SMBSlave::auth_smbc_get_data(const char *server,const char *share,
             info.username = m_default_user;
             info.password = m_default_password;
         }
-
-    } else
+    }
+    else
         kdDebug(KIO_SMB) << "got password through cache" << endl;
 
     strncpy(username, info.username.utf8(), unmaxlen - 1);
@@ -119,29 +112,28 @@ bool SMBSlave::checkPassword(SMBUrl &url)
 
     QString share = url.path();
     int index = share.find('/', 1);
-    if (index > 1)
+    if(index > 1)
         share = share.left(index);
-    if (share.at(0) == '/')
+    if(share.at(0) == '/')
         share = share.mid(1);
     info.url.setPath("/" + share);
     info.verifyPath = true;
 
-    if ( share.isEmpty() )
-        info.prompt = i18n(
-            "<qt>Please enter authentication information for <b>%1</b></qt>" )
-                      .arg( url.host() );
+    if(share.isEmpty())
+        info.prompt = i18n("<qt>Please enter authentication information for <b>%1</b></qt>").arg(url.host());
     else
         info.prompt = i18n(
-            "Please enter authentication information for:\n"
-            "Server = %1\n"
-            "Share = %2" )
-                      .arg( url.host() )
-                      .arg( share );
+                          "Please enter authentication information for:\n"
+                          "Server = %1\n"
+                          "Share = %2")
+                          .arg(url.host())
+                          .arg(share);
 
     info.username = url.user();
     kdDebug(KIO_SMB) << "call openPassDlg for " << info.url << endl;
 
-    if ( openPassDlg(info) ) {
+    if(openPassDlg(info))
+    {
         kdDebug(KIO_SMB) << "openPassDlg returned " << info.username << endl;
         url.setUser(info.username);
         return true;
@@ -162,10 +154,10 @@ bool SMBSlave::auth_initialize_smbc()
     if(m_initialized_smbc == false)
     {
         kdDebug(KIO_SMB) << "smbc_init call" << endl;
-        KSimpleConfig cfg( "kioslaverc", true );
+        KSimpleConfig cfg("kioslaverc", true);
 
-        cfg.setGroup( "SMB" );
-        int debug_level = cfg.readNumEntry( "DebugLevel", 0 );
+        cfg.setGroup("SMB");
+        int debug_level = cfg.readNumEntry("DebugLevel", 0);
 
 #if 0
 	/* old API initialisation routine does not allow to set flags */
@@ -176,31 +168,32 @@ bool SMBSlave::auth_initialize_smbc()
             return false;
         }
 #endif
-	smb_context = smbc_new_context();
-	if (smb_context == NULL) {
+        smb_context = smbc_new_context();
+        if(smb_context == NULL)
+        {
             SlaveBase::error(ERR_INTERNAL, i18n("libsmbclient failed to create context"));
-	    return false;
-	}
+            return false;
+        }
 
-	smb_context->debug = debug_level;
-	smb_context->callbacks.auth_fn = ::auth_smbc_get_data;
+        smb_context->debug = debug_level;
+        smb_context->callbacks.auth_fn = ::auth_smbc_get_data;
 
-	if (!smbc_init_context(smb_context)) {
-		smbc_free_context(smb_context, false);
-		smb_context = NULL;
-            	SlaveBase::error(ERR_INTERNAL, i18n("libsmbclient failed to initialize context"));
-	    	return false;
-	}
+        if(!smbc_init_context(smb_context))
+        {
+            smbc_free_context(smb_context, false);
+            smb_context = NULL;
+            SlaveBase::error(ERR_INTERNAL, i18n("libsmbclient failed to initialize context"));
+            return false;
+        }
 
 #if defined(SMB_CTX_FLAG_USE_KERBEROS) && defined(SMB_CTX_FLAG_FALLBACK_AFTER_KERBEROS)
-	smb_context->flags |= SMB_CTX_FLAG_USE_KERBEROS | SMB_CTX_FLAG_FALLBACK_AFTER_KERBEROS;
+        smb_context->flags |= SMB_CTX_FLAG_USE_KERBEROS | SMB_CTX_FLAG_FALLBACK_AFTER_KERBEROS;
 #endif
 
-	smbc_set_context(smb_context);
+        smbc_set_context(smb_context);
 
         m_initialized_smbc = true;
     }
 
     return true;
 }
-

@@ -26,29 +26,26 @@
 
 #include <qstring.h>
 
-class RemoteImpl
-{
+class RemoteImpl {
 public:
-	RemoteImpl();
+    RemoteImpl();
 
-	void createTopLevelEntry(KIO::UDSEntry &entry) const;
-	bool createWizardEntry(KIO::UDSEntry &entry) const;
-	bool isWizardURL(const KURL &url) const;
-	bool statNetworkFolder(KIO::UDSEntry &entry, const QString &filename) const;
+    void createTopLevelEntry(KIO::UDSEntry &entry) const;
+    bool createWizardEntry(KIO::UDSEntry &entry) const;
+    bool isWizardURL(const KURL &url) const;
+    bool statNetworkFolder(KIO::UDSEntry &entry, const QString &filename) const;
 
-	void listRoot(QValueList<KIO::UDSEntry> &list) const;
+    void listRoot(QValueList< KIO::UDSEntry > &list) const;
 
-	KURL findBaseURL(const QString &filename) const;
-	QString findDesktopFile(const QString &filename) const;
-	
-	bool deleteNetworkFolder(const QString &filename) const;
-	bool renameFolders(const QString &src, const QString &dest,
-	                   bool overwrite) const;
+    KURL findBaseURL(const QString &filename) const;
+    QString findDesktopFile(const QString &filename) const;
+
+    bool deleteNetworkFolder(const QString &filename) const;
+    bool renameFolders(const QString &src, const QString &dest, bool overwrite) const;
 
 private:
-	bool findDirectory(const QString &filename, QString &directory) const;
-	void createEntry(KIO::UDSEntry& entry, const QString &directory,
-	                 const QString &file) const;
+    bool findDirectory(const QString &filename, QString &directory) const;
+    void createEntry(KIO::UDSEntry &entry, const QString &directory, const QString &file) const;
 };
 
 #endif

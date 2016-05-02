@@ -23,16 +23,17 @@
 #ifndef KSG_CONF_H
 #define KSG_CONF_H
 
-typedef struct {
-  char *name;
-  char *path;
+typedef struct
+{
+    char *name;
+    char *path;
 } ConfigLogFile;
 
-extern char* RegisterDomain;
+extern char *RegisterDomain;
 
-void parseConfigFile( const char *filename );
+void parseConfigFile(const char *filename);
 void freeConfigFile();
 
-int sensorAvailable( const char* sensor );
+int sensorAvailable(const char *sensor);
 
 #endif

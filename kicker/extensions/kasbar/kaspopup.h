@@ -69,39 +69,42 @@ class KasBar;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KasPopup : public QHBox
-{
-   Q_OBJECT
+class KasPopup : public QHBox {
+    Q_OBJECT
 
 public:
-   KasPopup( KasItem *item, const char *name=0 );
-   virtual ~KasPopup();
-   
-   /** Returns the item that is the parent of this popup. */
-   KasItem *item() const { return item_; }
-   KasBar *kasbar() const { return kasbar_; }
+    KasPopup(KasItem *item, const char *name = 0);
+    virtual ~KasPopup();
 
-   static QPoint calcPosition( KasItem *item, int w, int h );
+    /** Returns the item that is the parent of this popup. */
+    KasItem *item() const
+    {
+        return item_;
+    }
+    KasBar *kasbar() const
+    {
+        return kasbar_;
+    }
+
+    static QPoint calcPosition(KasItem *item, int w, int h);
 
 public slots:
-   /**
-    * Move the popup to the right position. You should not need
-    * to call this directly.
-    */
-   void positionSelf();
-   
-   /** Reimplemented for internal reasons. */
-   void show();
+    /**
+     * Move the popup to the right position. You should not need
+     * to call this directly.
+     */
+    void positionSelf();
+
+    /** Reimplemented for internal reasons. */
+    void show();
 
 signals:
-   void aboutToShow();
-   void shown();
+    void aboutToShow();
+    void shown();
 
 private:
-   QGuardedPtr<KasItem> item_;
-   KasBar *kasbar_;
+    QGuardedPtr< KasItem > item_;
+    KasBar *kasbar_;
 };
 
 #endif // KASPOPUP_H
-
-

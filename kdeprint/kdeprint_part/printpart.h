@@ -27,33 +27,30 @@ class PrintPartExtension;
 class KMMainView;
 class KAboutData;
 
-class PrintPart : public KParts::ReadOnlyPart
-{
-	Q_OBJECT
+class PrintPart : public KParts::ReadOnlyPart {
+    Q_OBJECT
 public:
-	PrintPart(QWidget *parentWidget, const char *widgetName,
-		  QObject *parent, const char *name,
-		  const QStringList & );
-	virtual ~PrintPart();
+    PrintPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const QStringList &);
+    virtual ~PrintPart();
 
-	static KAboutData *createAboutData();
+    static KAboutData *createAboutData();
 
 protected:
-	bool openFile();
-	void initActions();
+    bool openFile();
+    void initActions();
 
 private:
-	PrintPartExtension	*m_extension;
-	KMMainView		*m_view;
+    PrintPartExtension *m_extension;
+    KMMainView *m_view;
 };
 
-class PrintPartExtension : public KParts::BrowserExtension
-{
-	Q_OBJECT
-	friend class PrintPart;
+class PrintPartExtension : public KParts::BrowserExtension {
+    Q_OBJECT
+    friend class PrintPart;
+
 public:
-	PrintPartExtension(PrintPart *parent);
-	virtual ~PrintPartExtension();
+    PrintPartExtension(PrintPart *parent);
+    virtual ~PrintPartExtension();
 };
 
 #endif

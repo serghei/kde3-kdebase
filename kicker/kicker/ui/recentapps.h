@@ -28,8 +28,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class RecentlyLaunchedApps;
 
-class RecentlyLaunchedAppInfo
-{
+class RecentlyLaunchedAppInfo {
 public:
     RecentlyLaunchedAppInfo()
     {
@@ -37,34 +36,50 @@ public:
         m_lastLaunchTime = 0;
     }
 
-    RecentlyLaunchedAppInfo(const QString& desktopPath, int nLaunchCount, time_t lastLaunchTime)
+    RecentlyLaunchedAppInfo(const QString &desktopPath, int nLaunchCount, time_t lastLaunchTime)
     {
         m_desktopPath = desktopPath;
         m_launchCount = nLaunchCount;
         m_lastLaunchTime = lastLaunchTime;
     }
 
-    RecentlyLaunchedAppInfo(const RecentlyLaunchedAppInfo& clone)
+    RecentlyLaunchedAppInfo(const RecentlyLaunchedAppInfo &clone)
     {
         m_desktopPath = clone.m_desktopPath;
         m_launchCount = clone.m_launchCount;
         m_lastLaunchTime = clone.m_lastLaunchTime;
     }
 
-    bool operator<(const RecentlyLaunchedAppInfo& rhs)
+    bool operator<(const RecentlyLaunchedAppInfo &rhs)
     {
         // Sort items in descending order according to either last launch time or launch count.
-        return KickerSettings::recentVsOften() ?
-               m_lastLaunchTime > rhs.m_lastLaunchTime:
-               m_launchCount > rhs.m_launchCount;
+        return KickerSettings::recentVsOften() ? m_lastLaunchTime > rhs.m_lastLaunchTime : m_launchCount > rhs.m_launchCount;
     }
 
-    QString getDesktopPath() const { return m_desktopPath; }
-    int getLaunchCount() const { return m_launchCount; };
-    time_t getLastLaunchTime() const { return m_lastLaunchTime; };
-    void increaseLaunchCount() { m_launchCount++; };
-    void setLaunchCount(int nLaunchCount) { m_launchCount = nLaunchCount; };
-    void setLastLaunchTime(time_t lastLaunch) { m_lastLaunchTime = lastLaunch; };
+    QString getDesktopPath() const
+    {
+        return m_desktopPath;
+    }
+    int getLaunchCount() const
+    {
+        return m_launchCount;
+    };
+    time_t getLastLaunchTime() const
+    {
+        return m_lastLaunchTime;
+    };
+    void increaseLaunchCount()
+    {
+        m_launchCount++;
+    };
+    void setLaunchCount(int nLaunchCount)
+    {
+        m_launchCount = nLaunchCount;
+    };
+    void setLastLaunchTime(time_t lastLaunch)
+    {
+        m_lastLaunchTime = lastLaunch;
+    };
 
 private:
     QString m_desktopPath;
@@ -72,16 +87,15 @@ private:
     time_t m_lastLaunchTime;
 };
 
-class RecentlyLaunchedApps
-{
+class RecentlyLaunchedApps {
 public:
-    static RecentlyLaunchedApps& the();
+    static RecentlyLaunchedApps &the();
     void init();
     void configChanged();
     void save();
     void clearRecentApps();
-    void appLaunched(const QString & strApp);
-    void getRecentApps(QStringList & RecentApps);
+    void appLaunched(const QString &strApp);
+    void getRecentApps(QStringList &RecentApps);
     void removeItem(const QString &strName);
     QString caption() const;
 
@@ -89,10 +103,13 @@ public:
     bool m_bNeedToUpdate;
 
 private:
-    QString launchDCOPSignalSource() { return "kmenu"; }
+    QString launchDCOPSignalSource()
+    {
+        return "kmenu";
+    }
     RecentlyLaunchedApps();
 
-    QValueList<RecentlyLaunchedAppInfo> m_appInfos;
+    QValueList< RecentlyLaunchedAppInfo > m_appInfos;
     bool m_bInitialised;
 };
 

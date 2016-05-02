@@ -33,35 +33,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kdebug.h>
 #include "quickaddappsmenu.h"
 
-QuickAddAppsMenu::QuickAddAppsMenu(const QString &label, const QString &relPath, QWidget *target, QWidget *parent, const char *name, const QString &sender)
-   : PanelServiceMenu(label, relPath, parent, name)
+QuickAddAppsMenu::QuickAddAppsMenu(const QString &label, const QString &relPath, QWidget *target, QWidget *parent, const char *name,
+                                   const QString &sender)
+    : PanelServiceMenu(label, relPath, parent, name)
 {
-   _targetObject = target;
-   _sender = sender;
-   connect(this, SIGNAL(addAppBefore(QString,QString)), 
-           target, SLOT(addAppBeforeManually(QString,QString)));
+    _targetObject = target;
+    _sender = sender;
+    connect(this, SIGNAL(addAppBefore(QString, QString)), target, SLOT(addAppBeforeManually(QString, QString)));
 }
 
 QuickAddAppsMenu::QuickAddAppsMenu(QWidget *target, QWidget *parent, const QString &sender, const char *name)
-   : PanelServiceMenu(QString::null, QString::null, parent, name)
+    : PanelServiceMenu(QString::null, QString::null, parent, name)
 {
-   _targetObject = target;
-   _sender = sender;
-   connect(this, SIGNAL(addAppBefore(QString,QString)),
-           target, SLOT(addAppBeforeManually(QString,QString)));
+    _targetObject = target;
+    _sender = sender;
+    connect(this, SIGNAL(addAppBefore(QString, QString)), target, SLOT(addAppBeforeManually(QString, QString)));
 }
 
 void QuickAddAppsMenu::slotExec(int id)
 {
-   if (!entryMap_.contains(id)) return;
-   KSycocaEntry * e = entryMap_[id];
-   KService::Ptr service = static_cast<KService *>(e);
-   emit addAppBefore(locate("apps", service->desktopEntryPath()),_sender);
+    if(!entryMap_.contains(id))
+        return;
+    KSycocaEntry *e = entryMap_[id];
+    KService::Ptr service = static_cast< KService * >(e);
+    emit addAppBefore(locate("apps", service->desktopEntryPath()), _sender);
 }
 
 
-PanelServiceMenu *QuickAddAppsMenu::newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name, const QString &insertInlineHeader)
+PanelServiceMenu *QuickAddAppsMenu::newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                               const QString &insertInlineHeader)
 {
-   return new QuickAddAppsMenu(label, relPath, _targetObject, parent, name, _sender);
+    return new QuickAddAppsMenu(label, relPath, _targetObject, parent, name, _sender);
 }
 #include "quickaddappsmenu.moc"

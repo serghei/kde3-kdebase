@@ -31,38 +31,36 @@ class QPushButton;
 class KListView;
 class QListViewItem;
 
-class AppletTab : public AppletTabBase
-{
-  Q_OBJECT
+class AppletTab : public AppletTabBase {
+    Q_OBJECT
 
- public:
-  AppletTab( QWidget *parent=0, const char* name=0 );
+public:
+    AppletTab(QWidget *parent = 0, const char *name = 0);
 
-  void load();
-  void load(bool useDefaults);
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
-  QString quickHelp() const;
+    QString quickHelp() const;
 
- signals:
-  void changed();
+signals:
+    void changed();
 
- protected slots:
-  void level_changed(int level);
-  void trusted_selection_changed(QListViewItem *);
-  void available_selection_changed(QListViewItem *);
-  void add_clicked();
-  void remove_clicked();
+protected slots:
+    void level_changed(int level);
+    void trusted_selection_changed(QListViewItem *);
+    void available_selection_changed(QListViewItem *);
+    void add_clicked();
+    void remove_clicked();
 
- protected:
-  void updateTrusted();
-  void updateAvailable();
-  void updateAddRemoveButton();
-  
- private:
-  QStringList   available, l_available, l_trusted;
+protected:
+    void updateTrusted();
+    void updateAvailable();
+    void updateAddRemoveButton();
+
+private:
+    QStringList available, l_available, l_trusted;
 };
 
 #endif
-

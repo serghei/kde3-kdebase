@@ -33,51 +33,51 @@ class QLineEdit;
 class KPushButton;
 class KListView;
 
-typedef QMap<QString, QString> KonqProfileMap;
+typedef QMap< QString, QString > KonqProfileMap;
 
-class KonqProfileItem : public QListViewItem
-{
+class KonqProfileItem : public QListViewItem {
 public:
-  KonqProfileItem( KListView *, const QString & );
-  ~KonqProfileItem() {}
+    KonqProfileItem(KListView *, const QString &);
+    ~KonqProfileItem()
+    {
+    }
 
-  QString m_profileName;
+    QString m_profileName;
 };
 
-class KonqProfileDlg : public KDialogBase
-{
-  Q_OBJECT
+class KonqProfileDlg : public KDialogBase {
+    Q_OBJECT
 public:
-  KonqProfileDlg( KonqViewManager *manager, const QString &preselectProfile, QWidget *parent = 0L );
-  ~KonqProfileDlg();
+    KonqProfileDlg(KonqViewManager *manager, const QString &preselectProfile, QWidget *parent = 0L);
+    ~KonqProfileDlg();
 
-  /**
-   * Find, read and return all available profiles
-   * @return a map with < name, full path >
-   */
-  static KonqProfileMap readAllProfiles();
+    /**
+     * Find, read and return all available profiles
+     * @return a map with < name, full path >
+     */
+    static KonqProfileMap readAllProfiles();
 
 protected slots:
-  virtual void slotUser1(); // User1 is "Rename Profile" button
-  virtual void slotUser2(); // User2 is "Delete Profile" button
-  virtual void slotUser3(); // User3 is Save button
-  void slotTextChanged( const QString & );
-  void slotSelectionChanged( QListViewItem * item );
+    virtual void slotUser1(); // User1 is "Rename Profile" button
+    virtual void slotUser2(); // User2 is "Delete Profile" button
+    virtual void slotUser3(); // User3 is Save button
+    void slotTextChanged(const QString &);
+    void slotSelectionChanged(QListViewItem *item);
 
-  void slotItemRenamed( QListViewItem * );
+    void slotItemRenamed(QListViewItem *);
 
 private:
-  void loadAllProfiles(const QString & = QString::null);
-  KonqViewManager *m_pViewManager;
+    void loadAllProfiles(const QString & = QString::null);
+    KonqViewManager *m_pViewManager;
 
-  KonqProfileMap m_mapEntries;
+    KonqProfileMap m_mapEntries;
 
-  QLineEdit *m_pProfileNameLineEdit;
+    QLineEdit *m_pProfileNameLineEdit;
 
-  QCheckBox *m_cbSaveURLs;
-  QCheckBox *m_cbSaveSize;
+    QCheckBox *m_cbSaveURLs;
+    QCheckBox *m_cbSaveSize;
 
-  KListView *m_pListView;
+    KListView *m_pListView;
 };
 
 #endif

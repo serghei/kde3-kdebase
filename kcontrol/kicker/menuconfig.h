@@ -22,8 +22,7 @@
 
 class MenuTab;
 
-class MenuConfig : public KCModule
-{
+class MenuConfig : public KCModule {
     Q_OBJECT
 
 public:

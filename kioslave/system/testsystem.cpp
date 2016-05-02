@@ -28,17 +28,21 @@
 
 #include <stdlib.h>
 
-static bool check(const QString& txt, QString a, QString b)
+static bool check(const QString &txt, QString a, QString b)
 {
-    if (a.isEmpty())
+    if(a.isEmpty())
         a = QString::null;
-    if (b.isEmpty())
+    if(b.isEmpty())
         b = QString::null;
-    if (a == b) {
-        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "ok" << endl;
+    if(a == b)
+    {
+        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... "
+                  << "ok" << endl;
     }
-    else {
-        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... " << "KO !" << endl;
+    else
+    {
+        kdDebug() << txt << " : checking '" << a << "' against expected value '" << b << "'... "
+                  << "KO !" << endl;
         exit(1);
     }
     return true;
@@ -47,7 +51,7 @@ static bool check(const QString& txt, QString a, QString b)
 int main(int argc, char *argv[])
 {
     KApplication::disableAutoDcopRegistration();
-    KCmdLineArgs::init(argc,argv,"testsystem", 0, 0, 0, 0);
+    KCmdLineArgs::init(argc, argv, "testsystem", 0, 0, 0, 0);
     KApplication app;
 
     TestSystem test;
@@ -59,11 +63,8 @@ int main(int argc, char *argv[])
 
 void TestSystem::setup()
 {
-
 }
 
 void TestSystem::runAll()
 {
-
 }
-

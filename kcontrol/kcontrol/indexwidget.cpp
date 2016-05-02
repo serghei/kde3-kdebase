@@ -26,117 +26,109 @@
 #include "moduletreeview.h"
 #include "moduleiconview.h"
 
-IndexWidget::IndexWidget(ConfigModuleList *modules, QWidget *parent ,const char *name)
-  : QWidgetStack(parent, name)
-  , _tree(0L)
-  , _icon(0L)
-  , _modules(modules)
-  , viewMode(Icon)
+IndexWidget::IndexWidget(ConfigModuleList *modules, QWidget *parent, const char *name)
+    : QWidgetStack(parent, name), _tree(0L), _icon(0L), _modules(modules), viewMode(Icon)
 {
-  activateView(Icon);
+    activateView(Icon);
 }
 
-IndexWidget::~IndexWidget() {}
+IndexWidget::~IndexWidget()
+{
+}
 
 void IndexWidget::reload()
 {
-  if (_icon)
-    _icon->fill();
+    if(_icon)
+        _icon->fill();
 }
 
 QListViewItem *IndexWidget::firstTreeViewItem()
 {
-  if (_tree)
-    return _tree->firstChild();
-  else
-	return 0L;
+    if(_tree)
+        return _tree->firstChild();
+    else
+        return 0L;
 }
 
 
 void IndexWidget::resizeEvent(QResizeEvent *e)
 {
-  QWidgetStack::resizeEvent( e );
+    QWidgetStack::resizeEvent(e);
 }
 
 void IndexWidget::moduleSelected(ConfigModule *m)
 {
-  const QObject *obj = sender();
-  if(!m) return;
+    const QObject *obj = sender();
+    if(!m)
+        return;
 
-  emit moduleActivated(m);
+    emit moduleActivated(m);
 
-  if (obj->inherits("ModuleIconView") && _tree)
-	{
-	  _tree->makeVisible(m);
+    if(obj->inherits("ModuleIconView") && _tree)
+    {
+        _tree->makeVisible(m);
 
-	  _tree->disconnect(SIGNAL(moduleSelected(ConfigModule*)));
-	  _tree->makeSelected(m);
-	  connect(_tree, SIGNAL(moduleSelected(ConfigModule*)),
-			  this, SLOT(moduleSelected(ConfigModule*)));
-	}
-  else if (obj->inherits("ModuleTreeView") && _icon)
-	{
-	  _icon->makeVisible(m);
+        _tree->disconnect(SIGNAL(moduleSelected(ConfigModule *)));
+        _tree->makeSelected(m);
+        connect(_tree, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+    }
+    else if(obj->inherits("ModuleTreeView") && _icon)
+    {
+        _icon->makeVisible(m);
 
-	  _icon->disconnect(SIGNAL(moduleSelected(ConfigModule*)));
-	  _icon->makeSelected(m);
-	  connect(_icon, SIGNAL(moduleSelected(ConfigModule*)),
-			 this, SLOT(moduleSelected(ConfigModule*)));
-	}
+        _icon->disconnect(SIGNAL(moduleSelected(ConfigModule *)));
+        _icon->makeSelected(m);
+        connect(_icon, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+    }
 }
 
 void IndexWidget::makeSelected(ConfigModule *module)
 {
-  if (_icon)
-  {
-   _icon->disconnect(SIGNAL(moduleSelected(ConfigModule*)));
-   _icon->makeSelected(module);
-   connect(_icon, SIGNAL(moduleSelected(ConfigModule*)),
-		  this, SLOT(moduleSelected(ConfigModule*)));
-  }
-  if (_tree)
-  {
-    _tree->disconnect(SIGNAL(moduleSelected(ConfigModule*)));
-    _tree->makeSelected(module);
-    connect(_tree, SIGNAL(moduleSelected(ConfigModule*)),
-		  this, SLOT(moduleSelected(ConfigModule*)));
-  }
+    if(_icon)
+    {
+        _icon->disconnect(SIGNAL(moduleSelected(ConfigModule *)));
+        _icon->makeSelected(module);
+        connect(_icon, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+    }
+    if(_tree)
+    {
+        _tree->disconnect(SIGNAL(moduleSelected(ConfigModule *)));
+        _tree->makeSelected(module);
+        connect(_tree, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+    }
 }
 
 void IndexWidget::makeVisible(ConfigModule *module)
 {
-  if (_icon)
-    _icon->makeVisible(module);
-  if (_tree)
-    _tree->makeVisible(module);
+    if(_icon)
+        _icon->makeVisible(module);
+    if(_tree)
+        _tree->makeVisible(module);
 }
 
 void IndexWidget::activateView(IndexViewMode mode)
 {
-  viewMode = mode;
+    viewMode = mode;
 
-  if (mode == Icon)
-  {
-    if (!_icon)
+    if(mode == Icon)
     {
-      _icon=new ModuleIconView(_modules, this);
-      _icon->fill();
-	  connect(_icon, SIGNAL(moduleSelected(ConfigModule*)),
-		  this, SLOT(moduleSelected(ConfigModule*)));
+        if(!_icon)
+        {
+            _icon = new ModuleIconView(_modules, this);
+            _icon->fill();
+            connect(_icon, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+        }
+        raiseWidget(_icon);
     }
-    raiseWidget( _icon );
-  }
-  else
-  {
-    if (!_tree)
+    else
     {
-      _tree=new ModuleTreeView(_modules, this);
-      _tree->fill();
-      connect(_tree, SIGNAL(moduleSelected(ConfigModule*)),
-		  this, SLOT(moduleSelected(ConfigModule*)));
-	  connect(_tree, SIGNAL(categorySelected(QListViewItem*)),
-		  this, SIGNAL(categorySelected(QListViewItem*)));
+        if(!_tree)
+        {
+            _tree = new ModuleTreeView(_modules, this);
+            _tree->fill();
+            connect(_tree, SIGNAL(moduleSelected(ConfigModule *)), this, SLOT(moduleSelected(ConfigModule *)));
+            connect(_tree, SIGNAL(categorySelected(QListViewItem *)), this, SIGNAL(categorySelected(QListViewItem *)));
+        }
+        raiseWidget(_tree);
     }
-    raiseWidget( _tree );
-  }
 }

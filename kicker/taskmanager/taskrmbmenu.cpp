@@ -29,22 +29,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "taskmanager.h"
 
-#if defined(HAVE_XCOMPOSITE) && \
-    defined(HAVE_XRENDER) && \
-    defined(HAVE_XFIXES)
+#if defined(HAVE_XCOMPOSITE) && defined(HAVE_XRENDER) && defined(HAVE_XFIXES)
 #include <fixx11h.h>
 #endif
 
 #include "taskrmbmenu.h"
 #include "taskrmbmenu.moc"
 
-TaskRMBMenu::TaskRMBMenu(const Task::List& theTasks, bool show, QWidget *parent, const char *name)
-	: QPopupMenu( parent, name )
-	, tasks( theTasks )
-	, showAll( show )
+TaskRMBMenu::TaskRMBMenu(const Task::List &theTasks, bool show, QWidget *parent, const char *name)
+    : QPopupMenu(parent, name), tasks(theTasks), showAll(show)
 {
     assert(tasks.count() > 0);
-    if (tasks.count() == 1)
+    if(tasks.count() == 1)
     {
         fillMenu(tasks.first());
     }
@@ -54,11 +50,9 @@ TaskRMBMenu::TaskRMBMenu(const Task::List& theTasks, bool show, QWidget *parent,
     }
 }
 
-TaskRMBMenu::TaskRMBMenu(Task::Ptr task, bool show, QWidget *parent, const char *name)
-	: QPopupMenu( parent, name )
-	, showAll( show )
+TaskRMBMenu::TaskRMBMenu(Task::Ptr task, bool show, QWidget *parent, const char *name) : QPopupMenu(parent, name), showAll(show)
 {
-	fillMenu(task);
+    fillMenu(task);
 }
 
 void TaskRMBMenu::fillMenu(Task::Ptr t)
@@ -69,18 +63,17 @@ void TaskRMBMenu::fillMenu(Task::Ptr t)
     insertItem(i18n("Ad&vanced"), makeAdvancedMenu(t));
     bool checkActions = KWin::allowedActionsSupported();
 
-    if (TaskManager::the()->numberOfDesktops() > 1)
+    if(TaskManager::the()->numberOfDesktops() > 1)
     {
         id = insertItem(i18n("To &Desktop"), makeDesktopsMenu(t));
 
-        if (showAll)
+        if(showAll)
         {
-            id = insertItem(i18n("&To Current Desktop"),
-                            t, SLOT(toCurrentDesktop()));
-            setItemEnabled( id, !t->isOnCurrentDesktop() );
+            id = insertItem(i18n("&To Current Desktop"), t, SLOT(toCurrentDesktop()));
+            setItemEnabled(id, !t->isOnCurrentDesktop());
         }
 
-        if (checkActions)
+        if(checkActions)
         {
             setItemEnabled(id, t->info().actionSupported(NET::ActionChangeDesktop));
         }
@@ -112,34 +105,32 @@ void TaskRMBMenu::fillMenu(Task::Ptr t)
 
 void TaskRMBMenu::fillMenu()
 {
-	int id;
-	setCheckable( true );
+    int id;
+    setCheckable(true);
 
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-		Task::Ptr t = (*it);
+        Task::Ptr t = (*it);
 
-		id = insertItem( QIconSet( t->pixmap() ),
-				 t->visibleNameWithState(),
-		                 new TaskRMBMenu(t, this) );
-		setItemChecked( id, t->isActive() );
-		connectItem( id, t, SLOT( activateRaiseOrIconify() ) );
-	}
+        id = insertItem(QIconSet(t->pixmap()), t->visibleNameWithState(), new TaskRMBMenu(t, this));
+        setItemChecked(id, t->isActive());
+        connectItem(id, t, SLOT(activateRaiseOrIconify()));
+    }
 
-	insertSeparator();
+    insertSeparator();
 
     bool enable = false;
 
-    if (TaskManager::the()->numberOfDesktops() > 1)
+    if(TaskManager::the()->numberOfDesktops() > 1)
     {
         id = insertItem(i18n("All to &Desktop"), makeDesktopsMenu());
 
         id = insertItem(i18n("All &to Current Desktop"), this, SLOT(slotAllToCurrentDesktop()));
         Task::List::iterator itEnd = tasks.end();
-        for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+        for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
         {
-            if (!(*it)->isOnCurrentDesktop())
+            if(!(*it)->isOnCurrentDesktop())
             {
                 enable = true;
                 break;
@@ -150,73 +141,70 @@ void TaskRMBMenu::fillMenu()
 
     enable = false;
 
-	id = insertItem( i18n( "Mi&nimize All" ), this, SLOT( slotMinimizeAll() ) );
+    id = insertItem(i18n("Mi&nimize All"), this, SLOT(slotMinimizeAll()));
     itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-		if( !(*it)->isIconified() ) {
-			enable = true;
-			break;
-		}
-	}
-	setItemEnabled( id, enable );
+        if(!(*it)->isIconified())
+        {
+            enable = true;
+            break;
+        }
+    }
+    setItemEnabled(id, enable);
 
-	enable = false;
+    enable = false;
 
-	id = insertItem( i18n( "Ma&ximize All" ), this, SLOT( slotMaximizeAll() ) );
+    id = insertItem(i18n("Ma&ximize All"), this, SLOT(slotMaximizeAll()));
     itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-        if( !(*it)->isMaximized() ) {
-			enable = true;
-			break;
-		}
-	}
-	setItemEnabled( id, enable );
+        if(!(*it)->isMaximized())
+        {
+            enable = true;
+            break;
+        }
+    }
+    setItemEnabled(id, enable);
 
-	enable = false;
+    enable = false;
 
-	id = insertItem( i18n( "&Restore All" ), this, SLOT( slotRestoreAll() ) );
+    id = insertItem(i18n("&Restore All"), this, SLOT(slotRestoreAll()));
     itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-		if( (*it)->isIconified() || (*it)->isMaximized() ) {
-			enable = true;
-			break;
-		}
-	}
-	setItemEnabled( id, enable );
+        if((*it)->isIconified() || (*it)->isMaximized())
+        {
+            enable = true;
+            break;
+        }
+    }
+    setItemEnabled(id, enable);
 
-	insertSeparator();
+    insertSeparator();
 
-	enable = false;
+    enable = false;
 
-	insertItem( SmallIcon( "remove" ), i18n( "&Close All" ), this, SLOT( slotCloseAll() ) );
+    insertItem(SmallIcon("remove"), i18n("&Close All"), this, SLOT(slotCloseAll()));
 }
 
-QPopupMenu* TaskRMBMenu::makeAdvancedMenu(Task::Ptr t)
+QPopupMenu *TaskRMBMenu::makeAdvancedMenu(Task::Ptr t)
 {
     int id;
-    QPopupMenu* menu = new QPopupMenu(this);
+    QPopupMenu *menu = new QPopupMenu(this);
 
     menu->setCheckable(true);
 
-    id = menu->insertItem(SmallIconSet("up"),
-                          i18n("Keep &Above Others"),
-                          t, SLOT(toggleAlwaysOnTop()));
+    id = menu->insertItem(SmallIconSet("up"), i18n("Keep &Above Others"), t, SLOT(toggleAlwaysOnTop()));
     menu->setItemChecked(id, t->isAlwaysOnTop());
 
-    id = menu->insertItem(SmallIconSet("down"),
-                          i18n("Keep &Below Others"),
-                          t, SLOT(toggleKeptBelowOthers()));
+    id = menu->insertItem(SmallIconSet("down"), i18n("Keep &Below Others"), t, SLOT(toggleKeptBelowOthers()));
     menu->setItemChecked(id, t->isKeptBelowOthers());
 
-    id = menu->insertItem(SmallIconSet("window_fullscreen"),
-                          i18n("&Fullscreen"),
-                          t, SLOT(toggleFullScreen()));
+    id = menu->insertItem(SmallIconSet("window_fullscreen"), i18n("&Fullscreen"), t, SLOT(toggleFullScreen()));
     menu->setItemChecked(id, t->isFullScreen());
 
-    if (KWin::allowedActionsSupported())
+    if(KWin::allowedActionsSupported())
     {
         menu->setItemEnabled(id, t->info().actionSupported(NET::ActionFullScreen));
     }
@@ -224,50 +212,52 @@ QPopupMenu* TaskRMBMenu::makeAdvancedMenu(Task::Ptr t)
     return menu;
 }
 
-QPopupMenu* TaskRMBMenu::makeDesktopsMenu(Task::Ptr t)
+QPopupMenu *TaskRMBMenu::makeDesktopsMenu(Task::Ptr t)
 {
-	QPopupMenu* m = new QPopupMenu( this );
-	m->setCheckable( true );
+    QPopupMenu *m = new QPopupMenu(this);
+    m->setCheckable(true);
 
-	int id = m->insertItem( i18n("&All Desktops"), t, SLOT( toDesktop(int) ) );
-	m->setItemParameter( id, 0 ); // 0 means all desktops
-	m->setItemChecked( id, t->isOnAllDesktops() );
+    int id = m->insertItem(i18n("&All Desktops"), t, SLOT(toDesktop(int)));
+    m->setItemParameter(id, 0); // 0 means all desktops
+    m->setItemChecked(id, t->isOnAllDesktops());
 
-	m->insertSeparator();
+    m->insertSeparator();
 
-	for (int i = 1; i <= TaskManager::the()->numberOfDesktops(); i++) {
-		QString name = QString("&%1 %2").arg(i).arg(TaskManager::the()->desktopName(i).replace('&', "&&"));
-		id = m->insertItem( name, t, SLOT( toDesktop(int) ) );
-		m->setItemParameter( id, i );
-		m->setItemChecked( id, !t->isOnAllDesktops() && t->desktop() == i );
-	}
+    for(int i = 1; i <= TaskManager::the()->numberOfDesktops(); i++)
+    {
+        QString name = QString("&%1 %2").arg(i).arg(TaskManager::the()->desktopName(i).replace('&', "&&"));
+        id = m->insertItem(name, t, SLOT(toDesktop(int)));
+        m->setItemParameter(id, i);
+        m->setItemChecked(id, !t->isOnAllDesktops() && t->desktop() == i);
+    }
 
-	return m;
+    return m;
 }
 
-QPopupMenu* TaskRMBMenu::makeDesktopsMenu()
+QPopupMenu *TaskRMBMenu::makeDesktopsMenu()
 {
-	QPopupMenu* m = new QPopupMenu( this );
-	m->setCheckable( true );
+    QPopupMenu *m = new QPopupMenu(this);
+    m->setCheckable(true);
 
-	int id = m->insertItem( i18n("&All Desktops"), this, SLOT( slotAllToDesktop(int) ) );
-	m->setItemParameter( id, 0 ); // 0 means all desktops
+    int id = m->insertItem(i18n("&All Desktops"), this, SLOT(slotAllToDesktop(int)));
+    m->setItemParameter(id, 0); // 0 means all desktops
 
-	m->insertSeparator();
+    m->insertSeparator();
 
-	for (int i = 1; i <= TaskManager::the()->numberOfDesktops(); i++) {
-		QString name = QString("&%1 %2").arg(i).arg(TaskManager::the()->desktopName(i).replace('&', "&&"));
-		id = m->insertItem( name, this, SLOT( slotAllToDesktop(int) ) );
-		m->setItemParameter( id, i );
-	}
+    for(int i = 1; i <= TaskManager::the()->numberOfDesktops(); i++)
+    {
+        QString name = QString("&%1 %2").arg(i).arg(TaskManager::the()->desktopName(i).replace('&', "&&"));
+        id = m->insertItem(name, this, SLOT(slotAllToDesktop(int)));
+        m->setItemParameter(id, i);
+    }
 
-	return m;
+    return m;
 }
 
 void TaskRMBMenu::slotMinimizeAll()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
         (*it)->setIconified(true);
     }
@@ -276,7 +266,7 @@ void TaskRMBMenu::slotMinimizeAll()
 void TaskRMBMenu::slotMaximizeAll()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
         (*it)->setMaximized(true);
     }
@@ -285,7 +275,7 @@ void TaskRMBMenu::slotMaximizeAll()
 void TaskRMBMenu::slotRestoreAll()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
         (*it)->restore();
     }
@@ -294,34 +284,34 @@ void TaskRMBMenu::slotRestoreAll()
 void TaskRMBMenu::slotShadeAll()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-        (*it)->setShaded( !(*it)->isShaded() );
+        (*it)->setShaded(!(*it)->isShaded());
     }
 }
 
 void TaskRMBMenu::slotCloseAll()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
         (*it)->close();
     }
 }
 
-void TaskRMBMenu::slotAllToDesktop( int desktop )
+void TaskRMBMenu::slotAllToDesktop(int desktop)
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
-        (*it)->toDesktop( desktop );
+        (*it)->toDesktop(desktop);
     }
 }
 
 void TaskRMBMenu::slotAllToCurrentDesktop()
 {
     Task::List::iterator itEnd = tasks.end();
-    for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+    for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
     {
         (*it)->toCurrentDesktop();
     }

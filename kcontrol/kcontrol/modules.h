@@ -25,7 +25,7 @@
 #include <qdict.h>
 #include <qxembed.h>
 
-template<class ConfigModule> class QPtrList;
+template < class ConfigModule > class QPtrList;
 class QStringList;
 class KAboutData;
 class KCModule;
@@ -36,101 +36,107 @@ class QVBoxLayout;
 class QVBox;
 class QWidgetStack;
 
-class ConfigModule : public QObject, public KCModuleInfo
-{
-  Q_OBJECT
+class ConfigModule : public QObject, public KCModuleInfo {
+    Q_OBJECT
 
 public:
+    ConfigModule(const KService::Ptr &s);
+    ~ConfigModule();
 
-  ConfigModule(const KService::Ptr &s);
-  ~ConfigModule();
+    bool isChanged()
+    {
+        return _changed;
+    };
+    void setChanged(bool changed)
+    {
+        _changed = changed;
+    };
 
-  bool isChanged() { return _changed; };
-  void setChanged(bool changed) { _changed = changed; };
-
-  bool isActive() { return _module != 0; };
-  ProxyWidget *module();
-  const KAboutData *aboutData() const;
+    bool isActive()
+    {
+        return _module != 0;
+    };
+    ProxyWidget *module();
+    const KAboutData *aboutData() const;
 
 
 public slots:
 
-  void deleteClient();
+    void deleteClient();
 
 
 private slots:
 
-  void clientClosed();
-  void clientChanged(bool state);
-  void runAsRoot();
-  void rootExited(KProcess *proc);
-  void embedded();
+    void clientClosed();
+    void clientChanged(bool state);
+    void runAsRoot();
+    void rootExited(KProcess *proc);
+    void embedded();
 
 
 signals:
 
-  void changed(ConfigModule *module);
-  void childClosed();
-  void handbookRequest();
-  void helpRequest();
+    void changed(ConfigModule *module);
+    void childClosed();
+    void handbookRequest();
+    void helpRequest();
 
 
 private:
-  
-  bool         _changed;
-  ProxyWidget *_module;
-  QXEmbed     *_embedWidget;
-  KProcess    *_rootProcess;
-  QVBoxLayout *_embedLayout;
-  QVBox       *_embedFrame;
-  QWidgetStack *_embedStack;
-
+    bool _changed;
+    ProxyWidget *_module;
+    QXEmbed *_embedWidget;
+    KProcess *_rootProcess;
+    QVBoxLayout *_embedLayout;
+    QVBox *_embedFrame;
+    QWidgetStack *_embedStack;
 };
 
-class ConfigModuleList : public QPtrList<ConfigModule>
-{
+class ConfigModuleList : public QPtrList< ConfigModule > {
 public:
+    ConfigModuleList();
 
-  ConfigModuleList();
+    void readDesktopEntries();
+    bool readDesktopEntriesRecursive(const QString &path);
 
-  void readDesktopEntries();
-  bool readDesktopEntriesRecursive(const QString &path);
+    /**
+     * Returns all submenus of the submenu identified by path
+     */
+    QPtrList< ConfigModule > modules(const QString &path);
 
-  /**
-   * Returns all submenus of the submenu identified by path
-   */
-  QPtrList<ConfigModule> modules(const QString &path);
-  
-  /**
-   * Returns all modules of the submenu identified by path
-   */
-  QStringList submenus(const QString &path);
+    /**
+     * Returns all modules of the submenu identified by path
+     */
+    QStringList submenus(const QString &path);
 
-  /**
-   * Returns the path of the submenu the module is in
-   */
-  QString findModule(ConfigModule *module);
- 
+    /**
+     * Returns the path of the submenu the module is in
+     */
+    QString findModule(ConfigModule *module);
+
 protected:
+    class Menu {
+    public:
+        QPtrList< ConfigModule > modules;
+        QStringList submenus;
+    };
 
-  class Menu
-  {
-  public:
-    QPtrList<ConfigModule> modules;
-    QStringList submenus;
-  };
-
-  QDict<Menu> subMenus;
+    QDict< Menu > subMenus;
 };
 
-class KControlEmbed : public QXEmbed
-    {
+class KControlEmbed : public QXEmbed {
     Q_OBJECT
-    public:
-        KControlEmbed( QWidget* w ) : QXEmbed( w ) {}
-        virtual void windowChanged( WId w ) { if( w ) emit windowEmbedded( w ); }
-    signals:
-        void windowEmbedded( WId w );
-    };
+public:
+    KControlEmbed(QWidget *w) : QXEmbed(w)
+    {
+    }
+    virtual void windowChanged(WId w)
+    {
+        if(w)
+            emit windowEmbedded(w);
+    }
+signals:
+    void windowEmbedded(WId w);
+};
 
 #endif

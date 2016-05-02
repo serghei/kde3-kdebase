@@ -1,11 +1,11 @@
 /****************************************************************************
 
  KHotKeys
- 
+
  Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
 
  Distributed under the terms of the GNU General Public License version 2.
- 
+
 ****************************************************************************/
 
 #define _UPDATE_CPP_
@@ -25,38 +25,35 @@
 
 using namespace KHotKeys;
 
-static const KCmdLineOptions options[] =
-    {
+static const KCmdLineOptions options[] = {
     // no need for I18N_NOOP(), this is not supposed to be used directly
-        { "id <id>", "Id of the script to add to khotkeysrc.", 0 },
-        KCmdLineLastOption
-    };
+    {"id <id>", "Id of the script to add to khotkeysrc.", 0},
+    KCmdLineLastOption};
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
+{
+    KCmdLineArgs::init(argc, argv, "khotkeys_update", "KHotKeys Update", "KHotKeys update utility", "1.0");
+    KCmdLineArgs::addCmdLineOptions(options);
+    KApplication app(false, true); // X11 connection is necessary for KKey* stuff :-/
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QCString id = args->getOption("id");
+    QString file = locate("data", "khotkeys/" + id + ".khotkeys");
+    if(file.isEmpty())
     {
-    KCmdLineArgs::init( argc, argv, "khotkeys_update", "KHotKeys Update",
-	"KHotKeys update utility", "1.0" );
-    KCmdLineArgs::addCmdLineOptions( options );
-    KApplication app( false, true ); // X11 connection is necessary for KKey* stuff :-/
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    QCString id = args->getOption( "id" );
-    QString file = locate( "data", "khotkeys/" + id + ".khotkeys" );
-    if( file.isEmpty())
-        {
         kdWarning() << "File " << id << " not found!" << endl;
         return 1;
-        }
-    init_global_data( false, &app );
+    }
+    init_global_data(false, &app);
     Settings settings;
-    settings.read_settings( true );
-    KConfig cfg( file, true );
-    if( !settings.import( cfg, false ))
-        {
+    settings.read_settings(true);
+    KConfig cfg(file, true);
+    if(!settings.import(cfg, false))
+    {
         kdWarning() << "Import of " << id << " failed!" << endl;
         return 2;
-        }
+    }
     settings.write_settings();
     QByteArray data;
-    kapp->dcopClient()->send( "khotkeys*", "khotkeys", "reread_configuration()", data );
+    kapp->dcopClient()->send("khotkeys*", "khotkeys", "reread_configuration()", data);
     return 0;
-    }
+}

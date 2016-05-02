@@ -35,31 +35,29 @@
  * IMPORTANT: If you change anything here, please run the regression test
  * kdelibs/kio/tests/kurifiltertest
  */
- 
-LocalDomainURIFilter::LocalDomainURIFilter( QObject *parent, const char *name,
-                                            const QStringList & /*args*/ )
-    : KURIFilterPlugin( parent, name ? name : "localdomainurifilter", 1.0 ),
-      DCOPObject( "LocalDomainURIFilterIface" ),
-      last_time( 0 ),
-      m_hostPortPattern( QString::fromLatin1(HOSTPORT_PATTERN) )
+
+LocalDomainURIFilter::LocalDomainURIFilter(QObject *parent, const char *name, const QStringList & /*args*/)
+    : KURIFilterPlugin(parent, name ? name : "localdomainurifilter", 1.0)
+    , DCOPObject("LocalDomainURIFilterIface")
+    , last_time(0)
+    , m_hostPortPattern(QString::fromLatin1(HOSTPORT_PATTERN))
 {
     configure();
 }
 
-bool LocalDomainURIFilter::filterURI( KURIFilterData& data ) const
+bool LocalDomainURIFilter::filterURI(KURIFilterData &data) const
 {
     KURL url = data.uri();
     QString cmd = url.url();
-    
+
     kdDebug() << "LocalDomainURIFilter::filterURI: " << url << endl;
-    
-    if( m_hostPortPattern.exactMatch( cmd ) && 
-        isLocalDomainHost( cmd ) )
+
+    if(m_hostPortPattern.exactMatch(cmd) && isLocalDomainHost(cmd))
     {
-        cmd.prepend( QString::fromLatin1("http://") );
-        setFilteredURI( data, KURL( cmd ) );
-        setURIType( data, KURIFilterData::NET_PROTOCOL );
-        
+        cmd.prepend(QString::fromLatin1("http://"));
+        setFilteredURI(data, KURL(cmd));
+        setURIType(data, KURIFilterData::NET_PROTOCOL);
+
         kdDebug() << "FilteredURI: " << data.uri() << endl;
         return true;
     }
@@ -68,42 +66,42 @@ bool LocalDomainURIFilter::filterURI( KURIFilterData& data ) const
 }
 
 // if it's e.g. just 'www', try if it's a hostname in the local search domain
-bool LocalDomainURIFilter::isLocalDomainHost( QString& cmd ) const
+bool LocalDomainURIFilter::isLocalDomainHost(QString &cmd) const
 {
     // find() returns -1 when no match -> left()/truncate() are noops then
-    QString host( cmd.left( cmd.find( '/' ) ) );
-    host.truncate( host.find( ':' ) ); // Remove port number
+    QString host(cmd.left(cmd.find('/')));
+    host.truncate(host.find(':')); // Remove port number
 
-    if( !(host == last_host && last_time > time( NULL ) - 5 ) ) {
+    if(!(host == last_host && last_time > time(NULL) - 5))
+    {
 
-        QString helper = KStandardDirs::findExe(QString::fromLatin1( "klocaldomainurifilterhelper" ));
-        if( helper.isEmpty())
+        QString helper = KStandardDirs::findExe(QString::fromLatin1("klocaldomainurifilterhelper"));
+        if(helper.isEmpty())
             return last_result = false;
 
         m_fullname = QString::null;
 
         KProcess proc;
         proc << helper << host;
-        connect( &proc, SIGNAL(receivedStdout(KProcess *, char *, int)),
-                 SLOT(receiveOutput(KProcess *, char *, int)) );
-        if( !proc.start( KProcess::NotifyOnExit, KProcess::Stdout ))
+        connect(&proc, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(receiveOutput(KProcess *, char *, int)));
+        if(!proc.start(KProcess::NotifyOnExit, KProcess::Stdout))
             return last_result = false;
 
         last_host = host;
-        last_time = time( (time_t *)0 );
+        last_time = time((time_t *)0);
 
-        last_result = proc.wait( 1 ) && proc.normalExit() && !proc.exitStatus();
+        last_result = proc.wait(1) && proc.normalExit() && !proc.exitStatus();
 
-        if( !m_fullname.isEmpty() )
-            cmd.replace( 0, host.length(), m_fullname );
+        if(!m_fullname.isEmpty())
+            cmd.replace(0, host.length(), m_fullname);
     }
 
     return last_result;
 }
 
-void LocalDomainURIFilter::receiveOutput( KProcess *, char *buf, int )
+void LocalDomainURIFilter::receiveOutput(KProcess *, char *buf, int)
 {
-    m_fullname = QFile::decodeName( buf );
+    m_fullname = QFile::decodeName(buf);
 }
 
 void LocalDomainURIFilter::configure()
@@ -111,7 +109,6 @@ void LocalDomainURIFilter::configure()
     // nothing
 }
 
-K_EXPORT_COMPONENT_FACTORY( liblocaldomainurifilter,
-                            KGenericFactory<LocalDomainURIFilter>( "kcmkurifilt" ) )
+K_EXPORT_COMPONENT_FACTORY(liblocaldomainurifilter, KGenericFactory< LocalDomainURIFilter >("kcmkurifilt"))
 
 #include "localdomainurifilter.moc"

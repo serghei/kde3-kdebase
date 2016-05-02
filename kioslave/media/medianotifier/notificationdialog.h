@@ -29,28 +29,26 @@
 #include "notifieraction.h"
 #include "notificationdialogview.h"
 
-class NotificationDialog : public KDialogBase
-{
-	Q_OBJECT
+class NotificationDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-	NotificationDialog( KFileItem medium, NotifierSettings *settings,
-	                    QWidget* parent = 0, const char* name = 0 );
-	~NotificationDialog();
+    NotificationDialog(KFileItem medium, NotifierSettings *settings, QWidget *parent = 0, const char *name = 0);
+    ~NotificationDialog();
 
 private slots:
-	void slotOk();
-	void slotConfigure();
-	void slotActionsChanged(const QString& dir);
+    void slotOk();
+    void slotConfigure();
+    void slotActionsChanged(const QString &dir);
 
 private:
-	void launchAction( NotifierAction *action );
-	void updateActionsListBox();
+    void launchAction(NotifierAction *action);
+    void updateActionsListBox();
 
-	KFileItem m_medium;
-	NotifierSettings *m_settings;
-	KDirWatch * m_actionWatcher;
-	NotificationDialogView *m_view;
+    KFileItem m_medium;
+    NotifierSettings *m_settings;
+    KDirWatch *m_actionWatcher;
+    NotificationDialogView *m_view;
 };
 
 #endif

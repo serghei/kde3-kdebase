@@ -27,8 +27,8 @@
 // in knowing this.
 typedef struct
 {
-  QString ItemPixmap;
-  QString ItemText;
+    QString ItemPixmap;
+    QString ItemText;
 } Action;
 
 class WndStatus;
@@ -36,74 +36,73 @@ class ObjKsTheme;
 class ThemeEngine;
 class KConfig;
 
-class KSplash: public QWidget, virtual public KSplashIface
-{
-  Q_OBJECT
+class KSplash : public QWidget, virtual public KSplashIface {
+    Q_OBJECT
 
 public:
-  KSplash(const char *name = "ksplash");
-  ~KSplash();
+    KSplash(const char *name = "ksplash");
+    ~KSplash();
 
-  QPtrList<Action> actionList();
+    QPtrList< Action > actionList();
 
-  // DCOP interface
-  ASYNC upAndRunning( QString );
-  ASYNC setMaxProgress(int);
-  ASYNC setProgress(int);
-  ASYNC setStartupItemCount( int count );
-  ASYNC programStarted( QString programIcon, QString programName, QString description );
-  ASYNC startupComplete();
-  ASYNC close();
-  ASYNC hide();
-  ASYNC show();
+    // DCOP interface
+    ASYNC upAndRunning(QString);
+    ASYNC setMaxProgress(int);
+    ASYNC setProgress(int);
+    ASYNC setStartupItemCount(int count);
+    ASYNC programStarted(QString programIcon, QString programName, QString description);
+    ASYNC startupComplete();
+    ASYNC close();
+    ASYNC hide();
+    ASYNC show();
 
 signals:
-  void stepsChanged(int);
-  void progressChanged(int);
-  void actionListChanged();
+    void stepsChanged(int);
+    void progressChanged(int);
+    void actionListChanged();
 
 protected:
-  bool eventFilter( QObject *o, QEvent *e );
+    bool eventFilter(QObject *o, QEvent *e);
 
 public slots:
-  void slotUpdateSteps( int );
-  void slotUpdateProgress( int );
+    void slotUpdateSteps(int);
+    void slotUpdateProgress(int);
 
 private slots:
-  void initDcop();
-  void prepareIconList();
-  void prepareSplashScreen();
-  void slotExec();
-  void nextIcon();
-  void slotInsertAction( const QString&, const QString& );
-  void slotReadProperties( KConfig * );
+    void initDcop();
+    void prepareIconList();
+    void prepareSplashScreen();
+    void slotExec();
+    void nextIcon();
+    void slotInsertAction(const QString &, const QString &);
+    void slotReadProperties(KConfig *);
 
-  void slotSetText( const QString& );
-  void slotSetPixmap( const QString& );
+    void slotSetText(const QString &);
+    void slotSetPixmap(const QString &);
 
-  void loadTheme( const QString& );
+    void loadTheme(const QString &);
 
 private:
-  ThemeEngine *_loadThemeEngine( const QString& pluginName, const QString& theme );
-  void updateState( unsigned int state );
+    ThemeEngine *_loadThemeEngine(const QString &pluginName, const QString &theme);
+    void updateState(unsigned int state);
 
 protected:
-  unsigned int mState;
-  unsigned int mMaxProgress;
-  unsigned int mStep; // ??
-  QTimer* close_timer;
+    unsigned int mState;
+    unsigned int mMaxProgress;
+    unsigned int mStep; // ??
+    QTimer *close_timer;
 
-  bool mSessMgrCalled;
-  bool mTimeToGo;
+    bool mSessMgrCalled;
+    bool mTimeToGo;
 
-  QString mTheme;
-  ObjKsTheme *mKsTheme;
+    QString mTheme;
+    ObjKsTheme *mKsTheme;
 
-  ThemeEngine *mThemeEngine;
-  QPtrList<Action> mActionList;
-  Action *mCurrentAction, *mPreviousAction;
+    ThemeEngine *mThemeEngine;
+    QPtrList< Action > mActionList;
+    Action *mCurrentAction, *mPreviousAction;
 
-  QString mThemeLibName;
+    QString mThemeLibName;
 };
 
 #endif

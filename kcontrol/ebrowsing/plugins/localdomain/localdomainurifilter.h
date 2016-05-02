@@ -38,28 +38,26 @@ class KProcess;
  intranet.domain.org and if yes, it's a network URI.
 */
 
-class LocalDomainURIFilter : public KURIFilterPlugin, public DCOPObject
-{
-  K_DCOP
-  Q_OBJECT
+class LocalDomainURIFilter : public KURIFilterPlugin, public DCOPObject {
+    K_DCOP
+    Q_OBJECT
 
-  public:
-    LocalDomainURIFilter( QObject* parent, const char* name, const QStringList& args );
-    virtual bool filterURI( KURIFilterData &data ) const;
+public:
+    LocalDomainURIFilter(QObject *parent, const char *name, const QStringList &args);
+    virtual bool filterURI(KURIFilterData &data) const;
 
-  k_dcop:
-    virtual void configure();
+    k_dcop : virtual void configure();
 
-  private:
-    bool isLocalDomainHost( QString& cmd ) const;
+private:
+    bool isLocalDomainHost(QString &cmd) const;
     mutable QString last_host;
     mutable bool last_result;
     mutable time_t last_time;
     mutable QString m_fullname;
     QRegExp m_hostPortPattern;
 
-  private slots:
-    void receiveOutput( KProcess *, char *, int );
+private slots:
+    void receiveOutput(KProcess *, char *, int);
 };
 
 #endif

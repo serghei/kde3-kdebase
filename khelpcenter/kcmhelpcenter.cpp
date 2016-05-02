@@ -57,246 +57,257 @@
 
 using namespace KHC;
 
-IndexDirDialog::IndexDirDialog( QWidget *parent )
-  : KDialogBase( parent, 0, true, i18n("Change Index Folder"), Ok | Cancel )
+IndexDirDialog::IndexDirDialog(QWidget *parent) : KDialogBase(parent, 0, true, i18n("Change Index Folder"), Ok | Cancel)
 {
-  QFrame *topFrame = makeMainWidget();
+    QFrame *topFrame = makeMainWidget();
 
-  QBoxLayout *urlLayout = new QHBoxLayout( topFrame );
+    QBoxLayout *urlLayout = new QHBoxLayout(topFrame);
 
-  QLabel *label = new QLabel( i18n("Index folder:"), topFrame );
-  urlLayout->addWidget( label );
+    QLabel *label = new QLabel(i18n("Index folder:"), topFrame);
+    urlLayout->addWidget(label);
 
-  mIndexUrlRequester = new KURLRequester( topFrame );
-  mIndexUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly |
-                               KFile::LocalOnly );
-  urlLayout->addWidget( mIndexUrlRequester );
+    mIndexUrlRequester = new KURLRequester(topFrame);
+    mIndexUrlRequester->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    urlLayout->addWidget(mIndexUrlRequester);
 
-  mIndexUrlRequester->setURL( Prefs::indexDirectory() );
-  connect(mIndexUrlRequester->lineEdit(),SIGNAL(textChanged ( const QString & )), this, SLOT(slotUrlChanged( const QString &)));
-  slotUrlChanged( mIndexUrlRequester->lineEdit()->text() );
+    mIndexUrlRequester->setURL(Prefs::indexDirectory());
+    connect(mIndexUrlRequester->lineEdit(), SIGNAL(textChanged(const QString &)), this, SLOT(slotUrlChanged(const QString &)));
+    slotUrlChanged(mIndexUrlRequester->lineEdit()->text());
 }
 
-void IndexDirDialog::slotUrlChanged( const QString &_url )
+void IndexDirDialog::slotUrlChanged(const QString &_url)
 {
-  enableButtonOK( !_url.isEmpty() );
+    enableButtonOK(!_url.isEmpty());
 }
-  
+
 
 void IndexDirDialog::slotOk()
 {
-  Prefs::setIndexDirectory( mIndexUrlRequester->url() );
-  accept();
+    Prefs::setIndexDirectory(mIndexUrlRequester->url());
+    accept();
 }
 
 
-IndexProgressDialog::IndexProgressDialog( QWidget *parent )
-  : KDialog( parent, "IndexProgressDialog", true ),
-    mFinished( true )
+IndexProgressDialog::IndexProgressDialog(QWidget *parent) : KDialog(parent, "IndexProgressDialog", true), mFinished(true)
 {
-  setCaption( i18n("Build Search Indices") );
+    setCaption(i18n("Build Search Indices"));
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->setMargin( marginHint() );
-  topLayout->setSpacing( spacingHint() );
+    QBoxLayout *topLayout = new QVBoxLayout(this);
+    topLayout->setMargin(marginHint());
+    topLayout->setSpacing(spacingHint());
 
-  mLabel = new QLabel( this );
-  mLabel->setAlignment( AlignHCenter );
-  topLayout->addWidget( mLabel );
+    mLabel = new QLabel(this);
+    mLabel->setAlignment(AlignHCenter);
+    topLayout->addWidget(mLabel);
 
-  mProgressBar = new QProgressBar( this );
-  topLayout->addWidget( mProgressBar );
+    mProgressBar = new QProgressBar(this);
+    topLayout->addWidget(mProgressBar);
 
-  mLogLabel = new QLabel( i18n("Index creation log:"), this );
-  topLayout->addWidget( mLogLabel );
+    mLogLabel = new QLabel(i18n("Index creation log:"), this);
+    topLayout->addWidget(mLogLabel);
 
-  mLogView = new QTextEdit( this );
-  mLogView->setTextFormat( LogText );
-  mLogView->setMinimumHeight( 200 );
-  topLayout->addWidget( mLogView, 1 );
+    mLogView = new QTextEdit(this);
+    mLogView->setTextFormat(LogText);
+    mLogView->setMinimumHeight(200);
+    topLayout->addWidget(mLogView, 1);
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *buttonLayout = new QHBoxLayout(topLayout);
 
-  buttonLayout->addStretch( 1 );
+    buttonLayout->addStretch(1);
 
-  mDetailsButton = new QPushButton( this );
-  connect( mDetailsButton, SIGNAL( clicked() ), SLOT( toggleDetails() ) );
-  buttonLayout->addWidget( mDetailsButton );
+    mDetailsButton = new QPushButton(this);
+    connect(mDetailsButton, SIGNAL(clicked()), SLOT(toggleDetails()));
+    buttonLayout->addWidget(mDetailsButton);
 
-  hideDetails();
+    hideDetails();
 
-  mEndButton = new QPushButton( this );
-  connect( mEndButton, SIGNAL( clicked() ), SLOT( slotEnd() ) );
-  buttonLayout->addWidget( mEndButton );
+    mEndButton = new QPushButton(this);
+    connect(mEndButton, SIGNAL(clicked()), SLOT(slotEnd()));
+    buttonLayout->addWidget(mEndButton);
 
-  setFinished( false );
+    setFinished(false);
 }
 
 IndexProgressDialog::~IndexProgressDialog()
 {
-  if ( !mLogView->isHidden() ) {
-    KConfig *cfg = KGlobal::config();
-    cfg->setGroup( "indexprogressdialog" );
-    cfg->writeEntry( "size", size() );
-  }
+    if(!mLogView->isHidden())
+    {
+        KConfig *cfg = KGlobal::config();
+        cfg->setGroup("indexprogressdialog");
+        cfg->writeEntry("size", size());
+    }
 }
 
-void IndexProgressDialog::setTotalSteps( int steps )
+void IndexProgressDialog::setTotalSteps(int steps)
 {
-  mProgressBar->setTotalSteps( steps );
-  mProgressBar->setProgress( 0 );
-  setFinished( false );
-  mLogView->clear();
+    mProgressBar->setTotalSteps(steps);
+    mProgressBar->setProgress(0);
+    setFinished(false);
+    mLogView->clear();
 }
 
 void IndexProgressDialog::advanceProgress()
 {
-  mProgressBar->setProgress( mProgressBar->progress() + 1 );
+    mProgressBar->setProgress(mProgressBar->progress() + 1);
 }
 
-void IndexProgressDialog::setLabelText( const QString &text )
+void IndexProgressDialog::setLabelText(const QString &text)
 {
-  mLabel->setText( text );
+    mLabel->setText(text);
 }
 
-void IndexProgressDialog::setMinimumLabelWidth( int width )
+void IndexProgressDialog::setMinimumLabelWidth(int width)
 {
-  mLabel->setMinimumWidth( width );
+    mLabel->setMinimumWidth(width);
 }
 
-void IndexProgressDialog::setFinished( bool finished )
+void IndexProgressDialog::setFinished(bool finished)
 {
-  if ( finished == mFinished ) return;
+    if(finished == mFinished)
+        return;
 
-  mFinished = finished;
+    mFinished = finished;
 
-  if ( mFinished ) {
-    mEndButton->setText( i18n("Close") );
-    mLabel->setText( i18n("Index creation finished.") );
-  } else {
-    mEndButton->setText( i18n("Stop") );
-  }
+    if(mFinished)
+    {
+        mEndButton->setText(i18n("Close"));
+        mLabel->setText(i18n("Index creation finished."));
+    }
+    else
+    {
+        mEndButton->setText(i18n("Stop"));
+    }
 }
 
-void IndexProgressDialog::appendLog( const QString &text )
+void IndexProgressDialog::appendLog(const QString &text)
 {
-  mLogView->append( text );
+    mLogView->append(text);
 }
 
 void IndexProgressDialog::slotEnd()
 {
-  if ( mFinished ) {
-    emit closed();
-    accept();
-  } else {
-    emit cancelled();
-    reject();
-  }
+    if(mFinished)
+    {
+        emit closed();
+        accept();
+    }
+    else
+    {
+        emit cancelled();
+        reject();
+    }
 }
 
 void IndexProgressDialog::toggleDetails()
 {
-  KConfig *cfg = KGlobal::config();
-  cfg->setGroup( "indexprogressdialog" );
-  if ( mLogView->isHidden() ) {
-    mLogLabel->show();
-    mLogView->show();
-    mDetailsButton->setText( i18n("Details <<") );
-    QSize size = cfg->readSizeEntry( "size" );
-    if ( !size.isEmpty() ) resize( size );
-  } else {
-    cfg->writeEntry( "size", size() );
-    hideDetails();
-  }
+    KConfig *cfg = KGlobal::config();
+    cfg->setGroup("indexprogressdialog");
+    if(mLogView->isHidden())
+    {
+        mLogLabel->show();
+        mLogView->show();
+        mDetailsButton->setText(i18n("Details <<"));
+        QSize size = cfg->readSizeEntry("size");
+        if(!size.isEmpty())
+            resize(size);
+    }
+    else
+    {
+        cfg->writeEntry("size", size());
+        hideDetails();
+    }
 }
 
 void IndexProgressDialog::hideDetails()
 {
-  mLogLabel->hide();
-  mLogView->hide();
-  mDetailsButton->setText( i18n("Details >>") );
-  layout()->activate();
-  adjustSize();
+    mLogLabel->hide();
+    mLogView->hide();
+    mDetailsButton->setText(i18n("Details >>"));
+    layout()->activate();
+    adjustSize();
 }
 
 
-KCMHelpCenter::KCMHelpCenter( KHC::SearchEngine *engine, QWidget *parent,
-  const char *name)
-  : DCOPObject( "kcmhelpcenter" ),
-    KDialogBase( parent, name, false, i18n("Build Search Index"),
-      Ok | Cancel, Ok, true ),
-    mEngine( engine ), mProgressDialog( 0 ), mCurrentEntry( 0 ), mCmdFile( 0 ),
-    mProcess( 0 ), mIsClosing( false ), mRunAsRoot( false )
+KCMHelpCenter::KCMHelpCenter(KHC::SearchEngine *engine, QWidget *parent, const char *name)
+    : DCOPObject("kcmhelpcenter")
+    , KDialogBase(parent, name, false, i18n("Build Search Index"), Ok | Cancel, Ok, true)
+    , mEngine(engine)
+    , mProgressDialog(0)
+    , mCurrentEntry(0)
+    , mCmdFile(0)
+    , mProcess(0)
+    , mIsClosing(false)
+    , mRunAsRoot(false)
 {
-  QWidget *widget = makeMainWidget();
+    QWidget *widget = makeMainWidget();
 
-  setupMainWidget( widget );
+    setupMainWidget(widget);
 
-  setButtonOK( i18n("Build Index") );
+    setButtonOK(i18n("Build Index"));
 
-  mConfig = KGlobal::config();
+    mConfig = KGlobal::config();
 
-  DocMetaInfo::self()->scanMetaInfo();
+    DocMetaInfo::self()->scanMetaInfo();
 
-  load();
+    load();
 
-  bool success = kapp->dcopClient()->connectDCOPSignal( "khc_indexbuilder",
-      0, "buildIndexProgress()", "kcmhelpcenter",
-      "slotIndexProgress()", false );
-  if ( !success ) kdError() << "connect DCOP signal failed" << endl;
+    bool success =
+        kapp->dcopClient()->connectDCOPSignal("khc_indexbuilder", 0, "buildIndexProgress()", "kcmhelpcenter", "slotIndexProgress()", false);
+    if(!success)
+        kdError() << "connect DCOP signal failed" << endl;
 
-  success = kapp->dcopClient()->connectDCOPSignal( "khc_indexbuilder",
-      0, "buildIndexError(QString)", "kcmhelpcenter",
-      "slotIndexError(QString)", false );
-  if ( !success ) kdError() << "connect DCOP signal failed" << endl;
+    success =
+        kapp->dcopClient()->connectDCOPSignal("khc_indexbuilder", 0, "buildIndexError(QString)", "kcmhelpcenter", "slotIndexError(QString)", false);
+    if(!success)
+        kdError() << "connect DCOP signal failed" << endl;
 
-  resize( configDialogSize( "IndexDialog" ) );
+    resize(configDialogSize("IndexDialog"));
 }
 
 KCMHelpCenter::~KCMHelpCenter()
 {
-  saveDialogSize( "IndexDialog" );
+    saveDialogSize("IndexDialog");
 }
 
-void KCMHelpCenter::setupMainWidget( QWidget *parent )
+void KCMHelpCenter::setupMainWidget(QWidget *parent)
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( parent );
-  topLayout->setSpacing( KDialog::spacingHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(parent);
+    topLayout->setSpacing(KDialog::spacingHint());
 
-  QString helpText =
-    i18n("To be able to search a document, there needs to exist a search\n"
-         "index. The status column of the list below shows, if an index\n"
-         "for a document exists.\n") +
-    i18n("To create an index check the box in the list and press the\n"
-         "\"Build Index\" button.\n");
+    QString helpText = i18n(
+                           "To be able to search a document, there needs to exist a search\n"
+                           "index. The status column of the list below shows, if an index\n"
+                           "for a document exists.\n")
+                       + i18n(
+                             "To create an index check the box in the list and press the\n"
+                             "\"Build Index\" button.\n");
 
-  QLabel *label = new QLabel( helpText, parent );
-  topLayout->addWidget( label );
+    QLabel *label = new QLabel(helpText, parent);
+    topLayout->addWidget(label);
 
-  mListView = new KListView( parent );
-  mListView->setFullWidth( true );
-  mListView->addColumn( i18n("Search Scope") );
-  mListView->addColumn( i18n("Status") );
-  mListView->setColumnAlignment( 1, AlignCenter );
-  topLayout->addWidget( mListView );
-  connect( mListView, SIGNAL( clicked( QListViewItem * ) ),
-    SLOT( checkSelection() ) );
+    mListView = new KListView(parent);
+    mListView->setFullWidth(true);
+    mListView->addColumn(i18n("Search Scope"));
+    mListView->addColumn(i18n("Status"));
+    mListView->setColumnAlignment(1, AlignCenter);
+    topLayout->addWidget(mListView);
+    connect(mListView, SIGNAL(clicked(QListViewItem *)), SLOT(checkSelection()));
 
-  QBoxLayout *urlLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *urlLayout = new QHBoxLayout(topLayout);
 
-  QLabel *urlLabel = new QLabel( i18n("Index folder:"), parent );
-  urlLayout->addWidget( urlLabel );
+    QLabel *urlLabel = new QLabel(i18n("Index folder:"), parent);
+    urlLayout->addWidget(urlLabel);
 
-  mIndexDirLabel = new QLabel( parent );
-  urlLayout->addWidget( mIndexDirLabel, 1 );
+    mIndexDirLabel = new QLabel(parent);
+    urlLayout->addWidget(mIndexDirLabel, 1);
 
-  QPushButton *button = new QPushButton( i18n("Change..."), parent );
-  connect( button, SIGNAL( clicked() ), SLOT( showIndexDirDialog() ) );
-  urlLayout->addWidget( button );
+    QPushButton *button = new QPushButton(i18n("Change..."), parent);
+    connect(button, SIGNAL(clicked()), SLOT(showIndexDirDialog()));
+    urlLayout->addWidget(button);
 
-  QBoxLayout *buttonLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *buttonLayout = new QHBoxLayout(topLayout);
 
-  buttonLayout->addStretch( 1 );
+    buttonLayout->addStretch(1);
 }
 
 void KCMHelpCenter::defaults()
@@ -305,374 +316,419 @@ void KCMHelpCenter::defaults()
 
 bool KCMHelpCenter::save()
 {
-  kdDebug(1401) << "KCMHelpCenter::save()" << endl;
+    kdDebug(1401) << "KCMHelpCenter::save()" << endl;
 
-  if ( !QFile::exists( Prefs::indexDirectory() ) ) {
-    KMessageBox::sorry( this,
-      i18n("<qt>The folder <b>%1</b> does not exist; unable to create index.</qt>")
-      .arg( Prefs::indexDirectory() ) );
-    return false;
-  } else {
-    return buildIndex();
-  }
+    if(!QFile::exists(Prefs::indexDirectory()))
+    {
+        KMessageBox::sorry(this, i18n("<qt>The folder <b>%1</b> does not exist; unable to create index.</qt>").arg(Prefs::indexDirectory()));
+        return false;
+    }
+    else
+    {
+        return buildIndex();
+    }
 
-  return true;
+    return true;
 }
 
 void KCMHelpCenter::load()
 {
-  mIndexDirLabel->setText( Prefs::indexDirectory() );
+    mIndexDirLabel->setText(Prefs::indexDirectory());
 
-  mListView->clear();
+    mListView->clear();
 
-  DocEntry::List entries = DocMetaInfo::self()->docEntries();
-  DocEntry::List::ConstIterator it;
-  for( it = entries.begin(); it != entries.end(); ++it ) {
-//    kdDebug(1401) << "Entry: " << (*it)->name() << " Indexer: '"
-//              << (*it)->indexer() << "'" << endl;
-    if ( mEngine->canSearch( *it ) && mEngine->needsIndex( *it ) ) {
-      ScopeItem *item = new ScopeItem( mListView, *it );
-      item->setOn( (*it)->searchEnabled() );
+    DocEntry::List entries = DocMetaInfo::self()->docEntries();
+    DocEntry::List::ConstIterator it;
+    for(it = entries.begin(); it != entries.end(); ++it)
+    {
+        //    kdDebug(1401) << "Entry: " << (*it)->name() << " Indexer: '"
+        //              << (*it)->indexer() << "'" << endl;
+        if(mEngine->canSearch(*it) && mEngine->needsIndex(*it))
+        {
+            ScopeItem *item = new ScopeItem(mListView, *it);
+            item->setOn((*it)->searchEnabled());
+        }
     }
-  }
 
-  updateStatus();
+    updateStatus();
 }
 
 void KCMHelpCenter::updateStatus()
 {
-  QListViewItemIterator it( mListView );
-  while ( it.current() != 0 ) {
-    ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-    QString status;
-    if ( item->entry()->indexExists( Prefs::indexDirectory() ) ) {
-      status = i18n("OK");
-      item->setOn( false );
-    } else {
-      status = i18n("Missing");
+    QListViewItemIterator it(mListView);
+    while(it.current() != 0)
+    {
+        ScopeItem *item = static_cast< ScopeItem * >(it.current());
+        QString status;
+        if(item->entry()->indexExists(Prefs::indexDirectory()))
+        {
+            status = i18n("OK");
+            item->setOn(false);
+        }
+        else
+        {
+            status = i18n("Missing");
+        }
+        item->setText(1, status);
+
+        ++it;
     }
-    item->setText( 1, status );
 
-    ++it;
-  }
-
-  checkSelection();
+    checkSelection();
 }
 
 bool KCMHelpCenter::buildIndex()
 {
-  kdDebug(1401) << "Build Index" << endl;
+    kdDebug(1401) << "Build Index" << endl;
 
-  kdDebug() << "IndexPath: '" << Prefs::indexDirectory() << "'" << endl;
+    kdDebug() << "IndexPath: '" << Prefs::indexDirectory() << "'" << endl;
 
-  if ( mProcess ) {
-    kdError() << "Error: Index Process still running." << endl;
-    return false;
-  }
-
-  mIndexQueue.clear();
-
-  QFontMetrics fm( font() );
-  int maxWidth = 0;
-
-  mCmdFile = new KTempFile;
-  mCmdFile->setAutoDelete( true );
-  QTextStream *ts = mCmdFile->textStream();
-  if ( !ts ) {
-    kdError() << "Error opening command file." << endl;
-    deleteCmdFile();
-    return false;
-  } else {
-    kdDebug() << "Writing to file '" << mCmdFile->name() << "'" << endl;
-  }
-
-  bool hasError = false;
-
-  QListViewItemIterator it( mListView );
-  while ( it.current() != 0 ) {
-    ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-    if ( item->isOn() ) {
-      DocEntry *entry = item->entry();
-
-      QString docText = i18n("Document '%1' (%2):\n")
-        .arg( entry->identifier() )
-        .arg( entry->name() );
-      if ( entry->documentType().isEmpty() ) {
-        KMessageBox::sorry( this, docText +
-          i18n("No document type.") );
-        hasError = true;
-      } else {
-        SearchHandler *handler = mEngine->handler( entry->documentType() );
-        if ( !handler ) {
-          KMessageBox::sorry( this, docText +
-            i18n("No search handler available for document type '%1'.")
-            .arg( entry->documentType() ) );
-          hasError = true;
-        } else {
-          QString indexer = handler->indexCommand( entry->identifier() );
-          if ( indexer.isEmpty() ) {
-            KMessageBox::sorry( this, docText +
-              i18n("No indexing command specified for document type '%1'.")
-              .arg( entry->documentType() ) );
-            hasError = true;
-          } else {
-            indexer.replace( QRegExp( "%i" ), entry->identifier() );
-            indexer.replace( QRegExp( "%d" ), Prefs::indexDirectory() );
-            indexer.replace( QRegExp( "%p" ), entry->url() );
-            kdDebug() << "INDEXER: " << indexer << endl;
-            *ts << indexer << endl;
-
-            int width = fm.width( entry->name() );
-            if ( width > maxWidth ) maxWidth = width;
-
-            mIndexQueue.append( entry );
-          }
-        }
-      }
+    if(mProcess)
+    {
+        kdError() << "Error: Index Process still running." << endl;
+        return false;
     }
-    ++it;
-  }
 
-  mCmdFile->close();
+    mIndexQueue.clear();
 
-  if ( mIndexQueue.isEmpty() ) {
-    deleteCmdFile();
-    return !hasError;
-  }
+    QFontMetrics fm(font());
+    int maxWidth = 0;
 
-  mCurrentEntry = mIndexQueue.begin();
-  QString name = (*mCurrentEntry)->name();
+    mCmdFile = new KTempFile;
+    mCmdFile->setAutoDelete(true);
+    QTextStream *ts = mCmdFile->textStream();
+    if(!ts)
+    {
+        kdError() << "Error opening command file." << endl;
+        deleteCmdFile();
+        return false;
+    }
+    else
+    {
+        kdDebug() << "Writing to file '" << mCmdFile->name() << "'" << endl;
+    }
 
-  if ( !mProgressDialog ) {
-    mProgressDialog = new IndexProgressDialog( this );
-    connect( mProgressDialog, SIGNAL( cancelled() ),
-             SLOT( cancelBuildIndex() ) );
-    connect( mProgressDialog, SIGNAL( closed() ),
-             SLOT( slotProgressClosed() ) );
-  }
-  mProgressDialog->setLabelText( name );
-  mProgressDialog->setTotalSteps( mIndexQueue.count() );
-  mProgressDialog->setMinimumLabelWidth( maxWidth );
-  mProgressDialog->show();
+    bool hasError = false;
 
-  startIndexProcess();
+    QListViewItemIterator it(mListView);
+    while(it.current() != 0)
+    {
+        ScopeItem *item = static_cast< ScopeItem * >(it.current());
+        if(item->isOn())
+        {
+            DocEntry *entry = item->entry();
 
-  return true;
+            QString docText = i18n("Document '%1' (%2):\n").arg(entry->identifier()).arg(entry->name());
+            if(entry->documentType().isEmpty())
+            {
+                KMessageBox::sorry(this, docText + i18n("No document type."));
+                hasError = true;
+            }
+            else
+            {
+                SearchHandler *handler = mEngine->handler(entry->documentType());
+                if(!handler)
+                {
+                    KMessageBox::sorry(this, docText + i18n("No search handler available for document type '%1'.").arg(entry->documentType()));
+                    hasError = true;
+                }
+                else
+                {
+                    QString indexer = handler->indexCommand(entry->identifier());
+                    if(indexer.isEmpty())
+                    {
+                        KMessageBox::sorry(this, docText + i18n("No indexing command specified for document type '%1'.").arg(entry->documentType()));
+                        hasError = true;
+                    }
+                    else
+                    {
+                        indexer.replace(QRegExp("%i"), entry->identifier());
+                        indexer.replace(QRegExp("%d"), Prefs::indexDirectory());
+                        indexer.replace(QRegExp("%p"), entry->url());
+                        kdDebug() << "INDEXER: " << indexer << endl;
+                        *ts << indexer << endl;
+
+                        int width = fm.width(entry->name());
+                        if(width > maxWidth)
+                            maxWidth = width;
+
+                        mIndexQueue.append(entry);
+                    }
+                }
+            }
+        }
+        ++it;
+    }
+
+    mCmdFile->close();
+
+    if(mIndexQueue.isEmpty())
+    {
+        deleteCmdFile();
+        return !hasError;
+    }
+
+    mCurrentEntry = mIndexQueue.begin();
+    QString name = (*mCurrentEntry)->name();
+
+    if(!mProgressDialog)
+    {
+        mProgressDialog = new IndexProgressDialog(this);
+        connect(mProgressDialog, SIGNAL(cancelled()), SLOT(cancelBuildIndex()));
+        connect(mProgressDialog, SIGNAL(closed()), SLOT(slotProgressClosed()));
+    }
+    mProgressDialog->setLabelText(name);
+    mProgressDialog->setTotalSteps(mIndexQueue.count());
+    mProgressDialog->setMinimumLabelWidth(maxWidth);
+    mProgressDialog->show();
+
+    startIndexProcess();
+
+    return true;
 }
 
 void KCMHelpCenter::startIndexProcess()
 {
-  kdDebug() << "KCMHelpCenter::startIndexProcess()" << endl;
+    kdDebug() << "KCMHelpCenter::startIndexProcess()" << endl;
 
-  mProcess = new KProcess;
+    mProcess = new KProcess;
 
-  if ( mRunAsRoot ) {
-    *mProcess << "kdesu" << "--nonewdcop";
-    kdDebug() << "Run as root" << endl;
-  }
+    if(mRunAsRoot)
+    {
+        *mProcess << "kdesu"
+                  << "--nonewdcop";
+        kdDebug() << "Run as root" << endl;
+    }
 
-  *mProcess << locate("exe", "khc_indexbuilder");
-  *mProcess << mCmdFile->name();
-  *mProcess << Prefs::indexDirectory();
+    *mProcess << locate("exe", "khc_indexbuilder");
+    *mProcess << mCmdFile->name();
+    *mProcess << Prefs::indexDirectory();
 
-  connect( mProcess, SIGNAL( processExited( KProcess * ) ),
-           SLOT( slotIndexFinished( KProcess * ) ) );
-  connect( mProcess, SIGNAL( receivedStdout( KProcess *, char *, int ) ),
-           SLOT( slotReceivedStdout(KProcess *, char *, int ) ) );
-  connect( mProcess, SIGNAL( receivedStderr( KProcess *, char *, int ) ),
-           SLOT( slotReceivedStderr( KProcess *, char *, int ) ) );
+    connect(mProcess, SIGNAL(processExited(KProcess *)), SLOT(slotIndexFinished(KProcess *)));
+    connect(mProcess, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(slotReceivedStdout(KProcess *, char *, int)));
+    connect(mProcess, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(slotReceivedStderr(KProcess *, char *, int)));
 
-  if ( !mProcess->start( KProcess::NotifyOnExit, KProcess::AllOutput ) ) {
-    kdError() << "KCMHelpcenter::startIndexProcess(): Failed to start process."
-      << endl;
-  }
+    if(!mProcess->start(KProcess::NotifyOnExit, KProcess::AllOutput))
+    {
+        kdError() << "KCMHelpcenter::startIndexProcess(): Failed to start process." << endl;
+    }
 }
 
 void KCMHelpCenter::cancelBuildIndex()
 {
-  kdDebug() << "cancelBuildIndex()" << endl;
+    kdDebug() << "cancelBuildIndex()" << endl;
 
-  deleteProcess();
-  deleteCmdFile();
-  mIndexQueue.clear();
+    deleteProcess();
+    deleteCmdFile();
+    mIndexQueue.clear();
 
-  if ( mIsClosing ) {
-    mIsClosing = false;
-  }
+    if(mIsClosing)
+    {
+        mIsClosing = false;
+    }
 }
 
-void KCMHelpCenter::slotIndexFinished( KProcess *proc )
+void KCMHelpCenter::slotIndexFinished(KProcess *proc)
 {
-  kdDebug() << "KCMHelpCenter::slotIndexFinished()" << endl;
+    kdDebug() << "KCMHelpCenter::slotIndexFinished()" << endl;
 
-  if ( proc == 0 ) {
-    kdWarning() << "Process null." << endl;
-    return;
-  }
-
-  if ( proc != mProcess ) {
-    kdError() << "Unexpected Process finished." << endl;
-    return;
-  }
-
-  if ( mProcess->normalExit() && mProcess->exitStatus() == 2 ) {
-    if ( mRunAsRoot ) {
-      kdError() << "Insufficient permissions." << endl;
-    } else {
-      kdDebug() << "Insufficient permissions. Trying again as root." << endl;
-      mRunAsRoot = true;
-      deleteProcess();
-      startIndexProcess();
-      return;
+    if(proc == 0)
+    {
+        kdWarning() << "Process null." << endl;
+        return;
     }
-  } else if ( !mProcess->normalExit() || mProcess->exitStatus() != 0 ) {
-    kdDebug() << "KProcess reported an error." << endl;
-    KMessageBox::error( this, i18n("Failed to build index.") );
-  } else {
-    mConfig->setGroup( "Search" );
-    mConfig->writeEntry( "IndexExists", true );
-    emit searchIndexUpdated();
-  }
 
-  deleteProcess();
-  deleteCmdFile();
-
-  mCurrentEntry = 0;
-
-  if ( mProgressDialog ) {
-    mProgressDialog->setFinished( true );
-  }
-
-  mStdOut = QString();
-  mStdErr = QString();
-
-  if ( mIsClosing ) {
-    if ( !mProgressDialog->isVisible() ) {
-      mIsClosing = false;
-      accept();
+    if(proc != mProcess)
+    {
+        kdError() << "Unexpected Process finished." << endl;
+        return;
     }
-  }
+
+    if(mProcess->normalExit() && mProcess->exitStatus() == 2)
+    {
+        if(mRunAsRoot)
+        {
+            kdError() << "Insufficient permissions." << endl;
+        }
+        else
+        {
+            kdDebug() << "Insufficient permissions. Trying again as root." << endl;
+            mRunAsRoot = true;
+            deleteProcess();
+            startIndexProcess();
+            return;
+        }
+    }
+    else if(!mProcess->normalExit() || mProcess->exitStatus() != 0)
+    {
+        kdDebug() << "KProcess reported an error." << endl;
+        KMessageBox::error(this, i18n("Failed to build index."));
+    }
+    else
+    {
+        mConfig->setGroup("Search");
+        mConfig->writeEntry("IndexExists", true);
+        emit searchIndexUpdated();
+    }
+
+    deleteProcess();
+    deleteCmdFile();
+
+    mCurrentEntry = 0;
+
+    if(mProgressDialog)
+    {
+        mProgressDialog->setFinished(true);
+    }
+
+    mStdOut = QString();
+    mStdErr = QString();
+
+    if(mIsClosing)
+    {
+        if(!mProgressDialog->isVisible())
+        {
+            mIsClosing = false;
+            accept();
+        }
+    }
 }
 
 void KCMHelpCenter::deleteProcess()
 {
-  delete mProcess;
-  mProcess = 0;
+    delete mProcess;
+    mProcess = 0;
 }
 
 void KCMHelpCenter::deleteCmdFile()
 {
-  delete mCmdFile;
-  mCmdFile = 0;
+    delete mCmdFile;
+    mCmdFile = 0;
 }
 
 void KCMHelpCenter::slotIndexProgress()
 {
-  if( !mProcess )
-    return;
+    if(!mProcess)
+        return;
 
-  kdDebug() << "KCMHelpCenter::slotIndexProgress()" << endl;
+    kdDebug() << "KCMHelpCenter::slotIndexProgress()" << endl;
 
-  updateStatus();
+    updateStatus();
 
-  advanceProgress();
+    advanceProgress();
 }
 
-void KCMHelpCenter::slotIndexError( const QString &str )
+void KCMHelpCenter::slotIndexError(const QString &str)
 {
-  if( !mProcess )
-    return;
+    if(!mProcess)
+        return;
 
-  kdDebug() << "KCMHelpCenter::slotIndexError()" << endl;
+    kdDebug() << "KCMHelpCenter::slotIndexError()" << endl;
 
-  KMessageBox::sorry( this, i18n("Error executing indexing build command:\n%1")
-    .arg( str ) );
+    KMessageBox::sorry(this, i18n("Error executing indexing build command:\n%1").arg(str));
 
-  if ( mProgressDialog ) {
-    mProgressDialog->appendLog( "<i>" + str + "</i>" );
-  }
+    if(mProgressDialog)
+    {
+        mProgressDialog->appendLog("<i>" + str + "</i>");
+    }
 
-  advanceProgress();
+    advanceProgress();
 }
 
 void KCMHelpCenter::advanceProgress()
 {
-  if ( mProgressDialog && mProgressDialog->isVisible() ) {
-    mProgressDialog->advanceProgress();
-    mCurrentEntry++;
-    if ( mCurrentEntry != mIndexQueue.end() ) {
-      QString name = (*mCurrentEntry)->name();
-      mProgressDialog->setLabelText( name );
+    if(mProgressDialog && mProgressDialog->isVisible())
+    {
+        mProgressDialog->advanceProgress();
+        mCurrentEntry++;
+        if(mCurrentEntry != mIndexQueue.end())
+        {
+            QString name = (*mCurrentEntry)->name();
+            mProgressDialog->setLabelText(name);
+        }
     }
-  }
 }
 
-void KCMHelpCenter::slotReceivedStdout( KProcess *, char *buffer, int buflen )
+void KCMHelpCenter::slotReceivedStdout(KProcess *, char *buffer, int buflen)
 {
-  QString text = QString::fromLocal8Bit( buffer, buflen );
-  int pos = text.findRev( '\n' );
-  if ( pos < 0 ) {
-    mStdOut.append( text );
-  } else {
-    if ( mProgressDialog ) {
-      mProgressDialog->appendLog( mStdOut + text.left( pos ) );
-      mStdOut = text.mid( pos + 1 );
+    QString text = QString::fromLocal8Bit(buffer, buflen);
+    int pos = text.findRev('\n');
+    if(pos < 0)
+    {
+        mStdOut.append(text);
     }
-  }
+    else
+    {
+        if(mProgressDialog)
+        {
+            mProgressDialog->appendLog(mStdOut + text.left(pos));
+            mStdOut = text.mid(pos + 1);
+        }
+    }
 }
 
-void KCMHelpCenter::slotReceivedStderr( KProcess *, char *buffer, int buflen )
+void KCMHelpCenter::slotReceivedStderr(KProcess *, char *buffer, int buflen)
 {
-  QString text = QString::fromLocal8Bit( buffer, buflen );
-  int pos = text.findRev( '\n' );
-  if ( pos < 0 ) {
-    mStdErr.append( text );
-  } else {
-    if ( mProgressDialog ) {
-      mProgressDialog->appendLog( "<i>" + mStdErr + text.left( pos ) +
-                                  "</i>");
-      mStdErr = text.mid( pos + 1 );
+    QString text = QString::fromLocal8Bit(buffer, buflen);
+    int pos = text.findRev('\n');
+    if(pos < 0)
+    {
+        mStdErr.append(text);
     }
-  }
+    else
+    {
+        if(mProgressDialog)
+        {
+            mProgressDialog->appendLog("<i>" + mStdErr + text.left(pos) + "</i>");
+            mStdErr = text.mid(pos + 1);
+        }
+    }
 }
 
 void KCMHelpCenter::slotOk()
 {
-  if ( buildIndex() ) {
-    if ( !mProcess ) accept();
-    else mIsClosing = true;
-  }
+    if(buildIndex())
+    {
+        if(!mProcess)
+            accept();
+        else
+            mIsClosing = true;
+    }
 }
 
 void KCMHelpCenter::slotProgressClosed()
 {
-  kdDebug() << "KCMHelpCenter::slotProgressClosed()" << endl;
+    kdDebug() << "KCMHelpCenter::slotProgressClosed()" << endl;
 
-  if ( mIsClosing ) accept();
+    if(mIsClosing)
+        accept();
 }
 
 void KCMHelpCenter::showIndexDirDialog()
 {
-  IndexDirDialog dlg( this );
-  if ( dlg.exec() == QDialog::Accepted ) {
-    load();
-  }
+    IndexDirDialog dlg(this);
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        load();
+    }
 }
 
 void KCMHelpCenter::checkSelection()
 {
-  int count = 0;
+    int count = 0;
 
-  QListViewItemIterator it( mListView );
-  while ( it.current() != 0 ) {
-    ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-    if ( item->isOn() ) {
-      ++count;
+    QListViewItemIterator it(mListView);
+    while(it.current() != 0)
+    {
+        ScopeItem *item = static_cast< ScopeItem * >(it.current());
+        if(item->isOn())
+        {
+            ++count;
+        }
+        ++it;
     }
-    ++it;
-  }
-  
-  enableButtonOK( count != 0 );
+
+    enableButtonOK(count != 0);
 }
 
 #include "kcmhelpcenter.moc"

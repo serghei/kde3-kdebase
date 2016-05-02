@@ -32,48 +32,45 @@
 #include "uagentproviderdlg.h"
 #include "uagentproviderdlg_ui.h"
 
-UALineEdit::UALineEdit( QWidget *parent, const char *name )
-           :KLineEdit( parent, name )
+UALineEdit::UALineEdit(QWidget *parent, const char *name) : KLineEdit(parent, name)
 {
-  // For now do not accept any drops since they might contain
-  // characters we do not accept.
-  // TODO: Re-implement ::dropEvent to allow acceptable formats...
-  setAcceptDrops( false );
+    // For now do not accept any drops since they might contain
+    // characters we do not accept.
+    // TODO: Re-implement ::dropEvent to allow acceptable formats...
+    setAcceptDrops(false);
 }
 
-void UALineEdit::keyPressEvent( QKeyEvent* e )
+void UALineEdit::keyPressEvent(QKeyEvent *e)
 {
-  int key = e->key();
-  QString keycode = e->text();
-  if ( (key >= Qt::Key_Escape && key <= Qt::Key_Help) || key == Qt::Key_Period ||
-       (cursorPosition() > 0 && key == Qt::Key_Minus) ||
-       (!keycode.isEmpty() && keycode.unicode()->isLetterOrNumber()) )
-  {
-    KLineEdit::keyPressEvent(e);
-    return;
-  }
-  e->accept();
+    int key = e->key();
+    QString keycode = e->text();
+    if((key >= Qt::Key_Escape && key <= Qt::Key_Help) || key == Qt::Key_Period || (cursorPosition() > 0 && key == Qt::Key_Minus)
+       || (!keycode.isEmpty() && keycode.unicode()->isLetterOrNumber()))
+    {
+        KLineEdit::keyPressEvent(e);
+        return;
+    }
+    e->accept();
 }
 
-UAProviderDlg::UAProviderDlg( const QString& caption, QWidget *parent,
-                              FakeUASProvider* provider, const char *name )
-              :KDialog(parent, name, true), m_provider(provider)
+UAProviderDlg::UAProviderDlg(const QString &caption, QWidget *parent, FakeUASProvider *provider, const char *name)
+    : KDialog(parent, name, true), m_provider(provider)
 {
-  setCaption ( caption );
+    setCaption(caption);
 
-  QVBoxLayout* mainLayout = new QVBoxLayout(this, 0, 0);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this, 0, 0);
 
-  dlg = new UAProviderDlgUI (this);
-  mainLayout->addWidget(dlg);
-  //dlg->leIdentity->setEnableSqueezedText( true );
+    dlg = new UAProviderDlgUI(this);
+    mainLayout->addWidget(dlg);
+    // dlg->leIdentity->setEnableSqueezedText( true );
 
-  if (!m_provider)
-  {
-    setEnabled( false );
-    return;
-  }
+    if(!m_provider)
+    {
+        setEnabled(false);
+        return;
+    }
 
-  init();
+    init();
 }
 
 UAProviderDlg::~UAProviderDlg()
@@ -82,68 +79,66 @@ UAProviderDlg::~UAProviderDlg()
 
 void UAProviderDlg::init()
 {
-  connect( dlg->pbOk, SIGNAL(clicked()), SLOT(accept()) );
-  connect( dlg->pbCancel, SIGNAL(clicked()), SLOT(reject()) );
+    connect(dlg->pbOk, SIGNAL(clicked()), SLOT(accept()));
+    connect(dlg->pbCancel, SIGNAL(clicked()), SLOT(reject()));
 
-  connect( dlg->leSite, SIGNAL(textChanged(const QString&)),
-                SLOT(slotTextChanged( const QString&)) );
+    connect(dlg->leSite, SIGNAL(textChanged(const QString &)), SLOT(slotTextChanged(const QString &)));
 
-  connect( dlg->cbAlias, SIGNAL(activated(const QString&)),
-                SLOT(slotActivated(const QString&)) );
+    connect(dlg->cbAlias, SIGNAL(activated(const QString &)), SLOT(slotActivated(const QString &)));
 
-  dlg->cbAlias->clear();
-  dlg->cbAlias->insertStringList( m_provider->userAgentAliasList() );
-  dlg->cbAlias->insertItem( "", 0 );
-  dlg->cbAlias->listBox()->sort();
+    dlg->cbAlias->clear();
+    dlg->cbAlias->insertStringList(m_provider->userAgentAliasList());
+    dlg->cbAlias->insertItem("", 0);
+    dlg->cbAlias->listBox()->sort();
 
-  dlg->leSite->setFocus();
+    dlg->leSite->setFocus();
 }
 
-void UAProviderDlg::slotActivated( const QString& text )
+void UAProviderDlg::slotActivated(const QString &text)
 {
-  if ( text.isEmpty() )
-    dlg->leIdentity->setText( "" );
-  else
-    dlg->leIdentity->setText( m_provider->agentStr(text) );
+    if(text.isEmpty())
+        dlg->leIdentity->setText("");
+    else
+        dlg->leIdentity->setText(m_provider->agentStr(text));
 
-  dlg->pbOk->setEnabled( (!dlg->leSite->text().isEmpty() && !text.isEmpty()) );
+    dlg->pbOk->setEnabled((!dlg->leSite->text().isEmpty() && !text.isEmpty()));
 }
 
-void UAProviderDlg::slotTextChanged( const QString& text )
+void UAProviderDlg::slotTextChanged(const QString &text)
 {
-  dlg->pbOk->setEnabled( (!text.isEmpty() && !dlg->cbAlias->currentText().isEmpty()) );
+    dlg->pbOk->setEnabled((!text.isEmpty() && !dlg->cbAlias->currentText().isEmpty()));
 }
 
-void UAProviderDlg::setSiteName( const QString& text )
+void UAProviderDlg::setSiteName(const QString &text)
 {
-  dlg->leSite->setText( text );
+    dlg->leSite->setText(text);
 }
 
-void UAProviderDlg::setIdentity( const QString& text )
+void UAProviderDlg::setIdentity(const QString &text)
 {
-  int id = dlg->cbAlias->listBox()->index( dlg->cbAlias->listBox()->findItem(text) );
-  dlg->cbAlias->setCurrentItem( id );
-  slotActivated( dlg->cbAlias->currentText() );
-  if ( !dlg->leSite->isEnabled() )
-    dlg->cbAlias->setFocus();
+    int id = dlg->cbAlias->listBox()->index(dlg->cbAlias->listBox()->findItem(text));
+    dlg->cbAlias->setCurrentItem(id);
+    slotActivated(dlg->cbAlias->currentText());
+    if(!dlg->leSite->isEnabled())
+        dlg->cbAlias->setFocus();
 }
 
 QString UAProviderDlg::siteName()
 {
-  QString site_name=dlg->leSite->text().lower();
-  site_name = site_name.remove( "https://" );
-  site_name = site_name.remove( "http://" );
-  return site_name;
+    QString site_name = dlg->leSite->text().lower();
+    site_name = site_name.remove("https://");
+    site_name = site_name.remove("http://");
+    return site_name;
 }
 
 QString UAProviderDlg::identity()
 {
-  return dlg->cbAlias->currentText();
+    return dlg->cbAlias->currentText();
 }
 
 QString UAProviderDlg::alias()
 {
-  return dlg->leIdentity->text();
+    return dlg->leIdentity->text();
 }
 
 #include "uagentproviderdlg.moc"

@@ -39,68 +39,66 @@ class ConfigModule;
 class ConfigModuleList;
 class ModuleTitle;
 
-class TopLevel : public KMainWindow
-{
-  Q_OBJECT
+class TopLevel : public KMainWindow {
+    Q_OBJECT
 
 public:
-  TopLevel( const char* name=0 );
-  ~TopLevel();
+    TopLevel(const char *name = 0);
+    ~TopLevel();
 
 protected:
-  void setupActions();
+    void setupActions();
 
 protected slots:
-  void activateModule(ConfigModule *);
-  void categorySelected(QListViewItem *category);
-  void newModule(const QString &name, const QString& docPath, const QString &quickhelp);
-  void activateIconView();
-  void activateTreeView();
+    void activateModule(ConfigModule *);
+    void categorySelected(QListViewItem *category);
+    void newModule(const QString &name, const QString &docPath, const QString &quickhelp);
+    void activateIconView();
+    void activateTreeView();
 
-  void reportBug();
-  void aboutModule();
+    void reportBug();
+    void aboutModule();
 
-  void activateSmallIcons();
-  void activateMediumIcons();
-  void activateLargeIcons();
-  void activateHugeIcons();
+    void activateSmallIcons();
+    void activateMediumIcons();
+    void activateLargeIcons();
+    void activateHugeIcons();
 
-  void deleteDummyAbout();
+    void deleteDummyAbout();
 
-  void slotSearchChanged(const QString &);
-  void slotHandbookRequest();
-  void slotHelpRequest();
+    void slotSearchChanged(const QString &);
+    void slotHandbookRequest();
+    void slotHelpRequest();
 
-  void changedModule(ConfigModule *changed);
+    void changedModule(ConfigModule *changed);
 
-  bool queryClose();
+    bool queryClose();
 
 private:
+    QString handleAmpersand(QString) const;
 
-  QString handleAmpersand( QString ) const;
+    QSplitter *_splitter;
+    QWidgetStack *_stack;
+    DockContainer *_dock;
+    ModuleTitle *_title;
 
-  QSplitter      *_splitter;
-  QWidgetStack   *_stack;
-  DockContainer  *_dock;
-  ModuleTitle    *_title;
+    KToggleAction *tree_view, *icon_view;
+    KToggleAction *icon_small, *icon_medium, *icon_large, *icon_huge;
+    KAction *report_bug, *about_module;
 
-  KToggleAction *tree_view, *icon_view;
-  KToggleAction *icon_small, *icon_medium, *icon_large, *icon_huge;
-  KAction *report_bug, *about_module;
+    IndexWidget *_index;
+    SearchWidget *_search;
+    HelpWidget *_help;
 
-  IndexWidget  *_index;
-  SearchWidget *_search;
-  HelpWidget   *_help;
+    ConfigModule *_active;
+    ConfigModuleList *_modules;
 
-  ConfigModule     *_active;
-  ConfigModuleList *_modules;
-
-  /**
-   * if someone wants to report a bug
-   * against a module with no about data
-   * we construct one for him
-   **/
-  KAboutData *dummyAbout;
+    /**
+     * if someone wants to report a bug
+     * against a module with no about data
+     * we construct one for him
+     **/
+    KAboutData *dummyAbout;
 };
 
 #endif

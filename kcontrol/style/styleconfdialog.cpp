@@ -21,26 +21,23 @@
 #include "styleconfdialog.h"
 #include <klocale.h>
 
-StyleConfigDialog::StyleConfigDialog(QWidget* parent, QString styleName):
-  KDialogBase(parent, "StyleConfigDialog",
-           true, /*modal*/
-           i18n("Configure %1").arg(styleName),
-           KDialogBase::Default | KDialogBase::Ok | KDialogBase::Cancel,
-           KDialogBase::Cancel)
+StyleConfigDialog::StyleConfigDialog(QWidget *parent, QString styleName)
+    : KDialogBase(parent, "StyleConfigDialog", true, /*modal*/
+                  i18n("Configure %1").arg(styleName), KDialogBase::Default | KDialogBase::Ok | KDialogBase::Cancel, KDialogBase::Cancel)
 {
-  m_dirty = false;
-  connect( this, SIGNAL( defaultClicked() ), this, SIGNAL( defaults() ));
-  connect( this, SIGNAL( okClicked() ), this, SIGNAL( save() ));
+    m_dirty = false;
+    connect(this, SIGNAL(defaultClicked()), this, SIGNAL(defaults()));
+    connect(this, SIGNAL(okClicked()), this, SIGNAL(save()));
 }
 
 bool StyleConfigDialog::isDirty() const
 {
-  return m_dirty;
+    return m_dirty;
 }
 
 void StyleConfigDialog::setDirty(bool dirty)
 {
-  m_dirty = dirty;
+    m_dirty = dirty;
 }
 
 #include <styleconfdialog.moc>

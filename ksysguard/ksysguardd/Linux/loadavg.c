@@ -33,111 +33,116 @@ static int LoadAvgOK = 0;
 static double LoadAvg1, LoadAvg5, LoadAvg15;
 
 #define LOADAVGBUFSIZE 128
-static char LoadAvgBuf[ LOADAVGBUFSIZE ];
+static char LoadAvgBuf[LOADAVGBUFSIZE];
 static int Dirty = 0;
 
-static void processLoadAvg( void )
+static void processLoadAvg(void)
 {
-  sscanf( LoadAvgBuf, "%lf %lf %lf", &LoadAvg1, &LoadAvg5, &LoadAvg15 );
-  Dirty = 0;
+    sscanf(LoadAvgBuf, "%lf %lf %lf", &LoadAvg1, &LoadAvg5, &LoadAvg15);
+    Dirty = 0;
 }
 
 /*
 ================================ public part =================================
 */
 
-void initLoadAvg( struct SensorModul* sm )
+void initLoadAvg(struct SensorModul *sm)
 {
-  if ( updateLoadAvg() < 0 ) {
+    if(updateLoadAvg() < 0)
+    {
+        LoadAvgOK = -1;
+        return;
+    }
+    else
+        LoadAvgOK = 1;
+
+    registerMonitor("cpu/loadavg1", "float", printLoadAvg1, printLoadAvg1Info, sm);
+    registerMonitor("cpu/loadavg5", "float", printLoadAvg5, printLoadAvg5Info, sm);
+    registerMonitor("cpu/loadavg15", "float", printLoadAvg15, printLoadAvg15Info, sm);
+}
+
+void exitLoadAvg(void)
+{
     LoadAvgOK = -1;
-    return;
-  } else
-    LoadAvgOK = 1;
-
-  registerMonitor( "cpu/loadavg1", "float", printLoadAvg1, printLoadAvg1Info, sm );
-  registerMonitor( "cpu/loadavg5", "float", printLoadAvg5, printLoadAvg5Info, sm );
-  registerMonitor( "cpu/loadavg15", "float", printLoadAvg15, printLoadAvg15Info, sm );
 }
 
-void exitLoadAvg( void )
+int updateLoadAvg(void)
 {
-  LoadAvgOK = -1;
+    size_t n;
+    int fd;
+
+    if(LoadAvgOK < 0)
+        return -1;
+
+    if((fd = open("/proc/loadavg", O_RDONLY)) < 0)
+    {
+        if(LoadAvgOK != 0)
+            print_error(
+                "Cannot open file \'/proc/loadavg\'!\n"
+                "The kernel needs to be compiled with support\n"
+                "for /proc filesystem enabled!\n");
+        return -1;
+    }
+
+    if((n = read(fd, LoadAvgBuf, LOADAVGBUFSIZE - 1)) == LOADAVGBUFSIZE - 1)
+    {
+        log_error("Internal buffer too small to read \'/proc/loadavg\'");
+
+        close(fd);
+        return -1;
+    }
+
+    close(fd);
+    LoadAvgBuf[n] = '\0';
+    Dirty = 1;
+
+    return 0;
 }
 
-int updateLoadAvg( void )
+void printLoadAvg1(const char *cmd)
 {
-  size_t n;
-  int fd;
+    (void)cmd;
 
-  if ( LoadAvgOK < 0 )
-    return -1;
+    if(Dirty)
+        processLoadAvg();
 
-  if ( ( fd = open( "/proc/loadavg", O_RDONLY ) ) < 0 ) {
-    if ( LoadAvgOK != 0 )
-      print_error( "Cannot open file \'/proc/loadavg\'!\n"
-                   "The kernel needs to be compiled with support\n"
-                   "for /proc filesystem enabled!\n" );
-    return -1;
-  }
-
-  if ( ( n = read( fd, LoadAvgBuf, LOADAVGBUFSIZE - 1 ) ) == LOADAVGBUFSIZE - 1 ) {
-    log_error( "Internal buffer too small to read \'/proc/loadavg\'" );
-
-    close( fd );
-    return -1;
-  }
-
-  close( fd );
-  LoadAvgBuf[ n ] = '\0';
-  Dirty = 1;
-
-  return 0;
+    fprintf(CurrentClient, "%f\n", LoadAvg1);
 }
 
-void printLoadAvg1( const char* cmd )
+void printLoadAvg1Info(const char *cmd)
 {
-  (void)cmd;
-
-  if ( Dirty )
-    processLoadAvg();
-
-  fprintf( CurrentClient, "%f\n", LoadAvg1 );
+    (void)cmd;
+    fprintf(CurrentClient, "Load average 1 min\t0\t0\t\n");
 }
 
-void printLoadAvg1Info( const char* cmd )
+void printLoadAvg5(const char *cmd)
 {
-  (void)cmd;
-  fprintf( CurrentClient, "Load average 1 min\t0\t0\t\n" );
+    (void)cmd;
+
+    if(Dirty)
+        processLoadAvg();
+
+    fprintf(CurrentClient, "%f\n", LoadAvg5);
 }
 
-void printLoadAvg5( const char* cmd )
+void printLoadAvg5Info(const char *cmd)
 {
-  (void)cmd;
-
-  if ( Dirty )
-    processLoadAvg();
-
-  fprintf( CurrentClient, "%f\n", LoadAvg5 );
+    (void)cmd;
+    fprintf(CurrentClient, "Load average 5 min\t0\t0\t\n");
 }
 
-void printLoadAvg5Info( const char* cmd )
+void printLoadAvg15(const char *cmd)
 {
-  (void)cmd;
-  fprintf( CurrentClient, "Load average 5 min\t0\t0\t\n" );
+    (void)cmd;
+
+    if(Dirty)
+        processLoadAvg();
+
+    fprintf(CurrentClient, "%f\n", LoadAvg15);
 }
 
-void printLoadAvg15( const char* cmd )
+void printLoadAvg15Info(const char *cmd)
 {
-  (void)cmd;
-
-  if ( Dirty )
-    processLoadAvg();
-
-  fprintf( CurrentClient, "%f\n", LoadAvg15 );
-}
-
-void printLoadAvg15Info( const char* cmd )
-{
-  (void)cmd;
-  fprintf( CurrentClient, "Load average 15 min\t0\t0\t\n" );
+    (void)cmd;
+    fprintf(CurrentClient, "Load average 15 min\t0\t0\t\n");
 }

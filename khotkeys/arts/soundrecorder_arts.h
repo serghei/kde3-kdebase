@@ -24,20 +24,17 @@
 #include <qmemarray.h>
 #include "sound.h"
 
-class  KAudioRecordStream ;
+class KAudioRecordStream;
 class KArtsServer;
 
-namespace KHotKeys
-{
-
+namespace KHotKeys {
 
 
 /**
 @author Olivier Goffart
 */
-class SoundRecorderArts : public SoundRecorder
-{
-Q_OBJECT
+class SoundRecorderArts : public SoundRecorder {
+    Q_OBJECT
 public:
     SoundRecorderArts(QObject *parent = 0, const char *name = 0);
     virtual ~SoundRecorderArts();
@@ -57,7 +54,6 @@ private:
     KArtsServer *m_server;
     KAudioRecordStream *m_recStream;
 };
-
 }
 
 #endif

@@ -31,19 +31,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KPanelMenu;
 class QWidget;
 
-class KDE_EXPORT MenuInfo
-{
+class KDE_EXPORT MenuInfo {
 public:
-    MenuInfo(const QString& desktopFile);
+    MenuInfo(const QString &desktopFile);
 
-    QString name() const    { return name_; }
-    QString comment() const { return comment_; }
-    QString icon() const    { return icon_; }
-    QString library() const { return library_; }
-    QString desktopFile() const { return desktopfile_; }
-    bool isValid() const    { return !name_.isEmpty(); }
+    QString name() const
+    {
+        return name_;
+    }
+    QString comment() const
+    {
+        return comment_;
+    }
+    QString icon() const
+    {
+        return icon_;
+    }
+    QString library() const
+    {
+        return library_;
+    }
+    QString desktopFile() const
+    {
+        return desktopfile_;
+    }
+    bool isValid() const
+    {
+        return !name_.isEmpty();
+    }
 
-    KPanelMenu* load(QWidget *parent = 0, const char *name = 0);
+    KPanelMenu *load(QWidget *parent = 0, const char *name = 0);
 
 private:
     QString name_, comment_, icon_, library_, desktopfile_;

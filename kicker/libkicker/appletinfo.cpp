@@ -27,16 +27,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "appletinfo.h"
 
-AppletInfo::AppletInfo( const QString& deskFile, const QString& configFile, const AppletInfo::AppletType type)
-  : m_type (type),
-    m_unique(true),
-    m_hidden(false)
+AppletInfo::AppletInfo(const QString &deskFile, const QString &configFile, const AppletInfo::AppletType type)
+    : m_type(type), m_unique(true), m_hidden(false)
 {
     QFileInfo fi(deskFile);
     m_desktopFile = fi.fileName();
 
-    const char* resource = "applets";
-    switch (type)
+    const char *resource = "applets";
+    switch(type)
     {
         case Extension:
             resource = "extensions";
@@ -69,20 +67,18 @@ AppletInfo::AppletInfo( const QString& deskFile, const QString& configFile, cons
     // should it be shown in the gui?
     m_hidden = df.readBoolEntry("Hidden", false);
 
-    if (configFile.isEmpty())
+    if(configFile.isEmpty())
     {
         // generate a config file base name from the library name
         m_configFile = m_lib.lower();
 
-        if (m_unique)
+        if(m_unique)
         {
             m_configFile.append("rc");
         }
         else
         {
-            m_configFile.append("_")
-                        .append(kapp->randomString(20).lower())
-                        .append("_rc");
+            m_configFile.append("_").append(kapp->randomString(20).lower()).append("_rc");
         }
     }
     else
@@ -91,22 +87,22 @@ AppletInfo::AppletInfo( const QString& deskFile, const QString& configFile, cons
     }
 }
 
-bool AppletInfo::operator!=( const AppletInfo& rhs) const
+bool AppletInfo::operator!=(const AppletInfo &rhs) const
 {
     return configFile() != rhs.configFile();
 }
 
-bool AppletInfo::operator<( const AppletInfo& rhs ) const
+bool AppletInfo::operator<(const AppletInfo &rhs) const
 {
-    return ( QString::localeAwareCompare( name(), rhs.name() ) < 0 );
+    return (QString::localeAwareCompare(name(), rhs.name()) < 0);
 }
 
-bool AppletInfo::operator> ( const AppletInfo& rhs ) const
+bool AppletInfo::operator>(const AppletInfo &rhs) const
 {
-    return ( QString::localeAwareCompare( name(), rhs.name() ) > 0 );
+    return (QString::localeAwareCompare(name(), rhs.name()) > 0);
 }
 
-bool AppletInfo::operator<= ( const AppletInfo& rhs ) const
+bool AppletInfo::operator<=(const AppletInfo &rhs) const
 {
-    return ( QString::localeAwareCompare( name(), rhs.name() ) <= 0 );
+    return (QString::localeAwareCompare(name(), rhs.name()) <= 0);
 }

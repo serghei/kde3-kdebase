@@ -44,249 +44,252 @@
 
 #include "toplevel.h"
 
-TopLevel::TopLevel( const QString &destDir, QWidget *parent, const char *name )
-  : KDialog( parent, name, true )
+TopLevel::TopLevel(const QString &destDir, QWidget *parent, const char *name) : KDialog(parent, name, true)
 {
-  setCaption( i18n( "KAppfinder" ) );
-  QVBoxLayout *layout = new QVBoxLayout( this, marginHint() );
+    setCaption(i18n("KAppfinder"));
+    QVBoxLayout *layout = new QVBoxLayout(this, marginHint());
 
-  QLabel *label = new QLabel( i18n( "The application finder looks for non-KDE "
+    QLabel *label = new QLabel(i18n("The application finder looks for non-KDE "
                                     "applications on your system and adds "
                                     "them to the KDE menu system. "
-                                    "Click 'Scan' to begin, select the desired applications and then click 'Apply'."), this);
-  label->setAlignment( AlignAuto | WordBreak );
-  layout->addWidget( label );
+                                    "Click 'Scan' to begin, select the desired applications and then click 'Apply'."),
+                               this);
+    label->setAlignment(AlignAuto | WordBreak);
+    layout->addWidget(label);
 
-  layout->addSpacing( 5 );
+    layout->addSpacing(5);
 
-  mListView = new QListView( this );
-  mListView->addColumn( i18n( "Application" ) );
-  mListView->addColumn( i18n( "Description" ) );
-  mListView->addColumn( i18n( "Command" ) );
-  mListView->setMinimumSize( 300, 300 );
-  mListView->setRootIsDecorated( true );
-  mListView->setAllColumnsShowFocus( true );
-  mListView->setSelectionMode(QListView::NoSelection);
-  layout->addWidget( mListView );
+    mListView = new QListView(this);
+    mListView->addColumn(i18n("Application"));
+    mListView->addColumn(i18n("Description"));
+    mListView->addColumn(i18n("Command"));
+    mListView->setMinimumSize(300, 300);
+    mListView->setRootIsDecorated(true);
+    mListView->setAllColumnsShowFocus(true);
+    mListView->setSelectionMode(QListView::NoSelection);
+    layout->addWidget(mListView);
 
-  mProgress = new KProgress( this );
-  mProgress->setPercentageVisible( false );
-  layout->addWidget( mProgress );
+    mProgress = new KProgress(this);
+    mProgress->setPercentageVisible(false);
+    layout->addWidget(mProgress);
 
-  mSummary = new QLabel( i18n( "Summary:" ), this );
-  layout->addWidget( mSummary );
+    mSummary = new QLabel(i18n("Summary:"), this);
+    layout->addWidget(mSummary);
 
-  KButtonBox* bbox = new KButtonBox( this );
-  mScanButton = bbox->addButton( KGuiItem( i18n( "Scan" ), "find"), this, SLOT( slotScan() ) );
-  bbox->addStretch( 5 );
-  mSelectButton = bbox->addButton( i18n( "Select All" ), this,
-                                   SLOT( slotSelectAll() ) );
-  mSelectButton->setEnabled( false );
-  mUnSelectButton = bbox->addButton( i18n( "Unselect All" ), this,
-                                     SLOT( slotUnselectAll() ) );
-  mUnSelectButton->setEnabled( false );
-  bbox->addStretch( 5 );
-  mApplyButton = bbox->addButton( KStdGuiItem::apply(), this, SLOT( slotCreate() ) );
-  mApplyButton->setEnabled( false );
-  bbox->addButton( KStdGuiItem::close(), kapp, SLOT( quit() ) );
-  bbox->layout();
+    KButtonBox *bbox = new KButtonBox(this);
+    mScanButton = bbox->addButton(KGuiItem(i18n("Scan"), "find"), this, SLOT(slotScan()));
+    bbox->addStretch(5);
+    mSelectButton = bbox->addButton(i18n("Select All"), this, SLOT(slotSelectAll()));
+    mSelectButton->setEnabled(false);
+    mUnSelectButton = bbox->addButton(i18n("Unselect All"), this, SLOT(slotUnselectAll()));
+    mUnSelectButton->setEnabled(false);
+    bbox->addStretch(5);
+    mApplyButton = bbox->addButton(KStdGuiItem::apply(), this, SLOT(slotCreate()));
+    mApplyButton->setEnabled(false);
+    bbox->addButton(KStdGuiItem::close(), kapp, SLOT(quit()));
+    bbox->layout();
 
-  layout->addWidget( bbox );
+    layout->addWidget(bbox);
 
-	connect( kapp, SIGNAL( lastWindowClosed() ), kapp, SLOT( quit() ) );
+    connect(kapp, SIGNAL(lastWindowClosed()), kapp, SLOT(quit()));
 
-  mAppCache.setAutoDelete( true );
+    mAppCache.setAutoDelete(true);
 
-  adjustSize();
+    adjustSize();
 
-  mDestDir = destDir;
-  mDestDir = mDestDir.replace( QRegExp( "^~/" ), QDir::homeDirPath() + "/" );
-	
-  KStartupInfo::appStarted();
+    mDestDir = destDir;
+    mDestDir = mDestDir.replace(QRegExp("^~/"), QDir::homeDirPath() + "/");
 
-  QAccel *accel = new QAccel( this );
-  accel->connectItem( accel->insertItem( Key_Q + CTRL ), kapp, SLOT( quit() ) );
+    KStartupInfo::appStarted();
 
-  KAcceleratorManager::manage( this );
+    QAccel *accel = new QAccel(this);
+    accel->connectItem(accel->insertItem(Key_Q + CTRL), kapp, SLOT(quit()));
+
+    KAcceleratorManager::manage(this);
 }
 
 
 TopLevel::~TopLevel()
 {
-  mAppCache.clear();
+    mAppCache.clear();
 }
 
-QListViewItem* TopLevel::addGroupItem( QListViewItem *parent, const QString &relPath,
-                                       const QString &name )
+QListViewItem *TopLevel::addGroupItem(QListViewItem *parent, const QString &relPath, const QString &name)
 {
-  KServiceGroup::Ptr root = KServiceGroup::group( relPath );
-  if( !root )
-		  return 0L;
-  KServiceGroup::List list = root->entries();
+    KServiceGroup::Ptr root = KServiceGroup::group(relPath);
+    if(!root)
+        return 0L;
+    KServiceGroup::List list = root->entries();
 
-  KServiceGroup::List::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
-    KSycocaEntry *p = (*it);
-    if ( p->isType( KST_KServiceGroup ) ) {
-      KServiceGroup* serviceGroup = static_cast<KServiceGroup*>( p );
-      if ( QString( "%1%2/" ).arg( relPath ).arg( name ) == serviceGroup->relPath() ) {
-        QListViewItem* retval;
-        if ( parent )
-          retval = parent->firstChild();
-        else
-          retval = mListView->firstChild();
+    KServiceGroup::List::ConstIterator it;
+    for(it = list.begin(); it != list.end(); ++it)
+    {
+        KSycocaEntry *p = (*it);
+        if(p->isType(KST_KServiceGroup))
+        {
+            KServiceGroup *serviceGroup = static_cast< KServiceGroup * >(p);
+            if(QString("%1%2/").arg(relPath).arg(name) == serviceGroup->relPath())
+            {
+                QListViewItem *retval;
+                if(parent)
+                    retval = parent->firstChild();
+                else
+                    retval = mListView->firstChild();
 
-        while ( retval ) {
-          if ( retval->text( 0 ) == serviceGroup->caption() )
-            return retval;
+                while(retval)
+                {
+                    if(retval->text(0) == serviceGroup->caption())
+                        return retval;
 
-          retval = retval->nextSibling();
+                    retval = retval->nextSibling();
+                }
+
+                QListViewItem *item;
+                if(parent)
+                    item = new QListViewItem(parent, serviceGroup->caption());
+                else
+                    item = new QListViewItem(mListView, serviceGroup->caption());
+
+                item->setPixmap(0, SmallIcon(serviceGroup->icon()));
+                item->setOpen(true);
+                return item;
+            }
         }
-
-        QListViewItem *item;
-        if ( parent )
-          item = new QListViewItem( parent, serviceGroup->caption() );
-        else
-          item = new QListViewItem( mListView, serviceGroup->caption() );
-
-        item->setPixmap( 0, SmallIcon( serviceGroup->icon() ) );
-        item->setOpen( true );
-        return item;
-      }
     }
-  }
 
-  return 0;
+    return 0;
 }
 
 void TopLevel::slotScan()
 {
-  KIconLoader* loader = KGlobal::iconLoader();
+    KIconLoader *loader = KGlobal::iconLoader();
 
-  mTemplates = KGlobal::dirs()->findAllResources( "data", "kappfinder/apps/*.desktop", true );
+    mTemplates = KGlobal::dirs()->findAllResources("data", "kappfinder/apps/*.desktop", true);
 
-  mAppCache.clear();
+    mAppCache.clear();
 
-  mFound = 0;
-  int count = mTemplates.count();
+    mFound = 0;
+    int count = mTemplates.count();
 
-  mScanButton->setEnabled( false );
-  mProgress->setPercentageVisible( true );
-  mProgress->setTotalSteps( count );
-  mProgress->setValue( 0 );
+    mScanButton->setEnabled(false);
+    mProgress->setPercentageVisible(true);
+    mProgress->setTotalSteps(count);
+    mProgress->setValue(0);
 
-  mListView->clear();
+    mListView->clear();
 
-  QStringList::Iterator it;
-  for ( it = mTemplates.begin(); it != mTemplates.end(); ++it ) {
-    // eye candy
-    mProgress->setProgress( mProgress->progress() + 1 );
+    QStringList::Iterator it;
+    for(it = mTemplates.begin(); it != mTemplates.end(); ++it)
+    {
+        // eye candy
+        mProgress->setProgress(mProgress->progress() + 1);
 
-    QString desktopName = *it;
-    int i = desktopName.findRev('/');
-    desktopName = desktopName.mid(i+1);
-    i = desktopName.findRev('.');
-    if (i != -1)
-       desktopName = desktopName.left(i);
+        QString desktopName = *it;
+        int i = desktopName.findRev('/');
+        desktopName = desktopName.mid(i + 1);
+        i = desktopName.findRev('.');
+        if(i != -1)
+            desktopName = desktopName.left(i);
 
-    bool found;
-    found = KService::serviceByDesktopName(desktopName);
-    if (found)
-       continue;
+        bool found;
+        found = KService::serviceByDesktopName(desktopName);
+        if(found)
+            continue;
 
-    found = KService::serviceByMenuId("kde-"+desktopName+".desktop");
-    if (found)
-       continue; 
+        found = KService::serviceByMenuId("kde-" + desktopName + ".desktop");
+        if(found)
+            continue;
 
-    found = KService::serviceByMenuId("gnome-"+desktopName+".desktop");
-    if (found)
-       continue; 
+        found = KService::serviceByMenuId("gnome-" + desktopName + ".desktop");
+        if(found)
+            continue;
 
-    KDesktopFile desktop( *it, true );
+        KDesktopFile desktop(*it, true);
 
-    // copy over the desktop file, if exists
-    if ( scanDesktopFile( mAppCache, *it, mDestDir ) ) {
-      QString relPath = *it;
-      int pos = relPath.find( "kappfinder/apps/" );
-      relPath = relPath.mid( pos + strlen( "kappfinder/apps/" ) );
-      relPath = relPath.left( relPath.findRev( '/' ) + 1 );
-      QStringList dirList = QStringList::split( '/', relPath );
+        // copy over the desktop file, if exists
+        if(scanDesktopFile(mAppCache, *it, mDestDir))
+        {
+            QString relPath = *it;
+            int pos = relPath.find("kappfinder/apps/");
+            relPath = relPath.mid(pos + strlen("kappfinder/apps/"));
+            relPath = relPath.left(relPath.findRev('/') + 1);
+            QStringList dirList = QStringList::split('/', relPath);
 
-      QListViewItem *dirItem = 0;
-      QString tmpRelPath = QString::null;
+            QListViewItem *dirItem = 0;
+            QString tmpRelPath = QString::null;
 
-      QStringList::Iterator tmpIt;
-      for ( tmpIt = dirList.begin(); tmpIt != dirList.end(); ++tmpIt ) {
-        dirItem = addGroupItem( dirItem, tmpRelPath, *tmpIt );
-        tmpRelPath += *tmpIt + '/';
-      }
+            QStringList::Iterator tmpIt;
+            for(tmpIt = dirList.begin(); tmpIt != dirList.end(); ++tmpIt)
+            {
+                dirItem = addGroupItem(dirItem, tmpRelPath, *tmpIt);
+                tmpRelPath += *tmpIt + '/';
+            }
 
-      mFound++;
+            mFound++;
 
-      QCheckListItem *item;
-      if ( dirItem )
-        item = new QCheckListItem( dirItem, desktop.readName(), QCheckListItem::CheckBox );
-      else
-        item = new QCheckListItem( mListView, desktop.readName(), QCheckListItem::CheckBox );
+            QCheckListItem *item;
+            if(dirItem)
+                item = new QCheckListItem(dirItem, desktop.readName(), QCheckListItem::CheckBox);
+            else
+                item = new QCheckListItem(mListView, desktop.readName(), QCheckListItem::CheckBox);
 
-      item->setPixmap( 0, loader->loadIcon( desktop.readIcon(), KIcon::Small ) );
-      item->setText( 1, desktop.readGenericName() );
-      item->setText( 2, desktop.readPathEntry( "Exec" ) );
-      if ( desktop.readBoolEntry( "X-StandardInstall" ) )
-        item->setOn( true );
+            item->setPixmap(0, loader->loadIcon(desktop.readIcon(), KIcon::Small));
+            item->setText(1, desktop.readGenericName());
+            item->setText(2, desktop.readPathEntry("Exec"));
+            if(desktop.readBoolEntry("X-StandardInstall"))
+                item->setOn(true);
 
-      AppLnkCache* cache = mAppCache.last();
-      if ( cache )
-        cache->item = item;
+            AppLnkCache *cache = mAppCache.last();
+            if(cache)
+                cache->item = item;
+        }
+
+        // update summary
+        QString sum(i18n("Summary: found %n application", "Summary: found %n applications", mFound));
+        mSummary->setText(sum);
     }
 
-    // update summary
-    QString sum( i18n( "Summary: found %n application",
-                       "Summary: found %n applications", mFound ) );
-    mSummary->setText( sum );
-  }
+    // stop scanning
+    mProgress->setValue(0);
+    mProgress->setPercentageVisible(false);
 
-  // stop scanning
-  mProgress->setValue( 0 );
-  mProgress->setPercentageVisible( false );
+    mScanButton->setEnabled(true);
 
-  mScanButton->setEnabled( true );
-
-  if ( mFound > 0 ) {
-    mApplyButton->setEnabled( true );
-    mSelectButton->setEnabled( true );
-    mUnSelectButton->setEnabled( true );
-  }
+    if(mFound > 0)
+    {
+        mApplyButton->setEnabled(true);
+        mSelectButton->setEnabled(true);
+        mUnSelectButton->setEnabled(true);
+    }
 }
 
 void TopLevel::slotSelectAll()
 {
-  AppLnkCache* cache;
-  for ( cache = mAppCache.first(); cache; cache = mAppCache.next() )
-    cache->item->setOn( true );
+    AppLnkCache *cache;
+    for(cache = mAppCache.first(); cache; cache = mAppCache.next())
+        cache->item->setOn(true);
 }
 
 void TopLevel::slotUnselectAll()
 {
-  AppLnkCache* cache;
-  for ( cache = mAppCache.first(); cache; cache = mAppCache.next() )
-    cache->item->setOn( false );
+    AppLnkCache *cache;
+    for(cache = mAppCache.first(); cache; cache = mAppCache.next())
+        cache->item->setOn(false);
 }
 
 void TopLevel::slotCreate()
 {
-  // copy template files
-  mAdded = 0;
-  createDesktopFiles( mAppCache, mAdded );
+    // copy template files
+    mAdded = 0;
+    createDesktopFiles(mAppCache, mAdded);
 
-  // decorate directories
-  decorateDirs( mDestDir );
+    // decorate directories
+    decorateDirs(mDestDir);
 
-  KService::rebuildKSycoca(this);
+    KService::rebuildKSycoca(this);
 
-  QString message( i18n( "%n application was added to the KDE menu system.",
-                         "%n applications were added to the KDE menu system.", mAdded ) );
-  KMessageBox::information( this, message, QString::null, "ShowInformation" );
+    QString message(i18n("%n application was added to the KDE menu system.", "%n applications were added to the KDE menu system.", mAdded));
+    KMessageBox::information(this, message, QString::null, "ShowInformation");
 }
 
 #include "toplevel.moc"

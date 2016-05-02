@@ -71,171 +71,253 @@ class KRootPixmap;
 class KasItem;
 class KasResources;
 
-typedef QPtrList<KasItem> KasItemList;
+typedef QPtrList< KasItem > KasItemList;
 
 
 /**
  * The main view for KasBar.
  */
-class KDE_EXPORT KasBar : public QWidget
-{
-   Q_OBJECT
-   Q_PROPERTY( int maxBoxes READ maxBoxes )
-   Q_PROPERTY( uint boxesPerLine READ boxesPerLine )
-   Q_PROPERTY( Direction direction READ direction )
-   Q_PROPERTY( Orientation orientation READ orientation )
-   Q_PROPERTY( bool masked READ isMasked )
-   Q_ENUMS( Direction )
+class KDE_EXPORT KasBar : public QWidget {
+    Q_OBJECT
+    Q_PROPERTY(int maxBoxes READ maxBoxes)
+    Q_PROPERTY(uint boxesPerLine READ boxesPerLine)
+    Q_PROPERTY(Direction direction READ direction)
+    Q_PROPERTY(Orientation orientation READ orientation)
+    Q_PROPERTY(bool masked READ isMasked)
+    Q_ENUMS(Direction)
 
-   friend class KasItem;
+    friend class KasItem;
+
 public:
-   KasBar( Orientation o, QWidget *parent=0, const char *name=0, WFlags f=0 );
-   KasBar( Orientation o, KasBar *master, 
-	   QWidget* parent=0, const char* name=0, WFlags f=0 );
+    KasBar(Orientation o, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+    KasBar(Orientation o, KasBar *master, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
-   virtual ~KasBar();
+    virtual ~KasBar();
 
-   typedef QBoxLayout::Direction Direction;
+    typedef QBoxLayout::Direction Direction;
 
-   /** Returns true iff this is a top-level bar. This is unrelated to it being a top-level widget. */
-   bool isTopLevel() const { return !master_; }
+    /** Returns true iff this is a top-level bar. This is unrelated to it being a top-level widget. */
+    bool isTopLevel() const
+    {
+        return !master_;
+    }
 
-   /** Returns the bar from which this bar inherits its settings (or 0 if this is the top-level bar). */
-   KasBar *master() const { return master_; }
+    /** Returns the bar from which this bar inherits its settings (or 0 if this is the top-level bar). */
+    KasBar *master() const
+    {
+        return master_;
+    }
 
-   /** Creates a child bar of the kasbar. The child will inherit the appearance options. */
-   virtual KasBar *createChildBar( Orientation o, QWidget *parent, const char *name=0 );
+    /** Creates a child bar of the kasbar. The child will inherit the appearance options. */
+    virtual KasBar *createChildBar(Orientation o, QWidget *parent, const char *name = 0);
 
-   /** Factory method that returns the singleton resources object. */
-   virtual KasResources *resources();
+    /** Factory method that returns the singleton resources object. */
+    virtual KasResources *resources();
 
-   /** Returns true iff we have a resources object. */
-   bool hasResources() const { return (res ? true : false); }
+    /** Returns true iff we have a resources object. */
+    bool hasResources() const
+    {
+        return (res ? true : false);
+    }
 
-   //
-   // Item management
-   //
-   void append( KasItem *i );
-   void insert( int index, KasItem *i );
-   void remove( KasItem *i );
-   void clear();
-   KasItem *take( KasItem *i ) { return items.take( indexOf(i) ); }
-   KasItem *itemAt( uint i ) { return items.at( i ); }
-   int indexOf( KasItem *i ) { return items.find( i ); }
+    //
+    // Item management
+    //
+    void append(KasItem *i);
+    void insert(int index, KasItem *i);
+    void remove(KasItem *i);
+    void clear();
+    KasItem *take(KasItem *i)
+    {
+        return items.take(indexOf(i));
+    }
+    KasItem *itemAt(uint i)
+    {
+        return items.at(i);
+    }
+    int indexOf(KasItem *i)
+    {
+        return items.find(i);
+    }
 
-   KasItemList *itemList() { return &items; }
+    KasItemList *itemList()
+    {
+        return &items;
+    }
 
-   //
-   // Layout options.
-   //
+    //
+    // Layout options.
+    //
 
-   /** The possible item sizes. */
-   enum ItemSize { Enormous, Huge, Large, Medium, Small, Custom };
+    /** The possible item sizes. */
+    enum ItemSize
+    {
+        Enormous,
+        Huge,
+        Large,
+        Medium,
+        Small,
+        Custom
+    };
 
-   int itemSize() const { return itemSize_; }
-   int itemExtent() const { return itemExtent_; }
+    int itemSize() const
+    {
+        return itemSize_;
+    }
+    int itemExtent() const
+    {
+        return itemExtent_;
+    }
 
-   /** The number of items in the bar. */
-   unsigned int itemCount() const { return items.count(); }
+    /** The number of items in the bar. */
+    unsigned int itemCount() const
+    {
+        return items.count();
+    }
 
-   int maxBoxes() const { return maxBoxes_; }
-   uint boxesPerLine() const { return boxesPerLine_; }
+    int maxBoxes() const
+    {
+        return maxBoxes_;
+    }
+    uint boxesPerLine() const
+    {
+        return boxesPerLine_;
+    }
 
-   void setOrientation( Orientation o );
-   Orientation orientation() const { return orient; }
+    void setOrientation(Orientation o);
+    Orientation orientation() const
+    {
+        return orient;
+    }
 
-   void setDirection( Direction dir );
-   Direction direction() const { return direction_; }
+    void setDirection(Direction dir);
+    Direction direction() const
+    {
+        return direction_;
+    }
 
-   bool isDetached() const { return detached; }
-   QPoint detachedPosition() const { return detachedPos; }
+    bool isDetached() const
+    {
+        return detached;
+    }
+    QPoint detachedPosition() const
+    {
+        return detachedPos;
+    }
 
-   bool isDrag() const { return inDrag; }
+    bool isDrag() const
+    {
+        return inDrag;
+    }
 
-   QSize sizeHint( Orientation,  QSize max );
+    QSize sizeHint(Orientation, QSize max);
 
-   //
-   // Look and feel options
-   //
+    //
+    // Look and feel options
+    //
 
-   bool isMasked() const { return useMask_; }
+    bool isMasked() const
+    {
+        return useMask_;
+    }
 
-   /** Is transparency enabled? */
-   bool isTransparent() const { return transparent_; }
+    /** Is transparency enabled? */
+    bool isTransparent() const
+    {
+        return transparent_;
+    }
 
-   /** Is tinting enabled? */
-   bool hasTint() const { return enableTint_; }
+    /** Is tinting enabled? */
+    bool hasTint() const
+    {
+        return enableTint_;
+    }
 
-   /** Sets the amount and color of the tint. */
-   void setTint( double amount, QColor color );
+    /** Sets the amount and color of the tint. */
+    void setTint(double amount, QColor color);
 
-   /** Sets the amount of tinting. */
-   void setTintAmount( double amount ) { setTint( amount, tintColour_ ); }
+    /** Sets the amount of tinting. */
+    void setTintAmount(double amount)
+    {
+        setTint(amount, tintColour_);
+    }
 
-   /** Get the amount of tinting. */
-   double tintAmount() const { return tintAmount_; }
+    /** Get the amount of tinting. */
+    double tintAmount() const
+    {
+        return tintAmount_;
+    }
 
-   /** Get the color of the tint. */
-   QColor tintColor() const { return tintColour_; }
+    /** Get the color of the tint. */
+    QColor tintColor() const
+    {
+        return tintColour_;
+    }
 
-   /** Returns true iff we will paint frames around inactive items. */
-   bool paintInactiveFrames() const { return paintInactiveFrame_; }
+    /** Returns true iff we will paint frames around inactive items. */
+    bool paintInactiveFrames() const
+    {
+        return paintInactiveFrame_;
+    }
 
-   //
-   // Utilities
-   //
+    //
+    // Utilities
+    //
 
-   void updateItem( KasItem *i );
+    void updateItem(KasItem *i);
 
-   /** Redraws the specified item. */
-   void repaintItem(KasItem *i, bool erase = true );
+    /** Redraws the specified item. */
+    void repaintItem(KasItem *i, bool erase = true);
 
-   /** Returns the item at p or 0. */
-   KasItem* itemAt(const QPoint &p);
+    /** Returns the item at p or 0. */
+    KasItem *itemAt(const QPoint &p);
 
-   /** Get the position of the specified item. */
-    QPoint itemPos( KasItem *i );
+    /** Get the position of the specified item. */
+    QPoint itemPos(KasItem *i);
 
-   /** The item under the mouse pointer (or 0). */
-   KasItem *itemUnderMouse() const { return itemUnderMouse_; }
+    /** The item under the mouse pointer (or 0). */
+    KasItem *itemUnderMouse() const
+    {
+        return itemUnderMouse_;
+    }
 
 public slots:
-   //
-   // Layout slots
-   //
-   void setMaxBoxes( int count );
-   void setBoxesPerLine( int count );
+    //
+    // Layout slots
+    //
+    void setMaxBoxes(int count);
+    void setBoxesPerLine(int count);
 
-   void setItemSize( int size );
-   void setItemExtent( int size );
-   void setDetachedPosition( const QPoint &pos );
+    void setItemSize(int size);
+    void setItemExtent(int size);
+    void setDetachedPosition(const QPoint &pos);
 
-   virtual void updateLayout();
+    virtual void updateLayout();
 
-   void updateMouseOver();
-   void updateMouseOver( QPoint pos );
+    void updateMouseOver();
+    void updateMouseOver(QPoint pos);
 
-   /** Enable or disable tinting. */
-   void setTint( bool enable );
+    /** Enable or disable tinting. */
+    void setTint(bool enable);
 
-   /** Enable or disable transparency. */
-   void setTransparent( bool enable );
+    /** Enable or disable transparency. */
+    void setTransparent(bool enable);
 
-   /** Set the color of the tint. */
-   void setTintColor( const QColor &c );
+    /** Set the color of the tint. */
+    void setTintColor(const QColor &c);
 
-   /** Set the strength of the tint (as a percentage). */
-   void setTintAmount( int percent );
+    /** Set the strength of the tint (as a percentage). */
+    void setTintAmount(int percent);
 
-   void setBackground( const QPixmap &pix );
+    void setBackground(const QPixmap &pix);
 
-   void setMasked( bool mask );
+    void setMasked(bool mask);
 
-   void setPaintInactiveFrames( bool enable );
+    void setPaintInactiveFrames(bool enable);
 
-   void toggleOrientation();
-   void toggleDetached();
-   void setDetached( bool detach );
+    void toggleOrientation();
+    void toggleDetached();
+    void setDetached(bool detach);
 
     /** Rereads the configuration of the master Kasbar. */
     virtual void rereadMaster();
@@ -244,75 +326,77 @@ public slots:
 
 signals:
 
-   void detachedChanged( bool );
-   void detachedPositionChanged( const QPoint & );
-   void dragStarted();
+    void detachedChanged(bool);
+    void detachedPositionChanged(const QPoint &);
+    void dragStarted();
 
-   void directionChanged();
+    void directionChanged();
 
-   /** Emitted when kasbar wants to resize. This happens when a new window is added. */
-   void layoutChanged();
+    /** Emitted when kasbar wants to resize. This happens when a new window is added. */
+    void layoutChanged();
 
-   /** Emitted when the item size is changed. */
-   void itemSizeChanged( int );
+    /** Emitted when the item size is changed. */
+    void itemSizeChanged(int);
 
-   void configChanged();
+    void configChanged();
 
 protected:
-    KRootPixmap *rootPixmap() const { return rootPix; }
+    KRootPixmap *rootPixmap() const
+    {
+        return rootPix;
+    }
 
-   /** Displays the popup menus, hides/shows windows. */
-   void mousePressEvent(QMouseEvent *ev);
+    /** Displays the popup menus, hides/shows windows. */
+    void mousePressEvent(QMouseEvent *ev);
 
-   /** Displays the popup menus, hides/shows windows. */
-   void mouseReleaseEvent(QMouseEvent *ev);
+    /** Displays the popup menus, hides/shows windows. */
+    void mouseReleaseEvent(QMouseEvent *ev);
 
-   /** Overridden to implement the mouse-over highlight effect. */
-   void mouseMoveEvent(QMouseEvent *ev);
+    /** Overridden to implement the mouse-over highlight effect. */
+    void mouseMoveEvent(QMouseEvent *ev);
 
-   /** Overridden to implement the drag-over task switching. */
-   void dragMoveEvent(QDragMoveEvent *ev);
+    /** Overridden to implement the drag-over task switching. */
+    void dragMoveEvent(QDragMoveEvent *ev);
 
-   /** Paints the background of the item to the painter. */
-   void paintBackground( QPainter *p, const QRect &r );
+    /** Paints the background of the item to the painter. */
+    void paintBackground(QPainter *p, const QRect &r);
 
-   /** Calls the paint methods for the items in the rectangle specified by the event. */
-   void paintEvent(QPaintEvent *ev);
+    /** Calls the paint methods for the items in the rectangle specified by the event. */
+    void paintEvent(QPaintEvent *ev);
 
-   /** Forces the widget to re-layout it's contents. */
-   void resizeEvent(QResizeEvent *ev);
+    /** Forces the widget to re-layout it's contents. */
+    void resizeEvent(QResizeEvent *ev);
 
 private:
-   // Core data
-   QPixmap offscreen;
-   KasBar *master_;
-   KasItemList items;
-   Orientation orient;
-   Direction direction_;
-   KasItem *itemUnderMouse_;
-   uint boxesPerLine_;
-   QPoint pressPos;
-   bool inDrag;
-   bool detached;
-   int maxBoxes_;
-   int itemSize_;
-   int itemExtent_;
-   QPoint detachedPos;
-   bool paintInactiveFrame_;
+    // Core data
+    QPixmap offscreen;
+    KasBar *master_;
+    KasItemList items;
+    Orientation orient;
+    Direction direction_;
+    KasItem *itemUnderMouse_;
+    uint boxesPerLine_;
+    QPoint pressPos;
+    bool inDrag;
+    bool detached;
+    int maxBoxes_;
+    int itemSize_;
+    int itemExtent_;
+    QPoint detachedPos;
+    bool paintInactiveFrame_;
 
-   // Implements pseudo-transparency
-   bool transparent_;
-   KPixmap bg;
-   KRootPixmap *rootPix;
-   bool enableTint_;
-   double tintAmount_;
-   QColor tintColour_;
-   bool useMask_;
+    // Implements pseudo-transparency
+    bool transparent_;
+    KPixmap bg;
+    KRootPixmap *rootPix;
+    bool enableTint_;
+    double tintAmount_;
+    QColor tintColour_;
+    bool useMask_;
 
-   // Look and feel resources
-   KasResources *res;
+    // Look and feel resources
+    KasResources *res;
 };
-
 
 
 #endif

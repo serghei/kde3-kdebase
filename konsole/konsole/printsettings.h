@@ -25,20 +25,19 @@
 
 class QCheckBox;
 
-class PrintSettings : public KPrintDialogPage
-{
-	Q_OBJECT
+class PrintSettings : public KPrintDialogPage {
+    Q_OBJECT
 public:
-	PrintSettings(QWidget *parent = 0, const char *name = 0);
-	~PrintSettings();
+    PrintSettings(QWidget *parent = 0, const char *name = 0);
+    ~PrintSettings();
 
-	void getOptions(QMap<QString,QString>& opts, bool incldef = false);
-	void setOptions(const QMap<QString,QString>& opts);
+    void getOptions(QMap< QString, QString > &opts, bool incldef = false);
+    void setOptions(const QMap< QString, QString > &opts);
 
 private:
-	QCheckBox	*m_printfriendly;
-	QCheckBox	*m_printexact;
-	QCheckBox	*m_printheader;
+    QCheckBox *m_printfriendly;
+    QCheckBox *m_printexact;
+    QCheckBox *m_printheader;
 };
 
 #endif

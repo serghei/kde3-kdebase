@@ -18,5 +18,3 @@ bool PropertiesPageGUI::hasChanged()
 {
     return m_hasChanged;
 }
-
-

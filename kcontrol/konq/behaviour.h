@@ -33,43 +33,42 @@ class KURLRequester;
 //-----------------------------------------------------------------------------
 
 
-class KBehaviourOptions : public KCModule
-{
-  Q_OBJECT
+class KBehaviourOptions : public KCModule {
+    Q_OBJECT
 public:
-  KBehaviourOptions(KConfig *config, QString group, QWidget *parent=0, const char *name=0);
+    KBehaviourOptions(KConfig *config, QString group, QWidget *parent = 0, const char *name = 0);
     ~KBehaviourOptions();
-  virtual void load();
-  virtual void load( bool useDefaults );
-  virtual void save();
-  virtual void defaults();
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
 protected slots:
 
-  void updateWinPixmap(bool);
-  void slotShowTips(bool);
+    void updateWinPixmap(bool);
+    void slotShowTips(bool);
+
 private:
+    KConfig *g_pConfig;
+    QString groupname;
 
-  KConfig *g_pConfig;
-  QString groupname;
+    QCheckBox *cbNewWin;
+    QCheckBox *cbListProgress;
 
-  QCheckBox *cbNewWin;
-  QCheckBox *cbListProgress;
+    QLabel *winPixmap;
 
-  QLabel *winPixmap;
+    KURLRequester *homeURL;
 
-  KURLRequester *homeURL;
+    QVButtonGroup *bgOneProcess;
+    // QLabel *fileTips;
+    // QSpinBox  *sbToolTip;
+    QCheckBox *cbShowTips;
+    QCheckBox *cbShowPreviewsInTips;
+    QCheckBox *cbRenameDirectlyIcon;
 
-  QVButtonGroup *bgOneProcess;
-  //QLabel *fileTips;
-  //QSpinBox  *sbToolTip;
-  QCheckBox *cbShowTips;
-  QCheckBox *cbShowPreviewsInTips;
-  QCheckBox *cbRenameDirectlyIcon;
-
-  QCheckBox *cbMoveToTrash;
-  QCheckBox *cbDelete;
-  QCheckBox *cbShowDeleteCommand;
+    QCheckBox *cbMoveToTrash;
+    QCheckBox *cbDelete;
+    QCheckBox *cbShowDeleteCommand;
 };
 
-#endif		// __BEHAVIOUR_H__
+#endif // __BEHAVIOUR_H__

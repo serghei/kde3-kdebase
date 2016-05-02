@@ -35,453 +35,445 @@
 
 // FRAME the preview doesn't update to reflect the changes done in the kcm
 
-KDecorationPreview::KDecorationPreview( QWidget* parent, const char* name )
-    :   QWidget( parent, name )
-    {
+KDecorationPreview::KDecorationPreview(QWidget *parent, const char *name) : QWidget(parent, name)
+{
     options = new KDecorationPreviewOptions;
 
-    bridge[Active]   = new KDecorationPreviewBridge( this, true );
-    bridge[Inactive] = new KDecorationPreviewBridge( this, false );
+    bridge[Active] = new KDecorationPreviewBridge(this, true);
+    bridge[Inactive] = new KDecorationPreviewBridge(this, false);
 
     deco[Active] = deco[Inactive] = NULL;
 
-    no_preview = new QLabel( i18n( "No preview available.\n"
-                                   "Most probably there\n"
-                                   "was a problem loading the plugin." ), this );
+    no_preview = new QLabel(i18n("No preview available.\n"
+                                 "Most probably there\n"
+                                 "was a problem loading the plugin."),
+                            this);
 
-    no_preview->setAlignment( AlignCenter );
+    no_preview->setAlignment(AlignCenter);
 
-    setMinimumSize( 100, 100 );
-    no_preview->resize( size());
-    }
+    setMinimumSize(100, 100);
+    no_preview->resize(size());
+}
 
 KDecorationPreview::~KDecorationPreview()
+{
+    for(int i = 0; i < NumWindows; i++)
     {
-    for ( int i = 0; i < NumWindows; i++ )
-        {
         delete deco[i];
         delete bridge[i];
-	}
+    }
     delete options;
+}
+
+bool KDecorationPreview::recreateDecoration(KDecorationPlugins *plugins)
+{
+    for(int i = 0; i < NumWindows; i++)
+    {
+        delete deco[i]; // deletes also window
+        deco[i] = plugins->createDecoration(bridge[i]);
+        deco[i]->init();
     }
 
-bool KDecorationPreview::recreateDecoration( KDecorationPlugins* plugins )
+    if(deco[Active] == NULL || deco[Inactive] == NULL)
     {
-    for ( int i = 0; i < NumWindows; i++ )
-        {
-        delete deco[i];   // deletes also window
-        deco[i] = plugins->createDecoration( bridge[i] );
-        deco[i]->init();
-        }
-
-    if( deco[Active] == NULL || deco[Inactive] == NULL )
-        {
         return false;
-        }
+    }
 
     positionPreviews();
     deco[Inactive]->widget()->show();
     deco[Active]->widget()->show();
 
     return true;
-    }
+}
 
 void KDecorationPreview::enablePreview()
-    {
+{
     no_preview->hide();
-    }
+}
 
 void KDecorationPreview::disablePreview()
-    {
+{
     delete deco[Active];
     delete deco[Inactive];
     deco[Active] = deco[Inactive] = NULL;
     no_preview->show();
-    }
+}
 
-void KDecorationPreview::resizeEvent( QResizeEvent* e )
-    {
-    QWidget::resizeEvent( e );
+void KDecorationPreview::resizeEvent(QResizeEvent *e)
+{
+    QWidget::resizeEvent(e);
     positionPreviews();
-    }
+}
 
 void KDecorationPreview::positionPreviews()
-    {
-    int titleBarHeight, leftBorder, rightBorder, xoffset,
-        dummy1, dummy2, dummy3;
+{
+    int titleBarHeight, leftBorder, rightBorder, xoffset, dummy1, dummy2, dummy3;
     QRect geometry;
     QSize size;
 
-    no_preview->resize( this->size() );
+    no_preview->resize(this->size());
 
-    if ( !deco[Active] || !deco[Inactive] )
+    if(!deco[Active] || !deco[Inactive])
         return;
 
     // don't have more than one reference to the same dummy variable in one borders() call.
-    deco[Active]->borders( dummy1, dummy2, titleBarHeight, dummy3 );
-    deco[Inactive]->borders( leftBorder, rightBorder, dummy1, dummy2 );
+    deco[Active]->borders(dummy1, dummy2, titleBarHeight, dummy3);
+    deco[Inactive]->borders(leftBorder, rightBorder, dummy1, dummy2);
 
-    titleBarHeight = kMin( int( titleBarHeight * .9 ), 30 );
-    xoffset = kMin( kMax( 10, QApplication::reverseLayout()
-			    ? leftBorder : rightBorder ), 30 );
+    titleBarHeight = kMin(int(titleBarHeight * .9), 30);
+    xoffset = kMin(kMax(10, QApplication::reverseLayout() ? leftBorder : rightBorder), 30);
 
     // Resize the active window
-    size = QSize( width() - xoffset, height() - titleBarHeight )
-                .expandedTo( deco[Active]->minimumSize() );
-    geometry = QRect( QPoint( 0, titleBarHeight ), size );
-    deco[Active]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
+    size = QSize(width() - xoffset, height() - titleBarHeight).expandedTo(deco[Active]->minimumSize());
+    geometry = QRect(QPoint(0, titleBarHeight), size);
+    deco[Active]->widget()->setGeometry(QStyle::visualRect(geometry, this));
 
     // Resize the inactive window
-    size = QSize( width() - xoffset, height() - titleBarHeight )
-                .expandedTo( deco[Inactive]->minimumSize() );
-    geometry = QRect( QPoint( xoffset, 0 ), size );
-    deco[Inactive]->widget()->setGeometry( QStyle::visualRect( geometry, this ) );
-    }
+    size = QSize(width() - xoffset, height() - titleBarHeight).expandedTo(deco[Inactive]->minimumSize());
+    geometry = QRect(QPoint(xoffset, 0), size);
+    deco[Inactive]->widget()->setGeometry(QStyle::visualRect(geometry, this));
+}
 
-void KDecorationPreview::setPreviewMask( const QRegion& reg, int mode, bool active )
-    {
+void KDecorationPreview::setPreviewMask(const QRegion &reg, int mode, bool active)
+{
     QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
 
     // FRAME duped from client.cpp
-    if( mode == Unsorted )
-        {
-        XShapeCombineRegion( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
-            reg.handle(), ShapeSet );
-        }
-    else
-        {
-        QMemArray< QRect > rects = reg.rects();
-        XRectangle* xrects = new XRectangle[ rects.count() ];
-        for( unsigned int i = 0;
-             i < rects.count();
-             ++i )
-            {
-            xrects[ i ].x = rects[ i ].x();
-            xrects[ i ].y = rects[ i ].y();
-            xrects[ i ].width = rects[ i ].width();
-            xrects[ i ].height = rects[ i ].height();
-            }
-        XShapeCombineRectangles( qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0,
-	    xrects, rects.count(), ShapeSet, mode );
-        delete[] xrects;
-        }
-    if( active )
-        mask = reg; // keep shape of the active window for unobscuredRegion()
-    }
-
-QRect KDecorationPreview::windowGeometry( bool active ) const
+    if(mode == Unsorted)
     {
+        XShapeCombineRegion(qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0, reg.handle(), ShapeSet);
+    }
+    else
+    {
+        QMemArray< QRect > rects = reg.rects();
+        XRectangle *xrects = new XRectangle[rects.count()];
+        for(unsigned int i = 0; i < rects.count(); ++i)
+        {
+            xrects[i].x = rects[i].x();
+            xrects[i].y = rects[i].y();
+            xrects[i].width = rects[i].width();
+            xrects[i].height = rects[i].height();
+        }
+        XShapeCombineRectangles(qt_xdisplay(), widget->winId(), ShapeBounding, 0, 0, xrects, rects.count(), ShapeSet, mode);
+        delete[] xrects;
+    }
+    if(active)
+        mask = reg; // keep shape of the active window for unobscuredRegion()
+}
+
+QRect KDecorationPreview::windowGeometry(bool active) const
+{
     QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
     return widget->geometry();
-    }
+}
 
-void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size)
-    {
+void KDecorationPreview::setTempBorderSize(KDecorationPlugins *plugin, KDecorationDefines::BorderSize size)
+{
     options->setCustomBorderSize(size);
-    if (plugin->factory()->reset(KDecorationDefines::SettingBorder) )
-        {
+    if(plugin->factory()->reset(KDecorationDefines::SettingBorder))
+    {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-        }
+    }
     else
-        {
+    {
         // handles the update, only update position...
         positionPreviews();
-        }
     }
+}
 
-void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right)
-    {
+void KDecorationPreview::setTempButtons(KDecorationPlugins *plugin, bool customEnabled, const QString &left, const QString &right)
+{
     options->setCustomTitleButtonsEnabled(customEnabled);
     options->setCustomTitleButtons(left, right);
-    if (plugin->factory()->reset(KDecorationDefines::SettingButtons) )
-        {
+    if(plugin->factory()->reset(KDecorationDefines::SettingButtons))
+    {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-        }
+    }
     else
-        {
+    {
         // handles the update, only update position...
         positionPreviews();
-        }
     }
+}
 
-QRegion KDecorationPreview::unobscuredRegion( bool active, const QRegion& r ) const
-    {
-    if( active ) // this one is not obscured
+QRegion KDecorationPreview::unobscuredRegion(bool active, const QRegion &r) const
+{
+    if(active) // this one is not obscured
         return r;
     else
-        {
+    {
         // copied from KWin core's code
         QRegion ret = r;
         QRegion r2 = mask;
-        if( r2.isEmpty())
-            r2 = QRegion( windowGeometry( true ));
-        r2.translate( windowGeometry( true ).x() - windowGeometry( false ).x(),
-            windowGeometry( true ).y() - windowGeometry( false ).y());
+        if(r2.isEmpty())
+            r2 = QRegion(windowGeometry(true));
+        r2.translate(windowGeometry(true).x() - windowGeometry(false).x(), windowGeometry(true).y() - windowGeometry(false).y());
         ret -= r2;
         return ret;
-        }
     }
+}
 
-KDecorationPreviewBridge::KDecorationPreviewBridge( KDecorationPreview* p, bool a )
-    :   preview( p ), active( a )
-    {
-    }
+KDecorationPreviewBridge::KDecorationPreviewBridge(KDecorationPreview *p, bool a) : preview(p), active(a)
+{
+}
 
-QWidget* KDecorationPreviewBridge::initialParentWidget() const
-    {
+QWidget *KDecorationPreviewBridge::initialParentWidget() const
+{
     return preview;
-    }
+}
 
 Qt::WFlags KDecorationPreviewBridge::initialWFlags() const
-    {
+{
     return 0;
-    }
+}
 
 bool KDecorationPreviewBridge::isActive() const
-    {
+{
     return active;
-    }
+}
 
 bool KDecorationPreviewBridge::isCloseable() const
-    {
+{
     return true;
-    }
+}
 
 bool KDecorationPreviewBridge::isMaximizable() const
-    {
+{
     return true;
-    }
+}
 
 KDecoration::MaximizeMode KDecorationPreviewBridge::maximizeMode() const
-    {
+{
     return KDecoration::MaximizeRestore;
-    }
+}
 
 bool KDecorationPreviewBridge::isMinimizable() const
-    {
+{
     return true;
-    }
+}
 
 bool KDecorationPreviewBridge::providesContextHelp() const
-    {
+{
     return true;
-    }
+}
 
 int KDecorationPreviewBridge::desktop() const
-    {
+{
     return 1;
-    }
+}
 
 bool KDecorationPreviewBridge::isModal() const
-    {
+{
     return false;
-    }
+}
 
 bool KDecorationPreviewBridge::isShadeable() const
-    {
+{
     return true;
-    }
+}
 
 bool KDecorationPreviewBridge::isShade() const
-    {
+{
     return false;
-    }
+}
 
 bool KDecorationPreviewBridge::isSetShade() const
-    {
+{
     return false;
-    }
+}
 
 bool KDecorationPreviewBridge::keepAbove() const
-    {
+{
     return false;
-    }
+}
 
 bool KDecorationPreviewBridge::keepBelow() const
-    {
+{
     return false;
-    }
+}
 
 bool KDecorationPreviewBridge::isMovable() const
-    {
+{
     return true;
-    }
+}
 
 bool KDecorationPreviewBridge::isResizable() const
-    {
+{
     return true;
-    }
+}
 
-NET::WindowType KDecorationPreviewBridge::windowType( unsigned long ) const
-    {
+NET::WindowType KDecorationPreviewBridge::windowType(unsigned long) const
+{
     return NET::Normal;
-    }
+}
 
 QIconSet KDecorationPreviewBridge::icon() const
-    {
-    return QIconSet( KGlobal::iconLoader()->loadIcon( "xapp", KIcon::NoGroup, 16 ),
-        KGlobal::iconLoader()->loadIcon( "xapp", KIcon::NoGroup, 32 ));
-    }
+{
+    return QIconSet(KGlobal::iconLoader()->loadIcon("xapp", KIcon::NoGroup, 16), KGlobal::iconLoader()->loadIcon("xapp", KIcon::NoGroup, 32));
+}
 
 QString KDecorationPreviewBridge::caption() const
-    {
-    return active ? i18n( "Active Window" ) : i18n( "Inactive Window" );
-    }
+{
+    return active ? i18n("Active Window") : i18n("Inactive Window");
+}
 
-void KDecorationPreviewBridge::processMousePressEvent( QMouseEvent* )
-    {
-    }
+void KDecorationPreviewBridge::processMousePressEvent(QMouseEvent *)
+{
+}
 
-void KDecorationPreviewBridge::showWindowMenu( const QRect &)
-    {
-    }
+void KDecorationPreviewBridge::showWindowMenu(const QRect &)
+{
+}
 
-void KDecorationPreviewBridge::showWindowMenu( QPoint )
-    {
-    }
+void KDecorationPreviewBridge::showWindowMenu(QPoint)
+{
+}
 
-void KDecorationPreviewBridge::performWindowOperation( WindowOperation )
-    {
-    }
+void KDecorationPreviewBridge::performWindowOperation(WindowOperation)
+{
+}
 
-void KDecorationPreviewBridge::setMask( const QRegion& reg, int mode )
-    {
-    preview->setPreviewMask( reg, mode, active );
-    }
+void KDecorationPreviewBridge::setMask(const QRegion &reg, int mode)
+{
+    preview->setPreviewMask(reg, mode, active);
+}
 
 bool KDecorationPreviewBridge::isPreview() const
-    {
+{
     return true;
-    }
+}
 
 QRect KDecorationPreviewBridge::geometry() const
-    {
-    return preview->windowGeometry( active );
-    }
+{
+    return preview->windowGeometry(active);
+}
 
 QRect KDecorationPreviewBridge::iconGeometry() const
-    {
+{
     return QRect();
-    }
+}
 
-QRegion KDecorationPreviewBridge::unobscuredRegion( const QRegion& r ) const
-    {
-    return preview->unobscuredRegion( active, r );
-    }
+QRegion KDecorationPreviewBridge::unobscuredRegion(const QRegion &r) const
+{
+    return preview->unobscuredRegion(active, r);
+}
 
-QWidget* KDecorationPreviewBridge::workspaceWidget() const
-    {
+QWidget *KDecorationPreviewBridge::workspaceWidget() const
+{
     return preview;
-    }
+}
 
 WId KDecorationPreviewBridge::windowId() const
-    {
+{
     return 0; // no decorated window
-    }
+}
 
 void KDecorationPreviewBridge::closeWindow()
-    {
-    }
+{
+}
 
-void KDecorationPreviewBridge::maximize( MaximizeMode )
-    {
-    }
+void KDecorationPreviewBridge::maximize(MaximizeMode)
+{
+}
 
 void KDecorationPreviewBridge::minimize()
-    {
-    }
+{
+}
 
 void KDecorationPreviewBridge::showContextHelp()
-    {
-    }
+{
+}
 
-void KDecorationPreviewBridge::setDesktop( int )
-    {
-    }
+void KDecorationPreviewBridge::setDesktop(int)
+{
+}
 
 void KDecorationPreviewBridge::titlebarDblClickOperation()
-    {
-    }
+{
+}
 
-void KDecorationPreviewBridge::titlebarMouseWheelOperation( int )
-    {
-    }
+void KDecorationPreviewBridge::titlebarMouseWheelOperation(int)
+{
+}
 
-void KDecorationPreviewBridge::setShade( bool )
-    {
-    }
+void KDecorationPreviewBridge::setShade(bool)
+{
+}
 
-void KDecorationPreviewBridge::setKeepAbove( bool )
-    {
-    }
+void KDecorationPreviewBridge::setKeepAbove(bool)
+{
+}
 
-void KDecorationPreviewBridge::setKeepBelow( bool )
-    {
-    }
+void KDecorationPreviewBridge::setKeepBelow(bool)
+{
+}
 
 int KDecorationPreviewBridge::currentDesktop() const
-    {
+{
     return 1;
-    }
+}
 
-void KDecorationPreviewBridge::helperShowHide( bool )
-    {
-    }
+void KDecorationPreviewBridge::helperShowHide(bool)
+{
+}
 
-void KDecorationPreviewBridge::grabXServer( bool )
-    {
-    }
+void KDecorationPreviewBridge::grabXServer(bool)
+{
+}
 
 KDecorationPreviewOptions::KDecorationPreviewOptions()
-    {
+{
     customBorderSize = BordersCount; // invalid
-    customButtonsChanged = false; // invalid
+    customButtonsChanged = false;    // invalid
     customButtons = true;
-    customTitleButtonsLeft = QString::null; // invalid
+    customTitleButtonsLeft = QString::null;  // invalid
     customTitleButtonsRight = QString::null; // invalid
 
     d = new KDecorationOptionsPrivate;
     d->defaultKWinSettings();
     updateSettings();
-    }
+}
 
 KDecorationPreviewOptions::~KDecorationPreviewOptions()
-    {
+{
     delete d;
-    }
+}
 
 unsigned long KDecorationPreviewOptions::updateSettings()
-    {
-    KConfig cfg( "kwinrc", true );
+{
+    KConfig cfg("kwinrc", true);
     unsigned long changed = 0;
-    changed |= d->updateKWinSettings( &cfg );
+    changed |= d->updateKWinSettings(&cfg);
 
     // set custom border size/buttons
-    if (customBorderSize != BordersCount)
+    if(customBorderSize != BordersCount)
         d->border_size = customBorderSize;
-    if (customButtonsChanged)
+    if(customButtonsChanged)
         d->custom_button_positions = customButtons;
-    if (customButtons) {
-        if (!customTitleButtonsLeft.isNull() )
+    if(customButtons)
+    {
+        if(!customTitleButtonsLeft.isNull())
             d->title_buttons_left = customTitleButtonsLeft;
-        if (!customTitleButtonsRight.isNull() )
+        if(!customTitleButtonsRight.isNull())
             d->title_buttons_right = customTitleButtonsRight;
-    } else {
+    }
+    else
+    {
         d->title_buttons_left = "MS";
         d->title_buttons_right = "HIAX";
     }
 
     return changed;
-    }
+}
 
 void KDecorationPreviewOptions::setCustomBorderSize(BorderSize size)
-    {
+{
     customBorderSize = size;
 
     updateSettings();
-    }
+}
 
 void KDecorationPreviewOptions::setCustomTitleButtonsEnabled(bool enabled)
 {
@@ -492,16 +484,16 @@ void KDecorationPreviewOptions::setCustomTitleButtonsEnabled(bool enabled)
 }
 
 void KDecorationPreviewOptions::setCustomTitleButtons(const QString &left, const QString &right)
-    {
+{
     customTitleButtonsLeft = left;
     customTitleButtonsRight = right;
 
     updateSettings();
-    }
+}
 
-bool KDecorationPreviewPlugins::provides( Requirement )
-    {
+bool KDecorationPreviewPlugins::provides(Requirement)
+{
     return false;
-    }
+}
 
 #include "preview.moc"

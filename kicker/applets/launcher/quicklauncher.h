@@ -43,24 +43,28 @@ class KAction;
 
 typedef QuickButtonGroup ButtonGroup;
 
-class QuickLauncher: public KPanelApplet, public DCOPObject
-{
+class QuickLauncher : public KPanelApplet, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-k_dcop:
-    void serviceStartedByStorageId(QString starter, QString storageId);
+    k_dcop : void serviceStartedByStorageId(QString starter, QString storageId);
 
 public:
-    enum {DEFAULT_ICON_DIM=QuickButton::DEFAULT_ICON_DIM};
-    enum {SIZE_AUTO=0};
-    
-    struct PopularityInfo {
+    enum
+    {
+        DEFAULT_ICON_DIM = QuickButton::DEFAULT_ICON_DIM
+    };
+    enum
+    {
+        SIZE_AUTO = 0
+    };
+
+    struct PopularityInfo
+    {
         float popularity;
     };
-    
-    QuickLauncher(const QString& configFile, Type t = Normal, int actions = 0,
-                  QWidget *parent = 0, const char *name = 0);
+
+    QuickLauncher(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     ~QuickLauncher();
     int widthForHeight(int height) const;
     int heightForWidth(int width) const;
@@ -76,13 +80,13 @@ public slots:
     void removeAppManually(int index);
     void saveConfig();
     void about();
-    
+
 protected:
     int findApp(QString url);
     int findApp(QuickButton *button);
-    
+
     void mousePressEvent(QMouseEvent *e);
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent *);
     void dragEnterEvent(QDragEnterEvent *e);
     void dragLeaveEvent(QDragLeaveEvent *e);
     void dragMoveEvent(QDragMoveEvent *e);
@@ -91,16 +95,22 @@ protected:
     void setRefreshEnabled(bool enable);
     void setConserveSpace(bool conserve_space);
     void setDragEnabled(bool conserve_space);
-    
-    bool conserveSpace() const { return m_manager->conserveSpace(); }
-    bool isDragEnabled() const { return m_settings->dragEnabled(); }
-    
+
+    bool conserveSpace() const
+    {
+        return m_manager->conserveSpace();
+    }
+    bool isDragEnabled() const
+    {
+        return m_settings->dragEnabled();
+    }
+
     void buildPopupMenu();
     void loadConfig();
-    
+
     void mergeButtons(int index);
     void clearTempButtons();
-    int  dimension() const;
+    int dimension() const;
 
 protected slots:
     void slotConfigure();
@@ -113,10 +123,10 @@ protected slots:
 protected:
     void updateInsertionPosToStatusQuo();
     void updateStickyHighlightLayer();
-    QuickButton* createButton(QString url);
-    virtual void paintEvent(QPaintEvent* e);
+    QuickButton *createButton(QString url);
+    virtual void paintEvent(QPaintEvent *e);
     virtual void positionChange(Position);
-    
+
     QPopupMenu *m_popup;
     QPopupMenu *m_appletPopup;
     QPopupMenu *m_removeAppsMenu;
@@ -126,11 +136,11 @@ protected:
     FlowGridManager *m_manager;
     int m_dropLen, m_dropPos, m_minPanelDim;
     bool m_dragAccepted, m_refreshEnabled, m_needsSave, m_needsRefresh;
-    std::map<QString, int> m_appOrdering;
-    Prefs* m_settings;
+    std::map< QString, int > m_appOrdering;
+    Prefs *m_settings;
     KAction *m_configAction;
     ConfigDlg *m_configDialog;
-    PopularityStatistics* m_popularity;
+    PopularityStatistics *m_popularity;
     QImage m_stickyHighlightLayer;
     QTimer *m_saveTimer;
 };

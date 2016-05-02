@@ -31,44 +31,37 @@
 #include "actionlistboxitem.h"
 #include "mimetypelistboxitem.h"
 
-NotifierModule::NotifierModule(QWidget *parent, const char *name)
-	: KCModule(parent, name)
+NotifierModule::NotifierModule(QWidget *parent, const char *name) : KCModule(parent, name)
 {
-	QBoxLayout *layout = new QVBoxLayout( this, 0, KDialog::spacingHint() );
-	
-	m_view = new NotifierModuleView( this );
-	layout->addWidget( m_view );
-	
-	m_view->addButton->setGuiItem( KStdGuiItem::add() );
-	m_view->editButton->setGuiItem( KStdGuiItem::properties() );
-	m_view->deleteButton->setGuiItem( KStdGuiItem::del() );
-	
-	m_view->mimetypesCombo->insertItem( i18n("All Mime Types") );
+    QBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-	QStringList mimetypes = m_settings.supportedMimetypes();
+    m_view = new NotifierModuleView(this);
+    layout->addWidget(m_view);
 
-	QStringList::iterator it = mimetypes.begin();
-	QStringList::iterator end = mimetypes.end();
+    m_view->addButton->setGuiItem(KStdGuiItem::add());
+    m_view->editButton->setGuiItem(KStdGuiItem::properties());
+    m_view->deleteButton->setGuiItem(KStdGuiItem::del());
 
-	for ( ; it!=end; ++it )
-	{
-		new MimetypeListBoxItem( *it, m_view->mimetypesCombo->listBox() );
-	}
-	
-	updateListBox();
+    m_view->mimetypesCombo->insertItem(i18n("All Mime Types"));
 
-	connect( m_view->mimetypesCombo, SIGNAL( activated(int) ),
-	         this, SLOT( slotMimeTypeChanged(int) ) );
-	connect( m_view->actionsList, SIGNAL( selectionChanged(QListBoxItem*) ),
-	         this, SLOT( slotActionSelected(QListBoxItem*) ) );
-	connect( m_view->addButton, SIGNAL( clicked() ),
-	         this, SLOT( slotAdd() ) );
-	connect( m_view->editButton, SIGNAL( clicked() ),
-	         this, SLOT( slotEdit() ) );
-	connect( m_view->deleteButton, SIGNAL( clicked() ),
-	         this, SLOT( slotDelete() ) );
-	connect( m_view->toggleAutoButton, SIGNAL( clicked() ),
-	         this, SLOT( slotToggleAuto() ) );
+    QStringList mimetypes = m_settings.supportedMimetypes();
+
+    QStringList::iterator it = mimetypes.begin();
+    QStringList::iterator end = mimetypes.end();
+
+    for(; it != end; ++it)
+    {
+        new MimetypeListBoxItem(*it, m_view->mimetypesCombo->listBox());
+    }
+
+    updateListBox();
+
+    connect(m_view->mimetypesCombo, SIGNAL(activated(int)), this, SLOT(slotMimeTypeChanged(int)));
+    connect(m_view->actionsList, SIGNAL(selectionChanged(QListBoxItem *)), this, SLOT(slotActionSelected(QListBoxItem *)));
+    connect(m_view->addButton, SIGNAL(clicked()), this, SLOT(slotAdd()));
+    connect(m_view->editButton, SIGNAL(clicked()), this, SLOT(slotEdit()));
+    connect(m_view->deleteButton, SIGNAL(clicked()), this, SLOT(slotDelete()));
+    connect(m_view->toggleAutoButton, SIGNAL(clicked()), this, SLOT(slotToggleAuto()));
 }
 
 NotifierModule::~NotifierModule()
@@ -77,154 +70,149 @@ NotifierModule::~NotifierModule()
 
 void NotifierModule::load()
 {
-	m_settings.reload();
-	slotMimeTypeChanged( m_view->mimetypesCombo->currentItem() );
+    m_settings.reload();
+    slotMimeTypeChanged(m_view->mimetypesCombo->currentItem());
 }
 
 void NotifierModule::save()
 {
-	m_settings.save();
+    m_settings.save();
 }
 
 void NotifierModule::defaults()
 {
-	m_settings.clearAutoActions();
-	slotMimeTypeChanged( m_view->mimetypesCombo->currentItem() );
+    m_settings.clearAutoActions();
+    slotMimeTypeChanged(m_view->mimetypesCombo->currentItem());
 }
 
 void NotifierModule::updateListBox()
 {
-	m_view->actionsList->clear();
-	slotActionSelected( 0L );
+    m_view->actionsList->clear();
+    slotActionSelected(0L);
 
-	QValueList<NotifierAction*> services;
-	if ( m_mimetype.isEmpty() )
-	{
-		services = m_settings.actions();
-	}
-	else
-	{
-		services = m_settings.actionsForMimetype( m_mimetype );
-	}
+    QValueList< NotifierAction * > services;
+    if(m_mimetype.isEmpty())
+    {
+        services = m_settings.actions();
+    }
+    else
+    {
+        services = m_settings.actionsForMimetype(m_mimetype);
+    }
 
-	QValueList<NotifierAction*>::iterator it;
-	
-	for ( it = services.begin(); it != services.end(); ++it )
-	{
-		new ActionListBoxItem( *it, m_mimetype, m_view->actionsList );
-	}
+    QValueList< NotifierAction * >::iterator it;
+
+    for(it = services.begin(); it != services.end(); ++it)
+    {
+        new ActionListBoxItem(*it, m_mimetype, m_view->actionsList);
+    }
 }
 
 void NotifierModule::slotActionSelected(QListBoxItem *item)
 {
-	NotifierAction *action = 0L;
+    NotifierAction *action = 0L;
 
-	if ( item!=0L )
-	{
-		ActionListBoxItem *action_item
-			= static_cast<ActionListBoxItem*>(item);
-		action = action_item->action();
-	}
+    if(item != 0L)
+    {
+        ActionListBoxItem *action_item = static_cast< ActionListBoxItem * >(item);
+        action = action_item->action();
+    }
 
-	bool isWritable = action!=0L && action->isWritable();
-	m_view->deleteButton->setEnabled( isWritable );
-	m_view->editButton->setEnabled( isWritable );
-	m_view->addButton->setEnabled( TRUE );
-	m_view->toggleAutoButton->setEnabled( action!=0L && !m_mimetype.isEmpty() );
+    bool isWritable = action != 0L && action->isWritable();
+    m_view->deleteButton->setEnabled(isWritable);
+    m_view->editButton->setEnabled(isWritable);
+    m_view->addButton->setEnabled(TRUE);
+    m_view->toggleAutoButton->setEnabled(action != 0L && !m_mimetype.isEmpty());
 }
 
 void NotifierModule::slotMimeTypeChanged(int index)
 {
-	if ( index == 0 )
-	{
-		m_mimetype = QString();
-	}
-	else
-	{
-		QListBoxItem *item = m_view->mimetypesCombo->listBox()->item( index );
-		MimetypeListBoxItem *mime_item
-			= static_cast<MimetypeListBoxItem*>( item );
-		m_mimetype = mime_item->mimetype();
-	}
+    if(index == 0)
+    {
+        m_mimetype = QString();
+    }
+    else
+    {
+        QListBoxItem *item = m_view->mimetypesCombo->listBox()->item(index);
+        MimetypeListBoxItem *mime_item = static_cast< MimetypeListBoxItem * >(item);
+        m_mimetype = mime_item->mimetype();
+    }
 
-	updateListBox();
+    updateListBox();
 }
 
 void NotifierModule::slotAdd()
 {
-	NotifierServiceAction *action = new NotifierServiceAction();
-	ServiceConfigDialog dialog(action, m_settings.supportedMimetypes(), this);
-	
-	int value = dialog.exec();
-	
-	if ( value == QDialog::Accepted )
-	{
-		m_settings.addAction( action );
-		updateListBox();
-		emit changed( true );
-	}
-	else
-	{
-		delete action;
-	}
+    NotifierServiceAction *action = new NotifierServiceAction();
+    ServiceConfigDialog dialog(action, m_settings.supportedMimetypes(), this);
+
+    int value = dialog.exec();
+
+    if(value == QDialog::Accepted)
+    {
+        m_settings.addAction(action);
+        updateListBox();
+        emit changed(true);
+    }
+    else
+    {
+        delete action;
+    }
 }
 
 void NotifierModule::slotEdit()
 {
-	ActionListBoxItem *action_item
-		= static_cast<ActionListBoxItem*>(m_view->actionsList->selectedItem());
-	
-	NotifierServiceAction * action = dynamic_cast<NotifierServiceAction*>( action_item->action() );
-	if ( action )
-	{
-		ServiceConfigDialog dialog(action, m_settings.supportedMimetypes(), this);
-		
-		int value = dialog.exec();
-		
-		if ( value == QDialog::Accepted )
-		{
-			updateListBox();
-			emit changed( true );
-		}
-	}
+    ActionListBoxItem *action_item = static_cast< ActionListBoxItem * >(m_view->actionsList->selectedItem());
+
+    NotifierServiceAction *action = dynamic_cast< NotifierServiceAction * >(action_item->action());
+    if(action)
+    {
+        ServiceConfigDialog dialog(action, m_settings.supportedMimetypes(), this);
+
+        int value = dialog.exec();
+
+        if(value == QDialog::Accepted)
+        {
+            updateListBox();
+            emit changed(true);
+        }
+    }
 }
 
 void NotifierModule::slotDelete()
 {
-	ActionListBoxItem *action_item
-		= static_cast<ActionListBoxItem*>(m_view->actionsList->selectedItem());
-	
-	NotifierServiceAction *action;
-        action = dynamic_cast<NotifierServiceAction*>( action_item->action() );
-	if ( action )
-	{
-		m_settings.deleteAction( action );
-		updateListBox();
-		emit changed( true );
-	}
+    ActionListBoxItem *action_item = static_cast< ActionListBoxItem * >(m_view->actionsList->selectedItem());
+
+    NotifierServiceAction *action;
+    action = dynamic_cast< NotifierServiceAction * >(action_item->action());
+    if(action)
+    {
+        m_settings.deleteAction(action);
+        updateListBox();
+        emit changed(true);
+    }
 }
 
 void NotifierModule::slotToggleAuto()
 {
-	ActionListBoxItem *action_item
-		= static_cast<ActionListBoxItem*>( m_view->actionsList->selectedItem() );
-	NotifierAction *action = action_item->action();
+    ActionListBoxItem *action_item = static_cast< ActionListBoxItem * >(m_view->actionsList->selectedItem());
+    NotifierAction *action = action_item->action();
 
-	int index = m_view->actionsList->index( action_item );
-	
-	if ( action->autoMimetypes().contains( m_mimetype ) )
-	{
-		m_settings.resetAutoAction( m_mimetype );
-	}
-	else
-	{
-		m_settings.setAutoAction( m_mimetype, action );
-	}
+    int index = m_view->actionsList->index(action_item);
 
-	updateListBox();
-	emit changed( true );
+    if(action->autoMimetypes().contains(m_mimetype))
+    {
+        m_settings.resetAutoAction(m_mimetype);
+    }
+    else
+    {
+        m_settings.setAutoAction(m_mimetype, action);
+    }
 
-	m_view->actionsList->setSelected( index, true );
+    updateListBox();
+    emit changed(true);
+
+    m_view->actionsList->setSelected(index, true);
 }
 
 #include "notifiermodule.moc"

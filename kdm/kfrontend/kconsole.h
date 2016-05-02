@@ -30,24 +30,24 @@ class QSocketNotifier;
 class KPty;
 
 class KConsole : public QTextEdit {
-	Q_OBJECT
-	typedef QTextEdit inherited;
+    Q_OBJECT
+    typedef QTextEdit inherited;
 
-  public:
-	KConsole( QWidget *_parent = 0 );
-	~KConsole();
+public:
+    KConsole(QWidget *_parent = 0);
+    ~KConsole();
 
-  private slots:
-	void slotData();
+private slots:
+    void slotData();
 
-  private:
-	int OpenConsole();
-	void CloseConsole();
+private:
+    int OpenConsole();
+    void CloseConsole();
 
-	KPty *pty;
-	QSocketNotifier *notifier;
-	QString leftover;
-	int fd;
+    KPty *pty;
+    QSocketNotifier *notifier;
+    QString leftover;
+    int fd;
 };
 
 #endif // KCONSOLE_H

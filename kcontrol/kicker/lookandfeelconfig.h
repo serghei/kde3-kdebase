@@ -22,8 +22,7 @@
 
 class LookAndFeelTab;
 
-class LookAndFeelConfig : public KCModule
-{
+class LookAndFeelConfig : public KCModule {
     Q_OBJECT
 
 public:

@@ -25,84 +25,92 @@
 #include "historystringitem.h"
 #include "klipperpopup.h"
 
-History::History( QWidget* parent, const char* name )
-    : QObject( parent,  name ),
-      m_popup( new KlipperPopup( this, parent, "main_widget" ) ),
-      m_topIsUserSelected( false )
+History::History(QWidget *parent, const char *name)
+    : QObject(parent, name), m_popup(new KlipperPopup(this, parent, "main_widget")), m_topIsUserSelected(false)
 {
-    connect( this, SIGNAL( changed() ), m_popup,  SLOT( slotHistoryChanged() ) );
-    itemList.setAutoDelete( true );
-
+    connect(this, SIGNAL(changed()), m_popup, SLOT(slotHistoryChanged()));
+    itemList.setAutoDelete(true);
 }
 
 
-History::~History() {
+History::~History()
+{
 }
 
-History::iterator History::youngest() {
-    return iterator( itemList );
+History::iterator History::youngest()
+{
+    return iterator(itemList);
 }
 
-void History::insert( const HistoryItem* item ) {
-    if ( !item )
+void History::insert(const HistoryItem *item)
+{
+    if(!item)
         return;
 
     m_topIsUserSelected = false;
 
     // Optimisation: Compare with top item.
-    if ( !itemList.isEmpty() && *itemList.first() == *item ) {
+    if(!itemList.isEmpty() && *itemList.first() == *item)
+    {
         delete item;
         return;
     }
 
-    remove( item );
-    forceInsert( item );
+    remove(item);
+    forceInsert(item);
 
     emit topChanged();
-
 }
 
-void History::forceInsert( const HistoryItem* item ) {
-    if ( !item )
+void History::forceInsert(const HistoryItem *item)
+{
+    if(!item)
         return;
-    itemList.prepend( item );
+    itemList.prepend(item);
     emit changed();
     trim();
 }
 
-void History::trim() {
+void History::trim()
+{
     int i = itemList.count() - max_size();
-    if ( i <= 0 )
+    if(i <= 0)
         return;
 
-    while ( i-- ) {
+    while(i--)
+    {
         itemList.removeLast();
     }
     emit changed();
 }
 
-void History::remove( const HistoryItem* newItem ) {
-    if ( !newItem )
+void History::remove(const HistoryItem *newItem)
+{
+    if(!newItem)
         return;
 
-    for ( const HistoryItem* item = itemList.first(); item; item=next() ) {
-        if ( *item == *newItem ) {
+    for(const HistoryItem *item = itemList.first(); item; item = next())
+    {
+        if(*item == *newItem)
+        {
             itemList.remove();
             emit changed();
             return;
         }
     }
-
 }
 
 
-void History::slotClear() {
+void History::slotClear()
+{
     itemList.clear();
     emit changed();
 }
 
-void History::slotMoveToTop(int pos ) {
-    if ( pos < 0 || static_cast<unsigned>( pos ) >= itemList.count() ) {
+void History::slotMoveToTop(int pos)
+{
+    if(pos < 0 || static_cast< unsigned >(pos) >= itemList.count())
+    {
         kdDebug() << "Argument pos out of range: " << pos << endl;
         return;
     }
@@ -110,22 +118,24 @@ void History::slotMoveToTop(int pos ) {
     m_topIsUserSelected = true;
 
     itemList.first();
-    for ( ; pos; pos-- ) {
+    for(; pos; pos--)
+    {
         itemList.next();
     }
-    HistoryItem* item = itemList.take();
-    itemList.prepend( item );
+    HistoryItem *item = itemList.take();
+    itemList.prepend(item);
     emit changed();
     emit topChanged();
 }
 
-void History::max_size( unsigned max_size ) {
+void History::max_size(unsigned max_size)
+{
     m_max_size = max_size;
     trim();
-
 }
 
-KlipperPopup* History::popup() {
+KlipperPopup *History::popup()
+{
     return m_popup;
 }
 

@@ -22,8 +22,7 @@
 #include <klistviewsearchline.h>
 #include <qobject.h>
 
-class KEBSearchLine : public KListViewSearchLine
-{
+class KEBSearchLine : public KListViewSearchLine {
     Q_OBJECT
 public:
     KEBSearchLine(QWidget *parent = 0, KListView *listView = 0, const char *name = 0);
@@ -32,7 +31,12 @@ public:
 
     virtual ~KEBSearchLine();
 
-    enum modes { EXACTLY, AND, OR } mmode;
+    enum modes
+    {
+        EXACTLY,
+        AND,
+        OR
+    } mmode;
     modes mode();
     void setMode(modes m);
     virtual void updateSearch(const QString &s = QString::null);
@@ -41,11 +45,10 @@ signals:
     void searchUpdated();
 
 protected:
-
     virtual bool itemMatches(const QListViewItem *item, const QString &s) const;
 
 private:
-    mutable QString lastpattern; // what was cached
+    mutable QString lastpattern;  // what was cached
     mutable QStringList splitted; // cache of the splitted string
 };
 

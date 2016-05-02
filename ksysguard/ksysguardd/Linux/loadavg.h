@@ -21,16 +21,16 @@
 #ifndef KSG_LOADAVG_H
 #define KSG_LOADAVG_H
 
-void initLoadAvg( struct SensorModul* );
-void exitLoadAvg( void );
+void initLoadAvg(struct SensorModul *);
+void exitLoadAvg(void);
 
-int updateLoadAvg( void );
+int updateLoadAvg(void);
 
-void printLoadAvg1( const char* );
-void printLoadAvg1Info( const char* );
-void printLoadAvg5( const char* );
-void printLoadAvg5Info( const char* );
-void printLoadAvg15( const char* );
-void printLoadAvg15Info( const char* );
+void printLoadAvg1(const char *);
+void printLoadAvg1Info(const char *);
+void printLoadAvg5(const char *);
+void printLoadAvg5Info(const char *);
+void printLoadAvg15(const char *);
+void printLoadAvg15Info(const char *);
 
 #endif

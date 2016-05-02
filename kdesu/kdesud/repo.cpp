@@ -17,21 +17,22 @@
 
 Repository::Repository()
 {
-    head_time = (unsigned) -1;
+    head_time = (unsigned)-1;
 }
 
 
 Repository::~Repository()
-{}
+{
+}
 
 
 void Repository::add(const QCString &key, Data_entry &data)
 {
     RepoIterator it = repo.find(key);
-    if (it != repo.end())
+    if(it != repo.end())
         remove(key);
-    if (data.timeout == 0)
-        data.timeout = (unsigned) -1;
+    if(data.timeout == 0)
+        data.timeout = (unsigned)-1;
     else
         data.timeout += time(0L);
     head_time = QMIN(head_time, data.timeout);
@@ -40,34 +41,33 @@ void Repository::add(const QCString &key, Data_entry &data)
 
 int Repository::remove(const QCString &key)
 {
-    if( key.isEmpty() )
+    if(key.isEmpty())
         return -1;
 
-     RepoIterator it = repo.find(key);
-     if (it == repo.end())
+    RepoIterator it = repo.find(key);
+    if(it == repo.end())
         return -1;
-     it.data().value.fill('x');
-     it.data().group.fill('x');
-     repo.remove(it);
-     return 0;
+    it.data().value.fill('x');
+    it.data().group.fill('x');
+    repo.remove(it);
+    return 0;
 }
 
 int Repository::removeSpecialKey(const QCString &key)
 {
     int found = -1;
-    if ( !key.isEmpty() )
+    if(!key.isEmpty())
     {
-        QValueStack<QCString> rm_keys;
-        for (RepoCIterator it=repo.begin(); it!=repo.end(); ++it)
+        QValueStack< QCString > rm_keys;
+        for(RepoCIterator it = repo.begin(); it != repo.end(); ++it)
         {
-            if (  key.find( it.data().group ) == 0 &&
-                  it.key().find( key ) >= 0 )
+            if(key.find(it.data().group) == 0 && it.key().find(key) >= 0)
             {
                 rm_keys.push(it.key());
                 found = 0;
             }
         }
-        while (!rm_keys.isEmpty())
+        while(!rm_keys.isEmpty())
         {
             kdDebug(1205) << "Removed key: " << rm_keys.top() << endl;
             remove(rm_keys.pop());
@@ -79,18 +79,18 @@ int Repository::removeSpecialKey(const QCString &key)
 int Repository::removeGroup(const QCString &group)
 {
     int found = -1;
-    if ( !group.isEmpty() )
+    if(!group.isEmpty())
     {
-        QValueStack<QCString> rm_keys;
-        for (RepoCIterator it=repo.begin(); it!=repo.end(); ++it)
+        QValueStack< QCString > rm_keys;
+        for(RepoCIterator it = repo.begin(); it != repo.end(); ++it)
         {
-            if (it.data().group == group)
+            if(it.data().group == group)
             {
                 rm_keys.push(it.key());
                 found = 0;
             }
         }
-        while (!rm_keys.isEmpty())
+        while(!rm_keys.isEmpty())
         {
             kdDebug(1205) << "Removed key: " << rm_keys.top() << endl;
             remove(rm_keys.pop());
@@ -101,40 +101,40 @@ int Repository::removeGroup(const QCString &group)
 
 int Repository::hasGroup(const QCString &group) const
 {
-    if ( !group.isEmpty() )
+    if(!group.isEmpty())
     {
         RepoCIterator it;
-        for (it=repo.begin(); it!=repo.end(); ++it)
+        for(it = repo.begin(); it != repo.end(); ++it)
         {
-            if (it.data().group == group)
+            if(it.data().group == group)
                 return 0;
         }
     }
     return -1;
 }
 
-QCString Repository::findKeys(const QCString &group, const char *sep ) const
+QCString Repository::findKeys(const QCString &group, const char *sep) const
 {
-    QCString list="";
-    if( !group.isEmpty() )
+    QCString list = "";
+    if(!group.isEmpty())
     {
         kdDebug(1205) << "Looking for matching key with group key: " << group << endl;
         int pos;
         QCString key;
         RepoCIterator it;
-        for (it=repo.begin(); it!=repo.end(); ++it)
+        for(it = repo.begin(); it != repo.end(); ++it)
         {
-            if (it.data().group == group)
+            if(it.data().group == group)
             {
                 key = it.key().copy();
                 kdDebug(1205) << "Matching key found: " << key << endl;
                 pos = key.findRev(sep);
-                key.truncate( pos );
+                key.truncate(pos);
                 key.remove(0, 2);
-                if (!list.isEmpty())
+                if(!list.isEmpty())
                 {
                     // Add the same keys only once please :)
-                    if( !list.contains(key) )
+                    if(!list.contains(key))
                     {
                         kdDebug(1205) << "Key added to list: " << key << endl;
                         list += '\007'; // I do not know
@@ -151,11 +151,11 @@ QCString Repository::findKeys(const QCString &group, const char *sep ) const
 
 QCString Repository::find(const QCString &key) const
 {
-    if( key.isEmpty() )
+    if(key.isEmpty())
         return 0;
 
     RepoCIterator it = repo.find(key);
-    if (it == repo.end())
+    if(it == repo.end())
         return 0;
     return it.data().value;
 }
@@ -164,25 +164,24 @@ QCString Repository::find(const QCString &key) const
 int Repository::expire()
 {
     unsigned current = time(0L);
-    if (current < head_time)
-	return 0;
+    if(current < head_time)
+        return 0;
 
     unsigned t;
-    QValueStack<QCString> keys;
-    head_time = (unsigned) -1;
+    QValueStack< QCString > keys;
+    head_time = (unsigned)-1;
     RepoIterator it;
-    for (it=repo.begin(); it!=repo.end(); ++it)
+    for(it = repo.begin(); it != repo.end(); ++it)
     {
-	t = it.data().timeout;
-	if (t <= current)
-	    keys.push(it.key());
-	else
-	    head_time = QMIN(head_time, t);
+        t = it.data().timeout;
+        if(t <= current)
+            keys.push(it.key());
+        else
+            head_time = QMIN(head_time, t);
     }
 
     int n = keys.count();
-    while (!keys.isEmpty())
-	remove(keys.pop());
+    while(!keys.isEmpty())
+        remove(keys.pop());
     return n;
 }
-

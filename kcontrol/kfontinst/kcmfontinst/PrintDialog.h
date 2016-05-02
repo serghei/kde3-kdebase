@@ -32,25 +32,25 @@
 #include <kdialogbase.h>
 #include <qcombobox.h>
 
-namespace KFI
-{
+namespace KFI {
 
-class CPrintDialog : public KDialogBase
-{
-    public:
-
+class CPrintDialog : public KDialogBase {
+public:
     CPrintDialog(QWidget *parent);
 
     bool exec(bool select, int size);
-    int  chosenSize() { return itsSize->currentItem(); }
-    bool outputAll()  { return 0==itsOutput->currentItem(); }
+    int chosenSize()
+    {
+        return itsSize->currentItem();
+    }
+    bool outputAll()
+    {
+        return 0 == itsOutput->currentItem();
+    }
 
-    private:
-
-    QComboBox *itsOutput,
-              *itsSize;
+private:
+    QComboBox *itsOutput, *itsSize;
 };
-
 }
 
 #endif

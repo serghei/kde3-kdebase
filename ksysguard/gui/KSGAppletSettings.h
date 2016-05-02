@@ -25,22 +25,21 @@
 
 class QSpinBox;
 
-class KSGAppletSettings : public KDialogBase
-{
-  public:
-    KSGAppletSettings( QWidget *parent = 0, const char *name = 0 );
+class KSGAppletSettings : public KDialogBase {
+public:
+    KSGAppletSettings(QWidget *parent = 0, const char *name = 0);
     ~KSGAppletSettings();
 
-    void setNumDisplay( int );
+    void setNumDisplay(int);
     int numDisplay() const;
 
-    void setSizeRatio( int );
+    void setSizeRatio(int);
     int sizeRatio() const;
 
-    void setUpdateInterval( int );
+    void setUpdateInterval(int);
     int updateInterval() const;
 
-  private:
+private:
     QSpinBox *mInterval;
     QSpinBox *mNumDisplay;
     QSpinBox *mSizeRatio;

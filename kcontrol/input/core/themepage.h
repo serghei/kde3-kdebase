@@ -22,32 +22,31 @@
 class KListView;
 class QListViewItem;
 
-class ThemePage : public QWidget
-{
-	Q_OBJECT
+class ThemePage : public QWidget {
+    Q_OBJECT
 
-	public:
-		ThemePage( QWidget* parent = 0, const char* name = 0 );
-		~ThemePage();
+public:
+    ThemePage(QWidget *parent = 0, const char *name = 0);
+    ~ThemePage();
 
-		// Called by the KCM
-		void save();
-		void load();
-		void load( bool useDefaults );
-		void defaults();
+    // Called by the KCM
+    void save();
+    void load();
+    void load(bool useDefaults);
+    void defaults();
 
-	signals:
-		void changed( bool );
+signals:
+    void changed(bool);
 
-	private slots:
-		void selectionChanged( QListViewItem * );
+private slots:
+    void selectionChanged(QListViewItem *);
 
-	private:
-		void insertThemes();
-		void fixCursorFile();
+private:
+    void insertThemes();
+    void fixCursorFile();
 
-		KListView *listview;
-		QString currentTheme, selectedTheme;
+    KListView *listview;
+    QString currentTheme, selectedTheme;
 };
 
 #endif // __THEMEPAGE_H

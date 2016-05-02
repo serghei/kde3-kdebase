@@ -30,38 +30,40 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class KWinModule;
 
-class DockBarExtension : public KPanelExtension
-{
+class DockBarExtension : public KPanelExtension {
     Q_OBJECT
 
 public:
-    DockBarExtension(const QString& configFile, Type t = Normal,
-		     int actions = 0, QWidget *parent = 0, const char *name = 0);
+    DockBarExtension(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
 
     virtual ~DockBarExtension();
 
     QSize sizeHint(Position, QSize maxSize) const;
-    Position preferedPosition() const { return Right; }
+    Position preferedPosition() const
+    {
+        return Right;
+    }
 
 protected slots:
     void windowAdded(WId);
-    void embeddedWindowDestroyed(DockContainer*);
-    void settingsChanged(DockContainer*);
+    void embeddedWindowDestroyed(DockContainer *);
+    void settingsChanged(DockContainer *);
 
 protected:
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent *);
     void embedWindow(WId win, QString command, QString resName, QString resClass);
-    void addContainer(DockContainer*, int pos=-1);
-    void removeContainer(DockContainer*);
+    void addContainer(DockContainer *, int pos = -1);
+    void removeContainer(DockContainer *);
     void saveContainerConfig();
     void loadContainerConfig();
     void layoutContainers();
-    int findContainerAtPoint(const QPoint&);
+    int findContainerAtPoint(const QPoint &);
     void mousePressEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
+
 private:
-    KWinModule* kwin_module;
+    KWinModule *kwin_module;
     DockContainer::Vector containers;
 
     // handle the dragging of applets

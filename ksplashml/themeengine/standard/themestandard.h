@@ -40,54 +40,56 @@
 /**
  * @short The default KSplash splash screen.
  */
-class ThemeStandard: public ThemeEngine
-{
-  Q_OBJECT
+class ThemeStandard : public ThemeEngine {
+    Q_OBJECT
 public:
-  ThemeStandard( QWidget *, const char*, const QStringList& );
-  //inline const ThemeEngineConfig *config( QWidget *p, KConfig *kc ) { return 0L; }
+    ThemeStandard(QWidget *, const char *, const QStringList &);
+    // inline const ThemeEngineConfig *config( QWidget *p, KConfig *kc ) { return 0L; }
 
 public slots:
-  inline void slotUpdateProgress( int i )
-  {
-    if( mStatus ) mStatus->slotUpdateProgress( i );
-  }
-  inline void slotUpdateSteps( int i )
-  {
-    if( mStatus ) mStatus->slotUpdateSteps( i );
-  }
-  inline void slotSetText( const QString& s )
-  {
-    if( mStatus ) mStatus->slotSetMessage( s );
-  }
-  void slotSetPixmap( const QString& );
+    inline void slotUpdateProgress(int i)
+    {
+        if(mStatus)
+            mStatus->slotUpdateProgress(i);
+    }
+    inline void slotUpdateSteps(int i)
+    {
+        if(mStatus)
+            mStatus->slotUpdateSteps(i);
+    }
+    inline void slotSetText(const QString &s)
+    {
+        if(mStatus)
+            mStatus->slotSetMessage(s);
+    }
+    void slotSetPixmap(const QString &);
 
 private:
-  void showEvent( QShowEvent * );
-  void _readSettings();
-  void _initUi();
+    void showEvent(QShowEvent *);
+    void _readSettings();
+    void _initUi();
 
-  WndStatus *mStatus;
-  WndIcon *mIcon, *mPrevIcon;
-  int mIconCount;
-  int mStatusBarHeight;
-  int mStdIconWidth;
+    WndStatus *mStatus;
+    WndIcon *mIcon, *mPrevIcon;
+    int mIconCount;
+    int mStatusBarHeight;
+    int mStdIconWidth;
 
-  WndIcon::Position mIconPos;
-  bool mSbAtTop;
-  bool mSbVisible;
-  bool mSbPbVisible;
-  QString mSbFontName;
-  int mSbFontSz;
-  bool mSbFontBold;
-  bool mSbFontItalic;
-  QFont mSbFont;
-  QColor mSbFg;
-  QColor mSbBg;
-  QString mSbIcon;
-  bool mIconsVisible;
-  bool mIconsJumping;
-  QString mSplashScreen;
+    WndIcon::Position mIconPos;
+    bool mSbAtTop;
+    bool mSbVisible;
+    bool mSbPbVisible;
+    QString mSbFontName;
+    int mSbFontSz;
+    bool mSbFontBold;
+    bool mSbFontItalic;
+    QFont mSbFont;
+    QColor mSbFg;
+    QColor mSbBg;
+    QString mSbIcon;
+    bool mIconsVisible;
+    bool mIconsJumping;
+    QString mSplashScreen;
 };
 
 #endif

@@ -4,7 +4,7 @@
  * Copyright (c) 2001 George Staikos <staikos@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published 
+ *  it under the terms of the GNU Lesser General Public License as published
  *  by the Free Software Foundation; either version 2.1 of the License, or
  *  (at your option) any later version.
  *
@@ -29,27 +29,25 @@ class QPushButton;
 class KSSLCertificate;
 
 
-class KCertExport : public KDialog
-{
-  Q_OBJECT
+class KCertExport : public KDialog {
+    Q_OBJECT
 public:
-  KCertExport(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~KCertExport();
+    KCertExport(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KCertExport();
 
-  void setCertificate(KSSLCertificate *c);
+    void setCertificate(KSSLCertificate *c);
 
 protected slots:
-  void slotExport();
-  void slotChoose();
-  void slotTextChanged(const QString &);
+    void slotExport();
+    void slotChoose();
+    void slotTextChanged(const QString &);
 
 private:
-  QPushButton *_export, *_cancel, *_choose;
-  QRadioButton *_pem, *_netscape, *_der, *_text;
-  KLineEdit *_filename;
+    QPushButton *_export, *_cancel, *_choose;
+    QRadioButton *_pem, *_netscape, *_der, *_text;
+    KLineEdit *_filename;
 
-  KSSLCertificate *_c;
-
+    KSSLCertificate *_c;
 };
 
 #endif

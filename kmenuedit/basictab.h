@@ -38,18 +38,17 @@ class KService;
 class MenuFolderInfo;
 class MenuEntryInfo;
 
-class BasicTab : public QWidget
-{
+class BasicTab : public QWidget {
     Q_OBJECT
 
 public:
-    BasicTab( QWidget *parent=0, const char *name=0 );
+    BasicTab(QWidget *parent = 0, const char *name = 0);
 
     void apply();
 signals:
-    void changed( MenuFolderInfo * );
-    void changed( MenuEntryInfo * );
-    void findServiceShortcut(const KShortcut&, KService::Ptr &);
+    void changed(MenuFolderInfo *);
+    void changed(MenuEntryInfo *);
+    void findServiceShortcut(const KShortcut &, KService::Ptr &);
 
 public slots:
     void setFolderInfo(MenuFolderInfo *folderInfo);
@@ -61,26 +60,26 @@ protected slots:
     void systraycb_clicked();
     void termcb_clicked();
     void uidcb_clicked();
-    void slotCapturedShortcut(const KShortcut&);
+    void slotCapturedShortcut(const KShortcut &);
     void slotExecSelected();
 
 protected:
     void enableWidgets(bool isDF, bool isDeleted);
 
 protected:
-    KLineEdit    *_nameEdit, *_commentEdit;
-    KLineEdit	 *_descriptionEdit;
-    KKeyButton   *_keyEdit;
+    KLineEdit *_nameEdit, *_commentEdit;
+    KLineEdit *_descriptionEdit;
+    KKeyButton *_keyEdit;
     KURLRequester *_execEdit, *_pathEdit;
-    KLineEdit    *_termOptEdit, *_uidEdit;
-    QCheckBox    *_terminalCB, *_uidCB, *_launchCB, *_systrayCB;
-    KIconButton  *_iconButton;
-    QGroupBox    *_path_group, *_term_group, *_uid_group, *general_group_keybind;
+    KLineEdit *_termOptEdit, *_uidEdit;
+    QCheckBox *_terminalCB, *_uidCB, *_launchCB, *_systrayCB;
+    KIconButton *_iconButton;
+    QGroupBox *_path_group, *_term_group, *_uid_group, *general_group_keybind;
     QLabel *_termOptLabel, *_uidLabel, *_pathLabel, *_nameLabel, *_commentLabel, *_execLabel;
-    QLabel	*_descriptionLabel;
+    QLabel *_descriptionLabel;
 
     MenuFolderInfo *_menuFolderInfo;
-    MenuEntryInfo  *_menuEntryInfo;
+    MenuEntryInfo *_menuEntryInfo;
     bool _isDeleted;
 };
 

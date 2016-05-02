@@ -31,27 +31,26 @@ class CommandShortcutsModule;
 class ShortcutsModule;
 class ModifiersModule;
 
-class KeyModule : public KCModule
-{
-	Q_OBJECT
- public:
-	KeyModule( QWidget *parent, const char *name );
-        ~KeyModule();
+class KeyModule : public KCModule {
+    Q_OBJECT
+public:
+    KeyModule(QWidget *parent, const char *name);
+    ~KeyModule();
 
-	void load();
-	void load( bool useDefaults );
-	void save();
-	void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
- protected:
-	void initGUI();
-	void resizeEvent( QResizeEvent* );
+protected:
+    void initGUI();
+    void resizeEvent(QResizeEvent *);
 
- private:
-	QTabWidget* m_pTab;
-	CommandShortcutsModule* m_pCommandShortcuts;
-	ShortcutsModule* m_pShortcuts;
-	ModifiersModule* m_pModifiers;
+private:
+    QTabWidget *m_pTab;
+    CommandShortcutsModule *m_pCommandShortcuts;
+    ShortcutsModule *m_pShortcuts;
+    ModifiersModule *m_pModifiers;
 };
 
 #endif

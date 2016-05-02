@@ -28,30 +28,39 @@
 /**
  * A string entry in the clipboard history.
  */
-class HistoryStringItem : public HistoryItem
-{
+class HistoryStringItem : public HistoryItem {
 public:
-    HistoryStringItem( const QString& data );
-    virtual ~HistoryStringItem() {}
+    HistoryStringItem(const QString &data);
+    virtual ~HistoryStringItem()
+    {
+    }
     virtual QString text() const;
-    virtual bool operator==( const HistoryItem& rhs) const {
-        if ( const HistoryStringItem* casted_rhs = dynamic_cast<const HistoryStringItem*>( &rhs ) ) {
+    virtual bool operator==(const HistoryItem &rhs) const
+    {
+        if(const HistoryStringItem *casted_rhs = dynamic_cast< const HistoryStringItem * >(&rhs))
+        {
             return casted_rhs->m_data == m_data;
         }
         return false;
     }
-    virtual QMimeSource* mimeSource() const { return new QTextDrag( m_data ) ; }
+    virtual QMimeSource *mimeSource() const
+    {
+        return new QTextDrag(m_data);
+    }
 
     /**
      * Write object on datastream
      */
-    virtual void write( QDataStream& stream ) const;
+    virtual void write(QDataStream &stream) const;
 
 private:
     QString m_data;
 };
 
-inline QString HistoryStringItem::text() const { return m_data; }
+inline QString HistoryStringItem::text() const
+{
+    return m_data;
+}
 
 
 #endif

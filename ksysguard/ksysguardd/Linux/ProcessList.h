@@ -22,17 +22,17 @@
 #ifndef KSG_PROCESSLIST_H
 #define KSG_PROCESSLIST_H
 
-void initProcessList( struct SensorModul* );
-void exitProcessList( void );
+void initProcessList(struct SensorModul *);
+void exitProcessList(void);
 
-int updateProcessList( void );
+int updateProcessList(void);
 
-void printProcessList( const char* );
-void printProcessListInfo( const char* );
-void printProcessCount( const char* );
-void printProcessCountInfo( const char* );
+void printProcessList(const char *);
+void printProcessListInfo(const char *);
+void printProcessCount(const char *);
+void printProcessCountInfo(const char *);
 
-void killProcess( const char* );
-void setPriority( const char* );
+void killProcess(const char *);
+void setPriority(const char *);
 
 #endif

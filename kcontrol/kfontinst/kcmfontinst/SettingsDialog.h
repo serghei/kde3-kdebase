@@ -33,25 +33,19 @@
 
 class QCheckBox;
 
-namespace KFI
-{
+namespace KFI {
 
-class CSettingsDialog : public KDialogBase
-{
-    public:
-
+class CSettingsDialog : public KDialogBase {
+public:
     CSettingsDialog(QWidget *parent);
 
-    private slots:
+private slots:
 
     void slotOk();
 
-    private:
-
-    QCheckBox *itsDoX,
-              *itsDoGs;
+private:
+    QCheckBox *itsDoX, *itsDoGs;
 };
-
 }
 
 #endif

@@ -30,47 +30,44 @@
 
 class KeyboardConfigWidget;
 
-class KeyboardConfig : public KCModule
-{
-  Q_OBJECT
+class KeyboardConfig : public KCModule {
+    Q_OBJECT
 public:
-  KeyboardConfig( QWidget *parent=0, const char* name=0);
+    KeyboardConfig(QWidget *parent = 0, const char *name = 0);
 
-  void save();
-  void load();
-  void defaults();
+    void save();
+    void load();
+    void defaults();
 
-  QString quickHelp() const;
+    QString quickHelp() const;
 
-  static void init_keyboard();
-  
+    static void init_keyboard();
+
 private slots:
-  void changed();
+    void changed();
 
-  void delaySliderChanged (int value);
-  void delaySpinboxChanged (int value);
-  void rateSliderChanged (int value);
-  void rateSpinboxChanged (double value);
+    void delaySliderChanged(int value);
+    void delaySpinboxChanged(int value);
+    void rateSliderChanged(int value);
+    void rateSpinboxChanged(double value);
 
 private:
+    void setClick(int);
+    void setRepeat(int flag, int delay, double rate);
+    void setRepeatRate(int);
+    void setNumLockState(int);
 
-  void setClick( int );
-  void setRepeat( int flag, int delay, double rate);
-  void setRepeatRate( int );
-  void setNumLockState( int );
+    int getClick();
+    int getRepeatRate();
+    int getNumLockState();
 
-  int getClick();
-  int getRepeatRate();
-  int getNumLockState();
-
-  int sliderMax;
-  int clickVolume, keyboardRepeat;
-  int numlockState; // 0 = on, 1 = off, 2 = don't change
-  KeyboardConfigWidget* ui;
+    int sliderMax;
+    int clickVolume, keyboardRepeat;
+    int numlockState; // 0 = on, 1 = off, 2 = don't change
+    KeyboardConfigWidget *ui;
 };
 
-void numlockx_change_numlock_state( bool set_P );
+void numlockx_change_numlock_state(bool set_P);
 void set_repeatrate(int delay, double rate);
 
 #endif
-

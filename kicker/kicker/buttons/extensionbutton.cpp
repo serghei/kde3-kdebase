@@ -31,27 +31,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "extensionbutton.h"
 #include "extensionbutton.moc"
 
-ExtensionButton::ExtensionButton( const QString& desktopFile, QWidget* parent )
-    : PanelPopupButton( parent, "ExtensionButton" )
-    , info( 0 )
-    , menu( 0 )
+ExtensionButton::ExtensionButton(const QString &desktopFile, QWidget *parent) : PanelPopupButton(parent, "ExtensionButton"), info(0), menu(0)
 {
-    initialize( desktopFile );
+    initialize(desktopFile);
 }
 
-ExtensionButton::ExtensionButton( const KConfigGroup& config, QWidget* parent )
-    : PanelPopupButton( parent, "extensionbuttton" )
+ExtensionButton::ExtensionButton(const KConfigGroup &config, QWidget *parent) : PanelPopupButton(parent, "extensionbuttton")
 {
-    initialize( config.readPathEntry("DesktopFile") );
+    initialize(config.readPathEntry("DesktopFile"));
 }
 
-void ExtensionButton::initialize( const QString& desktopFile )
+void ExtensionButton::initialize(const QString &desktopFile)
 {
     info = new MenuInfo(desktopFile);
-    if (!info->isValid())
+    if(!info->isValid())
     {
-       m_valid = false;
-       return;
+        m_valid = false;
+        return;
     }
     menu = info->load(this);
     setPopup(menu);
@@ -66,14 +62,15 @@ ExtensionButton::~ExtensionButton()
     delete info;
 }
 
-void ExtensionButton::saveConfig( KConfigGroup& config ) const
+void ExtensionButton::saveConfig(KConfigGroup &config) const
 {
     config.writePathEntry("DesktopFile", info->desktopFile());
 }
 
 void ExtensionButton::initPopup()
 {
-    if( !menu->initialized() ) {
+    if(!menu->initialized())
+    {
         menu->reinitialize();
     }
 }

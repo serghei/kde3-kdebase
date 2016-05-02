@@ -21,16 +21,16 @@
 #ifndef KSG_I8K_H
 #define KSG_I8K_H
 
-void initI8k( struct SensorModul* );
-void exitI8k( void );
+void initI8k(struct SensorModul *);
+void exitI8k(void);
 
-int updateI8k( void );
+int updateI8k(void);
 
-void printI8kCPUTemperature( const char* );
-void printI8kCPUTemperatureInfo( const char* );
-void printI8kFan0Speed( const char* );
-void printI8kFan0SpeedInfo( const char* );
-void printI8kFan1Speed( const char* );
-void printI8kFan1SpeedInfo( const char* );
+void printI8kCPUTemperature(const char *);
+void printI8kCPUTemperatureInfo(const char *);
+void printI8kFan0Speed(const char *);
+void printI8kFan0SpeedInfo(const char *);
+void printI8kFan1Speed(const char *);
+void printI8kFan1SpeedInfo(const char *);
 
 #endif

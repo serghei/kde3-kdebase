@@ -24,17 +24,16 @@
 #include <qpixmap.h>
 
 ActionListBoxItem::ActionListBoxItem(NotifierAction *action, QString mimetype, QListBox *parent)
-	: QListBoxPixmap(parent, action->pixmap()),
-	  m_action(action)
+    : QListBoxPixmap(parent, action->pixmap()), m_action(action)
 {
-	QString text = m_action->label();
-	
-	if ( m_action->autoMimetypes().contains( mimetype ) )
-	{
-		text += " (" + i18n( "Auto Action" ) + ")";
-	}
-	
-	setText( text );
+    QString text = m_action->label();
+
+    if(m_action->autoMimetypes().contains(mimetype))
+    {
+        text += " (" + i18n("Auto Action") + ")";
+    }
+
+    setText(text);
 }
 
 ActionListBoxItem::~ActionListBoxItem()
@@ -43,5 +42,5 @@ ActionListBoxItem::~ActionListBoxItem()
 
 NotifierAction *ActionListBoxItem::action() const
 {
-	return m_action;
+    return m_action;
 }

@@ -25,65 +25,69 @@
 #include <qmap.h>
 #include <qpair.h>
 
-namespace KIO {class MetaInfoJob;}
+namespace KIO {
+class MetaInfoJob;
+}
 class KonqListView;
 class KSelectAction;
 
 /**
  * The info list view
  */
-class KonqInfoListViewWidget : public KonqBaseListViewWidget
-{
-//   friend class KonqTextViewItem;
-   Q_OBJECT
-   public:
-      KonqInfoListViewWidget( KonqListView *parent, QWidget *parentWidget );
-      ~KonqInfoListViewWidget();
-      
-     const QStringList columnKeys() {return m_columnKeys;}
-      
-      virtual bool openURL( const KURL &url );
+class KonqInfoListViewWidget : public KonqBaseListViewWidget {
+    //   friend class KonqTextViewItem;
+    Q_OBJECT
+public:
+    KonqInfoListViewWidget(KonqListView *parent, QWidget *parentWidget);
+    ~KonqInfoListViewWidget();
 
-   protected slots:
-      // slots connected to the directory lister
-//      virtual void setComplete();
-      virtual void slotNewItems( const KFileItemList & );
-      virtual void slotRefreshItems( const KFileItemList & );
-      virtual void slotDeleteItem( KFileItem * );
-      virtual void slotClear();
-      virtual void slotSelectMimeType();
-      
-      void slotMetaInfo(const KFileItem*);
-      void slotMetaInfoResult();
-      
-   protected:
-       void determineCounts(const KFileItemList& list);
-       void rebuildView();
-   
-      virtual void createColumns();
-      void createFavoriteColumns();
-      
-      /**
-       * @internal
-       */
-      struct KonqILVMimeType
-      {
-          KonqILVMimeType() : mimetype(0), count(0), hasPlugin(false) {};
+    const QStringList columnKeys()
+    {
+        return m_columnKeys;
+    }
 
-          KMimeType::Ptr  mimetype;
-          int             count;
-          bool            hasPlugin;
-      };
+    virtual bool openURL(const KURL &url);
 
-      // all the mimetypes
-      QMap<QString, KonqILVMimeType > m_counts; 
-      QStringList                     m_columnKeys;
+protected slots:
+    // slots connected to the directory lister
+    //      virtual void setComplete();
+    virtual void slotNewItems(const KFileItemList &);
+    virtual void slotRefreshItems(const KFileItemList &);
+    virtual void slotDeleteItem(KFileItem *);
+    virtual void slotClear();
+    virtual void slotSelectMimeType();
 
-      KonqILVMimeType                 m_favorite;
-      
-      KSelectAction*                  m_mtSelector;
-      KIO::MetaInfoJob*               m_metaInfoJob;
-      KFileItemList                   m_metaInfoTodo;
+    void slotMetaInfo(const KFileItem *);
+    void slotMetaInfoResult();
+
+protected:
+    void determineCounts(const KFileItemList &list);
+    void rebuildView();
+
+    virtual void createColumns();
+    void createFavoriteColumns();
+
+    /**
+     * @internal
+     */
+    struct KonqILVMimeType
+    {
+        KonqILVMimeType() : mimetype(0), count(0), hasPlugin(false){};
+
+        KMimeType::Ptr mimetype;
+        int count;
+        bool hasPlugin;
+    };
+
+    // all the mimetypes
+    QMap< QString, KonqILVMimeType > m_counts;
+    QStringList m_columnKeys;
+
+    KonqILVMimeType m_favorite;
+
+    KSelectAction *m_mtSelector;
+    KIO::MetaInfoJob *m_metaInfoJob;
+    KFileItemList m_metaInfoTodo;
 };
 
 #endif

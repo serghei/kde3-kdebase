@@ -27,61 +27,64 @@
 class QPushButton;
 class PolicyDlgUI;
 
-class KCookieAdvice
-{
+class KCookieAdvice {
 public:
-  enum Value {Dunno=0, Accept, Reject, Ask};
-
-  static const char * adviceToStr (const int& advice)
-  {
-    switch (advice)
+    enum Value
     {
-      case KCookieAdvice::Accept:
-        return I18N_NOOP("Accept");
-      case KCookieAdvice::Reject:
-        return I18N_NOOP("Reject");
-      case KCookieAdvice::Ask:
-        return I18N_NOOP("Ask");
-      default:
-        return I18N_NOOP("Dunno");
+        Dunno = 0,
+        Accept,
+        Reject,
+        Ask
+    };
+
+    static const char *adviceToStr(const int &advice)
+    {
+        switch(advice)
+        {
+            case KCookieAdvice::Accept:
+                return I18N_NOOP("Accept");
+            case KCookieAdvice::Reject:
+                return I18N_NOOP("Reject");
+            case KCookieAdvice::Ask:
+                return I18N_NOOP("Ask");
+            default:
+                return I18N_NOOP("Dunno");
+        }
     }
-  }
 
-  static KCookieAdvice::Value strToAdvice (const QString& advice)
-  {
-    if (advice.isEmpty())
-      return KCookieAdvice::Dunno;
+    static KCookieAdvice::Value strToAdvice(const QString &advice)
+    {
+        if(advice.isEmpty())
+            return KCookieAdvice::Dunno;
 
-    if (advice.find (QString::fromLatin1("accept"), 0, false) == 0)
-      return KCookieAdvice::Accept;
-    else if (advice.find (QString::fromLatin1("reject"), 0, false) == 0)
-      return KCookieAdvice::Reject;
-    else if (advice.find (QString::fromLatin1("ask"), 0, false) == 0)
-      return KCookieAdvice::Ask;
+        if(advice.find(QString::fromLatin1("accept"), 0, false) == 0)
+            return KCookieAdvice::Accept;
+        else if(advice.find(QString::fromLatin1("reject"), 0, false) == 0)
+            return KCookieAdvice::Reject;
+        else if(advice.find(QString::fromLatin1("ask"), 0, false) == 0)
+            return KCookieAdvice::Ask;
 
-    return KCookieAdvice::Dunno;
-  }
+        return KCookieAdvice::Dunno;
+    }
 };
 
-class PolicyDlg : public KDialogBase
-{
-  Q_OBJECT
+class PolicyDlg : public KDialogBase {
+    Q_OBJECT
 
 public:
-  PolicyDlg (const QString& caption, QWidget *parent = 0,
-                    const char *name = 0);
-  ~PolicyDlg (){};
+    PolicyDlg(const QString &caption, QWidget *parent = 0, const char *name = 0);
+    ~PolicyDlg(){};
 
-  int advice() const;
-  QString domain() const;
+    int advice() const;
+    QString domain() const;
 
-  void setEnableHostEdit( bool, const QString& host = QString::null );
-  void setPolicy (int policy);
+    void setEnableHostEdit(bool, const QString &host = QString::null);
+    void setPolicy(int policy);
 
 protected slots:
-  void slotTextChanged( const QString& );
+    void slotTextChanged(const QString &);
 
 private:
-  PolicyDlgUI* m_dlgUI;
+    PolicyDlgUI *m_dlgUI;
 };
 #endif

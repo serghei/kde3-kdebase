@@ -26,12 +26,11 @@
 
 class advancedDialog;
 
-class LookAndFeelTab : public LookAndFeelTabBase
-{
+class LookAndFeelTab : public LookAndFeelTabBase {
     Q_OBJECT
 
 public:
-    LookAndFeelTab(QWidget *parent = 0, const char* name = 0);
+    LookAndFeelTab(QWidget *parent = 0, const char *name = 0);
 
     void load();
     void load(bool useDefaults);
@@ -45,12 +44,12 @@ signals:
 
 protected:
     void fillTileCombos();
-    void previewBackground(const QString& themepath, bool isNew);
+    void previewBackground(const QString &themepath, bool isNew);
 
 protected slots:
     void browseTheme();
-    void browseTheme(const QString&);
-    void enableTransparency( bool );
+    void browseTheme(const QString &);
+    void enableTransparency(bool);
 
     void launchAdvancedDialog();
     void finishAdvancedDialog();

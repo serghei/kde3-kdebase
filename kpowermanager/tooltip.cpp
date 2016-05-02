@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 Serghei Amelian <serghei.amelian@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -28,12 +28,11 @@ static int groupSpace = 1;
 static int decimals = 1;
 
 
-Tooltip::Tooltip(const QString &title, const QString &icon, KickerTip::Data &data)
-    : tip(data.subtext)
+Tooltip::Tooltip(const QString &title, const QString &icon, KickerTip::Data &data) : tip(data.subtext)
 {
     data.message = title;
     data.icon = DesktopIcon(icon, KIcon::SizeMedium);
-    //data.direction = popupDirection();
+    // data.direction = popupDirection();
     data.duration = 0;
 
     tip = QString::null;
@@ -54,7 +53,8 @@ void Tooltip::addGroup(const QString &groupName)
 
 void Tooltip::addItem(const QString &label, const QString &value, const QString &suffix)
 {
-    if(!group.isEmpty()) {
+    if(!group.isEmpty())
+    {
         tip += group;
         group = QString::null;
     }

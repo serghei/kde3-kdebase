@@ -32,31 +32,32 @@
 
 #include "khotkeysglobal.h"
 
-namespace KHotKeys
-{
+namespace KHotKeys {
 
 SoundRecorder::create_ptr SoundRecorder::create_fun = NULL;
 
-bool SoundRecorder::init( KLibrary* lib )
+bool SoundRecorder::init(KLibrary *lib)
 {
 #ifdef HAVE_ARTS
-    if( create_fun == NULL && lib != NULL )
-        create_fun = (create_ptr) lib->symbol( "khotkeys_soundrecorder_create" );
+    if(create_fun == NULL && lib != NULL)
+        create_fun = (create_ptr)lib->symbol("khotkeys_soundrecorder_create");
 #endif
-//    kdDebug( 1217 ) << "soundrecorder:" << create_fun << ":" << lib << endl;
+    //    kdDebug( 1217 ) << "soundrecorder:" << create_fun << ":" << lib << endl;
     return create_fun != NULL;
 }
 
-SoundRecorder* SoundRecorder::create( QObject* parent, const char* name )
+SoundRecorder *SoundRecorder::create(QObject *parent, const char *name)
 {
 #ifdef HAVE_ARTS
-    if( create_fun != NULL )
-        return create_fun( parent, name );
+    if(create_fun != NULL)
+        return create_fun(parent, name);
 #endif
-    return new SoundRecorder( parent, name );
+    return new SoundRecorder(parent, name);
 }
 
-SoundRecorder::SoundRecorder(QObject *parent, const char *name)  : QObject(parent, name) {}
+SoundRecorder::SoundRecorder(QObject *parent, const char *name) : QObject(parent, name)
+{
+}
 
 SoundRecorder::~SoundRecorder()
 {
@@ -77,10 +78,9 @@ void SoundRecorder::abort()
 
 Sound SoundRecorder::sound()
 {
-	Sound s;
-	return s;
+    Sound s;
+    return s;
 }
-
 }
 
 #include "soundrecorder.moc"

@@ -23,50 +23,47 @@
 
 /**
     A simple message view for Kate plugins.
-    
+
     This is a message view for displaying output from processes.
-    
-    It uses a QTextEdit in _ mode to display the text. 
-    
+
+    It uses a QTextEdit in _ mode to display the text.
+
     You can use HTML links, for example to allow the user to go
     to a line in a precessed document.
-    
+
     Connect to the linkClicked() signal to process the links.
-    
+
     @section Usage
-    
+
     To use it in the intended way:
     @li Create a KProcess (or derived class)
     @li As the output of the process arrives, hand it over
         using addText(). The view will add it to the end and
         make sure it is scrolled to the end.
-    
+
     Each time you restart the process, clear() the view.
 */
 
 class QTextBrowser;
 
-namespace Kate
-{
+namespace Kate {
 
 class MessageView : public DockViewBase {
-  Q_OBJECT
-  public:
-    MessageView( QWidget *parent=0, const char *name=0 );
+    Q_OBJECT
+public:
+    MessageView(QWidget *parent = 0, const char *name = 0);
     ~MessageView();
-    
-  public slots:
-    void addMessage( const QString &msg );
+
+public slots:
+    void addMessage(const QString &msg);
     void clear();
 
-  signals: 
-    void linkClicked( const QString & href );
-        
-  private:
+signals:
+    void linkClicked(const QString &href);
+
+private:
     QTextBrowser *m_view;
 };
-
 }
 
 #endif // _KATE_MESSAGE_VIEW_H_
-

@@ -22,6 +22,7 @@
 
 #include <kdebug.h>
 
-KateMainWindowDCOPIface::KateMainWindowDCOPIface (KateMainWindow *w) : DCOPObject ((QString("KateMainWindow#%1").arg(w->mainWindowNumber())).latin1()), m_w (w)
+KateMainWindowDCOPIface::KateMainWindowDCOPIface(KateMainWindow *w)
+    : DCOPObject((QString("KateMainWindow#%1").arg(w->mainWindowNumber())).latin1()), m_w(w)
 {
 }

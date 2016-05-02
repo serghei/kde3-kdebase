@@ -25,24 +25,24 @@
 #include <qpushbutton.h>
 class KListView;
 
-class ConfFilters : public QWidget
-{
-	Q_OBJECT
+class ConfFilters : public QWidget {
+    Q_OBJECT
 public:
-	ConfFilters(QWidget *parent = 0, const char *name = 0);
+    ConfFilters(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
+    void load();
+    void save();
 protected slots:
-	void slotAdd();
-	void slotRemove();
-	void slotChange();
-	void slotUp();
-	void slotDown();
-	void updateButton();
+    void slotAdd();
+    void slotRemove();
+    void slotChange();
+    void slotUp();
+    void slotDown();
+    void updateButton();
+
 private:
-	KListView	*m_filters;
-	QPushButton	*m_add,*m_remove,*m_up,*m_down,*m_change;
+    KListView *m_filters;
+    QPushButton *m_add, *m_remove, *m_up, *m_down, *m_change;
 };
 
 #endif

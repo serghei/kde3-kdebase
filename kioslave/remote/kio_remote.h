@@ -23,23 +23,21 @@
 #include <kio/slavebase.h>
 #include "remoteimpl.h"
 
-class RemoteProtocol : public KIO::SlaveBase
-{
+class RemoteProtocol : public KIO::SlaveBase {
 public:
-	RemoteProtocol(const QCString &protocol, const QCString &pool,
-	               const QCString &app);
-	virtual ~RemoteProtocol();
+    RemoteProtocol(const QCString &protocol, const QCString &pool, const QCString &app);
+    virtual ~RemoteProtocol();
 
-	virtual void listDir(const KURL &url);
-	virtual void stat(const KURL &url);
-	virtual void del(const KURL &url, bool isFile);
-	virtual void get(const KURL &url);
-	virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
+    virtual void del(const KURL &url, bool isFile);
+    virtual void get(const KURL &url);
+    virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
 
 private:
-	void listRoot();
-	
-	RemoteImpl m_impl;
+    void listRoot();
+
+    RemoteImpl m_impl;
 };
 
 #endif

@@ -52,46 +52,50 @@ class KonqView;
 
  * @endcode
  */
-class PopupMenuGUIClient : public KXMLGUIClient
-{
+class PopupMenuGUIClient : public KXMLGUIClient {
 public:
-  PopupMenuGUIClient( KonqMainWindow *mainWindow, const KTrader::OfferList &embeddingServices,
-                      bool isIntoTrash, bool doTabHandling );
-  virtual ~PopupMenuGUIClient();
+    PopupMenuGUIClient(KonqMainWindow *mainWindow, const KTrader::OfferList &embeddingServices, bool isIntoTrash, bool doTabHandling);
+    virtual ~PopupMenuGUIClient();
 
-  virtual KAction *action( const QDomElement &element ) const;
+    virtual KAction *action(const QDomElement &element) const;
 
 private:
-  void addEmbeddingService( QDomElement &menu, int idx, const QString &name, const KService::Ptr &service );
+    void addEmbeddingService(QDomElement &menu, int idx, const QString &name, const KService::Ptr &service);
 
-  KonqMainWindow *m_mainWindow;
+    KonqMainWindow *m_mainWindow;
 
-  QDomDocument m_doc;
+    QDomDocument m_doc;
 };
 
-class ToggleViewGUIClient : public QObject
-{
-  Q_OBJECT
+class ToggleViewGUIClient : public QObject {
+    Q_OBJECT
 public:
-  ToggleViewGUIClient( KonqMainWindow *mainWindow );
-  virtual ~ToggleViewGUIClient();
+    ToggleViewGUIClient(KonqMainWindow *mainWindow);
+    virtual ~ToggleViewGUIClient();
 
-  bool empty() const { return m_empty; }
+    bool empty() const
+    {
+        return m_empty;
+    }
 
-  QPtrList<KAction> actions() const;
-  KAction *action( const QString &name ) { return m_actions[ name ]; }
+    QPtrList< KAction > actions() const;
+    KAction *action(const QString &name)
+    {
+        return m_actions[name];
+    }
 
-  void saveConfig( bool add, const QString &serviceName );
+    void saveConfig(bool add, const QString &serviceName);
 
 private slots:
-  void slotToggleView( bool toggle );
-  void slotViewAdded( KonqView *view );
-  void slotViewRemoved( KonqView *view );
+    void slotToggleView(bool toggle);
+    void slotViewAdded(KonqView *view);
+    void slotViewRemoved(KonqView *view);
+
 private:
-  KonqMainWindow *m_mainWindow;
-  QDict<KAction> m_actions;
-  bool m_empty;
-  QMap<QString,bool> m_mapOrientation;
+    KonqMainWindow *m_mainWindow;
+    QDict< KAction > m_actions;
+    bool m_empty;
+    QMap< QString, bool > m_mapOrientation;
 };
 
 #endif

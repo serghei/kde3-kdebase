@@ -91,67 +91,64 @@
 
 #define FOUND_NAME 1
 #define FOUND_PPID 2
-#define FOUND_ALL (FOUND_NAME+FOUND_PPID)
+#define FOUND_ALL (FOUND_NAME + FOUND_PPID)
 
 unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 {
-    bool           error=false;
-    unsigned int   pid=0;
-    DIR           *dir;
+    bool error = false;
+    unsigned int pid = 0;
+    DIR *dir;
     struct dirent *entry;
 
     /* read in current process list via the /proc filesystem entry */
-    if(NULL!=(dir=opendir(PROCDIR)))
+    if(NULL != (dir = opendir(PROCDIR)))
     {
-        while((entry=readdir(dir)) && !error)
+        while((entry = readdir(dir)) && !error)
             if(isdigit(entry->d_name[0]))
             {
                 char buf[BUFSIZE];
                 FILE *fd;
 
-                snprintf(buf, BUFSIZE-1, PROCDIR"/%d/status", atoi(entry->d_name));
+                snprintf(buf, BUFSIZE - 1, PROCDIR "/%d/status", atoi(entry->d_name));
 
-                if(NULL!=(fd=fopen(buf, "r")))
+                if(NULL != (fd = fopen(buf, "r")))
                 {
-                    char format[32],
-                         tagformat[32],
-                         tag[32],
-                         name[64];
-                    int  found=0;
+                    char format[32], tagformat[32], tag[32], name[64];
+                    int found = 0;
 
-                    found=0;
-                    sprintf(format, "%%%d[^\n]\n", (int) sizeof(buf) - 1);
-                    sprintf(tagformat, "%%%ds", (int) sizeof(tag) - 1);
-                    for(;found<FOUND_ALL;)
+                    found = 0;
+                    sprintf(format, "%%%d[^\n]\n", (int)sizeof(buf) - 1);
+                    sprintf(tagformat, "%%%ds", (int)sizeof(tag) - 1);
+                    for(; found < FOUND_ALL;)
                     {
-                        if (fscanf(fd, format, buf)!=1)
+                        if(fscanf(fd, format, buf) != 1)
                             break;
-                        buf[sizeof(buf)-1]='\0';
+                        buf[sizeof(buf) - 1] = '\0';
                         sscanf(buf, tagformat, tag);
                         tag[sizeof(tag) - 1] = '\0';
-                        if(0==strcmp(tag, "Name:"))
+                        if(0 == strcmp(tag, "Name:"))
                         {
                             sscanf(buf, "%*s %63s", name);
-                            if(NULL==name || 0!=strcmp(name, proc))
+                            if(NULL == name || 0 != strcmp(name, proc))
                                 break;
-                            found|=FOUND_NAME;
+                            found |= FOUND_NAME;
                         }
-                        else if(0==strcmp(tag, "PPid:"))
+                        else if(0 == strcmp(tag, "PPid:"))
                         {
                             unsigned int proc_ppid;
 
                             sscanf(buf, "%*s %u", &proc_ppid);
-                            if(ppid!=proc_ppid)
+                            if(ppid != proc_ppid)
                                 break;
-                            found|=FOUND_PPID;
+                            found |= FOUND_PPID;
                         }
                     }
-                    if(FOUND_ALL==found)
+                    if(FOUND_ALL == found)
                     {
                         if(pid)
-                            error=true;
+                            error = true;
                         else
-                            pid=atoi(entry->d_name);
+                            pid = atoi(entry->d_name);
                     }
                     fclose(fd);
                 }
@@ -178,24 +175,23 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 #include <unistd.h>
 unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 {
-    bool              error=false;
-    unsigned int      pid=0;
-    int               mib[4];
-    size_t            len,
-                      num;
+    bool error = false;
+    unsigned int pid = 0;
+    int mib[4];
+    size_t len, num;
     struct kinfo_proc *p;
 
     mib[0] = CTL_KERN;
     mib[1] = KERN_PROC;
     mib[2] = KERN_PROC_ALL;
     sysctl(mib, 3, NULL, &len, NULL, 0);
-    p=(struct kinfo_proc*)malloc(len);
+    p = (struct kinfo_proc *)malloc(len);
     sysctl(mib, 3, p, &len, NULL, 0);
 
-    for(num=0; num < len / sizeof(struct kinfo_proc)  && !error; num++)
+    for(num = 0; num < len / sizeof(struct kinfo_proc) && !error; num++)
     {
         struct kinfo_proc proc_p;
-        size_t            len;
+        size_t len;
 
         mib[0] = CTL_KERN;
         mib[1] = KERN_PROC;
@@ -208,33 +204,33 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
         mib[3] = p[num].kp_proc.p_pid;
 #endif
 
-        len=sizeof(proc_p);
-        if(-1==sysctl(mib, 4, &proc_p, &len, NULL, 0) || !len)
+        len = sizeof(proc_p);
+        if(-1 == sysctl(mib, 4, &proc_p, &len, NULL, 0) || !len)
             break;
         else
         {
 #if __FreeBSD_version >= 500015
-            if(proc_p.ki_ppid==ppid && p[num].ki_comm && 0==strcmp(p[num].ki_comm, proc))
+            if(proc_p.ki_ppid == ppid && p[num].ki_comm && 0 == strcmp(p[num].ki_comm, proc))
                 if(pid)
-                    error=true;
+                    error = true;
                 else
-                    pid=p[num].ki_pid;
-#elif defined (__DragonFly__) && __DragonFly_version >= 190000
-            if(proc_p.kp_ppid==ppid && p[num].kp_comm && 0==strcmp(p[num].kp_comm, proc))
+                    pid = p[num].ki_pid;
+#elif defined(__DragonFly__) && __DragonFly_version >= 190000
+            if(proc_p.kp_ppid == ppid && p[num].kp_comm && 0 == strcmp(p[num].kp_comm, proc))
                 if(pid)
-                    error=true;
+                    error = true;
                 else
-                    pid=p[num].kp_pid;
+                    pid = p[num].kp_pid;
 #else
 #if defined(__DragonFly__)
-	    if(proc_p.kp_eproc.e_ppid==ppid && p[num].kp_thread.td_comm && 0==strcmp(p[num].kp_thread.td_comm, proc))
+            if(proc_p.kp_eproc.e_ppid == ppid && p[num].kp_thread.td_comm && 0 == strcmp(p[num].kp_thread.td_comm, proc))
 #else
-            if(proc_p.kp_eproc.e_ppid==ppid && p[num].kp_proc.p_comm && 0==strcmp(p[num].kp_proc.p_comm, proc))
+            if(proc_p.kp_eproc.e_ppid == ppid && p[num].kp_proc.p_comm && 0 == strcmp(p[num].kp_proc.p_comm, proc))
 #endif
                 if(pid)
-                    error=true;
+                    error = true;
                 else
-                    pid=p[num].kp_proc.p_pid;
+                    pid = p[num].kp_proc.p_pid;
 #endif
         }
     }
@@ -254,7 +250,7 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 #include <sys/resource.h>
 #ifdef OS_Solaris
 
-#if (!defined(_LP64)) && (_FILE_OFFSET_BITS - 0 == 64)
+#if(!defined(_LP64)) && (_FILE_OFFSET_BITS - 0 == 64)
 #define PROCFS_FILE_OFFSET_BITS_HACK 1
 #undef _FILE_OFFSET_BITS
 #else
@@ -263,51 +259,51 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 
 #include <procfs.h>
 
-#if (PROCFS_FILE_OFFSET_BITS_HACK - 0 == 1)
+#if(PROCFS_FILE_OFFSET_BITS_HACK - 0 == 1)
 #define _FILE_OFFSET_BITS 64
 #endif
 
 #else
 #include <sys/procfs.h>
 #include <sys/sysmp.h>
-#endif 
+#endif
 #include <sys/sysinfo.h>
 
 unsigned int kfi_getPid(const char *proc, pid_t ppid)
 {
-    DIR	         *procdir;
-    bool         error=false;
-    pid_t	 pid=(pid_t)0;
+    DIR *procdir;
+    bool error = false;
+    pid_t pid = (pid_t)0;
 
-    if(NULL!=(procdir=opendir(PROCDIR)))
+    if(NULL != (procdir = opendir(PROCDIR)))
     {
         struct dirent *de;
 
         rewinddir(procdir);
-        while((de=readdir(procdir)) && !error)
-            if('.'==de->d_name[0])
+        while((de = readdir(procdir)) && !error)
+            if('.' == de->d_name[0])
                 continue;
             else
             {
-                int        fd;
-                char       buf[BUFSIZE];
+                int fd;
+                char buf[BUFSIZE];
 #ifdef OS_Solaris
-                psinfo_t   psinfo;
+                psinfo_t psinfo;
 
                 snprintf(buf, BUFSIZE - 1, "%s/%s/psinfo", PROCDIR, de->d_name);
 #else
                 prpsinfo_t psinfo;
 
-                sprintf(buf, PROCDIR"/pinfo/%ld", pid);
+                sprintf(buf, PROCDIR "/pinfo/%ld", pid);
 #endif
 
-                if((fd=open(buf, O_RDONLY))<0)
+                if((fd = open(buf, O_RDONLY)) < 0)
                     continue;
 
 #ifdef OS_Solaris
-                if(sizeof(psinfo_t)!=read(fd, &psinfo, sizeof(psinfo_t)))
+                if(sizeof(psinfo_t) != read(fd, &psinfo, sizeof(psinfo_t)))
 #else
-                if(ioctl(fd, PIOCPSINFO, &psinfo)<0)
+                if(ioctl(fd, PIOCPSINFO, &psinfo) < 0)
 #endif
                 {
                     close(fd);
@@ -315,12 +311,12 @@ unsigned int kfi_getPid(const char *proc, pid_t ppid)
                 }
                 close(fd);
 
-                if(psinfo.pr_ppid==ppid && psinfo.pr_fname && 0==strcmp(psinfo.pr_fname, proc))
+                if(psinfo.pr_ppid == ppid && psinfo.pr_fname && 0 == strcmp(psinfo.pr_fname, proc))
                     if(pid)
-                        error=true;
+                        error = true;
                     else
-                        pid=psinfo.pr_pid;
-	    }
+                        pid = psinfo.pr_pid;
+            }
         closedir(procdir);
     }
 
@@ -334,23 +330,21 @@ unsigned int kfi_getPid(const char *proc, pid_t ppid)
 
 unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 {
-    bool              error=false;
-    unsigned int      pid=0;
-    int               i,
-                      count,
-                      idx=0; 
+    bool error = false;
+    unsigned int pid = 0;
+    int i, count, idx = 0;
     struct pst_status pst[MAX_PROCS];
 
-    while((count=pstat_getproc(&pst[0], sizeof(pst[0]), MAX_PROCS, idx)) > 0 && !error)
+    while((count = pstat_getproc(&pst[0], sizeof(pst[0]), MAX_PROCS, idx)) > 0 && !error)
     {
-        for (i = 0; i<count && !error; i++) 
-            if(pst[i].pst_ppid==ppid && pst[i].pst_ucomm && 0==strcmp(pst[i].pst_ucomm, proc))
+        for(i = 0; i < count && !error; i++)
+            if(pst[i].pst_ppid == ppid && pst[i].pst_ucomm && 0 == strcmp(pst[i].pst_ucomm, proc))
                 if(pid)
-                    error=true;
+                    error = true;
                 else
-                    pid=pst[i].pst_pid;
+                    pid = pst[i].pst_pid;
 
-        idx=pst[count-1].pst_idx+1;
+        idx = pst[count - 1].pst_idx + 1;
     }
 
     return error ? 0 : pid;
@@ -363,23 +357,21 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 
 unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 {
-    bool             error=false;
-    unsigned int     pid=0;
-    int              i,
-                     count,
-                     idx=0;
+    bool error = false;
+    unsigned int pid = 0;
+    int i, count, idx = 0;
     struct procsinfo pi[MAX_PROCS];
 
-    while((count=getprocs(&pi, sizeof(pi[0]), 0, 0, &pid, 1)) >0 && !error)
+    while((count = getprocs(&pi, sizeof(pi[0]), 0, 0, &pid, 1)) > 0 && !error)
     {
-        for (i = 0; i<count && !error; i++)
-            if(pi[i].pi_ppid==ppid && pi[i].pi_comm && 0==strcmp(pi[i].pi_comm, proc))
+        for(i = 0; i < count && !error; i++)
+            if(pi[i].pi_ppid == ppid && pi[i].pi_comm && 0 == strcmp(pi[i].pi_comm, proc))
                 if(pid)
-                    error=true;
+                    error = true;
                 else
-                    pid=pi[i].pi_pid;
+                    pid = pi[i].pi_pid;
 
-        idx=pi[count-1].pi_idx+1;
+        idx = pi[count - 1].pi_idx + 1;
     }
 
     return error ? 0 : pid;
@@ -394,111 +386,104 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 #include <limits.h>
 #include <ctype.h>
 
-#define FOUND_PID  1
+#define FOUND_PID 1
 #define FOUND_PPID 2
-#define FOUND_CMD  4
-#define FOUND_ALL  (FOUND_PID+FOUND_PPID+FOUND_CMD)
+#define FOUND_CMD 4
+#define FOUND_ALL (FOUND_PID + FOUND_PPID + FOUND_CMD)
 
 static int checkCmd(const char *proc, const char *cmd)
 {
-    int len=(int)strlen(cmd),
-        ch;
+    int len = (int)strlen(cmd), ch;
 
-    if(len>1)
-        for(ch=len-2; ch>=0; --ch)
-            if('/'==cmd[ch])
-                return strcmp(proc, &cmd[ch+1]);
+    if(len > 1)
+        for(ch = len - 2; ch >= 0; --ch)
+            if('/' == cmd[ch])
+                return strcmp(proc, &cmd[ch + 1]);
 
     return strcmp(proc, cmd);
 }
 
 unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 {
-    bool         error=false;
-    unsigned int pid=0;
-    static int   pid_c=-1,
-                 ppid_c=-1,
-                 time_c=-1,
-                 cmd_c=-1;
+    bool error = false;
+    unsigned int pid = 0;
+    static int pid_c = -1, ppid_c = -1, time_c = -1, cmd_c = -1;
 
-    char         cmd[BUFSIZE+1];
-    FILE         *p;
+    char cmd[BUFSIZE + 1];
+    FILE *p;
 
     /* If this function has been run before, and we know the column positions, then we can grep for just our command */
-    if(-1!=pid_c && -1!=ppid_c && -1!=time_c && -1!=cmd_c)
+    if(-1 != pid_c && -1 != ppid_c && -1 != time_c && -1 != cmd_c)
         snprintf(cmd, BUFSIZE, "ps -eaf | grep %s", proc);
     else
         strcpy(cmd, "ps -eaf");
 
-    if(NULL!=(p=popen(cmd, "r")))
+    if(NULL != (p = popen(cmd, "r")))
     {
-        char line[BUFSIZE+1];
-        int  c=0;
-        char *linep=NULL,
-             *token=NULL;
+        char line[BUFSIZE + 1];
+        int c = 0;
+        char *linep = NULL, *token = NULL;
 
         /* Read 1st line to determine columns... */
-        if((-1==pid_c || -1==ppid_c || -1==time_c || -1==cmd_c) && NULL!=fgets(line, BUFSIZE, p))
+        if((-1 == pid_c || -1 == ppid_c || -1 == time_c || -1 == cmd_c) && NULL != fgets(line, BUFSIZE, p))
         {
-            for(linep=line; -1==pid_c || -1==ppid_c || -1==time_c || -1==cmd_c; linep=NULL)
-                if(NULL!=(token=strtok(linep, " \t\n")))
+            for(linep = line; - 1 == pid_c || -1 == ppid_c || -1 == time_c || -1 == cmd_c; linep = NULL)
+                if(NULL != (token = strtok(linep, " \t\n")))
                 {
-                    if(0==strcmp("PID", token))
-                        pid_c=c;
-                    else if(0==strcmp("PPID", token))
-                        ppid_c=c;
-                    else if(NULL!=strstr("TIME", token))
-                        time_c=c;
-                    else if(0==strcmp("COMMAND", token) || 0==strcmp("CMD", token))
-                        cmd_c=c;
+                    if(0 == strcmp("PID", token))
+                        pid_c = c;
+                    else if(0 == strcmp("PPID", token))
+                        ppid_c = c;
+                    else if(NULL != strstr("TIME", token))
+                        time_c = c;
+                    else if(0 == strcmp("COMMAND", token) || 0 == strcmp("CMD", token))
+                        cmd_c = c;
                     c++;
                 }
                 else
                     break;
         }
 
-        /* If all column headings read, then look for details... */ 
-        if(-1!=pid_c && -1!=ppid_c && -1!=time_c && -1!=cmd_c)
-            while(NULL!=fgets(line, BUFSIZE, p) && !error)
+        /* If all column headings read, then look for details... */
+        if(-1 != pid_c && -1 != ppid_c && -1 != time_c && -1 != cmd_c)
+            while(NULL != fgets(line, BUFSIZE, p) && !error)
             {
-                int found=0,
-                    ps_pid=0,
-                    offset=0;
+                int found = 0, ps_pid = 0, offset = 0;
 
-                c=0;
-                for(linep=line; FOUND_ALL!=found; linep=NULL)
-                    if(NULL!=(token=strtok(linep, " \t\n")))
+                c = 0;
+                for(linep = line; FOUND_ALL != found; linep = NULL)
+                    if(NULL != (token = strtok(linep, " \t\n")))
                     {
-                        if(c==pid_c)
+                        if(c == pid_c)
                         {
-                            found|=FOUND_PID;
-                            ps_pid=atoi(token);
+                            found |= FOUND_PID;
+                            ps_pid = atoi(token);
                         }
-                        else if(c==ppid_c)
+                        else if(c == ppid_c)
                         {
-                            if(((unsigned int)atoi(token))!=ppid)
+                            if(((unsigned int)atoi(token)) != ppid)
                                 break;
-                            found|=FOUND_PPID;
+                            found |= FOUND_PPID;
                         }
-                        else if(c==time_c)
-                            offset=isdigit(token[0]) ? 0 : 1;
-                        else if(c==(cmd_c+offset))
+                        else if(c == time_c)
+                            offset = isdigit(token[0]) ? 0 : 1;
+                        else if(c == (cmd_c + offset))
                         {
-                            if(0!=checkCmd(proc, token))
+                            if(0 != checkCmd(proc, token))
                                 break;
-                            found|=FOUND_CMD;
+                            found |= FOUND_CMD;
                         }
                         c++;
                     }
                     else
                         break;
 
-                if(FOUND_ALL==found)
+                if(FOUND_ALL == found)
                 {
                     if(pid)
-                        error=true;
+                        error = true;
                     else
-                        pid=ps_pid;
+                        pid = ps_pid;
                 }
             }
         pclose(p);
@@ -512,7 +497,7 @@ unsigned int kfi_getPid(const char *proc, unsigned int ppid)
 #ifdef TEST_GETPID
 int main(int argc, char *argv[])
 {
-    if(3==argc)
+    if(3 == argc)
         printf("PID %u\n", kfi_getPid(argv[1], atoi(argv[2])));
     else
         printf("Usage: %s <process> <parent-process-id>\n", argv[0]);

@@ -26,30 +26,30 @@
 #include <qfile.h>
 #include <qtextstream.h>
 
-class MacProtocol : public QObject, public KIO::SlaveBase
-{
+class MacProtocol : public QObject, public KIO::SlaveBase {
     Q_OBJECT
 public:
     MacProtocol(const QCString &pool, const QCString &app);
     ~MacProtocol();
-    virtual void get(const KURL& url );
-    virtual void listDir(const KURL& url);
-    virtual void stat(const KURL& url);
+    virtual void get(const KURL &url);
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
 protected slots:
-    void slotGetStdOutput(KProcess*, char*, int);
-    void slotSetDataStdOutput(KProcess*, char *s, int len);
+    void slotGetStdOutput(KProcess *, char *, int);
+    void slotSetDataStdOutput(KProcess *, char *s, int len);
+
 protected:
-    QString prepareHP(const KURL& _url);
-    QValueList<KIO::UDSAtom> makeUDS(const QString& _line);
+    QString prepareHP(const KURL &_url);
+    QValueList< KIO::UDSAtom > makeUDS(const QString &_line);
     int makeTime(QString mday, QString mon, QString third);
     QString getMimetype(QString type, QString app);
-    QValueList<KIO::UDSAtom> doStat(const KURL& url);
+    QValueList< KIO::UDSAtom > doStat(const KURL &url);
 
     KIO::filesize_t processedBytes;
     QString standardOutputStream;
-    KProcess* myKProcess;
+    KProcess *myKProcess;
 
-    //for debugging
-    //QFile* logFile;
-    //QTextStream* logStream;
+    // for debugging
+    // QFile* logFile;
+    // QTextStream* logStream;
 };

@@ -29,26 +29,25 @@
 #include <qtabwidget.h>
 #include <kcmodule.h>
 
-class IconModule : public KCModule
-{
-  Q_OBJECT
+class IconModule : public KCModule {
+    Q_OBJECT
 
 public:
-  IconModule(QWidget *parent, const char *name, const QStringList &);
+    IconModule(QWidget *parent, const char *name, const QStringList &);
 
-  void load();
-  void save();
-  void defaults();
-  QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
 protected slots:
-  void moduleChanged(bool state);
+    void moduleChanged(bool state);
 
 private:
-  QTabWidget   *tab;
+    QTabWidget *tab;
 
-  KCModule *tab1;
-  KCModule *tab2;
+    KCModule *tab1;
+    KCModule *tab2;
 };
 
 

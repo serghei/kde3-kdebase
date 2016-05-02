@@ -36,107 +36,121 @@ class KAction;
 
 class QToolButton;
 
-class KateViewManager : public QObject
-{
-  Q_OBJECT
+class KateViewManager : public QObject {
+    Q_OBJECT
 
-  public:
-    KateViewManager (KateMainWindow *parent);
-    ~KateViewManager ();
+public:
+    KateViewManager(KateMainWindow *parent);
+    ~KateViewManager();
 
-    Kate::ViewManager *viewManager () const { return m_viewManager; };
+    Kate::ViewManager *viewManager() const
+    {
+        return m_viewManager;
+    };
 
-    KateViewSpaceContainer *activeContainer () { return m_currentContainer; }
+    KateViewSpaceContainer *activeContainer()
+    {
+        return m_currentContainer;
+    }
 
-    QPtrList<KateViewSpaceContainer> *containers() { return &m_viewSpaceContainerList; }
+    QPtrList< KateViewSpaceContainer > *containers()
+    {
+        return &m_viewSpaceContainerList;
+    }
 
-    void updateViewSpaceActions ();
+    void updateViewSpaceActions();
 
-  private:
+private:
     /**
      * create all actions needed for the view manager
      */
-    void setupActions ();
+    void setupActions();
 
-  public:
+public:
     /* This will save the splitter configuration */
-    void saveViewConfiguration(KConfig *config,const QString& group);
+    void saveViewConfiguration(KConfig *config, const QString &group);
 
     /* restore it */
-    void restoreViewConfiguration (KConfig *config,const QString& group);
+    void restoreViewConfiguration(KConfig *config, const QString &group);
 
-    uint openURL (const KURL &url, const QString& encoding, bool activate = true, bool isTempFile=false);
+    uint openURL(const KURL &url, const QString &encoding, bool activate = true, bool isTempFile = false);
 
-  public slots:
-    void openURL (const KURL &url);
+public slots:
+    void openURL(const KURL &url);
 
-  private:
-    void removeViewSpace (KateViewSpace *viewspace);
+private:
+    void removeViewSpace(KateViewSpace *viewspace);
 
     bool showFullPath;
 
-  public:
-    Kate::View* activeView ();
-    KateViewSpace* activeViewSpace ();
+public:
+    Kate::View *activeView();
+    KateViewSpace *activeViewSpace();
 
-    uint viewCount ();
-    uint viewSpaceCount ();
+    uint viewCount();
+    uint viewSpaceCount();
 
-    void setViewActivationBlocked (bool block);
+    void setViewActivationBlocked(bool block);
 
-  public:
+public:
     void closeViews(uint documentNumber);
     KateMainWindow *mainWindow();
 
-  private slots:
-    void activateView ( Kate::View *view );
-    void activateSpace ( Kate::View* v );
+private slots:
+    void activateView(Kate::View *view);
+    void activateSpace(Kate::View *v);
 
-    void tabChanged(QWidget*);
+    void tabChanged(QWidget *);
 
-  public slots:
-    bool getShowFullPath() const { return showFullPath; }
+public slots:
+    bool getShowFullPath() const
+    {
+        return showFullPath;
+    }
 
-    void activateView ( uint documentNumber );
-    void activateView ( int documentNumber ) { activateView((uint) documentNumber); };
+    void activateView(uint documentNumber);
+    void activateView(int documentNumber)
+    {
+        activateView((uint)documentNumber);
+    };
 
-    void slotDocumentNew ();
-    void slotDocumentOpen ();
-    void slotDocumentClose ();
+    void slotDocumentNew();
+    void slotDocumentOpen();
+    void slotDocumentClose();
 
     /** Splits the active viewspace horizontally */
-    void slotSplitViewSpaceHoriz ();
+    void slotSplitViewSpaceHoriz();
     /** Splits the active viewspace vertically */
-    void slotSplitViewSpaceVert ();
+    void slotSplitViewSpaceVert();
 
     void slotNewTab();
-    void slotCloseTab ();
-    void activateNextTab ();
-    void activatePrevTab ();
+    void slotCloseTab();
+    void activateNextTab();
+    void activatePrevTab();
 
     void slotCloseCurrentViewSpace();
 
-    void setActiveSpace ( KateViewSpace* vs );
-    void setActiveView ( Kate::View* view );
+    void setActiveSpace(KateViewSpace *vs);
+    void setActiveView(Kate::View *view);
 
     void setShowFullPath(bool enable);
 
     void activateNextView();
     void activatePrevView();
 
-  protected:
+protected:
     friend class KateViewSpaceContainer;
 
-    QGuardedPtr<Kate::View> guiMergedView;
+    QGuardedPtr< Kate::View > guiMergedView;
 
-  signals:
-    void statusChanged (Kate::View *, int, int, int, bool, int, const QString &);
-    void statChanged ();
-    void viewChanged ();
+signals:
+    void statusChanged(Kate::View *, int, int, int, bool, int, const QString &);
+    void statChanged();
+    void viewChanged();
 
-  private:
+private:
     Kate::ViewManager *m_viewManager;
-    QPtrList<KateViewSpaceContainer> m_viewSpaceContainerList;
+    QPtrList< KateViewSpaceContainer > m_viewSpaceContainerList;
     KateViewSpaceContainer *m_currentContainer;
 
     KateMainWindow *m_mainWindow;

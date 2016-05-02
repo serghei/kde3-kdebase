@@ -66,9 +66,9 @@ private: // Private attributes
         Not currently implemented */
     Q_UINT32 mExtendedCount;
 
-     /** Longname of the file as found in a SSH_FXP_NAME sftp packet.
-          These contents are parse to return the file's owner name and
-          gr oup name. */
+    /** Longname of the file as found in a SSH_FXP_NAME sftp packet.
+         These contents are parse to return the file's owner name and
+         gr oup name. */
     QCString mLongname;
 
     QString mUserName;
@@ -84,18 +84,17 @@ private: // Private attributes
     bool mDirAttrs;
 
     /** Holds the encoding of the remote host */
-    KRemoteEncoding* mEncoding;
+    KRemoteEncoding *mEncoding;
 
 public:
     sftpFileAttr();
 
-    sftpFileAttr(KRemoteEncoding* encoding);
+    sftpFileAttr(KRemoteEncoding *encoding);
 
     ~sftpFileAttr();
 
     /** Constructor to initialize the file attributes on declaration. */
-    sftpFileAttr(Q_ULLONG size_, uid_t uid_, gid_t gid_, mode_t permissions_,
-                 time_t atime_, time_t mtime_, Q_UINT32 extendedCount_ = 0);
+    sftpFileAttr(Q_ULLONG size_, uid_t uid_, gid_t gid_, mode_t permissions_, time_t atime_, time_t mtime_, Q_UINT32 extendedCount_ = 0);
 
     /** Return the size of the sftp attribute not including filename or longname*/
     Q_UINT32 size() const;
@@ -105,120 +104,206 @@ public:
 
     /** Set the size of the file. */
     void setFileSize(Q_ULLONG s)
-        { mSize = s; mFlags |= SSH2_FILEXFER_ATTR_SIZE; }
+    {
+        mSize = s;
+        mFlags |= SSH2_FILEXFER_ATTR_SIZE;
+    }
 
     /** The size file attribute will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. */
     void clearFileSize()
-        { mSize = 0; mFlags &= ~SSH2_FILEXFER_ATTR_SIZE; }
+    {
+        mSize = 0;
+        mFlags &= ~SSH2_FILEXFER_ATTR_SIZE;
+    }
 
     /** Returns the size of the file. */
-    Q_ULLONG fileSize() const { return mSize; }
+    Q_ULLONG fileSize() const
+    {
+        return mSize;
+    }
 
     /** Sets the POSIX permissions of the file. */
     void setPermissions(mode_t p)
-        { mPermissions = p; mFlags |= SSH2_FILEXFER_ATTR_PERMISSIONS; }
+    {
+        mPermissions = p;
+        mFlags |= SSH2_FILEXFER_ATTR_PERMISSIONS;
+    }
 
     /** The permissions file attribute will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. */
     void clearPermissions()
-        { mPermissions = 0; mFlags &= ~SSH2_FILEXFER_ATTR_PERMISSIONS; }
+    {
+        mPermissions = 0;
+        mFlags &= ~SSH2_FILEXFER_ATTR_PERMISSIONS;
+    }
 
     /** Returns the POSIX permissons of the file. */
-    mode_t permissions() const { return mPermissions; }
+    mode_t permissions() const
+    {
+        return mPermissions;
+    }
 
     /** Sets the group id of the file. */
     void setGid(gid_t id)
-        { mGid = id; mFlags |= SSH2_FILEXFER_ATTR_UIDGID; }
+    {
+        mGid = id;
+        mFlags |= SSH2_FILEXFER_ATTR_UIDGID;
+    }
 
     /** Neither the gid or uid file attributes will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. This is
         equivalent to clearUid() */
     void clearGid()
-        { mGid = 0; mFlags &= SSH2_FILEXFER_ATTR_UIDGID; }
+    {
+        mGid = 0;
+        mFlags &= SSH2_FILEXFER_ATTR_UIDGID;
+    }
 
     /** Returns the group id of the file. */
-    gid_t gid() const { return mGid; }
+    gid_t gid() const
+    {
+        return mGid;
+    }
 
     /** Sets the uid of the file. */
     void setUid(uid_t id)
-        { mUid = id; mFlags |= SSH2_FILEXFER_ATTR_UIDGID; }
+    {
+        mUid = id;
+        mFlags |= SSH2_FILEXFER_ATTR_UIDGID;
+    }
 
     /** Neither the gid or uid file attributes will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. This is
         equivalent to clearGid() */
     void clearUid()
-        { mUid = 0; mFlags &= SSH2_FILEXFER_ATTR_UIDGID; }
+    {
+        mUid = 0;
+        mFlags &= SSH2_FILEXFER_ATTR_UIDGID;
+    }
 
     /** Returns the user id of the file. */
-    gid_t uid() const { return mUid; }
+    gid_t uid() const
+    {
+        return mUid;
+    }
 
     /** Set the modificatoin time of the file in seconds since Jan. 1, 1970. */
     void setMtime(time_t t)
-        { mMtime = t; mFlags |= SSH2_FILEXFER_ATTR_ACMODTIME; }
+    {
+        mMtime = t;
+        mFlags |= SSH2_FILEXFER_ATTR_ACMODTIME;
+    }
 
     /** Neither the mtime or atime file attributes will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. This is
         equivalent to clearAtime() */
     void clearMtime()
-        { mMtime = 0; mFlags &= SSH2_FILEXFER_ATTR_ACMODTIME; }
+    {
+        mMtime = 0;
+        mFlags &= SSH2_FILEXFER_ATTR_ACMODTIME;
+    }
 
     /** Returns the modification time of the file in seconds since Jan. 1, 1970. */
-    time_t mtime() const { return mMtime; }
+    time_t mtime() const
+    {
+        return mMtime;
+    }
 
     /** Sets the access time of the file in seconds since Jan. 1, 1970. */
     void setAtime(time_t t)
-        { mAtime = t; mFlags |= SSH2_FILEXFER_ATTR_ACMODTIME; }
+    {
+        mAtime = t;
+        mFlags |= SSH2_FILEXFER_ATTR_ACMODTIME;
+    }
 
     /** Neither the atime or mtime file attributes will not be included in the UDSEntry
         or when the file attribute is written to the sftp packet. This is
         equivalent to clearMtime() */
     void clearAtime()
-        { mAtime = 0; mFlags &= SSH2_FILEXFER_ATTR_ACMODTIME; }
+    {
+        mAtime = 0;
+        mFlags &= SSH2_FILEXFER_ATTR_ACMODTIME;
+    }
 
     /** Returns the last access time of the file in seconds since Jan. 1, 1970. */
-    time_t atime() const { return mAtime; }
+    time_t atime() const
+    {
+        return mAtime;
+    }
 
     /** Sets the number of file attribute extensions. */
     void setExtendedCount(unsigned int c)
-        { mExtendedCount = c; mFlags |= SSH2_FILEXFER_ATTR_EXTENDED; }
+    {
+        mExtendedCount = c;
+        mFlags |= SSH2_FILEXFER_ATTR_EXTENDED;
+    }
 
     /** No extensions will be included when the file attribute is written
         to a sftp packet. */
     void clearExtensions()
-        { mExtendedCount = 0; mFlags &= ~SSH2_FILEXFER_ATTR_EXTENDED; }
+    {
+        mExtendedCount = 0;
+        mFlags &= ~SSH2_FILEXFER_ATTR_EXTENDED;
+    }
 
     /** Returns the number of file attribute extentsions. */
-    unsigned int extendedCount() const { return mExtendedCount; }
+    unsigned int extendedCount() const
+    {
+        return mExtendedCount;
+    }
 
     /** Returns the flags for the sftp file attributes. */
-    unsigned int flags() const { return mFlags; }
+    unsigned int flags() const
+    {
+        return mFlags;
+    }
 
     /** Sets file's longname. See sftpFileAttr::longname. */
-    void setLongname(QString l) { mLongname = l.latin1(); }
+    void setLongname(QString l)
+    {
+        mLongname = l.latin1();
+    }
 
     /** Returns a string describing the file attributes. The format is specific
         to the implementation of the sftp server.  In most cases (ie OpenSSH)
         this is similar to the long output of 'ls'. */
-    QString longname() const { return mLongname; }
+    QString longname() const
+    {
+        return mLongname;
+    }
 
-    void setLinkDestination(const QString& target)
-        { mLinkDestination = target; }
+    void setLinkDestination(const QString &target)
+    {
+        mLinkDestination = target;
+    }
 
     QString linkDestination()
-        { return mLinkDestination; }
+    {
+        return mLinkDestination;
+    }
 
     /** Sets the actual type a symbolic link points to. */
-    void setLinkType (mode_t type) { mLinkType = type; }
+    void setLinkType(mode_t type)
+    {
+        mLinkType = type;
+    }
 
-    mode_t linkType() const { return mLinkType; }
+    mode_t linkType() const
+    {
+        return mLinkType;
+    }
 
     /** No descriptions */
-    void setFilename(const QString& fn)
-        { mFilename = fn; }
+    void setFilename(const QString &fn)
+    {
+        mFilename = fn;
+    }
 
     QString filename() const
-        { return mFilename; }
+    {
+        return mFilename;
+    }
 
     /** Returns a UDSEntry describing the file.
        The UDSEntry is generated from the sftp file attributes. */
@@ -228,7 +313,7 @@ public:
         This will only write the sftp ATTR structure to the stream.
         It will never write the filename and longname because the client
         never sends those to the server. */
-    friend QDataStream& operator<< (QDataStream&, const sftpFileAttr&);
+    friend QDataStream &operator<<(QDataStream &, const sftpFileAttr &);
 
     /** Use to read a file attribute from a sftp packet.
         Read this carefully! If the DirAttrs flag is true, this will
@@ -237,25 +322,31 @@ public:
         If the DirAttrs flag is false, this will only read file attributes
         from the stream.
         BY DEFAULT, A NEW INSTANCE HAS DirAttrs == false */
-    friend QDataStream& operator>> (QDataStream&, sftpFileAttr&);
+    friend QDataStream &operator>>(QDataStream &, sftpFileAttr &);
 
     /** Parse longname for the owner and group names. */
     void getUserGroupNames();
 
     /** Sets the DirAttrs flag.  This flag affects how the >> operator works on data streams. */
-    void setDirAttrsFlag(bool flag){ mDirAttrs = flag; }
+    void setDirAttrsFlag(bool flag)
+    {
+        mDirAttrs = flag;
+    }
 
     /** Gets the DirAttrs flag. */
-    bool getDirAttrsFlag() const { return mDirAttrs; }
+    bool getDirAttrsFlag() const
+    {
+        return mDirAttrs;
+    }
 
-    friend kdbgstream& operator<< (kdbgstream& s, sftpFileAttr& a);
-    friend kndbgstream& operator<< (kndbgstream& s, sftpFileAttr& a);
+    friend kdbgstream &operator<<(kdbgstream &s, sftpFileAttr &a);
+    friend kndbgstream &operator<<(kndbgstream &s, sftpFileAttr &a);
 
     /** Returns the file type as determined from the file permissions */
     mode_t fileType() const;
 
     /** Set the encoding of the remote file system */
-    void setEncoding( KRemoteEncoding* encoding );
+    void setEncoding(KRemoteEncoding *encoding);
 };
 
 #endif

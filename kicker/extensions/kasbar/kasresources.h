@@ -73,23 +73,46 @@ class KasBar;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KasResources : public QObject
-{
+class KasResources : public QObject {
     Q_OBJECT
 
 public:
-    KasResources( KasBar *parent, const char *name=0 );
+    KasResources(KasBar *parent, const char *name = 0);
     virtual ~KasResources();
 
-    QColor labelPenColor() const    { return labelPenColor_; }
-    QColor labelBgColor() const     { return labelBgColor_; }
-    QColor inactivePenColor() const { return inactivePenColor_; }
-    QColor inactiveBgColor() const  { return inactiveBgColor_; }
-    QColor activePenColor() const   { return activePenColor_; }
-    QColor activeBgColor() const    { return activeBgColor_; }
+    QColor labelPenColor() const
+    {
+        return labelPenColor_;
+    }
+    QColor labelBgColor() const
+    {
+        return labelBgColor_;
+    }
+    QColor inactivePenColor() const
+    {
+        return inactivePenColor_;
+    }
+    QColor inactiveBgColor() const
+    {
+        return inactiveBgColor_;
+    }
+    QColor activePenColor() const
+    {
+        return activePenColor_;
+    }
+    QColor activeBgColor() const
+    {
+        return activeBgColor_;
+    }
 
-    QColor progressColor() const    { return progressColor_; }      
-    QColor attentionColor() const    { return attentionColor_; }      
+    QColor progressColor() const
+    {
+        return progressColor_;
+    }
+    QColor attentionColor() const
+    {
+        return attentionColor_;
+    }
 
     /** Accessor for the min icon (singleton). */
     QBitmap minIcon();
@@ -117,22 +140,22 @@ public:
 
     /** Accessor used by items to get the active bg fill. */
     KPixmap activeBg();
-    
+
     /** Accessor used by items to get the inactive bg fill. */
     KPixmap inactiveBg();
 
-    QValueVector<QPixmap> startupAnimation();
+    QValueVector< QPixmap > startupAnimation();
 
 public slots:
-    void setLabelPenColor( const QColor &color );
-    void setLabelBgColor( const QColor &color );
-    void setInactivePenColor( const QColor &color );
-    void setInactiveBgColor( const QColor &color );
-    void setActivePenColor( const QColor &color );
-    void setActiveBgColor( const QColor &color );
+    void setLabelPenColor(const QColor &color);
+    void setLabelBgColor(const QColor &color);
+    void setInactivePenColor(const QColor &color);
+    void setInactiveBgColor(const QColor &color);
+    void setActivePenColor(const QColor &color);
+    void setActiveBgColor(const QColor &color);
 
-    void setProgressColor( const QColor &color );
-    void setAttentionColor( const QColor &color );
+    void setProgressColor(const QColor &color);
+    void setAttentionColor(const QColor &color);
 
     void itemSizeChanged();
 
@@ -164,8 +187,7 @@ private:
     KPixmap actBg;
     KPixmap inactBg;
 
-    QValueVector<QPixmap> startupFrames_;
+    QValueVector< QPixmap > startupFrames_;
 };
 
 #endif // KASRESOURCES_H
-

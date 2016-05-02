@@ -20,29 +20,29 @@
 #include "extension.h"
 
 
-QMap<QString, FILE*> XKBExtension::fileCache;	//TODO: move to class?
+QMap< QString, FILE * > XKBExtension::fileCache; // TODO: move to class?
 
 
-static QString getLayoutKey(const QString& layout, const QString& variant)
+static QString getLayoutKey(const QString &layout, const QString &variant)
 {
-	return layout + "." + variant;
+    return layout + "." + variant;
 }
 
-QString XKBExtension::getPrecompiledLayoutFilename(const QString& layoutKey)
+QString XKBExtension::getPrecompiledLayoutFilename(const QString &layoutKey)
 {
-	QString compiledLayoutFileName = m_tempDir + layoutKey + ".xkm";
-	return compiledLayoutFileName;
+    QString compiledLayoutFileName = m_tempDir + layoutKey + ".xkm";
+    return compiledLayoutFileName;
 }
 
 XKBExtension::XKBExtension(Display *d)
 {
-	if ( d == NULL )
-		d = qt_xdisplay();
-	m_dpy = d;
-	
-//	QStringList dirs = KGlobal::dirs()->findDirs ( "tmp", "" );
-//	m_tempDir = dirs.count() == 0 ? "/tmp/" : dirs[0];
-	m_tempDir = locateLocal("tmp", "");
+    if(d == NULL)
+        d = qt_xdisplay();
+    m_dpy = d;
+
+    //	QStringList dirs = KGlobal::dirs()->findDirs ( "tmp", "" );
+    //	m_tempDir = dirs.count() == 0 ? "/tmp/" : dirs[0];
+    m_tempDir = locateLocal("tmp", "");
 }
 
 bool XKBExtension::init()
@@ -51,11 +51,10 @@ bool XKBExtension::init()
 
     int major = XkbMajorVersion;
     int minor = XkbMinorVersion;
-	
-    if (!XkbLibraryVersion(&major, &minor))
+
+    if(!XkbLibraryVersion(&major, &minor))
     {
-        kdError() << "Xlib XKB extension " << major << '.' << minor <<
-            " != " << XkbMajorVersion << '.' << XkbMinorVersion << endl;
+        kdError() << "Xlib XKB extension " << major << '.' << minor << " != " << XkbMajorVersion << '.' << XkbMinorVersion << endl;
         return false;
     }
 
@@ -64,11 +63,9 @@ bool XKBExtension::init()
     int opcode_rtrn;
     int error_rtrn;
     int xkb_opcode;
-    if (!XkbQueryExtension(m_dpy, &opcode_rtrn, &xkb_opcode, &error_rtrn,
-                         &major, &minor))
+    if(!XkbQueryExtension(m_dpy, &opcode_rtrn, &xkb_opcode, &error_rtrn, &major, &minor))
     {
-        kdError() << "X server XKB extension " << major << '.' << minor <<
-            " != " << XkbMajorVersion << '.' << XkbMinorVersion << endl;
+        kdError() << "X server XKB extension " << major << '.' << minor << " != " << XkbMajorVersion << '.' << XkbMinorVersion << endl;
         return false;
     }
 
@@ -80,31 +77,32 @@ bool XKBExtension::init()
 
 void XKBExtension::reset()
 {
-	for(QMap<QString, FILE*>::ConstIterator it = fileCache.begin(); it != fileCache.end(); it++) {
-		fclose(*it);
-//		remove( QFile::encodeName(getPrecompiledLayoutFileName(*it)) );
-	}
-	fileCache.clear();
+    for(QMap< QString, FILE * >::ConstIterator it = fileCache.begin(); it != fileCache.end(); it++)
+    {
+        fclose(*it);
+        //		remove( QFile::encodeName(getPrecompiledLayoutFileName(*it)) );
+    }
+    fileCache.clear();
 }
 
 XKBExtension::~XKBExtension()
 {
-/*	if( m_compiledLayoutFileNames.isEmpty() == false )
-		deletePrecompiledLayouts();*/
+    /*	if( m_compiledLayoutFileNames.isEmpty() == false )
+            deletePrecompiledLayouts();*/
 }
 
-bool XKBExtension::setXkbOptions(const QString& options, bool resetOld)
+bool XKBExtension::setXkbOptions(const QString &options, bool resetOld)
 {
-    if (options.isEmpty())
+    if(options.isEmpty())
         return true;
 
     QString exe = KGlobal::dirs()->findExe("setxkbmap");
-    if (exe.isEmpty())
+    if(exe.isEmpty())
         return false;
 
     KProcess p;
     p << exe;
-    if( resetOld )
+    if(resetOld)
         p << "-option";
     p << "-option" << options;
 
@@ -113,88 +111,91 @@ bool XKBExtension::setXkbOptions(const QString& options, bool resetOld)
     return p.normalExit() && (p.exitStatus() == 0);
 }
 
-bool XKBExtension::setLayout(const QString& model,
-		const QString& layout, const QString& variant,
-		const QString& includeGroup, bool useCompiledLayouts)
+bool XKBExtension::setLayout(const QString &model, const QString &layout, const QString &variant, const QString &includeGroup,
+                             bool useCompiledLayouts)
 {
-	if( useCompiledLayouts == false ) {
-		return setLayoutInternal( model, layout, variant, includeGroup );
-	}
-	
-	const QString layoutKey = getLayoutKey(layout, variant);
-	
-	bool res;
-	if( fileCache.contains(layoutKey) ) {
-		res = setCompiledLayout( layoutKey );
-		kdDebug() << "setCompiledLayout " << layoutKey << ": " << res << endl;
+    if(useCompiledLayouts == false)
+    {
+        return setLayoutInternal(model, layout, variant, includeGroup);
+    }
 
-		if( res )
-			return res;
-	}
-//	else {
-		res = setLayoutInternal( model, layout, variant, includeGroup );
-		kdDebug() << "setRawLayout " << layoutKey << ": " << res << endl;
-		if( res )
-			compileCurrentLayout( layoutKey );
-		
-//	}
-	return res;
+    const QString layoutKey = getLayoutKey(layout, variant);
+
+    bool res;
+    if(fileCache.contains(layoutKey))
+    {
+        res = setCompiledLayout(layoutKey);
+        kdDebug() << "setCompiledLayout " << layoutKey << ": " << res << endl;
+
+        if(res)
+            return res;
+    }
+    //	else {
+    res = setLayoutInternal(model, layout, variant, includeGroup);
+    kdDebug() << "setRawLayout " << layoutKey << ": " << res << endl;
+    if(res)
+        compileCurrentLayout(layoutKey);
+
+    //	}
+    return res;
 }
 
 // private
-bool XKBExtension::setLayoutInternal(const QString& model,
-		const QString& layout, const QString& variant,
-		const QString& includeGroup)
+bool XKBExtension::setLayoutInternal(const QString &model, const QString &layout, const QString &variant, const QString &includeGroup)
 {
-    if ( layout.isEmpty() )
+    if(layout.isEmpty())
         return false;
 
-	QString exe = KGlobal::dirs()->findExe("setxkbmap");
-	if( exe.isEmpty() ) {
-		kdError() << "Can't find setxkbmap" << endl;
-		return false;
-	}
+    QString exe = KGlobal::dirs()->findExe("setxkbmap");
+    if(exe.isEmpty())
+    {
+        kdError() << "Can't find setxkbmap" << endl;
+        return false;
+    }
 
     QString fullLayout = layout;
     QString fullVariant = variant;
-	if( includeGroup.isEmpty() == false ) {
+    if(includeGroup.isEmpty() == false)
+    {
         fullLayout = includeGroup;
         fullLayout += ",";
         fullLayout += layout;
-		
-//    fullVariant = baseVar;
+
+        //    fullVariant = baseVar;
         fullVariant = ",";
         fullVariant += variant;
     }
- 
+
     KProcess p;
     p << exe;
-//  p << "-rules" << rule;
-	if( model.isEmpty() == false )
-		p << "-model" << model;
+    //  p << "-rules" << rule;
+    if(model.isEmpty() == false)
+        p << "-model" << model;
     p << "-layout" << fullLayout;
-    if( !fullVariant.isNull() && !fullVariant.isEmpty() )
+    if(!fullVariant.isNull() && !fullVariant.isEmpty())
         p << "-variant" << fullVariant;
 
-    if (p.start(KProcess::Block) && p.normalExit() && (p.exitStatus() == 0)) {
-		return true; //setGroup( group );
+    if(p.start(KProcess::Block) && p.normalExit() && (p.exitStatus() == 0))
+    {
+        return true; // setGroup( group );
     }
-    else {
+    else
+    {
         return false;
     }
 }
 
 bool XKBExtension::setGroup(unsigned int group)
 {
-	kdDebug() << "Setting group " << group << endl;
-	return XkbLockGroup( m_dpy, XkbUseCoreKbd, group );
+    kdDebug() << "Setting group " << group << endl;
+    return XkbLockGroup(m_dpy, XkbUseCoreKbd, group);
 }
 
 unsigned int XKBExtension::getGroup() const
 {
-	XkbStateRec xkbState;
-	XkbGetState( m_dpy, XkbUseCoreKbd, &xkbState );
-	return xkbState.group;
+    XkbStateRec xkbState;
+    XkbGetState(m_dpy, XkbUseCoreKbd, &xkbState);
+    return xkbState.group;
 }
 
 /**
@@ -209,94 +210,101 @@ bool XKBExtension::compileCurrentLayout(const QString &layoutKey)
     memset(&result, 0, sizeof(result));
     result.type = XkmKeymapFile;
     XkbReadFromServer(m_dpy, XkbAllMapComponentsMask, XkbAllMapComponentsMask, &result);
-	 
-	const QString fileName = getPrecompiledLayoutFilename(layoutKey);
 
-	kdDebug() << "compiling layout " << this << " cache size: " << fileCache.count() << endl;
-	if( fileCache.contains(layoutKey) ) {
-		kdDebug() << "trashing old compiled layout for " << fileName << endl;
-		if( fileCache[ layoutKey ] != NULL )
-			fclose( fileCache[ layoutKey ] );	// recompiling - trash the old file
-		fileCache.remove(fileName);
-	}
+    const QString fileName = getPrecompiledLayoutFilename(layoutKey);
 
-	FILE *output = fopen(QFile::encodeName(fileName), "w");
-		
-    if ( output == NULL )
+    kdDebug() << "compiling layout " << this << " cache size: " << fileCache.count() << endl;
+    if(fileCache.contains(layoutKey))
     {
-		kdWarning() << "Could not open " << fileName << " to precompile: " << strerror(errno) << endl;
+        kdDebug() << "trashing old compiled layout for " << fileName << endl;
+        if(fileCache[layoutKey] != NULL)
+            fclose(fileCache[layoutKey]); // recompiling - trash the old file
+        fileCache.remove(fileName);
+    }
+
+    FILE *output = fopen(QFile::encodeName(fileName), "w");
+
+    if(output == NULL)
+    {
+        kdWarning() << "Could not open " << fileName << " to precompile: " << strerror(errno) << endl;
         XkbFreeKeyboard(result.xkb, XkbAllControlsMask, True);
         return false;
     }
 
-	if( !XkbWriteXKMFile(output, &result) ) {
-		kdWarning() << "Could not write compiled layout to " << fileName << endl;
-		fclose(output);
+    if(!XkbWriteXKMFile(output, &result))
+    {
+        kdWarning() << "Could not write compiled layout to " << fileName << endl;
+        fclose(output);
         return false;
-	}
-	
-	fclose(output);	// TODO: can we change mode w/out reopening?
-	FILE *input = fopen(QFile::encodeName(fileName), "r");
-	fileCache[ layoutKey ] = input;
+    }
 
-	XkbFreeKeyboard(result.xkb, XkbAllControlsMask, True);
+    fclose(output); // TODO: can we change mode w/out reopening?
+    FILE *input = fopen(QFile::encodeName(fileName), "r");
+    fileCache[layoutKey] = input;
+
+    XkbFreeKeyboard(result.xkb, XkbAllControlsMask, True);
     return true;
 }
 
 /**
- * @brief takes layout from its compiled binary snapshot in file 
+ * @brief takes layout from its compiled binary snapshot in file
  *	and sets it as current
  * TODO: cache layout in memory rather than in file
  */
 bool XKBExtension::setCompiledLayout(const QString &layoutKey)
 {
-	FILE *input = NULL;
-	
-	if( fileCache.contains(layoutKey) ) {
-		input = fileCache[ layoutKey ];
-	}
-	
-	if( input == NULL ) {
-		kdWarning() << "setCompiledLayout trying to reopen xkb file" << endl;	// should never happen
-		const QString fileName = getPrecompiledLayoutFilename(layoutKey);
-		input = fopen(QFile::encodeName(fileName), "r");
-		
-		// 	FILE *input = fopen(QFile::encodeName(fileName), "r");
-		if ( input == NULL ) {
-			kdDebug() << "Unable to open " << fileName << ": " << strerror(errno) << endl;
-			fileCache.remove(layoutKey);
-			return false;
-		}
-	}
-	else {
-		rewind(input);
-	}
+    FILE *input = NULL;
+
+    if(fileCache.contains(layoutKey))
+    {
+        input = fileCache[layoutKey];
+    }
+
+    if(input == NULL)
+    {
+        kdWarning() << "setCompiledLayout trying to reopen xkb file" << endl; // should never happen
+        const QString fileName = getPrecompiledLayoutFilename(layoutKey);
+        input = fopen(QFile::encodeName(fileName), "r");
+
+        // 	FILE *input = fopen(QFile::encodeName(fileName), "r");
+        if(input == NULL)
+        {
+            kdDebug() << "Unable to open " << fileName << ": " << strerror(errno) << endl;
+            fileCache.remove(layoutKey);
+            return false;
+        }
+    }
+    else
+    {
+        rewind(input);
+    }
 
     XkbFileInfo result;
     memset(&result, 0, sizeof(result));
-	if ((result.xkb = XkbAllocKeyboard())==NULL) {
-		kdWarning() << "Unable to allocate memory for keyboard description" << endl;
-//      fclose(input);
-//		fileCache.remove(layoutKey);
-    	return false;
-	}
-	
+    if((result.xkb = XkbAllocKeyboard()) == NULL)
+    {
+        kdWarning() << "Unable to allocate memory for keyboard description" << endl;
+        //      fclose(input);
+        //		fileCache.remove(layoutKey);
+        return false;
+    }
+
     unsigned retVal = XkmReadFile(input, 0, XkmKeymapLegal, &result);
-    if (retVal == XkmKeymapLegal)
+    if(retVal == XkmKeymapLegal)
     {
         // this means reading the Xkm didn't manage to read any section
         kdWarning() << "Unable to load map from file" << endl;
         XkbFreeKeyboard(result.xkb, XkbAllControlsMask, True);
         fclose(input);
-		fileCache.remove(layoutKey);
-		return false;
+        fileCache.remove(layoutKey);
+        return false;
     }
 
-	//    fclose(input);	// don't close - goes in cache
+    //    fclose(input);	// don't close - goes in cache
 
-    if (XkbChangeKbdDisplay(m_dpy, &result) == Success)
+    if(XkbChangeKbdDisplay(m_dpy, &result) == Success)
     {
-        if (!XkbWriteToServer(&result))
+        if(!XkbWriteToServer(&result))
         {
             kdWarning() << "Unable to write the keyboard layout to X display" << endl;
             XkbFreeKeyboard(result.xkb, XkbAllControlsMask, True);

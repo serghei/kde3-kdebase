@@ -32,24 +32,21 @@
 #include <kio/thumbcreator.h>
 #include "FcEngine.h"
 
-namespace KFI
-{
+namespace KFI {
 
-class CFontThumbnail : public ThumbCreator
-{
-    public:
-
+class CFontThumbnail : public ThumbCreator {
+public:
     CFontThumbnail();
-    ~CFontThumbnail() {}
+    ~CFontThumbnail()
+    {
+    }
 
-    bool  create(const QString &path, int width, int height, QImage &img);
+    bool create(const QString &path, int width, int height, QImage &img);
     Flags flags() const;
 
-    private:
-
+private:
     CFcEngine itsEngine;
 };
-
 }
 
 #endif

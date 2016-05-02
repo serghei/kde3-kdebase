@@ -21,53 +21,52 @@ class FileTypeDetails;
 class FileGroupDetails;
 class QWidgetStack;
 
-class FileTypesView : public KCModule
-{
-  Q_OBJECT
+class FileTypesView : public KCModule {
+    Q_OBJECT
 public:
-  FileTypesView(QWidget *p = 0, const char *name = 0);
-  ~FileTypesView();
+    FileTypesView(QWidget *p = 0, const char *name = 0);
+    ~FileTypesView();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected slots:
-  /** fill in the various graphical elements, set up other stuff. */
-  void init();
+    /** fill in the various graphical elements, set up other stuff. */
+    void init();
 
-  void addType();
-  void removeType();
-  void updateDisplay(QListViewItem *);
-  void slotDoubleClicked(QListViewItem *);
-  void slotFilter(const QString &patternFilter);
-  void setDirty(bool state);
+    void addType();
+    void removeType();
+    void updateDisplay(QListViewItem *);
+    void slotDoubleClicked(QListViewItem *);
+    void slotFilter(const QString &patternFilter);
+    void setDirty(bool state);
 
-  void slotDatabaseChanged();
-  void slotEmbedMajor(const QString &major, bool &embed);
+    void slotDatabaseChanged();
+    void slotEmbedMajor(const QString &major, bool &embed);
 
 protected:
-  void readFileTypes();
-  bool sync( QValueList<TypesListItem *>& itemsModified );
+    void readFileTypes();
+    bool sync(QValueList< TypesListItem * > &itemsModified);
 
 private:
-  KListView *typesLV;
-  QPushButton *m_removeTypeB;
+    KListView *typesLV;
+    QPushButton *m_removeTypeB;
 
-  QWidgetStack * m_widgetStack;
-  FileTypeDetails * m_details;
-  FileGroupDetails * m_groupDetails;
-  QLabel * m_emptyWidget;
+    QWidgetStack *m_widgetStack;
+    FileTypeDetails *m_details;
+    FileGroupDetails *m_groupDetails;
+    QLabel *m_emptyWidget;
 
-  QLineEdit *patternFilterLE;
-  QStringList removedList;
-  bool m_dirty;
-  QMap<QString,TypesListItem*> m_majorMap;
-  QPtrList<TypesListItem> m_itemList;
+    QLineEdit *patternFilterLE;
+    QStringList removedList;
+    bool m_dirty;
+    QMap< QString, TypesListItem * > m_majorMap;
+    QPtrList< TypesListItem > m_itemList;
 
-  QValueList<TypesListItem *> m_itemsModified;
+    QValueList< TypesListItem * > m_itemsModified;
 
-  KSharedConfig::Ptr m_konqConfig;
+    KSharedConfig::Ptr m_konqConfig;
 };
 
 #endif

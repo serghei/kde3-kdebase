@@ -1,4 +1,4 @@
-/* 	
+/*
  *	This file contains the B2 configuration widget
  *
  *	Copyright (c) 2001
@@ -16,33 +16,32 @@
 #include <qcombobox.h>
 #include <kconfig.h>
 
-class B2Config: public QObject
-{
-	Q_OBJECT
+class B2Config : public QObject {
+    Q_OBJECT
 
-	public:
-		B2Config( KConfig* conf, QWidget* parent );
-		~B2Config();
+public:
+    B2Config(KConfig *conf, QWidget *parent);
+    ~B2Config();
 
-	// These public signals/slots work similar to KCM modules
-	signals:
-		void changed();
+    // These public signals/slots work similar to KCM modules
+signals:
+    void changed();
 
-	public slots:
-		void load( KConfig* conf );	
-		void save( KConfig* conf );
-		void defaults();
+public slots:
+    void load(KConfig *conf);
+    void save(KConfig *conf);
+    void defaults();
 
-	protected slots:
-		void slotSelectionChanged();	// Internal use
+protected slots:
+    void slotSelectionChanged(); // Internal use
 
-	private:
-		KConfig*   b2Config;
-		QCheckBox* cbColorBorder;
-		QCheckBox*  showGrabHandleCb;
-		QHGroupBox* actionsGB;
-		QComboBox*  menuDblClickOp;
-		QWidget* gb;
+private:
+    KConfig *b2Config;
+    QCheckBox *cbColorBorder;
+    QCheckBox *showGrabHandleCb;
+    QHGroupBox *actionsGB;
+    QComboBox *menuDblClickOp;
+    QWidget *gb;
 };
 
 #endif

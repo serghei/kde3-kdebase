@@ -1,18 +1,18 @@
 /*****************************************************************
  * drkonqi - The KDE Crash Handler
- * 
+ *
  * Copyright (C) 2000-2003 Hans Petter Bieker <bieker@kde.org>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -36,37 +36,36 @@ class BackTrace;
 
 #include <qwidget.h>
 
-class KrashDebugger : public QWidget
-{
-  Q_OBJECT
+class KrashDebugger : public QWidget {
+    Q_OBJECT
 
 public:
-  KrashDebugger(const KrashConfig *krashconf, QWidget *parent = 0, const char *name = 0);
-  ~KrashDebugger();
+    KrashDebugger(const KrashConfig *krashconf, QWidget *parent = 0, const char *name = 0);
+    ~KrashDebugger();
 
 public slots:
-  void slotAppend(const QString &);
-  void slotDone(const QString&);
-  void slotSomeError();
+    void slotAppend(const QString &);
+    void slotDone(const QString &);
+    void slotSomeError();
 
 protected:
-  void startDebugger();
-  bool performChecks( QString* msg );
+    void startDebugger();
+    bool performChecks(QString *msg);
 
-  virtual void showEvent(QShowEvent *e);
+    virtual void showEvent(QShowEvent *e);
 
 protected slots:
-  void slotCopy();
-  void slotSave();
+    void slotCopy();
+    void slotSave();
 
 private:
-  const KrashConfig *m_krashconf;
-  BackTrace *m_proctrace;
-  QLabel *m_status;
-  KTextBrowser *m_backtrace;
-  QPushButton * m_copyButton;
-  QPushButton * m_saveButton;
-  QString m_prependText;
+    const KrashConfig *m_krashconf;
+    BackTrace *m_proctrace;
+    QLabel *m_status;
+    KTextBrowser *m_backtrace;
+    QPushButton *m_copyButton;
+    QPushButton *m_saveButton;
+    QString m_prependText;
 };
 
 #endif

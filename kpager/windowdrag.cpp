@@ -1,7 +1,7 @@
 /*************************************************************************
 
     windowdrag.cpp  - The windowDrag object, used to drag windows across
-       	                desktops
+                        desktops
 
     Copyright (C) 1998,99,2000  Antonio Larrosa Jimenez <larrosa@kde.org>
 
@@ -25,36 +25,36 @@
 
 #include "windowdrag.h"
 
-PagerWindowDrag::PagerWindowDrag(WId w,int deltax,int deltay, int origdesk,QWidget *parent)
-    : QStoredDrag("application/x-kpager",parent,"windowdrag")
+PagerWindowDrag::PagerWindowDrag(WId w, int deltax, int deltay, int origdesk, QWidget *parent)
+    : QStoredDrag("application/x-kpager", parent, "windowdrag")
 {
     QString tmp;
-    tmp.sprintf("%d %d %d %d", static_cast<int>(w), deltax, deltay, origdesk);
+    tmp.sprintf("%d %d %d %d", static_cast< int >(w), deltax, deltay, origdesk);
     QByteArray data;
-    data.setRawData(tmp.latin1(),tmp.length()+1);
+    data.setRawData(tmp.latin1(), tmp.length() + 1);
 
     setEncodedData(data);
-    data.resetRawData(tmp.latin1(),tmp.length()+1);
+    data.resetRawData(tmp.latin1(), tmp.length() + 1);
 }
 
 PagerWindowDrag::~PagerWindowDrag()
 {
 }
 
-bool PagerWindowDrag::canDecode (QDragMoveEvent *e)
+bool PagerWindowDrag::canDecode(QDragMoveEvent *e)
 {
     return e->provides("application/x-kpager");
 }
 
-bool PagerWindowDrag::decode( QDropEvent *e, WId &w,int &deltax,int &deltay,int &origdesk)
+bool PagerWindowDrag::decode(QDropEvent *e, WId &w, int &deltax, int &deltay, int &origdesk)
 {
-    QByteArray data=e->data("application/x-kpager");
-    if (data.size())
-	{
-	    char *tmp=data.data();
-	    sscanf(tmp,"%lu %d %d %d", &w, &deltax, &deltay, &origdesk);
-	    e->accept();
-	    return TRUE;
-	}
+    QByteArray data = e->data("application/x-kpager");
+    if(data.size())
+    {
+        char *tmp = data.data();
+        sscanf(tmp, "%lu %d %d %d", &w, &deltax, &deltay, &origdesk);
+        e->accept();
+        return TRUE;
+    }
     return FALSE;
 }

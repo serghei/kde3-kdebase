@@ -20,7 +20,6 @@
 */
 
 
-
 #ifndef __NSPluginClassIface_h__
 #define __NSPluginClassIface_h__
 
@@ -31,53 +30,47 @@
 #include <dcopref.h>
 
 
-class NSPluginViewerIface : virtual public DCOPObject
-{
-  K_DCOP
+class NSPluginViewerIface : virtual public DCOPObject {
+    K_DCOP
 
-k_dcop:
-  virtual void shutdown() = 0;
-  virtual DCOPRef newClass(QString plugin) = 0;
+    k_dcop : virtual void shutdown() = 0;
+    virtual DCOPRef newClass(QString plugin) = 0;
 };
 
 
-class NSPluginClassIface : virtual public DCOPObject
-{
-  K_DCOP
+class NSPluginClassIface : virtual public DCOPObject {
+    K_DCOP
 
-k_dcop:
+    k_dcop :
 
-  virtual DCOPRef newInstance(QString url, QString mimeType, Q_INT8 embed,
-                              QStringList argn, QStringList argv,
-                              QString appId, QString callbackId, Q_INT8 reload,
-                              Q_INT8 doPost, QByteArray postData, Q_UINT32 xembed) = 0;
-  virtual QString getMIMEDescription() = 0;
-
+        virtual DCOPRef
+        newInstance(QString url, QString mimeType, Q_INT8 embed, QStringList argn, QStringList argv, QString appId, QString callbackId, Q_INT8 reload,
+                    Q_INT8 doPost, QByteArray postData, Q_UINT32 xembed) = 0;
+    virtual QString getMIMEDescription() = 0;
 };
 
 
-class NSPluginInstanceIface : virtual public DCOPObject
-{
-  K_DCOP
+class NSPluginInstanceIface : virtual public DCOPObject {
+    K_DCOP
 
-k_dcop:
+    k_dcop :
 
-  virtual void shutdown() = 0;
+        virtual void
+        shutdown() = 0;
 
-  virtual int winId() = 0;
+    virtual int winId() = 0;
 
-  virtual int setWindow(Q_INT8 remove=0) = 0;
+    virtual int setWindow(Q_INT8 remove = 0) = 0;
 
-  virtual void resizePlugin(Q_INT32 w, Q_INT32 h) = 0;
+    virtual void resizePlugin(Q_INT32 w, Q_INT32 h) = 0;
 
-  virtual void javascriptResult(Q_INT32 id, QString result) = 0;
+    virtual void javascriptResult(Q_INT32 id, QString result) = 0;
 
-  virtual void displayPlugin() = 0;
-  
-  virtual void gotFocusIn() = 0;
-  virtual void gotFocusOut() = 0;
+    virtual void displayPlugin() = 0;
+
+    virtual void gotFocusIn() = 0;
+    virtual void gotFocusOut() = 0;
 };
 
 
 #endif
-

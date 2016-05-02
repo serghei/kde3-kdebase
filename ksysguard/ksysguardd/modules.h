@@ -81,71 +81,70 @@
 #include "memory.h"
 #endif /* OSTYPE_OpenBSD */
 
-typedef void (*VSFunc)( struct SensorModul* );
-#define NULLVSFUNC ((VSFunc) 0)
-typedef void (*VVFunc)( void );
-#define NULLVVFUNC ((VVFunc) 0)
-typedef int (*IVFunc)( void );
-#define NULLIVFUNC ((IVFunc) 0)
-#define NULLTIME ((time_t) 0)
+typedef void (*VSFunc)(struct SensorModul *);
+#define NULLVSFUNC ((VSFunc)0)
+typedef void (*VVFunc)(void);
+#define NULLVVFUNC ((VVFunc)0)
+typedef int (*IVFunc)(void);
+#define NULLIVFUNC ((IVFunc)0)
+#define NULLTIME ((time_t)0)
 
 struct SensorModul SensorModulList[] = {
 #ifdef OSTYPE_Linux
-  { "ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
-  { "Stat", initStat, exitStat, updateStat, NULLVVFUNC, 0, NULLTIME },
-  { "NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME },
-  { "NetStat", initNetStat, exitNetStat, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME },
-  { "Apm", initApm, exitApm, updateApm, NULLVVFUNC, 0, NULLTIME },
-  { "Acpi", initAcpi, exitAcpi, updateAcpi, NULLVVFUNC, 0, NULLTIME },
-  { "CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME },
-  { "LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME },
-  { "LmSensors", initLmSensors, exitLmSensors, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME },
-  { "DiskStat", initDiskStat, exitDiskStat, updateDiskStat, checkDiskStat, 0, NULLTIME },
-  { "LogFile", initLogFile, exitLogFile, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME },
-  { "DellLaptop", initI8k, exitI8k, updateI8k, NULLVVFUNC, 0, NULLTIME },
+    {"ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
+    {"Stat", initStat, exitStat, updateStat, NULLVVFUNC, 0, NULLTIME},
+    {"NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME},
+    {"NetStat", initNetStat, exitNetStat, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME},
+    {"Apm", initApm, exitApm, updateApm, NULLVVFUNC, 0, NULLTIME},
+    {"Acpi", initAcpi, exitAcpi, updateAcpi, NULLVVFUNC, 0, NULLTIME},
+    {"CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME},
+    {"LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME},
+    {"LmSensors", initLmSensors, exitLmSensors, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME},
+    {"DiskStat", initDiskStat, exitDiskStat, updateDiskStat, checkDiskStat, 0, NULLTIME},
+    {"LogFile", initLogFile, exitLogFile, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME},
+    {"DellLaptop", initI8k, exitI8k, updateI8k, NULLVVFUNC, 0, NULLTIME},
 #endif /* OSTYPE_Linux */
 
 #ifdef OSTYPE_FreeBSD
-  { "CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
-  { "ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME },
+    {"CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
+    {"ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME},
 #ifdef __i386__
-  { "Apm", initApm, exitApm, updateApm, NULLVVFUNC, 0, NULLTIME },
+    {"Apm", initApm, exitApm, updateApm, NULLVVFUNC, 0, NULLTIME},
 #endif
-  { "DiskStat", initDiskStat, exitDiskStat, updateDiskStat, checkDiskStat, 0, NULLTIME },
-  { "LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME },
-  { "LogFile", initLogFile, exitLogFile, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME },
-  { "NetDev", initNetDev, exitNetDev, updateNetDev, checkNetDev, 0, NULLTIME },
+    {"DiskStat", initDiskStat, exitDiskStat, updateDiskStat, checkDiskStat, 0, NULLTIME},
+    {"LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME},
+    {"LogFile", initLogFile, exitLogFile, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME},
+    {"NetDev", initNetDev, exitNetDev, updateNetDev, checkNetDev, 0, NULLTIME},
 #endif /* OSTYPE_FreeBSD */
 
 #ifdef OSTYPE_Solaris
-  { "LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
-  { "NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME },
-  { "ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME },
+    {"LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
+    {"NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME},
+    {"ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME},
 #endif /* OSTYPE_Solaris */
 
 #ifdef OSTYPE_Irix
-  { "CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME },
-  { "LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
-  { "NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME },
-  { "ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME },
+    {"CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME},
+    {"LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
+    {"NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME},
+    {"ProcessList", initProcessList, exitProcessList, updateProcessList, NULLVVFUNC, 0, NULLTIME},
 #endif /* OSTYPE_Irix */
 
 #ifdef OSTYPE_Tru64
-  { "LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
-  { "NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME },
+    {"LoadAvg", initLoadAvg, exitLoadAvg, updateLoadAvg, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
+    {"NetDev", initNetDev, exitNetDev, updateNetDev, NULLVVFUNC, 0, NULLTIME},
 #endif /* OSTYPE_Tru64 */
 
 #ifdef OSTYPE_OpenBSD
-  { "CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME },
-  { "Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME },
+    {"CpuInfo", initCpuInfo, exitCpuInfo, updateCpuInfo, NULLVVFUNC, 0, NULLTIME},
+    {"Memory", initMemory, exitMemory, updateMemory, NULLVVFUNC, 0, NULLTIME},
 #endif /* OSTYPE_OpenBSD */
 
-  { NULL, NULLVSFUNC, NULLVVFUNC, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME }
-};
+    {NULL, NULLVSFUNC, NULLVVFUNC, NULLIVFUNC, NULLVVFUNC, 0, NULLTIME}};
 
 #endif

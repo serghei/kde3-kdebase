@@ -25,8 +25,7 @@
 
 class KHTMLPart;
 
-class HTMLCreator : public QObject, public ThumbCreator
-{
+class HTMLCreator : public QObject, public ThumbCreator {
     Q_OBJECT
 public:
     HTMLCreator();

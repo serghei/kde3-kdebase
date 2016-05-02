@@ -33,50 +33,45 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "showdesktop.h"
 #include "showdesktop.moc"
 
-ShowDesktop* ShowDesktop::the()
+ShowDesktop *ShowDesktop::the()
 {
     static ShowDesktop showDesktop;
     return &showDesktop;
 }
 
-ShowDesktop::ShowDesktop()
-  : QObject(),
-    m_showingDesktop(false)
+ShowDesktop::ShowDesktop() : QObject(), m_showingDesktop(false)
 {
     // This feature is implemented in KWin. Keep old code in Kicker for the case
     // KDE is running with another WM without the feature.
-    NETRootInfo i( qt_xdisplay(), NET::Supported );
-    m_wmSupport = i.isSupported( NET::WM2ShowingDesktop );
-    if( m_wmSupport )
+    NETRootInfo i(qt_xdisplay(), NET::Supported);
+    m_wmSupport = i.isSupported(NET::WM2ShowingDesktop);
+    if(m_wmSupport)
     {
-        connect( Kicker::the()->kwinModule(), SIGNAL( showingDesktopChanged( bool )),
-            SLOT( showingDesktopChanged( bool )));
-        showingDesktopChanged( m_showingDesktop = Kicker::the()->kwinModule()->showingDesktop());
+        connect(Kicker::the()->kwinModule(), SIGNAL(showingDesktopChanged(bool)), SLOT(showingDesktopChanged(bool)));
+        showingDesktopChanged(m_showingDesktop = Kicker::the()->kwinModule()->showingDesktop());
     }
 }
 
 void ShowDesktop::slotCurrentDesktopChanged(int)
 {
-    showDesktop( false );
+    showDesktop(false);
 }
 
 void ShowDesktop::slotWindowAdded(WId w)
 {
-    if (!m_showingDesktop)
+    if(!m_showingDesktop)
     {
         return;
     }
 
-    NETWinInfo inf(qt_xdisplay(), w, qt_xrootwin(),
-                   NET::XAWMState | NET::WMWindowType);
+    NETWinInfo inf(qt_xdisplay(), w, qt_xrootwin(), NET::XAWMState | NET::WMWindowType);
     NET::WindowType windowType = inf.windowType(NET::AllTypesMask);
 
-    if ((windowType == NET::Normal || windowType == NET::Unknown) &&
-        inf.mappingState() == NET::Visible)
+    if((windowType == NET::Normal || windowType == NET::Unknown) && inf.mappingState() == NET::Visible)
     {
-        KConfig kwincfg( "kwinrc", true ); // see in kwin
-        kwincfg.setGroup( "Windows" );
-        if( kwincfg.readBoolEntry( "ShowDesktopIsMinimizeAll", false ))
+        KConfig kwincfg("kwinrc", true); // see in kwin
+        kwincfg.setGroup("Windows");
+        if(kwincfg.readBoolEntry("ShowDesktopIsMinimizeAll", false))
         {
             m_iconifiedList.clear();
             m_showingDesktop = false;
@@ -92,19 +87,17 @@ void ShowDesktop::slotWindowAdded(WId w)
 
 void ShowDesktop::slotWindowChanged(WId w, unsigned int dirty)
 {
-    if (!m_showingDesktop)
+    if(!m_showingDesktop)
     {
         return;
     }
 
-    if (dirty & NET::XAWMState)
+    if(dirty & NET::XAWMState)
     {
-        NETWinInfo inf(qt_xdisplay(), w, qt_xrootwin(),
-                       NET::XAWMState | NET::WMWindowType);
+        NETWinInfo inf(qt_xdisplay(), w, qt_xrootwin(), NET::XAWMState | NET::WMWindowType);
         NET::WindowType windowType = inf.windowType(NET::AllTypesMask);
 
-        if ((windowType == NET::Normal || windowType == NET::Unknown) &&
-            inf.mappingState() == NET::Visible)
+        if((windowType == NET::Normal || windowType == NET::Unknown) && inf.mappingState() == NET::Visible)
         {
             // a window was deiconified, abort the show desktop mode.
             m_iconifiedList.clear();
@@ -114,72 +107,58 @@ void ShowDesktop::slotWindowChanged(WId w, unsigned int dirty)
     }
 }
 
-void ShowDesktop::showDesktop( bool b )
+void ShowDesktop::showDesktop(bool b)
 {
-    if (b == m_showingDesktop)
+    if(b == m_showingDesktop)
     {
-        return;
-    }
-    
-    if( m_wmSupport )
-    {
-        NETRootInfo i( qt_xdisplay(), 0 );
-        i.setShowingDesktop( b );
         return;
     }
 
-    if (b)
+    if(m_wmSupport)
+    {
+        NETRootInfo i(qt_xdisplay(), 0);
+        i.setShowingDesktop(b);
+        return;
+    }
+
+    if(b)
     {
         m_activeWindow = Kicker::the()->kwinModule()->activeWindow();
         m_iconifiedList.clear();
 
-        const QValueList<WId> windows = Kicker::the()->kwinModule()->windows();
-        for (QValueList<WId>::ConstIterator it = windows.begin();
-             it != windows.end();
-             ++it)
+        const QValueList< WId > windows = Kicker::the()->kwinModule()->windows();
+        for(QValueList< WId >::ConstIterator it = windows.begin(); it != windows.end(); ++it)
         {
             WId w = *it;
 
-            NETWinInfo info( qt_xdisplay(), w, qt_xrootwin(),
-                             NET::XAWMState | NET::WMDesktop );
+            NETWinInfo info(qt_xdisplay(), w, qt_xrootwin(), NET::XAWMState | NET::WMDesktop);
 
-            if (info.mappingState() == NET::Visible &&
-                (info.desktop() == NETWinInfo::OnAllDesktops ||
-                 info.desktop() == (int)Kicker::the()->kwinModule()->currentDesktop()))
+            if(info.mappingState() == NET::Visible
+               && (info.desktop() == NETWinInfo::OnAllDesktops || info.desktop() == (int)Kicker::the()->kwinModule()->currentDesktop()))
             {
-                m_iconifiedList.append( w );
+                m_iconifiedList.append(w);
             }
         }
 
         // find first, hide later, otherwise transients may get minimized
         // with the window they're transient for
-        for (QValueVector<WId>::Iterator it = m_iconifiedList.begin();
-             it != m_iconifiedList.end();
-             ++it)
+        for(QValueVector< WId >::Iterator it = m_iconifiedList.begin(); it != m_iconifiedList.end(); ++it)
         {
-            KWin::iconifyWindow( *it, false );
+            KWin::iconifyWindow(*it, false);
         }
 
         // on desktop changes or when a window is deiconified, we abort the show desktop mode
-        connect(Kicker::the()->kwinModule(), SIGNAL(currentDesktopChanged(int)),
-                SLOT(slotCurrentDesktopChanged(int)));
-        connect(Kicker::the()->kwinModule(), SIGNAL(windowChanged(WId,unsigned int)),
-                SLOT(slotWindowChanged(WId,unsigned int)));
-        connect(Kicker::the()->kwinModule(), SIGNAL(windowAdded(WId)),
-                SLOT(slotWindowAdded(WId)));
+        connect(Kicker::the()->kwinModule(), SIGNAL(currentDesktopChanged(int)), SLOT(slotCurrentDesktopChanged(int)));
+        connect(Kicker::the()->kwinModule(), SIGNAL(windowChanged(WId, unsigned int)), SLOT(slotWindowChanged(WId, unsigned int)));
+        connect(Kicker::the()->kwinModule(), SIGNAL(windowAdded(WId)), SLOT(slotWindowAdded(WId)));
     }
     else
     {
-        disconnect(Kicker::the()->kwinModule(), SIGNAL(currentDesktopChanged(int)),
-                   this, SLOT(slotCurrentDesktopChanged(int)));
-        disconnect(Kicker::the()->kwinModule(), SIGNAL(windowChanged(WId,unsigned int)),
-                   this, SLOT(slotWindowChanged(WId,unsigned int)));
-        disconnect(Kicker::the()->kwinModule(), SIGNAL(windowAdded(WId)),
-                   this, SLOT(slotWindowAdded(WId)));
+        disconnect(Kicker::the()->kwinModule(), SIGNAL(currentDesktopChanged(int)), this, SLOT(slotCurrentDesktopChanged(int)));
+        disconnect(Kicker::the()->kwinModule(), SIGNAL(windowChanged(WId, unsigned int)), this, SLOT(slotWindowChanged(WId, unsigned int)));
+        disconnect(Kicker::the()->kwinModule(), SIGNAL(windowAdded(WId)), this, SLOT(slotWindowAdded(WId)));
 
-        for (QValueVector<WId>::ConstIterator it = m_iconifiedList.begin();
-             it != m_iconifiedList.end();
-             ++it)
+        for(QValueVector< WId >::ConstIterator it = m_iconifiedList.begin(); it != m_iconifiedList.end(); ++it)
         {
             KWin::deIconifyWindow(*it, false);
         }
@@ -191,7 +170,7 @@ void ShowDesktop::showDesktop( bool b )
     emit desktopShown(m_showingDesktop);
 }
 
-void ShowDesktop::showingDesktopChanged( bool showing )
+void ShowDesktop::showingDesktopChanged(bool showing)
 {
     m_showingDesktop = showing;
     emit desktopShown(m_showingDesktop);

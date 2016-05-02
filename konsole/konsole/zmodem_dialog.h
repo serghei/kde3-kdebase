@@ -23,27 +23,26 @@
 
 class QTextEdit;
 
-class ZModemDialog : public KDialogBase
-{
-  Q_OBJECT
+class ZModemDialog : public KDialogBase {
+    Q_OBJECT
 public:
-  ZModemDialog(QWidget *parent, bool modal, const QString &caption);
-  
-  /**
-   * Adds a line of text to the progress window
-   */
-  void addProgressText(const QString &);
+    ZModemDialog(QWidget *parent, bool modal, const QString &caption);
 
-  /**
-   * To indicate the process is finished.
-   */
-  void done();
+    /**
+     * Adds a line of text to the progress window
+     */
+    void addProgressText(const QString &);
+
+    /**
+     * To indicate the process is finished.
+     */
+    void done();
 
 public slots:
-  void slotClose();
-  
+    void slotClose();
+
 private:
-  QTextEdit *textEdit;
+    QTextEdit *textEdit;
 };
 
 #endif

@@ -34,33 +34,31 @@ class KTempFile;
 
 #include <qobject.h>
 
-class BackTrace : public QObject
-{
-  Q_OBJECT
+class BackTrace : public QObject {
+    Q_OBJECT
 
 public:
-  BackTrace(const KrashConfig *krashconf, QObject *parent,
-            const char *name = 0);
-  ~BackTrace();
+    BackTrace(const KrashConfig *krashconf, QObject *parent, const char *name = 0);
+    ~BackTrace();
 
-  void start();
+    void start();
 
 signals:
-  void append(const QString &str); // Just the new text
+    void append(const QString &str); // Just the new text
 
-  void someError();
-  void done(const QString &); // replaces whole text
+    void someError();
+    void done(const QString &); // replaces whole text
 
 protected slots:
-  void slotProcessExited(KProcess * proc);
-  void slotReadInput(KProcess * proc, char * buf, int buflen);
+    void slotProcessExited(KProcess *proc);
+    void slotReadInput(KProcess *proc, char *buf, int buflen);
 
 private:
-  bool usefulBacktrace();
-  void processBacktrace();
-  KProcess *m_proc;
-  const KrashConfig *m_krashconf;
-  KTempFile *m_temp;
-  QString m_strBt;
+    bool usefulBacktrace();
+    void processBacktrace();
+    KProcess *m_proc;
+    const KrashConfig *m_krashconf;
+    KTempFile *m_temp;
+    QString m_strBt;
 };
 #endif

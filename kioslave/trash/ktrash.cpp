@@ -25,40 +25,37 @@
 #include <kdirnotify_stub.h>
 #include <kdebug.h>
 
-static KCmdLineOptions options[] =
-{
-    { "empty", I18N_NOOP( "Empty the contents of the trash" ), 0 },
-    //{ "migrate", I18N_NOOP( "Migrate contents of old trash" ), 0 },
-    { "restore <file>", I18N_NOOP( "Restore a trashed file to its original location" ), 0 },
-    // This hack is for the servicemenu on trash.desktop which uses Exec=ktrash -empty. %f is implied...
-    { "+[ignored]", I18N_NOOP( "Ignored" ), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"empty", I18N_NOOP("Empty the contents of the trash"), 0},
+                                    //{ "migrate", I18N_NOOP( "Migrate contents of old trash" ), 0 },
+                                    {"restore <file>", I18N_NOOP("Restore a trashed file to its original location"), 0},
+                                    // This hack is for the servicemenu on trash.desktop which uses Exec=ktrash -empty. %f is implied...
+                                    {"+[ignored]", I18N_NOOP("Ignored"), 0},
+                                    KCmdLineLastOption};
 
 int main(int argc, char *argv[])
 {
     KApplication::disableAutoDcopRegistration();
-    KCmdLineArgs::init( argc, argv, "ktrash",
-                        I18N_NOOP( "ktrash" ),
-                        I18N_NOOP( "Helper program to handle the KDE trash can\n"
-				   "Note: to move files to the trash, do not use ktrash, but \"kfmclient move 'url' trash:/\"" ),
-                        KDE_VERSION_STRING );
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, "ktrash", I18N_NOOP("ktrash"),
+                       I18N_NOOP("Helper program to handle the KDE trash can\n"
+                                 "Note: to move files to the trash, do not use ktrash, but \"kfmclient move 'url' trash:/\""),
+                       KDE_VERSION_STRING);
+    KCmdLineArgs::addCmdLineOptions(options);
     KApplication app;
 
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    if ( args->isSet( "empty" ) ) {
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if(args->isSet("empty"))
+    {
         // We use a kio job instead of linking to TrashImpl, for a smaller binary
         // (and the possibility of a central service at some point)
         QByteArray packedArgs;
-        QDataStream stream( packedArgs, IO_WriteOnly );
+        QDataStream stream(packedArgs, IO_WriteOnly);
         stream << (int)1;
-        KIO::Job* job = KIO::special( "trash:/", packedArgs );
-        (void)KIO::NetAccess::synchronousRun( job, 0 );
+        KIO::Job *job = KIO::special("trash:/", packedArgs);
+        (void)KIO::NetAccess::synchronousRun(job, 0);
 
         // Update konq windows opened on trash:/
         KDirNotify_stub allDirNotify("*", "KDirNotify*");
-        allDirNotify.FilesAdded( "trash:/" ); // yeah, files were removed, but we don't know which ones...
+        allDirNotify.FilesAdded("trash:/"); // yeah, files were removed, but we don't know which ones...
         return 0;
     }
 
@@ -74,26 +71,29 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    QCString restoreArg = args->getOption( "restore" );
-    if ( !restoreArg.isEmpty() ) {
+    QCString restoreArg = args->getOption("restore");
+    if(!restoreArg.isEmpty())
+    {
 
-        if (restoreArg.find("system:/trash")==0) {
+        if(restoreArg.find("system:/trash") == 0)
+        {
             restoreArg.remove(0, 13);
             restoreArg.prepend("trash:");
         }
 
-        KURL trashURL( restoreArg );
-        if ( !trashURL.isValid() || trashURL.protocol() != "trash" ) {
+        KURL trashURL(restoreArg);
+        if(!trashURL.isValid() || trashURL.protocol() != "trash")
+        {
             kdError() << "Invalid URL for restoring a trashed file:" << trashURL << endl;
             return 1;
         }
 
         QByteArray packedArgs;
-        QDataStream stream( packedArgs, IO_WriteOnly );
+        QDataStream stream(packedArgs, IO_WriteOnly);
         stream << (int)3 << trashURL;
-        KIO::Job* job = KIO::special( trashURL, packedArgs );
-        bool ok = KIO::NetAccess::synchronousRun( job, 0 );
-        if ( !ok )
+        KIO::Job *job = KIO::special(trashURL, packedArgs);
+        bool ok = KIO::NetAccess::synchronousRun(job, 0);
+        if(!ok)
             kdError() << KIO::NetAccess::lastErrorString() << endl;
         return 0;
     }

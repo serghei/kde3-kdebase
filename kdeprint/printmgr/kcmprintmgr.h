@@ -24,16 +24,15 @@
 
 class KMMainView;
 
-class KCMPrintMgr : public KCModule
-{
+class KCMPrintMgr : public KCModule {
 public:
-	KCMPrintMgr(QWidget *parent, const char *name, const QStringList &);
-	~KCMPrintMgr();
+    KCMPrintMgr(QWidget *parent, const char *name, const QStringList &);
+    ~KCMPrintMgr();
 
-	QString quickHelp() const;
+    QString quickHelp() const;
 
 private:
-	KMMainView	*m_mainview;
+    KMMainView *m_mainview;
 };
 
 #endif

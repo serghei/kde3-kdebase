@@ -30,33 +30,37 @@
 
 HelpWidget::HelpWidget(QWidget *parent) : QWhatsThis(parent)
 {
-  setBaseText();
+    setBaseText();
 }
 
-void HelpWidget::setText(const QString& docPath, const QString& text)
+void HelpWidget::setText(const QString &docPath, const QString &text)
 {
-  docpath = docPath;
-  if (text.isEmpty() && docPath.isEmpty())
-    setBaseText();
-  else if (docPath.isEmpty())
-    helptext = text;
-  else
-    helptext = (text + i18n("<p>Use the \"What's This?\" (Shift+F1) to get help on specific options.</p><p>To read the full manual click <a href=\"%1\">here</a>.</p>")
-		      .arg(docPath.local8Bit()));
+    docpath = docPath;
+    if(text.isEmpty() && docPath.isEmpty())
+        setBaseText();
+    else if(docPath.isEmpty())
+        helptext = text;
+    else
+        helptext = (text
+                    + i18n("<p>Use the \"What's This?\" (Shift+F1) to get help on specific options.</p><p>To read the full manual click <a "
+                           "href=\"%1\">here</a>.</p>")
+                          .arg(docPath.local8Bit()));
 }
 
 void HelpWidget::setBaseText()
 {
-  if (KCGlobal::isInfoCenter())
-     helptext = (i18n("<h1>KDE Info Center</h1>"
-			 "There is no quick help available for the active info module."
-			 "<br><br>"
-			 "Click <a href = \"kinfocenter/index.html\">here</a> to read the general Info Center manual.") );
-  else
-     helptext = (i18n("<h1>KDE Control Center</h1>"
-			 "There is no quick help available for the active control module."
-			 "<br><br>"
-			 "Click <a href = \"kcontrol/index.html\">here</a> to read the general Control Center manual.") );
+    if(KCGlobal::isInfoCenter())
+        helptext =
+            (i18n("<h1>KDE Info Center</h1>"
+                  "There is no quick help available for the active info module."
+                  "<br><br>"
+                  "Click <a href = \"kinfocenter/index.html\">here</a> to read the general Info Center manual."));
+    else
+        helptext =
+            (i18n("<h1>KDE Control Center</h1>"
+                  "There is no quick help available for the active control module."
+                  "<br><br>"
+                  "Click <a href = \"kcontrol/index.html\">here</a> to read the general Control Center manual."));
 }
 
 QString HelpWidget::text() const
@@ -64,12 +68,13 @@ QString HelpWidget::text() const
     return helptext;
 }
 
-bool HelpWidget::clicked(const QString & _url)
+bool HelpWidget::clicked(const QString &_url)
 {
-    if ( _url.isNull() )
+    if(_url.isNull())
         return true;
 
-    if ( _url.find('@') > -1 ) {
+    if(_url.find('@') > -1)
+    {
         kapp->invokeMailer(_url);
         return true;
     }
@@ -77,11 +82,13 @@ bool HelpWidget::clicked(const QString & _url)
     KProcess process;
     KURL url(KURL("help:/"), _url);
 
-    if (url.protocol() == "help" || url.protocol() == "man" || url.protocol() == "info") {
-        process << "khelpcenter"
-                << url.url();
+    if(url.protocol() == "help" || url.protocol() == "man" || url.protocol() == "info")
+    {
+        process << "khelpcenter" << url.url();
         process.start(KProcess::DontCare);
-    } else {
+    }
+    else
+    {
         new KRun(url);
     }
     return true;
@@ -89,8 +96,8 @@ bool HelpWidget::clicked(const QString & _url)
 
 void HelpWidget::handbookRequest()
 {
-    if (docpath.isEmpty())
+    if(docpath.isEmpty())
         kdWarning() << "No handbook defined" << endl;
- 
+
     clicked(docpath);
 }

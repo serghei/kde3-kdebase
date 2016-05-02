@@ -25,14 +25,13 @@
 
 class QStringList;
 
-class KRarPlugin: public KFilePlugin
-{
+class KRarPlugin : public KFilePlugin {
     Q_OBJECT
 
 public:
-    KRarPlugin( QObject *parent, const char *name, const QStringList& args );
+    KRarPlugin(QObject *parent, const char *name, const QStringList &args);
 
-    virtual bool readInfo( KFileMetaInfo& info, uint what);
+    virtual bool readInfo(KFileMetaInfo &info, uint what);
 };
 
 #endif

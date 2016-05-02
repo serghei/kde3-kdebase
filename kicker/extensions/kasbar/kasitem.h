@@ -74,51 +74,83 @@ class KasPopup;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KDE_EXPORT KasItem : public QObject
-{
+class KDE_EXPORT KasItem : public QObject {
     Q_OBJECT
 
 public:
     friend class KasBar;
 
-    typedef QValueVector<QPixmap> PixmapList;
+    typedef QValueVector< QPixmap > PixmapList;
 
     /** The states that a window can be in. */
-    enum WindowState {
-	StateIcon, StateShaded, StateNormal
+    enum WindowState
+    {
+        StateIcon,
+        StateShaded,
+        StateNormal
     };
 
-    KasItem( KasBar *parent );
+    KasItem(KasBar *parent);
     virtual ~KasItem();
 
     /** Returns the parent KasBar of this item. */
-    KasBar *kasbar() const { return kas; }
+    KasBar *kasbar() const
+    {
+        return kas;
+    }
 
     /** Returns the size of the item in pixels. */
-    int extent() const { return kas->itemExtent(); }
+    int extent() const
+    {
+        return kas->itemExtent();
+    }
 
     /** Returns the text that will be displayed in the title. */
-    QString text() const { return title; }
+    QString text() const
+    {
+        return title;
+    }
 
     /** Returns the position of this item. */
-    QPoint pos() const { return pos_; }
-    void setPos( const QPoint &p ) { pos_ = p; }
-    void setPos( int x, int y ) { pos_ = QPoint( x, y ); }
+    QPoint pos() const
+    {
+        return pos_;
+    }
+    void setPos(const QPoint &p)
+    {
+        pos_ = p;
+    }
+    void setPos(int x, int y)
+    {
+        pos_ = QPoint(x, y);
+    }
 
     /** Returns the progress so far. This will -1 if the item is not displaying progress info. */
-    int progress() const { return prog; }
+    int progress() const
+    {
+        return prog;
+    }
 
     /** Returns true iff this item is displaying progress info. */
-    bool isProgressItem() const { return prog != -1; }
+    bool isProgressItem() const
+    {
+        return prog != -1;
+    }
 
     /** Returns true iff this item will display the modified indicator. */
-    bool isModified() const { return modified; }
+    bool isModified() const
+    {
+        return modified;
+    }
 
     /**
      * Returns true if this is a group item. Group items display an arrow
      * showing where the popup containing their children will appear.
      */
-    void setGroupItem( bool enable = true  ) { groupItem = enable; }
+    void setGroupItem(bool enable = true)
+    {
+        groupItem = enable;
+    }
 
     //
     // Popup
@@ -128,65 +160,77 @@ public:
     bool isShowingPopup() const;
 
     /** Returns the active popup or 0. */
-    KasPopup *popup() const { return pop; }
+    KasPopup *popup() const
+    {
+        return pop;
+    }
 
     /** Sets the popup to be used by this item. */
-    void setPopup( KasPopup *popup );
+    void setPopup(KasPopup *popup);
 
     /**
      * Returns true iff this item uses a custom popup policy.  If this flag is
      * set, the default popup behaviour is disabled. This means you must call
      * show/hide/toggle yourself if you want the popup to be shown.
      */
-    bool hasCustomPopup() const { return customPopup; }
+    bool hasCustomPopup() const
+    {
+        return customPopup;
+    }
 
     /** Enables or disables custom popup handling. */
-    void setCustomPopup( bool enable = true ) { customPopup = enable; }
+    void setCustomPopup(bool enable = true)
+    {
+        customPopup = enable;
+    }
 
     //
     // Drawing Methods
     //
 
     /** Translates the QPainter then calls paintItem(). */
-    void paint( QPainter *p, int x, int y );
+    void paint(QPainter *p, int x, int y);
 
     /**
      * Subclasses should reimplement this method to paint themselves. The painter is setup so
      * that the item is always at 0, 0.
      */
-    virtual void paint( QPainter *p );
+    virtual void paint(QPainter *p);
 
     /** Draw a standard frame for the item. */
-    void paintFrame( QPainter *p );
+    void paintFrame(QPainter *p);
 
     /** Paint the background. */
-    void paintBackground( QPainter *p );
+    void paintBackground(QPainter *p);
 
     /** Draw the label for the item. */
-    void paintLabel( QPainter *p );
+    void paintLabel(QPainter *p);
 
-    void paintIcon( QPainter *p );
+    void paintIcon(QPainter *p);
 
-    void paintModified( QPainter *p );
+    void paintModified(QPainter *p);
 
 public slots:
     void repaint();
-    void repaint( bool erase );
+    void repaint(bool erase);
     void update();
 
-    void setActive( bool yes );
-    void setText( const QString &title );
-    void setIcon( const QPixmap &icon );
-    void setProgress( int percent );
-    void setShowFrame( bool yes );
-    void setModified( bool yes );
-    void setAttention( bool yes );
-    void setAnimation( const PixmapList &frames );
-    void setShowAnimation( bool yes );
+    void setActive(bool yes);
+    void setText(const QString &title);
+    void setIcon(const QPixmap &icon);
+    void setProgress(int percent);
+    void setShowFrame(bool yes);
+    void setModified(bool yes);
+    void setAttention(bool yes);
+    void setAnimation(const PixmapList &frames);
+    void setShowAnimation(bool yes);
 
     void advanceAnimation();
 
-    void setLockPopup( bool yes ) { lockPopup = yes; }
+    void setLockPopup(bool yes)
+    {
+        lockPopup = yes;
+    }
 
     /** Shows the items popup. */
     void showPopup();
@@ -196,53 +240,66 @@ public slots:
 
     /** Check if the popup should be visible. */
     void checkPopup();
-    
+
     /** Hides or shows the popup. */
     void togglePopup();
 
     /**
      * Called when something being dragged is held over the item for a while.
      */
-    virtual void dragOverAction() {}
+    virtual void dragOverAction()
+    {
+    }
 
 signals:
-    void leftButtonClicked( QMouseEvent *ev );
-    void middleButtonClicked( QMouseEvent *ev );
-    void rightButtonClicked( QMouseEvent *ev );
+    void leftButtonClicked(QMouseEvent *ev);
+    void middleButtonClicked(QMouseEvent *ev);
+    void rightButtonClicked(QMouseEvent *ev);
 
 protected:
-    KasResources *resources() { return kas->resources(); }
+    KasResources *resources()
+    {
+        return kas->resources();
+    }
 
     /** Gets the font metrics from the parent. */
-    QFontMetrics fontMetrics() const { return kas->fontMetrics(); }
+    QFontMetrics fontMetrics() const
+    {
+        return kas->fontMetrics();
+    }
 
     /** Gets the color group from the parent. */
-    const QColorGroup &colorGroup() const { return kas->colorGroup(); }
+    const QColorGroup &colorGroup() const
+    {
+        return kas->colorGroup();
+    }
 
     /** Factory method that creates a popup widget for the item. */
     virtual KasPopup *createPopup();
 
     /** Draw a label with an arrow, the parameters specify the position and size of the arrow. */
-    void paintArrowLabel( QPainter *p, int arrowSize, bool arrowOnLeft );
+    void paintArrowLabel(QPainter *p, int arrowSize, bool arrowOnLeft);
 
     /** Paints a progress graph. */
-    void paintProgress( QPainter *p, int percent );
+    void paintProgress(QPainter *p, int percent);
 
-    void paintStateIcon( QPainter *p, uint state );
+    void paintStateIcon(QPainter *p, uint state);
 
-    void paintAttention( QPainter *p );
+    void paintAttention(QPainter *p);
 
-    void paintAnimation( QPainter *p );
+    void paintAnimation(QPainter *p);
 
     //
     // Event Handlers
     //
 
     /** Called when the item receives a mouse event. */
-    virtual void mousePressEvent( QMouseEvent * ) {}
+    virtual void mousePressEvent(QMouseEvent *)
+    {
+    }
 
     /** Called when the item receives a mouse event. */
-    virtual void mouseReleaseEvent( QMouseEvent * );
+    virtual void mouseReleaseEvent(QMouseEvent *);
 
     /** Called when the mouse enters the item. */
     virtual void mouseEnter();
@@ -258,7 +315,7 @@ protected:
 
 private:
     KasBar *kas;
-    QGuardedPtr<KasPopup> pop;
+    QGuardedPtr< KasPopup > pop;
     QTimer *popupTimer;
     QTimer *dragTimer;
 
@@ -281,4 +338,3 @@ private:
 };
 
 #endif // KASITEM_H
-

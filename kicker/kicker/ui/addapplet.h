@@ -39,44 +39,43 @@ class AppletView;
 class AppletWidget;
 class QTimer;
 
-class AddAppletDialog : public KDialogBase
-{
+class AddAppletDialog : public KDialogBase {
     Q_OBJECT
 
-    public:
-        AddAppletDialog(ContainerArea* cArea, QWidget* parent, const char* name);
-        void updateInsertionPoint();
+public:
+    AddAppletDialog(ContainerArea *cArea, QWidget *parent, const char *name);
+    void updateInsertionPoint();
 
-    protected:
-        void closeEvent(QCloseEvent*);
-        bool eventFilter(QObject *o, QEvent *e);
+protected:
+    void closeEvent(QCloseEvent *);
+    bool eventFilter(QObject *o, QEvent *e);
 
-    private slots:
-        void populateApplets();
-        void addCurrentApplet();
-        void addApplet(AppletWidget* applet);
-        void delayedSearch();
-        void search();
-        void filter(int i);
-        void selectApplet(AppletWidget* applet);
-        void resizeAppletView();
+private slots:
+    void populateApplets();
+    void addCurrentApplet();
+    void addApplet(AppletWidget *applet);
+    void delayedSearch();
+    void search();
+    void filter(int i);
+    void selectApplet(AppletWidget *applet);
+    void resizeAppletView();
 
-    private:
-        bool appletMatchesSearch(const AppletWidget* w, const QString& s);
+private:
+    bool appletMatchesSearch(const AppletWidget *w, const QString &s);
 
-        AppletView *m_mainWidget;
-        QWidget *m_appletBox;
+    AppletView *m_mainWidget;
+    QWidget *m_appletBox;
 
-        AppletInfo::List m_applets;
+    AppletInfo::List m_applets;
 
-        QValueList<AppletWidget*> m_appletWidgetList;
-        AppletWidget* m_selectedApplet;
+    QValueList< AppletWidget * > m_appletWidgetList;
+    AppletWidget *m_selectedApplet;
 
-        ContainerArea* m_containerArea;
-        AppletInfo::AppletType m_selectedType;
-        QPoint m_insertionPoint;
-        bool m_closing;
-        QTimer *m_searchDelay;
+    ContainerArea *m_containerArea;
+    AppletInfo::AppletType m_selectedType;
+    QPoint m_insertionPoint;
+    bool m_closing;
+    QTimer *m_searchDelay;
 };
 
 #endif

@@ -40,21 +40,20 @@ class KConfig;
  * @brief Class representing a theme
  * @author Lukas Tinkl <lukas@kde.org>
  */
-class KTheme
-{
+class KTheme {
 public:
     /**
      * Constructs KTheme using an installed theme
      * @param xmlFile The theme's XML file
      */
-    KTheme( QWidget *parent, const QString & xmlFile );
+    KTheme(QWidget *parent, const QString &xmlFile);
 
     /**
      * Constructs an empty theme, to be used with
      * #createYourself()
      * @param create Whether to start the DOM tree
      */
-    KTheme( QWidget *parent, bool create = false );
+    KTheme(QWidget *parent, bool create = false);
 
     /**
      * Destructor
@@ -66,7 +65,7 @@ public:
      *
      * @return true on success
      */
-    bool load( const KURL & url );
+    bool load(const KURL &url);
 
     /**
      * Creates a snapshot of the current configuration in the work directory
@@ -74,7 +73,7 @@ public:
      * @param pack Whether to also pack the theme in tar.gz format
      * @return The path to the newly created tarball with theme (if @p pack == true)
      */
-    QString createYourself( bool pack = false );
+    QString createYourself(bool pack = false);
 
     /**
      * Apply the theme to the system, ie. set the config variables and
@@ -87,41 +86,49 @@ public:
      * @param name The name of the theme
      * @return true on success
      */
-    static bool remove( const QString & name );
+    static bool remove(const QString &name);
 
     /**
      * @return the theme name
      */
-    QString name() const { return m_name; }
+    QString name() const
+    {
+        return m_name;
+    }
     /**
      * Set the theme name
      */
-    void setName( const QString & name );
+    void setName(const QString &name);
 
-    QString author() const {
-        return getProperty( "author" );
+    QString author() const
+    {
+        return getProperty("author");
     }
-    void setAuthor( const QString & author );
+    void setAuthor(const QString &author);
 
-    QString email() const {
-        return getProperty( "email" );
+    QString email() const
+    {
+        return getProperty("email");
     }
-    void setEmail( const QString & email );
+    void setEmail(const QString &email);
 
-    QString homepage() const {
-        return getProperty( "homepage" );
+    QString homepage() const
+    {
+        return getProperty("homepage");
     }
-    void setHomepage( const QString & homepage );
+    void setHomepage(const QString &homepage);
 
-    QString comment() const {
-        return getProperty( "comment" );
+    QString comment() const
+    {
+        return getProperty("comment");
     }
-    void setComment ( const QString & comment );
+    void setComment(const QString &comment);
 
-    QString version() const {
-        return getProperty( "version" );
+    QString version() const
+    {
+        return getProperty("version");
     }
-    void setVersion ( const QString & version );
+    void setVersion(const QString &version);
 
     /**
      * Creates a preview file called theme_name.preview.png
@@ -134,13 +141,11 @@ private:
      * Create a property with @p name, value @p value
      * and append it to @p parent element
      */
-    void setProperty( const QString & name,
-                      const QString & value,
-                      QDomElement parent );
+    void setProperty(const QString &name, const QString &value, QDomElement parent);
     /**
      * Get a simple property from the "general" section of the DOM tree
      */
-    QString getProperty( const QString & name ) const;
+    QString getProperty(const QString &name) const;
 
     /**
      * Get a property from the DOM tree, based on:
@@ -148,8 +153,7 @@ private:
      * @param tag From the this tag
      * @param attr From this attribute
      */
-    QString getProperty( QDomElement parent, const QString & tag,
-                         const QString & attr ) const;
+    QString getProperty(QDomElement parent, const QString &tag, const QString &attr) const;
 
     /**
      * Creates a list of "icon" elements based on:
@@ -158,16 +162,14 @@ private:
      * @param parent Parent element to append to
      * @param cfg The KConfig object to work with
      */
-    void createIconElems( const QString & group, const QString & object,
-                          QDomElement parent, KConfig * cfg );
+    void createIconElems(const QString &group, const QString &object, QDomElement parent, KConfig *cfg);
 
     /**
      * Creates a color DOM element @p name, with a specifier @p object,
      * appends it to @p parent; used when creating themes
      * @param cfg The KConfig object to work with
      */
-    void createColorElem( const QString & name, const QString & object,
-                          QDomElement parent, KConfig * cfg );
+    void createColorElem(const QString &name, const QString &object, QDomElement parent, KConfig *cfg);
     /**
      * Creates a list of "event" elements based on:
      * @param events The list of events to work on
@@ -175,8 +177,7 @@ private:
      * @param parent Parent element to append to
      * @param cfg The KConfig object to work with
      */
-    void createSoundList( const QStringList & events, const QString & object,
-                          QDomElement parent, KConfig * cfg );
+    void createSoundList(const QStringList &events, const QString &object, QDomElement parent, KConfig *cfg);
 
     /**
      * Tries to find out absolute path to a resource and copy it to the theme's temp dir;
@@ -186,25 +187,25 @@ private:
      * @return an internal path suitable for writing into the XML file or QString::null
      * in case the resource couldn't be found
      */
-    QString processFilePath( const QString & section, const QString & path );
+    QString processFilePath(const QString &section, const QString &path);
 
     /**
      * Converts an internal theme:/ representation of a resource
      * to a real path
      */
-    QString unprocessFilePath( const QString & section, QString path );
+    QString unprocessFilePath(const QString &section, QString path);
 
     /**
      * Wrapper around KIO::NetAccess::file_copy
      */
-    bool copyFile( const QString & from, const QString & to );
+    bool copyFile(const QString &from, const QString &to);
 
     /**
      * Wrapper around KGlobal::dirs()->findResource()
      * @param section Section to work on (desktop, sounds, panel etc)
      * @param path The file to find
      */
-    QString findResource( const QString & section, const QString & path );
+    QString findResource(const QString &section, const QString &path);
 
     /// name of the theme
     QString m_name;
@@ -216,9 +217,9 @@ private:
     /// "general" section
     QDomElement m_general;
 
-    KStandardDirs * m_kgd;
+    KStandardDirs *m_kgd;
 
-    QGuardedPtr<QWidget> m_parent;
+    QGuardedPtr< QWidget > m_parent;
 };
 
 #endif

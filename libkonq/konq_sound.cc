@@ -25,113 +25,104 @@
 
 using namespace std;
 
-class KonqSoundPlayerImpl : public KonqSoundPlayer
-{
+class KonqSoundPlayerImpl : public KonqSoundPlayer {
 public:
-	KonqSoundPlayerImpl();
-	virtual ~KonqSoundPlayerImpl();
+    KonqSoundPlayerImpl();
+    virtual ~KonqSoundPlayerImpl();
 
-	virtual const QStringList &mimeTypes();
-	virtual void play(const QString &fileName);
-	virtual void stop();
-	virtual bool isPlaying();
+    virtual const QStringList &mimeTypes();
+    virtual void play(const QString &fileName);
+    virtual void stop();
+    virtual bool isPlaying();
 
 private:
-	QStringList m_mimeTypes;
+    QStringList m_mimeTypes;
 
-	KArtsDispatcher     m_dispatcher;
-	Arts::SoundServerV2 m_soundServer;
-	KDE::PlayObjectFactory *m_factory;
-	KDE::PlayObject        *m_player;
+    KArtsDispatcher m_dispatcher;
+    Arts::SoundServerV2 m_soundServer;
+    KDE::PlayObjectFactory *m_factory;
+    KDE::PlayObject *m_player;
 };
 
-KonqSoundPlayerImpl::KonqSoundPlayerImpl()
-	: m_player(0)
+KonqSoundPlayerImpl::KonqSoundPlayerImpl() : m_player(0)
 {
-	m_soundServer = Arts::Reference("global:Arts_SoundServerV2");
-	m_factory = new KDE::PlayObjectFactory(m_soundServer);
+    m_soundServer = Arts::Reference("global:Arts_SoundServerV2");
+    m_factory = new KDE::PlayObjectFactory(m_soundServer);
 }
 
 KonqSoundPlayerImpl::~KonqSoundPlayerImpl()
 {
-	delete m_player;
-	delete m_factory;
+    delete m_player;
+    delete m_factory;
 }
 
 const QStringList &KonqSoundPlayerImpl::mimeTypes()
 {
-	if (m_mimeTypes.isEmpty())
-	{
-		Arts::TraderQuery query;
-		vector<Arts::TraderOffer> *offers = query.query();
+    if(m_mimeTypes.isEmpty())
+    {
+        Arts::TraderQuery query;
+        vector< Arts::TraderOffer > *offers = query.query();
 
-		for (vector<Arts::TraderOffer>::iterator it = offers->begin();
-			it != offers->end(); ++it)
-		{
-			vector<string> *prop = (*it).getProperty("MimeType");
-			for (vector<string>::iterator mt = prop->begin();
-				mt != prop->end(); ++mt)
-				if ((*mt).length()) // && (*mt).find("video/") == string::npos)
-					m_mimeTypes << (*mt).c_str();
-			delete prop;
-		}
-		delete offers;
-	}
-	return m_mimeTypes;
+        for(vector< Arts::TraderOffer >::iterator it = offers->begin(); it != offers->end(); ++it)
+        {
+            vector< string > *prop = (*it).getProperty("MimeType");
+            for(vector< string >::iterator mt = prop->begin(); mt != prop->end(); ++mt)
+                if((*mt).length()) // && (*mt).find("video/") == string::npos)
+                    m_mimeTypes << (*mt).c_str();
+            delete prop;
+        }
+        delete offers;
+    }
+    return m_mimeTypes;
 }
 
 void KonqSoundPlayerImpl::play(const QString &fileName)
 {
-	if (m_soundServer.isNull())
-		return;
+    if(m_soundServer.isNull())
+        return;
 
-	delete m_player;
-	if ((m_player = m_factory->createPlayObject(fileName, true)))
-	{
-		if (m_player->isNull())
-			stop();
-		else
-			m_player->play();
-	}
+    delete m_player;
+    if((m_player = m_factory->createPlayObject(fileName, true)))
+    {
+        if(m_player->isNull())
+            stop();
+        else
+            m_player->play();
+    }
 }
 
 void KonqSoundPlayerImpl::stop()
 {
-	delete m_player;
-	m_player = 0;
+    delete m_player;
+    m_player = 0;
 }
 
 bool KonqSoundPlayerImpl::isPlaying()
 {
-	return m_player ? (m_player->state() == Arts::posPlaying) : false;
+    return m_player ? (m_player->state() == Arts::posPlaying) : false;
 }
 
-class KonqSoundFactory : public KLibFactory
-{
+class KonqSoundFactory : public KLibFactory {
 public:
-	KonqSoundFactory(QObject *parent = 0, const char *name = 0)
-		: KLibFactory(parent, name) {};
-	virtual ~KonqSoundFactory() {};
+    KonqSoundFactory(QObject *parent = 0, const char *name = 0) : KLibFactory(parent, name){};
+    virtual ~KonqSoundFactory(){};
 
 protected:
-	virtual QObject *createObject(QObject * = 0, const char * = 0,
-		const char *className = "QObject", const QStringList &args = QStringList());
+    virtual QObject *createObject(QObject * = 0, const char * = 0, const char *className = "QObject", const QStringList &args = QStringList());
 };
 
-QObject *KonqSoundFactory::createObject(QObject *, const char *,
-	const char *className, const QStringList &)
+QObject *KonqSoundFactory::createObject(QObject *, const char *, const char *className, const QStringList &)
 {
-	if (qstrcmp(className, "KonqSoundPlayer") == 0)
-		return new KonqSoundPlayerImpl();
-	return 0;
+    if(qstrcmp(className, "KonqSoundPlayer") == 0)
+        return new KonqSoundPlayerImpl();
+    return 0;
 }
 
-extern "C"
+extern "C" {
+KDE_EXPORT KLibFactory *init_konq_sound()
 {
-	KDE_EXPORT KLibFactory *init_konq_sound()
-	{
-		return new KonqSoundFactory();
-	}
+    return new KonqSoundFactory();
+}
 }
 
 // vim: ts=4 sw=4 noet

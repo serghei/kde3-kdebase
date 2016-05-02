@@ -22,47 +22,47 @@
 
 #include <ktabwidget.h>
 
-class KateTabWidget : public KTabWidget
-{
-  Q_OBJECT
+class KateTabWidget : public KTabWidget {
+    Q_OBJECT
 
-  public:
-    enum TabWidgetVisibility {
-    AlwaysShowTabs         = 0,
-    ShowWhenMoreThanOneTab = 1,
-    NeverShowTabs          = 2
+public:
+    enum TabWidgetVisibility
+    {
+        AlwaysShowTabs = 0,
+        ShowWhenMoreThanOneTab = 1,
+        NeverShowTabs = 2
     };
 
-  public:
-    KateTabWidget(QWidget* parent, const char* name=0);
+public:
+    KateTabWidget(QWidget *parent, const char *name = 0);
     virtual ~KateTabWidget();
 
-    virtual void addTab ( QWidget * child, const QString & label );
+    virtual void addTab(QWidget *child, const QString &label);
 
-    virtual void addTab ( QWidget * child, const QIconSet & iconset, const QString & label );
+    virtual void addTab(QWidget *child, const QIconSet &iconset, const QString &label);
 
-    virtual void addTab ( QWidget * child, QTab * tab );
+    virtual void addTab(QWidget *child, QTab *tab);
 
-    virtual void insertTab ( QWidget * child, const QString & label, int index = -1 );
+    virtual void insertTab(QWidget *child, const QString &label, int index = -1);
 
-    virtual void insertTab ( QWidget * child, const QIconSet & iconset, const QString & label, int index = -1 );
+    virtual void insertTab(QWidget *child, const QIconSet &iconset, const QString &label, int index = -1);
 
-    virtual void insertTab ( QWidget * child, QTab * tab, int index = -1 );
+    virtual void insertTab(QWidget *child, QTab *tab, int index = -1);
 
-    virtual void removePage ( QWidget * w );
+    virtual void removePage(QWidget *w);
 
     TabWidgetVisibility tabWidgetVisibility() const;
 
-    void setTabWidgetVisibility( TabWidgetVisibility );
+    void setTabWidgetVisibility(TabWidgetVisibility);
 
-  private slots:
-    void closeTab(QWidget* w);
+private slots:
+    void closeTab(QWidget *w);
 
-  private:
+private:
     void maybeShow();
     void setCornerWidgetVisibility(bool visible);
 
-  private:
+private:
     TabWidgetVisibility m_visibility;
 };
 

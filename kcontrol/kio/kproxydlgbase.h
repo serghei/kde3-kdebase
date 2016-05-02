@@ -29,40 +29,37 @@
 #include <kdialogbase.h>
 #include <kprotocolmanager.h>
 
-class KProxyData
-{
+class KProxyData {
 public:
-  KProxyData();
-  KProxyData( const KProxyData &data );
+    KProxyData();
+    KProxyData(const KProxyData &data);
 
-  void reset ();
-  KProxyData& operator=( const KProxyData &data );
+    void reset();
+    KProxyData &operator=(const KProxyData &data);
 
-  bool useReverseProxy;
-  bool showEnvVarValue;
-  QStringList noProxyFor;
-  KProtocolManager::ProxyType type;
-  QMap<QString, QString> proxyList;
+    bool useReverseProxy;
+    bool showEnvVarValue;
+    QStringList noProxyFor;
+    KProtocolManager::ProxyType type;
+    QMap< QString, QString > proxyList;
 
 private:
-  void init();
+    void init();
 };
 
 
-class KProxyDialogBase : public KDialogBase
-{
+class KProxyDialogBase : public KDialogBase {
 public:
-  KProxyDialogBase( QWidget* parent = 0, const char* name = 0,
-                    bool modal = false, const QString &caption = QString::null);
+    KProxyDialogBase(QWidget *parent = 0, const char *name = 0, bool modal = false, const QString &caption = QString::null);
 
-  virtual ~KProxyDialogBase() {};
+    virtual ~KProxyDialogBase(){};
 
-  virtual const KProxyData data() const=0;
+    virtual const KProxyData data() const = 0;
 
-  virtual void setProxyData (const KProxyData&)=0;
+    virtual void setProxyData(const KProxyData &) = 0;
 
 protected:
-  void setHighLight (QWidget* widget = 0, bool highlight = false);
-  bool m_bHasValidData;
+    void setHighLight(QWidget *widget = 0, bool highlight = false);
+    bool m_bHasValidData;
 };
 #endif

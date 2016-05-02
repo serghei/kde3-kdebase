@@ -20,20 +20,21 @@
 #include "smserverconfigimpl.h"
 #include "smserverconfigimpl.moc"
 
-SMServerConfigImpl::SMServerConfigImpl(QWidget *parent, const char *name ) : SMServerConfigDlg(parent,name) {
-
+SMServerConfigImpl::SMServerConfigImpl(QWidget *parent, const char *name) : SMServerConfigDlg(parent, name)
+{
 }
-SMServerConfigImpl::~SMServerConfigImpl(){
+SMServerConfigImpl::~SMServerConfigImpl()
+{
 }
 /** No descriptions */
-void SMServerConfigImpl::configChanged(){
+void SMServerConfigImpl::configChanged()
+{
 
- emit changed();
-
+    emit changed();
 }
 
-void SMServerConfigImpl::offerSuspendOrHibernateChanged(){
+void SMServerConfigImpl::offerSuspendOrHibernateChanged()
+{
 
-  lockBeforeSuspendHibernateCheck->setEnabled(offerSuspendCheck->isChecked() || offerHibernateCheck->isChecked());
-
+    lockBeforeSuspendHibernateCheck->setEnabled(offerSuspendCheck->isChecked() || offerHibernateCheck->isChecked());
 }

@@ -23,21 +23,19 @@
 #include <qobject.h>
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 /** This interface provides access to the Kate Plugin Manager.
 */
-class KDE_EXPORT PluginManager : public QObject
-{
-  friend class PrivatePluginManager;
+class KDE_EXPORT PluginManager : public QObject {
+    friend class PrivatePluginManager;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    PluginManager ( void *pluginManager  );
-    virtual ~PluginManager ();
+public:
+    PluginManager(void *pluginManager);
+    virtual ~PluginManager();
 
-  public:
+public:
     /** if the plugin with the library name "name" is loaded, a pointer to that plugin is returned */
     class Plugin *plugin(const QString &name);
 
@@ -52,19 +50,18 @@ class KDE_EXPORT PluginManager : public QObject
      *
      * This method is not used yet
      */
-    class Plugin *loadPlugin(const QString &name,bool permanent=true);
+    class Plugin *loadPlugin(const QString &name, bool permanent = true);
 
     /** unload the specified plugin. If the value permanent is true (default value), the plugin will not be
      * loaded on kate's next startup. Even if it had been loaded with permanent=true.
      *
      * This method is not used yet
      */
-    void unloadPlugin(const QString &name,bool permanent=true);
+    void unloadPlugin(const QString &name, bool permanent = true);
 
-  private:
+private:
     class PrivatePluginManager *d;
 };
-
 }
 
 #endif

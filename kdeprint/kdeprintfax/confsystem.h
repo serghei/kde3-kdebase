@@ -27,24 +27,23 @@
 class QLineEdit;
 class QComboBox;
 
-class ConfSystem : public QWidget
-{
-	Q_OBJECT
+class ConfSystem : public QWidget {
+    Q_OBJECT
 public:
-	ConfSystem(QWidget *parent = 0, const char *name = 0);
+    ConfSystem(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
+    void load();
+    void save();
 
 protected slots:
-	void slotSystemChanged(int);
-	void slotDeviceChanged(int);
+    void slotSystemChanged(int);
+    void slotDeviceChanged(int);
 
 private:
-	QComboBox	*m_system, *m_device;
-	QLineEdit	*m_command, *m_server, *m_device_edit;
-	QStringList	m_commands;
-	int		m_current;
+    QComboBox *m_system, *m_device;
+    QLineEdit *m_command, *m_server, *m_device_edit;
+    QStringList m_commands;
+    int m_current;
 };
 
 #endif

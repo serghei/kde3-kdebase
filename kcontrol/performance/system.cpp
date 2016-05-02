@@ -24,56 +24,54 @@
 #include <qlabel.h>
 #include <klocale.h>
 
-namespace KCMPerformance
+namespace KCMPerformance {
+
+SystemWidget::SystemWidget(QWidget *parent_P) : System_ui(parent_P)
 {
-
-SystemWidget::SystemWidget( QWidget* parent_P )
-    : System_ui( parent_P )
-    {
-    QString tmp = 
-        i18n( "<p>During startup KDE needs to perform a check of its system configuration"
-              " (mimetypes, installed applications, etc.), and in case the configuration"
-              " has changed since the last time, the system configuration cache (KSyCoCa)"
-              " needs to be updated.</p>"
-              "<p>This option delays the check, which avoid scanning all directories containing"
-              " files describing the system during KDE startup, thus"
-              " making KDE startup faster. However, in the rare case the system configuration"
-              " has changed since the last time, and the change is needed before this"
-              " delayed check takes place, this option may lead to various problems"
-              " (missing applications in the K Menu, reports from applications about missing"
-              " required mimetypes, etc.).</p>"
-              "<p>Changes of system configuration mostly happen by (un)installing applications."
-              " It is therefore recommended to turn this option temporarily off while"
-              " (un)installing applications.</p>"
-              "<p>For this reason, usage of this option is not recommended. The KDE crash"
-              " handler will refuse to provide backtrace for the bugreport with this option"
-              " turned on (you will need to reproduce it again with this option turned off,"
-              " or turn on the developer mode for the crash handler).</p>" );
-    QWhatsThis::add( cb_disable_kbuildsycoca, tmp );
-    QWhatsThis::add( label_kbuildsycoca, tmp );
-    connect( cb_disable_kbuildsycoca, SIGNAL( clicked()), SIGNAL( changed()));
+    QString tmp = i18n(
+        "<p>During startup KDE needs to perform a check of its system configuration"
+        " (mimetypes, installed applications, etc.), and in case the configuration"
+        " has changed since the last time, the system configuration cache (KSyCoCa)"
+        " needs to be updated.</p>"
+        "<p>This option delays the check, which avoid scanning all directories containing"
+        " files describing the system during KDE startup, thus"
+        " making KDE startup faster. However, in the rare case the system configuration"
+        " has changed since the last time, and the change is needed before this"
+        " delayed check takes place, this option may lead to various problems"
+        " (missing applications in the K Menu, reports from applications about missing"
+        " required mimetypes, etc.).</p>"
+        "<p>Changes of system configuration mostly happen by (un)installing applications."
+        " It is therefore recommended to turn this option temporarily off while"
+        " (un)installing applications.</p>"
+        "<p>For this reason, usage of this option is not recommended. The KDE crash"
+        " handler will refuse to provide backtrace for the bugreport with this option"
+        " turned on (you will need to reproduce it again with this option turned off,"
+        " or turn on the developer mode for the crash handler).</p>");
+    QWhatsThis::add(cb_disable_kbuildsycoca, tmp);
+    QWhatsThis::add(label_kbuildsycoca, tmp);
+    connect(cb_disable_kbuildsycoca, SIGNAL(clicked()), SIGNAL(changed()));
     defaults();
-    }
+}
 
-void SystemWidget::load(bool useDefaults )
-    {
-    KConfig cfg( "kdedrc", true );
-	 cfg.setReadDefaults( useDefaults );
-    cfg.setGroup( "General" );
-    cb_disable_kbuildsycoca->setChecked( cfg.readBoolEntry( "DelayedCheck", false ));
-    }
+void SystemWidget::load(bool useDefaults)
+{
+    KConfig cfg("kdedrc", true);
+    cfg.setReadDefaults(useDefaults);
+    cfg.setGroup("General");
+    cb_disable_kbuildsycoca->setChecked(cfg.readBoolEntry("DelayedCheck", false));
+}
 
 void SystemWidget::save()
-    {
-    KConfig cfg( "kdedrc" );
-    cfg.setGroup( "General" );
-    cfg.writeEntry( "DelayedCheck", cb_disable_kbuildsycoca->isChecked());
-    }
+{
+    KConfig cfg("kdedrc");
+    cfg.setGroup("General");
+    cfg.writeEntry("DelayedCheck", cb_disable_kbuildsycoca->isChecked());
+}
 
 void SystemWidget::defaults()
-    {
-		 load( true );
-    }
+{
+    load(true);
+}
 
 } // namespace
 

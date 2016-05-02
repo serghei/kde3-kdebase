@@ -33,17 +33,14 @@ class QStringList;
 class QString;
 class QWidget;
 
-namespace KFI
-{
+namespace KFI {
 
 class CFcEngine;
 
-namespace Print
-{
-extern void printItems(const QStringList &items, int size, QWidget *parent, CFcEngine &engine);
-extern bool printable(const QString &mime);
+namespace Print {
+    extern void printItems(const QStringList &items, int size, QWidget *parent, CFcEngine &engine);
+    extern bool printable(const QString &mime);
 }
-
 }
 
 #endif

@@ -25,23 +25,21 @@
 #include "medialist.h"
 
 
-class MediaDirNotify : public KDirNotify
-{
-K_DCOP
+class MediaDirNotify : public KDirNotify {
+    K_DCOP
 
 public:
-	MediaDirNotify(const MediaList &list);
+    MediaDirNotify(const MediaList &list);
 
-k_dcop:
-	virtual ASYNC FilesAdded (const KURL &directory);
-	virtual ASYNC FilesRemoved (const KURL::List &fileList);
-	virtual ASYNC FilesChanged (const KURL::List &fileList);
+    k_dcop : virtual ASYNC FilesAdded(const KURL &directory);
+    virtual ASYNC FilesRemoved(const KURL::List &fileList);
+    virtual ASYNC FilesChanged(const KURL::List &fileList);
 
 private:
-	KURL::List toMediaURL(const KURL &url);
-	KURL::List toMediaURLList(const KURL::List &list);
+    KURL::List toMediaURL(const KURL &url);
+    KURL::List toMediaURLList(const KURL::List &list);
 
-	const MediaList &m_mediaList;
+    const MediaList &m_mediaList;
 };
 
 #endif

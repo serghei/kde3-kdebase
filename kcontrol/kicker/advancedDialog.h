@@ -24,21 +24,20 @@
 
 class advancedKickerOptions;
 
-class advancedDialog : public KDialogBase
-{
+class advancedDialog : public KDialogBase {
     Q_OBJECT
 
-    public:
-        advancedDialog(QWidget* parent, const char* name);
-        ~advancedDialog();
+public:
+    advancedDialog(QWidget *parent, const char *name);
+    ~advancedDialog();
 
-    protected slots:
-        void load();
-        void save();
-        void changed();
+protected slots:
+    void load();
+    void save();
+    void changed();
 
-	protected:
-        advancedKickerOptions* m_advancedWidget;
+protected:
+    advancedKickerOptions *m_advancedWidget;
 };
 
 #endif

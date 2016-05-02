@@ -41,101 +41,137 @@ class KConfig;
  * it's called from.
  */
 
-class LIBKONQ_EXPORT KonqFMSettings
-{
+class LIBKONQ_EXPORT KonqFMSettings {
 protected:
-  /**
-   * @internal
-   * Constructs a KonqFMSettings instance from a config file.
-   */
-  KonqFMSettings( KConfig * config );
+    /**
+     * @internal
+     * Constructs a KonqFMSettings instance from a config file.
+     */
+    KonqFMSettings(KConfig *config);
 
-  /** Destructor. Don't delete any instance by yourself. */
-  virtual ~KonqFMSettings();
+    /** Destructor. Don't delete any instance by yourself. */
+    virtual ~KonqFMSettings();
 
 public:
+    /**
+     * The static instance of KonqFMSettings
+     */
+    static KonqFMSettings *settings();
 
-  /**
-   * The static instance of KonqFMSettings
-   */
-  static KonqFMSettings * settings();
+    /**
+     * Reparse the configuration to update the already-created instances
+     *
+     * Warning : you need to call KGlobal::config()->reparseConfiguration()
+     * first (This is not done here so that the caller can avoid too much
+     * reparsing if having several classes from the same config file)
+     */
+    static void reparseConfiguration();
 
-  /**
-   * Reparse the configuration to update the already-created instances
-   *
-   * Warning : you need to call KGlobal::config()->reparseConfiguration()
-   * first (This is not done here so that the caller can avoid too much
-   * reparsing if having several classes from the same config file)
-   */
-  static void reparseConfiguration();
+    // Use settings (and mimetype definition files)
+    // to find whether to embed a certain service type or not
+    // Only makes sense in konqueror.
+    bool shouldEmbed(const QString &serviceType) const;
 
-  // Use settings (and mimetype definition files)
-  // to find whether to embed a certain service type or not
-  // Only makes sense in konqueror.
-  bool shouldEmbed( const QString & serviceType ) const;
+    // Behaviour settings
+    bool wordWrapText() const
+    {
+        return m_bWordWrapText;
+    }
+    int iconTextHeight() const
+    {
+        return m_iconTextHeight;
+    }
+    int iconTextWidth() const;
+    bool underlineLink() const
+    {
+        return m_underlineLink;
+    }
+    bool fileSizeInBytes() const
+    {
+        return m_fileSizeInBytes;
+    }
+    bool alwaysNewWin() const
+    {
+        return m_alwaysNewWin;
+    }
+    const QString &homeURL() const
+    {
+        return m_homeURL;
+    }
 
-  // Behaviour settings
-  bool wordWrapText() const { return m_bWordWrapText; }
-  int iconTextHeight() const { return m_iconTextHeight; }
-  int iconTextWidth() const;
-  bool underlineLink() const { return m_underlineLink; }
-  bool fileSizeInBytes() const { return m_fileSizeInBytes; }
-  bool alwaysNewWin() const { return m_alwaysNewWin; }
-  const QString & homeURL() const { return m_homeURL; }
-
-  bool showFileTips() const {return m_showFileTips; }
-  bool showPreviewsInFileTips() const;
-  int numFileTips() const {return m_numFileTips; }
+    bool showFileTips() const
+    {
+        return m_showFileTips;
+    }
+    bool showPreviewsInFileTips() const;
+    int numFileTips() const
+    {
+        return m_numFileTips;
+    }
     bool renameIconDirectly() const;
 
-  // Font settings
-  const QFont& standardFont() const { return m_standardFont; }
+    // Font settings
+    const QFont &standardFont() const
+    {
+        return m_standardFont;
+    }
 
-  // Color settings
-  const QColor& normalTextColor() const { return m_normalTextColor; }
-  const QColor& highlightedTextColor() const { return m_highlightedTextColor; }
-  const QColor& itemTextBackground() const { return m_itemTextBackground; }
+    // Color settings
+    const QColor &normalTextColor() const
+    {
+        return m_normalTextColor;
+    }
+    const QColor &highlightedTextColor() const
+    {
+        return m_highlightedTextColor;
+    }
+    const QColor &itemTextBackground() const
+    {
+        return m_itemTextBackground;
+    }
 
-  int textPreviewIconTransparency() const { return m_iconTransparency; }
+    int textPreviewIconTransparency() const
+    {
+        return m_iconTransparency;
+    }
 
-  int caseSensitiveCompare( const QString& a, const QString& b ) const;
+    int caseSensitiveCompare(const QString &a, const QString &b) const;
 
 private:
+    static KonqFMSettings *s_pSettings;
 
-  static KonqFMSettings * s_pSettings;
+    bool m_underlineLink;
+    bool m_fileSizeInBytes;
+    bool m_alwaysNewWin;
+    bool m_bTreeFollow;
 
-  bool m_underlineLink;
-  bool m_fileSizeInBytes;
-  bool m_alwaysNewWin;
-  bool m_bTreeFollow;
+    QMap< QString, QString > m_embedMap;
 
-  QMap<QString, QString> m_embedMap;
+    QFont m_standardFont;
 
-  QFont m_standardFont;
+    QColor m_normalTextColor;
+    QColor m_highlightedTextColor;
+    QColor m_itemTextBackground;
 
-  QColor m_normalTextColor;
-  QColor m_highlightedTextColor;
-  QColor m_itemTextBackground;
+    bool m_bWordWrapText;
+    int m_iconTextHeight;
 
-  bool m_bWordWrapText;
-  int m_iconTextHeight;
+    QString m_homeURL;
+    bool m_showFileTips;
+    int m_numFileTips;
 
-  QString m_homeURL;
-  bool m_showFileTips;
-  int  m_numFileTips;
+    // used for the textpreview
+    int m_iconTransparency;
 
-  // used for the textpreview
-  int m_iconTransparency;
+    /** Called by constructor and reparseConfiguration */
+    void init(KConfig *config);
 
-  /** Called by constructor and reparseConfiguration */
-  void init( KConfig * config );
+    struct KonqFMSettingsPrivate *d;
 
-  struct KonqFMSettingsPrivate * d;
-
-  // There is no default constructor. Use the provided ones.
-  KonqFMSettings();
-  // No copy constructor either. What for ?
-  KonqFMSettings( const KonqFMSettings &);
+    // There is no default constructor. Use the provided ones.
+    KonqFMSettings();
+    // No copy constructor either. What for ?
+    KonqFMSettings(const KonqFMSettings &);
 };
 
 #endif

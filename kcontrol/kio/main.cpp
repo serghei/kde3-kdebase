@@ -37,122 +37,117 @@
 
 #include "main.h"
 
-extern "C"
+extern "C" {
+
+KDE_EXPORT KCModule *create_cookie(QWidget *parent, const char /**name*/)
 {
-
-  KDE_EXPORT KCModule *create_cookie(QWidget *parent, const char /**name*/)
-  {
     return new KCookiesMain(parent);
-  }
-
-  KDE_EXPORT KCModule *create_smb(QWidget *parent, const char /**name*/)
-  {
-    return new SMBRoOptions(parent);
-  }
-
-  KDE_EXPORT KCModule *create_useragent(QWidget *parent, const char /**name*/)
-  {
-    return new UserAgentDlg(parent);
-  }
-
-  KDE_EXPORT KCModule *create_proxy(QWidget *parent, const char /**name*/)
-  {
-    return new KProxyOptions(parent);
-  }
-
-  KDE_EXPORT KCModule *create_cache(QWidget *parent, const char /**name*/)
-  {
-    return new KCacheConfigDialog( parent );
-  }
-
-  KDE_EXPORT KCModule *create_netpref(QWidget *parent, const char /**name*/)
-  {
-    return new KIOPreferences(parent);
-  }
-
-  KDE_EXPORT KCModule *create_lanbrowser(QWidget *parent, const char *)
-  {
-    return new LanBrowser(parent);
-  }
-
 }
 
-LanBrowser::LanBrowser(QWidget *parent)
-:KCModule(parent,"kcmkio")
-,layout(this)
-,tabs(this)
+KDE_EXPORT KCModule *create_smb(QWidget *parent, const char /**name*/)
 {
-   setQuickHelp( i18n("<h1>Local Network Browsing</h1>Here you setup your "
-		"<b>\"Network Neighborhood\"</b>. You "
-		"can use either the LISa daemon and the lan:/ ioslave, or the "
-		"ResLISa daemon and the rlan:/ ioslave.<br><br>"
-		"About the <b>LAN ioslave</b> configuration:<br> If you select it, the "
-		"ioslave, <i>if available</i>, will check whether the host "
-		"supports this service when you open this host. Please note "
-		"that paranoid people might consider even this to be an attack.<br>"
-		"<i>Always</i> means that you will always see the links for the "
-		"services, regardless of whether they are actually offered by the host. "
-		"<i>Never</i> means that you will never have the links to the services. "
-		"In both cases you will not contact the host, so nobody will ever regard "
-		"you as an attacker.<br><br>More information about <b>LISa</b> "
-		"can be found at <a href=\"http://lisa-home.sourceforge.net\">"
-		"the LISa Homepage</a> or contact Alexander Neundorf "
-		"&lt;<a href=\"mailto:neundorf@kde.org\">neundorf@kde.org</a>&gt;."));
+    return new SMBRoOptions(parent);
+}
 
-   layout.addWidget(&tabs);
+KDE_EXPORT KCModule *create_useragent(QWidget *parent, const char /**name*/)
+{
+    return new UserAgentDlg(parent);
+}
 
-   smbPage = create_smb(&tabs, 0);
-   tabs.addTab(smbPage, i18n("&Windows Shares"));
-   connect(smbPage,SIGNAL(changed(bool)), SLOT( changed() ));
+KDE_EXPORT KCModule *create_proxy(QWidget *parent, const char /**name*/)
+{
+    return new KProxyOptions(parent);
+}
 
-   lisaPage = KCModuleLoader::loadModule("kcmlisa", KCModuleLoader::None, &tabs);
-   if (lisaPage)
-   {
-     tabs.addTab(lisaPage,i18n("&LISa Daemon"));
-     connect(lisaPage,SIGNAL(changed()), SLOT( changed() ));
-   }
+KDE_EXPORT KCModule *create_cache(QWidget *parent, const char /**name*/)
+{
+    return new KCacheConfigDialog(parent);
+}
 
-//   resLisaPage = KCModuleLoader::loadModule("kcmreslisa", &tabs);
-//   if (resLisaPage)
-//   {
-//     tabs.addTab(resLisaPage,i18n("R&esLISa Daemon"));
-//     connect(resLisaPage,SIGNAL(changed()), SLOT( changed() ));
-//   }
+KDE_EXPORT KCModule *create_netpref(QWidget *parent, const char /**name*/)
+{
+    return new KIOPreferences(parent);
+}
 
-   kioLanPage = KCModuleLoader::loadModule("kcmkiolan",  KCModuleLoader::None, &tabs);
-   if (kioLanPage)
-   {
-     tabs.addTab(kioLanPage,i18n("lan:/ Iosla&ve"));
-     connect(kioLanPage,SIGNAL(changed()), SLOT( changed() ));
-   }
+KDE_EXPORT KCModule *create_lanbrowser(QWidget *parent, const char *)
+{
+    return new LanBrowser(parent);
+}
+}
 
-   setButtons(Apply|Help);
-   load();
+LanBrowser::LanBrowser(QWidget *parent) : KCModule(parent, "kcmkio"), layout(this), tabs(this)
+{
+    setQuickHelp(
+        i18n("<h1>Local Network Browsing</h1>Here you setup your "
+             "<b>\"Network Neighborhood\"</b>. You "
+             "can use either the LISa daemon and the lan:/ ioslave, or the "
+             "ResLISa daemon and the rlan:/ ioslave.<br><br>"
+             "About the <b>LAN ioslave</b> configuration:<br> If you select it, the "
+             "ioslave, <i>if available</i>, will check whether the host "
+             "supports this service when you open this host. Please note "
+             "that paranoid people might consider even this to be an attack.<br>"
+             "<i>Always</i> means that you will always see the links for the "
+             "services, regardless of whether they are actually offered by the host. "
+             "<i>Never</i> means that you will never have the links to the services. "
+             "In both cases you will not contact the host, so nobody will ever regard "
+             "you as an attacker.<br><br>More information about <b>LISa</b> "
+             "can be found at <a href=\"http://lisa-home.sourceforge.net\">"
+             "the LISa Homepage</a> or contact Alexander Neundorf "
+             "&lt;<a href=\"mailto:neundorf@kde.org\">neundorf@kde.org</a>&gt;."));
+
+    layout.addWidget(&tabs);
+
+    smbPage = create_smb(&tabs, 0);
+    tabs.addTab(smbPage, i18n("&Windows Shares"));
+    connect(smbPage, SIGNAL(changed(bool)), SLOT(changed()));
+
+    lisaPage = KCModuleLoader::loadModule("kcmlisa", KCModuleLoader::None, &tabs);
+    if(lisaPage)
+    {
+        tabs.addTab(lisaPage, i18n("&LISa Daemon"));
+        connect(lisaPage, SIGNAL(changed()), SLOT(changed()));
+    }
+
+    //   resLisaPage = KCModuleLoader::loadModule("kcmreslisa", &tabs);
+    //   if (resLisaPage)
+    //   {
+    //     tabs.addTab(resLisaPage,i18n("R&esLISa Daemon"));
+    //     connect(resLisaPage,SIGNAL(changed()), SLOT( changed() ));
+    //   }
+
+    kioLanPage = KCModuleLoader::loadModule("kcmkiolan", KCModuleLoader::None, &tabs);
+    if(kioLanPage)
+    {
+        tabs.addTab(kioLanPage, i18n("lan:/ Iosla&ve"));
+        connect(kioLanPage, SIGNAL(changed()), SLOT(changed()));
+    }
+
+    setButtons(Apply | Help);
+    load();
 }
 
 void LanBrowser::load()
 {
-   smbPage->load();
-   if (lisaPage)
-     lisaPage->load();
-//   if (resLisaPage)
-//     resLisaPage->load();
-   if (kioLanPage)
-     kioLanPage->load();
-   emit changed(false);
+    smbPage->load();
+    if(lisaPage)
+        lisaPage->load();
+    //   if (resLisaPage)
+    //     resLisaPage->load();
+    if(kioLanPage)
+        kioLanPage->load();
+    emit changed(false);
 }
 
 void LanBrowser::save()
 {
-   smbPage->save();
-//   if (resLisaPage)
-//     resLisaPage->save();
-   if (kioLanPage)
-     kioLanPage->save();
-   if (lisaPage)
-     lisaPage->save();
-   emit changed(false);
+    smbPage->save();
+    //   if (resLisaPage)
+    //     resLisaPage->save();
+    if(kioLanPage)
+        kioLanPage->save();
+    if(lisaPage)
+        lisaPage->save();
+    emit changed(false);
 }
 
 #include "main.moc"
-

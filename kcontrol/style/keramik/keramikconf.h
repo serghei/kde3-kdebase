@@ -26,37 +26,36 @@ DEALINGS IN THE SOFTWARE.
 
 class QCheckBox;
 
-class KeramikStyleConfig: public QWidget
-{
-	Q_OBJECT
+class KeramikStyleConfig : public QWidget {
+    Q_OBJECT
 public:
-	KeramikStyleConfig(QWidget* parent);
-	~KeramikStyleConfig();
+    KeramikStyleConfig(QWidget *parent);
+    ~KeramikStyleConfig();
 
-	//This signal and the next two slots are the plugin
-	//page interface
+    // This signal and the next two slots are the plugin
+    // page interface
 signals:
-	void changed(bool);
+    void changed(bool);
 
 public slots:
-	void save();
-	void defaults();
+    void save();
+    void defaults();
 
-	//Everything below this is internal.
+    // Everything below this is internal.
 protected slots:
-	void updateChanged();
+    void updateChanged();
 
 protected:
-	//We store settings directly in widgets to
-	//avoid the hassle of sync'ing things
-	//QCheckBox* highlightLineEdits;
-	QCheckBox* animateProgressBar;
-	QCheckBox* highlightScrollBar;
+    // We store settings directly in widgets to
+    // avoid the hassle of sync'ing things
+    // QCheckBox* highlightLineEdits;
+    QCheckBox *animateProgressBar;
+    QCheckBox *highlightScrollBar;
 
-	//Original settings, for accurate dirtiness tracking
-	//bool       origHlLineEdit;
-	bool       origAnimProgressBar;
-	bool       origHlScrollbar;
+    // Original settings, for accurate dirtiness tracking
+    // bool       origHlLineEdit;
+    bool origAnimProgressBar;
+    bool origHlScrollbar;
 };
 
 #endif

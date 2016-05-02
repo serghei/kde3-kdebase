@@ -21,26 +21,23 @@ class QListViewItem;
 class QTextView;
 
 
-class USBViewer : public KCModule
-{
-  Q_OBJECT
+class USBViewer : public KCModule {
+    Q_OBJECT
 
 public:
+    USBViewer(QWidget *parent = 0L, const char *name = 0L, const QStringList &list = QStringList());
 
-  USBViewer(QWidget *parent = 0L, const char *name = 0L, const QStringList &list=QStringList() );
-
-  void load();
+    void load();
 
 protected slots:
 
-  void selectionChanged(QListViewItem *item);
-  void refresh();
+    void selectionChanged(QListViewItem *item);
+    void refresh();
 
 private:
-
-  QIntDict<QListViewItem> _items;
-  QListView *_devices;
-  QTextView *_details;
+    QIntDict< QListViewItem > _items;
+    QListView *_devices;
+    QTextView *_details;
 };
 
 

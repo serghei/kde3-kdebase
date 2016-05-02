@@ -41,27 +41,23 @@
  *
  * @author Hamish Rodda <rodda@kde.org>
  */
-class KrashDCOPInterface : virtual public DCOPObject
-{
-  K_DCOP
+class KrashDCOPInterface : virtual public DCOPObject {
+    K_DCOP
 public:
+    k_dcop : virtual QString programName() const = 0;
+    virtual QCString appName() const = 0;
+    virtual int signalNumber() const = 0;
+    virtual int pid() const = 0;
+    virtual bool startedByKdeinit() const = 0;
+    virtual bool safeMode() const = 0;
+    virtual QString signalName() const = 0;
+    virtual QString signalText() const = 0;
+    virtual QString whatToDoText() const = 0;
+    virtual QString errorDescriptionText() const = 0;
 
-k_dcop:
-  virtual QString programName() const = 0;
-  virtual QCString appName() const = 0;
-  virtual int signalNumber() const = 0;
-  virtual int pid() const = 0;
-  virtual bool startedByKdeinit() const = 0;
-  virtual bool safeMode() const = 0;
-  virtual QString signalName() const = 0;
-  virtual QString signalText() const = 0;
-  virtual QString whatToDoText() const = 0;
-  virtual QString errorDescriptionText() const = 0;
+    virtual ASYNC registerDebuggingApplication(const QString &launchName) = 0;
 
-  virtual ASYNC registerDebuggingApplication(const QString& launchName) = 0;
-
-k_dcop_signals:
-  void acceptDebuggingApplication();
+    k_dcop_signals : void acceptDebuggingApplication();
 };
 
 #endif

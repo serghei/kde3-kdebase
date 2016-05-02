@@ -21,90 +21,86 @@
 #include "blankscrn.moc"
 
 // libkscreensaver interface
-extern "C"
+extern "C" {
+KDE_EXPORT const char *kss_applicationName = "kblankscrn.kss";
+KDE_EXPORT const char *kss_description = I18N_NOOP("KBlankScreen");
+KDE_EXPORT const char *kss_version = "2.2.0";
+
+KDE_EXPORT KScreenSaver *kss_create(WId id)
 {
-    KDE_EXPORT const char *kss_applicationName = "kblankscrn.kss";
-    KDE_EXPORT const char *kss_description = I18N_NOOP( "KBlankScreen" );
-    KDE_EXPORT const char *kss_version = "2.2.0";
+    return new KBlankSaver(id);
+}
 
-    KDE_EXPORT KScreenSaver* kss_create( WId id )
-    {
-        return new KBlankSaver( id );
-    }
-
-    KDE_EXPORT QDialog* kss_setup()
-    {
-        return new KBlankSetup();
-    }
+KDE_EXPORT QDialog *kss_setup()
+{
+    return new KBlankSetup();
+}
 }
 
 //-----------------------------------------------------------------------------
 // dialog to setup screen saver parameters
 //
-KBlankSetup::KBlankSetup( QWidget *parent, const char *name )
-	: KDialogBase( parent, name, true, i18n( "Setup Blank Screen Saver" ),
-		Ok|Cancel, Ok, true )
+KBlankSetup::KBlankSetup(QWidget *parent, const char *name) : KDialogBase(parent, name, true, i18n("Setup Blank Screen Saver"), Ok | Cancel, Ok, true)
 {
-	readSettings();
+    readSettings();
 
-	QFrame *main = makeMainWidget();
-	QGridLayout *grid = new QGridLayout(main, 4, 2, 0, spacingHint() );
+    QFrame *main = makeMainWidget();
+    QGridLayout *grid = new QGridLayout(main, 4, 2, 0, spacingHint());
 
-	QLabel *label = new QLabel( i18n("Color:"), main );
-	grid->addWidget(label, 0, 0);
+    QLabel *label = new QLabel(i18n("Color:"), main);
+    grid->addWidget(label, 0, 0);
 
-	KColorButton *colorPush = new KColorButton( color, main );
-	colorPush->setMinimumWidth(80);
-	connect( colorPush, SIGNAL( changed(const QColor &) ),
-		SLOT( slotColor(const QColor &) ) );
-	grid->addWidget(colorPush, 1, 0);
+    KColorButton *colorPush = new KColorButton(color, main);
+    colorPush->setMinimumWidth(80);
+    connect(colorPush, SIGNAL(changed(const QColor &)), SLOT(slotColor(const QColor &)));
+    grid->addWidget(colorPush, 1, 0);
 
-	preview = new QWidget( main );
-	preview->setFixedSize( 220, 165 );
-	preview->setBackgroundColor( black );
-	preview->show();    // otherwise saver does not get correct size
-	saver = new KBlankSaver( preview->winId() );
-	grid->addMultiCellWidget(preview, 0, 2, 1, 1);
+    preview = new QWidget(main);
+    preview->setFixedSize(220, 165);
+    preview->setBackgroundColor(black);
+    preview->show(); // otherwise saver does not get correct size
+    saver = new KBlankSaver(preview->winId());
+    grid->addMultiCellWidget(preview, 0, 2, 1, 1);
 
-	grid->setRowStretch( 2, 10 );
-	grid->setRowStretch( 3, 20 );
+    grid->setRowStretch(2, 10);
+    grid->setRowStretch(3, 20);
 
-	setMinimumSize( sizeHint() );
+    setMinimumSize(sizeHint());
 }
 
 // read settings from config file
 void KBlankSetup::readSettings()
 {
-	KConfig *config = KGlobal::config();
-	config->setGroup( "Settings" );
+    KConfig *config = KGlobal::config();
+    config->setGroup("Settings");
 
-	color = config->readColorEntry( "Color", &black );
+    color = config->readColorEntry("Color", &black);
 }
 
-void KBlankSetup::slotColor( const QColor &col )
+void KBlankSetup::slotColor(const QColor &col)
 {
     color = col;
-    saver->setColor( color );
+    saver->setColor(color);
 }
 
 // Ok pressed - save settings and exit
 void KBlankSetup::slotOk()
 {
-	KConfig *config = KGlobal::config();
-	config->setGroup( "Settings" );
-	config->writeEntry( "Color", color );
-	config->sync();
+    KConfig *config = KGlobal::config();
+    config->setGroup("Settings");
+    config->writeEntry("Color", color);
+    config->sync();
 
-	accept();
+    accept();
 }
 
 //-----------------------------------------------------------------------------
 
 
-KBlankSaver::KBlankSaver( WId id ) : KScreenSaver( id )
+KBlankSaver::KBlankSaver(WId id) : KScreenSaver(id)
 {
-	readSettings();
-	blank();
+    readSettings();
+    blank();
 }
 
 KBlankSaver::~KBlankSaver()
@@ -112,24 +108,23 @@ KBlankSaver::~KBlankSaver()
 }
 
 // set the color
-void KBlankSaver::setColor( const QColor &col )
+void KBlankSaver::setColor(const QColor &col)
 {
-	color = col;
-	blank();
+    color = col;
+    blank();
 }
 
 // read configuration settings from config file
 void KBlankSaver::readSettings()
 {
-	KConfig *config = KGlobal::config();
-	config->setGroup( "Settings" );
+    KConfig *config = KGlobal::config();
+    config->setGroup("Settings");
 
-	color = config->readColorEntry( "Color", &black );
+    color = config->readColorEntry("Color", &black);
 }
 
 void KBlankSaver::blank()
 {
-    setBackgroundColor( color );
+    setBackgroundColor(color);
     erase();
 }
-

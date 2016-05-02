@@ -27,38 +27,37 @@ class KonqHistoryManager;
 class KonqSidebarHistorySettings;
 class KonqSidebarHistoryDlg;
 
-class HistorySidebarConfig : public KCModule
-{
-  Q_OBJECT
+class HistorySidebarConfig : public KCModule {
+    Q_OBJECT
 
 public:
-  HistorySidebarConfig( QWidget *parent=0, const char* name=0, const QStringList &list=QStringList() );
+    HistorySidebarConfig(QWidget *parent = 0, const char *name = 0, const QStringList &list = QStringList());
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
-  QString quickHelp() const;
+    QString quickHelp() const;
 
 private slots:
-  void configChanged();
+    void configChanged();
 
-  void slotGetFontNewer();
-  void slotGetFontOlder();
+    void slotGetFontNewer();
+    void slotGetFontOlder();
 
-  void slotExpireChanged( int );
-  void slotNewerChanged( int );
-  void slotOlderChanged( int );
+    void slotExpireChanged(int);
+    void slotNewerChanged(int);
+    void slotOlderChanged(int);
 
-  void slotClearHistory();
+    void slotClearHistory();
 
 private:
-  QFont m_fontNewer;
-  QFont m_fontOlder;
+    QFont m_fontNewer;
+    QFont m_fontOlder;
 
-  KonqSidebarHistoryDlg* dialog;
-  KonqSidebarHistorySettings *m_settings;
-  KonqHistoryManager *mgr;
+    KonqSidebarHistoryDlg *dialog;
+    KonqSidebarHistorySettings *m_settings;
+    KonqHistoryManager *mgr;
 };
 
 #endif

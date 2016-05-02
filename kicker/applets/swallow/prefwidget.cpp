@@ -19,17 +19,16 @@
 
 #include "prefwidget.h"
 
-PreferencesWidget::PreferencesWidget( SwallowCommandList *swc, QWidget *parent )
-	: PreferencesWidgetBase(parent)
+PreferencesWidget::PreferencesWidget(SwallowCommandList *swc, QWidget *parent) : PreferencesWidgetBase(parent)
 {
 
-	SwallowCommandListIterator it( *swc );
-	SwallowCommand *currentCL;
-	while ( ( currentCL = it.current() )  != 0 )
-	{
-		++it;
-		klebDockApps->insertItem( currentCL->title );
-	}
+    SwallowCommandListIterator it(*swc);
+    SwallowCommand *currentCL;
+    while((currentCL = it.current()) != 0)
+    {
+        ++it;
+        klebDockApps->insertItem(currentCL->title);
+    }
 }
 /*
 PreferencesWidget::~PreferencesWidget()

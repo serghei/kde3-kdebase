@@ -32,15 +32,14 @@
 #include "kio_smb_internal.h"
 
 //===========================================================================
-SMBSlave::SMBSlave(const QCString& pool, const QCString& app)
-    : SlaveBase( "smb", pool, app )
+SMBSlave::SMBSlave(const QCString &pool, const QCString &app) : SlaveBase("smb", pool, app)
 {
     m_initialized_smbc = false;
 
-    //read in the default workgroup info...
+    // read in the default workgroup info...
     reparseConfiguration();
 
-    //initialize the library...
+    // initialize the library...
     auth_initialize_smbc();
 }
 
@@ -53,25 +52,23 @@ SMBSlave::~SMBSlave()
 
 //===========================================================================
 // pointer to the slave created in kdemain
-SMBSlave* G_TheSlave;
+SMBSlave *G_TheSlave;
 
 //===========================================================================
-int KDE_EXPORT kdemain( int argc, char **argv )
+int KDE_EXPORT kdemain(int argc, char **argv)
 {
 
-    KInstance instance( "kio_smb" );
-    if( argc != 4 )
+    KInstance instance("kio_smb");
+    if(argc != 4)
     {
-        kdDebug(KIO_SMB) << "Usage: kio_smb protocol domain-socket1 domain-socket2"
-                  << endl;
+        kdDebug(KIO_SMB) << "Usage: kio_smb protocol domain-socket1 domain-socket2" << endl;
         return -1;
     }
 
-    SMBSlave slave( argv[2], argv[3] );
+    SMBSlave slave(argv[2], argv[3]);
 
     G_TheSlave = &slave;
     slave.dispatchLoop();
 
     return 0;
 }
-

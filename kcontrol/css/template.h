@@ -5,16 +5,13 @@
 #include <qstring.h>
 #include <qmap.h>
 
-class CSSTemplate
-{
+class CSSTemplate {
 public:
-
-  CSSTemplate(QString fname) : _filename(fname) {};
-  bool expand(QString destname, const QMap<QString,QString> &dict);
+    CSSTemplate(QString fname) : _filename(fname){};
+    bool expand(QString destname, const QMap< QString, QString > &dict);
 
 protected:
-  QString _filename;
-
+    QString _filename;
 };
 
 

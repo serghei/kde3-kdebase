@@ -33,35 +33,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "addbutton_mnu.moc"
 #include "containerarea.h"
 
-PanelAddButtonMenu::PanelAddButtonMenu(ContainerArea* cArea, const QString & label,
-				       const QString & relPath, QWidget * parent, const char * name,  const QString& _inlineHeader)
+PanelAddButtonMenu::PanelAddButtonMenu(ContainerArea *cArea, const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                       const QString &_inlineHeader)
     : PanelServiceMenu(label, relPath, parent, name, true, _inlineHeader), containerArea(cArea)
 {
 }
 
-PanelAddButtonMenu::PanelAddButtonMenu(ContainerArea* cArea, QWidget * parent, const char * name, const QString& _inlineHeader)
+PanelAddButtonMenu::PanelAddButtonMenu(ContainerArea *cArea, QWidget *parent, const char *name, const QString &_inlineHeader)
     : PanelServiceMenu(QString::null, QString::null, parent, name, true, _inlineHeader), containerArea(cArea)
 {
 }
 
 void PanelAddButtonMenu::slotExec(int id)
 {
-    if (!entryMap_.contains(id))
-	return;
+    if(!entryMap_.contains(id))
+        return;
 
-    KSycocaEntry * e = entryMap_[id];
+    KSycocaEntry *e = entryMap_[id];
 
-    if (e->isType(KST_KServiceGroup)) {
-	KServiceGroup::Ptr g = static_cast<KServiceGroup *>(e);
-	containerArea->addServiceMenuButton(g->relPath());
-    } else if (e->isType(KST_KService)) {
-	KService::Ptr service = static_cast<KService *>(e);
-	containerArea->addServiceButton( service->desktopEntryPath() );
+    if(e->isType(KST_KServiceGroup))
+    {
+        KServiceGroup::Ptr g = static_cast< KServiceGroup * >(e);
+        containerArea->addServiceMenuButton(g->relPath());
+    }
+    else if(e->isType(KST_KService))
+    {
+        KService::Ptr service = static_cast< KService * >(e);
+        containerArea->addServiceButton(service->desktopEntryPath());
     }
 }
 
-PanelServiceMenu * PanelAddButtonMenu::newSubMenu(const QString & label, const QString & relPath,
-						QWidget * parent, const char * name, const QString& _inlineHeader)
+PanelServiceMenu *PanelAddButtonMenu::newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                                 const QString &_inlineHeader)
 {
     return new PanelAddButtonMenu(containerArea, label, relPath, parent, name, _inlineHeader);
 }
@@ -70,4 +73,3 @@ void PanelAddButtonMenu::addNonKDEApp()
 {
     containerArea->addNonKDEAppButton();
 }
-

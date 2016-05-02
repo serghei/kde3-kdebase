@@ -25,34 +25,28 @@
 
 KShadowSettings::KShadowSettings()
 {
-	// init the components with some default values
-	setDefaults();
+    // init the components with some default values
+    setDefaults();
 }
 
 // load/save methods
 void KShadowSettings::fromString(const QString &val)
 {
-  setOffsetX(val.section(',', OFFSET_X, OFFSET_X).toInt());
-  setOffsetY(val.section(',', OFFSET_Y, OFFSET_Y).toInt());
-  setMultiplicationFactor(val.section(',', MULTIPLICATION_FACTOR, MULTIPLICATION_FACTOR).toDouble());
-  setMaxOpacity(val.section(',', MAX_OPACITY, MAX_OPACITY).toDouble());
-  setThickness(val.section(',', THICKNESS, THICKNESS).toInt());
-  setAlgorithm((Algorithm) val.section(',', ALGORITHM, ALGORITHM).toInt());
-  setSelectionType((SelectionType)val.section(',', SELECTION_TYPE, SELECTION_TYPE).toInt());
+    setOffsetX(val.section(',', OFFSET_X, OFFSET_X).toInt());
+    setOffsetY(val.section(',', OFFSET_Y, OFFSET_Y).toInt());
+    setMultiplicationFactor(val.section(',', MULTIPLICATION_FACTOR, MULTIPLICATION_FACTOR).toDouble());
+    setMaxOpacity(val.section(',', MAX_OPACITY, MAX_OPACITY).toDouble());
+    setThickness(val.section(',', THICKNESS, THICKNESS).toInt());
+    setAlgorithm((Algorithm)val.section(',', ALGORITHM, ALGORITHM).toInt());
+    setSelectionType((SelectionType)val.section(',', SELECTION_TYPE, SELECTION_TYPE).toInt());
 }
 
 QString KShadowSettings::toString() const
 {
-  QString result;
-  result.sprintf("%d,%d,%f,%f,%d,%d,%d",
-		 offsetX(),
-		 offsetY(),
-		 multiplicationFactor(),
-		 maxOpacity(),
-		 thickness(),
-		 (int)algorithm(),
-		 (int)selectionType());
-  return result;
+    QString result;
+    result.sprintf("%d,%d,%f,%f,%d,%d,%d", offsetX(), offsetY(), multiplicationFactor(), maxOpacity(), thickness(), (int)algorithm(),
+                   (int)selectionType());
+    return result;
 }
 
 //***********************************
@@ -64,7 +58,7 @@ QString KShadowSettings::toString() const
  */
 KShadowSettings::Algorithm KShadowSettings::algorithm() const
 {
-	return _algorithm;
+    return _algorithm;
 }
 
 /**
@@ -72,7 +66,7 @@ KShadowSettings::Algorithm KShadowSettings::algorithm() const
  */
 double KShadowSettings::multiplicationFactor() const
 {
-	return _multiplicationFactor;
+    return _multiplicationFactor;
 }
 
 /**
@@ -80,7 +74,7 @@ double KShadowSettings::multiplicationFactor() const
  */
 double KShadowSettings::maxOpacity() const
 {
-	return _maxOpacity;
+    return _maxOpacity;
 }
 
 /**
@@ -88,7 +82,7 @@ double KShadowSettings::maxOpacity() const
  */
 int KShadowSettings::offsetX() const
 {
-	return _offsetX;
+    return _offsetX;
 }
 
 /**
@@ -96,7 +90,7 @@ int KShadowSettings::offsetX() const
  */
 int KShadowSettings::offsetY() const
 {
-	return _offsetY;
+    return _offsetY;
 }
 
 /**
@@ -104,7 +98,7 @@ int KShadowSettings::offsetY() const
  */
 int KShadowSettings::thickness() const
 {
-	return _thickness;
+    return _thickness;
 }
 
 /**
@@ -112,7 +106,7 @@ int KShadowSettings::thickness() const
  */
 KShadowSettings::SelectionType KShadowSettings::selectionType() const
 {
-	return _selectionType;
+    return _selectionType;
 }
 
 // set methods
@@ -121,7 +115,7 @@ KShadowSettings::SelectionType KShadowSettings::selectionType() const
  */
 void KShadowSettings::setDefaults()
 {
-	fromString(DEFAULT_SHADOW_CONFIGURATION);
+    fromString(DEFAULT_SHADOW_CONFIGURATION);
 }
 
 
@@ -130,7 +124,7 @@ void KShadowSettings::setDefaults()
  */
 void KShadowSettings::setAlgorithm(Algorithm val)
 {
-	_algorithm = val;
+    _algorithm = val;
 }
 
 /**
@@ -138,7 +132,7 @@ void KShadowSettings::setAlgorithm(Algorithm val)
  */
 void KShadowSettings::setMultiplicationFactor(double val)
 {
-	_multiplicationFactor = val;
+    _multiplicationFactor = val;
 }
 
 /**
@@ -146,7 +140,7 @@ void KShadowSettings::setMultiplicationFactor(double val)
  */
 void KShadowSettings::setMaxOpacity(double val)
 {
-	_maxOpacity = val;
+    _maxOpacity = val;
 }
 
 /**
@@ -154,7 +148,7 @@ void KShadowSettings::setMaxOpacity(double val)
  */
 void KShadowSettings::setOffsetX(int val)
 {
-	_offsetX = val;
+    _offsetX = val;
 }
 
 /**
@@ -162,7 +156,7 @@ void KShadowSettings::setOffsetX(int val)
  */
 void KShadowSettings::setOffsetY(int val)
 {
-	_offsetY = val;
+    _offsetY = val;
 }
 
 /**
@@ -170,7 +164,7 @@ void KShadowSettings::setOffsetY(int val)
  */
 void KShadowSettings::setThickness(int val)
 {
-	_thickness = val;
+    _thickness = val;
 }
 
 /**
@@ -178,5 +172,5 @@ void KShadowSettings::setThickness(int val)
  */
 void KShadowSettings::setSelectionType(SelectionType val)
 {
-	_selectionType = val;
+    _selectionType = val;
 }

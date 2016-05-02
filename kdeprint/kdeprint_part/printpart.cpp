@@ -30,24 +30,22 @@
 #include <kparts/genericfactory.h>
 #include <qwidget.h>
 
-typedef KParts::GenericFactory<PrintPart> PrintPartFactory;
-K_EXPORT_COMPONENT_FACTORY( libkdeprint_part, PrintPartFactory )
+typedef KParts::GenericFactory< PrintPart > PrintPartFactory;
+K_EXPORT_COMPONENT_FACTORY(libkdeprint_part, PrintPartFactory)
 
-PrintPart::PrintPart(QWidget *parentWidget, const char * /*widgetName*/ ,
-	             QObject *parent, const char *name,
-		     const QStringList & /*args*/ )
-: KParts::ReadOnlyPart(parent, name)
+PrintPart::PrintPart(QWidget *parentWidget, const char * /*widgetName*/, QObject *parent, const char *name, const QStringList & /*args*/)
+    : KParts::ReadOnlyPart(parent, name)
 {
-	setInstance(PrintPartFactory::instance());
+    setInstance(PrintPartFactory::instance());
     instance()->iconLoader()->addAppDir("kdeprint");
-	m_extension = new PrintPartExtension(this);
+    m_extension = new PrintPartExtension(this);
 
-	m_view = new KMMainView(parentWidget, "MainView", actionCollection());
-	m_view->setFocusPolicy(QWidget::ClickFocus);
-	m_view->enableToolbar(false);
-	setWidget(m_view);
+    m_view = new KMMainView(parentWidget, "MainView", actionCollection());
+    m_view->setFocusPolicy(QWidget::ClickFocus);
+    m_view->enableToolbar(false);
+    setWidget(m_view);
 
-	initActions();
+    initActions();
 }
 
 PrintPart::~PrintPart()
@@ -56,21 +54,20 @@ PrintPart::~PrintPart()
 
 KAboutData *PrintPart::createAboutData()
 {
-	return new KAboutData(I18N_NOOP("kdeprint_part"), I18N_NOOP("A Konqueror Plugin for Print Management"), "0.1");
+    return new KAboutData(I18N_NOOP("kdeprint_part"), I18N_NOOP("A Konqueror Plugin for Print Management"), "0.1");
 }
 
 bool PrintPart::openFile()
 {
-	return true;
+    return true;
 }
 
 void PrintPart::initActions()
 {
-	setXMLFile("kdeprint_part.rc");
+    setXMLFile("kdeprint_part.rc");
 }
 
-PrintPartExtension::PrintPartExtension(PrintPart *parent)
-: KParts::BrowserExtension(parent, "PrintPartExtension")
+PrintPartExtension::PrintPartExtension(PrintPart *parent) : KParts::BrowserExtension(parent, "PrintPartExtension")
 {
 }
 

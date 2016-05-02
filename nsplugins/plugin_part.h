@@ -43,112 +43,106 @@ class PluginPart;
 #include "NSPluginCallbackIface.h"
 
 
-class NSPluginCallback : public NSPluginCallbackIface
-{
+class NSPluginCallback : public NSPluginCallbackIface {
 public:
-  NSPluginCallback(PluginPart *part);
+    NSPluginCallback(PluginPart *part);
 
-  ASYNC reloadPage();
-  ASYNC requestURL(QString url, QString target);
-  ASYNC postURL(QString url, QString target, QByteArray data, QString mime);
-  ASYNC statusMessage( QString msg );
-  ASYNC evalJavaScript( int id, QString script );
+    ASYNC reloadPage();
+    ASYNC requestURL(QString url, QString target);
+    ASYNC postURL(QString url, QString target, QByteArray data, QString mime);
+    ASYNC statusMessage(QString msg);
+    ASYNC evalJavaScript(int id, QString script);
 
 private:
-  PluginPart *_part;
+    PluginPart *_part;
 };
 
 
-class PluginFactory : public KParts::Factory
-{
-  Q_OBJECT
+class PluginFactory : public KParts::Factory {
+    Q_OBJECT
 
 public:
-  PluginFactory();
-  virtual ~PluginFactory();
+    PluginFactory();
+    virtual ~PluginFactory();
 
-  virtual KParts::Part * createPartObject(QWidget *parentWidget = 0, const char *widgetName = 0,
-  		            	    QObject *parent = 0, const char *name = 0,
-  			            const char *classname = "KParts::Part",
-   			            const QStringList &args = QStringList());
+    virtual KParts::Part *createPartObject(QWidget *parentWidget = 0, const char *widgetName = 0, QObject *parent = 0, const char *name = 0,
+                                           const char *classname = "KParts::Part", const QStringList &args = QStringList());
 
-  static KInstance *instance();
-  static KAboutData *aboutData();
+    static KInstance *instance();
+    static KAboutData *aboutData();
 
 private:
-
-  static KInstance *s_instance;
-  class NSPluginLoader *_loader;
+    static KInstance *s_instance;
+    class NSPluginLoader *_loader;
 };
 
 
-class PluginCanvasWidget : public QWidget
-{
-  Q_OBJECT
+class PluginCanvasWidget : public QWidget {
+    Q_OBJECT
 public:
-
-  PluginCanvasWidget(QWidget *parent=0, const char *name=0)
-    : QWidget(parent,name) {}
+    PluginCanvasWidget(QWidget *parent = 0, const char *name = 0) : QWidget(parent, name)
+    {
+    }
 
 protected:
-  void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e);
 
 signals:
-  void resized(int,int);
+    void resized(int, int);
 };
 
 
-class PluginPart: public KParts::ReadOnlyPart
-{
-  Q_OBJECT
+class PluginPart : public KParts::ReadOnlyPart {
+    Q_OBJECT
 public:
-  PluginPart(QWidget *parentWidget, const char *widgetName, QObject *parent,
-             const char *name, const QStringList &args = QStringList());
-  virtual ~PluginPart();
+    PluginPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const QStringList &args = QStringList());
+    virtual ~PluginPart();
 
-  void postURL(const QString& url, const QString& target, const QByteArray& data, const QString& mime);
-  void requestURL(const QString& url, const QString& target);
-  void statusMessage( QString msg );
-  void evalJavaScript( int id, const QString& script );
-  void reloadPage();
+    void postURL(const QString &url, const QString &target, const QByteArray &data, const QString &mime);
+    void requestURL(const QString &url, const QString &target);
+    void statusMessage(QString msg);
+    void evalJavaScript(int id, const QString &script);
+    void reloadPage();
 
-  void changeSrc(const QString& url);
+    void changeSrc(const QString &url);
 
 protected:
-  virtual bool openURL(const KURL &url);
-  virtual bool closeURL();
-  virtual bool openFile() { return false; };
+    virtual bool openURL(const KURL &url);
+    virtual bool closeURL();
+    virtual bool openFile()
+    {
+        return false;
+    };
 
 protected slots:
-  void pluginResized(int,int);
-  void saveAs();
+    void pluginResized(int, int);
+    void saveAs();
 
 private:
-  QGuardedPtr<QWidget> _widget;
-  PluginCanvasWidget *_canvas;
-  PluginBrowserExtension *_extension;
-  PluginLiveConnectExtension *_liveconnect;
-  NSPluginCallback *_callback;
-  QStringList _args;
-  class NSPluginLoader *_loader;
-  bool *_destructed;
+    QGuardedPtr< QWidget > _widget;
+    PluginCanvasWidget *_canvas;
+    PluginBrowserExtension *_extension;
+    PluginLiveConnectExtension *_liveconnect;
+    NSPluginCallback *_callback;
+    QStringList _args;
+    class NSPluginLoader *_loader;
+    bool *_destructed;
 };
 
 
-class PluginLiveConnectExtension : public KParts::LiveConnectExtension
-{
-Q_OBJECT
+class PluginLiveConnectExtension : public KParts::LiveConnectExtension {
+    Q_OBJECT
 public:
-    PluginLiveConnectExtension(PluginPart* part);
+    PluginLiveConnectExtension(PluginPart *part);
     virtual ~PluginLiveConnectExtension();
     virtual bool put(const unsigned long, const QString &field, const QString &value);
-    virtual bool get(const unsigned long, const QString&, Type&, unsigned long&, QString&);
-    virtual bool call(const unsigned long, const QString&, const QStringList&, Type&, unsigned long&, QString&);
+    virtual bool get(const unsigned long, const QString &, Type &, unsigned long &, QString &);
+    virtual bool call(const unsigned long, const QString &, const QStringList &, Type &, unsigned long &, QString &);
 
-    QString evalJavaScript( const QString & script );
+    QString evalJavaScript(const QString &script);
 
 signals:
-    virtual void partEvent( const unsigned long objid, const QString & event, const KParts::LiveConnectExtension::ArgList & args );
+    virtual void partEvent(const unsigned long objid, const QString &event, const KParts::LiveConnectExtension::ArgList &args);
 
 private:
     PluginPart *_part;

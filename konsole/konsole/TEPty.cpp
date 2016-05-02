@@ -79,7 +79,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <termios.h>
-                     
+
 #include <kstandarddirs.h>
 #include <klocale.h>
 #include <kdebug.h>
@@ -90,79 +90,78 @@
 
 void TEPty::donePty()
 {
-  emit done(exitStatus());
+    emit done(exitStatus());
 }
 
 void TEPty::setSize(int lines, int cols)
 {
-  pty()->setWinSize(lines, cols);
+    pty()->setWinSize(lines, cols);
 }
 
 void TEPty::setXonXoff(bool on)
 {
-  pty()->setXonXoff(on);
+    pty()->setXonXoff(on);
 }
 
 void TEPty::useUtf8(bool on)
 {
-  pty()->setUtf8Mode(on);
+    pty()->setUtf8Mode(on);
 }
 
 void TEPty::setErase(char erase)
 {
-  struct termios tios;
-  int fd = pty()->slaveFd();
-  
-  if(tcgetattr(fd, &tios))
-  {
-    qWarning("Uh oh.. can't get terminal attributes..");
-    return;
-  }
-  tios.c_cc[VERASE] = erase;
-  if(tcsetattr(fd, TCSANOW, &tios))
-    qWarning("Uh oh.. can't set terminal attributes..");
+    struct termios tios;
+    int fd = pty()->slaveFd();
+
+    if(tcgetattr(fd, &tios))
+    {
+        qWarning("Uh oh.. can't get terminal attributes..");
+        return;
+    }
+    tios.c_cc[VERASE] = erase;
+    if(tcsetattr(fd, TCSANOW, &tios))
+        qWarning("Uh oh.. can't set terminal attributes..");
 }
 
 /*!
     start the client program.
 */
-int TEPty::run(const char* _pgm, QStrList & _args, const char* _term, ulong winid, bool _addutmp,
-               const char* _konsole_dcop, const char* _konsole_dcop_session)
+int TEPty::run(const char *_pgm, QStrList &_args, const char *_term, ulong winid, bool _addutmp, const char *_konsole_dcop,
+               const char *_konsole_dcop_session)
 {
-  clearArguments();
+    clearArguments();
 
-  setBinaryExecutable(_pgm);
+    setBinaryExecutable(_pgm);
 
-  QStrListIterator it( _args );
-  for (; it.current(); ++it )
-    arguments.append(it.current());
+    QStrListIterator it(_args);
+    for(; it.current(); ++it)
+        arguments.append(it.current());
 
-  if (_term && _term[0])
-     setEnvironment("TERM",_term);
-  if (_konsole_dcop && _konsole_dcop[0])
-     setEnvironment("KONSOLE_DCOP",_konsole_dcop);
-  if (_konsole_dcop_session && _konsole_dcop_session[0])
-     setEnvironment("KONSOLE_DCOP_SESSION", _konsole_dcop_session);
-  setEnvironment("WINDOWID", QString::number(winid));
+    if(_term && _term[0])
+        setEnvironment("TERM", _term);
+    if(_konsole_dcop && _konsole_dcop[0])
+        setEnvironment("KONSOLE_DCOP", _konsole_dcop);
+    if(_konsole_dcop_session && _konsole_dcop_session[0])
+        setEnvironment("KONSOLE_DCOP_SESSION", _konsole_dcop_session);
+    setEnvironment("WINDOWID", QString::number(winid));
 
-  setUsePty(All, _addutmp);
+    setUsePty(All, _addutmp);
 
-  if ( start(NotifyOnExit, (Communication) (Stdin | Stdout)) == false )
-     return -1;
+    if(start(NotifyOnExit, (Communication)(Stdin | Stdout)) == false)
+        return -1;
 
-  resume(); // Start...
-  return 0;
-
+    resume(); // Start...
+    return 0;
 }
 
 void TEPty::setWriteable(bool writeable)
 {
-  struct stat sbuf;
-  stat(pty()->ttyName(), &sbuf);
-  if (writeable)
-    chmod(pty()->ttyName(), sbuf.st_mode | S_IWGRP);
-  else
-    chmod(pty()->ttyName(), sbuf.st_mode & ~(S_IWGRP|S_IWOTH));
+    struct stat sbuf;
+    stat(pty()->ttyName(), &sbuf);
+    if(writeable)
+        chmod(pty()->ttyName(), sbuf.st_mode | S_IWGRP);
+    else
+        chmod(pty()->ttyName(), sbuf.st_mode & ~(S_IWGRP | S_IWOTH));
 }
 
 /*!
@@ -170,15 +169,12 @@ void TEPty::setWriteable(bool writeable)
 */
 TEPty::TEPty()
 {
-  m_bufferFull = false;
-  connect(this, SIGNAL(receivedStdout(KProcess *, char *, int )),
-	  this, SLOT(dataReceived(KProcess *,char *, int)));
-  connect(this, SIGNAL(processExited(KProcess *)),
-          this, SLOT(donePty()));
-  connect(this, SIGNAL(wroteStdin(KProcess *)),
-          this, SLOT(writeReady()));
+    m_bufferFull = false;
+    connect(this, SIGNAL(receivedStdout(KProcess *, char *, int)), this, SLOT(dataReceived(KProcess *, char *, int)));
+    connect(this, SIGNAL(processExited(KProcess *)), this, SLOT(donePty()));
+    connect(this, SIGNAL(wroteStdin(KProcess *)), this, SLOT(writeReady()));
 
-  setUsePty(All, false); // utmp will be overridden later
+    setUsePty(All, false); // utmp will be overridden later
 }
 
 /*!
@@ -191,69 +187,71 @@ TEPty::~TEPty()
 /*! sends a character through the line */
 void TEPty::send_byte(char c)
 {
-  send_bytes(&c,1);
+    send_bytes(&c, 1);
 }
 
 /*! sends a 0 terminated string through the line */
-void TEPty::send_string(const char* s)
+void TEPty::send_string(const char *s)
 {
-  send_bytes(s,strlen(s));
+    send_bytes(s, strlen(s));
 }
 
 void TEPty::writeReady()
 {
-  pendingSendJobs.remove(pendingSendJobs.begin());
-  m_bufferFull = false;
-  doSendJobs();
+    pendingSendJobs.remove(pendingSendJobs.begin());
+    m_bufferFull = false;
+    doSendJobs();
 }
 
-void TEPty::doSendJobs() {
-  if(pendingSendJobs.isEmpty())
-  {
-     emit buffer_empty();
-     return;
-  }
-  
-  SendJob& job = pendingSendJobs.first();
-  if (!writeStdin(job.buffer.data(), job.length))
-  {
-    qWarning("Uh oh.. can't write data..");
-    return;
-  }
-  m_bufferFull = true;
-}
-
-void TEPty::appendSendJob(const char* s, int len)
+void TEPty::doSendJobs()
 {
-  pendingSendJobs.append(SendJob(s,len));
+    if(pendingSendJobs.isEmpty())
+    {
+        emit buffer_empty();
+        return;
+    }
+
+    SendJob &job = pendingSendJobs.first();
+    if(!writeStdin(job.buffer.data(), job.length))
+    {
+        qWarning("Uh oh.. can't write data..");
+        return;
+    }
+    m_bufferFull = true;
+}
+
+void TEPty::appendSendJob(const char *s, int len)
+{
+    pendingSendJobs.append(SendJob(s, len));
 }
 
 /*! sends len bytes through the line */
-void TEPty::send_bytes(const char* s, int len)
+void TEPty::send_bytes(const char *s, int len)
 {
-  appendSendJob(s,len);
-  if (!m_bufferFull)
-     doSendJobs();
+    appendSendJob(s, len);
+    if(!m_bufferFull)
+        doSendJobs();
 }
 
 /*! indicates that a block of data is received */
-void TEPty::dataReceived(KProcess *,char *buf, int len)
+void TEPty::dataReceived(KProcess *, char *buf, int len)
 {
-  emit block_in(buf,len);
+    emit block_in(buf, len);
 }
 
 void TEPty::lockPty(bool lock)
 {
-  if (lock)
-    suspend();
-  else
-    resume();
+    if(lock)
+        suspend();
+    else
+        resume();
 }
 
-int TEPty::commSetupDoneC ()
+int TEPty::commSetupDoneC()
 {
-    int ok = KProcess::commSetupDoneC ();
-    if ( ok ) {
+    int ok = KProcess::commSetupDoneC();
+    if(ok)
+    {
         emit forkedChild();
     }
     return ok;

@@ -30,77 +30,73 @@ class KonqView;
 /**
  * DCOP interface for a konqueror main window
  */
-class KonqViewIface : virtual public DCOPObject
-{
-  K_DCOP
+class KonqViewIface : virtual public DCOPObject {
+    K_DCOP
 public:
+    KonqViewIface(KonqView *view, const QCString &name);
+    ~KonqViewIface();
 
-  KonqViewIface( KonqView * view, const QCString& name );
-  ~KonqViewIface();
+    k_dcop :
 
-k_dcop:
+        /**
+         * Displays another URL, but without changing the view mode
+         * (Make sure the part can display this URL)
+         */
+        void
+        openURL(QString url, const QString &locationBarURL, const QString &nameFilter);
 
-  /**
-   * Displays another URL, but without changing the view mode
-   * (Make sure the part can display this URL)
-   */
-  void openURL( QString url,
-                const QString & locationBarURL,
-                const QString & nameFilter );
+    /** Reload */
+    void reload();
 
-  /** Reload */
-  void reload();
+    /**
+     * Change the type of view (i.e. loads a new konqueror view)
+     * @param serviceType the service type we want to show
+     * @param serviceName allows to enforce a particular service to be chosen,
+     *        @see KonqFactory.
+     */
+    bool changeViewMode(const QString &serviceType, const QString &serviceName);
 
-  /**
-   * Change the type of view (i.e. loads a new konqueror view)
-   * @param serviceType the service type we want to show
-   * @param serviceName allows to enforce a particular service to be chosen,
-   *        @see KonqFactory.
-   */
-  bool changeViewMode( const QString &serviceType,
-                       const QString &serviceName );
+    /**
+     * Call this to prevent next openURL() call from changing history lists
+     * Used when the same URL is reloaded (for instance with another view mode)
+     */
+    void lockHistory();
 
-  /**
-   * Call this to prevent next openURL() call from changing history lists
-   * Used when the same URL is reloaded (for instance with another view mode)
-   */
-  void lockHistory();
+    /**
+     * Stop loading
+     */
+    void stop();
 
-  /**
-   * Stop loading
-   */
-  void stop();
+    /**
+     * Retrieve view's URL
+     */
+    QString url();
 
-  /**
-   * Retrieve view's URL
-   */
-  QString url();
+    /**
+     * Get view's location bar URL, i.e. the one that the view signals
+     * It can be different from url(), for instance if we display a index.html
+     */
+    QString locationBarURL();
 
-  /**
-   * Get view's location bar URL, i.e. the one that the view signals
-   * It can be different from url(), for instance if we display a index.html
-   */
-  QString locationBarURL();
+    /**
+     * @return the servicetype this view is currently displaying
+     */
+    QString serviceType();
 
-  /**
-   * @return the servicetype this view is currently displaying
-   */
-  QString serviceType();
+    /**
+     * @return the servicetypes this view is capable to display
+     */
+    QStringList serviceTypes();
 
-  /**
-   * @return the servicetypes this view is capable to display
-   */
-  QStringList serviceTypes();
+    /**
+     * @return the part embedded into this view
+     */
+    DCOPRef part();
 
-  /**
-   * @return the part embedded into this view
-   */
-  DCOPRef part();
-
-  /**
-   * Enable/Disable the context popup menu for this view.
-   */
-  void enablePopupMenu( bool b );
+    /**
+     * Enable/Disable the context popup menu for this view.
+     */
+    void enablePopupMenu(bool b);
 
 
     bool isPopupMenuEnabled() const;
@@ -108,7 +104,7 @@ k_dcop:
     /*
      * Return length of history
      */
-    uint historyLength()const;
+    uint historyLength() const;
     /*
      * Return true  if "Use index HTML" is checked
      */
@@ -123,14 +119,11 @@ k_dcop:
      */
     void goBack();
 
-    bool canGoBack()const;
-    bool canGoForward()const;
+    bool canGoBack() const;
+    bool canGoForward() const;
 
 private:
-
-  KonqView * m_pView;
-
+    KonqView *m_pView;
 };
 
 #endif
-

@@ -30,52 +30,60 @@
 
 #include "exrcreator.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        return new EXRCreator;
-    }
+    return new EXRCreator;
+}
 }
 
 bool EXRCreator::create(const QString &path, int, int, QImage &img)
 {
-    Imf::InputFile in ( path.ascii() );
+    Imf::InputFile in(path.ascii());
     const Imf::Header &h = in.header();
 
-    if ( h.hasPreviewImage() ) {
-	kdDebug() << "EXRcreator - using preview" << endl;
-	const Imf::PreviewImage &preview = in.header().previewImage();
-	QImage qpreview(preview.width(), preview.height(), 32, 0, QImage::BigEndian);
-	for ( unsigned int y=0; y < preview.height(); y++ ) {
-	    for ( unsigned int x=0; x < preview.width(); x++ ) {
-		const Imf::PreviewRgba &q = preview.pixels()[x+(y*preview.width())];
-		qpreview.setPixel( x, y, qRgba(q.r, q.g, q.b, q.a) );
-	    }
-	}
-	img = qpreview;
-	return true;
-    } else {
+    if(h.hasPreviewImage())
+    {
+        kdDebug() << "EXRcreator - using preview" << endl;
+        const Imf::PreviewImage &preview = in.header().previewImage();
+        QImage qpreview(preview.width(), preview.height(), 32, 0, QImage::BigEndian);
+        for(unsigned int y = 0; y < preview.height(); y++)
+        {
+            for(unsigned int x = 0; x < preview.width(); x++)
+            {
+                const Imf::PreviewRgba &q = preview.pixels()[x + (y * preview.width())];
+                qpreview.setPixel(x, y, qRgba(q.r, q.g, q.b, q.a));
+            }
+        }
+        img = qpreview;
+        return true;
+    }
+    else
+    {
         // do it the hard way
-	// We ignore maximum size when just extracting the thumnail
-	// from the header, but it is very expensive to render large
-	// EXR images just to turn it into an icon, so we go back
-	// to honouring it in here.
-	kdDebug() << "EXRcreator - using original image" << endl;
-	KConfig * config = KGlobal::config();
-	KConfigGroupSaver cgs( config, "PreviewSettings" );
-	unsigned long long maxSize = config->readNumEntry( "MaximumSize", 1024*1024 /* 1MB */ );
-	unsigned long long fileSize = QFile( path ).size();
-	if ( (fileSize > 0) && (fileSize < maxSize) ) {
-	    if (!img.load( path )) {
-		return false;
-	    }
-	    if (img.depth() != 32)
-		img = img.convertDepth( 32 );
-	    return true;
-	} else {
-	    return false;
-	}
+        // We ignore maximum size when just extracting the thumnail
+        // from the header, but it is very expensive to render large
+        // EXR images just to turn it into an icon, so we go back
+        // to honouring it in here.
+        kdDebug() << "EXRcreator - using original image" << endl;
+        KConfig *config = KGlobal::config();
+        KConfigGroupSaver cgs(config, "PreviewSettings");
+        unsigned long long maxSize = config->readNumEntry("MaximumSize", 1024 * 1024 /* 1MB */);
+        unsigned long long fileSize = QFile(path).size();
+        if((fileSize > 0) && (fileSize < maxSize))
+        {
+            if(!img.load(path))
+            {
+                return false;
+            }
+            if(img.depth() != 32)
+                img = img.convertDepth(32);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
 

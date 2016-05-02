@@ -22,75 +22,73 @@
 #include "konq_listview.h"
 
 
-KonqListViewDir::KonqListViewDir( KonqTreeViewWidget *_parent, KFileItem* _fileitem )
-  : KonqListViewItem( _parent, _fileitem )
+KonqListViewDir::KonqListViewDir(KonqTreeViewWidget *_parent, KFileItem *_fileitem) : KonqListViewItem(_parent, _fileitem)
 {
-  setExpandable( true );
-  m_bComplete = false;
+    setExpandable(true);
+    m_bComplete = false;
 }
 
-KonqListViewDir::KonqListViewDir( KonqTreeViewWidget *_treeview, KonqListViewDir *_parent, KFileItem *_fileitem )
-  : KonqListViewItem( _treeview, _parent, _fileitem )
+KonqListViewDir::KonqListViewDir(KonqTreeViewWidget *_treeview, KonqListViewDir *_parent, KFileItem *_fileitem)
+    : KonqListViewItem(_treeview, _parent, _fileitem)
 {
-  setExpandable( true );
-  m_bComplete = false;
+    setExpandable(true);
+    m_bComplete = false;
 }
 
-void KonqListViewDir::setOpen( bool _open )
+void KonqListViewDir::setOpen(bool _open)
 {
-  open( _open, false );
+    open(_open, false);
 }
 
-void KonqListViewDir::open( bool _open, bool _reload )
+void KonqListViewDir::open(bool _open, bool _reload)
 {
-  if ( _open != isOpen() || _reload )
-  {
-    KonqTreeViewWidget *treeView = static_cast<KonqTreeViewWidget *>(m_pListViewWidget);
-
-    if ( _open )
+    if(_open != isOpen() || _reload)
     {
-      if ( !m_bComplete || _reload ) // complete it before opening
-        treeView->openSubFolder( this, _reload );
-      else
-      {
-        // we need to add the items to the counts for the statusbar
-        KFileItemList lst;
-        lst.setAutoDelete( false );
+        KonqTreeViewWidget *treeView = static_cast< KonqTreeViewWidget * >(m_pListViewWidget);
 
-        QListViewItem* it = firstChild();
-        while ( it )
+        if(_open)
         {
-          lst.append( static_cast<KonqListViewItem*>(it)->item() );
-          it = it->nextSibling();
+            if(!m_bComplete || _reload) // complete it before opening
+                treeView->openSubFolder(this, _reload);
+            else
+            {
+                // we need to add the items to the counts for the statusbar
+                KFileItemList lst;
+                lst.setAutoDelete(false);
+
+                QListViewItem *it = firstChild();
+                while(it)
+                {
+                    lst.append(static_cast< KonqListViewItem * >(it)->item());
+                    it = it->nextSibling();
+                }
+
+                // tell the view about the new items to count
+                treeView->m_pBrowserView->newItems(lst);
+            }
+        }
+        else
+        {
+            treeView->stopListingSubFolder(this);
+
+            QListViewItem *it = firstChild();
+            while(it)
+            {
+                // unselect the items in the closed folder
+                treeView->setSelected(it, false);
+                // delete the item from the counts for the statusbar
+                KFileItem *item = static_cast< KonqListViewItem * >(it)->item();
+                treeView->m_pBrowserView->deleteItem(item);
+                it = it->nextSibling();
+            }
         }
 
-        // tell the view about the new items to count
-        treeView->m_pBrowserView->newItems( lst );
-      }
+        QListViewItem::setOpen(_open);
+        treeView->slotOnViewport();
     }
-    else
-    {
-      treeView->stopListingSubFolder( this );
-
-      QListViewItem* it = firstChild();
-      while ( it )
-      {
-        // unselect the items in the closed folder
-        treeView->setSelected( it, false );
-        // delete the item from the counts for the statusbar
-        KFileItem* item = static_cast<KonqListViewItem*>(it)->item();
-        treeView->m_pBrowserView->deleteItem( item );
-        it = it->nextSibling();
-      }
-    }
-
-    QListViewItem::setOpen( _open );
-    treeView->slotOnViewport();
-  }
 }
 
-QString KonqListViewDir::url( int _trailing )
+QString KonqListViewDir::url(int _trailing)
 {
-  return item()->url().url( _trailing );
+    return item()->url().url(_trailing);
 }
-

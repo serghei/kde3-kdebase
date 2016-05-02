@@ -80,185 +80,185 @@
 #include "kasaboutdlg.h"
 #include "version.h"
 
-#define Icon(x) KGlobal::iconLoader()->loadIcon( x, KIcon::NoGroup, KIcon::SizeMedium )
-#define LargeIcon(x) KGlobal::iconLoader()->loadIcon( x, KIcon::NoGroup, KIcon::SizeLarge )
+#define Icon(x) KGlobal::iconLoader()->loadIcon(x, KIcon::NoGroup, KIcon::SizeMedium)
+#define LargeIcon(x) KGlobal::iconLoader()->loadIcon(x, KIcon::NoGroup, KIcon::SizeLarge)
 
-KasAboutDialog::KasAboutDialog( QWidget *parent )
-   : KDialogBase( KDialogBase::IconList, i18n("About Kasbar"),
-		  KDialogBase::Ok,
-		  KDialogBase::Ok,
-		  parent, "kasbarAboutDialog", false )
+KasAboutDialog::KasAboutDialog(QWidget *parent)
+    : KDialogBase(KDialogBase::IconList, i18n("About Kasbar"), KDialogBase::Ok, KDialogBase::Ok, parent, "kasbarAboutDialog", false)
 {
 #ifdef USE_KSPY
-  KSpy::invoke();
+    KSpy::invoke();
 #endif
 
-  addInfoPage();
-  addAuthorsPage();
-  addBSDPage();
-  addGPLPage();
+    addInfoPage();
+    addAuthorsPage();
+    addBSDPage();
+    addGPLPage();
 
-  addDemoBar();
+    addDemoBar();
 
-  resize( 760, 450 );
+    resize(760, 450);
 }
 
 KasAboutDialog::~KasAboutDialog()
 {
-
 }
 
 void KasAboutDialog::addDemoBar()
 {
-   QHBox *box = new QHBox( this );
+    QHBox *box = new QHBox(this);
 
-   box->setLineWidth(2);
-   box->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+    box->setLineWidth(2);
+    box->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-   box->setSpacing( spacingHint() );
-   box->setMargin( marginHint() );
+    box->setSpacing(spacingHint());
+    box->setMargin(marginHint());
 
-   KasBar *bar = new KasBar( Horizontal, box );
-   bar->setItemSize( KasBar::Large );
-   bar->setMasked( false );
+    KasBar *bar = new KasBar(Horizontal, box);
+    bar->setItemSize(KasBar::Large);
+    bar->setMasked(false);
 
-   KasItem *ci = new KasItem( bar );
-   ci->setIcon( LargeIcon( "icons" ) );
-   bar->append( ci );
+    KasItem *ci = new KasItem(bar);
+    ci->setIcon(LargeIcon("icons"));
+    bar->append(ci);
 
-   KasPopup *pop = new KasPopup( ci );
-   ci->setPopup( pop );
-   ci->setCustomPopup( true );
-   connect( ci, SIGNAL(leftButtonClicked(QMouseEvent *)), ci, SLOT(togglePopup()) );
+    KasPopup *pop = new KasPopup(ci);
+    ci->setPopup(pop);
+    ci->setCustomPopup(true);
+    connect(ci, SIGNAL(leftButtonClicked(QMouseEvent *)), ci, SLOT(togglePopup()));
 
-   KasBar *groupbar = bar->createChildBar( ( bar->orientation() == Horizontal ) ? Vertical : Horizontal, pop );
-   KasItem *i = 0;
+    KasBar *groupbar = bar->createChildBar((bar->orientation() == Horizontal) ? Vertical : Horizontal, pop);
+    KasItem *i = 0;
 
-   KasClockItem *clk = new KasClockItem( groupbar );
-   groupbar->append( clk );
+    KasClockItem *clk = new KasClockItem(groupbar);
+    groupbar->append(clk);
 
-   i = new KasLoadItem( groupbar );
-   groupbar->append( i );
+    i = new KasLoadItem(groupbar);
+    groupbar->append(i);
 
-   groupbar->addTestItems();
+    groupbar->addTestItems();
 
-   pop->resize( groupbar->size() );
+    pop->resize(groupbar->size());
 
-   bar->setFixedSize( bar->itemExtent(), bar->itemExtent() );
-   addWidgetBelowList( box );
+    bar->setFixedSize(bar->itemExtent(), bar->itemExtent());
+    addWidgetBelowList(box);
 }
 
 void KasAboutDialog::addInfoPage()
 {
-   QVBox *aboutPage = addVBoxPage( i18n("About"), i18n("About Kasbar"), Icon( "appearance" ) );
-   aboutPage->setSpacing( spacingHint() );
+    QVBox *aboutPage = addVBoxPage(i18n("About"), i18n("About Kasbar"), Icon("appearance"));
+    aboutPage->setSpacing(spacingHint());
 
-   new QLabel( i18n( "<qt><body>"
-		     "<h2>Kasbar Version: %1</h2>"
-		     "<b>KDE Version:</b> %2"
-		     "</body></qt>" )
-	       .arg( VERSION_STRING ).arg( KDE_VERSION_STRING ),
-	       aboutPage );
+    new QLabel(i18n("<qt><body>"
+                    "<h2>Kasbar Version: %1</h2>"
+                    "<b>KDE Version:</b> %2"
+                    "</body></qt>")
+                   .arg(VERSION_STRING)
+                   .arg(KDE_VERSION_STRING),
+               aboutPage);
 
-   KTextBrowser *text5 = new KTextBrowser( aboutPage );
-   text5->setText( i18n( "<html><body>"
-			 "<p>Kasbar TNG began as a port of the original Kasbar applet to "
-			 "the (then new) extension API, but ended up as a complete "
-			 "rewrite because of the range of features needed by different "
-			 "groups of users. In the process of the rewrite all the standard "
-			 "features provided by the default taskbar were added, along with "
-			 "some more original ones such as thumbnails."
-			 "</p>"
-			 "<p>"
-			 "You can find information about the latest developments in Kasbar at "
-			 "<a href=\"%3\">%4</a>, the Kasbar homepage."
-			 "</p>"
-			 "</body></html>" )
-		   .arg( HOMEPAGE_URL ).arg( HOMEPAGE_URL ) );
+    KTextBrowser *text5 = new KTextBrowser(aboutPage);
+    text5->setText(i18n("<html><body>"
+                        "<p>Kasbar TNG began as a port of the original Kasbar applet to "
+                        "the (then new) extension API, but ended up as a complete "
+                        "rewrite because of the range of features needed by different "
+                        "groups of users. In the process of the rewrite all the standard "
+                        "features provided by the default taskbar were added, along with "
+                        "some more original ones such as thumbnails."
+                        "</p>"
+                        "<p>"
+                        "You can find information about the latest developments in Kasbar at "
+                        "<a href=\"%3\">%4</a>, the Kasbar homepage."
+                        "</p>"
+                        "</body></html>")
+                       .arg(HOMEPAGE_URL)
+                       .arg(HOMEPAGE_URL));
 
-   text5->setWordWrap( QTextEdit::WidgetWidth );
+    text5->setWordWrap(QTextEdit::WidgetWidth);
 }
 
 void KasAboutDialog::addAuthorsPage()
 {
-   QVBox *authorsPage = addVBoxPage( i18n("Authors"),
-				     i18n("Kasbar Authors"), 
-				     Icon( "kuser" ) );
+    QVBox *authorsPage = addVBoxPage(i18n("Authors"), i18n("Kasbar Authors"), Icon("kuser"));
 
-   KTextBrowser *text = new KTextBrowser( authorsPage );
-   text->setText( i18n(
-     "<html>"
+    KTextBrowser *text = new KTextBrowser(authorsPage);
+    text->setText(
+        i18n("<html>"
 
-     "<b>Richard Moore</b> <a href=\"mailto:rich@kde.org\">rich@kde.org</a><br>"
-     "<b>Homepage:</b> <a href=\"http://xmelegance.org/\">http://xmelegance.org/</a>"
+             "<b>Richard Moore</b> <a href=\"mailto:rich@kde.org\">rich@kde.org</a><br>"
+             "<b>Homepage:</b> <a href=\"http://xmelegance.org/\">http://xmelegance.org/</a>"
 
-     "<p>Developer and maintainer of the Kasbar TNG code.</p>"
+             "<p>Developer and maintainer of the Kasbar TNG code.</p>"
 
-     "<hr/>"
+             "<hr/>"
 
-     "<b>Daniel M. Duley (Mosfet)</b> <a href=\"mailto:mosfet@kde.org\">mosfet@kde.org</a><br>"
-     "<b>Homepage:</b> <a href=\"http://www.mosfet.org/\">http://www.mosfet.org/</a>"
+             "<b>Daniel M. Duley (Mosfet)</b> <a href=\"mailto:mosfet@kde.org\">mosfet@kde.org</a><br>"
+             "<b>Homepage:</b> <a href=\"http://www.mosfet.org/\">http://www.mosfet.org/</a>"
 
-     "<p>Mosfet wrote the original Kasbar applet on which this "
-     "extension is based. There is little of the original code "
-     "remaining, but the basic look in opaque mode is almost "
-     "identical to this first implementation.</p>"
+             "<p>Mosfet wrote the original Kasbar applet on which this "
+             "extension is based. There is little of the original code "
+             "remaining, but the basic look in opaque mode is almost "
+             "identical to this first implementation.</p>"
 
-     "</html>" ) );
+             "</html>"));
 
-   text->setWordWrap( QTextEdit::WidgetWidth );
+    text->setWordWrap(QTextEdit::WidgetWidth);
 }
 
 void KasAboutDialog::addBSDPage()
 {
-   QVBox *bsdLicense = addVBoxPage( i18n("BSD License"), QString::null, Icon( "filefind" ) );
+    QVBox *bsdLicense = addVBoxPage(i18n("BSD License"), QString::null, Icon("filefind"));
 
-   new QLabel( i18n( "Kasbar may be used under the terms of either the BSD license, "
-		     "or the GNU Public License." ), bsdLicense );
+    new QLabel(i18n("Kasbar may be used under the terms of either the BSD license, "
+                    "or the GNU Public License."),
+               bsdLicense);
 
-   KTextBrowser *text2 = new KTextBrowser( bsdLicense );
-   text2->setText( "Some text of unsurpassed tediousness goes here." );
-   text2->setWordWrap( QTextEdit::NoWrap );
+    KTextBrowser *text2 = new KTextBrowser(bsdLicense);
+    text2->setText("Some text of unsurpassed tediousness goes here.");
+    text2->setWordWrap(QTextEdit::NoWrap);
 
-   QString bsdFile = locate("data", "LICENSES/BSD");
-   if ( !bsdFile.isEmpty() ) {
-     QString result;
-     QFile file( bsdFile );
+    QString bsdFile = locate("data", "LICENSES/BSD");
+    if(!bsdFile.isEmpty())
+    {
+        QString result;
+        QFile file(bsdFile);
 
-     if ( file.open( IO_ReadOnly ) )
-     {
-        QTextStream str(&file);
-        result += str.read();
-     }
+        if(file.open(IO_ReadOnly))
+        {
+            QTextStream str(&file);
+            result += str.read();
+        }
 
-     text2->setText( result );
-   }
+        text2->setText(result);
+    }
 }
 
 void KasAboutDialog::addGPLPage()
 {
-   QVBox *gplPage = addVBoxPage( i18n("GPL License"), QString::null, Icon( "filefind" ) );
+    QVBox *gplPage = addVBoxPage(i18n("GPL License"), QString::null, Icon("filefind"));
 
-   new QLabel( i18n( "Kasbar may be used under the terms of either the BSD license, "
-		     "or the GNU Public License." ), gplPage );
+    new QLabel(i18n("Kasbar may be used under the terms of either the BSD license, "
+                    "or the GNU Public License."),
+               gplPage);
 
-   KTextBrowser *text3 = new KTextBrowser( gplPage );
-   text3->setText( "Some more text of unsurpassed tediousness goes here." );
-   text3->setWordWrap( QTextEdit::NoWrap );
+    KTextBrowser *text3 = new KTextBrowser(gplPage);
+    text3->setText("Some more text of unsurpassed tediousness goes here.");
+    text3->setWordWrap(QTextEdit::NoWrap);
 
-   QString gplFile = locate("data", "LICENSES/GPL_V2");
-   if ( !gplFile.isEmpty() ) {
-     QString result;
-     QFile file( gplFile );
+    QString gplFile = locate("data", "LICENSES/GPL_V2");
+    if(!gplFile.isEmpty())
+    {
+        QString result;
+        QFile file(gplFile);
 
-     if ( file.open( IO_ReadOnly ) )
-     {
-        QTextStream str(&file);
-        result += str.read();
-     }
+        if(file.open(IO_ReadOnly))
+        {
+            QTextStream str(&file);
+            result += str.read();
+        }
 
-     text3->setText( result );
-   }
+        text3->setText(result);
+    }
 }
 
 #include "kasaboutdlg.moc"

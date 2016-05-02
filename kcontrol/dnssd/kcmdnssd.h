@@ -27,23 +27,23 @@
 #include <kaboutdata.h>
 
 class KSimpleConfig;
-class KCMDnssd: public ConfigDialog
-{
-	Q_OBJECT
+class KCMDnssd : public ConfigDialog {
+    Q_OBJECT
 
 public:
-	KCMDnssd( QWidget *parent=0, const char *name=0, const QStringList& = QStringList() );
-	~KCMDnssd();
-	virtual void save();
-	virtual void load();
+    KCMDnssd(QWidget *parent = 0, const char *name = 0, const QStringList & = QStringList());
+    ~KCMDnssd();
+    virtual void save();
+    virtual void load();
 private slots:
-	void wdchanged();
-private: 
-	void loadMdnsd();
-	bool saveMdnsd();
-	QMap<QString,QString> mdnsdLines;
-	bool m_wdchanged;
-	KSimpleConfig* domain;
+    void wdchanged();
+
+private:
+    void loadMdnsd();
+    bool saveMdnsd();
+    QMap< QString, QString > mdnsdLines;
+    bool m_wdchanged;
+    KSimpleConfig *domain;
 };
 
 #endif

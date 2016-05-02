@@ -52,110 +52,110 @@ class QVBoxLayout;
 class StyleConfigDialog;
 class WidgetPreview;
 
-struct StyleEntry {
-	QString name;
-	QString desc;
-	QString configPage;
-	bool hidden;
+struct StyleEntry
+{
+    QString name;
+    QString desc;
+    QString configPage;
+    bool hidden;
 };
 
-class KCMStyle : public KCModule
-{
-	Q_OBJECT
+class KCMStyle : public KCModule {
+    Q_OBJECT
 
 public:
-	KCMStyle( QWidget* parent = 0, const char* name = 0 );
-	~KCMStyle();
+    KCMStyle(QWidget *parent = 0, const char *name = 0);
+    ~KCMStyle();
 
-	virtual void load();
-	virtual void load(bool useDefaults);
-	virtual void save();
-	virtual void defaults();
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
 protected:
-	bool findStyle( const QString& str, int& combobox_item );
-	void switchStyle(const QString& styleName, bool force = false);
-	void setStyleRecursive(QWidget* w, QStyle* s);
+    bool findStyle(const QString &str, int &combobox_item);
+    void switchStyle(const QString &styleName, bool force = false);
+    void setStyleRecursive(QWidget *w, QStyle *s);
 
-	void loadStyle( KConfig& config );
-	void loadEffects( KConfig& config );
-	void loadMisc( KConfig& config );
-	void addWhatsThis();
+    void loadStyle(KConfig &config);
+    void loadEffects(KConfig &config);
+    void loadMisc(KConfig &config);
+    void addWhatsThis();
 
 protected slots:
-	void styleSpecificConfig();
-	void updateConfigButton();
-	
-	void setEffectsDirty();
-	void setToolbarsDirty();
-	void setStyleDirty();
+    void styleSpecificConfig();
+    void updateConfigButton();
 
-	void styleChanged();
-	void menuEffectChanged( bool enabled );
-	void menuEffectChanged();
-	void menuEffectTypeChanged();
+    void setEffectsDirty();
+    void setToolbarsDirty();
+    void setStyleDirty();
+
+    void styleChanged();
+    void menuEffectChanged(bool enabled);
+    void menuEffectChanged();
+    void menuEffectTypeChanged();
 
 private:
-	QString currentStyle();
+    QString currentStyle();
 
-	bool m_bEffectsDirty, m_bStyleDirty, m_bToolbarsDirty;
-	QDict<StyleEntry> styleEntries;
-	QMap <QString,QString> nameToStyleKey;
+    bool m_bEffectsDirty, m_bStyleDirty, m_bToolbarsDirty;
+    QDict< StyleEntry > styleEntries;
+    QMap< QString, QString > nameToStyleKey;
 
-	QVBoxLayout* mainLayout;
-	QTabWidget* tabWidget;
-	QWidget *page1, *page2, *page3;
-	QVBoxLayout* page1Layout;
-	QVBoxLayout* page2Layout;
-	QVBoxLayout* page3Layout;
+    QVBoxLayout *mainLayout;
+    QTabWidget *tabWidget;
+    QWidget *page1, *page2, *page3;
+    QVBoxLayout *page1Layout;
+    QVBoxLayout *page2Layout;
+    QVBoxLayout *page3Layout;
 
-	// Page1 widgets
-	QGroupBox* gbWidgetStyle;
-	QVBoxLayout* gbWidgetStyleLayout;
-	QHBoxLayout* hbLayout;
-	KComboBox* cbStyle;
-	QPushButton* pbConfigStyle;
-	QLabel* lblStyleDesc;
-	StylePreview* stylePreview;
-	QStyle* appliedStyle;
-	QPalette palette;
+    // Page1 widgets
+    QGroupBox *gbWidgetStyle;
+    QVBoxLayout *gbWidgetStyleLayout;
+    QHBoxLayout *hbLayout;
+    KComboBox *cbStyle;
+    QPushButton *pbConfigStyle;
+    QLabel *lblStyleDesc;
+    StylePreview *stylePreview;
+    QStyle *appliedStyle;
+    QPalette palette;
 
-	// Page2 widgets
-	QCheckBox* cbEnableEffects;
+    // Page2 widgets
+    QCheckBox *cbEnableEffects;
 
-	QFrame* containerFrame;
-	QGridLayout* containerLayout;
-	QComboBox* comboTooltipEffect;
-	QComboBox* comboComboEffect;
-	QComboBox* comboMenuEffect;
-	QComboBox* comboMenuHandle;
+    QFrame *containerFrame;
+    QGridLayout *containerLayout;
+    QComboBox *comboTooltipEffect;
+    QComboBox *comboComboEffect;
+    QComboBox *comboMenuEffect;
+    QComboBox *comboMenuHandle;
 
-	QLabel* lblTooltipEffect;
-	QLabel* lblComboEffect;
-	QLabel* lblMenuEffect;
-	QLabel* lblMenuHandle;
-	QSpacerItem* comboSpacer;
+    QLabel *lblTooltipEffect;
+    QLabel *lblComboEffect;
+    QLabel *lblMenuEffect;
+    QLabel *lblMenuHandle;
+    QSpacerItem *comboSpacer;
 
-	QFrame* menuContainer;
-	QGridLayout* menuContainerLayout;
-	MenuPreview* menuPreview;
-	QVBox* sliderBox;
-	QSlider* slOpacity;
-	QComboBox* comboMenuEffectType;
-	QLabel* lblMenuEffectType;
-	QLabel* lblMenuOpacity;
-	QCheckBox* cbMenuShadow;
+    QFrame *menuContainer;
+    QGridLayout *menuContainerLayout;
+    MenuPreview *menuPreview;
+    QVBox *sliderBox;
+    QSlider *slOpacity;
+    QComboBox *comboMenuEffectType;
+    QLabel *lblMenuEffectType;
+    QLabel *lblMenuOpacity;
+    QCheckBox *cbMenuShadow;
 
-	// Page3 widgets
-	QGroupBox* gbVisualAppearance;
+    // Page3 widgets
+    QGroupBox *gbVisualAppearance;
 
-	QCheckBox* cbHoverButtons;
-	QCheckBox* cbTransparentToolbars;
-	QCheckBox* cbEnableTooltips;
-	QComboBox* comboToolbarIcons;
+    QCheckBox *cbHoverButtons;
+    QCheckBox *cbTransparentToolbars;
+    QCheckBox *cbEnableTooltips;
+    QComboBox *comboToolbarIcons;
 
-	QCheckBox* cbIconsOnButtons;
-	QCheckBox* cbTearOffHandles;
+    QCheckBox *cbIconsOnButtons;
+    QCheckBox *cbTearOffHandles;
 };
 
 #endif // __KCMSTYLE_H

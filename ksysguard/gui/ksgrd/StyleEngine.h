@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2001 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -38,35 +38,34 @@ class StyleSettings;
 
 namespace KSGRD {
 
-class KDE_EXPORT StyleEngine : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT StyleEngine : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     StyleEngine();
     ~StyleEngine();
 
-    void readProperties( KConfig* );
-    void saveProperties( KConfig* );
+    void readProperties(KConfig *);
+    void saveProperties(KConfig *);
 
-    const QColor& firstForegroundColor() const;
-    const QColor& secondForegroundColor() const;
-    const QColor& alarmColor() const;
-    const QColor& backgroundColor() const;
+    const QColor &firstForegroundColor() const;
+    const QColor &secondForegroundColor() const;
+    const QColor &alarmColor() const;
+    const QColor &backgroundColor() const;
 
     uint fontSize() const;
 
-    const QColor& sensorColor( uint pos );
+    const QColor &sensorColor(uint pos);
     uint numSensorColors() const;
 
-  public slots:
+public slots:
     void configure();
     void applyToWorksheet();
 
-  signals:
-	  void applyStyleToWorksheet();
+signals:
+    void applyStyleToWorksheet();
 
-  private:
+private:
     void apply();
 
     QColor mFirstForegroundColor;
@@ -74,13 +73,12 @@ class KDE_EXPORT StyleEngine : public QObject
     QColor mAlarmColor;
     QColor mBackgroundColor;
     uint mFontSize;
-    QValueList<QColor> mSensorColors;
+    QValueList< QColor > mSensorColors;
 
     StyleSettings *mSettingsDialog;
 };
 
-KDE_EXPORT extern StyleEngine* Style;
-
+KDE_EXPORT extern StyleEngine *Style;
 }
 
 #endif

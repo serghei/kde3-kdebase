@@ -1,10 +1,10 @@
 /*
     KSysGuard, the KDE System Guard
-   
-	Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
 
-	Irix support by Carsten Kroll <ckroll@pinnaclesys.com>
-    
+    Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
+
+    Irix support by Carsten Kroll <ckroll@pinnaclesys.com>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -26,18 +26,18 @@
 
 #define PROCDIR "/proc"
 
-void initProcessList(struct SensorModul* sm);
+void initProcessList(struct SensorModul *sm);
 void exitProcessList(void);
 
 int updateProcessList(void);
 
-void printProcessList(const char*);
-void printProcessListInfo(const char*);
+void printProcessList(const char *);
+void printProcessListInfo(const char *);
 
-void printProcessCount(const char* cmd);
-void printProcessCountInfo(const char* cmd);
+void printProcessCount(const char *cmd);
+void printProcessCountInfo(const char *cmd);
 
-void killProcess(const char* cmd);
-void setPriority(const char* cmd);
+void killProcess(const char *cmd);
+void setPriority(const char *cmd);
 
 #endif

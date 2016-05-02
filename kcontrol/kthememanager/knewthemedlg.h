@@ -30,11 +30,10 @@ class NewThemeWidget;
  * getters and setters used for the theme general properties
  * @author Lukas Tinkl <lukas@kde.org>
  */
-class KNewThemeDlg: public KDialogBase
-{
+class KNewThemeDlg : public KDialogBase {
     Q_OBJECT
 public:
-    KNewThemeDlg( QWidget * parent = 0, const char * name = 0);
+    KNewThemeDlg(QWidget *parent = 0, const char *name = 0);
     ~KNewThemeDlg();
 
     QString getName() const;
@@ -44,15 +43,16 @@ public:
     QString getComment() const;
     QString getVersion() const;
 
-    void setName( const QString & name );
-    void setAuthor( const QString & author );
-    void setEmail( const QString & email );
-    void setVersion( const QString & version );
+    void setName(const QString &name);
+    void setAuthor(const QString &author);
+    void setEmail(const QString &email);
+    void setVersion(const QString &version);
+
 private:
-    NewThemeWidget * m_base;
+    NewThemeWidget *m_base;
 
 private slots:
-    void slotThemeNameChanged( const QString &_text );
+    void slotThemeNameChanged(const QString &_text);
 };
 
 #endif

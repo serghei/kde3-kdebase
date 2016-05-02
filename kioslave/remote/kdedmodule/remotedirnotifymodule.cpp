@@ -22,16 +22,14 @@
 #include <klocale.h>
 #include <kglobal.h>
 
-RemoteDirNotifyModule::RemoteDirNotifyModule(const QCString &obj)
-	: KDEDModule(obj)
+RemoteDirNotifyModule::RemoteDirNotifyModule(const QCString &obj) : KDEDModule(obj)
 {
 }
 
 extern "C" {
-	KDE_EXPORT KDEDModule *create_remotedirnotify(const QCString &obj)
-	{
-		KGlobal::locale()->insertCatalogue("kio_remote");
-		return new RemoteDirNotifyModule(obj);
-	}
+KDE_EXPORT KDEDModule *create_remotedirnotify(const QCString &obj)
+{
+    KGlobal::locale()->insertCatalogue("kio_remote");
+    return new RemoteDirNotifyModule(obj);
 }
-
+}

@@ -36,7 +36,8 @@ QStringList getSearchPaths()
     config->setGroup("Misc");
 
     // setup default paths
-    if ( !config->hasKey("scanPaths") ) {
+    if(!config->hasKey("scanPaths"))
+    {
         QStringList paths;
         // keep sync with kdebase/kcontrol/konqhtml
         paths.append("$HOME/.mozilla/plugins");
@@ -56,18 +57,18 @@ QStringList getSearchPaths()
         paths.append("/usr/lib64/netscape/plugins");
         paths.append("/usr/lib64/mozilla/plugins");
         paths.append("$MOZILLA_HOME/plugins");
-        config->writeEntry( "scanPaths", paths );
+        config->writeEntry("scanPaths", paths);
     }
 
     // read paths
-    config->setDollarExpansion( true );
-    searchPaths = config->readListEntry( "scanPaths" );
+    config->setDollarExpansion(true);
+    searchPaths = config->readListEntry("scanPaths");
     delete config;
 
     // append environment variable NPX_PLUGIN_PATH
     QStringList envs = QStringList::split(':', getenv("NPX_PLUGIN_PATH"));
     QStringList::Iterator it;
-    for (it = envs.begin(); it != envs.end(); ++it)
+    for(it = envs.begin(); it != envs.end(); ++it)
         searchPaths.append(*it);
 
     return searchPaths;

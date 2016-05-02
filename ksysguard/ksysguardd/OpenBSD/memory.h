@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -24,20 +24,20 @@
 
 struct SensorModul;
 
-void initMemory(struct SensorModul* sm);
+void initMemory(struct SensorModul *sm);
 void exitMemory(void);
 
 int updateMemory(void);
 
-void printMFree(const char* cmd);
-void printMFreeInfo(const char* cmd);
-void printActive(const char* cmd);
-void printActiveInfo(const char* cmd);
-void printInActive(const char* cmd);
-void printInActiveInfo(const char* cmd);
-void printSwapUsed(const char* cmd);
-void printSwapUsedInfo(const char* cmd);
-void printSwapFree(const char* cmd);
-void printSwapFreeInfo(const char* cmd);
+void printMFree(const char *cmd);
+void printMFreeInfo(const char *cmd);
+void printActive(const char *cmd);
+void printActiveInfo(const char *cmd);
+void printInActive(const char *cmd);
+void printInActiveInfo(const char *cmd);
+void printSwapUsed(const char *cmd);
+void printSwapUsedInfo(const char *cmd);
+void printSwapFree(const char *cmd);
+void printSwapFreeInfo(const char *cmd);
 
 #endif

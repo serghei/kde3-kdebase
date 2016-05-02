@@ -46,183 +46,179 @@
 #include <libhal-storage.h>
 
 namespace KIO {
-  class Job;
+class Job;
 }
 
-class HALBackend : public QObject, public BackendBase
-{
-Q_OBJECT
+class HALBackend : public QObject, public BackendBase {
+    Q_OBJECT
 
 public:
-	/**
-	* Constructor
-	*/
-	HALBackend(MediaList &list, QObject* parent);
+    /**
+    * Constructor
+    */
+    HALBackend(MediaList &list, QObject *parent);
 
-	/**
-	* Destructor
-	*/
-	~HALBackend();
+    /**
+    * Destructor
+    */
+    ~HALBackend();
 
-	/**
-	* Perform HAL initialization.
-	*
-	* @return true if succeded. If not, rely on some other backend
-	*/
-	bool InitHal();
+    /**
+    * Perform HAL initialization.
+    *
+    * @return true if succeded. If not, rely on some other backend
+    */
+    bool InitHal();
 
-	/**
-	* List all devices and append them to the media device list (called only once, at startup).
-	*
-	* @return true if succeded, false otherwise
-	*/
-	bool ListDevices();
+    /**
+    * List all devices and append them to the media device list (called only once, at startup).
+    *
+    * @return true if succeded, false otherwise
+    */
+    bool ListDevices();
 
-	QStringList mountoptions(const QString &id);
+    QStringList mountoptions(const QString &id);
 
-	bool setMountoptions(const QString &id, const QStringList &options);
+    bool setMountoptions(const QString &id, const QStringList &options);
 
-	QString mount(const QString &id);
-	QString mount(const Medium *medium);
-	QString unmount(const QString &id);
+    QString mount(const QString &id);
+    QString mount(const Medium *medium);
+    QString unmount(const QString &id);
 
 private:
-	/**
-	* Append a device in the media list. This function will check if the device
-	* is worth listing.
-	*
-	*  @param udi                 Universal Device Id
-	*  @param allowNotification   Indicates if this event will be notified to the user
-	*/
-	void AddDevice(const char* udi, bool allowNotification=true);
+    /**
+    * Append a device in the media list. This function will check if the device
+    * is worth listing.
+    *
+    *  @param udi                 Universal Device Id
+    *  @param allowNotification   Indicates if this event will be notified to the user
+    */
+    void AddDevice(const char *udi, bool allowNotification = true);
 
-	/**
-	* Remove a device from the device list
-	*
-	*  @param udi                 Universal Device Id
-	*/
-	void RemoveDevice(const char* udi);
+    /**
+    * Remove a device from the device list
+    *
+    *  @param udi                 Universal Device Id
+    */
+    void RemoveDevice(const char *udi);
 
-	/**
-	* A device has changed, update it
-	*
-	*  @param udi                 Universal Device Id
-	*/
-	void ModifyDevice(const char *udi, const char* key);
+    /**
+    * A device has changed, update it
+    *
+    *  @param udi                 Universal Device Id
+    */
+    void ModifyDevice(const char *udi, const char *key);
 
-	/**
-	* HAL informed that a special action has occured
-	* (e.g. device unplugged without unmounting)
-	*
-	*  @param udi                 Universal Device Id
-	*/
-	void DeviceCondition(const char *udi, const char *condition);
+    /**
+    * HAL informed that a special action has occured
+    * (e.g. device unplugged without unmounting)
+    *
+    *  @param udi                 Universal Device Id
+    */
+    void DeviceCondition(const char *udi, const char *condition);
 
-	/**
-	* Integrate the DBus connection within qt main loop
-	*/
-	void MainLoopIntegration(DBusConnection *dbusConnection);
+    /**
+    * Integrate the DBus connection within qt main loop
+    */
+    void MainLoopIntegration(DBusConnection *dbusConnection);
 
-/* Set media properties */
+    /* Set media properties */
 private:
-	/**
-	* Reset properties for the given medium
-	*/
-	void ResetProperties(const char* MediumUdi, bool allowNotification=false);
+    /**
+    * Reset properties for the given medium
+    */
+    void ResetProperties(const char *MediumUdi, bool allowNotification = false);
 
-	/**
-	* Find the medium that is concerned with device udi
-	*/
-	const char* findMediumUdiFromUdi(const char* udi);
+    /**
+    * Find the medium that is concerned with device udi
+    */
+    const char *findMediumUdiFromUdi(const char *udi);
 
-	void setVolumeProperties(Medium* medium);
-	bool setFloppyProperties(Medium* medium);
-	void setFloppyMountState( Medium* medium );
-	bool setFstabProperties(Medium* medium);
-	void setCameraProperties(Medium* medium);
-	QString generateName(const QString &devNode);
-	static QString isInFstab(const Medium *medium);
-	static QString listUsingProcesses(const Medium *medium);
+    void setVolumeProperties(Medium *medium);
+    bool setFloppyProperties(Medium *medium);
+    void setFloppyMountState(Medium *medium);
+    bool setFstabProperties(Medium *medium);
+    void setCameraProperties(Medium *medium);
+    QString generateName(const QString &devNode);
+    static QString isInFstab(const Medium *medium);
+    static QString listUsingProcesses(const Medium *medium);
 
 private slots:
-	void slotResult(KIO::Job *job);
+    void slotResult(KIO::Job *job);
 
-/* Hal call-backs -- from gvm*/
+    /* Hal call-backs -- from gvm*/
 public:
-	/** Invoked when a device is added to the Global Device List.
-	*
-	*  @param  ctx                 LibHal context
-	*  @param  udi                 Universal Device Id
-	*/
-	static void hal_device_added(LibHalContext *ctx, const char *udi);
+    /** Invoked when a device is added to the Global Device List.
+    *
+    *  @param  ctx                 LibHal context
+    *  @param  udi                 Universal Device Id
+    */
+    static void hal_device_added(LibHalContext *ctx, const char *udi);
 
-	/** Invoked when a device is removed from the Global Device List.
-	*
-	*  @param  ctx                 LibHal context
-	*  @param  udi                 Universal Device Id
-	*/
-	static void hal_device_removed(LibHalContext *ctx, const char *udi);
+    /** Invoked when a device is removed from the Global Device List.
+    *
+    *  @param  ctx                 LibHal context
+    *  @param  udi                 Universal Device Id
+    */
+    static void hal_device_removed(LibHalContext *ctx, const char *udi);
 
-	/** Invoked when a property of a device in the Global Device List is
-	*  changed, and we have we have subscribed to changes for that device.
-	*
-	*  @param  ctx                 LibHal context
-	*  @param  udi                 Univerisal Device Id
-	*  @param  key                 Key of property
-	*/
-	static void hal_device_property_modified(LibHalContext *ctx, const char *udi, const char *key,
-				dbus_bool_t is_removed, dbus_bool_t is_added);
+    /** Invoked when a property of a device in the Global Device List is
+    *  changed, and we have we have subscribed to changes for that device.
+    *
+    *  @param  ctx                 LibHal context
+    *  @param  udi                 Univerisal Device Id
+    *  @param  key                 Key of property
+    */
+    static void hal_device_property_modified(LibHalContext *ctx, const char *udi, const char *key, dbus_bool_t is_removed, dbus_bool_t is_added);
 
-	/** Type for callback when a non-continuos condition occurs on a device
-	*
-	*  @param  udi                 Univerisal Device Id
-	*  @param  condition_name      Name of the condition
-	*  @param  message             D-BUS message with variable parameters depending on condition
-	*/
-	static void hal_device_condition(LibHalContext *ctx, const char *udi,
-				const char *condition_name,
-				const char* message
-				);
+    /** Type for callback when a non-continuos condition occurs on a device
+    *
+    *  @param  udi                 Univerisal Device Id
+    *  @param  condition_name      Name of the condition
+    *  @param  message             D-BUS message with variable parameters depending on condition
+    */
+    static void hal_device_condition(LibHalContext *ctx, const char *udi, const char *condition_name, const char *message);
 
-/* HAL and DBus structures */
+    /* HAL and DBus structures */
 private:
-	/**
-	* The HAL context connecting the whole application to the HAL
-	*/
-	LibHalContext*		m_halContext;
+    /**
+    * The HAL context connecting the whole application to the HAL
+    */
+    LibHalContext *m_halContext;
 
-	/**
-	* libhal-storage HAL policy, e.g. for icon names
-	*/
-	LibHalStoragePolicy*	m_halStoragePolicy;
+    /**
+    * libhal-storage HAL policy, e.g. for icon names
+    */
+    LibHalStoragePolicy *m_halStoragePolicy;
 
-	/**
-	* The DBus-Qt bindings connection for mainloop integration
-	*/
-	DBusQt::Connection*	m_dBusQtConnection;
+    /**
+    * The DBus-Qt bindings connection for mainloop integration
+    */
+    DBusQt::Connection *m_dBusQtConnection;
 
-	/**
-	* Object for the kded module
-	*/
-	QObject* m_parent;
+    /**
+    * Object for the kded module
+    */
+    QObject *m_parent;
 
-	DBusConnection *dbus_connection;
+    DBusConnection *dbus_connection;
 
-	/**
-	* Data structure for fstab mount/unmount jobs
-	*/
-	struct mount_job_data {
-		// [in] Medium, which is being mounted/unmounted by the job
-		const Medium* medium;
-		// [in,out] Should be set to true when the job completes
-		bool completed;
-		// [out] KIO::Error if an error occured during operation. Otherwise, 0
-		int error;
-		// [out] Error message to be displayed to the user
-		QString errorMessage;
-	};
+    /**
+    * Data structure for fstab mount/unmount jobs
+    */
+    struct mount_job_data
+    {
+        // [in] Medium, which is being mounted/unmounted by the job
+        const Medium *medium;
+        // [in,out] Should be set to true when the job completes
+        bool completed;
+        // [out] KIO::Error if an error occured during operation. Otherwise, 0
+        int error;
+        // [out] Error message to be displayed to the user
+        QString errorMessage;
+    };
 
-	QMap<KIO::Job *, struct mount_job_data*> mount_jobs;
+    QMap< KIO::Job *, struct mount_job_data * > mount_jobs;
 };
 
 #endif /* _HALBACKEND_H_ */

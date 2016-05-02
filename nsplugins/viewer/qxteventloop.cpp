@@ -54,10 +54,9 @@ const int XKeyRelease = KeyRelease;
 #undef KeyPress
 #undef KeyRelease
 
-Boolean qmotif_event_dispatcher( XEvent *event );
+Boolean qmotif_event_dispatcher(XEvent *event);
 
-class QXtEventLoopPrivate
-{
+class QXtEventLoopPrivate {
 public:
     QXtEventLoopPrivate();
 
@@ -65,20 +64,20 @@ public:
     void unhook();
 
     XtAppContext appContext, ownContext;
-    QMemArray<XtEventDispatchProc> dispatchers;
+    QMemArray< XtEventDispatchProc > dispatchers;
     QWidgetIntDict mapper;
 
-    QIntDict<QSocketNotifier> socknotDict;
+    QIntDict< QSocketNotifier > socknotDict;
     bool activate_timers;
     XtIntervalId timerid;
 
     // arguments for Xt display initialization
-    const char* applicationClass;
-    XrmOptionDescRec* options;
+    const char *applicationClass;
+    XrmOptionDescRec *options;
     int numOptions;
 };
 static QXtEventLoopPrivate *static_d = 0;
-static XEvent* last_xevent = 0;
+static XEvent *last_xevent = 0;
 
 
 /*! \internal
@@ -89,26 +88,24 @@ static XEvent* last_xevent = 0;
   updated.  This function should only be used if an event delivered by
   Qt to a QWidget needs to be sent to an Xt/Motif widget.
 */
-bool QXtEventLoop::redeliverEvent( XEvent *event )
+bool QXtEventLoop::redeliverEvent(XEvent *event)
 {
     // redeliver the event to Xt, NOT through Qt
-    if ( static_d->dispatchers[ event->type ]( event ) )
-	return TRUE;
+    if(static_d->dispatchers[event->type](event))
+        return TRUE;
     return FALSE;
 }
 
 
 /*!\internal
  */
-XEvent* QXtEventLoop::lastEvent()
+XEvent *QXtEventLoop::lastEvent()
 {
     return last_xevent;
 }
 
 
-QXtEventLoopPrivate::QXtEventLoopPrivate()
-    : appContext(NULL), ownContext(NULL),
-      activate_timers(FALSE), timerid(0)
+QXtEventLoopPrivate::QXtEventLoopPrivate() : appContext(NULL), ownContext(NULL), activate_timers(FALSE), timerid(0)
 {
 }
 
@@ -118,13 +115,11 @@ void QXtEventLoopPrivate::hookMeUp()
     // and Xt into Qt (QXtEventLoopEventLoop)
 
     // ### TODO extensions?
-    dispatchers.resize( LASTEvent );
-    dispatchers.fill( 0 );
+    dispatchers.resize(LASTEvent);
+    dispatchers.fill(0);
     int et;
-    for ( et = 2; et < LASTEvent; et++ )
-	dispatchers[ et ] =
-	    XtSetEventDispatcher( QPaintDevice::x11AppDisplay(),
-				  et, ::qmotif_event_dispatcher );
+    for(et = 2; et < LASTEvent; et++)
+        dispatchers[et] = XtSetEventDispatcher(QPaintDevice::x11AppDisplay(), et, ::qmotif_event_dispatcher);
 }
 
 void QXtEventLoopPrivate::unhook()
@@ -134,10 +129,9 @@ void QXtEventLoopPrivate::unhook()
 
     // ### TODO extensions?
     int et;
-    for ( et = 2; et < LASTEvent; et++ )
-	(void) XtSetEventDispatcher( QPaintDevice::x11AppDisplay(),
-				     et, dispatchers[ et ] );
-    dispatchers.resize( 0 );
+    for(et = 2; et < LASTEvent; et++)
+        (void)XtSetEventDispatcher(QPaintDevice::x11AppDisplay(), et, dispatchers[et]);
+    dispatchers.resize(0);
 
     /*
       We cannot destroy the app context here because it closes the X
@@ -148,76 +142,80 @@ void QXtEventLoopPrivate::unhook()
     appContext = ownContext = 0;
 }
 
-extern bool qt_try_modal( QWidget *, XEvent * ); // defined in qapplication_x11.cpp
-Boolean qmotif_event_dispatcher( XEvent *event )
+extern bool qt_try_modal(QWidget *, XEvent *); // defined in qapplication_x11.cpp
+Boolean qmotif_event_dispatcher(XEvent *event)
 {
     QApplication::sendPostedEvents();
 
     QWidgetIntDict *mapper = &static_d->mapper;
-    QWidget* qMotif = mapper->find( event->xany.window );
-    if ( !qMotif && QWidget::find( event->xany.window) == 0 ) {
-	// event is not for Qt, try Xt
-	Display* dpy = QPaintDevice::x11AppDisplay();
-	Widget w = XtWindowToWidget( dpy, event->xany.window );
-	while ( w && ! ( qMotif = mapper->find( XtWindow( w ) ) ) ) {
-	    if ( XtIsShell( w ) ) {
-		break;
-	    }
-	    w = XtParent( w );
-	}
+    QWidget *qMotif = mapper->find(event->xany.window);
+    if(!qMotif && QWidget::find(event->xany.window) == 0)
+    {
+        // event is not for Qt, try Xt
+        Display *dpy = QPaintDevice::x11AppDisplay();
+        Widget w = XtWindowToWidget(dpy, event->xany.window);
+        while(w && !(qMotif = mapper->find(XtWindow(w))))
+        {
+            if(XtIsShell(w))
+            {
+                break;
+            }
+            w = XtParent(w);
+        }
 
-	if ( qMotif &&
-	     ( event->type == XKeyPress || event->type == XKeyRelease ) )  {
-	    // remap key events
-	    event->xany.window = qMotif->winId();
-	}
+        if(qMotif && (event->type == XKeyPress || event->type == XKeyRelease))
+        {
+            // remap key events
+            event->xany.window = qMotif->winId();
+        }
     }
 
     last_xevent = event;
-    bool delivered = ( qApp->x11ProcessEvent( event ) != -1 );
+    bool delivered = (qApp->x11ProcessEvent(event) != -1);
     last_xevent = 0;
-    if ( qMotif ) {
-	switch ( event->type ) {
-	case EnterNotify:
-	case LeaveNotify:
-	    event->xcrossing.focus = False;
-	    delivered = FALSE;
-	    break;
-	case XKeyPress:
-	case XKeyRelease:
-	    delivered = TRUE;
-	    break;
-	case XFocusIn:
-	case XFocusOut:
-	    delivered = FALSE;
-	    break;
-	default:
-	    delivered = FALSE;
-	    break;
-	}
+    if(qMotif)
+    {
+        switch(event->type)
+        {
+            case EnterNotify:
+            case LeaveNotify:
+                event->xcrossing.focus = False;
+                delivered = FALSE;
+                break;
+            case XKeyPress:
+            case XKeyRelease:
+                delivered = TRUE;
+                break;
+            case XFocusIn:
+            case XFocusOut:
+                delivered = FALSE;
+                break;
+            default:
+                delivered = FALSE;
+                break;
+        }
     }
 
-    if ( delivered )
-	return True;
+    if(delivered)
+        return True;
 
 
-    if ( QApplication::activePopupWidget() )
-	// we get all events through the popup grabs.  discard the event
-	return True;
+    if(QApplication::activePopupWidget())
+        // we get all events through the popup grabs.  discard the event
+        return True;
 
-    if ( qMotif && QApplication::activeModalWidget() ) {
-	if ( !qt_try_modal(qMotif, event) )
-	    return True;
-
+    if(qMotif && QApplication::activeModalWidget())
+    {
+        if(!qt_try_modal(qMotif, event))
+            return True;
     }
 
-    if ( static_d->dispatchers[ event->type ]( event ) )
-	// Xt handled the event.
-	return True;
+    if(static_d->dispatchers[event->type](event))
+        // Xt handled the event.
+        return True;
 
     return False;
 }
-
 
 
 /*!
@@ -239,19 +237,19 @@ Boolean qmotif_event_dispatcher( XEvent *event )
 
     \code
     static char *resources[] = {
-	...
+    ...
     };
 
     int main(int argc, char **argv)
     {
-	QXtEventLoop integrator( "AppClass" );
-	XtAppSetFallbackResources( integrator.applicationContext(),
-				   resources );
-	QApplication app( argc, argv );
+    QXtEventLoop integrator( "AppClass" );
+    XtAppSetFallbackResources( integrator.applicationContext(),
+                   resources );
+    QApplication app( argc, argv );
 
-	...
+    ...
 
-	return app.exec();
+    return app.exec();
     }
     \endcode
 */
@@ -268,20 +266,19 @@ Boolean qmotif_event_dispatcher( XEvent *event )
 */
 
 
-
-QXtEventLoop::QXtEventLoop( const char *applicationClass, XtAppContext context, XrmOptionDescRec *options , int numOptions)
+QXtEventLoop::QXtEventLoop(const char *applicationClass, XtAppContext context, XrmOptionDescRec *options, int numOptions)
 {
 #if defined(QT_CHECK_STATE)
-    if ( static_d )
-	qWarning( "QXtEventLoop: should only have one QXtEventLoop instance!" );
+    if(static_d)
+        qWarning("QXtEventLoop: should only have one QXtEventLoop instance!");
 #endif
 
     d = static_d = new QXtEventLoopPrivate;
     XtToolkitInitialize();
-    if ( context )
-	d->appContext = context;
+    if(context)
+        d->appContext = context;
     else
-	d->ownContext = d->appContext = XtCreateApplicationContext();
+        d->ownContext = d->appContext = XtCreateApplicationContext();
 
     d->applicationClass = applicationClass;
     d->options = options;
@@ -294,7 +291,7 @@ QXtEventLoop::QXtEventLoop( const char *applicationClass, XtAppContext context, 
 */
 QXtEventLoop::~QXtEventLoop()
 {
-  //   d->unhook();
+    //   d->unhook();
     delete d;
 }
 
@@ -310,14 +307,8 @@ XtAppContext QXtEventLoop::applicationContext() const
 void QXtEventLoop::appStartingUp()
 {
     int argc = qApp->argc();
-    XtDisplayInitialize( d->appContext,
-			 QPaintDevice::x11AppDisplay(),
-			 qApp->name(),
-			 d->applicationClass,
-			 d->options,
-			 d->numOptions,
-			 &argc,
-			 qApp->argv() );
+    XtDisplayInitialize(d->appContext, QPaintDevice::x11AppDisplay(), qApp->name(), d->applicationClass, d->options, d->numOptions, &argc,
+                        qApp->argv());
     d->hookMeUp();
 }
 
@@ -329,88 +320,88 @@ void QXtEventLoop::appClosingDown()
 
 /*!\internal
  */
-void QXtEventLoop::registerWidget( QWidget* w )
+void QXtEventLoop::registerWidget(QWidget *w)
 {
-    if ( !static_d )
-	return;
-    static_d->mapper.insert( w->winId(), w );
+    if(!static_d)
+        return;
+    static_d->mapper.insert(w->winId(), w);
 }
 
 
 /*!\internal
  */
-void QXtEventLoop::unregisterWidget( QWidget* w )
+void QXtEventLoop::unregisterWidget(QWidget *w)
 {
-    if ( !static_d )
-	return;
-    static_d->mapper.remove( w->winId() );
+    if(!static_d)
+        return;
+    static_d->mapper.remove(w->winId());
 }
 
 
 /*! \internal
  */
-void qmotif_socknot_handler( XtPointer pointer, int *, XtInputId *id )
+void qmotif_socknot_handler(XtPointer pointer, int *, XtInputId *id)
 {
-    QXtEventLoop *eventloop = (QXtEventLoop *) pointer;
-    QSocketNotifier *socknot = static_d->socknotDict.find( *id );
-    if ( ! socknot ) // this shouldn't happen
-	return;
-    eventloop->setSocketNotifierPending( socknot );
+    QXtEventLoop *eventloop = (QXtEventLoop *)pointer;
+    QSocketNotifier *socknot = static_d->socknotDict.find(*id);
+    if(!socknot) // this shouldn't happen
+        return;
+    eventloop->setSocketNotifierPending(socknot);
 }
 
 /*! \reimp
  */
-void QXtEventLoop::registerSocketNotifier( QSocketNotifier *notifier )
+void QXtEventLoop::registerSocketNotifier(QSocketNotifier *notifier)
 {
     XtInputMask mask;
-    switch ( notifier->type() ) {
-    case QSocketNotifier::Read:
-	mask = XtInputReadMask;
-	break;
+    switch(notifier->type())
+    {
+        case QSocketNotifier::Read:
+            mask = XtInputReadMask;
+            break;
 
-    case QSocketNotifier::Write:
-	mask = XtInputWriteMask;
-	break;
+        case QSocketNotifier::Write:
+            mask = XtInputWriteMask;
+            break;
 
-    case QSocketNotifier::Exception:
-	mask = XtInputExceptMask;
-	break;
+        case QSocketNotifier::Exception:
+            mask = XtInputExceptMask;
+            break;
 
-    default:
-	qWarning( "QXtEventLoopEventLoop: socket notifier has invalid type" );
-	return;
+        default:
+            qWarning("QXtEventLoopEventLoop: socket notifier has invalid type");
+            return;
     }
 
-    XtInputId id = XtAppAddInput( d->appContext,
-				  notifier->socket(), (XtPointer) mask,
-				  qmotif_socknot_handler, this );
-    d->socknotDict.insert( id, notifier );
+    XtInputId id = XtAppAddInput(d->appContext, notifier->socket(), (XtPointer)mask, qmotif_socknot_handler, this);
+    d->socknotDict.insert(id, notifier);
 
-    QEventLoop::registerSocketNotifier( notifier );
+    QEventLoop::registerSocketNotifier(notifier);
 }
 
 /*! \reimp
  */
-void QXtEventLoop::unregisterSocketNotifier( QSocketNotifier *notifier )
+void QXtEventLoop::unregisterSocketNotifier(QSocketNotifier *notifier)
 {
-    QIntDictIterator<QSocketNotifier> it( d->socknotDict );
-    while ( it.current() && notifier != it.current() )
-	++it;
-    if ( ! it.current() ) {
-	// this shouldn't happen
-	qWarning( "QXtEventLoopEventLoop: failed to unregister socket notifier" );
-	return;
+    QIntDictIterator< QSocketNotifier > it(d->socknotDict);
+    while(it.current() && notifier != it.current())
+        ++it;
+    if(!it.current())
+    {
+        // this shouldn't happen
+        qWarning("QXtEventLoopEventLoop: failed to unregister socket notifier");
+        return;
     }
 
-    XtRemoveInput( it.currentKey() );
-    d->socknotDict.remove( it.currentKey() );
+    XtRemoveInput(it.currentKey());
+    d->socknotDict.remove(it.currentKey());
 
-    QEventLoop::unregisterSocketNotifier( notifier );
+    QEventLoop::unregisterSocketNotifier(notifier);
 }
 
 /*! \internal
  */
-void qmotif_timeout_handler( XtPointer, XtIntervalId * )
+void qmotif_timeout_handler(XtPointer, XtIntervalId *)
 {
     static_d->activate_timers = TRUE;
     static_d->timerid = 0;
@@ -418,7 +409,7 @@ void qmotif_timeout_handler( XtPointer, XtIntervalId * )
 
 /*! \reimp
  */
-bool QXtEventLoop::processEvents( ProcessEventsFlags flags )
+bool QXtEventLoop::processEvents(ProcessEventsFlags flags)
 {
     // Qt uses posted events to do lots of delayed operations, like repaints... these
     // need to be delivered before we go to sleep
@@ -426,47 +417,48 @@ bool QXtEventLoop::processEvents( ProcessEventsFlags flags )
 
     // make sure we fire off Qt's timers
     int ttw = timeToWait();
-    if ( d->timerid != 0 ) {
-	XtRemoveTimeOut( d->timerid );
+    if(d->timerid != 0)
+    {
+        XtRemoveTimeOut(d->timerid);
     }
     d->timerid = 0;
-    if ( ttw != -1 ) {
-	d->timerid =
-	    XtAppAddTimeOut( d->appContext, ttw,
-			     qmotif_timeout_handler, 0 );
+    if(ttw != -1)
+    {
+        d->timerid = XtAppAddTimeOut(d->appContext, ttw, qmotif_timeout_handler, 0);
     }
 
     // get the pending event mask from Xt and process the next event
-    XtInputMask pendingmask = XtAppPending( d->appContext );
+    XtInputMask pendingmask = XtAppPending(d->appContext);
     XtInputMask mask = pendingmask;
-    if ( pendingmask & XtIMTimer ) {
-	mask &= ~XtIMTimer;
-	// zero timers will starve the Xt X event dispatcher... so process
-	// something *instead* of a timer first...
-	if ( mask != 0 )
-	    XtAppProcessEvent( d->appContext, mask );
-	// and process a timer afterwards
-	mask = pendingmask & XtIMTimer;
+    if(pendingmask & XtIMTimer)
+    {
+        mask &= ~XtIMTimer;
+        // zero timers will starve the Xt X event dispatcher... so process
+        // something *instead* of a timer first...
+        if(mask != 0)
+            XtAppProcessEvent(d->appContext, mask);
+        // and process a timer afterwards
+        mask = pendingmask & XtIMTimer;
     }
 
-    if ( ( flags & WaitForMore ) )
-	XtAppProcessEvent( d->appContext, XtIMAll );
+    if((flags & WaitForMore))
+        XtAppProcessEvent(d->appContext, XtIMAll);
     else
-	XtAppProcessEvent( d->appContext, mask );
+        XtAppProcessEvent(d->appContext, mask);
 
     int nevents = 0;
-    if ( ! ( flags & ExcludeSocketNotifiers ) )
-	nevents += activateSocketNotifiers();
+    if(!(flags & ExcludeSocketNotifiers))
+        nevents += activateSocketNotifiers();
 
-    if ( d->activate_timers ) {
-	nevents += activateTimers();
+    if(d->activate_timers)
+    {
+        nevents += activateTimers();
     }
     d->activate_timers = FALSE;
 
-    return ( (flags & WaitForMore) || ( pendingmask != 0 ) || nevents > 0 );
+    return ((flags & WaitForMore) || (pendingmask != 0) || nevents > 0);
 }
 
 #include "qxteventloop.moc"
 
 #endif
-

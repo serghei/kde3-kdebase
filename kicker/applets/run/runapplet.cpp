@@ -40,27 +40,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "runapplet.h"
 #include "runapplet.moc"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-  KDE_EXPORT KPanelApplet* init(QWidget *parent, const QString& configFile)
-  {
     KGlobal::locale()->insertCatalogue("krunapplet");
     return new RunApplet(configFile, KPanelApplet::Stretch, 0, parent, "krunapplet");
-  }
+}
 }
 
-RunApplet::RunApplet(const QString& configFile, Type type, int actions,
-                             QWidget *parent, const char *name)
-  : KPanelApplet(configFile, type, actions, parent, name)
+RunApplet::RunApplet(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelApplet(configFile, type, actions, parent, name)
 {
-  //  setBackgroundMode(X11ParentRelative);
-    setBackgroundOrigin( AncestorOrigin );
+    //  setBackgroundMode(X11ParentRelative);
+    setBackgroundOrigin(AncestorOrigin);
     // setup label
     _label = new QLabel(i18n("Run command:"), this);
     QFont f(_label->font());
     f.setPixelSize(12);
-//    _label->setBackgroundMode(X11ParentRelative);
-    _label->setBackgroundOrigin( AncestorOrigin );
+    //    _label->setBackgroundMode(X11ParentRelative);
+    _label->setBackgroundOrigin(AncestorOrigin);
     _label->setFixedHeight(14);
     _label->setFont(f);
 
@@ -76,8 +74,7 @@ RunApplet::RunApplet(const QString& configFile, Type type, int actions,
     _input->setFocus();
     _input->clearEdit();
     watchForFocus(_input->lineEdit());
-    connect(_input, SIGNAL(activated(const QString&)),
-	    SLOT(run_command(const QString&)));
+    connect(_input, SIGNAL(activated(const QString &)), SLOT(run_command(const QString &)));
 
     KConfig *c = config();
     c->setGroup("General");
@@ -87,12 +84,12 @@ RunApplet::RunApplet(const QString& configFile, Type type, int actions,
     _input->completionObject()->setItems(list);
     list = c->readListEntry("History list");
     _input->setHistoryItems(list);
-    int mode = c->readNumEntry( "CompletionMode", KGlobalSettings::completionMode() );
-    _input->setCompletionMode( (KGlobalSettings::Completion) mode );
+    int mode = c->readNumEntry("CompletionMode", KGlobalSettings::completionMode());
+    _input->setCompletionMode((KGlobalSettings::Completion)mode);
 
     _filterData = new KURIFilterData();
 
-    _hbox = new QHBox( 0, 0, WStyle_Customize | WType_Popup );
+    _hbox = new QHBox(0, 0, WStyle_Customize | WType_Popup);
     _hbox->setFixedSize(120, 22);
 }
 
@@ -106,52 +103,49 @@ RunApplet::~RunApplet()
     c->writeEntry("Completion list", list);
     list = _input->historyItems();
     c->writeEntry("History list", list);
-    c->writeEntry( "CompletionMode", (int) _input->completionMode() );
+    c->writeEntry("CompletionMode", (int)_input->completionMode());
     c->sync();
 
     delete _filterData;
     KGlobal::locale()->removeCatalogue("krunapplet");
 }
 
-void RunApplet::resizeEvent(QResizeEvent*)
+void RunApplet::resizeEvent(QResizeEvent *)
 {
     if(orientation() == Horizontal)
-	{
-	    _btn->hide();
-	    _input->reparent(this, QPoint(0,0), true);
-	    _label->setGeometry(0,0, width(), _label->height());
+    {
+        _btn->hide();
+        _input->reparent(this, QPoint(0, 0), true);
+        _label->setGeometry(0, 0, width(), _label->height());
 
-	    if(height() >= _input->sizeHint().height() + _label->height())
-		{
-                    int inputVOffset = height() - _input->sizeHint().height() - 2;
-                    int labelHeight = _label->sizeHint().height();
-		    _label->setGeometry(0, inputVOffset - labelHeight,
-                                        width(), labelHeight);
-		    _input->setGeometry(0, inputVOffset,
-					width(), _input->sizeHint().height());
-		    _label->show();
-		}
-	    else
-		{
-		    _label->hide();
+        if(height() >= _input->sizeHint().height() + _label->height())
+        {
+            int inputVOffset = height() - _input->sizeHint().height() - 2;
+            int labelHeight = _label->sizeHint().height();
+            _label->setGeometry(0, inputVOffset - labelHeight, width(), labelHeight);
+            _input->setGeometry(0, inputVOffset, width(), _input->sizeHint().height());
+            _label->show();
+        }
+        else
+        {
+            _label->hide();
 
-                    // make it as high as the combobox naturally wants to be
-                    // but no taller than the panel is!
-                    // don't forget to center it vertically either.
-                    int newHeight = _input->sizeHint().height();
-                    if (newHeight > height())
-                        newHeight = height();
-		    _input->setGeometry(0, (height() - newHeight) / 2,
-                                        width(), newHeight);
-		}
-	}
+            // make it as high as the combobox naturally wants to be
+            // but no taller than the panel is!
+            // don't forget to center it vertically either.
+            int newHeight = _input->sizeHint().height();
+            if(newHeight > height())
+                newHeight = height();
+            _input->setGeometry(0, (height() - newHeight) / 2, width(), newHeight);
+        }
+    }
     else
-	{
-	    _btn->show();
-	    _btn->setFixedSize(width(), 22);
-	    _input->reparent( _hbox, QPoint(0, 0), false);
-	    _label->hide();
-	}
+    {
+        _btn->show();
+        _btn->setFixedSize(width(), 22);
+        _input->reparent(_hbox, QPoint(0, 0), false);
+        _label->hide();
+    }
     setButtonText();
 }
 
@@ -164,30 +158,30 @@ void RunApplet::setButtonText()
 {
     QString t;
 
-    if (position() == pRight)
-	{
-	    if (width() >= 42)
-		t = i18n("< Run");
-	    else
-		t = "<";
-	}
+    if(position() == pRight)
+    {
+        if(width() >= 42)
+            t = i18n("< Run");
+        else
+            t = "<";
+    }
     else
-	{
-	    if(width() >= 42)
-		t = i18n("Run >");
-	    else
-		t = ">";
-	}
+    {
+        if(width() >= 42)
+            t = i18n("Run >");
+        else
+            t = ">";
+    }
 
     _btn->setText(t);
 }
 
-int RunApplet::widthForHeight(int ) const
+int RunApplet::widthForHeight(int) const
 {
     return _label->sizeHint().width();
 }
 
-int RunApplet::heightForWidth(int ) const
+int RunApplet::heightForWidth(int) const
 {
     return 22;
 }
@@ -195,100 +189,104 @@ int RunApplet::heightForWidth(int ) const
 void RunApplet::popup_combo()
 {
     QPoint p;
-    if (position() == pRight)
-	p = mapToGlobal(QPoint(-_input->width()-1, 0));
+    if(position() == pRight)
+        p = mapToGlobal(QPoint(-_input->width() - 1, 0));
     else
-	p = mapToGlobal(QPoint(width()+1, 0));
+        p = mapToGlobal(QPoint(width() + 1, 0));
     _hbox->move(p);
     _hbox->show();
     _input->setFocus();
 }
 
-void RunApplet::run_command(const QString& command)
+void RunApplet::run_command(const QString &command)
 {
     QString exec;
     bool focusNeeded = false;
 
     kapp->propagateSessionManager();
 
-    _filterData->setData( _input->currentText().stripWhiteSpace() );
+    _filterData->setData(_input->currentText().stripWhiteSpace());
     QStringList filters;
-    filters << "kurisearchfilter" << "kshorturifilter";
-    KURIFilter::self()->filterURI( *(_filterData), filters );
+    filters << "kurisearchfilter"
+            << "kshorturifilter";
+    KURIFilter::self()->filterURI(*(_filterData), filters);
 
     _input->addToHistory(command);
     _input->clearEdit();
 
-    QString cmd = (_filterData->uri().isLocalFile() ? _filterData->uri().path():_filterData->uri().url());
+    QString cmd = (_filterData->uri().isLocalFile() ? _filterData->uri().path() : _filterData->uri().url());
 
     // Nothing interesting. Quit!
-    if ( cmd.isEmpty() ){
-	KMessageBox::sorry(0L, i18n("You have to enter a command to execute "
-				    "or a URL to be opened first."));
+    if(cmd.isEmpty())
+    {
+        KMessageBox::sorry(0L, i18n("You have to enter a command to execute "
+                                    "or a URL to be opened first."));
         focusNeeded = true;
-	goto hide;
+        goto hide;
     }
-    else if (cmd == "logout")
-	{
-	    bool shutdown = kapp->requestShutDown();
-	    if( !shutdown )
-            {
-                // This i18n string is in kdesktop/desktop.cc as well. Maybe we should DCOP to kdesktop instead ?
-		KMessageBox::error( 0, i18n("Unable to log out properly.\nThe session manager cannot "
-					    "be contacted. You can try to force a shutdown by pressing "
-					    "Ctrl+Alt+Backspace. Note, however, that your current "
-                                            "session will not be saved with a forced shutdown." ) );
-                focusNeeded = true;
-            }
-	    goto hide;
-	}
-    else
-	{
-	    switch( _filterData->uriType() )
-		{
-		case KURIFilterData::LOCAL_FILE:
-		case KURIFilterData::LOCAL_DIR:
-		case KURIFilterData::NET_PROTOCOL:
-		case KURIFilterData::HELP:
-		    {
-		        (void) new KRun( _filterData->uri() );
-			goto hide;
-		    }
-		case KURIFilterData::EXECUTABLE:
-		case KURIFilterData::SHELL:
-		    {
-		        exec = cmd;
-			if( _filterData->hasArgsAndOptions() )
-			  cmd += _filterData->argsAndOptions();
-			break;
-		    }
-		case KURIFilterData::UNKNOWN:
-		case KURIFilterData::ERROR:
-		default:
-		    KMessageBox::sorry( 0, i18n("<qt>The program name or command <b>%1</b>\n"
-						"cannot be found. Please correct the command\n"
-						"or URL and try again</qt>").arg( cmd ) );
-		    _input->removeFromHistory( _input->currentText() );
-                    focusNeeded = true;
-		    goto hide;
-		}
-	}
-    if (KRun::runCommand( cmd, exec, "" ))
-	goto hide;
-    else
-	{
-	    KMessageBox::sorry( 0, i18n("<qt>Could not run <b>%1</b>.\nPlease correct"
-					" the command or URL and try again.</qt>").arg( cmd ) );
-	    _input->removeFromHistory( _input->currentText() );
+    else if(cmd == "logout")
+    {
+        bool shutdown = kapp->requestShutDown();
+        if(!shutdown)
+        {
+            // This i18n string is in kdesktop/desktop.cc as well. Maybe we should DCOP to kdesktop instead ?
+            KMessageBox::error(0, i18n("Unable to log out properly.\nThe session manager cannot "
+                                       "be contacted. You can try to force a shutdown by pressing "
+                                       "Ctrl+Alt+Backspace. Note, however, that your current "
+                                       "session will not be saved with a forced shutdown."));
             focusNeeded = true;
-	    goto hide;
-	}
+        }
+        goto hide;
+    }
+    else
+    {
+        switch(_filterData->uriType())
+        {
+            case KURIFilterData::LOCAL_FILE:
+            case KURIFilterData::LOCAL_DIR:
+            case KURIFilterData::NET_PROTOCOL:
+            case KURIFilterData::HELP:
+            {
+                (void)new KRun(_filterData->uri());
+                goto hide;
+            }
+            case KURIFilterData::EXECUTABLE:
+            case KURIFilterData::SHELL:
+            {
+                exec = cmd;
+                if(_filterData->hasArgsAndOptions())
+                    cmd += _filterData->argsAndOptions();
+                break;
+            }
+            case KURIFilterData::UNKNOWN:
+            case KURIFilterData::ERROR:
+            default:
+                KMessageBox::sorry(0, i18n("<qt>The program name or command <b>%1</b>\n"
+                                           "cannot be found. Please correct the command\n"
+                                           "or URL and try again</qt>")
+                                          .arg(cmd));
+                _input->removeFromHistory(_input->currentText());
+                focusNeeded = true;
+                goto hide;
+        }
+    }
+    if(KRun::runCommand(cmd, exec, ""))
+        goto hide;
+    else
+    {
+        KMessageBox::sorry(0, i18n("<qt>Could not run <b>%1</b>.\nPlease correct"
+                                   " the command or URL and try again.</qt>")
+                                  .arg(cmd));
+        _input->removeFromHistory(_input->currentText());
+        focusNeeded = true;
+        goto hide;
+    }
 
     needsFocus(focusNeeded);
     return;
 
- hide:
-    if (orientation() == Vertical)
-	_hbox->hide();
+hide:
+    if(orientation() == Vertical)
+        _hbox->hide();
     needsFocus(focusNeeded);
 }

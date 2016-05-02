@@ -29,12 +29,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "appletinfo.h"
 
-class PanelAddExtensionMenu : public QPopupMenu
-{
+class PanelAddExtensionMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    PanelAddExtensionMenu(QWidget *parent=0, const char *name=0);
+    PanelAddExtensionMenu(QWidget *parent = 0, const char *name = 0);
 
 protected slots:
     virtual void slotExec(int id);

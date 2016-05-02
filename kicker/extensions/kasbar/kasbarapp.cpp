@@ -67,59 +67,56 @@
 
 #include "version.h"
 
-static KCmdLineOptions options[] =
+static KCmdLineOptions options[] = {{"test", "Test the basic kasbar code", 0}, KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-   { "test", "Test the basic kasbar code", 0 },
-   KCmdLineLastOption
-};
+    KCmdLineArgs::init(argc, argv, "kasbar", "KasBar", I18N_NOOP("An alternative task manager"), VERSION_STRING);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KGlobal::locale()->setMainCatalogue("kasbarextension");
+    KApplication app;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-int main( int argc, char **argv )
-{
-  KCmdLineArgs::init( argc, argv, "kasbar", "KasBar", I18N_NOOP( "An alternative task manager" ), VERSION_STRING );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KGlobal::locale()->setMainCatalogue( "kasbarextension" );
-  KApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    kdDebug(1345) << "Kasbar starting..." << endl;
 
-  kdDebug(1345) << "Kasbar starting..." << endl;
+    int wflags = Qt::WStyle_Customize | Qt::WX11BypassWM | Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop;
+    KasBar *kasbar;
+    KConfig conf("kasbarrc");
 
-  int wflags = Qt::WStyle_Customize | Qt::WX11BypassWM | Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop;
-  KasBar *kasbar;
-  KConfig conf( "kasbarrc" );
+    if(args->isSet("test"))
+    {
+        kasbar = new KasBar(Qt::Vertical, 0, "testkas", wflags);
+        kasbar->setItemSize(KasBar::Large);
+        kasbar->append(new KasClockItem(kasbar));
+        kasbar->append(new KasItem(kasbar));
+        kasbar->append(new KasLoadItem(kasbar));
+        kasbar->append(new KasItem(kasbar));
+        kasbar->addTestItems();
+    }
+    else
+    {
+        KasTasker *kastasker = new KasTasker(Qt::Vertical, 0, "testkas", wflags);
+        kastasker->setConfig(&conf);
+        kastasker->setStandAlone(true);
+        kasbar = kastasker;
 
-  if ( args->isSet("test") ) {
-      kasbar = new KasBar( Qt::Vertical, 0, "testkas", wflags );
-      kasbar->setItemSize( KasBar::Large );
-      kasbar->append( new KasClockItem(kasbar) );
-      kasbar->append( new KasItem(kasbar) );
-      kasbar->append( new KasLoadItem(kasbar) );
-      kasbar->append( new KasItem(kasbar) );
-      kasbar->addTestItems();
-  }
-  else {
-      KasTasker *kastasker = new KasTasker( Qt::Vertical, 0, "testkas", wflags );
-      kastasker->setConfig( &conf );
-      kastasker->setStandAlone( true );
-      kasbar = kastasker;
+        kastasker->readConfig();
+        kastasker->move(kastasker->detachedPosition());
+        kastasker->connect(kastasker->resources(), SIGNAL(changed()), SLOT(readConfig()));
+        kastasker->refreshAll();
+    }
 
-      kastasker->readConfig();
-      kastasker->move( kastasker->detachedPosition() );
-      kastasker->connect( kastasker->resources(), SIGNAL(changed()), SLOT(readConfig()) );
-      kastasker->refreshAll();
-  }
+    kdDebug(1345) << "Kasbar about to show" << endl;
+    app.setMainWidget(kasbar);
+    kasbar->show();
 
-  kdDebug(1345) << "Kasbar about to show" << endl;
-  app.setMainWidget( kasbar );
-  kasbar->show();
+    kasbar->setDetached(true);
+    KWin::setOnAllDesktops(kasbar->winId(), true);
+    kdDebug() << "kasbar: Window id is " << kasbar->winId() << endl;
 
-  kasbar->setDetached( true );
-  KWin::setOnAllDesktops( kasbar->winId(), true );
-  kdDebug() << "kasbar: Window id is " << kasbar->winId() << endl;
+    KApplication::kApplication()->dcopClient()->registerAs("kasbar");
 
-  KApplication::kApplication()->dcopClient()->registerAs( "kasbar" );
+    app.connect(&app, SIGNAL(lastWindowClosed()), SLOT(quit()));
 
-  app.connect( &app, SIGNAL( lastWindowClosed() ), SLOT(quit()) );
-
-  return app.exec();
+    return app.exec();
 }
-

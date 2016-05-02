@@ -71,38 +71,36 @@ static const int rowOffset = 2000;
 static const int labelOffset = 200;
 static const int bgOffset = 300;
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-    KDE_EXPORT KPanelApplet* init(QWidget *parent, const QString& configFile)
-    {
-      KGlobal::locale()->insertCatalogue("kminipagerapplet");
-      return new KMiniPager(configFile, KPanelApplet::Normal, 0, parent, "kminipagerapplet");
-    }
+    KGlobal::locale()->insertCatalogue("kminipagerapplet");
+    return new KMiniPager(configFile, KPanelApplet::Normal, 0, parent, "kminipagerapplet");
+}
 }
 
-KMiniPager::KMiniPager(const QString& configFile, Type type, int actions,
-                       QWidget *parent, const char *name)
-    : KPanelApplet( configFile, type, actions, parent, name ),
-      m_layout(0),
-      m_desktopLayoutOwner( NULL ),
-      m_shadowEngine(0),
-      m_contextMenu(0),
-      m_settings( new PagerSettings(sharedConfig()) )
+KMiniPager::KMiniPager(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelApplet(configFile, type, actions, parent, name)
+    , m_layout(0)
+    , m_desktopLayoutOwner(NULL)
+    , m_shadowEngine(0)
+    , m_contextMenu(0)
+    , m_settings(new PagerSettings(sharedConfig()))
 {
-    setBackgroundOrigin( AncestorOrigin );
+    setBackgroundOrigin(AncestorOrigin);
     int scnum = QApplication::desktop()->screenNumber(this);
     QRect desk = QApplication::desktop()->screenGeometry(scnum);
-    if (desk.width() <= 800)
+    if(desk.width() <= 800)
     {
-        KConfigSkeleton::ItemBool* item = dynamic_cast<KConfigSkeleton::ItemBool*>(m_settings->findItem("Preview"));
-        if (item)
+        KConfigSkeleton::ItemBool *item = dynamic_cast< KConfigSkeleton::ItemBool * >(m_settings->findItem("Preview"));
+        if(item)
         {
             item->setDefaultValue(false);
         }
     }
     m_settings->readConfig();
     m_windows.setAutoDelete(true);
-    if (m_settings->preview())
+    if(m_settings->preview())
     {
         TaskManager::the()->trackGeometry();
     }
@@ -110,15 +108,15 @@ KMiniPager::KMiniPager(const QString& configFile, Type type, int actions,
     m_group = new QButtonGroup(this);
     m_group->setBackgroundOrigin(AncestorOrigin);
     m_group->setFrameStyle(QFrame::NoFrame);
-    m_group->setExclusive( true );
+    m_group->setExclusive(true);
 
-    setFont( KGlobalSettings::taskbarFont() );
+    setFont(KGlobalSettings::taskbarFont());
 
     m_kwin = new KWinModule(this);
     m_activeWindow = m_kwin->activeWindow();
     m_curDesk = m_kwin->currentDesktop();
 
-    if (m_curDesk == 0) // kwin not yet launched
+    if(m_curDesk == 0) // kwin not yet launched
     {
         m_curDesk = 1;
     }
@@ -132,18 +130,17 @@ KMiniPager::KMiniPager(const QString& configFile, Type type, int actions,
 
     drawButtons();
 
-    connect( m_kwin, SIGNAL( currentDesktopChanged(int)), SLOT( slotSetDesktop(int) ) );
-    connect( m_kwin, SIGNAL( currentDesktopViewportChanged(int, const QPoint&)),
-            SLOT(slotSetDesktopViewport(int, const QPoint&)));
-    connect( m_kwin, SIGNAL( numberOfDesktopsChanged(int)), SLOT( slotSetDesktopCount(int) ) );
-    connect( m_kwin, SIGNAL( activeWindowChanged(WId)), SLOT( slotActiveWindowChanged(WId) ) );
-    connect( m_kwin, SIGNAL( windowAdded(WId) ), this, SLOT( slotWindowAdded(WId) ) );
-    connect( m_kwin, SIGNAL( windowRemoved(WId) ), this, SLOT( slotWindowRemoved(WId) ) );
-    connect( m_kwin, SIGNAL( windowChanged(WId,unsigned int) ), this, SLOT( slotWindowChanged(WId,unsigned int) ) );
-    connect( m_kwin, SIGNAL( desktopNamesChanged() ), this, SLOT( slotDesktopNamesChanged() ) );
-    connect( kapp, SIGNAL(backgroundChanged(int)), SLOT(slotBackgroundChanged(int)) );
+    connect(m_kwin, SIGNAL(currentDesktopChanged(int)), SLOT(slotSetDesktop(int)));
+    connect(m_kwin, SIGNAL(currentDesktopViewportChanged(int, const QPoint &)), SLOT(slotSetDesktopViewport(int, const QPoint &)));
+    connect(m_kwin, SIGNAL(numberOfDesktopsChanged(int)), SLOT(slotSetDesktopCount(int)));
+    connect(m_kwin, SIGNAL(activeWindowChanged(WId)), SLOT(slotActiveWindowChanged(WId)));
+    connect(m_kwin, SIGNAL(windowAdded(WId)), this, SLOT(slotWindowAdded(WId)));
+    connect(m_kwin, SIGNAL(windowRemoved(WId)), this, SLOT(slotWindowRemoved(WId)));
+    connect(m_kwin, SIGNAL(windowChanged(WId, unsigned int)), this, SLOT(slotWindowChanged(WId, unsigned int)));
+    connect(m_kwin, SIGNAL(desktopNamesChanged()), this, SLOT(slotDesktopNamesChanged()));
+    connect(kapp, SIGNAL(backgroundChanged(int)), SLOT(slotBackgroundChanged(int)));
 
-    if (kapp->authorizeKAction("kicker_rmb") && kapp->authorizeControlModule("kde-kcmtaskbar.desktop"))
+    if(kapp->authorizeKAction("kicker_rmb") && kapp->authorizeControlModule("kde-kcmtaskbar.desktop"))
     {
         m_contextMenu = new QPopupMenu();
         connect(m_contextMenu, SIGNAL(aboutToShow()), SLOT(aboutToShowContextMenu()));
@@ -151,14 +148,14 @@ KMiniPager::KMiniPager(const QString& configFile, Type type, int actions,
         setCustomMenu(m_contextMenu);
     }
 
-    QValueList<WId>::ConstIterator it;
-    QValueList<WId>::ConstIterator itEnd = m_kwin->windows().end();
-    for ( it = m_kwin->windows().begin(); it != itEnd; ++it)
+    QValueList< WId >::ConstIterator it;
+    QValueList< WId >::ConstIterator itEnd = m_kwin->windows().end();
+    for(it = m_kwin->windows().begin(); it != itEnd; ++it)
     {
-        slotWindowAdded( (*it) );
+        slotWindowAdded((*it));
     }
 
-    slotSetDesktop( m_curDesk );
+    slotSetDesktop(m_curDesk);
     updateLayout();
 }
 
@@ -173,12 +170,12 @@ KMiniPager::~KMiniPager()
 void KMiniPager::slotBackgroundChanged(int desk)
 {
     unsigned numDesktops = m_kwin->numberOfDesktops();
-    if (numDesktops != m_desktops.count())
+    if(numDesktops != m_desktops.count())
     {
         slotSetDesktopCount(numDesktops);
     }
 
-    if (desk < 1 || (unsigned) desk > m_desktops.count())
+    if(desk < 1 || (unsigned)desk > m_desktops.count())
     {
         // should not happen, but better to be paranoid than crash
         return;
@@ -189,12 +186,12 @@ void KMiniPager::slotBackgroundChanged(int desk)
 
 void KMiniPager::slotSetDesktop(int desktop)
 {
-    if (m_kwin->numberOfDesktops() > static_cast<int>(m_desktops.count()))
+    if(m_kwin->numberOfDesktops() > static_cast< int >(m_desktops.count()))
     {
-        slotSetDesktopCount( m_kwin->numberOfDesktops() );
+        slotSetDesktopCount(m_kwin->numberOfDesktops());
     }
 
-    if (!m_useViewports && (desktop != KWin::currentDesktop()))
+    if(!m_useViewports && (desktop != KWin::currentDesktop()))
     {
         // this can happen when the user clicks on a desktop,
         // holds down the key combo to switch desktops, lets the
@@ -206,58 +203,56 @@ void KMiniPager::slotSetDesktop(int desktop)
     }
 
     m_curDesk = desktop;
-    if (m_curDesk < 1)
+    if(m_curDesk < 1)
     {
         m_curDesk = 1;
     }
 
-    KMiniPagerButton* button = m_desktops[m_curDesk - 1];
-    if (!button->isOn())
+    KMiniPagerButton *button = m_desktops[m_curDesk - 1];
+    if(!button->isOn())
     {
         button->toggle();
     }
 }
 
-void KMiniPager::slotSetDesktopViewport(int desktop, const QPoint& viewport)
+void KMiniPager::slotSetDesktopViewport(int desktop, const QPoint &viewport)
 {
     // ###
     Q_UNUSED(desktop);
     QSize s(m_kwin->numberOfViewports(m_kwin->currentDesktop()));
-    slotSetDesktop((viewport.y()-1) * s.width() + viewport.x() );
+    slotSetDesktop((viewport.y() - 1) * s.width() + viewport.x());
 }
 
-void KMiniPager::slotButtonSelected( int desk )
+void KMiniPager::slotButtonSelected(int desk)
 {
-    if (m_kwin->numberOfViewports(m_kwin->currentDesktop()).width() *
-        m_kwin->numberOfViewports(m_kwin->currentDesktop()).height() > 1)
+    if(m_kwin->numberOfViewports(m_kwin->currentDesktop()).width() * m_kwin->numberOfViewports(m_kwin->currentDesktop()).height() > 1)
     {
         QPoint p;
 
-        p.setX( (desk-1) * QApplication::desktop()->width());
-        p.setY( 0 );
+        p.setX((desk - 1) * QApplication::desktop()->width());
+        p.setY(0);
 
         KWin::setCurrentDesktopViewport(m_kwin->currentDesktop(), p);
     }
     else
-        KWin::setCurrentDesktop( desk );
+        KWin::setCurrentDesktop(desk);
 
-    slotSetDesktop( desk );
+    slotSetDesktop(desk);
 }
 
 int KMiniPager::widthForHeight(int h) const
 {
-    if (orientation() == Qt::Vertical)
+    if(orientation() == Qt::Vertical)
     {
         return width();
     }
 
-    int deskNum = m_kwin->numberOfDesktops() * m_kwin->numberOfViewports(0).width()
-        * m_kwin->numberOfViewports(0).height();
+    int deskNum = m_kwin->numberOfDesktops() * m_kwin->numberOfViewports(0).width() * m_kwin->numberOfViewports(0).height();
 
     int rowNum = m_settings->numberOfRows();
-    if (rowNum == 0)
+    if(rowNum == 0)
     {
-        if (h <= 32 || deskNum <= 1)
+        if(h <= 32 || deskNum <= 1)
         {
             rowNum = 1;
         }
@@ -267,27 +262,27 @@ int KMiniPager::widthForHeight(int h) const
         }
     }
 
-    int deskCols = deskNum/rowNum;
+    int deskCols = deskNum / rowNum;
     if(deskNum == 0 || deskNum % rowNum != 0)
         deskCols += 1;
 
     int bw = (h / rowNum);
-    if( m_settings->labelType() != PagerSettings::EnumLabelType::LabelName )
+    if(m_settings->labelType() != PagerSettings::EnumLabelType::LabelName)
     {
-        if (desktopPreview() || m_settings->backgroundType() == PagerSettings::EnumBackgroundType::BgLive)
+        if(desktopPreview() || m_settings->backgroundType() == PagerSettings::EnumBackgroundType::BgLive)
         {
-            bw = (int) ( bw * (double) QApplication::desktop()->width() / QApplication::desktop()->height() );
+            bw = (int)(bw * (double)QApplication::desktop()->width() / QApplication::desktop()->height());
         }
     }
     else
     {
         // scale to desktop width as a minimum
-        bw = (int) (bw * (double) QApplication::desktop()->width() / QApplication::desktop()->height());
+        bw = (int)(bw * (double)QApplication::desktop()->width() / QApplication::desktop()->height());
         QFontMetrics fm = fontMetrics();
-        for (int i = 1; i <= deskNum; i++)
+        for(int i = 1; i <= deskNum; i++)
         {
-            int sw = fm.width( m_kwin->desktopName( i ) ) + 8;
-            if (sw > bw)
+            int sw = fm.width(m_kwin->desktopName(i)) + 8;
+            if(sw > bw)
             {
                 bw = sw;
             }
@@ -302,17 +297,16 @@ int KMiniPager::widthForHeight(int h) const
 
 int KMiniPager::heightForWidth(int w) const
 {
-    if (orientation() == Qt::Horizontal)
+    if(orientation() == Qt::Horizontal)
     {
         return height();
     }
 
-    int deskNum = m_kwin->numberOfDesktops() * m_kwin->numberOfViewports(0).width()
-        * m_kwin->numberOfViewports(0).height();
+    int deskNum = m_kwin->numberOfDesktops() * m_kwin->numberOfViewports(0).width() * m_kwin->numberOfViewports(0).height();
     int rowNum = m_settings->numberOfRows(); // actually these are columns now... oh well.
-    if (rowNum == 0)
+    if(rowNum == 0)
     {
-        if (w <= 48 || deskNum == 1)
+        if(w <= 48 || deskNum == 1)
         {
             rowNum = 1;
         }
@@ -322,20 +316,20 @@ int KMiniPager::heightForWidth(int w) const
         }
     }
 
-    int deskCols = deskNum/rowNum;
+    int deskCols = deskNum / rowNum;
     if(deskNum == 0 || deskNum % rowNum != 0)
     {
         deskCols += 1;
     }
 
-    int bh = (w/rowNum) + 1;
-    if ( desktopPreview() )
+    int bh = (w / rowNum) + 1;
+    if(desktopPreview())
     {
-        bh = (int) ( bh *  (double) QApplication::desktop()->height() / QApplication::desktop()->width() );
+        bh = (int)(bh * (double)QApplication::desktop()->height() / QApplication::desktop()->width());
     }
-    else if ( m_settings->labelType() == PagerSettings::EnumLabelType::LabelName )
+    else if(m_settings->labelType() == PagerSettings::EnumLabelType::LabelName)
     {
-       bh = fontMetrics().lineSpacing() + 8;
+        bh = fontMetrics().lineSpacing() + 8;
     }
 
     // we add one to the width for the spacing in between the buttons
@@ -348,26 +342,23 @@ int KMiniPager::heightForWidth(int w) const
 
 void KMiniPager::updateDesktopLayout(int o, int x, int y)
 {
-    if ((desktopLayoutOrientation == o) &&
-       (desktopLayoutX == x) &&
-       (desktopLayoutY == y))
+    if((desktopLayoutOrientation == o) && (desktopLayoutX == x) && (desktopLayoutY == y))
     {
-      return;
+        return;
     }
 
     desktopLayoutOrientation = o;
     desktopLayoutX = x;
     desktopLayoutY = y;
-    if( x == -1 ) // do-the-maths-yourself is encoded as 0 in the wm spec
+    if(x == -1) // do-the-maths-yourself is encoded as 0 in the wm spec
         x = 0;
-    if( y == -1 )
+    if(y == -1)
         y = 0;
-    if( m_desktopLayoutOwner == NULL )
+    if(m_desktopLayoutOwner == NULL)
     { // must own manager selection before setting global desktop layout
-        int screen = DefaultScreen( qt_xdisplay());
-        m_desktopLayoutOwner = new KSelectionOwner( QString( "_NET_DESKTOP_LAYOUT_S%1" ).arg( screen ).latin1(),
-            screen, this );
-        if( !m_desktopLayoutOwner->claim( false ))
+        int screen = DefaultScreen(qt_xdisplay());
+        m_desktopLayoutOwner = new KSelectionOwner(QString("_NET_DESKTOP_LAYOUT_S%1").arg(screen).latin1(), screen, this);
+        if(!m_desktopLayoutOwner->claim(false))
         {
             delete m_desktopLayoutOwner;
             m_desktopLayoutOwner = NULL;
@@ -375,36 +366,36 @@ void KMiniPager::updateDesktopLayout(int o, int x, int y)
         }
     }
     NET::Orientation orient = o == Qt::Horizontal ? NET::OrientationHorizontal : NET::OrientationVertical;
-    NETRootInfo i( qt_xdisplay(), 0 );
-    i.setDesktopLayout( orient, x, y, NET::DesktopLayoutCornerTopLeft );
+    NETRootInfo i(qt_xdisplay(), 0);
+    i.setDesktopLayout(orient, x, y, NET::DesktopLayoutCornerTopLeft);
 }
 
-void KMiniPager::resizeEvent(QResizeEvent*)
+void KMiniPager::resizeEvent(QResizeEvent *)
 {
     bool horiz = orientation() == Horizontal;
 
     int deskNum = m_desktops.count();
     int rowNum = m_settings->numberOfRows();
-    if (rowNum == 0)
+    if(rowNum == 0)
     {
-        if (((horiz && height()<=32)||(!horiz && width()<=48)) || deskNum <= 1)
+        if(((horiz && height() <= 32) || (!horiz && width() <= 48)) || deskNum <= 1)
             rowNum = 1;
         else
             rowNum = 2;
     }
 
-    int deskCols = deskNum/rowNum;
+    int deskCols = deskNum / rowNum;
     if(deskNum == 0 || deskNum % rowNum != 0)
         deskCols += 1;
 
-    if (m_layout)
+    if(m_layout)
     {
         delete m_layout;
         m_layout = 0;
     }
 
     int nDX, nDY;
-    if (horiz)
+    if(horiz)
     {
         nDX = rowNum;
         nDY = deskCols;
@@ -420,14 +411,15 @@ void KMiniPager::resizeEvent(QResizeEvent*)
     // 1 pixel spacing.
     m_layout = new QGridLayout(this, nDX, nDY, 0, 1);
 
-    QValueList<KMiniPagerButton*>::Iterator it = m_desktops.begin();
-    QValueList<KMiniPagerButton*>::Iterator itEnd = m_desktops.end();
-    int c = 0,
-        r = 0;
-    while( it != itEnd ) {
+    QValueList< KMiniPagerButton * >::Iterator it = m_desktops.begin();
+    QValueList< KMiniPagerButton * >::Iterator itEnd = m_desktops.end();
+    int c = 0, r = 0;
+    while(it != itEnd)
+    {
         c = 0;
-        while( (it != itEnd) && (c < nDY) ) {
-            m_layout->addWidget( *it, r, c );
+        while((it != itEnd) && (c < nDY))
+        {
+            m_layout->addWidget(*it, r, c);
             ++it;
             ++c;
         }
@@ -438,13 +430,13 @@ void KMiniPager::resizeEvent(QResizeEvent*)
     updateGeometry();
 }
 
-void KMiniPager::wheelEvent( QWheelEvent* e )
+void KMiniPager::wheelEvent(QWheelEvent *e)
 {
     int newDesk;
     int desktops = KWin::numberOfDesktops();
-    if (m_kwin->numberOfViewports(0).width() * m_kwin->numberOfViewports(0).height() > 1 )
+    if(m_kwin->numberOfViewports(0).width() * m_kwin->numberOfViewports(0).height() > 1)
         desktops = m_kwin->numberOfViewports(0).width() * m_kwin->numberOfViewports(0).height();
-    if (e->delta() < 0)
+    if(e->delta() < 0)
     {
         newDesk = m_curDesk % desktops + 1;
     }
@@ -466,45 +458,42 @@ void KMiniPager::drawButtons()
     do
     {
         QSize viewportNum = m_kwin->numberOfViewports(i);
-        for (int j = 1; j <= viewportNum.width() * viewportNum.height(); ++j)
+        for(int j = 1; j <= viewportNum.width() * viewportNum.height(); ++j)
         {
             QSize s(m_kwin->numberOfViewports(m_kwin->currentDesktop()));
-            QPoint viewport( (j-1) % s.width(), (j-1) / s.width());
-            desk = new KMiniPagerButton( count, m_useViewports, viewport, this );
-            if ( m_settings->labelType() != PagerSettings::EnumLabelType::LabelName )
+            QPoint viewport((j - 1) % s.width(), (j - 1) / s.width());
+            desk = new KMiniPagerButton(count, m_useViewports, viewport, this);
+            if(m_settings->labelType() != PagerSettings::EnumLabelType::LabelName)
             {
-                QToolTip::add( desk, desk->desktopName() );
+                QToolTip::add(desk, desk->desktopName());
             }
 
-            m_desktops.append( desk );
-            m_group->insert( desk, count );
+            m_desktops.append(desk);
+            m_group->insert(desk, count);
 
-            connect(desk, SIGNAL(buttonSelected(int)),
-                    SLOT(slotButtonSelected(int)) );
-            connect(desk, SIGNAL(showMenu(const QPoint&, int )),
-                    SLOT(slotShowMenu(const QPoint&, int )) );
+            connect(desk, SIGNAL(buttonSelected(int)), SLOT(slotButtonSelected(int)));
+            connect(desk, SIGNAL(showMenu(const QPoint &, int)), SLOT(slotShowMenu(const QPoint &, int)));
 
             desk->show();
             ++count;
         }
-    }
-    while ( ++i <= deskNum );
+    } while(++i <= deskNum);
 }
 
-void KMiniPager::slotSetDesktopCount( int )
+void KMiniPager::slotSetDesktopCount(int)
 {
-    QValueList<KMiniPagerButton*>::ConstIterator it;
-    QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-    for( it = m_desktops.begin(); it != itEnd; ++it )
+    QValueList< KMiniPagerButton * >::ConstIterator it;
+    QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+    for(it = m_desktops.begin(); it != itEnd; ++it)
     {
-        delete (*it);
+        delete(*it);
     }
     m_desktops.clear();
 
     drawButtons();
 
     m_curDesk = m_kwin->currentDesktop();
-    if ( m_curDesk == 0 )
+    if(m_curDesk == 0)
     {
         m_curDesk = 1;
     }
@@ -513,20 +502,19 @@ void KMiniPager::slotSetDesktopCount( int )
     updateLayout();
 }
 
-void KMiniPager::slotActiveWindowChanged( WId win )
+void KMiniPager::slotActiveWindowChanged(WId win)
 {
-    if (desktopPreview())
+    if(desktopPreview())
     {
-        KWin::WindowInfo* inf1 = m_activeWindow ? info( m_activeWindow ) : NULL;
-        KWin::WindowInfo* inf2 = win ? info( win ) : NULL;
+        KWin::WindowInfo *inf1 = m_activeWindow ? info(m_activeWindow) : NULL;
+        KWin::WindowInfo *inf2 = win ? info(win) : NULL;
         m_activeWindow = win;
 
-        QValueList<KMiniPagerButton*>::ConstIterator it;
-        QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-        for ( it = m_desktops.begin(); it != itEnd; ++it)
+        QValueList< KMiniPagerButton * >::ConstIterator it;
+        QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+        for(it = m_desktops.begin(); it != itEnd; ++it)
         {
-            if ( ( inf1 && (*it)->shouldPaintWindow(inf1)) ||
-                 ( inf2 && (*it)->shouldPaintWindow(inf2)) )
+            if((inf1 && (*it)->shouldPaintWindow(inf1)) || (inf2 && (*it)->shouldPaintWindow(inf2)))
             {
                 (*it)->windowsChanged();
             }
@@ -534,22 +522,22 @@ void KMiniPager::slotActiveWindowChanged( WId win )
     }
 }
 
-void KMiniPager::slotWindowAdded( WId win)
+void KMiniPager::slotWindowAdded(WId win)
 {
-    if (desktopPreview())
+    if(desktopPreview())
     {
-        KWin::WindowInfo* inf = info( win );
+        KWin::WindowInfo *inf = info(win);
 
-        if (inf->state() & NET::SkipPager)
+        if(inf->state() & NET::SkipPager)
         {
             return;
         }
 
-        QValueList<KMiniPagerButton*>::ConstIterator it;
-        QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-        for ( it = m_desktops.begin(); it != itEnd; ++it)
+        QValueList< KMiniPagerButton * >::ConstIterator it;
+        QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+        for(it = m_desktops.begin(); it != itEnd; ++it)
         {
-            if ( (*it)->shouldPaintWindow(inf) )
+            if((*it)->shouldPaintWindow(inf))
             {
                 (*it)->windowsChanged();
             }
@@ -559,29 +547,29 @@ void KMiniPager::slotWindowAdded( WId win)
 
 void KMiniPager::slotWindowRemoved(WId win)
 {
-    if (desktopPreview())
+    if(desktopPreview())
     {
-        KWin::WindowInfo* inf = info(win);
+        KWin::WindowInfo *inf = info(win);
         bool onAllDesktops = inf->onAllDesktops();
         bool onAllViewports = inf->hasState(NET::Sticky);
         bool skipPager = inf->state() & NET::SkipPager;
         int desktop = inf->desktop();
 
-        if (win == m_activeWindow)
+        if(win == m_activeWindow)
             m_activeWindow = 0;
 
-        m_windows.remove((long) win);
+        m_windows.remove((long)win);
 
-        if (skipPager)
+        if(skipPager)
         {
             return;
         }
 
-        QValueList<KMiniPagerButton*>::ConstIterator it;
-        QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-        for (it = m_desktops.begin(); it != itEnd; ++it)
+        QValueList< KMiniPagerButton * >::ConstIterator it;
+        QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+        for(it = m_desktops.begin(); it != itEnd; ++it)
         {
-            if (onAllDesktops || onAllViewports || desktop == (*it)->desktop())
+            if(onAllDesktops || onAllViewports || desktop == (*it)->desktop())
             {
                 (*it)->windowsChanged();
             }
@@ -592,28 +580,25 @@ void KMiniPager::slotWindowRemoved(WId win)
         m_windows.remove(win);
         return;
     }
-
 }
 
-void KMiniPager::slotWindowChanged( WId win , unsigned int properties )
+void KMiniPager::slotWindowChanged(WId win, unsigned int properties)
 {
-    if ((properties & (NET::WMState | NET::XAWMState | NET::WMDesktop)) == 0 &&
-        (!desktopPreview() || (properties & NET::WMGeometry) == 0) &&
-        !(desktopPreview() && windowIcons() &&
-         (properties & NET::WMIcon | NET::WMIconName | NET::WMVisibleIconName) == 0))
+    if((properties & (NET::WMState | NET::XAWMState | NET::WMDesktop)) == 0 && (!desktopPreview() || (properties & NET::WMGeometry) == 0)
+       && !(desktopPreview() && windowIcons() && (properties & NET::WMIcon | NET::WMIconName | NET::WMVisibleIconName) == 0))
     {
         return;
     }
 
-    if (desktopPreview())
+    if(desktopPreview())
     {
-        KWin::WindowInfo* inf = m_windows[win];
+        KWin::WindowInfo *inf = m_windows[win];
         bool skipPager = inf->hasState(NET::SkipPager);
-        QMemArray<bool> old_shouldPaintWindow(m_desktops.size());
-        QValueList<KMiniPagerButton*>::ConstIterator it;
-        QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
+        QMemArray< bool > old_shouldPaintWindow(m_desktops.size());
+        QValueList< KMiniPagerButton * >::ConstIterator it;
+        QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
         int i = 0;
-        for ( it = m_desktops.begin(); it != itEnd; ++it)
+        for(it = m_desktops.begin(); it != itEnd; ++it)
         {
             old_shouldPaintWindow[i++] = (*it)->shouldPaintWindow(inf);
         }
@@ -621,14 +606,14 @@ void KMiniPager::slotWindowChanged( WId win , unsigned int properties )
         m_windows.remove(win);
         inf = info(win);
 
-        if (inf->hasState(NET::SkipPager) || skipPager)
+        if(inf->hasState(NET::SkipPager) || skipPager)
         {
             return;
         }
 
-        for ( i = 0, it = m_desktops.begin(); it != itEnd; ++it)
+        for(i = 0, it = m_desktops.begin(); it != itEnd; ++it)
         {
-            if ( old_shouldPaintWindow[i++] || (*it)->shouldPaintWindow(inf))
+            if(old_shouldPaintWindow[i++] || (*it)->shouldPaintWindow(inf))
             {
                 (*it)->windowsChanged();
             }
@@ -641,12 +626,12 @@ void KMiniPager::slotWindowChanged( WId win , unsigned int properties )
     }
 }
 
-KWin::WindowInfo* KMiniPager::info( WId win )
+KWin::WindowInfo *KMiniPager::info(WId win)
 {
-    if (!m_windows[win])
+    if(!m_windows[win])
     {
-        KWin::WindowInfo* info = new KWin::WindowInfo( win,
-            NET::WMWindowType | NET::WMState | NET::XAWMState | NET::WMDesktop | NET::WMGeometry | NET::WMKDEFrameStrut, 0 );
+        KWin::WindowInfo *info =
+            new KWin::WindowInfo(win, NET::WMWindowType | NET::WMState | NET::XAWMState | NET::WMDesktop | NET::WMGeometry | NET::WMKDEFrameStrut, 0);
 
         m_windows.insert(win, info);
         return info;
@@ -655,9 +640,9 @@ KWin::WindowInfo* KMiniPager::info( WId win )
     return m_windows[win];
 }
 
-KTextShadowEngine* KMiniPager::shadowEngine()
+KTextShadowEngine *KMiniPager::shadowEngine()
 {
-    if (!m_shadowEngine)
+    if(!m_shadowEngine)
         m_shadowEngine = new KTextShadowEngine();
 
     return m_shadowEngine;
@@ -665,9 +650,9 @@ KTextShadowEngine* KMiniPager::shadowEngine()
 
 void KMiniPager::refresh()
 {
-    QValueList<KMiniPagerButton*>::ConstIterator it;
-    QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-    for ( it = m_desktops.begin(); it != itEnd; ++it)
+    QValueList< KMiniPagerButton * >::ConstIterator it;
+    QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+    for(it = m_desktops.begin(); it != itEnd; ++it)
     {
         (*it)->update();
     }
@@ -680,49 +665,38 @@ void KMiniPager::aboutToShowContextMenu()
     m_contextMenu->insertItem(SmallIcon("kpager"), i18n("&Launch Pager"), LaunchExtPager);
     m_contextMenu->insertSeparator();
 
-    m_contextMenu->insertItem(i18n("&Rename Desktop \"%1\"")
-                                   .arg(kwin()->desktopName(m_rmbDesk)), RenameDesktop);
+    m_contextMenu->insertItem(i18n("&Rename Desktop \"%1\"").arg(kwin()->desktopName(m_rmbDesk)), RenameDesktop);
     m_contextMenu->insertSeparator();
 
-    KPopupMenu* showMenu = new KPopupMenu(m_contextMenu);
+    KPopupMenu *showMenu = new KPopupMenu(m_contextMenu);
     showMenu->setCheckable(true);
     showMenu->insertTitle(i18n("Pager Layout"));
 
-    QPopupMenu* rowMenu = new QPopupMenu(showMenu);
+    QPopupMenu *rowMenu = new QPopupMenu(showMenu);
     rowMenu->setCheckable(true);
     rowMenu->insertItem(i18n("&Automatic"), 0 + rowOffset);
     rowMenu->insertItem(i18n("one row or column", "&1"), 1 + rowOffset);
     rowMenu->insertItem(i18n("two rows or columns", "&2"), 2 + rowOffset);
-    rowMenu->insertItem( i18n("three rows or columns", "&3"), 3 + rowOffset);
+    rowMenu->insertItem(i18n("three rows or columns", "&3"), 3 + rowOffset);
     connect(rowMenu, SIGNAL(activated(int)), SLOT(contextMenuActivated(int)));
-    showMenu->insertItem((orientation()==Horizontal) ? i18n("&Rows"):
-                                                       i18n("&Columns"),
-                         rowMenu);
+    showMenu->insertItem((orientation() == Horizontal) ? i18n("&Rows") : i18n("&Columns"), rowMenu);
 
     showMenu->insertItem(i18n("&Window Thumbnails"), WindowThumbnails);
     showMenu->insertItem(i18n("&Window Icons"), WindowIcons);
 
     showMenu->insertTitle(i18n("Text Label"));
-    showMenu->insertItem(i18n("Desktop N&umber"),
-                         PagerSettings::EnumLabelType::LabelNumber + labelOffset);
-    showMenu->insertItem(i18n("Desktop N&ame"),
-                         PagerSettings::EnumLabelType::LabelName + labelOffset);
-    showMenu->insertItem(i18n("N&o Label"),
-                         PagerSettings::EnumLabelType::LabelNone + labelOffset);
+    showMenu->insertItem(i18n("Desktop N&umber"), PagerSettings::EnumLabelType::LabelNumber + labelOffset);
+    showMenu->insertItem(i18n("Desktop N&ame"), PagerSettings::EnumLabelType::LabelName + labelOffset);
+    showMenu->insertItem(i18n("N&o Label"), PagerSettings::EnumLabelType::LabelNone + labelOffset);
 
     showMenu->insertTitle(i18n("Background"));
-    showMenu->insertItem(i18n("&Elegant"),
-                         PagerSettings::EnumBackgroundType::BgPlain + bgOffset);
-    showMenu->insertItem(i18n("&Transparent"),
-                         PagerSettings::EnumBackgroundType::BgTransparent + bgOffset);
-    showMenu->insertItem(i18n("&Desktop Wallpaper"),
-                         PagerSettings::EnumBackgroundType::BgLive + bgOffset);
+    showMenu->insertItem(i18n("&Elegant"), PagerSettings::EnumBackgroundType::BgPlain + bgOffset);
+    showMenu->insertItem(i18n("&Transparent"), PagerSettings::EnumBackgroundType::BgTransparent + bgOffset);
+    showMenu->insertItem(i18n("&Desktop Wallpaper"), PagerSettings::EnumBackgroundType::BgLive + bgOffset);
     connect(showMenu, SIGNAL(activated(int)), SLOT(contextMenuActivated(int)));
-    m_contextMenu->insertItem(i18n("&Pager Options"),showMenu);
+    m_contextMenu->insertItem(i18n("&Pager Options"), showMenu);
 
-    m_contextMenu->insertItem(SmallIcon("configure"),
-                              i18n("&Configure Desktops..."),
-                              ConfigureDesktops);
+    m_contextMenu->insertItem(SmallIcon("configure"), i18n("&Configure Desktops..."), ConfigureDesktops);
 
     rowMenu->setItemChecked(m_settings->numberOfRows() + rowOffset, true);
     m_contextMenu->setItemChecked(m_settings->labelType() + labelOffset, showMenu);
@@ -731,14 +705,12 @@ void KMiniPager::aboutToShowContextMenu()
     m_contextMenu->setItemChecked(WindowThumbnails, m_settings->preview());
     m_contextMenu->setItemChecked(WindowIcons, m_settings->icons());
     m_contextMenu->setItemEnabled(WindowIcons, m_settings->preview());
-    m_contextMenu->setItemEnabled(RenameDesktop,
-                                  m_settings->labelType() ==
-                                  PagerSettings::EnumLabelType::LabelName);
+    m_contextMenu->setItemEnabled(RenameDesktop, m_settings->labelType() == PagerSettings::EnumLabelType::LabelName);
 }
 
-void KMiniPager::slotShowMenu(const QPoint& pos, int desktop)
+void KMiniPager::slotShowMenu(const QPoint &pos, int desktop)
 {
-    if (!m_contextMenu)
+    if(!m_contextMenu)
     {
         return;
     }
@@ -750,12 +722,12 @@ void KMiniPager::slotShowMenu(const QPoint& pos, int desktop)
 
 void KMiniPager::contextMenuActivated(int result)
 {
-    if (result < 1)
+    if(result < 1)
     {
         return;
     }
 
-    switch (result)
+    switch(result)
     {
         case LaunchExtPager:
             showPager();
@@ -770,13 +742,13 @@ void KMiniPager::contextMenuActivated(int result)
             return;
     }
 
-    if (result >= rowOffset)
+    if(result >= rowOffset)
     {
         m_settings->setNumberOfRows(result - rowOffset);
         resizeEvent(0);
     }
 
-    switch (result)
+    switch(result)
     {
         case WindowThumbnails:
             m_settings->setPreview(!m_settings->preview());
@@ -796,9 +768,9 @@ void KMiniPager::contextMenuActivated(int result)
         case PagerSettings::EnumBackgroundType::BgLive + bgOffset:
         {
             m_settings->setBackgroundType(PagerSettings::EnumBackgroundType::BgLive);
-            QValueList<KMiniPagerButton*>::ConstIterator it;
-            QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
-            for( it = m_desktops.begin(); it != itEnd; ++it )
+            QValueList< KMiniPagerButton * >::ConstIterator it;
+            QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
+            for(it = m_desktops.begin(); it != itEnd; ++it)
             {
                 (*it)->backgroundChanged();
             }
@@ -823,10 +795,10 @@ void KMiniPager::contextMenuActivated(int result)
 
 void KMiniPager::slotDesktopNamesChanged()
 {
-    QValueList<KMiniPagerButton*>::ConstIterator it = m_desktops.begin();
-    QValueList<KMiniPagerButton*>::ConstIterator itEnd = m_desktops.end();
+    QValueList< KMiniPagerButton * >::ConstIterator it = m_desktops.begin();
+    QValueList< KMiniPagerButton * >::ConstIterator itEnd = m_desktops.end();
 
-    for (int i = 1; it != itEnd; ++it, ++i)
+    for(int i = 1; it != itEnd; ++it, ++i)
     {
         QString name = m_kwin->desktopName(i);
         (*it)->setDesktopName(name);
@@ -840,19 +812,19 @@ void KMiniPager::slotDesktopNamesChanged()
 
 void KMiniPager::showPager()
 {
-    DCOPClient *dcop=kapp->dcopClient();
+    DCOPClient *dcop = kapp->dcopClient();
 
-    if (dcop->isApplicationRegistered("kpager"))
+    if(dcop->isApplicationRegistered("kpager"))
     {
-       showKPager(true);
+        showKPager(true);
     }
     else
     {
-    // Let's run kpager if it isn't running
-        connect( dcop, SIGNAL( applicationRegistered(const QCString &) ), this, SLOT(applicationRegistered(const QCString &)) );
+        // Let's run kpager if it isn't running
+        connect(dcop, SIGNAL(applicationRegistered(const QCString &)), this, SLOT(applicationRegistered(const QCString &)));
         dcop->setNotifications(true);
         QString strAppPath(locate("exe", "kpager"));
-        if (!strAppPath.isEmpty())
+        if(!strAppPath.isEmpty())
         {
             KProcess process;
             process << strAppPath;
@@ -865,26 +837,26 @@ void KMiniPager::showPager()
 void KMiniPager::showKPager(bool toggleShow)
 {
     QPoint pt;
-    switch ( position() )
+    switch(position())
     {
         case pTop:
-            pt = mapToGlobal( QPoint(x(), y() + height()) );
+            pt = mapToGlobal(QPoint(x(), y() + height()));
             break;
         case pLeft:
-            pt = mapToGlobal( QPoint(x() + width(), y()) );
+            pt = mapToGlobal(QPoint(x() + width(), y()));
             break;
         case pRight:
         case pBottom:
         default:
-            pt=mapToGlobal( QPoint(x(), y()) );
+            pt = mapToGlobal(QPoint(x(), y()));
     }
 
-    DCOPClient *dcop=kapp->dcopClient();
+    DCOPClient *dcop = kapp->dcopClient();
 
     QByteArray data;
     QDataStream arg(data, IO_WriteOnly);
-    arg << pt.x() << pt.y() ;
-    if (toggleShow)
+    arg << pt.x() << pt.y();
+    if(toggleShow)
     {
         dcop->send("kpager", "KPagerIface", "toggleShow(int,int)", data);
     }
@@ -894,13 +866,11 @@ void KMiniPager::showKPager(bool toggleShow)
     }
 }
 
-void KMiniPager::applicationRegistered( const QCString  & appName )
+void KMiniPager::applicationRegistered(const QCString &appName)
 {
-    if (appName == "kpager")
+    if(appName == "kpager")
     {
-        disconnect( kapp->dcopClient(), SIGNAL( applicationRegistered(const QCString &) ),
-                    this, SLOT(applicationRegistered(const QCString &)) );
+        disconnect(kapp->dcopClient(), SIGNAL(applicationRegistered(const QCString &)), this, SLOT(applicationRegistered(const QCString &)));
         showKPager(false);
     }
 }
-

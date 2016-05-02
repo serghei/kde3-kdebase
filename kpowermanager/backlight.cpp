@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 Serghei Amelian <serghei.amelian@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -27,7 +27,8 @@
 #include "backlight.h"
 
 
-struct Backlight::Private {
+struct Backlight::Private
+{
     Atom backlight;
     XRRScreenResources *resources;
     RROutput output;
@@ -47,24 +48,29 @@ Backlight::Backlight()
     Window xroot = QPaintDevice::x11AppRootWindow();
 
     d->backlight = ::XInternAtom(xdisplay, "Backlight", True);
-    if(None == d->backlight) {
+    if(None == d->backlight)
+    {
         error = "Video output have no backlight property.";
         goto err;
     }
 
     d->resources = ::XRRGetScreenResourcesCurrent(xdisplay, xroot);
-    if(!d->resources) {
+    if(!d->resources)
+    {
         error = "No Randr resources available.";
         goto err;
     }
 
     // cache min/max brightness
-    for(int i = 0; i < d->resources->noutput; i++) {
+    for(int i = 0; i < d->resources->noutput; i++)
+    {
         d->output = d->resources->outputs[i];
         XRRPropertyInfo *info = ::XRRQueryOutputProperty(xdisplay, d->output, d->backlight);
 
-        if(info) {
-            if(info->range && 2 == info->num_values) {
+        if(info)
+        {
+            if(info->range && 2 == info->num_values)
+            {
                 d->minLevel = info->values[0];
                 d->maxLevel = info->values[1];
                 ::XFree(info);
@@ -79,7 +85,8 @@ Backlight::Backlight()
 
 err:
     d->backlight = None;
-    kdDebug() << error << " " << "The brightness control has been disabled." << endl;
+    kdDebug() << error << " "
+              << "The brightness control has been disabled." << endl;
 }
 
 
@@ -122,15 +129,13 @@ int Backlight::brightness()
     int actual_format;
     long value = 0;
 
-    int ret = ::XRRGetOutputProperty(
-        QPaintDevice::x11AppDisplay(), d->output, d->backlight,
-        0, 4, False, False, None,
-        &actual_type, &actual_format,
-        &nitems, &bytes_after, &prop);
+    int ret = ::XRRGetOutputProperty(QPaintDevice::x11AppDisplay(), d->output, d->backlight, 0, 4, False, False, None, &actual_type, &actual_format,
+                                     &nitems, &bytes_after, &prop);
 
-    if(Success == ret) {
+    if(Success == ret)
+    {
         if(XA_INTEGER == actual_type && 1 == nitems && 32 == actual_format)
-            value = *((long*)prop);
+            value = *((long *)prop);
         ::XFree(prop);
     }
 
@@ -143,7 +148,5 @@ void Backlight::setBrightness(int level)
     if(None == d->backlight)
         return;
 
-    ::XRRChangeOutputProperty(
-        QPaintDevice::x11AppDisplay(), d->output, d->backlight,
-        XA_INTEGER, 32, PropModeReplace, (unsigned char*)&level, 1);
+    ::XRRChangeOutputProperty(QPaintDevice::x11AppDisplay(), d->output, d->backlight, XA_INTEGER, 32, PropModeReplace, (unsigned char *)&level, 1);
 }

@@ -34,53 +34,52 @@ class BrowserView;
 class KonqMainWindow;
 class KAboutData;
 
-class KonqViewFactory
-{
+class KonqViewFactory {
 public:
-  KonqViewFactory() : m_factory( 0L ), m_createBrowser( false ) {}
+    KonqViewFactory() : m_factory(0L), m_createBrowser(false)
+    {
+    }
 
-  KonqViewFactory( KLibFactory *factory, const QStringList &args, bool createBrowser );
+    KonqViewFactory(KLibFactory *factory, const QStringList &args, bool createBrowser);
 
-  KonqViewFactory( const KonqViewFactory &factory )
-  { (*this) = factory; }
+    KonqViewFactory(const KonqViewFactory &factory)
+    {
+        (*this) = factory;
+    }
 
-  KonqViewFactory &operator=( const KonqViewFactory &other )
-  {
-    m_factory = other.m_factory;
-    m_args = other.m_args;
-    m_createBrowser = other.m_createBrowser;
-    return *this;
-  }
+    KonqViewFactory &operator=(const KonqViewFactory &other)
+    {
+        m_factory = other.m_factory;
+        m_args = other.m_args;
+        m_createBrowser = other.m_createBrowser;
+        return *this;
+    }
 
-  KParts::ReadOnlyPart *create( QWidget *parentWidget, const char *widgetName,
-                                QObject *parent, const char *name );
+    KParts::ReadOnlyPart *create(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name);
 
-  bool isNull() const { return m_factory ? false : true; }
+    bool isNull() const
+    {
+        return m_factory ? false : true;
+    }
 
 private:
-  KLibFactory *m_factory;
-  QStringList m_args;
-  bool m_createBrowser;
+    KLibFactory *m_factory;
+    QStringList m_args;
+    bool m_createBrowser;
 };
 
-class KonqFactory
-{
+class KonqFactory {
 public:
-  static KonqViewFactory createView( const QString &serviceType,
-				     const QString &serviceName = QString::null,
-				     KService::Ptr *serviceImpl = 0,
-				     KTrader::OfferList *partServiceOffers = 0,
-				     KTrader::OfferList *appServiceOffers = 0,
-				     bool forceAutoEmbed = false );
+    static KonqViewFactory createView(const QString &serviceType, const QString &serviceName = QString::null, KService::Ptr *serviceImpl = 0,
+                                      KTrader::OfferList *partServiceOffers = 0, KTrader::OfferList *appServiceOffers = 0,
+                                      bool forceAutoEmbed = false);
 
-  static void getOffers( const QString & serviceType,
-                         KTrader::OfferList *partServiceOffers = 0,
-                         KTrader::OfferList *appServiceOffers = 0);
+    static void getOffers(const QString &serviceType, KTrader::OfferList *partServiceOffers = 0, KTrader::OfferList *appServiceOffers = 0);
 
-  static const KAboutData* aboutData();
+    static const KAboutData *aboutData();
 
 private:
-  static KAboutData *s_aboutData;
+    static KAboutData *s_aboutData;
 };
 
 #endif

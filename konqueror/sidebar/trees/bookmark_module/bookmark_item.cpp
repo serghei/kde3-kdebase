@@ -24,25 +24,26 @@
 
 #include "bookmark_module.h"
 
-#define MYMODULE static_cast<KonqSidebarBookmarkModule*>(module())
+#define MYMODULE static_cast< KonqSidebarBookmarkModule * >(module())
 
-KonqSidebarBookmarkItem::KonqSidebarBookmarkItem( KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem, const KBookmark & bk, int key )
-    : KonqSidebarTreeItem( parentItem, topLevelItem ), m_bk(bk), m_key(key)
+KonqSidebarBookmarkItem::KonqSidebarBookmarkItem(KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem, const KBookmark &bk,
+                                                 int key)
+    : KonqSidebarTreeItem(parentItem, topLevelItem), m_bk(bk), m_key(key)
 {
-    setText( 0, bk.text() );
-    setPixmap( 0, SmallIcon(bk.icon()) );
+    setText(0, bk.text());
+    setPixmap(0, SmallIcon(bk.icon()));
 }
 
-QDragObject * KonqSidebarBookmarkItem::dragObject( QWidget * parent, bool )
+QDragObject *KonqSidebarBookmarkItem::dragObject(QWidget *parent, bool)
 {
-    KBookmarkDrag * drag = KBookmarkDrag::newDrag( m_bk, parent );
+    KBookmarkDrag *drag = KBookmarkDrag::newDrag(m_bk, parent);
     // TODO honour bool move ?
     return drag;
 }
 
 void KonqSidebarBookmarkItem::middleButtonClicked()
 {
-    emit tree()->createNewWindow( externalURL() );
+    emit tree()->createNewWindow(externalURL());
 }
 
 void KonqSidebarBookmarkItem::rightButtonPressed()
@@ -52,7 +53,7 @@ void KonqSidebarBookmarkItem::rightButtonPressed()
 
 void KonqSidebarBookmarkItem::del()
 {
-    //maybe todo
+    // maybe todo
 }
 
 KURL KonqSidebarBookmarkItem::externalURL() const
@@ -67,12 +68,12 @@ QString KonqSidebarBookmarkItem::toolTipText() const
 
 void KonqSidebarBookmarkItem::itemSelected()
 {
-    tree()->enableActions( false, false, false, false, false, false );
+    tree()->enableActions(false, false, false, false, false, false);
 }
 
-QString KonqSidebarBookmarkItem::key( int /*column*/, bool /*ascending*/ ) const
+QString KonqSidebarBookmarkItem::key(int /*column*/, bool /*ascending*/) const
 {
-    return QString::number(m_key).rightJustify( 5, '0' );
+    return QString::number(m_key).rightJustify(5, '0');
 }
 
 KBookmark &KonqSidebarBookmarkItem::bookmark()

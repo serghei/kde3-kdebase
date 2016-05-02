@@ -28,29 +28,35 @@
 class MenuFile;
 class MenuEntryInfo;
 
-class MenuInfo
-{
+class MenuInfo {
 public:
-    MenuInfo() {}
-    virtual ~MenuInfo() {}
+    MenuInfo()
+    {
+    }
+    virtual ~MenuInfo()
+    {
+    }
 };
 
-class MenuSeparatorInfo : public MenuInfo
-{
+class MenuSeparatorInfo : public MenuInfo {
 public:
-    MenuSeparatorInfo() {}
+    MenuSeparatorInfo()
+    {
+    }
 };
 
-class MenuFolderInfo : public MenuInfo
-{
+class MenuFolderInfo : public MenuInfo {
 public:
-    MenuFolderInfo() : dirty(false), hidden(false) { subFolders.setAutoDelete(true); }
+    MenuFolderInfo() : dirty(false), hidden(false)
+    {
+        subFolders.setAutoDelete(true);
+    }
 
     // Add separator
-    void add(MenuSeparatorInfo *, bool initial=false);
+    void add(MenuSeparatorInfo *, bool initial = false);
 
     // Add sub menu
-    void add(MenuFolderInfo *, bool initial=false);
+    void add(MenuFolderInfo *, bool initial = false);
 
     // Remove sub menu (without deleting it)
     void take(MenuFolderInfo *);
@@ -58,10 +64,10 @@ public:
     // Remove sub menu (without deleting it)
     // @return true if found
     bool takeRecursive(MenuFolderInfo *info);
-    
+
     // Add entry
     void add(MenuEntryInfo *, bool initial = false);
-    
+
     // Remove entry (without deleteing it)
     void take(MenuEntryInfo *);
 
@@ -80,90 +86,98 @@ public:
 
     void setCaption(const QString &_caption)
     {
-       if (_caption == caption) return;
-       caption = _caption;
-       setDirty();
+        if(_caption == caption)
+            return;
+        caption = _caption;
+        setDirty();
     }
 
     void setIcon(const QString &_icon)
     {
-       if (_icon == icon) return;
-       icon = _icon;
-       setDirty();
+        if(_icon == icon)
+            return;
+        icon = _icon;
+        setDirty();
     }
 
     void setGenericName(const QString &_description)
     {
-       if (_description == genericname) return;
-       genericname = _description;
-       setDirty();
+        if(_description == genericname)
+            return;
+        genericname = _description;
+        setDirty();
     }
 
     void setComment(const QString &_comment)
     {
-       if (_comment == comment) return;
-       comment = _comment;
-       setDirty();
+        if(_comment == comment)
+            return;
+        comment = _comment;
+        setDirty();
     }
 
     // Mark menu as dirty
     void setDirty();
-    
+
     // Return whether this menu or any entry or submenu contained in it is dirty.
     bool hasDirt();
 
     // Return whether this menu should be explicitly added to its parent menu
     bool needInsertion();
-    
+
     // Save menu and all its entries and submenus
     void save(MenuFile *);
 
     // Search service by shortcut
-    KService::Ptr findServiceShortcut(const KShortcut&);
+    KService::Ptr findServiceShortcut(const KShortcut &);
 
     // Set whether the entry is in active use (as opposed to in the clipboard/deleted)
     void setInUse(bool inUse);
-    
+
 public:
-    QString id; // Relative to parent
-    QString fullId; // Name in tree
-    QString caption; // Visible name
-    QString genericname; // Generic description
-    QString comment; // Comment
-    QString directoryFile; // File describing this folder.
-    QString icon; // Icon
-    QPtrList<MenuFolderInfo> subFolders; // Sub menus in this folder
-    QPtrList<MenuEntryInfo> entries; // Menu entries in this folder
-    QPtrList<MenuInfo> initialLayout; // Layout of menu entries according to sycoca
+    QString id;                            // Relative to parent
+    QString fullId;                        // Name in tree
+    QString caption;                       // Visible name
+    QString genericname;                   // Generic description
+    QString comment;                       // Comment
+    QString directoryFile;                 // File describing this folder.
+    QString icon;                          // Icon
+    QPtrList< MenuFolderInfo > subFolders; // Sub menus in this folder
+    QPtrList< MenuEntryInfo > entries;     // Menu entries in this folder
+    QPtrList< MenuInfo > initialLayout;    // Layout of menu entries according to sycoca
     bool dirty;
     bool hidden;
 };
 
-class MenuEntryInfo : public MenuInfo
-{
+class MenuEntryInfo : public MenuInfo {
 public:
-    MenuEntryInfo(const KService::Ptr &_service, KDesktopFile *_df = 0) 
-     : service(_service), df(_df), 
-       shortcutLoaded(false), shortcutDirty(false), dirty(_df != 0), hidden(false)
+    MenuEntryInfo(const KService::Ptr &_service, KDesktopFile *_df = 0)
+        : service(_service), df(_df), shortcutLoaded(false), shortcutDirty(false), dirty(_df != 0), hidden(false)
     {
-       caption = service->name();
-       description = service->genericName();
-       icon = service->icon();
+        caption = service->name();
+        description = service->genericName();
+        icon = service->icon();
     }
     ~MenuEntryInfo();
 
     void setCaption(const QString &_caption);
     void setDescription(const QString &_description);
     void setIcon(const QString &_icon);
-    
-    QString menuId() const { return service->menuId(); }
-    
-    QString file() const { return service->desktopEntryPath(); }
-    
+
+    QString menuId() const
+    {
+        return service->menuId();
+    }
+
+    QString file() const
+    {
+        return service->desktopEntryPath();
+    }
+
     KShortcut shortcut();
     void setShortcut(const KShortcut &_shortcut);
     bool isShortcutAvailable(const KShortcut &_shortcut);
-    
+
     void setDirty();
 
     // Set whether the entry is in active use (as opposed to in the clipboard/deleted)
@@ -171,7 +185,7 @@ public:
 
     // Return whether this menu should be explicitly added to its parent menu
     bool needInsertion();
-    
+
     void save();
 
     KDesktopFile *desktopFile();

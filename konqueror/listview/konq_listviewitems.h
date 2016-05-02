@@ -36,88 +36,91 @@ class KFileItem;
 class KonqBaseListViewWidget;
 
 
-class KonqBaseListViewItem : public KListViewItem
-{
-   public:
-      KonqBaseListViewItem( KonqBaseListViewWidget *_listViewWidget, 
-                            KFileItem *_fileitem );
-      KonqBaseListViewItem( KonqBaseListViewWidget *_treeViewWidget, 
-                            KonqBaseListViewItem *_parent, KFileItem *_fileitem );
-      virtual ~KonqBaseListViewItem();
+class KonqBaseListViewItem : public KListViewItem {
+public:
+    KonqBaseListViewItem(KonqBaseListViewWidget *_listViewWidget, KFileItem *_fileitem);
+    KonqBaseListViewItem(KonqBaseListViewWidget *_treeViewWidget, KonqBaseListViewItem *_parent, KFileItem *_fileitem);
+    virtual ~KonqBaseListViewItem();
 
-      /** @return the file item held by this instance */
-      KFileItem * item() { return m_fileitem; }
+    /** @return the file item held by this instance */
+    KFileItem *item()
+    {
+        return m_fileitem;
+    }
 
-      void mimetypeFound();
-      virtual void updateContents() = 0;
-      virtual void setDisabled( bool disabled ) { m_bDisabled = disabled; }
-      virtual void setActive  ( bool active   ) { m_bActive   = active;   }
-      virtual int compare( QListViewItem* i, int col, bool ascending ) const;
-      
-      int state() const 
-      {
-         if (m_bDisabled)
+    void mimetypeFound();
+    virtual void updateContents() = 0;
+    virtual void setDisabled(bool disabled)
+    {
+        m_bDisabled = disabled;
+    }
+    virtual void setActive(bool active)
+    {
+        m_bActive = active;
+    }
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;
+
+    int state() const
+    {
+        if(m_bDisabled)
             return KIcon::DisabledState;
-         if (m_bActive)
-            return KIcon::ActiveState; 
-         return KIcon::DefaultState;
-      }
+        if(m_bActive)
+            return KIcon::ActiveState;
+        return KIcon::DefaultState;
+    }
 
-      /** For KonqMimeTypeResolver */
-      QRect rect() const;
-      
-   protected:
-      short int sortChar;
-      bool m_bDisabled;
-      bool m_bActive; 
-      
-      /** Pointer to the file item in KDirLister's list */
-      KFileItem* m_fileitem;
-      /** Parent tree view */
-      KonqBaseListViewWidget* m_pListViewWidget;
+    /** For KonqMimeTypeResolver */
+    QRect rect() const;
 
-     /**
-      * @deprecated Use KFileItem::permissionsString() instead
-      */
-      static const char* makeAccessString( const mode_t mode );
+protected:
+    short int sortChar;
+    bool m_bDisabled;
+    bool m_bActive;
+
+    /** Pointer to the file item in KDirLister's list */
+    KFileItem *m_fileitem;
+    /** Parent tree view */
+    KonqBaseListViewWidget *m_pListViewWidget;
+
+    /**
+     * @deprecated Use KFileItem::permissionsString() instead
+     */
+    static const char *makeAccessString(const mode_t mode);
 };
 
 /**
  * One item in the detailed list or in the tree (not text)
  */
-class KonqListViewItem : public KonqBaseListViewItem
-{
-   public:
-      /**
-       * Create an item in the tree toplevel representing a file
-       * @param _parent the parent widget, the tree view
-       * @param _fileitem the file item created by KDirLister
-       */
-      KonqListViewItem( KonqBaseListViewWidget *_parent, KFileItem *_fileitem );
+class KonqListViewItem : public KonqBaseListViewItem {
+public:
+    /**
+     * Create an item in the tree toplevel representing a file
+     * @param _parent the parent widget, the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqListViewItem(KonqBaseListViewWidget *_parent, KFileItem *_fileitem);
 
-      /**
-       * Create an item representing a file, inside a directory
-       * @param _treeview the parent tree view
-       * @param _parent the parent widget, a directory item in the tree view
-       * @param _fileitem the file item created by KDirLister
-       */
-      KonqListViewItem( KonqBaseListViewWidget *_treeview, 
-                        KonqListViewItem *_parent, KFileItem *_fileitem );
+    /**
+     * Create an item representing a file, inside a directory
+     * @param _treeview the parent tree view
+     * @param _parent the parent widget, a directory item in the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqListViewItem(KonqBaseListViewWidget *_treeview, KonqListViewItem *_parent, KFileItem *_fileitem);
 
-      virtual ~KonqListViewItem();
+    virtual ~KonqListViewItem();
 
-      virtual void paintCell( QPainter *_painter, const QColorGroup & cg,
-                              int column, int width, int alignment );
-      virtual void paintFocus( QPainter * _painter, const QColorGroup & cg, const QRect & r );
-      virtual void updateContents();
-      virtual void setDisabled( bool disabled );
-      virtual void setActive  ( bool active   );
+    virtual void paintCell(QPainter *_painter, const QColorGroup &cg, int column, int width, int alignment);
+    virtual void paintFocus(QPainter *_painter, const QColorGroup &cg, const QRect &r);
+    virtual void updateContents();
+    virtual void setDisabled(bool disabled);
+    virtual void setActive(bool active);
 
-      virtual void setPixmap( int column, const QPixmap & pm );
-      virtual const QPixmap * pixmap( int column ) const;
+    virtual void setPixmap(int column, const QPixmap &pm);
+    virtual const QPixmap *pixmap(int column) const;
 
 private:
-      QValueVector<QPixmap *> m_pixmaps;
+    QValueVector< QPixmap * > m_pixmaps;
 };
 
 #endif

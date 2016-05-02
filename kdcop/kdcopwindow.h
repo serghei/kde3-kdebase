@@ -19,46 +19,38 @@ class KDCOPListView;
 #include "kdcoplistview.h"
 #include "kdcopview.h"
 
-class KDCOPWindow : public KMainWindow
-{
-  Q_OBJECT
+class KDCOPWindow : public KMainWindow {
+    Q_OBJECT
 
-  public:
+public:
+    KDCOPWindow(QWidget *parent = 0, const char *name = 0);
 
-    KDCOPWindow( QWidget* parent = 0, const char* name = 0 );
+protected slots:
 
-  protected slots:
-
-    void slotCurrentChanged( QListViewItem* item );
+    void slotCurrentChanged(QListViewItem *item);
     void slotCallFunction();
-    void slotCallFunction( QListViewItem* item );
+    void slotCallFunction(QListViewItem *item);
     void slotApplicationRegistered(const QCString &);
     void slotApplicationUnregistered(const QCString &);
     void slotFillApplications();
     void slotCopy();
     void slotMode();
     void slotReload();
-  private:
-    void fillObjects( DCOPBrowserItem*, const char* app );
-    void fillFunctions( DCOPBrowserItem*, const char* app, const char* obj );
 
-    bool getParameters
-      (
-       const QString  & unNormalisedSignature,
-       QString        & normalisedSignature,
-       QStringList    & types,
-       QStringList    & names
-      );
+private:
+    void fillObjects(DCOPBrowserItem *, const char *app);
+    void fillFunctions(DCOPBrowserItem *, const char *app, const char *obj);
 
-    bool demarshal(QCString & replyType, QDataStream & reply, QListBox *theList);
+    bool getParameters(const QString &unNormalisedSignature, QString &normalisedSignature, QStringList &types, QStringList &names);
 
-    DCOPClient    * dcopClient;
-    KAction       * exeaction;
-    KSelectAction * langmode;
-    kdcopview	  * mainView;
-    QVBoxLayout  * mainLayout;
+    bool demarshal(QCString &replyType, QDataStream &reply, QListBox *theList);
+
+    DCOPClient *dcopClient;
+    KAction *exeaction;
+    KSelectAction *langmode;
+    kdcopview *mainView;
+    QVBoxLayout *mainLayout;
 };
-
 
 
 #endif

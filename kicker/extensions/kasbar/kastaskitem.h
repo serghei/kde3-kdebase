@@ -68,26 +68,28 @@ class KPixmap;
 /**
  * A KasItem that represents a single Task.
  */
-class KasTaskItem : public KasItem
-{
+class KasTaskItem : public KasItem {
     Q_OBJECT
 
- public:
-    KasTaskItem( KasTasker *parent, Task::Ptr task );
+public:
+    KasTaskItem(KasTasker *parent, Task::Ptr task);
     virtual ~KasTaskItem();
 
     QPixmap icon();
 
     /** Reimplemented to paint the item. */
-    virtual void paint( QPainter *p );
+    virtual void paint(QPainter *p);
 
     /** Returns the task the item is displaying. */
-    Task::Ptr task() const { return task_; }
+    Task::Ptr task() const
+    {
+        return task_;
+    }
 
     /** Returns the parent KasTasker object. */
     KasTasker *kasbar() const;
 
-    QString expandMacros( const QString &format, QObject *data );
+    QString expandMacros(const QString &format, QObject *data);
 
 public slots:
     void updateTask(bool geometryChangeOnly);
@@ -101,12 +103,12 @@ public slots:
     void iconChanged();
     void checkAttention();
 
-    void showWindowMenuAt( QPoint pos );
+    void showWindowMenuAt(QPoint pos);
     void sendToTray();
     void showPropertiesDialog();
 
     void toggleActivateAction();
-    void showWindowMenuAt( QMouseEvent *ev );
+    void showWindowMenuAt(QMouseEvent *ev);
 
 protected:
     /**
@@ -114,9 +116,9 @@ protected:
      */
     virtual KasPopup *createPopup();
 
-    QWidget *createTaskProps( QObject *target, QWidget *parent=0, bool recursive=true );
-    QWidget *createX11Props( QWidget *tabbed );
-    QWidget *createNETProps( QWidget *tabbed );
+    QWidget *createTaskProps(QObject *target, QWidget *parent = 0, bool recursive = true);
+    QWidget *createX11Props(QWidget *tabbed);
+    QWidget *createNETProps(QWidget *tabbed);
 
     /**
      * Reimplemented to activate the task.
@@ -132,4 +134,3 @@ private:
 };
 
 #endif // KASTASKITEM_H
-

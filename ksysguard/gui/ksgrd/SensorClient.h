@@ -35,41 +35,57 @@ namespace KSGRD {
   to the SensorAgent. When the requested information is available or a
   problem occurred one of the member functions is called.
  */
-class SensorClient
-{
-  public:
-    SensorClient() { }
-    virtual ~SensorClient() { }
+class SensorClient {
+public:
+    SensorClient()
+    {
+    }
+    virtual ~SensorClient()
+    {
+    }
 
     /**
       This function is called whenever the information form the sensor has
       been received by the sensor agent. This function must be reimplemented
       by the sensor client to receive and process this information.
      */
-    virtual void answerReceived( int, const QString& ) { }
+    virtual void answerReceived(int, const QString &)
+    {
+    }
 
     /**
       In case of an unexpected fatal problem with the sensor the sensor
       agent will call this function to notify the client about it.
      */
-    virtual void sensorLost( int ) { }
+    virtual void sensorLost(int)
+    {
+    }
 };
 
 /**
   Every object that has a SensorClient as a child must inherit from
   this class to support the advanced update interval settings.
  */
-class SensorBoard
-{
-  public:
-    SensorBoard() { }
-    virtual ~SensorBoard() { }
+class SensorBoard {
+public:
+    SensorBoard()
+    {
+    }
+    virtual ~SensorBoard()
+    {
+    }
 
-    void updateInterval( int interval ) { mUpdateInterval = interval; }
+    void updateInterval(int interval)
+    {
+        mUpdateInterval = interval;
+    }
 
-    int updateInterval() { return mUpdateInterval; }
+    int updateInterval()
+    {
+        return mUpdateInterval;
+    }
 
-  private:
+private:
     int mUpdateInterval;
 };
 
@@ -78,27 +94,28 @@ class SensorBoard
   convenient way to retrieve pieces of information from the sensor
   answers. For each type of answer there is a separate class.
  */
-class SensorTokenizer
-{
-  public:
-    SensorTokenizer( const QString &info, QChar separator )
+class SensorTokenizer {
+public:
+    SensorTokenizer(const QString &info, QChar separator)
     {
-      mTokens = QStringList::split( separator, info );
+        mTokens = QStringList::split(separator, info);
     }
 
-    ~SensorTokenizer() { }
+    ~SensorTokenizer()
+    {
+    }
 
-    const QString& operator[]( unsigned idx )
-	  {
-      return mTokens[ idx ];
+    const QString &operator[](unsigned idx)
+    {
+        return mTokens[idx];
     }
 
     uint count()
     {
-      return mTokens.count();
+        return mTokens.count();
     }
 
-  private:
+private:
     QStringList mTokens;
 };
 
@@ -107,32 +124,34 @@ class SensorTokenizer
   (name), the minimum and the maximum values and the unit.
   e.g. Swap Memory	0	133885952	KB
  */
-class SensorIntegerInfo : public SensorTokenizer
-{
-  public:
-    SensorIntegerInfo( const QString &info )
-      : SensorTokenizer( info, '\t' ) { }
+class SensorIntegerInfo : public SensorTokenizer {
+public:
+    SensorIntegerInfo(const QString &info) : SensorTokenizer(info, '\t')
+    {
+    }
 
-    ~SensorIntegerInfo() { }
+    ~SensorIntegerInfo()
+    {
+    }
 
     const QString &name()
     {
-      return (*this)[ 0 ];
+        return (*this)[0];
     }
 
     long min()
     {
-      return (*this)[ 1 ].toLong();
+        return (*this)[1].toLong();
     }
 
     long max()
     {
-      return (*this)[ 2 ].toLong();
+        return (*this)[2].toLong();
     }
 
     const QString &unit()
     {
-      return (*this)[ 3 ];
+        return (*this)[3];
     }
 };
 
@@ -141,69 +160,72 @@ class SensorIntegerInfo : public SensorTokenizer
   (name), the minimum and the maximum values and the unit.
   e.g. CPU Voltage 0.0	5.0	V
  */
-class SensorFloatInfo : public SensorTokenizer
-{
-  public:
-    SensorFloatInfo( const QString &info )
-      : SensorTokenizer( info, '\t' ) { }
+class SensorFloatInfo : public SensorTokenizer {
+public:
+    SensorFloatInfo(const QString &info) : SensorTokenizer(info, '\t')
+    {
+    }
 
-    ~SensorFloatInfo() { }
+    ~SensorFloatInfo()
+    {
+    }
 
     const QString &name()
     {
-      return (*this)[ 0 ];
+        return (*this)[0];
     }
 
     double min()
     {
-      return (*this)[ 1 ].toDouble();
+        return (*this)[1].toDouble();
     }
 
     double max()
     {
-      return (*this)[ 2 ].toDouble();
+        return (*this)[2].toDouble();
     }
 
     const QString &unit()
     {
-      return (*this)[ 3 ];
+        return (*this)[3];
     }
 };
 
 /**
-  A PS line consists of information about a process. Each piece of 
+  A PS line consists of information about a process. Each piece of
   information is seperated by a TAB. The first 4 fields are process name,
   PID, PPID and real user ID. Those fields are mandatory.
  */
-class SensorPSLine : public SensorTokenizer
-{
-  public:
-    SensorPSLine( const QString &line )
-      : SensorTokenizer( line, '\t' ) { }
-
-    ~SensorPSLine() { }
-
-    const QString& name()
+class SensorPSLine : public SensorTokenizer {
+public:
+    SensorPSLine(const QString &line) : SensorTokenizer(line, '\t')
     {
-      return (*this)[ 0 ];
+    }
+
+    ~SensorPSLine()
+    {
+    }
+
+    const QString &name()
+    {
+        return (*this)[0];
     }
 
     long pid()
     {
-      return (*this)[ 1 ].toLong();
+        return (*this)[1].toLong();
     }
 
     long ppid()
     {
-      return (*this)[ 2 ].toLong();
+        return (*this)[2].toLong();
     }
 
     long uid()
     {
-      return (*this)[ 3 ].toLong();
+        return (*this)[3].toLong();
     }
 };
-
 }
 
 #endif

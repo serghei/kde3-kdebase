@@ -31,28 +31,25 @@ class QDomNode;
 
 namespace KHC {
 
-class ScrollKeeperTreeBuilder : public QObject
-{
-  Q_OBJECT
-  public:
-    ScrollKeeperTreeBuilder( QObject *parent, const char *name = 0 );
+class ScrollKeeperTreeBuilder : public QObject {
+    Q_OBJECT
+public:
+    ScrollKeeperTreeBuilder(QObject *parent, const char *name = 0);
 
-    NavigatorItem *build( NavigatorItem *parent, NavigatorItem *after );
+    NavigatorItem *build(NavigatorItem *parent, NavigatorItem *after);
 
-  private slots:
-    void getContentsList( KProcIO *proc );
+private slots:
+    void getContentsList(KProcIO *proc);
 
-  private:
+private:
     void loadConfig();
-    int insertSection( NavigatorItem *parent, NavigatorItem *after,
-                       const QDomNode &sectNode, NavigatorItem *&created );
-    void insertDoc( NavigatorItem *parent, const QDomNode &docNode );
+    int insertSection(NavigatorItem *parent, NavigatorItem *after, const QDomNode &sectNode, NavigatorItem *&created);
+    void insertDoc(NavigatorItem *parent, const QDomNode &docNode);
 
     bool mShowEmptyDirs;
     QString mContentsList;
-    QPtrList<NavigatorItem> mItems;
+    QPtrList< NavigatorItem > mItems;
 };
-
 }
 
 #endif // KHC_SCROLLKEEPERTREEBUILDER_H

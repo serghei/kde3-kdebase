@@ -30,74 +30,72 @@ DEALINGS IN THE SOFTWARE.
 
 #include "keramikconf.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT QWidget *allocate_kstyle_config(QWidget *parent)
 {
-	KDE_EXPORT QWidget* allocate_kstyle_config(QWidget* parent)
-	{
-		return new KeramikStyleConfig(parent);
-	}
+    return new KeramikStyleConfig(parent);
+}
 }
 
-KeramikStyleConfig::KeramikStyleConfig(QWidget* parent): QWidget(parent)
+KeramikStyleConfig::KeramikStyleConfig(QWidget *parent) : QWidget(parent)
 {
-	//Should have no margins here, the dialog provides them
-	QVBoxLayout* layout = new QVBoxLayout(this, 0, 0);
-	KGlobal::locale()->insertCatalogue("kstyle_keramik_config");
+    // Should have no margins here, the dialog provides them
+    QVBoxLayout *layout = new QVBoxLayout(this, 0, 0);
+    KGlobal::locale()->insertCatalogue("kstyle_keramik_config");
 
-	//highlightLineEdits = new QCheckBox(i18n("Highlight active lineedits"), this);
-	highlightScrollBar = new QCheckBox(i18n("Highlight scroll bar handles"), this);
-	animateProgressBar = new QCheckBox(i18n("Animate progress bars"), this);
+    // highlightLineEdits = new QCheckBox(i18n("Highlight active lineedits"), this);
+    highlightScrollBar = new QCheckBox(i18n("Highlight scroll bar handles"), this);
+    animateProgressBar = new QCheckBox(i18n("Animate progress bars"), this);
 
-	//layout->add(highlightLineEdits);
-	layout->add(highlightScrollBar);
-	layout->add(animateProgressBar);
-	layout->addStretch(1);
+    // layout->add(highlightLineEdits);
+    layout->add(highlightScrollBar);
+    layout->add(animateProgressBar);
+    layout->addStretch(1);
 
-	QSettings s;
-	//origHlLineEdit = s.readBoolEntry("/keramik/Settings/highlightLineEdits", false);
-	//highlightLineEdits->setChecked(origHlLineEdit);
+    QSettings s;
+    // origHlLineEdit = s.readBoolEntry("/keramik/Settings/highlightLineEdits", false);
+    // highlightLineEdits->setChecked(origHlLineEdit);
 
-	origHlScrollbar = s.readBoolEntry("/keramik/Settings/highlightScrollBar", true);
-	highlightScrollBar->setChecked(origHlScrollbar);
+    origHlScrollbar = s.readBoolEntry("/keramik/Settings/highlightScrollBar", true);
+    highlightScrollBar->setChecked(origHlScrollbar);
 
-	origAnimProgressBar = s.readBoolEntry("/keramik/Settings/animateProgressBar", false);
-	animateProgressBar->setChecked(origAnimProgressBar);
-	
-	//connect(highlightLineEdits, SIGNAL( toggled(bool) ), SLOT( updateChanged() ) );
-	connect(highlightScrollBar, SIGNAL( toggled(bool) ), SLOT( updateChanged() ) );
-	connect(animateProgressBar, SIGNAL( toggled(bool) ), SLOT( updateChanged() ) );
+    origAnimProgressBar = s.readBoolEntry("/keramik/Settings/animateProgressBar", false);
+    animateProgressBar->setChecked(origAnimProgressBar);
+
+    // connect(highlightLineEdits, SIGNAL( toggled(bool) ), SLOT( updateChanged() ) );
+    connect(highlightScrollBar, SIGNAL(toggled(bool)), SLOT(updateChanged()));
+    connect(animateProgressBar, SIGNAL(toggled(bool)), SLOT(updateChanged()));
 }
 
 KeramikStyleConfig::~KeramikStyleConfig()
 {
-	KGlobal::locale()->removeCatalogue("kstyle_keramik_config");
+    KGlobal::locale()->removeCatalogue("kstyle_keramik_config");
 }
 
 
 void KeramikStyleConfig::save()
 {
-	QSettings s;
-	//s.writeEntry("/keramik/Settings/highlightLineEdits", highlightLineEdits->isChecked());
-	s.writeEntry("/keramik/Settings/highlightScrollBar", highlightScrollBar->isChecked());
-	s.writeEntry("/keramik/Settings/animateProgressBar", animateProgressBar->isChecked());
+    QSettings s;
+    // s.writeEntry("/keramik/Settings/highlightLineEdits", highlightLineEdits->isChecked());
+    s.writeEntry("/keramik/Settings/highlightScrollBar", highlightScrollBar->isChecked());
+    s.writeEntry("/keramik/Settings/animateProgressBar", animateProgressBar->isChecked());
 }
 
 void KeramikStyleConfig::defaults()
 {
-	//highlightLineEdits->setChecked(false);
-	highlightScrollBar->setChecked(true);
-	animateProgressBar->setChecked(false);
-	//updateChanged would be done by setChecked already
+    // highlightLineEdits->setChecked(false);
+    highlightScrollBar->setChecked(true);
+    animateProgressBar->setChecked(false);
+    // updateChanged would be done by setChecked already
 }
 
 void KeramikStyleConfig::updateChanged()
 {
-	if ( /*(highlightLineEdits->isChecked() == origHlLineEdit)  &&*/
-		 (highlightScrollBar->isChecked() == origHlScrollbar) &&
-		 (animateProgressBar->isChecked() == origAnimProgressBar) )
-		emit changed(false);
-	else
-		emit changed(true);
+    if(/*(highlightLineEdits->isChecked() == origHlLineEdit)  &&*/
+       (highlightScrollBar->isChecked() == origHlScrollbar) && (animateProgressBar->isChecked() == origAnimProgressBar))
+        emit changed(false);
+    else
+        emit changed(true);
 }
 
 #include "keramikconf.moc"

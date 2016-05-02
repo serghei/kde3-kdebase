@@ -44,262 +44,287 @@
 
 namespace KHC {
 
-SearchWidget::SearchWidget( SearchEngine *engine, QWidget *parent )
-  : QWidget( parent ), DCOPObject( "SearchWidget" ), mEngine( engine ),
-  mScopeCount( 0 )
+SearchWidget::SearchWidget(SearchEngine *engine, QWidget *parent) : QWidget(parent), DCOPObject("SearchWidget"), mEngine(engine), mScopeCount(0)
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this, 2, 2 );
+    QBoxLayout *topLayout = new QVBoxLayout(this, 2, 2);
 
-  QBoxLayout *hLayout = new QHBoxLayout( topLayout );
+    QBoxLayout *hLayout = new QHBoxLayout(topLayout);
 
-  mMethodCombo = new QComboBox( this );
-  mMethodCombo->insertItem( i18n("and") );
-  mMethodCombo->insertItem( i18n("or") );
+    mMethodCombo = new QComboBox(this);
+    mMethodCombo->insertItem(i18n("and"));
+    mMethodCombo->insertItem(i18n("or"));
 
-  QLabel *l = new QLabel( mMethodCombo, i18n("&Method:"), this );
+    QLabel *l = new QLabel(mMethodCombo, i18n("&Method:"), this);
 
-  hLayout->addWidget( l );
-  hLayout->addWidget( mMethodCombo );
+    hLayout->addWidget(l);
+    hLayout->addWidget(mMethodCombo);
 
-  hLayout = new QHBoxLayout( topLayout );
+    hLayout = new QHBoxLayout(topLayout);
 
-  mPagesCombo = new QComboBox( this );
-  mPagesCombo->insertItem( "5" );
-  mPagesCombo->insertItem( "10" );
-  mPagesCombo->insertItem( "25" );
-  mPagesCombo->insertItem( "50" );
-  mPagesCombo->insertItem( "1000" );
+    mPagesCombo = new QComboBox(this);
+    mPagesCombo->insertItem("5");
+    mPagesCombo->insertItem("10");
+    mPagesCombo->insertItem("25");
+    mPagesCombo->insertItem("50");
+    mPagesCombo->insertItem("1000");
 
-  l = new QLabel( mPagesCombo, i18n("Max. &results:"), this );
-  
-  hLayout->addWidget( l );
-  hLayout->addWidget( mPagesCombo );
+    l = new QLabel(mPagesCombo, i18n("Max. &results:"), this);
 
-  hLayout = new QHBoxLayout( topLayout );
+    hLayout->addWidget(l);
+    hLayout->addWidget(mPagesCombo);
 
-  mScopeCombo = new QComboBox( this );
-  for (int i=0; i < ScopeNum; ++i ) {
-    mScopeCombo->insertItem( scopeSelectionLabel( i ) );
-  }
-  connect( mScopeCombo, SIGNAL( activated( int ) ),
-           SLOT( scopeSelectionChanged( int ) ) );
+    hLayout = new QHBoxLayout(topLayout);
 
-  l = new QLabel( mScopeCombo, i18n("&Scope selection:"), this );
+    mScopeCombo = new QComboBox(this);
+    for(int i = 0; i < ScopeNum; ++i)
+    {
+        mScopeCombo->insertItem(scopeSelectionLabel(i));
+    }
+    connect(mScopeCombo, SIGNAL(activated(int)), SLOT(scopeSelectionChanged(int)));
 
-  hLayout->addWidget( l );
-  hLayout->addWidget( mScopeCombo );
+    l = new QLabel(mScopeCombo, i18n("&Scope selection:"), this);
 
-  mScopeListView = new QListView( this );
-  mScopeListView->setRootIsDecorated( true );
-  mScopeListView->addColumn( i18n("Scope") );
-  topLayout->addWidget( mScopeListView, 1 );
+    hLayout->addWidget(l);
+    hLayout->addWidget(mScopeCombo);
 
-  QPushButton *indexButton = new QPushButton( i18n("Build Search &Index..."),
-                                              this );
-  connect( indexButton, SIGNAL( clicked() ), SIGNAL( showIndexDialog() ) );
-  topLayout->addWidget( indexButton );
+    mScopeListView = new QListView(this);
+    mScopeListView->setRootIsDecorated(true);
+    mScopeListView->addColumn(i18n("Scope"));
+    topLayout->addWidget(mScopeListView, 1);
+
+    QPushButton *indexButton = new QPushButton(i18n("Build Search &Index..."), this);
+    connect(indexButton, SIGNAL(clicked()), SIGNAL(showIndexDialog()));
+    topLayout->addWidget(indexButton);
 
 // FIXME: Use SearchHandler on double-clicked document
 #if 0
   connect( mScopeListView, SIGNAL( doubleClicked( QListViewItem * ) ),
            SLOT( scopeDoubleClicked( QListViewItem * ) ) );
 #endif
-  connect( mScopeListView, SIGNAL( clicked( QListViewItem * ) ),
-           SLOT( scopeClicked( QListViewItem * ) ) );
+    connect(mScopeListView, SIGNAL(clicked(QListViewItem *)), SLOT(scopeClicked(QListViewItem *)));
 }
 
 
 SearchWidget::~SearchWidget()
 {
-  writeConfig( KGlobal::config() );
+    writeConfig(KGlobal::config());
 }
 
 
-void SearchWidget::readConfig( KConfig *cfg )
+void SearchWidget::readConfig(KConfig *cfg)
 {
-  cfg->setGroup( "Search" );
+    cfg->setGroup("Search");
 
-  int scopeSelection = cfg->readNumEntry( "ScopeSelection", ScopeDefault );
-  mScopeCombo->setCurrentItem( scopeSelection );
-  if ( scopeSelection != ScopeDefault ) scopeSelectionChanged( scopeSelection );
+    int scopeSelection = cfg->readNumEntry("ScopeSelection", ScopeDefault);
+    mScopeCombo->setCurrentItem(scopeSelection);
+    if(scopeSelection != ScopeDefault)
+        scopeSelectionChanged(scopeSelection);
 
-  mMethodCombo->setCurrentItem( Prefs::method() );
-  mPagesCombo->setCurrentItem( Prefs::maxCount() );
+    mMethodCombo->setCurrentItem(Prefs::method());
+    mPagesCombo->setCurrentItem(Prefs::maxCount());
 
-  if ( scopeSelection == ScopeCustom ) {
-    cfg->setGroup( "Custom Search Scope" );
-    QListViewItemIterator it( mScopeListView );
-    while( it.current() ) {
-      if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-        ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-        item->setOn( cfg->readBoolEntry( item->entry()->identifier(),
-                                         item->isOn() ) );
-      }
-      ++it;
+    if(scopeSelection == ScopeCustom)
+    {
+        cfg->setGroup("Custom Search Scope");
+        QListViewItemIterator it(mScopeListView);
+        while(it.current())
+        {
+            if(it.current()->rtti() == ScopeItem::rttiId())
+            {
+                ScopeItem *item = static_cast< ScopeItem * >(it.current());
+                item->setOn(cfg->readBoolEntry(item->entry()->identifier(), item->isOn()));
+            }
+            ++it;
+        }
     }
-  }
-  
-  checkScope();
+
+    checkScope();
 }
 
-void SearchWidget::writeConfig( KConfig *cfg )
+void SearchWidget::writeConfig(KConfig *cfg)
 {
-  cfg->setGroup( "Search" );
-  
-  cfg->writeEntry( "ScopeSelection", mScopeCombo->currentItem() );
-  Prefs::setMethod( mMethodCombo->currentItem() );
-  Prefs::setMaxCount( mPagesCombo->currentItem() );
+    cfg->setGroup("Search");
 
-  if ( mScopeCombo->currentItem() == ScopeCustom ) {
-    cfg->setGroup( "Custom Search Scope" );
-    QListViewItemIterator it( mScopeListView );
-    while( it.current() ) {
-      if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-        ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-        cfg->writeEntry( item->entry()->identifier(), item->isOn() );
-      }
-      ++it;
+    cfg->writeEntry("ScopeSelection", mScopeCombo->currentItem());
+    Prefs::setMethod(mMethodCombo->currentItem());
+    Prefs::setMaxCount(mPagesCombo->currentItem());
+
+    if(mScopeCombo->currentItem() == ScopeCustom)
+    {
+        cfg->setGroup("Custom Search Scope");
+        QListViewItemIterator it(mScopeListView);
+        while(it.current())
+        {
+            if(it.current()->rtti() == ScopeItem::rttiId())
+            {
+                ScopeItem *item = static_cast< ScopeItem * >(it.current());
+                cfg->writeEntry(item->entry()->identifier(), item->isOn());
+            }
+            ++it;
+        }
     }
-  }
 }
 
 void SearchWidget::slotSwitchBoxes()
 {
-  QListViewItemIterator it( mScopeListView );
-  while( it.current() ) {
-    if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-      ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-      item->setOn( !item->isOn() );
+    QListViewItemIterator it(mScopeListView);
+    while(it.current())
+    {
+        if(it.current()->rtti() == ScopeItem::rttiId())
+        {
+            ScopeItem *item = static_cast< ScopeItem * >(it.current());
+            item->setOn(!item->isOn());
+        }
+        ++it;
     }
-    ++it;
-  }
 
-  checkScope();
+    checkScope();
 }
 
-void SearchWidget::scopeSelectionChanged( int id )
+void SearchWidget::scopeSelectionChanged(int id)
 {
-  QListViewItemIterator it( mScopeListView );
-  while( it.current() ) {
-    if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-      ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-      bool state = item->isOn();
-      switch( id ) {
-        case ScopeDefault:
-          state = item->entry()->searchEnabledDefault();
-          break;
-        case ScopeAll:
-          state = true;
-          break;
-        case ScopeNone:
-          state = false;
-          break;
-        default:
-          break;
-      }
-      if ( state != item->isOn() ) {
-        item->setOn( state );
-      }
+    QListViewItemIterator it(mScopeListView);
+    while(it.current())
+    {
+        if(it.current()->rtti() == ScopeItem::rttiId())
+        {
+            ScopeItem *item = static_cast< ScopeItem * >(it.current());
+            bool state = item->isOn();
+            switch(id)
+            {
+                case ScopeDefault:
+                    state = item->entry()->searchEnabledDefault();
+                    break;
+                case ScopeAll:
+                    state = true;
+                    break;
+                case ScopeNone:
+                    state = false;
+                    break;
+                default:
+                    break;
+            }
+            if(state != item->isOn())
+            {
+                item->setOn(state);
+            }
+        }
+        ++it;
     }
-    ++it;
-  }
 
-  checkScope();
+    checkScope();
 }
 
 QString SearchWidget::method()
 {
-  QString m = "and";
-  if ( mMethodCombo->currentItem() == 1)
-    m = "or";
+    QString m = "and";
+    if(mMethodCombo->currentItem() == 1)
+        m = "or";
 
-  return m;
+    return m;
 }
 
 int SearchWidget::pages()
 {
-  int p = mPagesCombo->currentText().toInt();
+    int p = mPagesCombo->currentText().toInt();
 
-  return p;
+    return p;
 }
 
 QString SearchWidget::scope()
 {
-  QString scope;
+    QString scope;
 
-  QListViewItemIterator it( mScopeListView );
-  while( it.current() ) {
-    if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-      ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-      if ( item->isOn() ) {
-        if ( !scope.isEmpty() ) scope += "&";
-        scope += "scope=" + item->entry()->identifier();
-      }
+    QListViewItemIterator it(mScopeListView);
+    while(it.current())
+    {
+        if(it.current()->rtti() == ScopeItem::rttiId())
+        {
+            ScopeItem *item = static_cast< ScopeItem * >(it.current());
+            if(item->isOn())
+            {
+                if(!scope.isEmpty())
+                    scope += "&";
+                scope += "scope=" + item->entry()->identifier();
+            }
+        }
+        ++it;
     }
-    ++it;
-  }
 
-  return scope;
+    return scope;
 }
 
-class ScopeTraverser : public DocEntryTraverser
-{
-  public:
-    ScopeTraverser( SearchWidget *widget, int level ) :
-      mWidget( widget ), mLevel( level ), mParentItem( 0 ) {}
+class ScopeTraverser : public DocEntryTraverser {
+public:
+    ScopeTraverser(SearchWidget *widget, int level) : mWidget(widget), mLevel(level), mParentItem(0)
+    {
+    }
 
     ~ScopeTraverser()
     {
-      if( mParentItem && !mParentItem->childCount() ) delete mParentItem;
+        if(mParentItem && !mParentItem->childCount())
+            delete mParentItem;
     }
 
-    void process( DocEntry *entry )
+    void process(DocEntry *entry)
     {
-      if ( mWidget->engine()->canSearch( entry ) &&
-           ( !mWidget->engine()->needsIndex( entry ) || 
-           entry->indexExists( Prefs::indexDirectory() ) ) ) {
-        ScopeItem *item = 0;
-        if ( mParentItem ) {
-          item = new ScopeItem( mParentItem, entry );
-        } else {
-          item = new ScopeItem( mWidget->listView(), entry );
+        if(mWidget->engine()->canSearch(entry) && (!mWidget->engine()->needsIndex(entry) || entry->indexExists(Prefs::indexDirectory())))
+        {
+            ScopeItem *item = 0;
+            if(mParentItem)
+            {
+                item = new ScopeItem(mParentItem, entry);
+            }
+            else
+            {
+                item = new ScopeItem(mWidget->listView(), entry);
+            }
+            item->setOn(entry->searchEnabled());
         }
-        item->setOn( entry->searchEnabled() );
-      }
     }
 
-    DocEntryTraverser *createChild( DocEntry *entry )
+    DocEntryTraverser *createChild(DocEntry *entry)
     {
-      if ( mLevel >= mNestingLevel ) {
-        ++mLevel;
-        return this;
-      } else {
-        ScopeTraverser *t = new ScopeTraverser( mWidget, mLevel + 1 );
-        QListViewItem *item = 0;
-        if ( mParentItem ) {
-          item = new QListViewItem( mParentItem, entry->name() );
-        } else {
-          item = new QListViewItem( mWidget->listView(), entry->name() );
+        if(mLevel >= mNestingLevel)
+        {
+            ++mLevel;
+            return this;
         }
-        item->setOpen( true );
-        t->mParentItem = item;
-        return t;
-      }
+        else
+        {
+            ScopeTraverser *t = new ScopeTraverser(mWidget, mLevel + 1);
+            QListViewItem *item = 0;
+            if(mParentItem)
+            {
+                item = new QListViewItem(mParentItem, entry->name());
+            }
+            else
+            {
+                item = new QListViewItem(mWidget->listView(), entry->name());
+            }
+            item->setOpen(true);
+            t->mParentItem = item;
+            return t;
+        }
     }
 
     DocEntryTraverser *parentTraverser()
     {
-      if ( mLevel > mNestingLevel ) return this;
-      else return mParent;
+        if(mLevel > mNestingLevel)
+            return this;
+        else
+            return mParent;
     }
 
     void deleteTraverser()
     {
-      if ( mLevel > mNestingLevel ) --mLevel;
-      else delete this;
+        if(mLevel > mNestingLevel)
+            --mLevel;
+        else
+            delete this;
     }
 
-  private:
+private:
     SearchWidget *mWidget;
     int mLevel;
     QListViewItem *mParentItem;
@@ -311,80 +336,84 @@ int ScopeTraverser::mNestingLevel = 2;
 
 void SearchWidget::searchIndexUpdated()
 {
-  KGlobal::config()->reparseConfiguration();
-  updateScopeList();
-  update();
+    KGlobal::config()->reparseConfiguration();
+    updateScopeList();
+    update();
 }
 
 void SearchWidget::updateScopeList()
 {
-  mScopeListView->clear();
+    mScopeListView->clear();
 
-  ScopeTraverser t( this, 0 );
-  DocMetaInfo::self()->traverseEntries( &t );
+    ScopeTraverser t(this, 0);
+    DocMetaInfo::self()->traverseEntries(&t);
 
-  checkScope();
+    checkScope();
 }
 
-void SearchWidget::scopeDoubleClicked( QListViewItem *item )
+void SearchWidget::scopeDoubleClicked(QListViewItem *item)
 {
-  if ( !item || item->rtti() != ScopeItem::rttiId() ) return;
-  ScopeItem *scopeItem = static_cast<ScopeItem *>( item );
+    if(!item || item->rtti() != ScopeItem::rttiId())
+        return;
+    ScopeItem *scopeItem = static_cast< ScopeItem * >(item);
 
-  QString searchUrl = scopeItem->entry()->search();
-  
-  kdDebug() << "DoubleClick: " << searchUrl << endl;
-  
-  emit searchResult( searchUrl );
+    QString searchUrl = scopeItem->entry()->search();
+
+    kdDebug() << "DoubleClick: " << searchUrl << endl;
+
+    emit searchResult(searchUrl);
 }
 
-void SearchWidget::scopeClicked( QListViewItem * )
+void SearchWidget::scopeClicked(QListViewItem *)
 {
-  checkScope();
+    checkScope();
 
-  mScopeCombo->setCurrentItem( ScopeCustom );
+    mScopeCombo->setCurrentItem(ScopeCustom);
 }
 
-QString SearchWidget::scopeSelectionLabel( int id ) const
+QString SearchWidget::scopeSelectionLabel(int id) const
 {
-  switch( id ) {
-    case ScopeCustom:
-      return i18n("Custom");
-    case ScopeDefault:
-      return i18n("Default");
-    case ScopeAll:
-      return i18n("All");
-    case ScopeNone:
-      return i18n("None");
-    default:
-      return i18n("unknown");
-  }
+    switch(id)
+    {
+        case ScopeCustom:
+            return i18n("Custom");
+        case ScopeDefault:
+            return i18n("Default");
+        case ScopeAll:
+            return i18n("All");
+        case ScopeNone:
+            return i18n("None");
+        default:
+            return i18n("unknown");
+    }
 }
 
 void SearchWidget::checkScope()
 {
-  mScopeCount = 0;
+    mScopeCount = 0;
 
-  QListViewItemIterator it( mScopeListView );
-  while( it.current() ) {
-    if ( it.current()->rtti() == ScopeItem::rttiId() ) {
-      ScopeItem *item = static_cast<ScopeItem *>( it.current() );
-      if ( item->isOn() ) {
-        ++mScopeCount;
-      }
-      item->entry()->enableSearch( item->isOn() );
+    QListViewItemIterator it(mScopeListView);
+    while(it.current())
+    {
+        if(it.current()->rtti() == ScopeItem::rttiId())
+        {
+            ScopeItem *item = static_cast< ScopeItem * >(it.current());
+            if(item->isOn())
+            {
+                ++mScopeCount;
+            }
+            item->entry()->enableSearch(item->isOn());
+        }
+        ++it;
     }
-    ++it;
-  }
-  
-  emit scopeCountChanged( mScopeCount );
+
+    emit scopeCountChanged(mScopeCount);
 }
 
 int SearchWidget::scopeCount() const
 {
-  return mScopeCount;
+    return mScopeCount;
 }
-
 }
 
 #include "searchwidget.moc"

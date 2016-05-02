@@ -38,61 +38,57 @@ class KJavaOptions;
   */
 class JavaPolicies : public Policies {
 public:
-  /**
-   * constructor
-   * @param config configuration to initialize this instance from
-   * @param group config group to use if this instance contains the global
-   *	policies (global == true)
-   * @param global true if this instance contains the global policy settings,
-   *	false if this instance contains policies specific for a domain.
-   * @param domain name of the domain this instance is used to configure the
-   *	policies for (case insensitive, ignored if global == true)
-   */
-  JavaPolicies(KConfig* config, const QString &group, bool global,
-  		const QString &domain = QString::null);
+    /**
+     * constructor
+     * @param config configuration to initialize this instance from
+     * @param group config group to use if this instance contains the global
+     *	policies (global == true)
+     * @param global true if this instance contains the global policy settings,
+     *	false if this instance contains policies specific for a domain.
+     * @param domain name of the domain this instance is used to configure the
+     *	policies for (case insensitive, ignored if global == true)
+     */
+    JavaPolicies(KConfig *config, const QString &group, bool global, const QString &domain = QString::null);
 
-  /** empty constructur to make QMap happy
-   * don't use for constructing a policies instance.
-   * @internal
-   */
-  JavaPolicies();
+    /** empty constructur to make QMap happy
+     * don't use for constructing a policies instance.
+     * @internal
+     */
+    JavaPolicies();
 
-  virtual ~JavaPolicies();
+    virtual ~JavaPolicies();
 };
 
 /** Java-specific enhancements to the domain list view
   */
 class JavaDomainListView : public DomainListView {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  JavaDomainListView(KConfig *config,const QString &group,KJavaOptions *opt,
-  		QWidget *parent,const char *name = 0);
-  virtual ~JavaDomainListView();
+    JavaDomainListView(KConfig *config, const QString &group, KJavaOptions *opt, QWidget *parent, const char *name = 0);
+    virtual ~JavaDomainListView();
 
-  /** remnant for importing pre KDE 3.2 settings
-    */
-  void updateDomainListLegacy(const QStringList &domainConfig);
+    /** remnant for importing pre KDE 3.2 settings
+      */
+    void updateDomainListLegacy(const QStringList &domainConfig);
 
 protected:
-  virtual JavaPolicies *createPolicies();
-  virtual JavaPolicies *copyPolicies(Policies *pol);
-  virtual void setupPolicyDlg(PushButton trigger,PolicyDialog &pDlg,
-  		Policies *copy);
+    virtual JavaPolicies *createPolicies();
+    virtual JavaPolicies *copyPolicies(Policies *pol);
+    virtual void setupPolicyDlg(PushButton trigger, PolicyDialog &pDlg, Policies *copy);
 
 private:
-  QString group;
-  KJavaOptions *options;
+    QString group;
+    KJavaOptions *options;
 };
 
-class KJavaOptions : public KCModule
-{
+class KJavaOptions : public KCModule {
     Q_OBJECT
 
 public:
-    KJavaOptions( KConfig* config, QString group, QWidget* parent = 0, const char* name = 0 );
+    KJavaOptions(KConfig *config, QString group, QWidget *parent = 0, const char *name = 0);
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
@@ -103,24 +99,22 @@ private slots:
     void toggleJavaControls();
 
 private:
-
-    KConfig* m_pConfig;
-    QString  m_groupname;
+    KConfig *m_pConfig;
+    QString m_groupname;
     JavaPolicies java_global_policies;
 
-    QCheckBox*     enableJavaGloballyCB;
-    QCheckBox*     javaSecurityManagerCB;
-    QCheckBox*     useKioCB;
-    QCheckBox*     enableShutdownCB;
-    KIntNumInput*  serverTimeoutSB;
-    QLineEdit*     addArgED;
-    KURLRequester* pathED;
-    bool           _removeJavaDomainSettings;
+    QCheckBox *enableJavaGloballyCB;
+    QCheckBox *javaSecurityManagerCB;
+    QCheckBox *useKioCB;
+    QCheckBox *enableShutdownCB;
+    KIntNumInput *serverTimeoutSB;
+    QLineEdit *addArgED;
+    KURLRequester *pathED;
+    bool _removeJavaDomainSettings;
 
     JavaDomainListView *domainSpecific;
 
     friend class JavaDomainListView;
 };
 
-#endif		// __HTML_OPTIONS_H__
-
+#endif // __HTML_OPTIONS_H__

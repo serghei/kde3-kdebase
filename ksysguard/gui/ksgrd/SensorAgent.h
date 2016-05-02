@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -43,16 +43,14 @@ class SensorRequest;
   ksysguardd. The current implementation only allowes one pending
   requests. Incoming requests are queued in an input FIFO.
 */
-class KDE_EXPORT SensorAgent : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT SensorAgent : public QObject {
+    Q_OBJECT
 
-  public:
-    SensorAgent( SensorManager *sm );
+public:
+    SensorAgent(SensorManager *sm);
     virtual ~SensorAgent();
 
-    virtual bool start( const QString &host, const QString &shell,
-                        const QString &command = "", int port = -1 ) = 0;
+    virtual bool start(const QString &host, const QString &shell, const QString &command = "", int port = -1) = 0;
 
     /**
       This function should only be used by the the SensorManager and
@@ -66,38 +64,38 @@ class KDE_EXPORT SensorAgent : public QObject
       used by the SensorAgent. So it can be any value the client suits to
       use.
      */
-    bool sendRequest( const QString &req, SensorClient *client, int id = 0 );
+    bool sendRequest(const QString &req, SensorClient *client, int id = 0);
 
-    virtual void hostInfo( QString &sh, QString &cmd, int &port ) const = 0;
+    virtual void hostInfo(QString &sh, QString &cmd, int &port) const = 0;
 
-    void disconnectClient( SensorClient *client );
+    void disconnectClient(SensorClient *client);
 
     const QString &hostName() const;
-	
-  signals:
-    void reconfigure( const SensorAgent* );
 
-  protected:
-    void processAnswer( const QString &buffer );
+signals:
+    void reconfigure(const SensorAgent *);
+
+protected:
+    void processAnswer(const QString &buffer);
     void executeCommand();
 
     SensorManager *sensorManager();
 
-    void setDaemonOnLine( bool value );
+    void setDaemonOnLine(bool value);
     bool daemonOnLine() const;
 
-    void setTransmitting( bool value );
+    void setTransmitting(bool value);
     bool transmitting() const;
 
-    void setHostName( const QString &hostName );
+    void setHostName(const QString &hostName);
 
-  private:
-    virtual bool writeMsg( const char *msg, int len ) = 0;
+private:
+    virtual bool writeMsg(const char *msg, int len) = 0;
     virtual bool txReady() = 0;
 
     int mState;
-    QPtrList<SensorRequest> mInputFIFO;
-    QPtrList<SensorRequest> mProcessingFIFO;
+    QPtrList< SensorRequest > mInputFIFO;
+    QPtrList< SensorRequest > mProcessingFIFO;
     QString mAnswerBuffer;
     QString mErrorBuffer;
 
@@ -111,27 +109,25 @@ class KDE_EXPORT SensorAgent : public QObject
 /**
   This auxilliary class is used to store requests during their processing.
 */
-class SensorRequest
-{
-  public:
-    SensorRequest( const QString &request, SensorClient *client, int id );
+class SensorRequest {
+public:
+    SensorRequest(const QString &request, SensorClient *client, int id);
     ~SensorRequest();
 
-    void setRequest( const QString& );
+    void setRequest(const QString &);
     QString request() const;
 
-    void setClient( SensorClient* );
+    void setClient(SensorClient *);
     SensorClient *client();
 
-    void setId( int );
+    void setId(int);
     int id();
 
-  private:
+private:
     QString mRequest;
     SensorClient *mClient;
     int mId;
 };
-
 }
-	
+
 #endif

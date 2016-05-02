@@ -16,27 +16,23 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <stdlib.h>
 #include <qpixmap.h>
 
-namespace KWinInternal
+namespace KWinInternal {
+
+PluginMgr::PluginMgr() : KDecorationPlugins(KGlobal::config())
 {
+    defaultPlugin = (QPixmap::defaultDepth() > 8) ? "kwin3_plastik" : "kwin3_quartz";
+    loadPlugin(""); // load the plugin specified in cfg file
+}
 
-PluginMgr::PluginMgr()
-    : KDecorationPlugins( KGlobal::config())
-    {
-    defaultPlugin = (QPixmap::defaultDepth() > 8) ?
-            "kwin3_plastik" : "kwin3_quartz";
-    loadPlugin( "" ); // load the plugin specified in cfg file
-    }
-
-void PluginMgr::error( const QString &error_msg )
-    {
-    qWarning( "%s", (i18n("KWin: ") + error_msg +
-                    i18n("\nKWin will now exit...")).local8Bit().data() );
+void PluginMgr::error(const QString &error_msg)
+{
+    qWarning("%s", (i18n("KWin: ") + error_msg + i18n("\nKWin will now exit...")).local8Bit().data());
     exit(1);
-    }
+}
 
-bool PluginMgr::provides( Requirement )
-    {
+bool PluginMgr::provides(Requirement)
+{
     return false;
-    }
+}
 
 } // namespace

@@ -43,133 +43,146 @@ class KActionCollection;
 class KActionMenu;
 class KWindowListMenu;
 
-enum {
-  ITEM_HELP=100,
-  ITEM_PASTE,
-  ITEM_EXECUTE,
-  ITEM_CONFIGURE_BACKGROUND,
-  ITEM_CONFIGURE_ICONS,
-  ITEM_UNCLUTTER_WINDOWS,
-  ITEM_CASCADE_WINDOWS,
-  ITEM_ARRANGE_ICONS,
-  ITEM_LOCK_SCREEN,
-  ITEM_LOGOUT
+enum
+{
+    ITEM_HELP = 100,
+    ITEM_PASTE,
+    ITEM_EXECUTE,
+    ITEM_CONFIGURE_BACKGROUND,
+    ITEM_CONFIGURE_ICONS,
+    ITEM_UNCLUTTER_WINDOWS,
+    ITEM_CASCADE_WINDOWS,
+    ITEM_ARRANGE_ICONS,
+    ITEM_LOCK_SCREEN,
+    ITEM_LOGOUT
 };
 
 /**
  * This class is the handler for the menus (root popup menu and desktop menubar)
  */
-class KRootWm: public QObject {
-  Q_OBJECT
+class KRootWm : public QObject {
+    Q_OBJECT
 
 public:
-  KRootWm(KDesktop*);
-  ~KRootWm();
+    KRootWm(KDesktop *);
+    ~KRootWm();
 
-  void mousePressed( const QPoint& _global, int _button );
-  bool hasLeftButtonMenu() { return leftButtonChoice != NOTHING; }
+    void mousePressed(const QPoint &_global, int _button);
+    bool hasLeftButtonMenu()
+    {
+        return leftButtonChoice != NOTHING;
+    }
 
-  /**
-   * Return the unique KRootWm instance
-   */
-  static KRootWm * self() { return s_rootWm; }
+    /**
+     * Return the unique KRootWm instance
+     */
+    static KRootWm *self()
+    {
+        return s_rootWm;
+    }
 
-  /**
-   * share this with desktop.cc
-   */
-  KNewMenu * newMenu() const { return menuNew; }
+    /**
+     * share this with desktop.cc
+     */
+    KNewMenu *newMenu() const
+    {
+        return menuNew;
+    }
 
-  /**
-   * The position of the (usually RMB) click that opened the 'desktop' menu
-   */
-  QPoint desktopMenuPosition() const { return m_desktopMenuPosition; }
+    /**
+     * The position of the (usually RMB) click that opened the 'desktop' menu
+     */
+    QPoint desktopMenuPosition() const
+    {
+        return m_desktopMenuPosition;
+    }
 
-  /**
-   * Read and apply configuration
-   */
-  void initConfig();
+    /**
+     * Read and apply configuration
+     */
+    void initConfig();
 
-  /**
-   * List of config modules used by Configure Desktop
-   */
-  static QStringList configModules();
+    /**
+     * List of config modules used by Configure Desktop
+     */
+    static QStringList configModules();
 
 public slots:
-  void slotArrangeByNameCS();
-  void slotArrangeByNameCI();
-  void slotArrangeBySize();
-  void slotArrangeByType();
-  void slotArrangeByDate();
-  void slotLineupIconsHoriz();
-  void slotLineupIconsVert();
-  void slotLineupIcons();
-  void slotRefreshDesktop();
-  void slotConfigureDesktop();
-  void slotToggleDirFirst( bool );
-  void slotToggleAutoAlign( bool );
-  void slotToggleLockIcons( bool );
-  void slotToggleDesktopMenu();
-  void slotUnclutterWindows();
-  void slotCascadeWindows();
-  void slotWindowList();
-  void slotLock();
-  void slotLogout();
-  void slotSwitchUser();
-  void slotPopulateSessions();
-  void slotSessionActivated( int );
-  void slotNewSession();
-  void slotLockNNewSession();
+    void slotArrangeByNameCS();
+    void slotArrangeByNameCI();
+    void slotArrangeBySize();
+    void slotArrangeByType();
+    void slotArrangeByDate();
+    void slotLineupIconsHoriz();
+    void slotLineupIconsVert();
+    void slotLineupIcons();
+    void slotRefreshDesktop();
+    void slotConfigureDesktop();
+    void slotToggleDirFirst(bool);
+    void slotToggleAutoAlign(bool);
+    void slotToggleLockIcons(bool);
+    void slotToggleDesktopMenu();
+    void slotUnclutterWindows();
+    void slotCascadeWindows();
+    void slotWindowList();
+    void slotLock();
+    void slotLogout();
+    void slotSwitchUser();
+    void slotPopulateSessions();
+    void slotSessionActivated(int);
+    void slotNewSession();
+    void slotLockNNewSession();
 
 private:
-  KDesktop* m_pDesktop;
+    KDesktop *m_pDesktop;
 
-  // The five root menus :
-  KWindowListMenu* windowListMenu;
-  QPopupMenu* desktopMenu;
-  // the appMenu is (will be) provided by kicker
-  QPopupMenu* customMenu1;
-  QPopupMenu* customMenu2;
-  KCMultiDialog* m_configDialog;
+    // The five root menus :
+    KWindowListMenu *windowListMenu;
+    QPopupMenu *desktopMenu;
+    // the appMenu is (will be) provided by kicker
+    QPopupMenu *customMenu1;
+    QPopupMenu *customMenu2;
+    KCMultiDialog *m_configDialog;
 
-  // Configuration for the root menus :
-  typedef enum { NOTHING = 0, WINDOWLISTMENU, DESKTOPMENU, APPMENU, CUSTOMMENU1, CUSTOMMENU2, BOOKMARKSMENU, SESSIONSMENU } menuChoice;
-  menuChoice leftButtonChoice;
-  menuChoice middleButtonChoice;
-  menuChoice rightButtonChoice;
+    // Configuration for the root menus :
+    typedef enum { NOTHING = 0, WINDOWLISTMENU, DESKTOPMENU, APPMENU, CUSTOMMENU1, CUSTOMMENU2, BOOKMARKSMENU, SESSIONSMENU } menuChoice;
+    menuChoice leftButtonChoice;
+    menuChoice middleButtonChoice;
+    menuChoice rightButtonChoice;
 
-  KNewMenu* menuNew;
-  KActionMenu* bookmarks;
-  KBookmarkMenu* bookmarkMenu;
-  KActionCollection * m_actionCollection;
-  QPoint m_desktopMenuPosition;
+    KNewMenu *menuNew;
+    KActionMenu *bookmarks;
+    KBookmarkMenu *bookmarkMenu;
+    KActionCollection *m_actionCollection;
+    QPoint m_desktopMenuPosition;
 
-  void activateMenu( menuChoice choice, const QPoint& global );
-  void buildMenus();
+    void activateMenu(menuChoice choice, const QPoint &global);
+    void buildMenus();
 
-  bool m_bShowMenuBar;
-  bool m_bGlobalMenuBar;
-  bool m_bInit;
-  bool m_bDesktopEnabled;
-  KMenuBar *menuBar;
+    bool m_bShowMenuBar;
+    bool m_bGlobalMenuBar;
+    bool m_bInit;
+    bool m_bDesktopEnabled;
+    KMenuBar *menuBar;
 
-  QPopupMenu *file;
-  QPopupMenu *desk;
-  KHelpMenu *help;
+    QPopupMenu *file;
+    QPopupMenu *desk;
+    KHelpMenu *help;
 
-  QPixmap defaultPixmap;
+    QPixmap defaultPixmap;
 
-  void doNewSession( bool lock );
-  QPopupMenu *sessionsMenu;
+    void doNewSession(bool lock);
+    QPopupMenu *sessionsMenu;
 
-  static KRootWm * s_rootWm;
+    static KRootWm *s_rootWm;
 
 
 private slots:
 
-  void slotMenuItemActivated(int);
-  void slotFileNewAboutToShow();
-  void slotWindowListAboutToShow();
-  void slotConfigClosed();
+    void slotMenuItemActivated(int);
+    void slotFileNewAboutToShow();
+    void slotWindowListAboutToShow();
+    void slotConfigClosed();
 };
 
 #endif

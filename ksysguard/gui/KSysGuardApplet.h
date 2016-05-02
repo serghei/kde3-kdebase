@@ -1,8 +1,8 @@
 /*
     KKSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2001 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -27,8 +27,7 @@
 
 #include <kpanelapplet.h>
 
-namespace KSGRD
-{
+namespace KSGRD {
 class SensorBoard;
 class SensorDisplay;
 }
@@ -38,48 +37,45 @@ class QDropEvent;
 class QPoint;
 class KSGAppletSettings;
 
-class KSysGuardApplet : public KPanelApplet, public KSGRD::SensorBoard
-{
-	Q_OBJECT
+class KSysGuardApplet : public KPanelApplet, public KSGRD::SensorBoard {
+    Q_OBJECT
 
-  public:
-    KSysGuardApplet( const QString& configFile, Type type = Normal,
-                     int actions = 0, QWidget *parent = 0,
-                     const char *name = 0 );
+public:
+    KSysGuardApplet(const QString &configFile, Type type = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     virtual ~KSysGuardApplet();
 
-    virtual int heightForWidth( int width ) const;
-    virtual int widthForHeight( int height ) const;
+    virtual int heightForWidth(int width) const;
+    virtual int widthForHeight(int height) const;
 
     virtual void preferences();
 
-  protected:
-    void resizeEvent( QResizeEvent* );
-    void dragEnterEvent( QDragEnterEvent* );
-    void dropEvent( QDropEvent* );
-    void customEvent( QCustomEvent* );
-    
+protected:
+    void resizeEvent(QResizeEvent *);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
+    void customEvent(QCustomEvent *);
 
-  private slots:
+
+private slots:
     void applySettings();
-    void sensorDisplayModified( bool );
+    void sensorDisplayModified(bool);
     void preferencesFinished();
 
-  private:
+private:
     void layout();
-    void resizeDocks( uint newDockCount );
-    void addEmptyDisplay( QWidget **dock, uint pos );
+    void resizeDocks(uint newDockCount);
+    void addEmptyDisplay(QWidget **dock, uint pos);
 
     bool load();
     bool save();
 
-    int findDock( const QPoint& );
-    void removeDisplay( KSGRD::SensorDisplay* );
+    int findDock(const QPoint &);
+    void removeDisplay(KSGRD::SensorDisplay *);
 
     double mSizeRatio;
     uint mDockCount;
-    KSGAppletSettings* mSettingsDlg;
-    QWidget** mDockList;
+    KSGAppletSettings *mSettingsDlg;
+    QWidget **mDockList;
 };
 
 #endif

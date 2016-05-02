@@ -28,76 +28,88 @@
 
 #include <qtimer.h>
 
-BookmarkIterator::BookmarkIterator(QValueList<KBookmark> bks) : m_bklist(bks) {
-    connect(this, SIGNAL( deleteSelf(BookmarkIterator *) ), 
-            SLOT( slotCancelTest(BookmarkIterator *) ));
+BookmarkIterator::BookmarkIterator(QValueList< KBookmark > bks) : m_bklist(bks)
+{
+    connect(this, SIGNAL(deleteSelf(BookmarkIterator *)), SLOT(slotCancelTest(BookmarkIterator *)));
     delayedEmitNextOne();
 }
 
-BookmarkIterator::~BookmarkIterator() {
+BookmarkIterator::~BookmarkIterator()
+{
     ;
 }
 
-void BookmarkIterator::delayedEmitNextOne() {
-    QTimer::singleShot(1, this, SLOT( nextOne() ));
+void BookmarkIterator::delayedEmitNextOne()
+{
+    QTimer::singleShot(1, this, SLOT(nextOne()));
 }
 
-void BookmarkIterator::slotCancelTest(BookmarkIterator *test) {
+void BookmarkIterator::slotCancelTest(BookmarkIterator *test)
+{
     holder()->removeItr(test);
 }
 
-KEBListViewItem* BookmarkIterator::curItem() const {
-    if (!m_bk.hasParent())
+KEBListViewItem *BookmarkIterator::curItem() const
+{
+    if(!m_bk.hasParent())
         return 0;
     return ListView::self()->getItemAtAddress(m_bk.address());
 }
 
-const KBookmark BookmarkIterator::curBk() const {
+const KBookmark BookmarkIterator::curBk() const
+{
     assert(m_bk.hasParent());
     return m_bk;
 }
 
-void BookmarkIterator::nextOne() {
+void BookmarkIterator::nextOne()
+{
     // kdDebug() << "BookmarkIterator::nextOne" << endl;
 
-    if (m_bklist.isEmpty()) {
+    if(m_bklist.isEmpty())
+    {
         emit deleteSelf(this);
         return;
     }
 
-    QValueListIterator<KBookmark> head = m_bklist.begin();
+    QValueListIterator< KBookmark > head = m_bklist.begin();
     KBookmark bk = (*head);
 
     bool viable = bk.hasParent() && isApplicable(bk);
 
-    if (viable) {
+    if(viable)
+    {
         m_bk = bk;
         doAction();
     }
 
     m_bklist.remove(head);
 
-    if (!viable)
+    if(!viable)
         delayedEmitNextOne();
 }
 
 /* --------------------------- */
 
-BookmarkIteratorHolder::BookmarkIteratorHolder() {
+BookmarkIteratorHolder::BookmarkIteratorHolder()
+{
     m_itrs.setAutoDelete(true);
 }
 
-void BookmarkIteratorHolder::insertItr(BookmarkIterator *itr) {
+void BookmarkIteratorHolder::insertItr(BookmarkIterator *itr)
+{
     m_itrs.insert(0, itr);
     doItrListChanged();
 }
 
-void BookmarkIteratorHolder::removeItr(BookmarkIterator *itr) {
+void BookmarkIteratorHolder::removeItr(BookmarkIterator *itr)
+{
     m_itrs.remove(itr);
     doItrListChanged();
 }
 
-void BookmarkIteratorHolder::cancelAllItrs() {
+void BookmarkIteratorHolder::cancelAllItrs()
+{
     m_itrs.clear();
     doItrListChanged();
 }

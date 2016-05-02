@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-	   
-	Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
-    
+
+    Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -21,20 +21,20 @@
 #ifndef _diskstat_h_
 #define _diskstat_h_
 
-void initDiskStat(struct SensorModul* sm);
+void initDiskStat(struct SensorModul *sm);
 void exitDiskStat(void);
 
 int updateDiskStat(void);
 void checkDiskStat(void);
 
-void printDiskStat(const char* cmd);
-void printDiskStatInfo(const char* cmd);
+void printDiskStat(const char *cmd);
+void printDiskStatInfo(const char *cmd);
 
-void printDiskStatUsed(const char* cmd);
-void printDiskStatUsedInfo(const char* cmd);
-void printDiskStatFree(const char* cmd);
-void printDiskStatFreeInfo(const char* cmd);
-void printDiskStatPercent(const char* cmd);
-void printDiskStatPercentInfo(const char* cmd);
+void printDiskStatUsed(const char *cmd);
+void printDiskStatUsedInfo(const char *cmd);
+void printDiskStatFree(const char *cmd);
+void printDiskStatFreeInfo(const char *cmd);
+void printDiskStatPercent(const char *cmd);
+void printDiskStatPercentInfo(const char *cmd);
 
 #endif

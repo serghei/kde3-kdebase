@@ -27,24 +27,26 @@
 
 #include "spellchecking.h"
 
-typedef KGenericFactory<KSpellCheckingConfig, QWidget > SpellFactory;
-K_EXPORT_COMPONENT_FACTORY (kcm_spellchecking, SpellFactory("kcmspellchecking") )
+typedef KGenericFactory< KSpellCheckingConfig, QWidget > SpellFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_spellchecking, SpellFactory("kcmspellchecking"))
 
 
-KSpellCheckingConfig::KSpellCheckingConfig(QWidget *parent, const char *name, const QStringList &):
-    KCModule(SpellFactory::instance(), parent, name)
+KSpellCheckingConfig::KSpellCheckingConfig(QWidget *parent, const char *name, const QStringList &) : KCModule(SpellFactory::instance(), parent, name)
 {
-  QBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
-  QGroupBox *box = new QVGroupBox( i18n("Spell Checking Settings"), this );
-  box->layout()->setSpacing( KDialog::spacingHint() );
-  layout->addWidget(box);
+    QBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    QGroupBox *box = new QVGroupBox(i18n("Spell Checking Settings"), this);
+    box->layout()->setSpacing(KDialog::spacingHint());
+    layout->addWidget(box);
 
-  spellConfig = new KSpellConfig(box, 0L ,0L, false );
-  layout->addStretch(1);
-  connect(spellConfig,SIGNAL(configChanged()), SLOT( changed() ));
+    spellConfig = new KSpellConfig(box, 0L, 0L, false);
+    layout->addStretch(1);
+    connect(spellConfig, SIGNAL(configChanged()), SLOT(changed()));
 
-  setQuickHelp( i18n("<h1>Spell Checker</h1><p>This control module allows you to configure the KDE spell checking system. You can configure:<ul><li> which spell checking program to use<li> which types of spelling errors are identified<li> which dictionary is used by default.</ul><br>The KDE spell checking system (KSpell) provides support for two common spell checking utilities: ASpell and ISpell. This allows you to share dictionaries between KDE applications and non-KDE applications.</p>"));
-
+    setQuickHelp(
+        i18n("<h1>Spell Checker</h1><p>This control module allows you to configure the KDE spell checking system. You can configure:<ul><li> which "
+             "spell checking program to use<li> which types of spelling errors are identified<li> which dictionary is used by default.</ul><br>The "
+             "KDE spell checking system (KSpell) provides support for two common spell checking utilities: ASpell and ISpell. This allows you to "
+             "share dictionaries between KDE applications and non-KDE applications.</p>"));
 }
 
 void KSpellCheckingConfig::load()
@@ -56,9 +58,9 @@ void KSpellCheckingConfig::save()
 {
     spellConfig->writeGlobalSettings();
     QByteArray data;
-    if ( !kapp->dcopClient()->isAttached() )
+    if(!kapp->dcopClient()->isAttached())
         kapp->dcopClient()->attach();
-    kapp->dcopClient()->send( "konqueror*", "KonquerorIface", "reparseConfiguration()", data );
+    kapp->dcopClient()->send("konqueror*", "KonquerorIface", "reparseConfiguration()", data);
 }
 
 void KSpellCheckingConfig::defaults()
@@ -67,8 +69,8 @@ void KSpellCheckingConfig::defaults()
     spellConfig->setRunTogether(0);
     spellConfig->setDictionary("");
     spellConfig->setDictFromList(FALSE);
-    spellConfig->setEncoding (KS_E_ASCII);
-    spellConfig->setClient (KS_CLIENT_ISPELL);
+    spellConfig->setEncoding(KS_E_ASCII);
+    spellConfig->setClient(KS_CLIENT_ISPELL);
 }
 
 #include "spellchecking.moc"

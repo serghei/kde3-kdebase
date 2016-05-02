@@ -26,24 +26,23 @@ class KPrinter;
 class KPrintDialog;
 class QSocketNotifier;
 
-class PrintWrapper : public QWidget
-{
-	Q_OBJECT
+class PrintWrapper : public QWidget {
+    Q_OBJECT
 public:
-	PrintWrapper();
+    PrintWrapper();
 
 public slots:
-	void slotPrint();
-	void slotPrintRequested(KPrinter*);
+    void slotPrint();
+    void slotPrintRequested(KPrinter *);
 
 private slots:
-	void slotGotStdin();
-		
+    void slotGotStdin();
+
 private:
-	bool force_stdin;
-	bool check_stdin;
-	KPrintDialog* dlg;
-	QSocketNotifier* notif;
+    bool force_stdin;
+    bool check_stdin;
+    KPrintDialog *dlg;
+    QSocketNotifier *notif;
 };
 
 #endif

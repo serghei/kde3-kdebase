@@ -23,17 +23,16 @@
 
 class KRandRSystemTray;
 
-class KRandRApp : public KUniqueApplication
-{
-	Q_OBJECT
+class KRandRApp : public KUniqueApplication {
+    Q_OBJECT
 
 public:
-	KRandRApp();
+    KRandRApp();
 
-	virtual bool x11EventFilter(XEvent * e);
+    virtual bool x11EventFilter(XEvent *e);
 
 private:
-	KRandRSystemTray*	m_tray;
+    KRandRSystemTray *m_tray;
 };
 
 #endif

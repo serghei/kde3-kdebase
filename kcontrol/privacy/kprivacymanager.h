@@ -27,9 +27,8 @@
 @author Ralf Hoelzer
 */
 
-class KPrivacyManager : public QObject
-{
-Q_OBJECT
+class KPrivacyManager : public QObject {
+    Q_OBJECT
 public:
     KPrivacyManager();
 
@@ -49,7 +48,6 @@ public:
 private:
     bool isApplicationRegistered(const QString &appName);
     bool m_error;
-
 };
 
 #endif

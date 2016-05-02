@@ -26,13 +26,15 @@
 
 #include <qfile.h>
 
-HTMLExporter::HTMLExporter() 
-    : m_out(&m_string, IO_WriteOnly) {
+HTMLExporter::HTMLExporter() : m_out(&m_string, IO_WriteOnly)
+{
 }
 
-void HTMLExporter::write(const KBookmarkGroup &grp, const QString &filename, bool showAddress) {
+void HTMLExporter::write(const KBookmarkGroup &grp, const QString &filename, bool showAddress)
+{
     QFile file(filename);
-    if (!file.open(IO_WriteOnly)) {
+    if(!file.open(IO_WriteOnly))
+    {
         kdError(7043) << "Can't write to file " << filename << endl;
         return;
     }
@@ -56,17 +58,18 @@ QString HTMLExporter::toString(const KBookmarkGroup &grp, bool showAddress)
            "</body>\n</html>\n";
 }
 
-void HTMLExporter::visit(const KBookmark &bk) {
+void HTMLExporter::visit(const KBookmark &bk)
+{
     // kdDebug() << "visit(" << bk.text() << ")" << endl;
     if(bk.isSeparator())
     {
-        m_out << bk.fullText() << "<br>"<<endl;
+        m_out << bk.fullText() << "<br>" << endl;
     }
     else
     {
         if(m_showAddress)
         {
-            m_out << bk.fullText() <<"<br>"<< endl;
+            m_out << bk.fullText() << "<br>" << endl;
             m_out << "<i><div style =\"margin-left: 1em\">" << bk.url().url().utf8() << "</div></i>";
         }
         else
@@ -77,14 +80,15 @@ void HTMLExporter::visit(const KBookmark &bk) {
     }
 }
 
-void HTMLExporter::visitEnter(const KBookmarkGroup &grp) {
+void HTMLExporter::visitEnter(const KBookmarkGroup &grp)
+{
     // kdDebug() << "visitEnter(" << grp.text() << ")" << endl;
     m_out << "<b>" << grp.fullText() << "</b><br>" << endl;
-    m_out << "<div style=\"margin-left: 2em\">"<< endl;
-} 
+    m_out << "<div style=\"margin-left: 2em\">" << endl;
+}
 
-void HTMLExporter::visitLeave(const KBookmarkGroup &) {
+void HTMLExporter::visitLeave(const KBookmarkGroup &)
+{
     // kdDebug() << "visitLeave()" << endl;
     m_out << "</div>" << endl;
 }
-

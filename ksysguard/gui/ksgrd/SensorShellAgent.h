@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -43,35 +43,32 @@ class SensorManager;
   implementation only allowes one pending requests. Incoming requests
   are queued in an input FIFO.
  */
-class SensorShellAgent : public SensorAgent
-{
-  Q_OBJECT
+class SensorShellAgent : public SensorAgent {
+    Q_OBJECT
 
-  public:
-    SensorShellAgent( SensorManager *sm );
+public:
+    SensorShellAgent(SensorManager *sm);
     ~SensorShellAgent();
 
-    bool start( const QString &host, const QString &shell,
-                const QString &command = "", int port = -1 );
+    bool start(const QString &host, const QString &shell, const QString &command = "", int port = -1);
 
-    void hostInfo( QString &shell, QString &command, int &port) const;
+    void hostInfo(QString &shell, QString &command, int &port) const;
 
-  private slots:
-    void msgSent( KProcess* );
-    void msgRcvd( KProcess*, char *buffer, int buflen );
-    void errMsgRcvd( KProcess*, char *buffer, int buflen );
-    void daemonExited( KProcess* );
+private slots:
+    void msgSent(KProcess *);
+    void msgRcvd(KProcess *, char *buffer, int buflen);
+    void errMsgRcvd(KProcess *, char *buffer, int buflen);
+    void daemonExited(KProcess *);
 
-  private:
-    bool writeMsg( const char *msg, int len );
+private:
+    bool writeMsg(const char *msg, int len);
     bool txReady();
 
-    QGuardedPtr<KProcess> mDaemon;
+    QGuardedPtr< KProcess > mDaemon;
     QString mShell;
     QString mCommand;
     int mRetryCount;
 };
-
 }
-	
+
 #endif

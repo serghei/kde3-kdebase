@@ -32,33 +32,26 @@
 
 using namespace KHC;
 
-PluginTraverser::PluginTraverser( Navigator *navigator, QListView *parent )
-  : DocEntryTraverser(),
-  mListView( parent ),
-  mParentItem( 0 ),
-  mCurrentItem( 0 ),
-  mNavigator( navigator )
+PluginTraverser::PluginTraverser(Navigator *navigator, QListView *parent)
+    : DocEntryTraverser(), mListView(parent), mParentItem(0), mCurrentItem(0), mNavigator(navigator)
 {
 }
 
-PluginTraverser::PluginTraverser( Navigator *navigator, NavigatorItem *parent )
-  : DocEntryTraverser(),
-  mListView( 0 ),
-  mParentItem( parent ),
-  mCurrentItem( 0 ),
-  mNavigator( navigator )
+PluginTraverser::PluginTraverser(Navigator *navigator, NavigatorItem *parent)
+    : DocEntryTraverser(), mListView(0), mParentItem(parent), mCurrentItem(0), mNavigator(navigator)
 {
 }
 
-void PluginTraverser::process( DocEntry *entry )
+void PluginTraverser::process(DocEntry *entry)
 {
-  if ( !mListView && !mParentItem ) {
-    kdDebug( 1400 ) << "ERROR! Neither mListView nor mParentItem is set." << endl;
-    return;
-  }
+    if(!mListView && !mParentItem)
+    {
+        kdDebug(1400) << "ERROR! Neither mListView nor mParentItem is set." << endl;
+        return;
+    }
 
-  if ( !entry->docExists() && !mNavigator->showMissingDocs() )
-    return;
+    if(!entry->docExists() && !mNavigator->showMissingDocs())
+        return;
 
 #if 0
   kdDebug() << "PluginTraverser::process(): " << entry->name()
@@ -66,52 +59,67 @@ void PluginTraverser::process( DocEntry *entry )
     << ( mParentItem ? mParentItem->name() : "0" ) << ")" << endl;
 #endif
 
-  if ( entry->khelpcenterSpecial() == "apps" ) {
-    NavigatorAppItem *appItem;
-    entry->setIcon( "kmenu" );
-    if ( mListView )
-      appItem = new NavigatorAppItem( entry, mListView, mCurrentItem );
-    else
-      appItem = new NavigatorAppItem( entry, mParentItem, mCurrentItem );
-    KConfig *cfg = kapp->config();
-    cfg->setGroup( "General" );
-    appItem->setRelpath( cfg->readPathEntry( "AppsRoot" ) );
-    mCurrentItem = appItem;
-  } else if ( entry->khelpcenterSpecial() == "scrollkeeper" ) {
-    if ( mParentItem ) {
-      mCurrentItem = mNavigator->insertScrollKeeperDocs( mParentItem, mCurrentItem );
+    if(entry->khelpcenterSpecial() == "apps")
+    {
+        NavigatorAppItem *appItem;
+        entry->setIcon("kmenu");
+        if(mListView)
+            appItem = new NavigatorAppItem(entry, mListView, mCurrentItem);
+        else
+            appItem = new NavigatorAppItem(entry, mParentItem, mCurrentItem);
+        KConfig *cfg = kapp->config();
+        cfg->setGroup("General");
+        appItem->setRelpath(cfg->readPathEntry("AppsRoot"));
+        mCurrentItem = appItem;
     }
-    return;
-  } else {
-    if ( mListView )
-      mCurrentItem = new NavigatorItem( entry, mListView, mCurrentItem );
+    else if(entry->khelpcenterSpecial() == "scrollkeeper")
+    {
+        if(mParentItem)
+        {
+            mCurrentItem = mNavigator->insertScrollKeeperDocs(mParentItem, mCurrentItem);
+        }
+        return;
+    }
     else
-      mCurrentItem = new NavigatorItem( entry, mParentItem, mCurrentItem );
+    {
+        if(mListView)
+            mCurrentItem = new NavigatorItem(entry, mListView, mCurrentItem);
+        else
+            mCurrentItem = new NavigatorItem(entry, mParentItem, mCurrentItem);
 
-    if (entry->khelpcenterSpecial() == "applets" ) {
-      mNavigator->insertAppletDocs( mCurrentItem );
-    } else if ( entry->khelpcenterSpecial() == "kinfocenter" ||
-                entry->khelpcenterSpecial() == "kcontrol" ||
-                entry->khelpcenterSpecial() == "konqueror" ) {
-      mNavigator->insertParentAppDocs( entry->khelpcenterSpecial(), mCurrentItem );
-    } else if ( entry->khelpcenterSpecial() == "kioslave" ) {
-      mNavigator->insertIOSlaveDocs( entry->khelpcenterSpecial(), mCurrentItem );
-    } else if ( entry->khelpcenterSpecial() == "info" ) {
-      mNavigator->insertInfoDocs( mCurrentItem );
-    } else {
-      return;
+        if(entry->khelpcenterSpecial() == "applets")
+        {
+            mNavigator->insertAppletDocs(mCurrentItem);
+        }
+        else if(entry->khelpcenterSpecial() == "kinfocenter" || entry->khelpcenterSpecial() == "kcontrol"
+                || entry->khelpcenterSpecial() == "konqueror")
+        {
+            mNavigator->insertParentAppDocs(entry->khelpcenterSpecial(), mCurrentItem);
+        }
+        else if(entry->khelpcenterSpecial() == "kioslave")
+        {
+            mNavigator->insertIOSlaveDocs(entry->khelpcenterSpecial(), mCurrentItem);
+        }
+        else if(entry->khelpcenterSpecial() == "info")
+        {
+            mNavigator->insertInfoDocs(mCurrentItem);
+        }
+        else
+        {
+            return;
+        }
+        mCurrentItem->setPixmap(0, SmallIcon("contents2"));
     }
-    mCurrentItem->setPixmap( 0, SmallIcon( "contents2" ) );
-  }
 }
 
-DocEntryTraverser *PluginTraverser::createChild( DocEntry * /*entry*/ )
+DocEntryTraverser *PluginTraverser::createChild(DocEntry * /*entry*/)
 {
-  if ( mCurrentItem ) {
-    return new PluginTraverser( mNavigator, mCurrentItem );
-  }
-  kdDebug( 1400 ) << "ERROR! mCurrentItem is not set." << endl;
-  return 0;
+    if(mCurrentItem)
+    {
+        return new PluginTraverser(mNavigator, mCurrentItem);
+    }
+    kdDebug(1400) << "ERROR! mCurrentItem is not set." << endl;
+    return 0;
 }
 
 // vim:ts=2:sw=2:et

@@ -38,17 +38,14 @@
 K_EXPORT_KICKER_MENUEXT(remotemenu, RemoteMenu)
 
 
-RemoteMenu::RemoteMenu(QWidget *parent, const char *name,
-                       const QStringList &/*args*/)
-  : KPanelMenu(parent, name), KDirNotify()
+RemoteMenu::RemoteMenu(QWidget *parent, const char *name, const QStringList & /*args*/) : KPanelMenu(parent, name), KDirNotify()
 {
-    KGlobal::dirs()->addResourceType("remote_entries",
-    KStandardDirs::kde_default("data") + "remoteview");
+    KGlobal::dirs()->addResourceType("remote_entries", KStandardDirs::kde_default("data") + "remoteview");
 
     QString path = KGlobal::dirs()->saveLocation("remote_entries");
 
     QDir dir = path;
-    if (!dir.exists())
+    if(!dir.exists())
     {
         dir.cdUp();
         dir.mkdir("remoteview");
@@ -62,7 +59,7 @@ RemoteMenu::~RemoteMenu()
 void RemoteMenu::initialize()
 {
     int id = 0;
-    if (KickerSettings::showMenuTitles())
+    if(KickerSettings::showMenuTitles())
     {
         insertTitle(i18n("Network Folders"));
     }
@@ -80,23 +77,23 @@ void RemoteMenu::initialize()
 
     QStringList::ConstIterator dirpath = dirList.begin();
     QStringList::ConstIterator end = dirList.end();
-    for(; dirpath!=end; ++dirpath)
+    for(; dirpath != end; ++dirpath)
     {
         QDir dir = *dirpath;
-        if (!dir.exists()) continue;
+        if(!dir.exists())
+            continue;
 
-        QStringList filenames
-            = dir.entryList( QDir::Files | QDir::Readable );
+        QStringList filenames = dir.entryList(QDir::Files | QDir::Readable);
 
         QStringList::ConstIterator name = filenames.begin();
         QStringList::ConstIterator endf = filenames.end();
 
-        for(; name!=endf; ++name)
+        for(; name != endf; ++name)
         {
-            if (!names_found.contains(*name))
+            if(!names_found.contains(*name))
             {
                 names_found.append(*name);
-                QString filename = *dirpath+*name;
+                QString filename = *dirpath + *name;
                 KDesktopFile desktop(filename);
                 id = insertItem(SmallIcon(desktop.readIcon()), desktop.readName());
                 m_desktopMap[id] = filename;
@@ -110,7 +107,7 @@ void RemoteMenu::startWizard()
     KURL url;
     KService::Ptr service = KService::serviceByDesktopName(WIZARD_SERVICE);
 
-    if (service && service->isValid())
+    if(service && service->isValid())
     {
         url.setPath(locate("apps", service->desktopEntryPath()));
         new KRun(url, 0, true); // will delete itself
@@ -124,7 +121,7 @@ void RemoteMenu::openRemoteDir()
 
 void RemoteMenu::slotExec(int id)
 {
-    if (m_desktopMap.contains(id))
+    if(m_desktopMap.contains(id))
     {
         new KRun(m_desktopMap[id]);
     }
@@ -132,17 +129,18 @@ void RemoteMenu::slotExec(int id)
 
 ASYNC RemoteMenu::FilesAdded(const KURL &directory)
 {
-    if (directory.protocol()=="remote") reinitialize();
+    if(directory.protocol() == "remote")
+        reinitialize();
 }
 
 ASYNC RemoteMenu::FilesRemoved(const KURL::List &fileList)
 {
     KURL::List::ConstIterator it = fileList.begin();
     KURL::List::ConstIterator end = fileList.end();
-    
-    for (; it!=end; ++it)
+
+    for(; it != end; ++it)
     {
-        if ((*it).protocol()=="remote")
+        if((*it).protocol() == "remote")
         {
             reinitialize();
             return;
@@ -157,7 +155,7 @@ ASYNC RemoteMenu::FilesChanged(const KURL::List &fileList)
 
 ASYNC RemoteMenu::FilesRenamed(const KURL &src, const KURL &dest)
 {
-    if (src.protocol()=="remote" || dest.protocol()=="remote")
+    if(src.protocol() == "remote" || dest.protocol() == "remote")
         reinitialize();
 }
 

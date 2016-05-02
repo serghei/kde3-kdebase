@@ -29,21 +29,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include <kapplication.h>
 
 class GreeterApp : public KApplication {
-	Q_OBJECT
-	typedef KApplication inherited;
+    Q_OBJECT
+    typedef KApplication inherited;
 
-  public:
-	GreeterApp();
-	virtual bool x11EventFilter( XEvent * );
+public:
+    GreeterApp();
+    virtual bool x11EventFilter(XEvent *);
 
-  protected:
-	virtual void timerEvent( QTimerEvent * );
+protected:
+    virtual void timerEvent(QTimerEvent *);
 
-  signals:
+signals:
     void activity();
 
-  private:
-	int pingInterval;
+private:
+    int pingInterval;
 };
 
 #endif /* KGAPP_H */

@@ -29,57 +29,55 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_p.h"
 
 KDecorationFactory::KDecorationFactory()
-    {
-    }
-    
+{
+}
+
 KDecorationFactory::~KDecorationFactory()
-    {
-    assert( _decorations.count() == 0 );
-    }
+{
+    assert(_decorations.count() == 0);
+}
 
-bool KDecorationFactory::reset( unsigned long )
-    {
+bool KDecorationFactory::reset(unsigned long)
+{
     return false;
-    }
-    
-bool KDecorationFactory::supports( Ability )
-    {
-    return false;
-    }
+}
 
-void KDecorationFactory::checkRequirements( KDecorationProvides* )
-    {
-    }
+bool KDecorationFactory::supports(Ability)
+{
+    return false;
+}
+
+void KDecorationFactory::checkRequirements(KDecorationProvides *)
+{
+}
 
 QValueList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
-    {
+{
     return QValueList< BorderSize >() << BorderNormal;
-    }
-    
-bool KDecorationFactory::exists( const KDecoration* deco ) const
-    {
-    return _decorations.contains( const_cast< KDecoration* >( deco ));
-    }
-    
-void KDecorationFactory::addDecoration( KDecoration* deco )
-    {
-    _decorations.append( deco );
-    }
-    
-void KDecorationFactory::removeDecoration( KDecoration* deco )
-    {
-    _decorations.remove( deco );
-    }
+}
 
-void KDecorationFactory::resetDecorations( unsigned long changed )
-    {
-    for( QValueList< KDecoration* >::ConstIterator it = _decorations.begin();
-         it != _decorations.end();
-         ++it )
-        (*it)->reset( changed );
-    }
+bool KDecorationFactory::exists(const KDecoration *deco) const
+{
+    return _decorations.contains(const_cast< KDecoration * >(deco));
+}
 
-NET::WindowType KDecorationFactory::windowType( unsigned long supported_types, KDecorationBridge* bridge ) const
-    {
-    return bridge->windowType( supported_types );
-    }
+void KDecorationFactory::addDecoration(KDecoration *deco)
+{
+    _decorations.append(deco);
+}
+
+void KDecorationFactory::removeDecoration(KDecoration *deco)
+{
+    _decorations.remove(deco);
+}
+
+void KDecorationFactory::resetDecorations(unsigned long changed)
+{
+    for(QValueList< KDecoration * >::ConstIterator it = _decorations.begin(); it != _decorations.end(); ++it)
+        (*it)->reset(changed);
+}
+
+NET::WindowType KDecorationFactory::windowType(unsigned long supported_types, KDecorationBridge *bridge) const
+{
+    return bridge->windowType(supported_types);
+}

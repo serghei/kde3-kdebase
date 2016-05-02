@@ -27,8 +27,7 @@ class QComboBox;
 class KAboutData;
 class KDirWatch;
 
-class KickerConfig : public QObject, public DCOPObject
-{
+class KickerConfig : public QObject, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
@@ -36,10 +35,10 @@ public:
     static KickerConfig *the();
     ~KickerConfig();
 
-    void populateExtensionInfoList(QComboBox* list);
+    void populateExtensionInfoList(QComboBox *list);
     void reloadExtensionInfo();
     void saveExtentionInfo();
-    const ExtensionInfoList& extensionsInfo();
+    const ExtensionInfoList &extensionsInfo();
 
     QString configName();
     void notifyKicker();
@@ -47,27 +46,29 @@ public:
     QString quickHelp() const;
     KAboutData *aboutData();
 
-    int currentPanelIndex() const { return m_currentPanelIndex; }
+    int currentPanelIndex() const
+    {
+        return m_currentPanelIndex;
+    }
 
-k_dcop:
-    void jumpToPanel(const QString& panelConfig);
+    k_dcop : void jumpToPanel(const QString &panelConfig);
 
 signals:
     void positionPanelChanged(int);
     void hidingPanelChanged(int);
     void extensionInfoChanged();
-    void extensionAdded(ExtensionInfo*);
-    void extensionRemoved(ExtensionInfo*);
-    void extensionChanged(const QString&);
-    void extensionAboutToChange(const QString&);
+    void extensionAdded(ExtensionInfo *);
+    void extensionRemoved(ExtensionInfo *);
+    void extensionChanged(const QString &);
+    void extensionAboutToChange(const QString &);
     void aboutToNotifyKicker();
 
 protected:
     void init();
-    void setupExtensionInfo(KConfig& c, bool checkExists, bool reloadIfExists = false);
+    void setupExtensionInfo(KConfig &c, bool checkExists, bool reloadIfExists = false);
 
 protected slots:
-    void configChanged(const QString&);
+    void configChanged(const QString &);
     void setCurrentPanelIndex(int);
 
 private:

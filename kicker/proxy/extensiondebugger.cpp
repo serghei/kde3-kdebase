@@ -41,29 +41,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "extensiondebugger.moc"
 
 
+static KCmdLineOptions options[] = {{"+desktopfile", I18N_NOOP("The extensions desktop file"), 0}, KCmdLineLastOption};
 
-static KCmdLineOptions options[] =
+KPanelExtension *loadExtension(const AppletInfo &info)
 {
-  { "+desktopfile", I18N_NOOP("The extensions desktop file"), 0 },
-  KCmdLineLastOption
-};
+    KLibLoader *loader = KLibLoader::self();
+    KLibrary *lib = loader->library(QFile::encodeName(info.library()));
 
-KPanelExtension* loadExtension(const AppletInfo& info)
-{
-    KLibLoader* loader = KLibLoader::self();
-    KLibrary* lib = loader->library(QFile::encodeName(info.library()));
-
-    if (!lib)
+    if(!lib)
     {
-        kdWarning() << "cannot open extension: " << info.library()
-                    << " because of " << loader->lastErrorMessage() << endl;
+        kdWarning() << "cannot open extension: " << info.library() << " because of " << loader->lastErrorMessage() << endl;
         return 0;
     }
 
-    KPanelExtension* (*init_ptr)(QWidget *, const QString&);
-    init_ptr = (KPanelExtension* (*)(QWidget *, const QString&))lib->symbol( "init" );
+    KPanelExtension *(*init_ptr)(QWidget *, const QString &);
+    init_ptr = (KPanelExtension * (*)(QWidget *, const QString &))lib->symbol("init");
 
-    if (!init_ptr)
+    if(!init_ptr)
     {
         kdWarning() << info.library() << " is not a kicker extension!" << endl;
         return 0;
@@ -72,24 +66,20 @@ KPanelExtension* loadExtension(const AppletInfo& info)
     return init_ptr(0, info.configFile());
 }
 
-int main( int argc, char ** argv )
+int main(int argc, char **argv)
 {
-    KAboutData aboutData( "extensionproxy", I18N_NOOP("Panel extension proxy.")
-                          , "v0.1.0"
-                          ,I18N_NOOP("Panel extension proxy.")
-                          , KAboutData::License_BSD
-                          , "(c) 2000, The KDE Developers");
-    KCmdLineArgs::init(argc, argv, &aboutData );
-    aboutData.addAuthor("Matthias Elter",0, "elter@kde.org");
-    aboutData.addAuthor("Matthias Ettrich",0, "ettrich@kde.org");
+    KAboutData aboutData("extensionproxy", I18N_NOOP("Panel extension proxy."), "v0.1.0", I18N_NOOP("Panel extension proxy."),
+                         KAboutData::License_BSD, "(c) 2000, The KDE Developers");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    aboutData.addAuthor("Matthias Elter", 0, "elter@kde.org");
+    aboutData.addAuthor("Matthias Ettrich", 0, "ettrich@kde.org");
     KApplication::addCmdLineOptions();
     KCmdLineArgs::addCmdLineOptions(options); // Add our own options.
 
     KApplication a;
     a.disableSessionManagement();
 
-    KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") +
-				     "kicker/extensions");
+    KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") + "kicker/extensions");
 
     QString df;
 
@@ -97,39 +87,44 @@ int main( int argc, char ** argv )
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     // sanity check
-    if ( args->count() == 0 )
-        KCmdLineArgs::usage(i18n("No desktop file specified") );
+    if(args->count() == 0)
+        KCmdLineArgs::usage(i18n("No desktop file specified"));
 
 
-    QCString desktopFile = QCString( args->arg(0) );
+    QCString desktopFile = QCString(args->arg(0));
 
     // try simple path first
-    QFileInfo finfo( desktopFile );
-    if ( finfo.exists() ) {
-	df = finfo.absFilePath();
-    } else {
-	// locate desktop file
-	df = KGlobal::dirs()->findResource("extensions", QString(desktopFile));
+    QFileInfo finfo(desktopFile);
+    if(finfo.exists())
+    {
+        df = finfo.absFilePath();
+    }
+    else
+    {
+        // locate desktop file
+        df = KGlobal::dirs()->findResource("extensions", QString(desktopFile));
     }
 
     // does the config file exist?
-    if (!QFile::exists(df)) {
-	kdError() << "Failed to locate extension desktop file: " << desktopFile << endl;
-	return 1;
+    if(!QFile::exists(df))
+    {
+        kdError() << "Failed to locate extension desktop file: " << desktopFile << endl;
+        return 1;
     }
 
-    AppletInfo info( df );
+    AppletInfo info(df);
 
     KPanelExtension *extension = loadExtension(info);
-    if ( !extension ) {
-	kdError() << "Failed to load extension: " << info.library() << endl;
-	return 1;
+    if(!extension)
+    {
+        kdError() << "Failed to load extension: " << info.library() << endl;
+        return 1;
     }
 
-    ExtensionContainer *container = new ExtensionContainer( extension );
+    ExtensionContainer *container = new ExtensionContainer(extension);
     container->show();
 
-    QObject::connect( &a, SIGNAL( lastWindowClosed() ), &a, SLOT( quit() ) );
+    QObject::connect(&a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()));
 
     int result = a.exec();
 
@@ -137,24 +132,22 @@ int main( int argc, char ** argv )
     return result;
 }
 
-ExtensionContainer::ExtensionContainer( KPanelExtension *extension, QWidget *parent, const char *name )
-    : QWidget( parent, name ), m_extension( extension )
+ExtensionContainer::ExtensionContainer(KPanelExtension *extension, QWidget *parent, const char *name) : QWidget(parent, name), m_extension(extension)
 {
-    ( new QVBoxLayout( this ) )->setAutoAdd( true );
+    (new QVBoxLayout(this))->setAutoAdd(true);
 
-    QPushButton *configButton = new QPushButton( i18n( "Configure..." ), this );
-    connect( configButton, SIGNAL( clicked() ),
-             this, SLOT( showPreferences() ) );
+    QPushButton *configButton = new QPushButton(i18n("Configure..."), this);
+    connect(configButton, SIGNAL(clicked()), this, SLOT(showPreferences()));
 
-    m_extension->reparent( this, QPoint( 0, 0 ) );
+    m_extension->reparent(this, QPoint(0, 0));
 }
 
-void ExtensionContainer::resizeEvent( QResizeEvent * )
+void ExtensionContainer::resizeEvent(QResizeEvent *)
 {
-    m_extension->setGeometry( 0, 0, width(), height() );
+    m_extension->setGeometry(0, 0, width(), height());
 }
 
 void ExtensionContainer::showPreferences()
 {
-    m_extension->action( KPanelExtension::Preferences );
+    m_extension->action(KPanelExtension::Preferences);
 }

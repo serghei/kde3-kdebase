@@ -25,16 +25,16 @@
 
 #include <X11/Xlib.h>
 
-KRandRApp::KRandRApp()
-	: m_tray(new KRandRSystemTray(0L, "RANDRTray"))
+KRandRApp::KRandRApp() : m_tray(new KRandRSystemTray(0L, "RANDRTray"))
 {
-	m_tray->show();
+    m_tray->show();
 }
 
-bool KRandRApp::x11EventFilter(XEvent* e)
+bool KRandRApp::x11EventFilter(XEvent *e)
 {
-	if (e->type == m_tray->screenChangeNotifyEvent()) {
-		m_tray->configChanged();
-	}
-	return KApplication::x11EventFilter( e );
+    if(e->type == m_tray->screenChangeNotifyEvent())
+    {
+        m_tray->configChanged();
+    }
+    return KApplication::x11EventFilter(e);
 }

@@ -21,15 +21,15 @@
 #ifndef KSG_NETDEV_H
 #define KSG_NETDEV_H
 
-void initNetDev( struct SensorModul* );
-void exitNetDev( void );
+void initNetDev(struct SensorModul *);
+void exitNetDev(void);
 
-int updateNetDev( void );
-void checkNetDev( void );
+int updateNetDev(void);
+void checkNetDev(void);
 
-void printNetDevRecBytes( const char* );
-void printNetDevRecBytesInfo( const char* );
-void printNetDevSentBytes( const char* );
-void printNetDevSentBytesInfo( const char* );
+void printNetDevRecBytes(const char *);
+void printNetDevRecBytesInfo(const char *);
+void printNetDevSentBytes(const char *);
+void printNetDevSentBytesInfo(const char *);
 
 #endif

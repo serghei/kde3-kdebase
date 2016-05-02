@@ -23,13 +23,13 @@
 
 #include <kio/thumbcreator.h>
 
-class DjVuCreator : public ThumbCreator
-{
+class DjVuCreator : public ThumbCreator {
 public:
-    DjVuCreator() {}
+    DjVuCreator()
+    {
+    }
     virtual bool create(const QString &path, int, int, QImage &img);
-	virtual Flags flags() const;
-
+    virtual Flags flags() const;
 };
 
 #endif

@@ -22,16 +22,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************/
 
 #ifndef NOSLOTS
-# define DEF( name, key3, key4, fnSlot ) \
-   keys->insert( name, i18n(name), QString::null, key3, key4, this, SLOT(fnSlot) )
+#define DEF(name, key3, key4, fnSlot) keys->insert(name, i18n(name), QString::null, key3, key4, this, SLOT(fnSlot))
 #else
-# define DEF( name, key3, key4, fnSlot ) \
-   keys->insert( name, i18n(name), QString::null, key3, key4 )
+#define DEF(name, key3, key4, fnSlot) keys->insert(name, i18n(name), QString::null, key3, key4)
 #endif
 #define WIN KKey::QtWIN
 
-	DEF( I18N_NOOP( "Next Taskbar Entry" ), 0, 0, slotActivateNextTask() );
-	DEF( I18N_NOOP( "Previous Taskbar Entry" ), 0, 0, slotActivatePreviousTask() );
+DEF(I18N_NOOP("Next Taskbar Entry"), 0, 0, slotActivateNextTask());
+DEF(I18N_NOOP("Previous Taskbar Entry"), 0, 0, slotActivatePreviousTask());
 
 #undef DEF
 #undef WIN

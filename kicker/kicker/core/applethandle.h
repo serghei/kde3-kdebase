@@ -35,92 +35,101 @@ class QTimer;
 class AppletHandleDrag;
 class AppletHandleButton;
 
-class AppletHandle : public QWidget
-{
+class AppletHandle : public QWidget {
     Q_OBJECT
-    
-    public:
-        AppletHandle(AppletContainer* parent);
 
-        void resetLayout();
-        void setFadeOutHandle(bool);
+public:
+    AppletHandle(AppletContainer *parent);
 
-        bool eventFilter (QObject *, QEvent *);
+    void resetLayout();
+    void setFadeOutHandle(bool);
 
-        int widthForHeight( int h ) const;
-        int heightForWidth( int w ) const;
+    bool eventFilter(QObject *, QEvent *);
 
-        void setPopupDirection(KPanelApplet::Direction);
-        KPanelApplet::Direction popupDirection() const
-        {
-            return m_popupDirection;
-        }
+    int widthForHeight(int h) const;
+    int heightForWidth(int w) const;
 
-        KPanelApplet::Orientation orientation() const
-        {
-            return m_applet->orientation();
-        }
+    void setPopupDirection(KPanelApplet::Direction);
+    KPanelApplet::Direction popupDirection() const
+    {
+        return m_popupDirection;
+    }
 
-        bool onMenuButton(const QPoint& point) const;
+    KPanelApplet::Orientation orientation() const
+    {
+        return m_applet->orientation();
+    }
 
-    signals:
-        void moveApplet( const QPoint& moveOffset );
-        void showAppletMenu();
+    bool onMenuButton(const QPoint &point) const;
 
-    public slots:
-        void toggleMenuButtonOff();
+signals:
+    void moveApplet(const QPoint &moveOffset);
+    void showAppletMenu();
 
-    protected slots:
-        void menuButtonPressed();
-        void checkHandleHover();
+public slots:
+    void toggleMenuButtonOff();
 
-    private:
-        AppletContainer* m_applet;
-        QBoxLayout* m_layout;
-        AppletHandleDrag* m_dragBar;
-        AppletHandleButton* m_menuButton;
-        bool m_drawHandle;
-        KPanelApplet::Direction m_popupDirection;
-        QTimer* m_handleHoverTimer;
-        bool m_inside;
+protected slots:
+    void menuButtonPressed();
+    void checkHandleHover();
+
+private:
+    AppletContainer *m_applet;
+    QBoxLayout *m_layout;
+    AppletHandleDrag *m_dragBar;
+    AppletHandleButton *m_menuButton;
+    bool m_drawHandle;
+    KPanelApplet::Direction m_popupDirection;
+    QTimer *m_handleHoverTimer;
+    bool m_inside;
 };
 
-class AppletHandleDrag : public QWidget
-{
+class AppletHandleDrag : public QWidget {
     Q_OBJECT
-    
-    public:
-        AppletHandleDrag(AppletHandle* parent);
 
-        QSize minimumSizeHint() const;
-        QSize minimumSize() const { return minimumSizeHint(); }
-        QSize sizeHint() const { return minimumSize(); }
-        QSizePolicy sizePolicy() const;
+public:
+    AppletHandleDrag(AppletHandle *parent);
 
-    protected:
-        void paintEvent( QPaintEvent* );
-        void enterEvent( QEvent* );
-        void leaveEvent( QEvent* );
-        const AppletHandle* m_parent;
-    
-    private:
-        bool m_inside;
+    QSize minimumSizeHint() const;
+    QSize minimumSize() const
+    {
+        return minimumSizeHint();
+    }
+    QSize sizeHint() const
+    {
+        return minimumSize();
+    }
+    QSizePolicy sizePolicy() const;
+
+protected:
+    void paintEvent(QPaintEvent *);
+    void enterEvent(QEvent *);
+    void leaveEvent(QEvent *);
+    const AppletHandle *m_parent;
+
+private:
+    bool m_inside;
 };
 
-class AppletHandleButton : public SimpleArrowButton
-{
+class AppletHandleButton : public SimpleArrowButton {
     Q_OBJECT
-    
-    public:
-        AppletHandleButton(AppletHandle *parent);
-        QSize minimumSizeHint() const;
-        QSize minimumSize() const { return minimumSizeHint(); }
-        QSize sizeHint() const { return minimumSize(); }
-        QSizePolicy sizePolicy() const;
 
-    private:
-        bool m_moveMouse;
-        const AppletHandle* m_parent;
+public:
+    AppletHandleButton(AppletHandle *parent);
+    QSize minimumSizeHint() const;
+    QSize minimumSize() const
+    {
+        return minimumSizeHint();
+    }
+    QSize sizeHint() const
+    {
+        return minimumSize();
+    }
+    QSizePolicy sizePolicy() const;
+
+private:
+    bool m_moveMouse;
+    const AppletHandle *m_parent;
 };
 
 #endif

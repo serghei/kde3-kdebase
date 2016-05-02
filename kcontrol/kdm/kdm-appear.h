@@ -42,54 +42,57 @@ class QLineEdit;
 class KLineEdit;
 
 
-class KDMAppearanceWidget : public QWidget
-{
-	Q_OBJECT
+class KDMAppearanceWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	KDMAppearanceWidget(QWidget *parent, const char *name=0);
+    KDMAppearanceWidget(QWidget *parent, const char *name = 0);
 
-	void load();
-	void save();
-	void defaults();
-	void makeReadOnly();
-	QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    void makeReadOnly();
+    QString quickHelp() const;
 
-	void loadColorSchemes(KBackedComboBox *combo);
-	void loadGuiStyles(KBackedComboBox *combo);
-	void loadLanguageList(KLanguageButton *combo);
+    void loadColorSchemes(KBackedComboBox *combo);
+    void loadGuiStyles(KBackedComboBox *combo);
+    void loadLanguageList(KLanguageButton *combo);
 
-	bool eventFilter(QObject *, QEvent *);
+    bool eventFilter(QObject *, QEvent *);
 
 signals:
-	void changed( bool state );
+    void changed(bool state);
 
 protected:
-	void iconLoaderDragEnterEvent(QDragEnterEvent *event);
-	void iconLoaderDropEvent(QDropEvent *event);
-	bool setLogo(QString logo);
+    void iconLoaderDragEnterEvent(QDragEnterEvent *event);
+    void iconLoaderDropEvent(QDropEvent *event);
+    bool setLogo(QString logo);
 
 private slots:
-	void slotAreaRadioClicked(int id);
-	void slotLogoButtonClicked();
-	void changed();
+    void slotAreaRadioClicked(int id);
+    void slotLogoButtonClicked();
+    void changed();
 
 private:
-	enum { KdmNone, KdmClock, KdmLogo };
-	QLabel      *logoLabel;
-	QPushButton *logobutton;
-	KLineEdit    *greetstr_lined;
-	QString      logopath;
-	QRadioButton *noneRadio;
-	QRadioButton *clockRadio;
-	QRadioButton *logoRadio;
-	QLineEdit    *xLineEdit;
-	QLineEdit    *yLineEdit;
-	KBackedComboBox    *guicombo;
-	KBackedComboBox    *colcombo;
-	KBackedComboBox    *echocombo;
-	KLanguageButton *langcombo;
-
+    enum
+    {
+        KdmNone,
+        KdmClock,
+        KdmLogo
+    };
+    QLabel *logoLabel;
+    QPushButton *logobutton;
+    KLineEdit *greetstr_lined;
+    QString logopath;
+    QRadioButton *noneRadio;
+    QRadioButton *clockRadio;
+    QRadioButton *logoRadio;
+    QLineEdit *xLineEdit;
+    QLineEdit *yLineEdit;
+    KBackedComboBox *guicombo;
+    KBackedComboBox *colcombo;
+    KBackedComboBox *echocombo;
+    KLanguageButton *langcombo;
 };
 
 #endif

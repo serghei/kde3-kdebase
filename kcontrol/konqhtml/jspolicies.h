@@ -34,7 +34,7 @@ class QRadioButton;
 class QButtonGroup;
 
 // special value for inheriting a global policy
-#define INHERIT_POLICY		32767
+#define INHERIT_POLICY 32767
 
 /**
  * @short Contains all the JavaScript policies and methods for their manipulation.
@@ -53,135 +53,144 @@ public:
   		WindowMove, WindowFocus, WindowStatus, NumPolicies };
 #endif
 
-  /**
-   * constructor
-   * @param config configuration to initialize this instance from
-   * @param group config group to use if this instance contains the global
-   *	policies (global == true)
-   * @param global true if this instance contains the global policy settings,
-   *	false if this instance contains policies specific for a domain.
-   * @param domain name of the domain this instance is used to configure the
-   *	policies for (case insensitive, ignored if global == true)
-   */
-  JSPolicies(KConfig* config, const QString &group, bool global,
-  		const QString &domain = QString::null);
-		
-  /**
-   * dummy constructor to make QMap happy.
-   *
-   * Never construct an object by using this.
-   * @internal
-   */
-  JSPolicies();
+    /**
+     * constructor
+     * @param config configuration to initialize this instance from
+     * @param group config group to use if this instance contains the global
+     *	policies (global == true)
+     * @param global true if this instance contains the global policy settings,
+     *	false if this instance contains policies specific for a domain.
+     * @param domain name of the domain this instance is used to configure the
+     *	policies for (case insensitive, ignored if global == true)
+     */
+    JSPolicies(KConfig *config, const QString &group, bool global, const QString &domain = QString::null);
 
-  virtual ~JSPolicies();
+    /**
+     * dummy constructor to make QMap happy.
+     *
+     * Never construct an object by using this.
+     * @internal
+     */
+    JSPolicies();
 
-  /**
-   * Returns whether the WindowOpen policy is inherited.
-   */
-  bool isWindowOpenPolicyInherited() const {
-    return window_open == INHERIT_POLICY;
-  }
-  /**
-   * Returns the current value of the WindowOpen policy.
-   *
-   * This will return an illegal value if isWindowOpenPolicyInherited is
-   * true.
-   */
-  KHTMLSettings::KJSWindowOpenPolicy windowOpenPolicy() const {
-    return (KHTMLSettings::KJSWindowOpenPolicy)window_open;
-  }
+    virtual ~JSPolicies();
 
-  /**
-   * Returns whether the WindowResize policy is inherited.
-   */
-  bool isWindowResizePolicyInherited() const {
-    return window_resize == INHERIT_POLICY;
-  }
-  /**
-   * Returns the current value of the WindowResize policy.
-   *
-   * This will return an illegal value if isWindowResizePolicyInherited is
-   * true.
-   */
-  KHTMLSettings::KJSWindowResizePolicy windowResizePolicy() const {
-    return (KHTMLSettings::KJSWindowResizePolicy)window_resize;
-  }
+    /**
+     * Returns whether the WindowOpen policy is inherited.
+     */
+    bool isWindowOpenPolicyInherited() const
+    {
+        return window_open == INHERIT_POLICY;
+    }
+    /**
+     * Returns the current value of the WindowOpen policy.
+     *
+     * This will return an illegal value if isWindowOpenPolicyInherited is
+     * true.
+     */
+    KHTMLSettings::KJSWindowOpenPolicy windowOpenPolicy() const
+    {
+        return (KHTMLSettings::KJSWindowOpenPolicy)window_open;
+    }
 
-  /**
-   * Returns whether the WindowMove policy is inherited.
-   */
-  bool isWindowMovePolicyInherited() const {
-    return window_move == INHERIT_POLICY;
-  }
-  /**
-   * Returns the current value of the WindowMove policy.
-   *
-   * This will return an illegal value if isWindowMovePolicyInherited is
-   * true.
-   */
-  KHTMLSettings::KJSWindowMovePolicy windowMovePolicy() const {
-    return (KHTMLSettings::KJSWindowMovePolicy)window_move;
-  }
+    /**
+     * Returns whether the WindowResize policy is inherited.
+     */
+    bool isWindowResizePolicyInherited() const
+    {
+        return window_resize == INHERIT_POLICY;
+    }
+    /**
+     * Returns the current value of the WindowResize policy.
+     *
+     * This will return an illegal value if isWindowResizePolicyInherited is
+     * true.
+     */
+    KHTMLSettings::KJSWindowResizePolicy windowResizePolicy() const
+    {
+        return (KHTMLSettings::KJSWindowResizePolicy)window_resize;
+    }
 
-  /**
-   * Returns whether the WindowFocus policy is inherited.
-   */
-  bool isWindowFocusPolicyInherited() const {
-    return window_focus == INHERIT_POLICY;
-  }
-  /**
-   * Returns the current value of the WindowFocus policy.
-   *
-   * This will return an illegal value if isWindowFocusPolicyInherited is
-   * true.
-   */
-  KHTMLSettings::KJSWindowFocusPolicy windowFocusPolicy() const {
-    return (KHTMLSettings::KJSWindowFocusPolicy)window_focus;
-  }
+    /**
+     * Returns whether the WindowMove policy is inherited.
+     */
+    bool isWindowMovePolicyInherited() const
+    {
+        return window_move == INHERIT_POLICY;
+    }
+    /**
+     * Returns the current value of the WindowMove policy.
+     *
+     * This will return an illegal value if isWindowMovePolicyInherited is
+     * true.
+     */
+    KHTMLSettings::KJSWindowMovePolicy windowMovePolicy() const
+    {
+        return (KHTMLSettings::KJSWindowMovePolicy)window_move;
+    }
 
-  /**
-   * Returns whether the WindowStatus policy is inherited.
-   */
-  bool isWindowStatusPolicyInherited() const {
-    return window_status == INHERIT_POLICY;
-  }
-  /**
-   * Returns the current value of the WindowStatus policy.
-   *
-   * This will return an illegal value if isWindowStatusPolicyInherited is
-   * true.
-   */
-  KHTMLSettings::KJSWindowStatusPolicy windowStatusPolicy() const {
-    return (KHTMLSettings::KJSWindowStatusPolicy)window_status;
-  }
+    /**
+     * Returns whether the WindowFocus policy is inherited.
+     */
+    bool isWindowFocusPolicyInherited() const
+    {
+        return window_focus == INHERIT_POLICY;
+    }
+    /**
+     * Returns the current value of the WindowFocus policy.
+     *
+     * This will return an illegal value if isWindowFocusPolicyInherited is
+     * true.
+     */
+    KHTMLSettings::KJSWindowFocusPolicy windowFocusPolicy() const
+    {
+        return (KHTMLSettings::KJSWindowFocusPolicy)window_focus;
+    }
 
-  /**
-   * (re)loads settings from configuration file given in the constructor.
-   */
-  virtual void load();
-  /**
-   * saves current settings to the configuration file given in the constructor
-   */
-  virtual void save();
-  /**
-   * restores the default settings
-   */
-  virtual void defaults();
+    /**
+     * Returns whether the WindowStatus policy is inherited.
+     */
+    bool isWindowStatusPolicyInherited() const
+    {
+        return window_status == INHERIT_POLICY;
+    }
+    /**
+     * Returns the current value of the WindowStatus policy.
+     *
+     * This will return an illegal value if isWindowStatusPolicyInherited is
+     * true.
+     */
+    KHTMLSettings::KJSWindowStatusPolicy windowStatusPolicy() const
+    {
+        return (KHTMLSettings::KJSWindowStatusPolicy)window_status;
+    }
+
+    /**
+     * (re)loads settings from configuration file given in the constructor.
+     */
+    virtual void load();
+    /**
+     * saves current settings to the configuration file given in the constructor
+     */
+    virtual void save();
+    /**
+     * restores the default settings
+     */
+    virtual void defaults();
 
 private:
-  // one of KHTMLSettings::KJSWindowOpenPolicy or INHERIT_POLICY
-  unsigned int window_open;
-  // one of KHTMLSettings::KJSWindowResizePolicy or INHERIT_POLICY
-  unsigned int window_resize;
-  // one of KHTMLSettings::KJSWindowMovePolicy or INHERIT_POLICY
-  unsigned int window_move;
-  // one of KHTMLSettings::KJSWindowFocusPolicy or INHERIT_POLICY
-  unsigned int window_focus;
-  // one of KHTMLSettings::KJSWindowStatusPolicy or INHERIT_POLICY
-  unsigned int window_status;
+    // one of KHTMLSettings::KJSWindowOpenPolicy or INHERIT_POLICY
+    unsigned int window_open;
+    // one of KHTMLSettings::KJSWindowResizePolicy or INHERIT_POLICY
+    unsigned int window_resize;
+    // one of KHTMLSettings::KJSWindowMovePolicy or INHERIT_POLICY
+    unsigned int window_move;
+    // one of KHTMLSettings::KJSWindowFocusPolicy or INHERIT_POLICY
+    unsigned int window_focus;
+    // one of KHTMLSettings::KJSWindowStatusPolicy or INHERIT_POLICY
+    unsigned int window_status;
 
-  friend class JSPoliciesFrame;	// for changing policies
+    friend class JSPoliciesFrame; // for changing policies
 };
 
 /**
@@ -202,69 +211,69 @@ private:
  * @author Leo Savernik
  */
 class JSPoliciesFrame : public QGroupBox {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  /**
-   * constructor
-   * @param policies associated object containing the policy values. This
-   *	object will be updated accordingly as the settings are changed.
-   * @param title title for group box
-   * @param parent parent widget
-   */
-  JSPoliciesFrame(JSPolicies *policies, const QString &title,
-		QWidget* parent = 0);
+    /**
+     * constructor
+     * @param policies associated object containing the policy values. This
+     *	object will be updated accordingly as the settings are changed.
+     * @param title title for group box
+     * @param parent parent widget
+     */
+    JSPoliciesFrame(JSPolicies *policies, const QString &title, QWidget *parent = 0);
 
-  virtual ~JSPoliciesFrame();
+    virtual ~JSPoliciesFrame();
 
-  /**
-   * updates the controls to resemble the status of the underlying
-   * JSPolicies object.
-   */
-  void refresh();
-  /**
-   * (re)loads settings from configuration file given in the constructor.
-   */
-  void load() {
-    policies->load();
-    refresh();
-  }
-  /**
-   * saves current settings to the configuration file given in the constructor
-   */
-  void save() {
-    policies->save();
-  }
-  /**
-   * restores the default settings
-   */
-  void defaults() {
-    policies->defaults();
-    refresh();
-  }
+    /**
+     * updates the controls to resemble the status of the underlying
+     * JSPolicies object.
+     */
+    void refresh();
+    /**
+     * (re)loads settings from configuration file given in the constructor.
+     */
+    void load()
+    {
+        policies->load();
+        refresh();
+    }
+    /**
+     * saves current settings to the configuration file given in the constructor
+     */
+    void save()
+    {
+        policies->save();
+    }
+    /**
+     * restores the default settings
+     */
+    void defaults()
+    {
+        policies->defaults();
+        refresh();
+    }
 
 signals:
-  /**
-   * emitted every time an option has been changed
-   */
-  void changed();
+    /**
+     * emitted every time an option has been changed
+     */
+    void changed();
 
 private slots:
-  void setWindowOpenPolicy(int id);
-  void setWindowResizePolicy(int id);
-  void setWindowMovePolicy(int id);
-  void setWindowFocusPolicy(int id);
-  void setWindowStatusPolicy(int id);
+    void setWindowOpenPolicy(int id);
+    void setWindowResizePolicy(int id);
+    void setWindowMovePolicy(int id);
+    void setWindowFocusPolicy(int id);
+    void setWindowStatusPolicy(int id);
 
 private:
-
-  JSPolicies *policies;
-  QButtonGroup *js_popup;
-  QButtonGroup *js_resize;
-  QButtonGroup *js_move;
-  QButtonGroup *js_focus;
-  QButtonGroup *js_statusbar;
+    JSPolicies *policies;
+    QButtonGroup *js_popup;
+    QButtonGroup *js_resize;
+    QButtonGroup *js_move;
+    QButtonGroup *js_focus;
+    QButtonGroup *js_statusbar;
 };
 
 
-#endif		// __JSPOLICIES_H__
-
+#endif // __JSPOLICIES_H__

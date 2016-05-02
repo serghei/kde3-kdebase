@@ -20,15 +20,15 @@
 #ifndef TESTMEDIA_H
 #define TESTMEDIA_H
 
-class TestMedia
-{
+class TestMedia {
 public:
-    TestMedia() {}
+    TestMedia()
+    {
+    }
     void setup();
     void runAll();
 
     // tests
-
 };
 
 #endif

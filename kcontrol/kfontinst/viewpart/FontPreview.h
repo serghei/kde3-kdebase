@@ -37,47 +37,45 @@
 #include <kurl.h>
 #include "FcEngine.h"
 
-namespace KFI
-{
+namespace KFI {
 
-class CFontPreview : public QWidget
-{
+class CFontPreview : public QWidget {
     Q_OBJECT
 
-    public:
+public:
+    CFontPreview(QWidget *parent, const char *name = NULL);
+    virtual ~CFontPreview()
+    {
+    }
 
-    CFontPreview(QWidget *parent, const char *name=NULL);
-    virtual ~CFontPreview() {}
+    void paintEvent(QPaintEvent *);
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
 
-    void        paintEvent(QPaintEvent *);
-    QSize       sizeHint() const;
-    QSize       minimumSizeHint() const;
+    void showFont(const KURL &url);
+    void showFont();
 
-    void        showFont(const KURL &url);
-    void        showFont();
+    CFcEngine &engine()
+    {
+        return itsEngine;
+    }
 
-    CFcEngine & engine() { return itsEngine; }
+public slots:
 
-    public slots:
+    void showFace(int face);
 
-    void        showFace(int face);
+signals:
 
-    signals:
+    void status(bool);
 
-    void        status(bool);
-
-    private:
-
+private:
     CFcEngine itsEngine;
-    QPixmap   itsPixmap;
-    KURL      itsCurrentUrl;
-    int       itsCurrentFace,
-              itsLastWidth,
-              itsLastHeight;
-    QColor    itsBgndCol;
-    QString   itsFontName;
+    QPixmap itsPixmap;
+    KURL itsCurrentUrl;
+    int itsCurrentFace, itsLastWidth, itsLastHeight;
+    QColor itsBgndCol;
+    QString itsFontName;
 };
-
 }
 
 #endif

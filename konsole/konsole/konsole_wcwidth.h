@@ -3,8 +3,8 @@
 /* Markus Kuhn -- 2001-01-12 -- public domain */
 /* Adaptions for KDE by Waldo Bastian <bastian@kde.org> */
 
-#ifndef	_KONSOLE_WCWIDTH_H_
-#define	_KONSOLE_WCWIDTH_H_
+#ifndef _KONSOLE_WCWIDTH_H_
+#define _KONSOLE_WCWIDTH_H_
 
 #include <qglobal.h>
 #include <qstring.h>
@@ -14,6 +14,6 @@ int konsole_wcwidth(Q_UINT16 ucs);
 int konsole_wcwidth_cjk(Q_UINT16 ucs);
 #endif
 
-int string_width( const QString &txt );
+int string_width(const QString &txt);
 
 #endif

@@ -29,26 +29,26 @@ class KonqTextViewItem;
 /**
  * The text view
  */
-class KonqTextViewWidget : public KonqBaseListViewWidget
-{
-   friend class KonqTextViewItem;
-   Q_OBJECT
-   public:
-      KonqTextViewWidget( KonqListView *parent, QWidget *parentWidget );
-      ~KonqTextViewWidget();
-      virtual bool isExecuteArea( const QPoint& point );
+class KonqTextViewWidget : public KonqBaseListViewWidget {
+    friend class KonqTextViewItem;
+    Q_OBJECT
+public:
+    KonqTextViewWidget(KonqListView *parent, QWidget *parentWidget);
+    ~KonqTextViewWidget();
+    virtual bool isExecuteArea(const QPoint &point);
 
-   protected slots:
-      // slots connected to the directory lister
-      virtual void setComplete();
-      virtual void slotNewItems( const KFileItemList & );
-   protected:
-//      bool isNameColumn(const QPoint& point );
-//      virtual void viewportDragMoveEvent( QDragMoveEvent *_ev );
-//      virtual void viewportDropEvent( QDropEvent *ev  );
-      virtual void createColumns();
+protected slots:
+    // slots connected to the directory lister
+    virtual void setComplete();
+    virtual void slotNewItems(const KFileItemList &);
 
-      QColor colors[11];
+protected:
+    //      bool isNameColumn(const QPoint& point );
+    //      virtual void viewportDragMoveEvent( QDragMoveEvent *_ev );
+    //      virtual void viewportDropEvent( QDropEvent *ev  );
+    virtual void createColumns();
+
+    QColor colors[11];
 };
 
 #endif

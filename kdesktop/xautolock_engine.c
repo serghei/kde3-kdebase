@@ -8,13 +8,13 @@
  *          Please send bug reports etc. to eyckmans@imec.be.
  *
  * --------------------------------------------------------------------------
- * 
+ *
  * Copyright 1990,1992-1999,2001-2002 by Stefan De Troch and Michel Eyckmans.
- * 
+ *
  * Versions 2.0 and above of xautolock are available under version 2 of the
  * GNU GPL. Earlier versions are available under other conditions. For more
  * information, see the License file.
- * 
+ *
  *****************************************************************************/
 
 #include <X11/Xlib.h>
@@ -27,137 +27,125 @@
  *  Only used if either the Xidle or the Xscreensaver
  *  extension is present.
  */
-void 
-xautolock_queryIdleTime (Display* d)
+void xautolock_queryIdleTime(Display *d)
 {
-  Time idleTime = 0; /* millisecs since last input event */
+    Time idleTime = 0; /* millisecs since last input event */
 
 #ifdef HasXidle
-  if (xautolock_useXidle)
-  {
-    XGetIdleTime (d, &idleTime);
-  }
-  else
-#endif /* HasXIdle */
-  {
-#ifdef HasScreenSaver
-    if( xautolock_useMit )
+    if(xautolock_useXidle)
     {
-    static XScreenSaverInfo* mitInfo = 0; 
-    if (!mitInfo) mitInfo = XScreenSaverAllocInfo ();
-    XScreenSaverQueryInfo (d, DefaultRootWindow (d), mitInfo);
-    idleTime = mitInfo->idle;
+        XGetIdleTime(d, &idleTime);
     }
     else
-#endif /* HasScreenSaver */
+#endif /* HasXIdle */
     {
-        d = d; /* shut up */
-        return; /* DIY */
+#ifdef HasScreenSaver
+        if(xautolock_useMit)
+        {
+            static XScreenSaverInfo *mitInfo = 0;
+            if(!mitInfo)
+                mitInfo = XScreenSaverAllocInfo();
+            XScreenSaverQueryInfo(d, DefaultRootWindow(d), mitInfo);
+            idleTime = mitInfo->idle;
+        }
+        else
+#endif /* HasScreenSaver */
+        {
+            d = d;  /* shut up */
+            return; /* DIY */
+        }
     }
-  }
 
-  if (idleTime < CHECK_INTERVAL )  
-  {
-    xautolock_resetTriggers ();
-  }
+    if(idleTime < CHECK_INTERVAL)
+    {
+        xautolock_resetTriggers();
+    }
 }
 
 /*
- *  Function for monitoring pointer movements. This implements the 
- *  `corners' feature and as a side effect also tracks pointer 
+ *  Function for monitoring pointer movements. This implements the
+ *  `corners' feature and as a side effect also tracks pointer
  *  related user activity. The latter actually is only needed when
  *  we're using the DIY mode of operations, but it's much simpler
  *  to do it unconditionally.
  */
-void 
-xautolock_queryPointer (Display* d)
+void xautolock_queryPointer(Display *d)
 {
-  Window           dummyWin;         /* as it says                    */
-  int              dummyInt;         /* as it says                    */
-  unsigned         mask;             /* modifier mask                 */
-  int              rootX;            /* as it says                    */
-  int              rootY;            /* as it says                    */
-  int              corner;           /* corner index                  */
-  time_t           now;              /* as it says                    */
-  time_t           newTrigger;       /* temporary storage             */
-  int              i;                /* loop counter                  */
-  static Window    root;             /* root window the pointer is on */
-  static Screen*   screen;           /* screen the pointer is on      */
-  static unsigned  prevMask = 0;     /* as it says                    */
-  static int       prevRootX = -1;   /* as it says                    */
-  static int       prevRootY = -1;   /* as it says                    */
-  static Bool      firstCall = True; /* as it says                    */
+    Window dummyWin;              /* as it says                    */
+    int dummyInt;                 /* as it says                    */
+    unsigned mask;                /* modifier mask                 */
+    int rootX;                    /* as it says                    */
+    int rootY;                    /* as it says                    */
+    int corner;                   /* corner index                  */
+    time_t now;                   /* as it says                    */
+    time_t newTrigger;            /* temporary storage             */
+    int i;                        /* loop counter                  */
+    static Window root;           /* root window the pointer is on */
+    static Screen *screen;        /* screen the pointer is on      */
+    static unsigned prevMask = 0; /* as it says                    */
+    static int prevRootX = -1;    /* as it says                    */
+    static int prevRootY = -1;    /* as it says                    */
+    static Bool firstCall = True; /* as it says                    */
 
- /*
-  *  Have a guess...
-  */
-  if (firstCall)
-  {
-    firstCall = False;
-    root = DefaultRootWindow (d);
-    screen = ScreenOfDisplay (d, DefaultScreen (d));
-  }
-
- /*
-  *  Find out whether the pointer has moved. Using XQueryPointer for this
-  *  is gross, but it also is the only way never to mess up propagation
-  *  of pointer events.
-  */
-  if (!XQueryPointer (d, root, &root, &dummyWin, &rootX, &rootY,
-                      &dummyInt, &dummyInt, &mask))
-  {
-   /*
-    *  Pointer has moved to another screen, so let's find out which one.
-    */
-    for (i = -1; ++i < ScreenCount (d); ) 
+    /*
+     *  Have a guess...
+     */
+    if(firstCall)
     {
-      if (root == RootWindow (d, i)) 
-      {
-        screen = ScreenOfDisplay (d, i);
-        break;
-      }
+        firstCall = False;
+        root = DefaultRootWindow(d);
+        screen = ScreenOfDisplay(d, DefaultScreen(d));
     }
-  }
 
-  if (   rootX == prevRootX
-      && rootY == prevRootY
-      && mask == prevMask)
-  {
-  xautolock_corner_t* corners = xautolock_corners;
-   /*
-    *  If the pointer has not moved since the previous call and 
-    *  is inside one of the 4 corners, we act according to the
-    *  contents of the "corners" array.
-    *
-    *  If rootX and rootY are less than zero, don't lock even if
-    *  ca_forceLock is set in the upper-left corner. Why? 'cause
-    *  on initial server startup, if (and only if) the pointer is
-    *  never moved, XQueryPointer() can return values less than 
-    *  zero (only some servers, Openwindows 2.0 and 3.0 in 
-    *  particular).
-    */
-    if (   (corner = 0,
-               rootX <= cornerSize && rootX >= 0
-            && rootY <= cornerSize && rootY >= 0)
-        || (corner++,
-               rootX >= WidthOfScreen  (screen) - cornerSize - 1
-            && rootY <= cornerSize)
-        || (corner++,
-               rootX <= cornerSize
-            && rootY >= HeightOfScreen (screen) - cornerSize - 1)
-        || (corner++,
-               rootX >= WidthOfScreen  (screen) - cornerSize - 1
-            && rootY >= HeightOfScreen (screen) - cornerSize - 1))
+    /*
+     *  Find out whether the pointer has moved. Using XQueryPointer for this
+     *  is gross, but it also is the only way never to mess up propagation
+     *  of pointer events.
+     */
+    if(!XQueryPointer(d, root, &root, &dummyWin, &rootX, &rootY, &dummyInt, &dummyInt, &mask))
     {
-      now = time (0);
+        /*
+         *  Pointer has moved to another screen, so let's find out which one.
+         */
+        for(i = -1; ++i < ScreenCount(d);)
+        {
+            if(root == RootWindow(d, i))
+            {
+                screen = ScreenOfDisplay(d, i);
+                break;
+            }
+        }
+    }
 
-      switch (corners[corner])
-      {
-        case ca_forceLock:
+    if(rootX == prevRootX && rootY == prevRootY && mask == prevMask)
+    {
+        xautolock_corner_t *corners = xautolock_corners;
+        /*
+         *  If the pointer has not moved since the previous call and
+         *  is inside one of the 4 corners, we act according to the
+         *  contents of the "corners" array.
+         *
+         *  If rootX and rootY are less than zero, don't lock even if
+         *  ca_forceLock is set in the upper-left corner. Why? 'cause
+         *  on initial server startup, if (and only if) the pointer is
+         *  never moved, XQueryPointer() can return values less than
+         *  zero (only some servers, Openwindows 2.0 and 3.0 in
+         *  particular).
+         */
+        if((corner = 0, rootX <= cornerSize && rootX >= 0 && rootY <= cornerSize && rootY >= 0)
+           || (corner++, rootX >= WidthOfScreen(screen) - cornerSize - 1 && rootY <= cornerSize)
+           || (corner++, rootX <= cornerSize && rootY >= HeightOfScreen(screen) - cornerSize - 1)
+           || (corner++, rootX >= WidthOfScreen(screen) - cornerSize - 1 && rootY >= HeightOfScreen(screen) - cornerSize - 1))
+        {
+            now = time(0);
+
+            switch(corners[corner])
+            {
+                case ca_forceLock:
 #if 0
           newTrigger = now + (useRedelay ? cornerRedelay : cornerDelay) - 1;
 #else
-          newTrigger = now;
+                    newTrigger = now;
 #endif
 
 #if 0
@@ -166,30 +154,30 @@ xautolock_queryPointer (Display* d)
             setLockTrigger (newTrigger - now);
           }
 #else
-          xautolock_setTrigger( newTrigger );
+                    xautolock_setTrigger(newTrigger);
 #endif
-          break;
+                    break;
 
-        case ca_dontLock:
-          xautolock_resetTriggers ();
+                case ca_dontLock:
+                    xautolock_resetTriggers();
 
 #ifdef __GNUC__
-	default: ; /* Makes gcc -Wall shut up. */
-#endif /* __GNUC__ */
-      }
+                default:; /* Makes gcc -Wall shut up. */
+#endif                    /* __GNUC__ */
+            }
+        }
     }
-  }
-  else
-  {
+    else
+    {
 #if 0
     useRedelay = False;
 #endif
-    prevRootX = rootX;
-    prevRootY = rootY;
-    prevMask = mask;
+        prevRootX = rootX;
+        prevRootY = rootY;
+        prevMask = mask;
 
-    xautolock_resetTriggers ();
-  }
+        xautolock_resetTriggers();
+    }
 }
 
 #if 0
@@ -229,9 +217,9 @@ evaluateTriggers (Display* d)
 #else /* VMS */
   if (lockerPid)
   {
-#if !defined (UTEKV) && !defined (SYSV) && !defined (SVR4)
+#if !defined(UTEKV) && !defined(SYSV) && !defined(SVR4)
     union wait  status;      /* childs process status */
-#else /* !UTEKV && !SYSV && !SVR4 */
+#else  /* !UTEKV && !SYSV && !SVR4 */
     int         status = 0;  /* childs process status */
 #endif /* !UTEKV && !SYSV && !SVR4 */
 
@@ -240,10 +228,10 @@ evaluateTriggers (Display* d)
       (void) kill (lockerPid, SIGTERM);
     }
 
-#if !defined (UTEKV) && !defined (SYSV) && !defined (SVR4)
+#if !defined(UTEKV) && !defined(SYSV) && !defined(SVR4)
     if (wait3 (&status, WNOHANG, 0))
-#else /* !UTEKV && !SYSV && !SVR4 */
-    if (waitpid (-1, &status, WNOHANG)) 
+#else  /* !UTEKV && !SYSV && !SVR4 */
+    if (waitpid (-1, &status, WNOHANG))
 #endif /* !UTEKV && !SYSV && !SVR4 */
     {
      /*
@@ -337,7 +325,7 @@ evaluateTriggers (Display* d)
   {
 #ifdef VMS
     if (vmsStatus != 0)
-#else /* VMS */
+#else  /* VMS */
     if (!lockerPid)
 #endif /* VMS */
     {
@@ -357,9 +345,9 @@ evaluateTriggers (Display* d)
 	  if (!(lockerPid & 1)) exit (lockerPid);
 
 #ifdef SLOW_VMS
-          (void) sleep (SLOW_VMS_DELAY); 
+          (void) sleep (SLOW_VMS_DELAY);
 #endif /* SLOW_VMS */
-#else /* VMS */
+#else  /* VMS */
           (void) execl ("/bin/sh", "/bin/sh", "-c", 
 	                (lockNow ? nowLocker : locker), 0);
 #endif /* VMS */

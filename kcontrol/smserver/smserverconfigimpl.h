@@ -25,18 +25,18 @@
   *@author stulle
   */
 
-class SMServerConfigImpl : public SMServerConfigDlg  {
-   Q_OBJECT
+class SMServerConfigImpl : public SMServerConfigDlg {
+    Q_OBJECT
 public:
-	SMServerConfigImpl(QWidget *parent=0, const char *name=0);
-	~SMServerConfigImpl();
+    SMServerConfigImpl(QWidget *parent = 0, const char *name = 0);
+    ~SMServerConfigImpl();
 public slots: // Public slots
-  /** No descriptions */
-  void configChanged();
-  void offerSuspendOrHibernateChanged();
+    /** No descriptions */
+    void configChanged();
+    void offerSuspendOrHibernateChanged();
 signals: // Signals
-  /** No descriptions */
-  void changed();
+    /** No descriptions */
+    void changed();
 };
 
 #endif

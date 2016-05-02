@@ -28,8 +28,7 @@
 class KonqMainWindow;
 class KonqView;
 
-class KonqMisc
-{
+class KonqMisc {
 public:
     /*
     private:
@@ -54,25 +53,20 @@ public:
     /**
      * Create a new window with a single view, showing @p url
      */
-    static KonqMainWindow * createSimpleWindow( const KURL &url, const QString &frameName = QString::null );
+    static KonqMainWindow *createSimpleWindow(const KURL &url, const QString &frameName = QString::null);
 
     /**
      * Create a new window with a single view, showing @p url, using @p args
      */
-    static KonqMainWindow * createSimpleWindow( const KURL &url, const KParts::URLArgs &args, 
-						bool tempFile = false);
+    static KonqMainWindow *createSimpleWindow(const KURL &url, const KParts::URLArgs &args, bool tempFile = false);
 
     /**
      * Create a new window for @p url using @p args and the appropriate profile for this URL.
      * @param forbidUseHTML internal. True when called by "Find Files"
      * @param openURL If it is false, no url is openend in the new window. The url is used to guess the profile
      */
-    static KonqMainWindow * createNewWindow( const KURL &url,
-                                             const KParts::URLArgs &args = KParts::URLArgs(),
-                                             bool forbidUseHTML = false,
-                                             QStringList filesToSelect = QStringList(),
-                                             bool tempFile = false,
-					     bool openURL = true);
+    static KonqMainWindow *createNewWindow(const KURL &url, const KParts::URLArgs &args = KParts::URLArgs(), bool forbidUseHTML = false,
+                                           QStringList filesToSelect = QStringList(), bool tempFile = false, bool openURL = true);
 
     /**
      * Create a new window from the profile defined by @p filename and @p path.
@@ -80,21 +74,17 @@ public:
      * @param forbidUseHTML internal. True when called by "Find Files"
      * @param openURL If false no url is opened
      */
-    static KonqMainWindow * createBrowserWindowFromProfile( const QString &path,
-                                                            const QString &filename,
-                                                            const KURL &url = KURL(),
-                                                            const KParts::URLArgs &args = KParts::URLArgs(),
-                                                            bool forbidUseHTML = false,
-                                                            const QStringList& filesToSelect = QStringList(),
-                                                            bool tempFile = false,
-							    bool openURL = true);
+    static KonqMainWindow *createBrowserWindowFromProfile(const QString &path, const QString &filename, const KURL &url = KURL(),
+                                                          const KParts::URLArgs &args = KParts::URLArgs(), bool forbidUseHTML = false,
+                                                          const QStringList &filesToSelect = QStringList(), bool tempFile = false,
+                                                          bool openURL = true);
 
     /**
      * Creates a new window from the history of a view, copies the history
      * @param view the History is copied from this view
      * @param steps Restore currentPos() + steps
      */
-    static KonqMainWindow * newWindowFromHistory( KonqView* view, int steps );
+    static KonqMainWindow *newWindowFromHistory(KonqView *view, int steps);
 
     /**
      * Applies the URI filters to @p url.
@@ -103,24 +93,22 @@ public:
      * @p _url to be filtered.
      * @p _path the absolute path to append to the url before filtering it.
      */
-    static QString konqFilteredURL( QWidget* /*parent*/, const QString& /*_url*/, const QString& _path = QString::null );
-
+    static QString konqFilteredURL(QWidget * /*parent*/, const QString & /*_url*/, const QString &_path = QString::null);
 };
 
 #include <qlabel.h>
 
-class KonqDraggableLabel : public QLabel
-{
+class KonqDraggableLabel : public QLabel {
     Q_OBJECT
 public:
-    KonqDraggableLabel( KonqMainWindow * mw, const QString & text );
+    KonqDraggableLabel(KonqMainWindow *mw, const QString &text);
 
 protected:
-    void mousePressEvent( QMouseEvent * ev );
-    void mouseMoveEvent( QMouseEvent * ev );
-    void mouseReleaseEvent( QMouseEvent * );
-    void dragEnterEvent( QDragEnterEvent *ev );
-    void dropEvent( QDropEvent* ev );
+    void mousePressEvent(QMouseEvent *ev);
+    void mouseMoveEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *);
+    void dragEnterEvent(QDragEnterEvent *ev);
+    void dropEvent(QDropEvent *ev);
 
 private slots:
     void delayedOpenURL();
@@ -128,7 +116,7 @@ private slots:
 private:
     QPoint startDragPos;
     bool validDrag;
-    KonqMainWindow * m_mw;
+    KonqMainWindow *m_mw;
     KURL::List _savedLst;
 };
 

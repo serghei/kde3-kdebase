@@ -28,70 +28,65 @@
 #include "../app/katepluginmanager.h"
 #include "../app/katemainwindow.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivateApplication
-  {
-  public:
-    PrivateApplication ()
+class PrivateApplication {
+public:
+    PrivateApplication()
     {
     }
 
-    ~PrivateApplication ()
+    ~PrivateApplication()
     {
-
     }
 
     KateApp *app;
-  };
+};
 
-Application::Application (void *application) : QObject ((KateApp *) application)
+Application::Application(void *application) : QObject((KateApp *)application)
 {
-  d = new PrivateApplication;
-  d->app = (KateApp *) application;
+    d = new PrivateApplication;
+    d->app = (KateApp *)application;
 }
 
-Application::~Application ()
+Application::~Application()
 {
-  delete d;
+    delete d;
 }
 
-DocumentManager *Application::documentManager ()
+DocumentManager *Application::documentManager()
 {
-  return d->app->documentManager ()->documentManager ();
+    return d->app->documentManager()->documentManager();
 }
 
-PluginManager *Application::pluginManager ()
+PluginManager *Application::pluginManager()
 {
-  return d->app->pluginManager ()->pluginManager ();
+    return d->app->pluginManager()->pluginManager();
 }
 
-MainWindow *Application::activeMainWindow ()
+MainWindow *Application::activeMainWindow()
 {
-  if (!d->app->activeMainWindow())
+    if(!d->app->activeMainWindow())
+        return 0;
+
+    return d->app->activeMainWindow()->mainWindow();
+}
+
+uint Application::mainWindows()
+{
+    return d->app->mainWindows();
+}
+
+MainWindow *Application::mainWindow(uint n)
+{
+    if(n < mainWindows())
+        return d->app->mainWindow(n)->mainWindow();
+
     return 0;
-
-  return d->app->activeMainWindow()->mainWindow();
 }
 
-uint Application::mainWindows ()
+Application *application()
 {
-  return d->app->mainWindows ();
+    return KateApp::self()->application();
 }
-
-MainWindow *Application::mainWindow (uint n)
-{
-  if (n < mainWindows ())
-    return d->app->mainWindow (n)->mainWindow();
-
-  return 0;
 }
-
-Application *application ()
-{
-  return KateApp::self()->application ();
-}
-
-}
-

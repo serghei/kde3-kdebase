@@ -19,35 +19,34 @@
 
 /* function call-back-prototypes... */
 
-bool GetInfo_CPU( QListView *lBox );
-bool GetInfo_IRQ( QListView *lBox );
-bool GetInfo_DMA( QListView *lBox );
-bool GetInfo_PCI( QListView *lBox );
-bool GetInfo_IO_Ports( QListView *lBox );
-bool GetInfo_Sound( QListView *lBox );
-bool GetInfo_Devices( QListView *lBox );
-bool GetInfo_SCSI( QListView *lBox );
-bool GetInfo_Partitions( QListView *lBox );
-bool GetInfo_XServer_and_Video( QListView *lBox );
-bool GetInfo_CD_ROM( QListView *lBox ); /* New CD-ROM Info */
-extern bool GetInfo_OpenGL( QListView *lBox );
+bool GetInfo_CPU(QListView *lBox);
+bool GetInfo_IRQ(QListView *lBox);
+bool GetInfo_DMA(QListView *lBox);
+bool GetInfo_PCI(QListView *lBox);
+bool GetInfo_IO_Ports(QListView *lBox);
+bool GetInfo_Sound(QListView *lBox);
+bool GetInfo_Devices(QListView *lBox);
+bool GetInfo_SCSI(QListView *lBox);
+bool GetInfo_Partitions(QListView *lBox);
+bool GetInfo_XServer_and_Video(QListView *lBox);
+bool GetInfo_CD_ROM(QListView *lBox); /* New CD-ROM Info */
+extern bool GetInfo_OpenGL(QListView *lBox);
 
-class KInfoListWidget : public KCModule
-{
+class KInfoListWidget : public KCModule {
 public:
-  KInfoListWidget(const QString &_title, QWidget *parent, const char *name=0, bool _getlistbox (QListView *)=0);
+    KInfoListWidget(const QString &_title, QWidget *parent, const char *name = 0, bool _getlistbox(QListView *) = 0);
 
-  virtual void load();
-  virtual QString quickHelp() const;
-  
+    virtual void load();
+    virtual QString quickHelp() const;
+
 private:
-  QListView 	*lBox;
-  bool 		(*getlistbox) (QListView *);
-  QString title;
-  
-  QLabel	*NoInfoText;
-  QString	ErrorString;
-  QWidgetStack  *widgetStack;
+    QListView *lBox;
+    bool (*getlistbox)(QListView *);
+    QString title;
+
+    QLabel *NoInfoText;
+    QString ErrorString;
+    QWidgetStack *widgetStack;
 };
 
 #endif

@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -30,27 +30,26 @@ class QCheckBox;
 class QLabel;
 class QSpinBox;
 
-class KDE_EXPORT TimerSettings : public KDialogBase
-{
-  Q_OBJECT
+class KDE_EXPORT TimerSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    TimerSettings( QWidget *parent, const char *name = 0 );
+public:
+    TimerSettings(QWidget *parent, const char *name = 0);
     ~TimerSettings();
 
-    void setUseGlobalUpdate( bool value );
+    void setUseGlobalUpdate(bool value);
     bool useGlobalUpdate() const;
 
-    void setInterval( int interval );
+    void setInterval(int interval);
     int interval() const;
 
-  private slots:
-    void globalUpdateChanged( bool );
+private slots:
+    void globalUpdateChanged(bool);
 
-  private:
-    QCheckBox* mUseGlobalUpdate;
-    QLabel* mLabel;
-    QSpinBox* mInterval;
+private:
+    QCheckBox *mUseGlobalUpdate;
+    QLabel *mLabel;
+    QSpinBox *mInterval;
 };
 
 #endif

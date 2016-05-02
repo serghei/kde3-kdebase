@@ -28,13 +28,11 @@
 
 class SensorLoggerDlgWidget;
 
-class SensorLoggerDlg : public KDialogBase
-{
-  Q_OBJECT
+class SensorLoggerDlg : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
-    SensorLoggerDlg( QWidget *parent=0, const char *name=0 );
+public:
+    SensorLoggerDlg(QWidget *parent = 0, const char *name = 0);
 
     QString fileName() const;
     int timerInterval() const;
@@ -43,15 +41,14 @@ class SensorLoggerDlg : public KDialogBase
     double lowerLimit() const;
     double upperLimit() const;
 
-    void setFileName( const QString & );
-    void setTimerInterval( int );
-    void setLowerLimitActive( bool );
-    void setUpperLimitActive( bool );
-    void setLowerLimit( double );
-    void setUpperLimit( double );
+    void setFileName(const QString &);
+    void setTimerInterval(int);
+    void setLowerLimitActive(bool);
+    void setUpperLimitActive(bool);
+    void setLowerLimit(double);
+    void setUpperLimit(double);
 
-  private:
-
+private:
     SensorLoggerDlgWidget *m_loggerWidget;
 };
 
@@ -59,4 +56,3 @@ class SensorLoggerDlg : public KDialogBase
 
 /* vim: et sw=2 ts=2
 */
-

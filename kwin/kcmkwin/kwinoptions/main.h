@@ -35,66 +35,60 @@ class KWindowActionsConfig;
 class KAdvancedConfig;
 class KTranslucencyConfig;
 
-class KWinOptions : public KCModule
-{
-  Q_OBJECT
+class KWinOptions : public KCModule {
+    Q_OBJECT
 
 public:
+    KWinOptions(QWidget *parent, const char *name);
+    virtual ~KWinOptions();
 
-  KWinOptions(QWidget *parent, const char *name);
-  virtual ~KWinOptions();
-
-  void load();
-  void save();
-  void defaults();
-  QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
 
 protected slots:
 
-  void moduleChanged(bool state);
+    void moduleChanged(bool state);
 
 
 private:
+    QTabWidget *tab;
 
-  QTabWidget   *tab;
+    KFocusConfig *mFocus;
+    KTitleBarActionsConfig *mTitleBarActions;
+    KWindowActionsConfig *mWindowActions;
+    KMovingConfig *mMoving;
+    KAdvancedConfig *mAdvanced;
+    KTranslucencyConfig *mTranslucency;
 
-  KFocusConfig *mFocus;
-  KTitleBarActionsConfig *mTitleBarActions;
-  KWindowActionsConfig *mWindowActions;
-  KMovingConfig *mMoving;
-  KAdvancedConfig *mAdvanced;
-  KTranslucencyConfig *mTranslucency;
-
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
-class KActionsOptions : public KCModule
-{
-  Q_OBJECT
+class KActionsOptions : public KCModule {
+    Q_OBJECT
 
 public:
+    KActionsOptions(QWidget *parent, const char *name);
+    virtual ~KActionsOptions();
 
-  KActionsOptions(QWidget *parent, const char *name);
-  virtual ~KActionsOptions();
-
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 protected slots:
 
-  void moduleChanged(bool state);
+    void moduleChanged(bool state);
 
 
 private:
+    QTabWidget *tab;
 
-  QTabWidget   *tab;
+    KTitleBarActionsConfig *mTitleBarActions;
+    KWindowActionsConfig *mWindowActions;
 
-  KTitleBarActionsConfig *mTitleBarActions;
-  KWindowActionsConfig *mWindowActions;
-
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
 #endif

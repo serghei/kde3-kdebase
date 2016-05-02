@@ -39,56 +39,54 @@
 
 //-----------------------------------------------------------------------------
 
-class PreviewCheckListItem : public QCheckListItem
-{
-  public:
-    PreviewCheckListItem( QListView *parent, const QString &text )
-      : QCheckListItem( parent, text, CheckBoxController )
-    {}
-
-    PreviewCheckListItem( QListViewItem *parent, const QString &text )
-      : QCheckListItem( parent, text, CheckBox )
-    {}
-
-  protected:
-    void stateChange( bool )
+class PreviewCheckListItem : public QCheckListItem {
+public:
+    PreviewCheckListItem(QListView *parent, const QString &text) : QCheckListItem(parent, text, CheckBoxController)
     {
-        static_cast<KPreviewOptions *>( listView()->parent() )->changed();
+    }
+
+    PreviewCheckListItem(QListViewItem *parent, const QString &text) : QCheckListItem(parent, text, CheckBox)
+    {
+    }
+
+protected:
+    void stateChange(bool)
+    {
+        static_cast< KPreviewOptions * >(listView()->parent())->changed();
     }
 };
 
-KPreviewOptions::KPreviewOptions( QWidget *parent, const char */*name*/ )
-    : KCModule( parent, "kcmkonq" )
+KPreviewOptions::KPreviewOptions(QWidget *parent, const char * /*name*/) : KCModule(parent, "kcmkonq")
 {
     QVBoxLayout *lay = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-    lay->addWidget( new QLabel( i18n("<p>Allow previews, \"Folder Icons Reflect Contents\", and "
-                                     "retrieval of meta-data on protocols:</p>"), this ) );
+    lay->addWidget(new QLabel(i18n("<p>Allow previews, \"Folder Icons Reflect Contents\", and "
+                                   "retrieval of meta-data on protocols:</p>"),
+                              this));
 
-    setQuickHelp( i18n("<h1>Preview Options</h1> Here you can modify the behavior "
-                "of Konqueror when it shows the files in a folder."
-                "<h2>The list of protocols:</h2> check the protocols over which "
-                "previews should be shown; uncheck those over which they should not. "
-                "For instance, you might want to show previews over SMB if the local "
-                "network is fast enough, but you might disable it for FTP if you often "
-                "visit very slow FTP sites with large images."
-                "<h2>Maximum File Size:</h2> select the maximum file size for which "
-                "previews should be generated. For instance, if set to 1 MB (the default), "
-                "no preview will be generated for files bigger than 1 MB, for speed reasons."));
+    setQuickHelp(
+        i18n("<h1>Preview Options</h1> Here you can modify the behavior "
+             "of Konqueror when it shows the files in a folder."
+             "<h2>The list of protocols:</h2> check the protocols over which "
+             "previews should be shown; uncheck those over which they should not. "
+             "For instance, you might want to show previews over SMB if the local "
+             "network is fast enough, but you might disable it for FTP if you often "
+             "visit very slow FTP sites with large images."
+             "<h2>Maximum File Size:</h2> select the maximum file size for which "
+             "previews should be generated. For instance, if set to 1 MB (the default), "
+             "no preview will be generated for files bigger than 1 MB, for speed reasons."));
 
     // Listview containing checkboxes for all protocols that support listing
-    KListView *listView = new KListView( this, "listView" );
-    listView->addColumn( i18n( "Select Protocols" ) );
-    listView->setFullWidth( true );
+    KListView *listView = new KListView(this, "listView");
+    listView->addColumn(i18n("Select Protocols"));
+    listView->setFullWidth(true);
 
-    QHBoxLayout *hbox = new QHBoxLayout( lay );
-    hbox->addWidget( listView );
+    QHBoxLayout *hbox = new QHBoxLayout(lay);
+    hbox->addWidget(listView);
     hbox->addStretch();
 
-    PreviewCheckListItem *localItems = new PreviewCheckListItem( listView,
-        i18n( "Local Protocols" ) );
-    PreviewCheckListItem *inetItems = new PreviewCheckListItem( listView,
-        i18n( "Internet Protocols" ) );
+    PreviewCheckListItem *localItems = new PreviewCheckListItem(listView, i18n("Local Protocols"));
+    PreviewCheckListItem *inetItems = new PreviewCheckListItem(listView, i18n("Internet Protocols"));
 
     QStringList protocolList = KProtocolInfo::protocols();
     protocolList.sort();
@@ -97,85 +95,84 @@ KPreviewOptions::KPreviewOptions( QWidget *parent, const char */*name*/ )
     KURL url;
     url.setPath("/");
 
-    for ( ; it != protocolList.end() ; ++it )
+    for(; it != protocolList.end(); ++it)
     {
-        url.setProtocol( *it );
-        if ( KProtocolInfo::supportsListing( url ) )
+        url.setProtocol(*it);
+        if(KProtocolInfo::supportsListing(url))
         {
             QCheckListItem *item;
-            if ( KProtocolInfo::protocolClass( *it ) == ":local" )
-                item = new PreviewCheckListItem( localItems, ( *it ) );
+            if(KProtocolInfo::protocolClass(*it) == ":local")
+                item = new PreviewCheckListItem(localItems, (*it));
             else
-                item = new PreviewCheckListItem( inetItems, ( *it ) );
+                item = new PreviewCheckListItem(inetItems, (*it));
 
-            m_items.append( item );
+            m_items.append(item);
         }
     }
 
-    listView->setOpen( localItems, true );
-    listView->setOpen( inetItems, true );
+    listView->setOpen(localItems, true);
+    listView->setOpen(inetItems, true);
 
-    QWhatsThis::add( listView,
-                     i18n("This option makes it possible to choose when the file previews, "
-                          "smart folder icons, and meta-data in the File Manager should be activated.\n"
-                          "In the list of protocols that appear, select which ones are fast "
-                          "enough for you to allow previews to be generated.") );
+    QWhatsThis::add(listView, i18n("This option makes it possible to choose when the file previews, "
+                                   "smart folder icons, and meta-data in the File Manager should be activated.\n"
+                                   "In the list of protocols that appear, select which ones are fast "
+                                   "enough for you to allow previews to be generated."));
 
-    QLabel *label = new QLabel( i18n( "&Maximum file size:" ), this );
-    lay->addWidget( label );
+    QLabel *label = new QLabel(i18n("&Maximum file size:"), this);
+    lay->addWidget(label);
 
-    m_maxSize = new KDoubleNumInput( this );
-    m_maxSize->setSuffix( i18n(" MB") );
-    m_maxSize->setRange( 0.02, 10, 0.02, true );
-    m_maxSize->setPrecision( 1 );
-    label->setBuddy( m_maxSize );
-    lay->addWidget( m_maxSize );
-    connect( m_maxSize, SIGNAL( valueChanged(double) ), SLOT( changed() ) );
+    m_maxSize = new KDoubleNumInput(this);
+    m_maxSize->setSuffix(i18n(" MB"));
+    m_maxSize->setRange(0.02, 10, 0.02, true);
+    m_maxSize->setPrecision(1);
+    label->setBuddy(m_maxSize);
+    lay->addWidget(m_maxSize);
+    connect(m_maxSize, SIGNAL(valueChanged(double)), SLOT(changed()));
 
     m_boostSize = new QCheckBox(i18n("&Increase size of previews relative to icons"), this);
-    connect( m_boostSize, SIGNAL( toggled(bool) ), SLOT( changed() ) );
+    connect(m_boostSize, SIGNAL(toggled(bool)), SLOT(changed()));
     lay->addWidget(m_boostSize);
 
     m_useFileThumbnails = new QCheckBox(i18n("&Use thumbnails embedded in files"), this);
-    connect( m_useFileThumbnails, SIGNAL( toggled(bool) ), SLOT( changed() ) );
+    connect(m_useFileThumbnails, SIGNAL(toggled(bool)), SLOT(changed()));
 
     lay->addWidget(m_useFileThumbnails);
 
-    QWhatsThis::add( m_useFileThumbnails,
-                i18n("Select this to use thumbnails that are found inside some "
-                "file types (e.g. JPEG). This will increase speed and reduce "
-                "disk usage. Deselect it if you have files that have been processed "
-                "by programs which create inaccurate thumbnails, such as ImageMagick.") );
+    QWhatsThis::add(m_useFileThumbnails, i18n("Select this to use thumbnails that are found inside some "
+                                              "file types (e.g. JPEG). This will increase speed and reduce "
+                                              "disk usage. Deselect it if you have files that have been processed "
+                                              "by programs which create inaccurate thumbnails, such as ImageMagick."));
 
-    lay->addWidget( new QWidget(this), 10 );
+    lay->addWidget(new QWidget(this), 10);
 
     load();
 }
 
 // Default: 1 MB
-#define DEFAULT_MAXSIZE (1024*1024)
+#define DEFAULT_MAXSIZE (1024 * 1024)
 
 void KPreviewOptions::load(bool useDefaults)
 {
     // *** load and apply to GUI ***
     KGlobal::config()->setReadDefaults(useDefaults);
-    KConfigGroup group( KGlobal::config(), "PreviewSettings" );
-    QPtrListIterator<QCheckListItem> it( m_items );
+    KConfigGroup group(KGlobal::config(), "PreviewSettings");
+    QPtrListIterator< QCheckListItem > it(m_items);
 
-    for ( ; it.current() ; ++it ) {
-        QString protocol( it.current()->text() );
-        if ( ( protocol == "file" ) && ( !group.hasKey ( protocol ) ) )
-          // file should be enabled in case is not defined because if not so
-          // than preview's lost when size is changed from default one
-          it.current()->setOn( true );
+    for(; it.current(); ++it)
+    {
+        QString protocol(it.current()->text());
+        if((protocol == "file") && (!group.hasKey(protocol)))
+            // file should be enabled in case is not defined because if not so
+            // than preview's lost when size is changed from default one
+            it.current()->setOn(true);
         else
-          it.current()->setOn( group.readBoolEntry( protocol, false ) );
+            it.current()->setOn(group.readBoolEntry(protocol, false));
     }
     // config key is in bytes (default value 1MB), numinput is in MB
-    m_maxSize->setValue( ((double)group.readNumEntry( "MaximumSize", DEFAULT_MAXSIZE )) / (1024*1024) );
+    m_maxSize->setValue(((double)group.readNumEntry("MaximumSize", DEFAULT_MAXSIZE)) / (1024 * 1024));
 
-    m_boostSize->setChecked( group.readBoolEntry( "BoostSize", false /*default*/ ) );
-    m_useFileThumbnails->setChecked( group.readBoolEntry( "UseFileThumbnails", true /*default*/ ) );
+    m_boostSize->setChecked(group.readBoolEntry("BoostSize", false /*default*/));
+    m_useFileThumbnails->setChecked(group.readBoolEntry("UseFileThumbnails", true /*default*/));
     KGlobal::config()->setReadDefaults(false);
 }
 
@@ -191,24 +188,25 @@ void KPreviewOptions::defaults()
 
 void KPreviewOptions::save()
 {
-    KConfigGroup group( KGlobal::config(), "PreviewSettings" );
-    QPtrListIterator<QCheckListItem> it( m_items );
-    for ( ; it.current() ; ++it ) {
-        QString protocol( it.current()->text() );
-        group.writeEntry( protocol, it.current()->isOn(), true, true );
+    KConfigGroup group(KGlobal::config(), "PreviewSettings");
+    QPtrListIterator< QCheckListItem > it(m_items);
+    for(; it.current(); ++it)
+    {
+        QString protocol(it.current()->text());
+        group.writeEntry(protocol, it.current()->isOn(), true, true);
     }
     // config key is in bytes, numinput is in MB
-    group.writeEntry( "MaximumSize", qRound( m_maxSize->value() *1024*1024 ), true, true );
-    group.writeEntry( "BoostSize", m_boostSize->isChecked(), true, true );
-    group.writeEntry( "UseFileThumbnails", m_useFileThumbnails->isChecked(), true, true );
+    group.writeEntry("MaximumSize", qRound(m_maxSize->value() * 1024 * 1024), true, true);
+    group.writeEntry("BoostSize", m_boostSize->isChecked(), true, true);
+    group.writeEntry("UseFileThumbnails", m_useFileThumbnails->isChecked(), true, true);
     group.sync();
 
     // Send signal to konqueror
     // Warning. In case something is added/changed here, keep kfmclient in sync
     QByteArray data;
-    if ( !kapp->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-    kapp->dcopClient()->send( "konqueror*", "KonquerorIface", "reparseConfiguration()", data );
+    if(!kapp->dcopClient()->isAttached())
+        kapp->dcopClient()->attach();
+    kapp->dcopClient()->send("konqueror*", "KonquerorIface", "reparseConfiguration()", data);
 }
 
 void KPreviewOptions::changed()

@@ -29,26 +29,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class AppletInfo;
 
 // The button operations menu (usually right click)
-class PanelAppletOpMenu : public QPopupMenu
-{
-Q_OBJECT
+class PanelAppletOpMenu : public QPopupMenu {
+    Q_OBJECT
 
 public:
-    enum OpButton{Move = 9900, Remove = 9901, Help = 9902, About = 9903, Preferences = 9904, ReportBug = 9905 };
+    enum OpButton
+    {
+        Move = 9900,
+        Remove = 9901,
+        Help = 9902,
+        About = 9903,
+        Preferences = 9904,
+        ReportBug = 9905
+    };
 
     // Note: these entries have to be | and &-able with KPanelApplet::Actions!
     //       they also are treated just like KPanelApplet::Preferences on selection
     //       KDE4: look at merging them there? perhaps under a generic "Editor" option?
-    enum { KMenuEditor = 1048576, BookmarkEditor = 2097152 };
-    PanelAppletOpMenu(int actions, QPopupMenu *opMenu, const QPopupMenu* appletsMenu = 0, 
-                      const QString &title = 0, const QString &icon = 0,
-                      QWidget *parent=0, const char *name=0);
+    enum
+    {
+        KMenuEditor = 1048576,
+        BookmarkEditor = 2097152
+    };
+    PanelAppletOpMenu(int actions, QPopupMenu *opMenu, const QPopupMenu *appletsMenu = 0, const QString &title = 0, const QString &icon = 0,
+                      QWidget *parent = 0, const char *name = 0);
 
 signals:
     void escapePressed();
 
 protected:
-    void keyPressEvent(QKeyEvent* e);
+    void keyPressEvent(QKeyEvent *e);
 };
 
 

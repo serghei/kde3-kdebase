@@ -27,8 +27,7 @@
 class ThumbCreator;
 class QImage;
 
-class ThumbnailProtocol : public KIO::SlaveBase
-{
+class ThumbnailProtocol : public KIO::SlaveBase {
 public:
     ThumbnailProtocol(const QCString &pool, const QCString &app);
     virtual ~ThumbnailProtocol();
@@ -36,8 +35,8 @@ public:
     virtual void get(const KURL &url);
 
 protected:
-    const QImage& getIcon();
-    
+    const QImage &getIcon();
+
 private:
     QString m_mimeType;
     int m_width;
@@ -46,9 +45,9 @@ private:
     int m_iconSize;
     int m_iconAlpha;
     // Thumbnail creators
-    QDict<ThumbCreator> m_creators;
+    QDict< ThumbCreator > m_creators;
     // transparent icon cache
-    QDict<QImage> m_iconDict;
+    QDict< QImage > m_iconDict;
 };
 
 #endif

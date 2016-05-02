@@ -1,4 +1,4 @@
-/* 	
+/*
     info_svr4.cpp
 
     UNIX System V Release 4 specific Information about the Hardware.
@@ -22,111 +22,117 @@
 
 #include <sys/systeminfo.h>
 
-/*  all following functions should return true, when the Information 
+/*  all following functions should return true, when the Information
     was filled into the lBox-Widget.
     returning false indicates, that information was not available.
 */
 
-bool GetInfo_ReadfromFile( QListView *lBox, char *Name, char splitchar  )
+bool GetInfo_ReadfromFile(QListView *lBox, char *Name, char splitchar)
 {
-  QString str;
-  char buf[512];
+    QString str;
+    char buf[512];
 
-  QFile *file = new QFile(Name);
-  QListViewItem* olditem = 0;
+    QFile *file = new QFile(Name);
+    QListViewItem *olditem = 0;
 
-  if(!file->open(IO_ReadOnly)) {
-    delete file; 
-    return false;
-  }
-  
-  while (file->readLine(buf,sizeof(buf)-1) > 0) {
-      if (strlen(buf)) {
-          char *p=buf;
-          if (splitchar!=0)    /* remove leading spaces between ':' and the following text */
-              while (*p) {
-                  if (*p==splitchar) {
-                      *p++ = ' ';
-                      while (*p==' ') ++p;
-                      *(--p) = splitchar;
-                      ++p;
-                  }
-                  else ++p;
-              }
-          
-          QString s1 = QString::fromLocal8Bit(buf);
-          QString s2 = s1.mid(s1.find(splitchar)+1);
-          
-          s1.truncate(s1.find(splitchar));
-          if(!(s1.isEmpty() || s2.isEmpty()))
-              olditem = new QListViewItem(lBox, olditem, s1, s2);
-      }
-  }
-  file->close();
-  
-  delete file;
-  return true;
-}
+    if(!file->open(IO_ReadOnly))
+    {
+        delete file;
+        return false;
+    }
 
-bool GetInfo_CPU( QListView *lBox )
-{
-      char buf[256];
+    while(file->readLine(buf, sizeof(buf) - 1) > 0)
+    {
+        if(strlen(buf))
+        {
+            char *p = buf;
+            if(splitchar != 0) /* remove leading spaces between ':' and the following text */
+                while(*p)
+                {
+                    if(*p == splitchar)
+                    {
+                        *p++ = ' ';
+                        while(*p == ' ')
+                            ++p;
+                        *(--p) = splitchar;
+                        ++p;
+                    }
+                    else
+                        ++p;
+                }
 
-      sysinfo(SI_ARCHITECTURE, buf, sizeof(buf));
-      new QListViewItem(lBox, QString::fromLocal8Bit(buf));
-      return true;
-}
+            QString s1 = QString::fromLocal8Bit(buf);
+            QString s2 = s1.mid(s1.find(splitchar) + 1);
 
+            s1.truncate(s1.find(splitchar));
+            if(!(s1.isEmpty() || s2.isEmpty()))
+                olditem = new QListViewItem(lBox, olditem, s1, s2);
+        }
+    }
+    file->close();
 
-bool GetInfo_IRQ( QListView * )
-{
-	return false;
-}
-
-bool GetInfo_DMA( QListView * )
-{
-	return false;
-}
-
-bool GetInfo_PCI( QListView *lBox )
-{
-      char buf[256];
-
-      sysinfo(SI_BUSTYPES, buf, sizeof(buf));
-      new QListViewItem(lBox, QString::fromLocal8Bit(buf));
-      return true;
-}
-
-bool GetInfo_IO_Ports( QListView * )
-{
-	return false;
-}
-
-bool GetInfo_Sound( QListView *lBox )
-{
-  if ( GetInfo_ReadfromFile( lBox, INFO_DEV_SNDSTAT, 0 ))
+    delete file;
     return true;
-  else
-    return false;
 }
 
-bool GetInfo_Devices( QListView * )
+bool GetInfo_CPU(QListView *lBox)
+{
+    char buf[256];
+
+    sysinfo(SI_ARCHITECTURE, buf, sizeof(buf));
+    new QListViewItem(lBox, QString::fromLocal8Bit(buf));
+    return true;
+}
+
+
+bool GetInfo_IRQ(QListView *)
 {
     return false;
 }
 
-bool GetInfo_SCSI( QListView * )
+bool GetInfo_DMA(QListView *)
 {
     return false;
 }
 
-bool GetInfo_Partitions( QListView * )
+bool GetInfo_PCI(QListView *lBox)
 {
-	return false;
+    char buf[256];
+
+    sysinfo(SI_BUSTYPES, buf, sizeof(buf));
+    new QListViewItem(lBox, QString::fromLocal8Bit(buf));
+    return true;
 }
 
-bool GetInfo_XServer_and_Video( QListView *lBox )
+bool GetInfo_IO_Ports(QListView *)
 {
-	return GetInfo_XServer_Generic( lBox );
+    return false;
 }
 
+bool GetInfo_Sound(QListView *lBox)
+{
+    if(GetInfo_ReadfromFile(lBox, INFO_DEV_SNDSTAT, 0))
+        return true;
+    else
+        return false;
+}
+
+bool GetInfo_Devices(QListView *)
+{
+    return false;
+}
+
+bool GetInfo_SCSI(QListView *)
+{
+    return false;
+}
+
+bool GetInfo_Partitions(QListView *)
+{
+    return false;
+}
+
+bool GetInfo_XServer_and_Video(QListView *lBox)
+{
+    return GetInfo_XServer_Generic(lBox);
+}

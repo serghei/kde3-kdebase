@@ -31,84 +31,91 @@
 /* Cached values become invalid after 5 minutes */
 #define TIMEOUT 300
 
-typedef struct {
-  uid_t uid;
-  char* uName;
-  time_t tStamp;
+typedef struct
+{
+    uid_t uid;
+    char *uName;
+    time_t tStamp;
 } CachedPWUID;
 
 static CONTAINER UIDCache = 0;
 static time_t lastCleanup = 0;
 
-void PWUIDCache_cleanup( void* c );
+void PWUIDCache_cleanup(void *c);
 
-static int uidCmp( void* p1, void* p2 )
+static int uidCmp(void *p1, void *p2)
 {
-  return ( ((CachedPWUID*)p1)->uid - ((CachedPWUID*)p2)->uid );
+    return (((CachedPWUID *)p1)->uid - ((CachedPWUID *)p2)->uid);
 }
 
-void PWUIDCache_cleanup( void* c )
+void PWUIDCache_cleanup(void *c)
 {
-  if ( c ) {
-    if ( ((CachedPWUID*)c)->uName )
-      free ( ((CachedPWUID*)c)->uName );
-    free ( c );
-	}
+    if(c)
+    {
+        if(((CachedPWUID *)c)->uName)
+            free(((CachedPWUID *)c)->uName);
+        free(c);
+    }
 }
-			
+
 void initPWUIDCache()
 {
-  UIDCache = new_ctnr();
+    UIDCache = new_ctnr();
 }
 
 void exitPWUIDCache()
 {
-  destr_ctnr( UIDCache, PWUIDCache_cleanup );
+    destr_ctnr(UIDCache, PWUIDCache_cleanup);
 }
 
-const char* getCachedPWUID( uid_t uid )
+const char *getCachedPWUID(uid_t uid)
 {
-  CachedPWUID key;
-  CachedPWUID* entry = 0;
-  long idx;
-  time_t stamp;
+    CachedPWUID key;
+    CachedPWUID *entry = 0;
+    long idx;
+    time_t stamp;
 
-  stamp = time( 0 );
-  if ( stamp - lastCleanup > TIMEOUT ) {
-    /* Cleanup cache entries every TIMEOUT seconds so that we
-     * don't pile tons of unused entries, and to make sure that
-     * our entries are not outdated. */
-    for ( entry = first_ctnr( UIDCache ); entry; entry = next_ctnr( UIDCache ) ) {
-      /* If a cache entry has not been updated for TIMEOUT
-       * seconds the entry is removed. */
-      if ( stamp - entry->tStamp > TIMEOUT )
-        PWUIDCache_cleanup( remove_ctnr( UIDCache ) );
+    stamp = time(0);
+    if(stamp - lastCleanup > TIMEOUT)
+    {
+        /* Cleanup cache entries every TIMEOUT seconds so that we
+         * don't pile tons of unused entries, and to make sure that
+         * our entries are not outdated. */
+        for(entry = first_ctnr(UIDCache); entry; entry = next_ctnr(UIDCache))
+        {
+            /* If a cache entry has not been updated for TIMEOUT
+             * seconds the entry is removed. */
+            if(stamp - entry->tStamp > TIMEOUT)
+                PWUIDCache_cleanup(remove_ctnr(UIDCache));
+        }
+
+        lastCleanup = stamp;
     }
 
-    lastCleanup = stamp;
-  }
+    key.uid = uid;
+    if((idx = search_ctnr(UIDCache, uidCmp, &key)) < 0)
+    {
+        struct passwd *pwent;
 
-  key.uid = uid;
-  if ( ( idx = search_ctnr( UIDCache, uidCmp, &key ) ) < 0 ) {
-    struct passwd* pwent;
+        /* User id is not yet known */
+        entry = (CachedPWUID *)malloc(sizeof(CachedPWUID));
+        entry->tStamp = stamp;
+        entry->uid = uid;
 
-    /* User id is not yet known */
-    entry = (CachedPWUID*)malloc( sizeof( CachedPWUID ) );
-    entry->tStamp = stamp;
-    entry->uid = uid;
+        pwent = getpwuid(uid);
+        if(pwent)
+            entry->uName = strdup(pwent->pw_name);
+        else
+            entry->uName = strdup("?");
 
-    pwent = getpwuid( uid );
-    if ( pwent )
-      entry->uName = strdup( pwent->pw_name );
+        push_ctnr(UIDCache, entry);
+        bsort_ctnr(UIDCache, uidCmp);
+    }
     else
-      entry->uName = strdup( "?" );
+    {
+        /* User is is already known */
+        entry = get_ctnr(UIDCache, idx);
+    }
 
-    push_ctnr( UIDCache, entry );
-    bsort_ctnr( UIDCache, uidCmp );
-	} else {
-    /* User is is already known */
-    entry = get_ctnr( UIDCache, idx );
-  }
-
-  return entry->uName;
+    return entry->uName;
 }

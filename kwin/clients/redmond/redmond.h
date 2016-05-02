@@ -27,63 +27,66 @@ namespace Redmond {
 
 class RedmondDeco;
 
-class RedmondButton : public KCommonDecorationButton
-{
-	Q_OBJECT
+class RedmondButton : public KCommonDecorationButton {
+    Q_OBJECT
 public:
-	RedmondButton(ButtonType type, RedmondDeco *parent, const char *name);
-	void setBitmap(const unsigned char *bitmap);
-	void setPixmap(const QPixmap &p);
-	void reset(unsigned long changed);
+    RedmondButton(ButtonType type, RedmondDeco *parent, const char *name);
+    void setBitmap(const unsigned char *bitmap);
+    void setPixmap(const QPixmap &p);
+    void reset(unsigned long changed);
 
 protected:
-	virtual void drawButton(QPainter *p);
-	void drawButtonLabel(QPainter *){;}
+    virtual void drawButton(QPainter *p);
+    void drawButtonLabel(QPainter *)
+    {
+        ;
+    }
 
-	QBitmap  deco;
-	QPixmap  pix;
-	bool     miniBtn;
+    QBitmap deco;
+    QPixmap pix;
+    bool miniBtn;
 };
 
 
-class RedmondDeco : public KCommonDecoration
-{
+class RedmondDeco : public KCommonDecoration {
 public:
-	RedmondDeco(KDecorationBridge *, KDecorationFactory *);
-	~RedmondDeco() {;}
+    RedmondDeco(KDecorationBridge *, KDecorationFactory *);
+    ~RedmondDeco()
+    {
+        ;
+    }
 
-	virtual QString visibleName() const;
-	virtual QString defaultButtonsLeft() const;
-	virtual QString defaultButtonsRight() const;
-	virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
-	virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-	virtual KCommonDecorationButton *createButton(ButtonType type);
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual KCommonDecorationButton *createButton(ButtonType type);
 
-	void init();
+    void init();
 
 protected:
-    virtual void reset( unsigned long changed );
+    virtual void reset(unsigned long changed);
 
-	void paintEvent(QPaintEvent*);
+    void paintEvent(QPaintEvent *);
 
 private:
-	int            titleHeight;
+    int titleHeight;
 };
 
-class RedmondDecoFactory : public QObject, public KDecorationFactory
-{
-   Q_OBJECT
+class RedmondDecoFactory : public QObject, public KDecorationFactory {
+    Q_OBJECT
 public:
-	RedmondDecoFactory();
-	virtual ~RedmondDecoFactory();
-	virtual KDecoration *createDecoration(KDecorationBridge *);
-	virtual bool reset(unsigned long);
-	virtual bool supports( Ability ability );
-	virtual QValueList< BorderSize > borderSizes() const;
-private:
-	void readConfig();
-};
+    RedmondDecoFactory();
+    virtual ~RedmondDecoFactory();
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool reset(unsigned long);
+    virtual bool supports(Ability ability);
+    virtual QValueList< BorderSize > borderSizes() const;
 
+private:
+    void readConfig();
+};
 }
 
 #endif

@@ -3,17 +3,18 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
-    if( argc < 5 ) {
-        cout << "Usage: " << argv[0] << 
-            " <ssh path> <host> <username> <password>" << endl;
+    if(argc < 5)
+    {
+        cout << "Usage: " << argv[0] << " <ssh path> <host> <username> <password>" << endl;
         return 1;
     }
 
     KSshProcess ssh(argv[1]);
     cout << ssh.version() << endl;
-    
+
     KSshProcess::SshOptList opts;
     KSshProcess::SshOpt opt;
 
@@ -29,11 +30,12 @@ int main(int argc, char *argv[]) {
     opt.str = QString(argv[3]);
     opts.append(opt);
 
-//    opt.opt = KSshProcess::SSH_PASSWD;
-//    opt.str = QString(argv[4]);
-//   opts.append(opt);
+    //    opt.opt = KSshProcess::SSH_PASSWD;
+    //    opt.str = QString(argv[4]);
+    //   opts.append(opt);
 
-    if( !ssh.setOptions(opts) ) {
+    if(!ssh.setOptions(opts))
+    {
         cout << "ksshprocesstest: setOptions failed" << endl;
         return -1;
     }
@@ -44,10 +46,12 @@ int main(int argc, char *argv[]) {
     bool connected;
     char buf[256];
     char c;
-    while( !stop && !(connected = ssh.connect()) ) {
+    while(!stop && !(connected = ssh.connect()))
+    {
         cout << "ksshprocesstest: Error num - " << ssh.error() << endl;
         cout << "ksshprocesstest: Error msg - " << ssh.errorMsg().latin1() << endl;
-        switch( ssh.error() ) {
+        switch(ssh.error())
+        {
             case KSshProcess::ERR_NEED_PASSWD:
             case KSshProcess::ERR_NEED_PASSPHRASE:
                 cout << "Password: ";
@@ -74,7 +78,7 @@ int main(int argc, char *argv[]) {
                 cout << "ksshprocesstest: auth failed because of changed key." << endl;
                 stop = true;
                 break;
-            
+
             case KSshProcess::ERR_INTERACT:
             case KSshProcess::ERR_INTERNAL:
             case KSshProcess::ERR_UNKNOWN:
@@ -84,15 +88,15 @@ int main(int argc, char *argv[]) {
                 cout << "ksshprocesstest: FATAL ERROR" << endl;
                 stop = true;
                 break;
-                
         }
     }
 
-    if( connected ) {
+    if(connected)
+    {
         cout << "ksshprocesstest: Successfully connected to " << argv[2] << endl;
     }
-    else {
+    else
+    {
         cout << "ksshprocesstest: Connect to " << argv[2] << " failed." << endl;
     }
-    
 }

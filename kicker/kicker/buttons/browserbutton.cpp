@@ -38,18 +38,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "browserbutton.h"
 #include "browserbutton.moc"
 
-BrowserButton::BrowserButton( const QString& icon, const QString& startDir, QWidget* parent )
-    : PanelPopupButton( parent, "BrowserButton" )
-    , topMenu( 0 )
+BrowserButton::BrowserButton(const QString &icon, const QString &startDir, QWidget *parent) : PanelPopupButton(parent, "BrowserButton"), topMenu(0)
 {
-    initialize( icon, startDir );
+    initialize(icon, startDir);
 }
 
-BrowserButton::BrowserButton( const KConfigGroup& config, QWidget* parent )
-    : PanelPopupButton( parent, "BrowserButton" )
-    , topMenu( 0 )
+BrowserButton::BrowserButton(const KConfigGroup &config, QWidget *parent) : PanelPopupButton(parent, "BrowserButton"), topMenu(0)
 {
-    initialize( config.readEntry("Icon", "kdisknav"), config.readPathEntry("Path") );
+    initialize(config.readEntry("Icon", "kdisknav"), config.readPathEntry("Path"));
 }
 
 BrowserButton::~BrowserButton()
@@ -57,31 +53,31 @@ BrowserButton::~BrowserButton()
     delete topMenu;
 }
 
-void BrowserButton::initialize( const QString& icon, const QString& path )
+void BrowserButton::initialize(const QString &icon, const QString &path)
 {
     _icon = icon;
 
     // Don't parent to this, so that the tear of menu is not always-on-top.
-    topMenu = new PanelBrowserMenu( path );
+    topMenu = new PanelBrowserMenu(path);
     setPopup(topMenu);
 
-    _menuTimer = new QTimer( this );
-    connect( _menuTimer, SIGNAL(timeout()), SLOT(slotDelayedPopup()) );
+    _menuTimer = new QTimer(this);
+    connect(_menuTimer, SIGNAL(timeout()), SLOT(slotDelayedPopup()));
 
     QToolTip::add(this, i18n("Browse: %1").arg(path));
-    setTitle( path );
-    setIcon ( _icon );
+    setTitle(path);
+    setIcon(_icon);
 }
 
-void BrowserButton::saveConfig( KConfigGroup& config ) const
+void BrowserButton::saveConfig(KConfigGroup &config) const
 {
     config.writeEntry("Icon", _icon);
     config.writePathEntry("Path", topMenu->path());
 }
 
-void BrowserButton::dragEnterEvent( QDragEnterEvent *ev )
+void BrowserButton::dragEnterEvent(QDragEnterEvent *ev)
 {
-    if ((ev->source() != this) && KURLDrag::canDecode(ev))
+    if((ev->source() != this) && KURLDrag::canDecode(ev))
     {
         _menuTimer->start(500, true);
         ev->accept();
@@ -93,18 +89,18 @@ void BrowserButton::dragEnterEvent( QDragEnterEvent *ev )
     PanelButton::dragEnterEvent(ev);
 }
 
-void BrowserButton::dragLeaveEvent( QDragLeaveEvent *ev )
+void BrowserButton::dragLeaveEvent(QDragLeaveEvent *ev)
 {
-   _menuTimer->stop();
-   PanelButton::dragLeaveEvent(ev);
+    _menuTimer->stop();
+    PanelButton::dragLeaveEvent(ev);
 }
 
-void BrowserButton::dropEvent( QDropEvent *ev )
+void BrowserButton::dropEvent(QDropEvent *ev)
 {
-    KURL path ( topMenu->path() );
+    KURL path(topMenu->path());
     _menuTimer->stop();
-    KFileItem item( path, QString::fromLatin1( "inode/directory" ), KFileItem::Unknown );
-    KonqOperations::doDrop( &item, path, ev, this );
+    KFileItem item(path, QString::fromLatin1("inode/directory"), KFileItem::Unknown);
+    KonqOperations::doDrop(&item, path, ev, this);
     PanelButton::dropEvent(ev);
 }
 
@@ -122,20 +118,22 @@ void BrowserButton::slotDelayedPopup()
 
 void BrowserButton::properties()
 {
-    PanelBrowserDialog dlg( topMenu->path(), _icon, this );
+    PanelBrowserDialog dlg(topMenu->path(), _icon, this);
 
-    if( dlg.exec() == QDialog::Accepted ){
-	_icon = dlg.icon();
-	QString path = dlg.path();
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        _icon = dlg.icon();
+        QString path = dlg.path();
 
-	if ( path != topMenu->path() ) {
-	    delete topMenu;
-	    topMenu = new PanelBrowserMenu( path, this );
-	    setPopup( topMenu );
-	    setTitle( path );
-	}
-	setIcon( _icon );
-	emit requestSave();
+        if(path != topMenu->path())
+        {
+            delete topMenu;
+            topMenu = new PanelBrowserMenu(path, this);
+            setPopup(topMenu);
+            setTitle(path);
+        }
+        setIcon(_icon);
+        emit requestSave();
     }
 }
 
@@ -144,4 +142,3 @@ void BrowserButton::startDrag()
     KURL url(topMenu->path());
     emit dragme(KURL::List(url), labelIcon());
 }
-

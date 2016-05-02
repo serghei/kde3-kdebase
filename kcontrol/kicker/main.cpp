@@ -40,11 +40,11 @@
 #include <X11/Xlib.h>
 
 KickerConfig *KickerConfig::m_self = 0;
-static KStaticDeleter<KickerConfig> staticKickerConfigDeleter;
+static KStaticDeleter< KickerConfig > staticKickerConfigDeleter;
 
 KickerConfig *KickerConfig::the()
 {
-    if (!m_self)
+    if(!m_self)
     {
         staticKickerConfigDeleter.setObject(m_self, new KickerConfig());
     }
@@ -52,10 +52,7 @@ KickerConfig *KickerConfig::the()
 }
 
 KickerConfig::KickerConfig(QWidget *parent, const char *name)
-  : QObject(parent, name),
-    DCOPObject("KickerConfig"),
-    configFileWatch(new KDirWatch(this)),
-    m_currentPanelIndex(0)
+    : QObject(parent, name), DCOPObject("KickerConfig"), configFileWatch(new KDirWatch(this)), m_currentPanelIndex(0)
 {
     m_screenNumber = qt_xdisplay() ? DefaultScreen(qt_xdisplay()) : 0;
 
@@ -64,23 +61,20 @@ KickerConfig::KickerConfig(QWidget *parent, const char *name)
     init();
 
     kapp->dcopClient()->setNotifications(true);
-    connectDCOPSignal("kicker", "kicker", "configSwitchToPanel(QString)",
-                      "jumpToPanel(QString)", false);
+    connectDCOPSignal("kicker", "kicker", "configSwitchToPanel(QString)", "jumpToPanel(QString)", false);
     kapp->dcopClient()->send("kicker", "kicker", "configLaunched()", QByteArray());
 
-    connect(this, SIGNAL(hidingPanelChanged(int)),
-            this, SLOT(setCurrentPanelIndex(int)));
-    connect(this, SIGNAL(positionPanelChanged(int)),
-            this, SLOT(setCurrentPanelIndex(int)));
+    connect(this, SIGNAL(hidingPanelChanged(int)), this, SLOT(setCurrentPanelIndex(int)));
+    connect(this, SIGNAL(positionPanelChanged(int)), this, SLOT(setCurrentPanelIndex(int)));
 }
 
 KickerConfig::~KickerConfig()
 {
     // QValueList::setAutoDelete where for art thou?
     ExtensionInfoList::iterator it = m_extensionInfo.begin();
-    while (it != m_extensionInfo.end())
+    while(it != m_extensionInfo.end())
     {
-        ExtensionInfo* info = *it;
+        ExtensionInfo *info = *it;
         it = m_extensionInfo.erase(it);
         delete info;
     }
@@ -90,22 +84,20 @@ KickerConfig::~KickerConfig()
 // this method may get called multiple times during the life of the control panel!
 void KickerConfig::init()
 {
-    disconnect(configFileWatch, SIGNAL(dirty(const QString&)), this, SLOT(configChanged(const QString&)));
+    disconnect(configFileWatch, SIGNAL(dirty(const QString &)), this, SLOT(configChanged(const QString &)));
     configFileWatch->stopScan();
-    for (ExtensionInfoList::iterator it = m_extensionInfo.begin();
-         it != m_extensionInfo.end();
-         ++it)
+    for(ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
     {
         configFileWatch->removeFile((*it)->_configPath);
     }
 
     QString configname = configName();
     QString configpath = KGlobal::dirs()->findResource("config", configname);
-    if (configpath.isEmpty())
-       configpath = locateLocal("config", configname);
+    if(configpath.isEmpty())
+        configpath = locateLocal("config", configname);
     KSharedConfig::Ptr config = KSharedConfig::openConfig(configname);
 
-    if (m_extensionInfo.isEmpty())
+    if(m_extensionInfo.isEmpty())
     {
         // our list is empty, so add the main kicker config
         m_extensionInfo.append(new ExtensionInfo(QString::null, configname, configpath));
@@ -116,9 +108,9 @@ void KickerConfig::init()
         // this isn't our first trip through here, which means we are reloading
         // so reload the kicker config (first we have to find it ;)
         ExtensionInfoList::iterator it = m_extensionInfo.begin();
-        for (; it != m_extensionInfo.end(); ++it)
+        for(; it != m_extensionInfo.end(); ++it)
         {
-            if (configpath == (*it)->_configPath)
+            if(configpath == (*it)->_configPath)
             {
                 (*it)->load();
                 break;
@@ -128,7 +120,7 @@ void KickerConfig::init()
 
     setupExtensionInfo(*config, true, true);
 
-    connect(configFileWatch, SIGNAL(dirty(const QString&)), this, SLOT(configChanged(const QString&)));
+    connect(configFileWatch, SIGNAL(dirty(const QString &)), this, SLOT(configChanged(const QString &)));
     configFileWatch->startScan();
 }
 
@@ -139,7 +131,7 @@ void KickerConfig::notifyKicker()
     emit aboutToNotifyKicker();
 
     // Tell kicker about the new config file.
-    if (!kapp->dcopClient()->isAttached())
+    if(!kapp->dcopClient()->isAttached())
     {
         kapp->dcopClient()->attach();
     }
@@ -147,7 +139,7 @@ void KickerConfig::notifyKicker()
     QByteArray data;
     QCString appname;
 
-    if (m_screenNumber == 0)
+    if(m_screenNumber == 0)
     {
         appname = "kicker";
     }
@@ -159,7 +151,7 @@ void KickerConfig::notifyKicker()
     kapp->dcopClient()->send(appname, appname, "configure()", data);
 }
 
-void KickerConfig::setupExtensionInfo(KConfig& config, bool checkExists, bool reloadIfExists)
+void KickerConfig::setupExtensionInfo(KConfig &config, bool checkExists, bool reloadIfExists)
 {
     config.setGroup("General");
     QStringList elist = config.readListEntry("Extensions2");
@@ -169,13 +161,13 @@ void KickerConfig::setupExtensionInfo(KConfig& config, bool checkExists, bool re
     // all the extensions that remain (e.g. are no longer active)
     ExtensionInfoList oldExtensions(m_extensionInfo);
 
-    for (QStringList::Iterator it = elist.begin(); it != elist.end(); ++it)
+    for(QStringList::Iterator it = elist.begin(); it != elist.end(); ++it)
     {
         // extension id
         QString group(*it);
 
         // is there a config group for this extension?
-        if (!config.hasGroup(group) || group.contains("Extension") < 1)
+        if(!config.hasGroup(group) || group.contains("Extension") < 1)
         {
             continue;
         }
@@ -187,17 +179,17 @@ void KickerConfig::setupExtensionInfo(KConfig& config, bool checkExists, bool re
         QString configname = config.readEntry("ConfigFile");
         QString configpath = KGlobal::dirs()->findResource("config", configname);
 
-        if (checkExists)
+        if(checkExists)
         {
             ExtensionInfoList::iterator extIt = m_extensionInfo.begin();
-            for (; extIt != m_extensionInfo.end(); ++extIt)
+            for(; extIt != m_extensionInfo.end(); ++extIt)
             {
-                if (configpath == (*extIt)->_configPath)
+                if(configpath == (*extIt)->_configPath)
                 {
                     // we have found it in the config file and it exists
                     // so remove it from our list of existing extensions
                     oldExtensions.remove(*extIt);
-                    if (reloadIfExists)
+                    if(reloadIfExists)
                     {
                         (*extIt)->load();
                     }
@@ -205,26 +197,26 @@ void KickerConfig::setupExtensionInfo(KConfig& config, bool checkExists, bool re
                 }
             }
 
-            if (extIt != m_extensionInfo.end())
+            if(extIt != m_extensionInfo.end())
             {
                 continue;
             }
         }
 
         configFileWatch->addFile(configpath);
-        ExtensionInfo* info = new ExtensionInfo(df, configname, configpath);
+        ExtensionInfo *info = new ExtensionInfo(df, configname, configpath);
         m_extensionInfo.append(info);
         emit extensionAdded(info);
     }
 
-    if (checkExists)
+    if(checkExists)
     {
         // now remove all the left overs that weren't in the file
         ExtensionInfoList::iterator extIt = oldExtensions.begin();
-        for (; extIt != oldExtensions.end(); ++extIt)
+        for(; extIt != oldExtensions.end(); ++extIt)
         {
             // don't remove the kickerrc!
-            if (!(*extIt)->_configPath.endsWith(configName()))
+            if(!(*extIt)->_configPath.endsWith(configName()))
             {
                 emit extensionRemoved(*extIt);
                 m_extensionInfo.remove(*extIt);
@@ -233,9 +225,9 @@ void KickerConfig::setupExtensionInfo(KConfig& config, bool checkExists, bool re
     }
 }
 
-void KickerConfig::configChanged(const QString& configPath)
+void KickerConfig::configChanged(const QString &configPath)
 {
-    if (configPath.endsWith(configName()))
+    if(configPath.endsWith(configName()))
     {
         KSharedConfig::Ptr config = KSharedConfig::openConfig(configName());
         config->reparseConfiguration();
@@ -243,9 +235,9 @@ void KickerConfig::configChanged(const QString& configPath)
     }
 
     // find the extension and change it
-    for (ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
+    for(ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
     {
-        if (configPath == (*it)->_configPath)
+        if(configPath == (*it)->_configPath)
         {
             emit extensionAboutToChange(configPath);
             (*it)->configChanged();
@@ -256,25 +248,25 @@ void KickerConfig::configChanged(const QString& configPath)
     emit extensionChanged(configPath);
 }
 
-void KickerConfig::populateExtensionInfoList(QComboBox* list)
+void KickerConfig::populateExtensionInfoList(QComboBox *list)
 {
     list->clear();
-    for (ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
+    for(ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
     {
-       list->insertItem((*it)->_name);
+        list->insertItem((*it)->_name);
     }
 }
 
-const ExtensionInfoList& KickerConfig::extensionsInfo()
+const ExtensionInfoList &KickerConfig::extensionsInfo()
 {
     return m_extensionInfo;
 }
 
 void KickerConfig::reloadExtensionInfo()
 {
-    for (ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
+    for(ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
     {
-       (*it)->load();
+        (*it)->load();
     }
 
     emit extensionInfoChanged();
@@ -282,25 +274,25 @@ void KickerConfig::reloadExtensionInfo()
 
 void KickerConfig::saveExtentionInfo()
 {
-    for (ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
+    for(ExtensionInfoList::iterator it = m_extensionInfo.begin(); it != m_extensionInfo.end(); ++it)
     {
-       (*it)->save();
+        (*it)->save();
     }
 }
 
-void KickerConfig::jumpToPanel(const QString& panelConfig)
+void KickerConfig::jumpToPanel(const QString &panelConfig)
 {
     ExtensionInfoList::iterator it = m_extensionInfo.begin();
     int index = 0;
-    for (; it != m_extensionInfo.end(); ++it, ++index)
+    for(; it != m_extensionInfo.end(); ++it, ++index)
     {
-        if ((*it)->_configFile == panelConfig)
+        if((*it)->_configFile == panelConfig)
         {
             break;
         }
     }
 
-    if (it == m_extensionInfo.end())
+    if(it == m_extensionInfo.end())
     {
         return;
     }
@@ -313,7 +305,7 @@ void KickerConfig::jumpToPanel(const QString& panelConfig)
 
 QString KickerConfig::configName()
 {
-    if (m_screenNumber == 0)
+    if(m_screenNumber == 0)
     {
         return "kickerrc";
     }
@@ -330,24 +322,22 @@ void KickerConfig::setCurrentPanelIndex(int index)
 
 QString KickerConfig::quickHelp() const
 {
-    return i18n("<h1>Panel</h1> Here you can configure the KDE panel (also"
-                " referred to as 'kicker'). This includes options like the position and"
-                " size of the panel, as well as its hiding behavior and its looks.<p>"
-                " Note that you can also access some of these options directly by clicking"
-                " on the panel, e.g. dragging it with the left mouse button or using the"
-                " context menu on right mouse button click. This context menu also offers you"
-                " manipulation of the panel's buttons and applets.");
+    return i18n(
+        "<h1>Panel</h1> Here you can configure the KDE panel (also"
+        " referred to as 'kicker'). This includes options like the position and"
+        " size of the panel, as well as its hiding behavior and its looks.<p>"
+        " Note that you can also access some of these options directly by clicking"
+        " on the panel, e.g. dragging it with the left mouse button or using the"
+        " context menu on right mouse button click. This context menu also offers you"
+        " manipulation of the panel's buttons and applets.");
 }
 
 KAboutData *KickerConfig::aboutData()
 {
     // the KAboutDatas are deleted by the KCModules
-    KAboutData *about
-          = new KAboutData(I18N_NOOP("kcmkicker"),
-                           I18N_NOOP("KDE Panel Control Module"),
-                           0, 0, KAboutData::License_GPL,
-                           I18N_NOOP("(c) 1999 - 2001 Matthias Elter\n"
-                                     "(c) 2002 - 2003 Aaron J. Seigo"));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkicker"), I18N_NOOP("KDE Panel Control Module"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 1999 - 2001 Matthias Elter\n"
+                                                 "(c) 2002 - 2003 Aaron J. Seigo"));
 
     about->addAuthor("Aaron J. Seigo", 0, "aseigo@kde.org");
     about->addAuthor("Matthias Elter", 0, "elter@kde.org");
@@ -355,44 +345,39 @@ KAboutData *KickerConfig::aboutData()
     return about;
 }
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_kicker(QWidget *parent, const char *name)
 {
-    KDE_EXPORT KCModule *create_kicker(QWidget *parent, const char *name)
-    {
-        KCModuleContainer *container = new KCModuleContainer(parent, "kcmkicker");
-        container->addModule("kicker_config_arrangement");
-        container->addModule("kicker_config_hiding");
-        container->addModule("kicker_config_menus");
-        container->addModule("kicker_config_appearance");
-        return container;
-    }
+    KCModuleContainer *container = new KCModuleContainer(parent, "kcmkicker");
+    container->addModule("kicker_config_arrangement");
+    container->addModule("kicker_config_hiding");
+    container->addModule("kicker_config_menus");
+    container->addModule("kicker_config_appearance");
+    return container;
+}
 
-    KDE_EXPORT KCModule *create_kicker_arrangement(QWidget *parent, const char * /*name*/)
-    {
-        KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") +
-                                         "kicker/extensions");
-        return new PositionConfig(parent, "kcmkicker");
-    }
+KDE_EXPORT KCModule *create_kicker_arrangement(QWidget *parent, const char * /*name*/)
+{
+    KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") + "kicker/extensions");
+    return new PositionConfig(parent, "kcmkicker");
+}
 
-    KDE_EXPORT KCModule *create_kicker_hiding(QWidget *parent, const char * /*name*/)
-    {
-        KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") +
-                                         "kicker/extensions");
-        return new HidingConfig(parent, "kcmkicker");
-    }
+KDE_EXPORT KCModule *create_kicker_hiding(QWidget *parent, const char * /*name*/)
+{
+    KGlobal::dirs()->addResourceType("extensions", KStandardDirs::kde_default("data") + "kicker/extensions");
+    return new HidingConfig(parent, "kcmkicker");
+}
 
-    KDE_EXPORT KCModule *create_kicker_menus(QWidget *parent, const char * /*name*/)
-    {
-        return new MenuConfig(parent, "kcmkicker");
-    }
+KDE_EXPORT KCModule *create_kicker_menus(QWidget *parent, const char * /*name*/)
+{
+    return new MenuConfig(parent, "kcmkicker");
+}
 
-    KDE_EXPORT KCModule *create_kicker_appearance(QWidget *parent, const char * /*name*/)
-    {
-        KImageIO::registerFormats();
-        KGlobal::dirs()->addResourceType("tiles", KStandardDirs::kde_default("data") +
-                "kicker/tiles");
-        KGlobal::dirs()->addResourceType("hb_pics", KStandardDirs::kde_default("data") +
-                "kcmkicker/pics");
-        return new LookAndFeelConfig(parent, "kcmkicker");
-    }
+KDE_EXPORT KCModule *create_kicker_appearance(QWidget *parent, const char * /*name*/)
+{
+    KImageIO::registerFormats();
+    KGlobal::dirs()->addResourceType("tiles", KStandardDirs::kde_default("data") + "kicker/tiles");
+    KGlobal::dirs()->addResourceType("hb_pics", KStandardDirs::kde_default("data") + "kcmkicker/pics");
+    return new LookAndFeelConfig(parent, "kcmkicker");
+}
 }

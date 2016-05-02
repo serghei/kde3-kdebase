@@ -15,22 +15,19 @@
 
 class KWinModule;
 
-class KStart: public QObject {
-  Q_OBJECT
+class KStart : public QObject {
+    Q_OBJECT
 
 public:
-  KStart();
-  ~KStart(){};
-  
+    KStart();
+    ~KStart(){};
+
 public slots:
-  void windowAdded(WId);
+    void windowAdded(WId);
 
 private:
-
-  void applyStyle(WId );
-  void sendRule();
-
+    void applyStyle(WId);
+    void sendRule();
 };
 
 #endif
-

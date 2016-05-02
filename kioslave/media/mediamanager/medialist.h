@@ -23,57 +23,41 @@
 
 #include "medium.h"
 
-class MediaList : public QObject
-{
-Q_OBJECT
+class MediaList : public QObject {
+    Q_OBJECT
 
 public:
-	MediaList();
+    MediaList();
 
-	// FIXME: should be <const Medium> or something similar...
-	const QPtrList<Medium> list() const;
-	const Medium *findById(const QString &id) const;
-	const Medium *findByName(const QString &name) const;
+    // FIXME: should be <const Medium> or something similar...
+    const QPtrList< Medium > list() const;
+    const Medium *findById(const QString &id) const;
+    const Medium *findByName(const QString &name) const;
 
 public:
-	QString addMedium(Medium *medium, bool allowNotification = true);
-	bool removeMedium(const QString &id, bool allowNotification = true);
+    QString addMedium(Medium *medium, bool allowNotification = true);
+    bool removeMedium(const QString &id, bool allowNotification = true);
 
-	bool changeMediumState(const Medium &medium, bool allowNotification);
-	bool changeMediumState(const QString &id,
-	                       const QString &baseURL,
-	                       bool allowNotification = true,
-	                       const QString &mimeType = QString::null,
-	                       const QString &iconName = QString::null,
-	                       const QString &label = QString::null);
-	bool changeMediumState(const QString &id,
-	                       const QString &deviceNode,
-	                       const QString &mountPoint,
-	                       const QString &fsType, bool mounted,
-	                       bool allowNotification = true,
-	                       const QString &mimeType = QString::null,
-	                       const QString &iconName = QString::null,
-	                       const QString &label = QString::null);
-	bool changeMediumState(const QString &id, bool mounted,
-	                       bool allowNotification = true,
-	                       const QString &mimeType = QString::null,
-	                       const QString &iconName = QString::null,
-	                       const QString &label = QString::null);
+    bool changeMediumState(const Medium &medium, bool allowNotification);
+    bool changeMediumState(const QString &id, const QString &baseURL, bool allowNotification = true, const QString &mimeType = QString::null,
+                           const QString &iconName = QString::null, const QString &label = QString::null);
+    bool changeMediumState(const QString &id, const QString &deviceNode, const QString &mountPoint, const QString &fsType, bool mounted,
+                           bool allowNotification = true, const QString &mimeType = QString::null, const QString &iconName = QString::null,
+                           const QString &label = QString::null);
+    bool changeMediumState(const QString &id, bool mounted, bool allowNotification = true, const QString &mimeType = QString::null,
+                           const QString &iconName = QString::null, const QString &label = QString::null);
 
-	bool setUserLabel(const QString &name, const QString &label);
+    bool setUserLabel(const QString &name, const QString &label);
 
 signals:
-	void mediumAdded(const QString &id, const QString &name,
-	                 bool allowNotification);
-	void mediumRemoved(const QString &id, const QString &name,
-	                   bool allowNotification);
-	void mediumStateChanged(const QString &id, const QString &name,
-	                        bool mounted, bool allowNotification);
+    void mediumAdded(const QString &id, const QString &name, bool allowNotification);
+    void mediumRemoved(const QString &id, const QString &name, bool allowNotification);
+    void mediumStateChanged(const QString &id, const QString &name, bool mounted, bool allowNotification);
 
 private:
-	QPtrList<Medium> m_media;
-	QMap<QString,Medium*> m_nameMap;
-	QMap<QString,Medium*> m_idMap;
+    QPtrList< Medium > m_media;
+    QMap< QString, Medium * > m_nameMap;
+    QMap< QString, Medium * > m_idMap;
 };
 
 #endif

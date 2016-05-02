@@ -28,12 +28,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ContainerArea;
 
-class RemoveContainerMenu : public QPopupMenu
-{
+class RemoveContainerMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    RemoveContainerMenu(ContainerArea* cArea, QWidget *parent=0, const char *name=0);
+    RemoveContainerMenu(ContainerArea *cArea, QWidget *parent = 0, const char *name = 0);
     ~RemoveContainerMenu();
 
 protected slots:

@@ -41,8 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class KWinModule;
 
-namespace KickerMenuApplet
-{
+namespace KickerMenuApplet {
 
 class MenuEmbed;
 
@@ -64,114 +63,112 @@ class MenuEmbed;
  * @author Lubos Lunak <l.lunak@suse.cz>
  */
 
-class Applet : public KPanelApplet, public DCOPObject
-{
+class Applet : public KPanelApplet, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-k_dcop:
-   
-    /**
-     * Called by the Kicker configuration(KCM). Does in turn call
-     * readSettings().
-     */
-    ASYNC configure();
-    
+    k_dcop :
+
+        /**
+         * Called by the Kicker configuration(KCM). Does in turn call
+         * readSettings().
+         */
+        ASYNC
+        configure();
+
 public:
-    Applet( const QString& configFile, QWidget *parent );
-            virtual ~Applet();
-    virtual int widthForHeight( int height ) const;
-    virtual int heightForWidth( int width ) const;
-    
+    Applet(const QString &configFile, QWidget *parent);
+    virtual ~Applet();
+    virtual int widthForHeight(int height) const;
+    virtual int heightForWidth(int width) const;
+
     /**
      * Looks up @param embed in @ref menus, and removes it.
      */
-    void menuLost( MenuEmbed* embed );
-    void updateMenuGeometry( MenuEmbed* embed );
+    void menuLost(MenuEmbed *embed);
+    void updateMenuGeometry(MenuEmbed *embed);
     void setBackground();
 
 protected:
-    
-    virtual void paletteChange(const QPalette& );
-    virtual void positionChange( Position p );
+    virtual void paletteChange(const QPalette &);
+    virtual void positionChange(Position p);
     virtual void moveEvent(QMoveEvent *);
 
 private slots:
-    
+
     /**
      * Called each time a window is added. When the selection is
      * initially claimed, it is called for every window. It does the big
      * work, and does the embedding with MenuEmbed.
      */
-    void windowAdded( WId w );
-   
+    void windowAdded(WId w);
+
     /**
      * Finds @p w's menubar in @see menus, and then activates it.
      *
      * @param w the activated window.
      */
-    void activeWindowChanged( WId w );
-    
+    void activeWindowChanged(WId w);
+
     /**
      * Called when the selection(selection_atom) is lost. Deletes the
      * embedded menus, and starts listening for the selection again.
      *
      */
     void lostSelection();
-    
+
     /**
      * Reads whether a central menu bar should be used or not, basically.
      */
     void readSettings();
     void claimSelection();
-    
+
 private:
-    
     /**
      * Returns true if the selection is Not owned. That is, the menu applet
      * isn't "running" and is listening for the selection to be released.
      */
     bool isDisabled() const;
-    
-    WId tryTransientFor( WId w );
-   
+
+    WId tryTransientFor(WId w);
+
     /**
      * Does some sanity checks, and then sets active_menu to @param embed.
      */
-    void activateMenu( MenuEmbed* embed );
-    
+    void activateMenu(MenuEmbed *embed);
+
     /**
      * Creates msg_type_atom and selection_atom, and returns the latter.
      */
     static Atom makeSelectionAtom();
     void updateTopEdgeOffset();
-    KWinModule* module;
-    
+    KWinModule *module;
+
     /**
      * List of all known menus.
      */
-    QValueList< MenuEmbed* > menus;
-    
+    QValueList< MenuEmbed * > menus;
+
     /**
      * A pointer to the current active menu, which is member
      * of @ref menus.
      */
-    MenuEmbed* active_menu;
-    
-    KSelectionOwner* selection;
-    
+    MenuEmbed *active_menu;
+
+    KSelectionOwner *selection;
+
     /**
      * Only the messenger. Dispatches signals to  claimSelection().
      */
-    KSelectionWatcher* selection_watcher;
-    
+    KSelectionWatcher *selection_watcher;
+
     /**
      * Whether the Desktop menu should be used, when a window
      * with no menu is used.
      */
     bool desktop_menu;
     DCOPClient dcopclient;
-    
+
     /**
      * The distance to the top of the screen.
      */
@@ -183,76 +180,69 @@ private:
  * @author Siegfried Nijssen <snijssen@liacs.nl>
  * @author Lubos Lunak <l.lunak@suse.cz>
  */
-class MenuEmbed
-    : public QXEmbed
-{
+class MenuEmbed : public QXEmbed {
     Q_OBJECT
 
 public:
-
     /**
      * Default constructor
      *
      * @param mainwindow window ID for the window to be plugged
      * @param desktop true if @p mainwindow is the desktop
      */
-    MenuEmbed( WId mainwindow, bool desktop,
-                QWidget* parent = NULL, const char* name = NULL );
-    
+    MenuEmbed(WId mainwindow, bool desktop, QWidget *parent = NULL, const char *name = NULL);
+
     void setBackground();
-    
+
     /**
      * @returns the window ID for the handled window.
      */
     WId mainWindow() const;
-    
+
     /**
      */
     bool isDesktopMenu() const;
-    virtual void setMinimumSize( int w, int h );
-    void setMinimumSize( const QSize& s ) { setMinimumSize( s.width(), s.height()); }
+    virtual void setMinimumSize(int w, int h);
+    void setMinimumSize(const QSize &s)
+    {
+        setMinimumSize(s.width(), s.height());
+    }
 
 protected:
-    
     /**
      * When @p w is None, that is the embedded window was lost, it calls
      * menuLost() such that the this is deleted from @ref menus list.
      */
-    virtual void windowChanged( WId w );
-    
-    virtual bool x11Event( XEvent* ev );
+    virtual void windowChanged(WId w);
+
+    virtual bool x11Event(XEvent *ev);
 
 private:
-    
     void sendSyntheticConfigureNotifyEvent();
     WId main_window;
-    
+
     /**
      * If the window is the desktop window.
      */
     bool desktop;
 };
-    
-inline
-bool Applet::isDisabled() const
+
+inline bool Applet::isDisabled() const
 {
-    assert( ( selection == NULL && selection_watcher != NULL )
-        || ( selection != NULL && selection_watcher == NULL ));
+    assert((selection == NULL && selection_watcher != NULL) || (selection != NULL && selection_watcher == NULL));
     return selection == NULL;
 }
 
-inline
-WId MenuEmbed::mainWindow() const
+inline WId MenuEmbed::mainWindow() const
 {
     return main_window;
 }
 
-inline
-bool MenuEmbed::isDesktopMenu() const
+inline bool MenuEmbed::isDesktopMenu() const
 {
     return desktop;
 }
-    
+
 } // namespace
 
 #endif

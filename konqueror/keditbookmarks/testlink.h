@@ -30,46 +30,54 @@
 
 class TestLinkItrHolder : public BookmarkIteratorHolder {
 public:
-   static TestLinkItrHolder* self() { 
-      if (!s_self) { s_self = new TestLinkItrHolder(); }; return s_self; 
-   }
-   void addAffectedBookmark( const QString & address );
-   void resetToValue(const QString &url, const QString &val);
-   const QString getMod(const QString &url) const;
-   const QString getOldVisit(const QString &url) const;
-   void setMod(const QString &url, const QString &val);
-   void setOldVisit(const QString &url, const QString &val);
-   static QString calcPaintStyle(const QString &, KEBListViewItem::PaintStyle&, 
-                                 const QString &, const QString &);
+    static TestLinkItrHolder *self()
+    {
+        if(!s_self)
+        {
+            s_self = new TestLinkItrHolder();
+        };
+        return s_self;
+    }
+    void addAffectedBookmark(const QString &address);
+    void resetToValue(const QString &url, const QString &val);
+    const QString getMod(const QString &url) const;
+    const QString getOldVisit(const QString &url) const;
+    void setMod(const QString &url, const QString &val);
+    void setOldVisit(const QString &url, const QString &val);
+    static QString calcPaintStyle(const QString &, KEBListViewItem::PaintStyle &, const QString &, const QString &);
+
 protected:
-   virtual void doItrListChanged();
+    virtual void doItrListChanged();
+
 private:
-   TestLinkItrHolder();
-   static TestLinkItrHolder *s_self;
-   QMap<QString, QString> m_modify;
-   QMap<QString, QString> m_oldModify;
-   QString m_affectedBookmark;
+    TestLinkItrHolder();
+    static TestLinkItrHolder *s_self;
+    QMap< QString, QString > m_modify;
+    QMap< QString, QString > m_oldModify;
+    QString m_affectedBookmark;
 };
 
-class TestLinkItr : public BookmarkIterator
-{
-   Q_OBJECT
+class TestLinkItr : public BookmarkIterator {
+    Q_OBJECT
 
 public:
-   TestLinkItr(QValueList<KBookmark> bks);
-   ~TestLinkItr();
-   virtual TestLinkItrHolder* holder() const { return TestLinkItrHolder::self(); }
+    TestLinkItr(QValueList< KBookmark > bks);
+    ~TestLinkItr();
+    virtual TestLinkItrHolder *holder() const
+    {
+        return TestLinkItrHolder::self();
+    }
 
 public slots:
-   void slotJobResult(KIO::Job *job);
-   void slotJobData(KIO::Job *job, const QByteArray &data);
+    void slotJobResult(KIO::Job *job);
+    void slotJobData(KIO::Job *job, const QByteArray &data);
 
 private:
-   virtual void doAction();
-   virtual bool isApplicable(const KBookmark &bk) const;
+    virtual void doAction();
+    virtual bool isApplicable(const KBookmark &bk) const;
 
-   KIO::TransferJob *m_job;
-   bool m_errSet;
+    KIO::TransferJob *m_job;
+    bool m_errSet;
 };
 
 #endif

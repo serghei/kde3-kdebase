@@ -25,21 +25,21 @@
 
 class KCmdLineArgs;
 
-class KCMInit : public QObject, public DCOPObject
-{
+class KCMInit : public QObject, public DCOPObject {
     Q_OBJECT
     K_DCOP
-    k_dcop:
-        void runPhase1();
-        void runPhase2();
-    public:
-        KCMInit( KCmdLineArgs* args );
-        virtual ~KCMInit();
-    private:
-        bool runModule(const QString &libName, KService::Ptr service);
-        void runModules( int phase );
-        KService::List list;
-        QStrList alreadyInitialized;
+    k_dcop : void runPhase1();
+    void runPhase2();
+
+public:
+    KCMInit(KCmdLineArgs *args);
+    virtual ~KCMInit();
+
+private:
+    bool runModule(const QString &libName, KService::Ptr service);
+    void runModules(int phase);
+    KService::List list;
+    QStrList alreadyInitialized;
 };
 
 #endif

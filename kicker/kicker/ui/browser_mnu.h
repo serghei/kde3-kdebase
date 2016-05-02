@@ -29,13 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kpanelmenu.h>
 #include <kdirwatch.h>
 
-class PanelBrowserMenu : public KPanelMenu
-{
+class PanelBrowserMenu : public KPanelMenu {
     Q_OBJECT
 
 public:
     PanelBrowserMenu(QString path, QWidget *parent = 0, const char *name = 0, int startid = 0);
-  ~PanelBrowserMenu();
+    ~PanelBrowserMenu();
 
     void append(const QPixmap &pixmap, const QString &title, const QString &filename, bool mimecheck);
     void append(const QPixmap &pixmap, const QString &title, PanelBrowserMenu *subMenu);
@@ -48,7 +47,7 @@ protected slots:
     void slotOpenTerminal();
     void slotOpenFileManager();
     void slotMimeCheck();
-    void slotClearIfNeeded(const QString&);
+    void slotClearIfNeeded(const QString &);
     void slotClear();
     void slotDragObjectDestroyed();
 
@@ -60,22 +59,22 @@ protected:
     void dragMoveEvent(QDragMoveEvent *);
     void initIconMap();
 
-    QPoint             _lastpress;
-    QMap<int, QString> _filemap;
-    QMap<int, bool>    _mimemap;
-    QTimer            *_mimecheckTimer;
-    KDirWatch          _dirWatch;
-    QValueVector<PanelBrowserMenu*> _subMenus;
+    QPoint _lastpress;
+    QMap< int, QString > _filemap;
+    QMap< int, bool > _mimemap;
+    QTimer *_mimecheckTimer;
+    KDirWatch _dirWatch;
+    QValueVector< PanelBrowserMenu * > _subMenus;
 
-    int                _startid;
-    bool               _dirty;
+    int _startid;
+    bool _dirty;
 
     // With this flag set to 'true' the menu only displays files and
     // directories. i.e. the "Open in File Manager" and "Open in Terminal"
     // entries are not inserted in the menu and its submenus.
-    bool               _filesOnly;
+    bool _filesOnly;
 
-    static QMap<QString, QPixmap> *_icons;
+    static QMap< QString, QPixmap > *_icons;
 };
 
 #endif

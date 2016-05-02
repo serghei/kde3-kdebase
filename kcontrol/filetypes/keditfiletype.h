@@ -25,30 +25,28 @@ class TypesListItem;
 class FileTypeDetails;
 
 // A dialog for ONE file type to be edited.
-class FileTypeDialog : public KDialogBase
-{
-  Q_OBJECT
+class FileTypeDialog : public KDialogBase {
+    Q_OBJECT
 public:
-  FileTypeDialog( KMimeType::Ptr mime );
-  FileTypeDialog( KMimeType::Ptr mime, bool newItem );
+    FileTypeDialog(KMimeType::Ptr mime);
+    FileTypeDialog(KMimeType::Ptr mime, bool newItem);
 
 protected slots:
 
-  //virtual void slotDefault();
-  //virtual void slotUser1(); // Reset
-  virtual void slotApply();
-  virtual void slotOk();
-  void clientChanged(bool state);
-  void slotDatabaseChanged();
+    // virtual void slotDefault();
+    // virtual void slotUser1(); // Reset
+    virtual void slotApply();
+    virtual void slotOk();
+    void clientChanged(bool state);
+    void slotDatabaseChanged();
 
 protected:
-  void save();
+    void save();
 
 private:
-  void init( KMimeType::Ptr mime, bool newItem );
-  FileTypeDetails * m_details;
-  TypesListItem * m_item;
+    void init(KMimeType::Ptr mime, bool newItem);
+    FileTypeDetails *m_details;
+    TypesListItem *m_item;
 };
 
 #endif
-

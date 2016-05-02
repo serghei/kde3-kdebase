@@ -15,7 +15,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-*/  
+*/
 
 #ifndef __KDMUSERS_H__
 #define __KDMUSERS_H__
@@ -37,70 +37,67 @@
 #include <pwd.h>
 
 
-class KDMUsersWidget : public QWidget
-{
-	Q_OBJECT
+class KDMUsersWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	KDMUsersWidget( QWidget *parent = 0, const char *name = 0 );
+    KDMUsersWidget(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
-	void defaults();
-	void makeReadOnly();
+    void load();
+    void save();
+    void defaults();
+    void makeReadOnly();
 
-	bool eventFilter( QObject *o, QEvent *e );
+    bool eventFilter(QObject *o, QEvent *e);
 
 public slots:
-	void slotClearUsers();
-	void slotAddUsers( const QMap<QString,int> & );
-	void slotDelUsers( const QMap<QString,int> & );
+    void slotClearUsers();
+    void slotAddUsers(const QMap< QString, int > &);
+    void slotDelUsers(const QMap< QString, int > &);
 
 signals:
-	void changed( bool state );
-	void setMinMaxUID( int, int );
+    void changed(bool state);
+    void setMinMaxUID(int, int);
 
 private slots:
-	void slotMinMaxChanged();
-	void slotShowOpts();
-	void slotUpdateOptIn( QListViewItem *item );
-	void slotUpdateOptOut( QListViewItem *item );
-	void slotUserSelected();
-	void slotUnsetUserPix();
-	void slotFaceOpts();
-	void slotUserButtonClicked();
-	void slotChanged();
+    void slotMinMaxChanged();
+    void slotShowOpts();
+    void slotUpdateOptIn(QListViewItem *item);
+    void slotUpdateOptOut(QListViewItem *item);
+    void slotUserSelected();
+    void slotUnsetUserPix();
+    void slotFaceOpts();
+    void slotUserButtonClicked();
+    void slotChanged();
 
 private:
-	void updateOptList( QListViewItem *item, QStringList &list );
-	void userButtonDropEvent( QDropEvent *e );
-	void changeUserPix( const QString & );
+    void updateOptList(QListViewItem *item, QStringList &list);
+    void userButtonDropEvent(QDropEvent *e);
+    void changeUserPix(const QString &);
 
-	QGroupBox	*minGroup;	// top left
-	QLineEdit	*leminuid, *lemaxuid;
+    QGroupBox *minGroup; // top left
+    QLineEdit *leminuid, *lemaxuid;
 
-	QButtonGroup	*usrGroup; // right below
-	QCheckBox	*cbshowlist, *cbcomplete, *cbinverted, *cbusrsrt;
+    QButtonGroup *usrGroup; // right below
+    QCheckBox *cbshowlist, *cbcomplete, *cbinverted, *cbusrsrt;
 
-	QLabel		*s_label; // middle
-	QWidgetStack	*wstack;
-	KListView	*optoutlv, *optinlv;
+    QLabel *s_label; // middle
+    QWidgetStack *wstack;
+    KListView *optoutlv, *optinlv;
 
-	QButtonGroup	*faceGroup; // right
-	QRadioButton	*rbadmonly, *rbprefadm, *rbprefusr, *rbusronly;
+    QButtonGroup *faceGroup; // right
+    QRadioButton *rbadmonly, *rbprefadm, *rbprefusr, *rbusronly;
 
-	KComboBox	*usercombo; // right below
-	QPushButton	*userbutton;
-	QPushButton	*rstuserbutton;
+    KComboBox *usercombo; // right below
+    QPushButton *userbutton;
+    QPushButton *rstuserbutton;
 
-	QString		m_userPixDir;
-	QString		m_defaultText;
-	QStringList	hiddenUsers, selectedUsers;
-	QString		defminuid, defmaxuid;
+    QString m_userPixDir;
+    QString m_defaultText;
+    QStringList hiddenUsers, selectedUsers;
+    QString defminuid, defmaxuid;
 
-	bool		m_notFirst;
+    bool m_notFirst;
 };
 
 #endif
-
-

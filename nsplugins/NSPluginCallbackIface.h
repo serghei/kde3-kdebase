@@ -19,7 +19,6 @@
 */
 
 
-
 #ifndef __NSPluginCallbackIface_h__
 #define __NSPluginCallbackIface_h__
 
@@ -28,19 +27,17 @@
 #include <dcopobject.h>
 
 
-class NSPluginCallbackIface : virtual public DCOPObject
-{
-  K_DCOP
+class NSPluginCallbackIface : virtual public DCOPObject {
+    K_DCOP
 
-k_dcop:
+    k_dcop :
 
-  virtual ASYNC requestURL(QString url, QString target) = 0;
-  virtual ASYNC postURL(QString url, QString target, QByteArray data, QString mime) = 0;
-  virtual ASYNC statusMessage( QString msg ) = 0;
-  virtual ASYNC evalJavaScript( Q_INT32 id, QString script ) = 0;
-
+        virtual ASYNC
+        requestURL(QString url, QString target) = 0;
+    virtual ASYNC postURL(QString url, QString target, QByteArray data, QString mime) = 0;
+    virtual ASYNC statusMessage(QString msg) = 0;
+    virtual ASYNC evalJavaScript(Q_INT32 id, QString script) = 0;
 };
 
 
 #endif
-

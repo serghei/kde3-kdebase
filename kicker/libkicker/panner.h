@@ -31,37 +31,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class QBoxLayout;
 class QTimer;
 
-class KDE_EXPORT Panner : public QScrollView
-{
+class KDE_EXPORT Panner : public QScrollView {
     Q_OBJECT
 
 public:
-    Panner( QWidget* parent, const char* name = 0 );
+    Panner(QWidget *parent, const char *name = 0);
     ~Panner();
 
-    QSize minimumSizeHint() const { return QWidget::minimumSizeHint(); }
+    QSize minimumSizeHint() const
+    {
+        return QWidget::minimumSizeHint();
+    }
 
-    Qt::Orientation orientation() const { return _orient; }
+    Qt::Orientation orientation() const
+    {
+        return _orient;
+    }
     virtual void setOrientation(Orientation orientation);
 
 public slots:
-    virtual void resizeContents( int w, int h );
+    virtual void resizeContents(int w, int h);
     void scrollRightDown();
     void scrollLeftUp();
     void reallyUpdateScrollButtons();
 
 protected:
     void resizeEvent(QResizeEvent *ev);
-    void contentsWheelEvent(QWheelEvent *){;}
-    void viewportWheelEvent(QWheelEvent *){;}
+    void contentsWheelEvent(QWheelEvent *)
+    {
+        ;
+    }
+    void viewportWheelEvent(QWheelEvent *)
+    {
+        ;
+    }
 
 private:
     void setupButtons();
     void createScrollButtons();
     void updateScrollButtons();
 
-    Orientation       _orient;
-    QBoxLayout       *_layout;
+    Orientation _orient;
+    QBoxLayout *_layout;
     SimpleArrowButton *_luSB; // Left Scroll Button
     SimpleArrowButton *_rdSB; // Right Scroll Button
     QTimer *_updateScrollButtonsTimer;

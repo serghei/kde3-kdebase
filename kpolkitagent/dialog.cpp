@@ -36,14 +36,11 @@
 #include "dialog.h"
 
 
-AuthenticationDialog::AuthenticationDialog(
-        const QString &actionId,
-        const QString &iconName,
-        const QString &message,
-        const QMap<QString,QString> &details,
-        const QStringList &listUsers)
-    : KDialogBase(Plain, i18n("Authentication"), Ok|Cancel|Details, Ok, 0, "KDE3-PolkitAgent-AuthenticationDialog", false, true),
-      users(0), user(0)
+AuthenticationDialog::AuthenticationDialog(const QString &actionId, const QString &iconName, const QString &message,
+                                           const QMap< QString, QString > &details, const QStringList &listUsers)
+    : KDialogBase(Plain, i18n("Authentication"), Ok | Cancel | Details, Ok, 0, "KDE3-PolkitAgent-AuthenticationDialog", false, true)
+    , users(0)
+    , user(0)
 {
     setIcon(SmallIcon("password"));
 
@@ -64,7 +61,8 @@ AuthenticationDialog::AuthenticationDialog(
     iconBoxLayout->addWidget(iconPassword);
     iconPassword->setPixmap(icon);
 
-    if(!iconName.isEmpty()) {
+    if(!iconName.isEmpty())
+    {
         icon = KGlobal::iconLoader()->loadIcon(iconName, KIcon::NoGroup, KIcon::SizeLarge);
         QLabel *iconLabel = new QLabel(iconBox);
         iconBoxLayout->addWidget(iconLabel);
@@ -80,10 +78,9 @@ AuthenticationDialog::AuthenticationDialog(
     labelMessage->setFont(boldFont);
     contentLayout->addWidget(labelMessage, 0, AlignTop);
 
-    QLabel *labelExplain = new QLabel(
-                i18n("<qt>An application is attempting to perform an action that requires privileges.<br>"
-                     "Authentication as one of the users below is required to perform this action.</qt>"),
-                content);
+    QLabel *labelExplain = new QLabel(i18n("<qt>An application is attempting to perform an action that requires privileges.<br>"
+                                           "Authentication as one of the users below is required to perform this action.</qt>"),
+                                      content);
     contentLayout->addWidget(labelExplain, 0);
 
     QWidget *inputBox = new QWidget(content);
@@ -96,11 +93,14 @@ AuthenticationDialog::AuthenticationDialog(
     labelPass = new QLabel(i18n("Password:"), inputBox);
     inputBoxLayout->addWidget(labelPass, 1, 0);
 
-    if(listUsers.count() > 1) {
+    if(listUsers.count() > 1)
+    {
         users = new QComboBox(inputBox);
         inputBoxLayout->addWidget(users, 0, 1);
         users->insertStringList(listUsers);
-    } else {
+    }
+    else
+    {
         user = new QLabel(listUsers.front(), inputBox);
         inputBoxLayout->addWidget(user, 0, 1);
         user->setFont(boldFont);
@@ -117,7 +117,8 @@ AuthenticationDialog::AuthenticationDialog(
     detailsBoxLayout->setColStretch(1, 1);
 
     int i = 0;
-    for(QMap<QString,QString>::ConstIterator it = details.begin(); it != details.end(); ++it, i++) {
+    for(QMap< QString, QString >::ConstIterator it = details.begin(); it != details.end(); ++it, i++)
+    {
         QLabel *label = new QLabel(it.key() + ":", detailsBox);
         detailsBoxLayout->addWidget(label, i, 0, AlignRight);
 

@@ -37,8 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 K_EXPORT_KICKER_MENUEXT(recentdocs, RecentDocsMenu)
 
-RecentDocsMenu::RecentDocsMenu(QWidget *parent, const char *name,
-                               const QStringList &/*args*/)
+RecentDocsMenu::RecentDocsMenu(QWidget *parent, const char *name, const QStringList & /*args*/)
     : KPanelMenu(KRecentDocument::recentDocumentDirectory(), parent, name)
 {
 }
@@ -47,87 +46,92 @@ RecentDocsMenu::~RecentDocsMenu()
 {
 }
 
-void RecentDocsMenu::initialize() {
-	if (initialized()) clear();
+void RecentDocsMenu::initialize()
+{
+    if(initialized())
+        clear();
 
-	insertItem(SmallIconSet("history_clear"), i18n("Clear History"),
-	           this, SLOT(slotClearHistory()));
-	insertSeparator();
+    insertItem(SmallIconSet("history_clear"), i18n("Clear History"), this, SLOT(slotClearHistory()));
+    insertSeparator();
 
-	_fileList = KRecentDocument::recentDocuments();
+    _fileList = KRecentDocument::recentDocuments();
 
-	if (_fileList.isEmpty()) {
-		insertItem(i18n("No Entries"), 0);
-		setItemEnabled(0, false);
-		return;
+    if(_fileList.isEmpty())
+    {
+        insertItem(i18n("No Entries"), 0);
+        setItemEnabled(0, false);
+        return;
     }
 
-	int id = 0;
+    int id = 0;
 
-	for (QStringList::ConstIterator it = _fileList.begin();
-	     it != _fileList.end();
-	     ++it)
-	{
-		KDesktopFile f(*it, true /* read only */);
-		insertItem(SmallIconSet(f.readIcon()), f.readName().replace('&', QString::fromAscii("&&") ), id++);
+    for(QStringList::ConstIterator it = _fileList.begin(); it != _fileList.end(); ++it)
+    {
+        KDesktopFile f(*it, true /* read only */);
+        insertItem(SmallIconSet(f.readIcon()), f.readName().replace('&', QString::fromAscii("&&")), id++);
     }
 
     setInitialized(true);
 }
 
-void RecentDocsMenu::slotClearHistory() {
+void RecentDocsMenu::slotClearHistory()
+{
     KRecentDocument::clear();
     reinitialize();
 }
 
-void RecentDocsMenu::slotExec(int id) {
-	if (id >= 0) {
-		kapp->propagateSessionManager();
-		KURL u;
-		u.setPath(_fileList[id]);
-		KDEDesktopMimeType::run(u, true);
-	}
+void RecentDocsMenu::slotExec(int id)
+{
+    if(id >= 0)
+    {
+        kapp->propagateSessionManager();
+        KURL u;
+        u.setPath(_fileList[id]);
+        KDEDesktopMimeType::run(u, true);
+    }
 }
 
-void RecentDocsMenu::mousePressEvent(QMouseEvent* e) {
-	_mouseDown = e->pos();
-	QPopupMenu::mousePressEvent(e);
+void RecentDocsMenu::mousePressEvent(QMouseEvent *e)
+{
+    _mouseDown = e->pos();
+    QPopupMenu::mousePressEvent(e);
 }
 
-void RecentDocsMenu::mouseMoveEvent(QMouseEvent* e) {
-	KPanelMenu::mouseMoveEvent(e);
+void RecentDocsMenu::mouseMoveEvent(QMouseEvent *e)
+{
+    KPanelMenu::mouseMoveEvent(e);
 
-	if (!(e->state() & LeftButton))
-		return;
+    if(!(e->state() & LeftButton))
+        return;
 
-	if (!rect().contains(_mouseDown))
-		return;
+    if(!rect().contains(_mouseDown))
+        return;
 
-	int dragLength = (e->pos() - _mouseDown).manhattanLength();
+    int dragLength = (e->pos() - _mouseDown).manhattanLength();
 
-	if (dragLength <= KGlobalSettings::dndEventDelay())
-		return;  // ignore it
+    if(dragLength <= KGlobalSettings::dndEventDelay())
+        return; // ignore it
 
-	int id = idAt(_mouseDown);
+    int id = idAt(_mouseDown);
 
-	// Don't drag 'manual' items.
-	if (id < 0)
-		return;
+    // Don't drag 'manual' items.
+    if(id < 0)
+        return;
 
-	KDesktopFile f(_fileList[id], true /* read only */);
+    KDesktopFile f(_fileList[id], true /* read only */);
 
-	KURL url ( f.readURL() );
+    KURL url(f.readURL());
 
-	if (url.isEmpty()) // What are we to do ?
-		return;
+    if(url.isEmpty()) // What are we to do ?
+        return;
 
-	KURL::List lst;
-	lst.append(url);
+    KURL::List lst;
+    lst.append(url);
 
-	KURLDrag* d = new KURLDrag(lst, this);
-	d->setPixmap(SmallIcon(f.readIcon()));
-	d->dragCopy();
-	close();
+    KURLDrag *d = new KURLDrag(lst, this);
+    d->setPixmap(SmallIcon(f.readIcon()));
+    d->dragCopy();
+    close();
 }
 
 void RecentDocsMenu::slotAboutToShow()

@@ -28,32 +28,30 @@
 #include <stdio.h>
 #include <string.h>
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
 {
-    struct hostent* ent;
+    struct hostent *ent;
 
-    if( argc != 2 )
-      return 2;
+    if(argc != 2)
+        return 2;
 
-    ent = gethostbyname( argv[ 1 ] );
-    if (ent)
+    ent = gethostbyname(argv[1]);
+    if(ent)
     {
         int i;
         int found = 0;
         /* try to find the same fully qualified name first */
-        for( i = 0;
-             ent->h_aliases[ i ] != NULL;
-             ++i )
+        for(i = 0; ent->h_aliases[i] != NULL; ++i)
         {
-            if( strncmp( argv[ 1 ], ent->h_aliases[ i ], strlen( argv[ 1 ] )) == 0 )
+            if(strncmp(argv[1], ent->h_aliases[i], strlen(argv[1])) == 0)
             {
                 found = 1;
-                fputs( ent->h_aliases[ i ], stdout );
+                fputs(ent->h_aliases[i], stdout);
                 break;
             }
         }
-        if( !found )
-            fputs( ent->h_name, stdout );
+        if(!found)
+            fputs(ent->h_name, stdout);
     }
 
     return (ent != NULL || h_errno == NO_ADDRESS) ? 0 : 1;

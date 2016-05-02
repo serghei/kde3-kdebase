@@ -13,24 +13,28 @@ namespace ModernSystem {
 
 class ModernSys;
 
-class ModernButton : public KCommonDecorationButton
-{
+class ModernButton : public KCommonDecorationButton {
 public:
     ModernButton(ButtonType type, ModernSys *parent, const char *name);
     void setBitmap(const unsigned char *bitmap);
     virtual void reset(unsigned long changed);
-protected:
 
+protected:
     virtual void drawButton(QPainter *p);
-    void drawButtonLabel(QPainter *){;}
+    void drawButtonLabel(QPainter *)
+    {
+        ;
+    }
     QBitmap deco;
 };
 
-class ModernSys : public KCommonDecoration
-{
+class ModernSys : public KCommonDecoration {
 public:
-    ModernSys( KDecorationBridge* b, KDecorationFactory* f );
-    ~ModernSys(){;}
+    ModernSys(KDecorationBridge *b, KDecorationFactory *f);
+    ~ModernSys()
+    {
+        ;
+    }
 
     virtual QString visibleName() const;
     virtual QString defaultButtonsLeft() const;
@@ -43,30 +47,31 @@ public:
     virtual void updateCaption();
 
     void init();
+
 protected:
     void drawRoundFrame(QPainter &p, int x, int y, int w, int h);
-    void paintEvent( QPaintEvent* );
+    void paintEvent(QPaintEvent *);
     void recalcTitleBuffer();
-    void reset( unsigned long );
+    void reset(unsigned long);
+
 private:
     QPixmap titleBuffer;
     QString oldTitle;
     bool reverse;
 };
 
-class ModernSysFactory : public QObject, public KDecorationFactory
-{
+class ModernSysFactory : public QObject, public KDecorationFactory {
 public:
     ModernSysFactory();
     virtual ~ModernSysFactory();
-    virtual KDecoration* createDecoration( KDecorationBridge* );
-    virtual bool reset( unsigned long changed );
-    virtual bool supports( Ability ability );
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool reset(unsigned long changed);
+    virtual bool supports(Ability ability);
     QValueList< BorderSize > borderSizes() const;
+
 private:
     void read_config();
 };
-
 }
 
 #endif

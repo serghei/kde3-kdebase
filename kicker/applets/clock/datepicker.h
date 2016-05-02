@@ -30,20 +30,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KDatePicker;
 class Prefs;
 
-class DatePicker : public QVBox
-{
-    public:
-        DatePicker(QWidget*, const QDate&, Prefs* _prefs);
-        bool setDate(const QDate& date);
-        QDate date();
+class DatePicker : public QVBox {
+public:
+    DatePicker(QWidget *, const QDate &, Prefs *_prefs);
+    bool setDate(const QDate &date);
+    QDate date();
 
-    protected:
-        void closeEvent(QCloseEvent* e);
-        void keyPressEvent(QKeyEvent *e);
+protected:
+    void closeEvent(QCloseEvent *e);
+    void keyPressEvent(QKeyEvent *e);
 
-    private:
-        KDatePicker *picker;
-        Prefs *prefs;
+private:
+    KDatePicker *picker;
+    Prefs *prefs;
 };
 
 #endif

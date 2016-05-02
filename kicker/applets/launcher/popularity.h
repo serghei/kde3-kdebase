@@ -42,27 +42,26 @@ class Prefs;
  * If some new services are suddenly used a few times, their ranking
  * may grow higher than the ranking of services, which were used very
  * frequently a while ago. But after this short term usage has
- * stopped, its influence gets weaker more quickly then for the old, 
+ * stopped, its influence gets weaker more quickly then for the old,
  * more frequently used services.
- * During first time usage, the algorithm needs some time to stabilize, 
- * since there is simply no dependable long term usage data available, 
+ * During first time usage, the algorithm needs some time to stabilize,
+ * since there is simply no dependable long term usage data available,
  * so the ranking is more likely to change at first.
- * But in the long run, the behaviour of the algorithm is 
+ * But in the long run, the behaviour of the algorithm is
  * completely stable, unlike simple usage counting for instance.
  */
-class PopularityStatistics
-{
+class PopularityStatistics {
 public:
     PopularityStatistics();
     virtual ~PopularityStatistics();
-    
+
     /**
      * Touch a service. This will increase the usage
      * counters for the given service and decrease the
      * counters for all the others.
      */
-    void useService(const QString& service);
-    
+    void useService(const QString &service);
+
     /**
      * Exchange all state variables of the most
      * popular service with those from services,
@@ -71,42 +70,42 @@ public:
      * as before. Order of items in the string list
      * does *not* matter/
      */
-    void moveToTop(const QStringList& services);
-    
+    void moveToTop(const QStringList &services);
+
     /**
      * Sets all counters to zero for the given service
      */
-    void moveToBottom(const QString& service);
-    
+    void moveToBottom(const QString &service);
+
     /**
      * Retrieve the name of a service by its position
      * in the current popularity ranking
      */
     QString serviceByRank(int n) const;
-    
+
     /**
-     * Retrieve the popularity (0-1) of a service by 
+     * Retrieve the popularity (0-1) of a service by
      * its position in the current popularity ranking
      */
     double popularityByRank(int n) const;
 
     /**
-     * Gets the rank of a given service. 
+     * Gets the rank of a given service.
      * Returns -1 if the service is not in the ranking
      */
     int rankByService(const QString service);
- 
-    /** 
+
+    /**
      * Writes the configuration.
      * A section must be set already for config.
      */
-    void writeConfig(Prefs* prefs) const;
+    void writeConfig(Prefs *prefs) const;
 
     /**
      * Reads the configuration.
      * A section must be set already for config.
      */
-    void readConfig(Prefs* prefs);
+    void readConfig(Prefs *prefs);
 
     /**
      * Modify the weighting of the history logs.
@@ -121,7 +120,9 @@ protected:
     PopularityStatisticsImpl *d;
 
 private:
-    PopularityStatistics(const PopularityStatistics&) {}
+    PopularityStatistics(const PopularityStatistics &)
+    {
+    }
 };
 
 #endif

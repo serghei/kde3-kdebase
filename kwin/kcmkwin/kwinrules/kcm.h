@@ -26,27 +26,25 @@
 class KConfig;
 class KAboutData;
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
 class KCMRulesList;
 
-class KCMRules
-    : public KCModule
-    {
+class KCMRules : public KCModule {
     Q_OBJECT
-    public:
-        KCMRules( QWidget *parent, const char *name );
-        virtual void load();
-        virtual void save();
-        virtual void defaults();
-        virtual QString quickHelp() const;
-    protected slots:
-        void moduleChanged( bool state );
-    private:
-        KCMRulesList* widget;
-        KConfig config;
-    };
+public:
+    KCMRules(QWidget *parent, const char *name);
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    virtual QString quickHelp() const;
+protected slots:
+    void moduleChanged(bool state);
+
+private:
+    KCMRulesList *widget;
+    KConfig config;
+};
 
 } // namespace
 

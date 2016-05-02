@@ -20,15 +20,15 @@
 #ifndef TESTSYSTEM_H
 #define TESTSYSTEM_H
 
-class TestSystem
-{
+class TestSystem {
 public:
-    TestSystem() {}
+    TestSystem()
+    {
+    }
     void setup();
     void runAll();
 
     // tests
-
 };
 
 #endif

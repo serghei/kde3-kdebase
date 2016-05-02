@@ -27,19 +27,17 @@
 
 #include "konq_pixmapprovider.h"
 
-KonqPixmapProvider * KonqPixmapProvider::s_self = 0L;
+KonqPixmapProvider *KonqPixmapProvider::s_self = 0L;
 
-KonqPixmapProvider * KonqPixmapProvider::self()
+KonqPixmapProvider *KonqPixmapProvider::self()
 {
-    if ( !s_self )
-	s_self = new KonqPixmapProvider( kapp, "KonqPixmapProvider" );
+    if(!s_self)
+        s_self = new KonqPixmapProvider(kapp, "KonqPixmapProvider");
 
     return s_self;
 }
 
-KonqPixmapProvider::KonqPixmapProvider( QObject *parent, const char *name )
-    : KPixmapProvider(), 
-      KonqFavIconMgr( parent, name )
+KonqPixmapProvider::KonqPixmapProvider(QObject *parent, const char *name) : KPixmapProvider(), KonqFavIconMgr(parent, name)
 {
 }
 
@@ -52,101 +50,100 @@ KonqPixmapProvider::~KonqPixmapProvider()
 // if not available, tries to find the pixmap for the mimetype of url
 // if that fails, gets the icon for the protocol
 // finally, inserts the url/icon pair into the cache
-QString KonqPixmapProvider::iconNameFor( const QString& url )
+QString KonqPixmapProvider::iconNameFor(const QString &url)
 {
-    QMapIterator<QString,QString> it = iconMap.find( url );
+    QMapIterator< QString, QString > it = iconMap.find(url);
     QString icon;
-    if ( it != iconMap.end() ) {
+    if(it != iconMap.end())
+    {
         icon = it.data();
-        if ( !icon.isEmpty() )
-	    return icon;
+        if(!icon.isEmpty())
+            return icon;
     }
 
-    if ( url.isEmpty() ) {
+    if(url.isEmpty())
+    {
         // Use the folder icon for the empty URL
-        icon = KMimeType::mimeType( "inode/directory" )->KServiceType::icon();
-        Q_ASSERT( !icon.isEmpty() );
+        icon = KMimeType::mimeType("inode/directory")->KServiceType::icon();
+        Q_ASSERT(!icon.isEmpty());
     }
     else
     {
         KURL u;
-        if ( url.at(0) == '~' )
-	    u.setPath( KShell::tildeExpand( url ) );
-        else if ( url.at(0) == '/' )
-	    u.setPath( url );
+        if(url.at(0) == '~')
+            u.setPath(KShell::tildeExpand(url));
+        else if(url.at(0) == '/')
+            u.setPath(url);
         else
-	    u = url;
+            u = url;
 
-        icon = KMimeType::iconForURL( u );
-        //Q_ASSERT( !icon.isEmpty() );
+        icon = KMimeType::iconForURL(u);
+        // Q_ASSERT( !icon.isEmpty() );
     }
 
 
     // cache the icon found for url
-    iconMap.insert( url, icon );
+    iconMap.insert(url, icon);
 
     return icon;
 }
 
-QPixmap KonqPixmapProvider::pixmapFor( const QString& url, int size )
+QPixmap KonqPixmapProvider::pixmapFor(const QString &url, int size)
 {
-    return loadIcon( url, iconNameFor( url ), size );
+    return loadIcon(url, iconNameFor(url), size);
 }
 
-void KonqPixmapProvider::load( KConfig *kc, const QString& key )
+void KonqPixmapProvider::load(KConfig *kc, const QString &key)
 {
     iconMap.clear();
     QStringList list;
-    list = kc->readPathListEntry( key );
+    list = kc->readPathListEntry(key);
     QStringList::Iterator it = list.begin();
     QString url, icon;
-    while ( it != list.end() ) {
-	url = (*it);
-	if ( ++it == list.end() )
-	    break;
-	icon = (*it);
-	iconMap.insert( url, icon );
+    while(it != list.end())
+    {
+        url = (*it);
+        if(++it == list.end())
+            break;
+        icon = (*it);
+        iconMap.insert(url, icon);
 
-	++it;
+        ++it;
     }
 }
 
 // only saves the cache for the given list of items to prevent the cache
 // from growing forever.
-void KonqPixmapProvider::save( KConfig *kc, const QString& key,
-			       const QStringList& items )
+void KonqPixmapProvider::save(KConfig *kc, const QString &key, const QStringList &items)
 {
     QStringList list;
     QStringList::ConstIterator it = items.begin();
-    QMapConstIterator<QString,QString> mit;
-    while ( it != items.end() ) {
-	mit = iconMap.find( *it );
-	if ( mit != iconMap.end() ) {
-	    list.append( mit.key() );
-	    list.append( mit.data() );
-	}
+    QMapConstIterator< QString, QString > mit;
+    while(it != items.end())
+    {
+        mit = iconMap.find(*it);
+        if(mit != iconMap.end())
+        {
+            list.append(mit.key());
+            list.append(mit.data());
+        }
 
-	++it;
+        ++it;
     }
-    kc->writePathEntry( key, list );
+    kc->writePathEntry(key, list);
 }
 
-void KonqPixmapProvider::notifyChange( bool isHost, QString hostOrURL,
-    QString iconName )
+void KonqPixmapProvider::notifyChange(bool isHost, QString hostOrURL, QString iconName)
 {
-    for ( QMapIterator<QString,QString> it = iconMap.begin();
-          it != iconMap.end();
-          ++it )
+    for(QMapIterator< QString, QString > it = iconMap.begin(); it != iconMap.end(); ++it)
     {
-        KURL url( it.key() );
-        if ( url.protocol().startsWith("http") &&
-            ( ( isHost && url.host() == hostOrURL ) ||
-                ( url.host() + url.path() == hostOrURL ) ) )
+        KURL url(it.key());
+        if(url.protocol().startsWith("http") && ((isHost && url.host() == hostOrURL) || (url.host() + url.path() == hostOrURL)))
         {
             // For host default-icons still query the favicon manager to get
             // the correct icon for pages that have an own one.
-            QString icon = isHost ? KMimeType::favIconForURL( url ) : iconName;
-            if ( !icon.isEmpty() )
+            QString icon = isHost ? KMimeType::favIconForURL(url) : iconName;
+            if(!icon.isEmpty())
                 *it = icon;
         }
     }
@@ -159,43 +156,41 @@ void KonqPixmapProvider::clear()
     iconMap.clear();
 }
 
-QPixmap KonqPixmapProvider::loadIcon( const QString& url, const QString& icon,
-				      int size )
+QPixmap KonqPixmapProvider::loadIcon(const QString &url, const QString &icon, int size)
 {
-    if ( size <= KIcon::SizeSmall )
-	return SmallIcon( icon, size );
+    if(size <= KIcon::SizeSmall)
+        return SmallIcon(icon, size);
 
     KURL u;
-    if ( url.at(0) == '/' )
-	u.setPath( url );
+    if(url.at(0) == '/')
+        u.setPath(url);
     else
-	u = url;
+        u = url;
 
     QPixmap big;
 
     // favicon? => blend the favicon in the large
-    if ( url.startsWith( "http:/" ) && icon.startsWith("favicons/") ) {
-	QPixmap small = SmallIcon( icon, size );
-	big = KGlobal::iconLoader()->loadIcon( KProtocolInfo::icon("http"),
-					       KIcon::Panel, size );
+    if(url.startsWith("http:/") && icon.startsWith("favicons/"))
+    {
+        QPixmap small = SmallIcon(icon, size);
+        big = KGlobal::iconLoader()->loadIcon(KProtocolInfo::icon("http"), KIcon::Panel, size);
 
-	int x = big.width()  - small.width();
-	int y = 0;
+        int x = big.width() - small.width();
+        int y = 0;
 
- 	if ( big.mask() ) {
- 	    QBitmap mask = *big.mask();
- 	    bitBlt( &mask, x, y,
-            small.mask() ? const_cast<QBitmap *>(small.mask()) : &small, 0, 0,
- 		    small.width(), small.height(),
- 		    small.mask() ? OrROP : SetROP );
- 	    big.setMask( mask );
- 	}
+        if(big.mask())
+        {
+            QBitmap mask = *big.mask();
+            bitBlt(&mask, x, y, small.mask() ? const_cast< QBitmap * >(small.mask()) : &small, 0, 0, small.width(), small.height(),
+                   small.mask() ? OrROP : SetROP);
+            big.setMask(mask);
+        }
 
-	bitBlt( &big, x, y, &small );
+        bitBlt(&big, x, y, &small);
     }
 
     else // not a favicon..
-	big = KGlobal::iconLoader()->loadIcon( icon, KIcon::Panel, size );
+        big = KGlobal::iconLoader()->loadIcon(icon, KIcon::Panel, size);
 
     return big;
 }

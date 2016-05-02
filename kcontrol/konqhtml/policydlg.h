@@ -29,8 +29,7 @@ class Policies;
  *
  * @author unknown
  */
-class PolicyDialog : public KDialogBase
-{
+class PolicyDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -38,7 +37,12 @@ public:
      * Enumerates the possible return values for the "feature enabled"
      * policy
      */
-    enum FeatureEnabledPolicy { InheritGlobal = 0, Accept, Reject };
+    enum FeatureEnabledPolicy
+    {
+        InheritGlobal = 0,
+        Accept,
+        Reject
+    };
 
     /** constructor
      * @param policies policies object this dialog will write the settings
@@ -47,9 +51,9 @@ public:
      * @param parent parent widget this belongs to
      * @param name internal name
      */
-    PolicyDialog(Policies *policies, QWidget *parent = 0, const char *name = 0 );
+    PolicyDialog(Policies *policies, QWidget *parent = 0, const char *name = 0);
 
-    virtual ~PolicyDialog() {};
+    virtual ~PolicyDialog(){};
 
     /*
     * @return whether this feature should be activated, deactivated or
@@ -66,7 +70,10 @@ public:
     /*
     * @return the hostname for which the policy is being set
     */
-    QString domain() const { return le_domain->text(); }
+    QString domain() const
+    {
+        return le_domain->text();
+    }
 
     /*
     * Sets the line-edit to be enabled/disabled.
@@ -77,7 +84,7 @@ public:
     * @param state @p true to enable the line-edit, otherwise disabled.
     * @param text  the text to be set in the line-edit. Default is NULL.
     */
-    void setDisableEdit( bool /*state*/, const QString& text = QString::null );
+    void setDisableEdit(bool /*state*/, const QString &text = QString::null);
 
     /**
      * Sets the label for the "feature enabled" policy
@@ -113,7 +120,7 @@ public:
 protected slots:
 
     virtual void accept();
-    void slotTextChanged( const QString &text);
+    void slotTextChanged(const QString &text);
 
 private:
     Policies *policies;

@@ -1,6 +1,6 @@
 /**
- *  Copyright 2003 Braden MacDonald <bradenm_k@shaw.ca>                   
- *  Copyright 2003 Ravikiran Rajagopal <ravi@ee.eng.ohio-state.edu>       
+ *  Copyright 2003 Braden MacDonald <bradenm_k@shaw.ca>
+ *  Copyright 2003 Ravikiran Rajagopal <ravi@ee.eng.ohio-state.edu>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -32,38 +32,43 @@
 
 #include <kiconview.h> // declaration below
 
-enum FacePerm { adminOnly = 1, adminFirst = 2, userFirst = 3, userOnly = 4}; 
+enum FacePerm
+{
+    adminOnly = 1,
+    adminFirst = 2,
+    userFirst = 3,
+    userOnly = 4
+};
 
 class KDialogBase;
 
-class ChFaceDlg : public KDialogBase
-{
-  Q_OBJECT
+class ChFaceDlg : public KDialogBase {
+    Q_OBJECT
 public:
+    ChFaceDlg(const QString &picsdirs, QWidget *parent = 0, const char *name = 0, bool modal = true);
 
 
-  ChFaceDlg(const QString& picsdirs, QWidget *parent=0, const char *name=0, bool modal=true);
-
-
-  QPixmap getFaceImage() const 
-  {
-    if(m_FacesWidget->currentItem())
-      return *(m_FacesWidget->currentItem()->pixmap());
-    else
-      return QPixmap();
-  }
+    QPixmap getFaceImage() const
+    {
+        if(m_FacesWidget->currentItem())
+            return *(m_FacesWidget->currentItem()->pixmap());
+        else
+            return QPixmap();
+    }
 
 private slots:
-  void slotFaceWidgetSelectionChanged( QIconViewItem *item )
-  	{ enableButtonOK( !item->pixmap()->isNull() ); }
+    void slotFaceWidgetSelectionChanged(QIconViewItem *item)
+    {
+        enableButtonOK(!item->pixmap()->isNull());
+    }
 
-  void slotGetCustomImage();
-  //void slotSaveCustomImage();
+    void slotGetCustomImage();
+    // void slotSaveCustomImage();
 
 private:
-  void addCustomPixmap( QString imPath, bool saveCopy );
+    void addCustomPixmap(QString imPath, bool saveCopy);
 
-  KIconView *m_FacesWidget;
+    KIconView *m_FacesWidget;
 };
 
 #endif // CHFACEDLG_H

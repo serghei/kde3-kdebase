@@ -42,16 +42,13 @@ class TrayEmbed;
 class KDialogBase;
 class KActionSelector;
 
-class SystemTrayApplet : public KPanelApplet, public DCOPObject
-{
+class SystemTrayApplet : public KPanelApplet, public DCOPObject {
     Q_OBJECT
     K_DCOP
-    typedef QValueVector<TrayEmbed*> TrayEmbedList;
+    typedef QValueVector< TrayEmbed * > TrayEmbedList;
 
 public:
-
-    SystemTrayApplet(const QString& configFile, Type t = Normal, int actions = 0,
-                     QWidget *parent = 0, const char *name = 0);
+    SystemTrayApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     ~SystemTrayApplet();
 
     int widthForHeight(int h) const;
@@ -59,21 +56,20 @@ public:
     int maxIconWidth() const;
     int maxIconHeight() const;
 
-    bool eventFilter(QObject* watched, QEvent* e);
+    bool eventFilter(QObject *watched, QEvent *e);
 
-k_dcop:
-    void loadSettings();
+    k_dcop : void loadSettings();
 
 protected:
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent *);
     void moveEvent(QMoveEvent *);
-    bool x11Event( XEvent *e );
+    bool x11Event(XEvent *e);
     void preferences();
-    void orientationChange( Orientation );
+    void orientationChange(Orientation);
 
 protected slots:
     void initialize();
-    void systemTrayWindowAdded( WId );
+    void systemTrayWindowAdded(WId);
     void updateTrayWindows();
     void layoutTray();
     void paletteChange(const QPalette & /* oldPalette */);
@@ -81,13 +77,16 @@ protected slots:
     void settingsDialogFinished();
     void applySettings();
     void checkAutoRetract();
-    void configure() { preferences(); }
+    void configure()
+    {
+        preferences();
+    }
     void setBackground();
 
 private:
-    void embedWindow( WId w, bool kde_tray );
-    bool isWinManaged( WId w);
-    bool shouldHide( WId w);
+    void embedWindow(WId w, bool kde_tray);
+    bool isWinManaged(WId w);
+    bool shouldHide(WId w);
     void updateVisibleWins();
     void expand();
     void retract();
@@ -103,21 +102,24 @@ private:
     bool m_showFrame;
     bool m_showHidden;
     SimpleArrowButton *m_expandButton;
-    KDialogBase* m_settingsDialog;
-    KActionSelector* m_iconSelector;
-    QTimer* m_autoRetractTimer;
+    KDialogBase *m_settingsDialog;
+    KActionSelector *m_iconSelector;
+    QTimer *m_autoRetractTimer;
     bool m_autoRetract;
     int m_iconSize;
-    QGridLayout* m_layout;
+    QGridLayout *m_layout;
 };
 
-class TrayEmbed : public QXEmbed
-{
+class TrayEmbed : public QXEmbed {
     Q_OBJECT
 public:
-    TrayEmbed( bool kdeTray, QWidget* parent = NULL );
-    bool kdeTray() const { return kde_tray; }
+    TrayEmbed(bool kdeTray, QWidget *parent = NULL);
+    bool kdeTray() const
+    {
+        return kde_tray;
+    }
     void setBackground();
+
 private:
     bool kde_tray;
 };

@@ -14,14 +14,13 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "client.h"
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
-QString Notify::eventToName( Event e )
-    {
+QString Notify::eventToName(Event e)
+{
     QString event;
-    switch ( e ) 
-        {
+    switch(e)
+    {
         case Activate:
             event = "activate";
             break;
@@ -83,65 +82,65 @@ QString Notify::eventToName( Event e )
             event = "demandsattentionother";
             break;
         default:
-            if ((e > DesktopChange) && (e <= DesktopChange+20))
+            if((e > DesktopChange) && (e <= DesktopChange + 20))
             {
-            event = QString("desktop%1").arg(e-DesktopChange);
+                event = QString("desktop%1").arg(e - DesktopChange);
             }
-        break;
-        }
-    return event;
+            break;
     }
+    return event;
+}
 
 static bool forgetIt = FALSE;
 QValueList< Notify::EventData > Notify::pending_events;
 
-bool Notify::raise( Event e, const QString& message, Client* c )
-    {
-    if ( forgetIt )
+bool Notify::raise(Event e, const QString &message, Client *c)
+{
+    if(forgetIt)
         return false; // no connection was possible, don't try each time
 
-    QString event = eventToName( e );
-    if ( !event )
+    QString event = eventToName(e);
+    if(!event)
         return false;
 
-// There may be a deadlock if KNotify event is sent while KWin has X grabbed.
-// If KNotify is not running, KLauncher may do X requests (startup notification, whatever)
-// that will block it. And KNotifyClient waits for the launch to succeed, which means
-// KLauncher waits for X and KWin waits for KLauncher. So postpone events in such case.
-    if( grabbedXServer())
-        {
+    // There may be a deadlock if KNotify event is sent while KWin has X grabbed.
+    // If KNotify is not running, KLauncher may do X requests (startup notification, whatever)
+    // that will block it. And KNotifyClient waits for the launch to succeed, which means
+    // KLauncher waits for X and KWin waits for KLauncher. So postpone events in such case.
+    if(grabbedXServer())
+    {
         EventData data;
         data.event = event;
         data.message = message;
         data.window = c ? c->window() : 0;
-        pending_events.append( data );
+        pending_events.append(data);
         return true;
-        }
-
-    forgetIt= !KNotifyClient::event( c ? c->window() : 0, event, message );
-    return !forgetIt;
     }
+
+    forgetIt = !KNotifyClient::event(c ? c->window() : 0, event, message);
+    return !forgetIt;
+}
 
 void Notify::sendPendingEvents()
+{
+    while(!pending_events.isEmpty())
     {
-    while( !pending_events.isEmpty())
-        {
         EventData data = pending_events.first();
         pending_events.pop_front();
-        if( !forgetIt )
-            forgetIt= !KNotifyClient::event( data.window, data.event, data.message );
-        }
+        if(!forgetIt)
+            forgetIt = !KNotifyClient::event(data.window, data.event, data.message);
     }
+}
 
-bool Notify::makeDemandAttention( Event e )
-    {
-    QString event = eventToName( e );
-    if( !event )
+bool Notify::makeDemandAttention(Event e)
+{
+    QString event = eventToName(e);
+    if(!event)
         return false;
-    int rep = KNotifyClient::getPresentation( event );
-    if( rep == -1 )
-        rep = KNotifyClient::getDefaultPresentation( event );
-    return rep != -1 && ( rep & KNotifyClient::Taskbar );
-    }
+    int rep = KNotifyClient::getPresentation(event);
+    if(rep == -1)
+        rep = KNotifyClient::getDefaultPresentation(event);
+    return rep != -1 && (rep & KNotifyClient::Taskbar);
+}
 
 } // namespace

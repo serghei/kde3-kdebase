@@ -23,22 +23,21 @@
 #include <qbutton.h>
 #include <qpixmap.h>
 
-class HideButton : public QButton
-{
-  Q_OBJECT
+class HideButton : public QButton {
+    Q_OBJECT
 
-  public:
+public:
     HideButton(QWidget *parent, const char *name = 0);
     void setArrowType(Qt::ArrowType arrow);
     void setPixmap(const QPixmap &pix);
 
-  protected:
+protected:
     void drawButton(QPainter *p);
     void drawButtonLabel(QPainter *p);
     void generateIcons();
 
     void enterEvent(QEvent *e);
-    void leaveEvent( QEvent *e );
+    void leaveEvent(QEvent *e);
     void resizeEvent(QResizeEvent *e);
 
     bool m_highlight;
@@ -46,9 +45,9 @@ class HideButton : public QButton
     QPixmap m_activeIcon;
     Qt::ArrowType m_arrow;
 
-  protected slots:
-    void slotSettingsChanged( int category );
-    void slotIconChanged( int group );
+protected slots:
+    void slotSettingsChanged(int category);
+    void slotIconChanged(int group);
 };
 
 #endif // HIDEBUTTON_H

@@ -41,156 +41,155 @@ class QComboBox;
 class QCheckBox;
 class QLineEdit;
 
-enum { Authed = QDialog::Accepted + 1, Schedule };
+enum
+{
+    Authed = QDialog::Accepted + 1,
+    Schedule
+};
 
 class KDMShutdownBase : public FDialog, public KGVerifyHandler {
-	Q_OBJECT
-	typedef FDialog inherited;
+    Q_OBJECT
+    typedef FDialog inherited;
 
-  public:
-	KDMShutdownBase( int _uid, QWidget *_parent );
-	virtual ~KDMShutdownBase();
+public:
+    KDMShutdownBase(int _uid, QWidget *_parent);
+    virtual ~KDMShutdownBase();
 
-  protected slots:
-	virtual void accept();
+protected slots:
+    virtual void accept();
 
-  protected:
-	virtual void accepted();
+protected:
+    virtual void accepted();
 
-  protected:
-	void updateNeedRoot();
-	void complete( QWidget *prevWidget );
+protected:
+    void updateNeedRoot();
+    void complete(QWidget *prevWidget);
 
-	QVBoxLayout *box;
+    QVBoxLayout *box;
 #ifdef HAVE_VTS
-	bool willShut;
+    bool willShut;
 #else
-	static const bool willShut = true;
+    static const bool willShut = true;
 #endif
-	bool mayNuke, doesNuke, mayOk, maySched;
+    bool mayNuke, doesNuke, mayOk, maySched;
 
-  private slots:
-	void slotSched();
-	void slotActivatePlugMenu();
+private slots:
+    void slotSched();
+    void slotActivatePlugMenu();
 
-  private:
-	KPushButton *okButton, *cancelButton;
-	QLabel *rootlab;
-	KGStdVerify *verify;
-	int needRoot, uid;
+private:
+    KPushButton *okButton, *cancelButton;
+    QLabel *rootlab;
+    KGStdVerify *verify;
+    int needRoot, uid;
 
-	static int curPlugin;
-	static PluginList pluginList;
+    static int curPlugin;
+    static PluginList pluginList;
 
-  public: // from KGVerifyHandler
-	virtual void verifyPluginChanged( int id );
-	virtual void verifyOk();
-	virtual void verifyFailed();
-	virtual void verifyRetry();
-	virtual void verifySetUser( const QString &user );
+public: // from KGVerifyHandler
+    virtual void verifyPluginChanged(int id);
+    virtual void verifyOk();
+    virtual void verifyFailed();
+    virtual void verifyRetry();
+    virtual void verifySetUser(const QString &user);
 };
 
 
 class KDMShutdown : public KDMShutdownBase {
-	Q_OBJECT
-	typedef KDMShutdownBase inherited;
+    Q_OBJECT
+    typedef KDMShutdownBase inherited;
 
-  public:
-	KDMShutdown( int _uid, QWidget *_parent = 0 );
-	static void scheduleShutdown( QWidget *_parent = 0 );
+public:
+    KDMShutdown(int _uid, QWidget *_parent = 0);
+    static void scheduleShutdown(QWidget *_parent = 0);
 
-  protected slots:
-	virtual void accept();
+protected slots:
+    virtual void accept();
 
-  protected:
-	virtual void accepted();
+protected:
+    virtual void accepted();
 
-  private slots:
-	void slotTargetChanged();
-	void slotWhenChanged();
+private slots:
+    void slotTargetChanged();
+    void slotWhenChanged();
 
-  private:
-	QButtonGroup *howGroup;
-	QGroupBox *schedGroup;
-	QRadioButton *restart_rb;
-	QLineEdit *le_start, *le_timeout;
-	QCheckBox *cb_force;
-	QComboBox *targets;
-	int oldTarget;
-	int sch_st, sch_to;
-
+private:
+    QButtonGroup *howGroup;
+    QGroupBox *schedGroup;
+    QRadioButton *restart_rb;
+    QLineEdit *le_start, *le_timeout;
+    QCheckBox *cb_force;
+    QComboBox *targets;
+    int oldTarget;
+    int sch_st, sch_to;
 };
 
 class KDMRadioButton : public QRadioButton {
-	Q_OBJECT
-	typedef QRadioButton inherited;
+    Q_OBJECT
+    typedef QRadioButton inherited;
 
-  public:
-	KDMRadioButton( const QString &label, QWidget *parent );
+public:
+    KDMRadioButton(const QString &label, QWidget *parent);
 
-  private:
-	virtual void mouseDoubleClickEvent( QMouseEvent * );
+private:
+    virtual void mouseDoubleClickEvent(QMouseEvent *);
 
-  signals:
-	void doubleClicked();
-
+signals:
+    void doubleClicked();
 };
 
 class KDMDelayedPushButton : public KPushButton {
-	Q_OBJECT
-	typedef KPushButton inherited;
+    Q_OBJECT
+    typedef KPushButton inherited;
 
-  public:
-	KDMDelayedPushButton( const KGuiItem &item, QWidget *parent, const char *name = 0 );
-	void setPopup( QPopupMenu *pop );
+public:
+    KDMDelayedPushButton(const KGuiItem &item, QWidget *parent, const char *name = 0);
+    void setPopup(QPopupMenu *pop);
 
-  private slots:
-	void slotTimeout();
-	void slotPressed();
-	void slotReleased();
+private slots:
+    void slotTimeout();
+    void slotPressed();
+    void slotReleased();
 
-  private:
-	QPopupMenu *pop;
-	QTimer popt;
+private:
+    QPopupMenu *pop;
+    QTimer popt;
 };
 
 class KDMSlimShutdown : public FDialog {
-	Q_OBJECT
-	typedef FDialog inherited;
+    Q_OBJECT
+    typedef FDialog inherited;
 
-  public:
-	KDMSlimShutdown( QWidget *_parent = 0 );
-	~KDMSlimShutdown();
-	static void externShutdown( int type, const char *os, int uid );
+public:
+    KDMSlimShutdown(QWidget *_parent = 0);
+    ~KDMSlimShutdown();
+    static void externShutdown(int type, const char *os, int uid);
 
-  private slots:
-	void slotHalt();
-	void slotReboot();
-	void slotReboot( int );
-	void slotSched();
+private slots:
+    void slotHalt();
+    void slotReboot();
+    void slotReboot(int);
+    void slotSched();
 
-  private:
-	bool checkShutdown( int type, const char *os );
-	char **targetList;
-
+private:
+    bool checkShutdown(int type, const char *os);
+    char **targetList;
 };
 
 class KDMConfShutdown : public KDMShutdownBase {
-	Q_OBJECT
-	typedef KDMShutdownBase inherited;
+    Q_OBJECT
+    typedef KDMShutdownBase inherited;
 
-  public:
-	KDMConfShutdown( int _uid, struct dpySpec *sess, int type, const char *os,
-	                 QWidget *_parent = 0 );
+public:
+    KDMConfShutdown(int _uid, struct dpySpec *sess, int type, const char *os, QWidget *_parent = 0);
 };
 
 class KDMCancelShutdown : public KDMShutdownBase {
-	Q_OBJECT
-	typedef KDMShutdownBase inherited;
+    Q_OBJECT
+    typedef KDMShutdownBase inherited;
 
-  public:
-	KDMCancelShutdown( int how, int start, int timeout, int force, int uid,
-	                   const char *os, QWidget *_parent );
+public:
+    KDMCancelShutdown(int how, int start, int timeout, int force, int uid, const char *os, QWidget *_parent);
 };
 
 #endif /* KDMSHUTDOWN_H */

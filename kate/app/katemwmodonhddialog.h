@@ -24,34 +24,38 @@
 #include <qptrvector.h>
 #include <kate/document.h>
 
-typedef  QPtrVector<Kate::Document> DocVector;
+typedef QPtrVector< Kate::Document > DocVector;
 class KProcIO;
 class KProcess;
 /**
  * A dialog for handling multiple documents modified on disk
  * from within KateMainWindow
  */
-class KateMwModOnHdDialog : public KDialogBase
-{
-  Q_OBJECT
-  public:
-    KateMwModOnHdDialog( DocVector docs, QWidget *parent=0, const char *name=0 );
+class KateMwModOnHdDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    KateMwModOnHdDialog(DocVector docs, QWidget *parent = 0, const char *name = 0);
     ~KateMwModOnHdDialog();
 
-  protected slots:
+protected slots:
     void slotUser1();
     void slotUser2();
     void slotUser3();
 
-  private slots:
+private slots:
     void slotDiff();
     void slotSelectionChanged();
-    void slotPRead(KProcIO*);
-    void slotPDone(KProcess*);
+    void slotPRead(KProcIO *);
+    void slotPDone(KProcess *);
 
-  private:
-    enum Action { Ignore, Overwrite, Reload };
-    void handleSelected( int action );
+private:
+    enum Action
+    {
+        Ignore,
+        Overwrite,
+        Reload
+    };
+    void handleSelected(int action);
     class KListView *lvDocuments;
     class QPushButton *btnDiff;
     class KTempFile *m_tmpfile;

@@ -22,21 +22,19 @@ namespace KHC {
 
 class View;
 
-class MainWindow : public KMainWindow, public DCOPObject
-{
+class MainWindow : public KMainWindow, public DCOPObject {
     Q_OBJECT
     K_DCOP
-  public:
+public:
     MainWindow();
     ~MainWindow();
 
-  k_dcop:
-    void openUrl( const QString &url );
-    void openUrl( const QString &url, const QCString& startup_id );
+    k_dcop : void openUrl(const QString &url);
+    void openUrl(const QString &url, const QCString &startup_id);
     void showHome();
     void lastSearch();
 
-  public slots:
+public slots:
     void print();
     void statusBarMessage(const QString &m);
     void slotShowHome();
@@ -45,45 +43,43 @@ class MainWindow : public KMainWindow, public DCOPObject
     /**
       Show document corresponding to given URL in viewer part.
     */
-    void viewUrl( const KURL &url,
-                  const KParts::URLArgs &args = KParts::URLArgs() );
+    void viewUrl(const KURL &url, const KParts::URLArgs &args = KParts::URLArgs());
     /**
       Show document corresponding to given URL in viewer part.
     */
-    void viewUrl( const QString & );
+    void viewUrl(const QString &);
 
     /**
       Open document corresponding to given URL, i.e. show it in the viewer part
       and select the corresponding entry in the navigator widget.
     */
-    void openUrl( const KURL &url );
+    void openUrl(const KURL &url);
 
-  protected:
+protected:
     void setupActions();
 
-    virtual void saveProperties( KConfig *config );
-    virtual void readProperties( KConfig *config );
+    virtual void saveProperties(KConfig *config);
+    virtual void readProperties(KConfig *config);
 
     void readConfig();
     void writeConfig();
 
-  protected slots:
+protected slots:
     void enableLastSearchAction();
     void enableCopyTextAction();
 
-  private:
+private:
     void stop();
 
-  private slots:
+private slots:
     void slotGlossSelected(const GlossaryEntry &entry);
     void slotStarted(KIO::Job *job);
     void slotInfoMessage(KIO::Job *, const QString &);
-    void goInternalUrl( const KURL & );
+    void goInternalUrl(const KURL &);
     /**
       This function is called when the user clicks on a link in the viewer part.
     */
-    void slotOpenURLRequest( const KURL &url,
-                             const KParts::URLArgs &args);
+    void slotOpenURLRequest(const KURL &url, const KParts::URLArgs &args);
     void documentCompleted();
     void slotIncFontSizes();
     void slotDecFontSizes();
@@ -101,7 +97,6 @@ private:
     KAction *mCopyText;
     LogDialog *mLogDialog;
 };
-
 }
 
 #endif

@@ -26,33 +26,65 @@
 /**
 @author Raul Fernandes
 */
-class KIO_EXPORT KRar : public KArchive
-{
+class KIO_EXPORT KRar : public KArchive {
 public:
-    KRar( const QString &filename );
+    KRar(const QString &filename);
 
     ~KRar();
 
-    QString fileName() { return m_filename; }
-    bool doneWriting( uint size );
-    bool writeDir( const QString& name, const QString& user, const QString& group );
-    bool prepareWriting( const QString& name, const QString& user, const QString& group, uint size );
-    uint dirs() { return m_dirs; }
-    uint files() { return m_files; }
-    unsigned long long uncompressed() { return m_uncompressed; }
-    unsigned long long compressed() { return m_compressed; }
-    uint ratio() { return m_ratio; }
-    bool isArchiveVolume() { return m_volattr; };
-    int volNum() {
-      if( m_volattr ) return volnum;
-      else return -1;
+    QString fileName()
+    {
+        return m_filename;
     }
-    bool isLocked() { return m_lock; };
-    bool isSolid() { return m_solid; };
-    bool hasAuthInfo() { return m_authenticity; };
+    bool doneWriting(uint size);
+    bool writeDir(const QString &name, const QString &user, const QString &group);
+    bool prepareWriting(const QString &name, const QString &user, const QString &group, uint size);
+    uint dirs()
+    {
+        return m_dirs;
+    }
+    uint files()
+    {
+        return m_files;
+    }
+    unsigned long long uncompressed()
+    {
+        return m_uncompressed;
+    }
+    unsigned long long compressed()
+    {
+        return m_compressed;
+    }
+    uint ratio()
+    {
+        return m_ratio;
+    }
+    bool isArchiveVolume()
+    {
+        return m_volattr;
+    };
+    int volNum()
+    {
+        if(m_volattr)
+            return volnum;
+        else
+            return -1;
+    }
+    bool isLocked()
+    {
+        return m_lock;
+    };
+    bool isSolid()
+    {
+        return m_solid;
+    };
+    bool hasAuthInfo()
+    {
+        return m_authenticity;
+    };
 
 protected:
-    bool openArchive( int mode );
+    bool openArchive(int mode);
     bool closeArchive();
     uint m_dirs;
     uint m_files;
@@ -66,7 +98,7 @@ protected:
     bool m_authenticity;
 
 private:
-  QString m_filename;
+    QString m_filename;
 };
 
 #endif

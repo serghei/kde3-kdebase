@@ -22,12 +22,12 @@
 
 #include <kio/thumbcreator.h>
 
-class CursorCreator : public ThumbCreator
-{
-	public:
-		CursorCreator() {}
-		bool create( const QString &path, int, int, QImage &img );
+class CursorCreator : public ThumbCreator {
+public:
+    CursorCreator()
+    {
+    }
+    bool create(const QString &path, int, int, QImage &img);
 };
 
 #endif
-

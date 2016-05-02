@@ -27,8 +27,7 @@
 
 using namespace KIO;
 
-AboutProtocol::AboutProtocol(const QCString &pool_socket, const QCString &app_socket)
-    : SlaveBase("about", pool_socket, app_socket)
+AboutProtocol::AboutProtocol(const QCString &pool_socket, const QCString &app_socket) : SlaveBase("about", pool_socket, app_socket)
 {
 }
 
@@ -36,41 +35,40 @@ AboutProtocol::~AboutProtocol()
 {
 }
 
-void AboutProtocol::get( const KURL& )
+void AboutProtocol::get(const KURL &)
 {
     QByteArray output;
-    
-    QTextStream os( output, IO_WriteOnly );
-    os.setEncoding( QTextStream::Latin1 ); // In fast ASCII
+
+    QTextStream os(output, IO_WriteOnly);
+    os.setEncoding(QTextStream::Latin1); // In fast ASCII
 
     os << "<html><head><title>about:blank</title></head><body></body></html>";
-    
-    data( output );
+
+    data(output);
     finished();
 }
 
-void AboutProtocol::mimetype( const KURL& )
+void AboutProtocol::mimetype(const KURL &)
 {
     mimeType("text/html");
     finished();
 }
 
-extern "C"
+extern "C" {
+int KDE_EXPORT kdemain(int argc, char **argv)
 {
-    int KDE_EXPORT kdemain( int argc, char **argv ) {
 
-        KInstance instance("kio_about");
+    KInstance instance("kio_about");
 
-        if (argc != 4)
-        {
-            fprintf(stderr, "Usage: kio_about protocol domain-socket1 domain-socket2\n");
-            exit(-1);
-        }
-
-        AboutProtocol slave(argv[2], argv[3]);
-        slave.dispatchLoop();
-
-        return 0;
+    if(argc != 4)
+    {
+        fprintf(stderr, "Usage: kio_about protocol domain-socket1 domain-socket2\n");
+        exit(-1);
     }
-}
 
+    AboutProtocol slave(argv[2], argv[3]);
+    slave.dispatchLoop();
+
+    return 0;
+}
+}

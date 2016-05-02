@@ -35,40 +35,40 @@ class QRadioButton;
  * Dialog for configuring the background
  * Currently it defines and shows the pixmaps under the tiles resource
  */
-class KonqBgndDialog : public KDialogBase
-{
-  Q_OBJECT
+class KonqBgndDialog : public KDialogBase {
+    Q_OBJECT
 public:
-  /**
-   * Constructor
-   */
-  KonqBgndDialog( QWidget* parent, const QString& pixmapFile,
-                  const QColor& theColor, const QColor& defaultColor );
-  ~KonqBgndDialog();
+    /**
+     * Constructor
+     */
+    KonqBgndDialog(QWidget *parent, const QString &pixmapFile, const QColor &theColor, const QColor &defaultColor);
+    ~KonqBgndDialog();
 
-  QColor color() const;
-  const QString& pixmapFile() const { return m_pixmapFile; }
+    QColor color() const;
+    const QString &pixmapFile() const
+    {
+        return m_pixmapFile;
+    }
 
 private slots:
-  void slotBackgroundModeChanged();
-  void slotPictureChanged();
-  void slotColorChanged();
-  
-private:
-  void initPictures();
-  void loadPicture( const QString& fileName );
+    void slotBackgroundModeChanged();
+    void slotPictureChanged();
+    void slotColorChanged();
 
-  QColor m_color;
-  QPixmap m_pixmap;
-  QString m_pixmapFile;
-  QFrame* m_preview;
-  
-  QButtonGroup* m_buttonGroup;
-  QRadioButton* m_radioColor;
-  QRadioButton* m_radioPicture;
-  KURLRequester* m_comboPicture;
-  KColorButton* m_buttonColor;
-  
+private:
+    void initPictures();
+    void loadPicture(const QString &fileName);
+
+    QColor m_color;
+    QPixmap m_pixmap;
+    QString m_pixmapFile;
+    QFrame *m_preview;
+
+    QButtonGroup *m_buttonGroup;
+    QRadioButton *m_radioColor;
+    QRadioButton *m_radioPicture;
+    KURLRequester *m_comboPicture;
+    KColorButton *m_buttonColor;
 };
 
 #endif

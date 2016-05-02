@@ -28,22 +28,21 @@
 
 #include "medium.h"
 
-class MountHelper : public KApplication
-{
-        Q_OBJECT
+class MountHelper : public KApplication {
+    Q_OBJECT
 public:
-	MountHelper();
+    MountHelper();
 
 private:
-	const Medium findMedium(const KURL &url);
-	void invokeEject(const QString &device, bool quiet=false);
-	QString m_errorStr;
-	QString m_device;
-	bool m_isCdrom;
+    const Medium findMedium(const KURL &url);
+    void invokeEject(const QString &device, bool quiet = false);
+    QString m_errorStr;
+    QString m_device;
+    bool m_isCdrom;
 
 private slots:
-	void ejectFinished(KProcess* proc);
-	void error();
+    void ejectFinished(KProcess *proc);
+    void error();
 };
 
 #endif

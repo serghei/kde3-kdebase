@@ -52,43 +52,53 @@ extern int kdesktop_screen_number;
  * @param _showMsg show a message box if we created the dir
  * @return true if the dir was just created (e.g. so that we can populate it)
  */
-static bool testDir( const QString &_name )
+static bool testDir(const QString &_name)
 {
-  DIR *dp;
-  dp = opendir( QFile::encodeName(_name) );
-  if ( dp == NULL )
-  {
-    QString m = _name;
-    if ( m.endsWith( "/" ) )
-      m.truncate( m.length() - 1 );
-    QCString path = QFile::encodeName(m);
+    DIR *dp;
+    dp = opendir(QFile::encodeName(_name));
+    if(dp == NULL)
+    {
+        QString m = _name;
+        if(m.endsWith("/"))
+            m.truncate(m.length() - 1);
+        QCString path = QFile::encodeName(m);
 
-    bool ok = ::mkdir( path, S_IRWXU ) == 0;
-    if ( !ok && errno == EEXIST ) {
-        int ret = KMessageBox::warningYesNo( 0, i18n("%1 is a file, but KDE needs it to be a directory; move it to %2.orig and create directory?").arg(m).arg(m), QString::null, i18n("Move It"), i18n("Do Not Move") );
-        if ( ret == KMessageBox::Yes ) {
-            if ( ::rename( path, path + ".orig" ) == 0 ) {
-                ok = ::mkdir( path, S_IRWXU ) == 0;
-            } else {
-                // foo.orig existed already. How likely is that?
-                ok = false;
+        bool ok = ::mkdir(path, S_IRWXU) == 0;
+        if(!ok && errno == EEXIST)
+        {
+            int ret = KMessageBox::warningYesNo(
+                0, i18n("%1 is a file, but KDE needs it to be a directory; move it to %2.orig and create directory?").arg(m).arg(m), QString::null,
+                i18n("Move It"), i18n("Do Not Move"));
+            if(ret == KMessageBox::Yes)
+            {
+                if(::rename(path, path + ".orig") == 0)
+                {
+                    ok = ::mkdir(path, S_IRWXU) == 0;
+                }
+                else
+                {
+                    // foo.orig existed already. How likely is that?
+                    ok = false;
+                }
             }
-        } else {
+            else
+            {
+                return false;
+            }
+        }
+        if(!ok)
+        {
+            KMessageBox::sorry(0,
+                               i18n("Could not create directory %1; check for permissions or reconfigure the desktop to use another path.").arg(m));
             return false;
         }
+        return true;
     }
-    if ( !ok )
+    else // exists already
     {
-        KMessageBox::sorry( 0, i18n( "Could not create directory %1; check for permissions or reconfigure the desktop to use another path." ).arg( m ) );
+        closedir(dp);
         return false;
     }
-    return true;
-  }
-  else // exists already
-  {
-    closedir( dp );
-    return false;
-  }
 }
 
 /**
@@ -97,33 +107,35 @@ static bool testDir( const QString &_name )
  * @param dir destination directory
  * @param force if false, don't copy if destination file already exists
  */
-static void copyDirectoryFile(const QString &fileName, const QString& dir, bool force)
+static void copyDirectoryFile(const QString &fileName, const QString &dir, bool force)
 {
-  if (force || !QFile::exists(dir + "/.directory")) {
-    QString cmd = "cp ";
-    cmd += KProcess::quote(locate("data", QString("kdesktop/") + fileName));
-    cmd += " ";
-    cmd += KProcess::quote(dir+"/.directory");
-    system( QFile::encodeName(cmd) );
-  }
+    if(force || !QFile::exists(dir + "/.directory"))
+    {
+        QString cmd = "cp ";
+        cmd += KProcess::quote(locate("data", QString("kdesktop/") + fileName));
+        cmd += " ";
+        cmd += KProcess::quote(dir + "/.directory");
+        system(QFile::encodeName(cmd));
+    }
 }
 
-static void copyFile( const QString& src, const QString& dest )
+static void copyFile(const QString &src, const QString &dest)
 {
     QCString cmd = "cp ";
     cmd += QFile::encodeName(KProcess::quote(src));
     cmd += " ";
     cmd += QFile::encodeName(KProcess::quote(dest));
-    system( cmd );
+    system(cmd);
 }
 
 static QString realDesktopPath()
 {
     QString desktopPath = KGlobalSettings::desktopPath();
-    if (kdesktop_screen_number != 0) {
-	QString dn = "Desktop";
-	dn += QString::number(kdesktop_screen_number);
-	desktopPath.replace("Desktop", dn);
+    if(kdesktop_screen_number != 0)
+    {
+        QString dn = "Desktop";
+        dn += QString::number(kdesktop_screen_number);
+        desktopPath.replace("Desktop", dn);
     }
     return desktopPath;
 }
@@ -136,19 +148,19 @@ static void copyDesktopLinks()
 {
     KConfig *config = kapp->config();
     config->setGroup("General");
-    if (!config->readBoolEntry("CopyDesktopLinks", true))
-       return;
+    if(!config->readBoolEntry("CopyDesktopLinks", true))
+        return;
 
-    QStringList list =
-	KGlobal::dirs()->findAllResources("appdata", "DesktopLinks/*", false, true);
+    QStringList list = KGlobal::dirs()->findAllResources("appdata", "DesktopLinks/*", false, true);
 
     QString desktopPath = realDesktopPath();
 
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); it++) {
-        KDesktopFile desk( *it );
-        if (desk.readBoolEntry("Hidden"))
-           continue;
-        copyFile( *it, desktopPath );
+    for(QStringList::ConstIterator it = list.begin(); it != list.end(); it++)
+    {
+        KDesktopFile desk(*it);
+        if(desk.readBoolEntry("Hidden"))
+            continue;
+        copyFile(*it, desktopPath);
     }
 }
 
@@ -165,18 +177,19 @@ static bool isNewRelease()
     int versionMinor = KDesktopSettings::kDEVersionMinor();
     int versionRelease = KDesktopSettings::kDEVersionRelease();
 
-    if( versionMajor < KDE_VERSION_MAJOR )
+    if(versionMajor < KDE_VERSION_MAJOR)
         bNewRelease = true;
-    else if( versionMinor < KDE_VERSION_MINOR )
+    else if(versionMinor < KDE_VERSION_MINOR)
         bNewRelease = true;
-    else if( versionRelease < KDE_VERSION_RELEASE )
+    else if(versionRelease < KDE_VERSION_RELEASE)
         bNewRelease = true;
 
-    if( bNewRelease ) {
-      KDesktopSettings::setKDEVersionMajor( KDE_VERSION_MAJOR );
-      KDesktopSettings::setKDEVersionMinor( KDE_VERSION_MINOR );
-      KDesktopSettings::setKDEVersionRelease( KDE_VERSION_RELEASE );
-      KDesktopSettings::writeConfig();
+    if(bNewRelease)
+    {
+        KDesktopSettings::setKDEVersionMajor(KDE_VERSION_MAJOR);
+        KDesktopSettings::setKDEVersionMinor(KDE_VERSION_MINOR);
+        KDesktopSettings::setKDEVersionRelease(KDE_VERSION_RELEASE);
+        KDesktopSettings::writeConfig();
     }
 
     return bNewRelease;
@@ -192,56 +205,61 @@ void testLocalInstallation()
     const bool newRelease = isNewRelease();
 
     const QString desktopPath = realDesktopPath();
-    const bool emptyDesktop = testDir( desktopPath );
+    const bool emptyDesktop = testDir(desktopPath);
 
     // Do not force copying that one (it would lose the icon positions)
     copyDirectoryFile("directory.desktop", desktopPath, false);
 
-    testDir( KGlobalSettings::autostartPath() );
+    testDir(KGlobalSettings::autostartPath());
     // we force the copying in case of a new release, to install new translations....
     copyDirectoryFile("directory.autostart", KGlobalSettings::autostartPath(), newRelease);
 
-    if (emptyDesktop)
-	copyDesktopLinks();
+    if(emptyDesktop)
+        copyDesktopLinks();
 
     // Take care of creating or updating trash.desktop
     const QString trashDir = KGlobal::dirs()->localxdgdatadir() + "Trash";
-    const bool firstTimeWithNewTrash = !QFile::exists( trashDir );
+    const bool firstTimeWithNewTrash = !QFile::exists(trashDir);
     const QString trashDesktopPath = desktopPath + "/trash.desktop";
-    const bool trashDesktopExists = QFile::exists( trashDesktopPath );
+    const bool trashDesktopExists = QFile::exists(trashDesktopPath);
     const bool installNewTrashi18n = newRelease && trashDesktopExists; // not if deleted by user
-    if ( emptyDesktop || firstTimeWithNewTrash || installNewTrashi18n ) {
+    if(emptyDesktop || firstTimeWithNewTrash || installNewTrashi18n)
+    {
         QString oldIcon, oldEmptyIcon;
-        if ( trashDesktopExists ) {
-            KDesktopFile trashDesktop( trashDesktopPath, true );
+        if(trashDesktopExists)
+        {
+            KDesktopFile trashDesktop(trashDesktopPath, true);
             oldIcon = trashDesktop.readIcon();
-            oldEmptyIcon = trashDesktop.readEntry( "EmptyIcon" );
+            oldEmptyIcon = trashDesktop.readEntry("EmptyIcon");
         }
-        copyFile( locate( "data", "kdesktop/directory.trash" ), trashDesktopPath );
-        if ( trashDesktopExists ) {
-            KDesktopFile trashDesktop( trashDesktopPath );
-            trashDesktop.writeEntry( "Icon", oldIcon );
-            trashDesktop.writeEntry( "EmptyIcon", oldEmptyIcon );
+        copyFile(locate("data", "kdesktop/directory.trash"), trashDesktopPath);
+        if(trashDesktopExists)
+        {
+            KDesktopFile trashDesktop(trashDesktopPath);
+            trashDesktop.writeEntry("Icon", oldIcon);
+            trashDesktop.writeEntry("EmptyIcon", oldEmptyIcon);
             trashDesktop.sync();
         }
     }
 
-    if ( firstTimeWithNewTrash ) { // migrate pre-kde-3.4 trash contents
+    if(firstTimeWithNewTrash)
+    { // migrate pre-kde-3.4 trash contents
         QByteArray packedArgs;
-        QDataStream stream( packedArgs, IO_WriteOnly );
+        QDataStream stream(packedArgs, IO_WriteOnly);
         stream << (int)2;
-        KIO::Job* job = KIO::special( "trash:/", packedArgs );
-        (void)KIO::NetAccess::synchronousRun( job, 0 );
+        KIO::Job *job = KIO::special("trash:/", packedArgs);
+        (void)KIO::NetAccess::synchronousRun(job, 0);
 
         // OK the only thing missing is to convert the icon position...
-        KSimpleConfig cfg( locateLocal("appdata", "IconPositions") );
-        if ( cfg.hasGroup( "IconPosition::Trash" ) && !cfg.hasGroup( "IconPosition::trash.desktop" ) ) {
-            const QMap<QString, QString> entries = cfg.entryMap( "IconPosition::Trash" );
-            cfg.setGroup( "IconPosition::trash.desktop" );
-            for( QMap<QString,QString>::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
-                cfg.writeEntry( it.key(), it.data() );
+        KSimpleConfig cfg(locateLocal("appdata", "IconPositions"));
+        if(cfg.hasGroup("IconPosition::Trash") && !cfg.hasGroup("IconPosition::trash.desktop"))
+        {
+            const QMap< QString, QString > entries = cfg.entryMap("IconPosition::Trash");
+            cfg.setGroup("IconPosition::trash.desktop");
+            for(QMap< QString, QString >::ConstIterator it = entries.begin(); it != entries.end(); ++it)
+            {
+                cfg.writeEntry(it.key(), it.data());
             }
         }
     }
 }
-

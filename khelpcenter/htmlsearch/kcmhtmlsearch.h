@@ -33,49 +33,45 @@ class KProcess;
 class KLanguageCombo;
 class KURLRequester;
 
-class KHTMLSearchConfig : public KCModule
-{
-  Q_OBJECT
+class KHTMLSearchConfig : public KCModule {
+    Q_OBJECT
 
 public:
+    KHTMLSearchConfig(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KHTMLSearchConfig();
 
-  KHTMLSearchConfig(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~KHTMLSearchConfig();
-  
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
-  QString quickHelp() const;
-  
-  int buttons();
+    QString quickHelp() const;
 
-  
+    int buttons();
+
+
 protected slots:
 
-  void configChanged();
-  void addClicked(); 
-  void delClicked();
-  void pathSelected(const QString &);
-  void urlClicked(const QString&);
-  void generateIndex();
+    void configChanged();
+    void addClicked();
+    void delClicked();
+    void pathSelected(const QString &);
+    void urlClicked(const QString &);
+    void generateIndex();
 
-  void indexTerminated(KProcess *proc);
+    void indexTerminated(KProcess *proc);
 
-      
+
 private:
+    void checkButtons();
+    void loadLanguages();
 
-  void checkButtons();
-  void loadLanguages();
+    KURLRequester *htdigBin, *htsearchBin, *htmergeBin;
+    QCheckBox *indexKDE, *indexMan, *indexInfo;
+    QPushButton *addButton, *delButton, *runButton;
+    KListBox *searchPaths;
+    KLanguageCombo *language;
 
-  KURLRequester *htdigBin, *htsearchBin, *htmergeBin;
-  QCheckBox *indexKDE, *indexMan, *indexInfo;
-  QPushButton *addButton, *delButton, *runButton;
-  KListBox *searchPaths;
-  KLanguageCombo *language;
-
-  KProcess *indexProc;
-
+    KProcess *indexProc;
 };
 
 #endif

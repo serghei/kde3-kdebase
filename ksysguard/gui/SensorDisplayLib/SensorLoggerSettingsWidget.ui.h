@@ -32,25 +32,25 @@ QColor SensorLoggerSettingsWidget::alarmColor()
 }
 
 
-void SensorLoggerSettingsWidget::setTitle( const QString &t )
+void SensorLoggerSettingsWidget::setTitle(const QString &t)
 {
     m_title->setText(t);
 }
 
 
-void SensorLoggerSettingsWidget::setForegroundColor( const QColor &c )
+void SensorLoggerSettingsWidget::setForegroundColor(const QColor &c)
 {
     m_foregroundColor->setColor(c);
 }
 
 
-void SensorLoggerSettingsWidget::setBackgroundColor( const QColor &c )
+void SensorLoggerSettingsWidget::setBackgroundColor(const QColor &c)
 {
     m_backgroundColor->setColor(c);
 }
 
 
-void SensorLoggerSettingsWidget::setAlarmColor( const QColor &c )
+void SensorLoggerSettingsWidget::setAlarmColor(const QColor &c)
 {
     m_alarmColor->setColor(c);
 }

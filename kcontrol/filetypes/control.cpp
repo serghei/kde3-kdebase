@@ -1,11 +1,8 @@
 #include "filetypesview.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_filetypes(QWidget *parent, const char *)
 {
-	  KDE_EXPORT KCModule *create_filetypes(QWidget *parent, const char *)
-          {
-        return new FileTypesView(parent, "filetypes");
-	  }
-
+    return new FileTypesView(parent, "filetypes");
 }
-
+}

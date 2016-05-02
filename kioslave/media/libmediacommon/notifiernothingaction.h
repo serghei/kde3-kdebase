@@ -22,13 +22,11 @@
 
 #include "notifieraction.h"
 
-class NotifierNothingAction : public NotifierAction
-{
+class NotifierNothingAction : public NotifierAction {
 public:
-	NotifierNothingAction();
-	virtual QString id() const;
-	virtual void execute(KFileItem &medium);
+    NotifierNothingAction();
+    virtual QString id() const;
+    virtual void execute(KFileItem &medium);
 };
 
 #endif
-

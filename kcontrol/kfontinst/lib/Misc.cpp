@@ -28,211 +28,206 @@
 
 #include "Misc.h"
 #include <qfile.h>
-#include <kprocess.h> 
+#include <kprocess.h>
 #include <kstandarddirs.h>
 #include <klargefile.h>
 #include <kio/netaccess.h>
 #include <unistd.h>
 
-namespace KFI
-{
+namespace KFI {
 
-namespace Misc
-{
+namespace Misc {
 
-QString linkedTo(const QString &i)
-{
-    QString d;
-
-    if(isLink(i))
+    QString linkedTo(const QString &i)
     {
-        char buffer[1000];
-        int  n=readlink(QFile::encodeName(i), buffer, 1000);
+        QString d;
 
-        if(n!=-1)
+        if(isLink(i))
         {
-            buffer[n]='\0';
-            d=buffer;
+            char buffer[1000];
+            int n = readlink(QFile::encodeName(i), buffer, 1000);
+
+            if(n != -1)
+            {
+                buffer[n] = '\0';
+                d = buffer;
+            }
         }
+
+        return d;
     }
 
-    return d;
-}
-
-QString dirSyntax(const QString &d)
-{
-    if(!d.isEmpty())
+    QString dirSyntax(const QString &d)
     {
-        QString ds(d);
+        if(!d.isEmpty())
+        {
+            QString ds(d);
 
-        ds.replace("//", "/");
+            ds.replace("//", "/");
 
-        int slashPos=ds.findRev('/');
+            int slashPos = ds.findRev('/');
 
-        if(slashPos!=(((int)ds.length())-1))
-            ds.append('/');
+            if(slashPos != (((int)ds.length()) - 1))
+                ds.append('/');
 
-        return ds;
+            return ds;
+        }
+
+        return d;
     }
 
-    return d;
-}
-
-QString xDirSyntax(const QString &d)
-{
-    if(!d.isEmpty())
+    QString xDirSyntax(const QString &d)
     {
-        QString ds(d);
+        if(!d.isEmpty())
+        {
+            QString ds(d);
 
-        ds.replace("//", "/");
+            ds.replace("//", "/");
 
-        int slashPos=ds.findRev('/');
- 
-        if(slashPos==(((int)ds.length())-1))
-            ds.remove(slashPos, 1);
-        return ds;
+            int slashPos = ds.findRev('/');
+
+            if(slashPos == (((int)ds.length()) - 1))
+                ds.remove(slashPos, 1);
+            return ds;
+        }
+
+        return d;
     }
 
-    return d;
-}
+    QString getDir(const QString &f)
+    {
+        QString d(f);
 
-QString getDir(const QString &f)
-{
-    QString d(f);
+        int slashPos = d.findRev('/');
 
-    int slashPos=d.findRev('/');
- 
-    if(slashPos!=-1)
-        d.remove(slashPos+1, d.length());
+        if(slashPos != -1)
+            d.remove(slashPos + 1, d.length());
 
-    return dirSyntax(d);
-}
+        return dirSyntax(d);
+    }
 
-QString getFile(const QString &f)
-{
-    QString d(f);
+    QString getFile(const QString &f)
+    {
+        QString d(f);
 
-    int slashPos=d.findRev('/');
- 
-    if(slashPos!=-1)
-        d.remove(0, slashPos+1);
+        int slashPos = d.findRev('/');
 
-    return d;
-}
+        if(slashPos != -1)
+            d.remove(0, slashPos + 1);
 
-bool createDir(const QString &dir)
-{
+        return d;
+    }
+
+    bool createDir(const QString &dir)
+    {
+        //
+        // Clear any umask before dir is created
+        mode_t oldMask = umask(0000);
+        bool status = KStandardDirs::makeDir(dir, DIR_PERMS);
+        // Reset umask
+        ::umask(oldMask);
+        return status;
+    }
+
+    bool doCmd(const QString &cmd, const QString &p1, const QString &p2, const QString &p3)
+    {
+        KProcess proc;
+
+        proc << cmd;
+
+        if(!p1.isEmpty())
+            proc << p1;
+        if(!p2.isEmpty())
+            proc << p2;
+        if(!p3.isEmpty())
+            proc << p3;
+
+        proc.start(KProcess::Block);
+
+        return proc.normalExit() && proc.exitStatus() == 0;
+    }
+
+    QString changeExt(const QString &f, const QString &newExt)
+    {
+        QString newStr(f);
+        int dotPos = newStr.findRev('.');
+
+        if(-1 == dotPos)
+            newStr += QChar('.') + newExt;
+        else
+        {
+            newStr.remove(dotPos + 1, newStr.length());
+            newStr += newExt;
+        }
+        return newStr;
+    }
+
+    void createBackup(const QString &f)
+    {
+        const QString constExt(".bak");
+
+        if(!fExists(f + constExt) && fExists(f))
+            doCmd("cp", "-f", f, f + constExt);
+    }
+
     //
-    // Clear any umask before dir is created
-    mode_t oldMask=umask(0000);
-    bool   status=KStandardDirs::makeDir(dir, DIR_PERMS);
-    // Reset umask
-    ::umask(oldMask);
-    return status;
-}
-
-bool doCmd(const QString &cmd, const QString &p1, const QString &p2, const QString &p3)
-{
-    KProcess proc;
-
-    proc << cmd;
-
-    if(!p1.isEmpty())
-        proc << p1;
-    if(!p2.isEmpty())
-        proc << p2;
-    if(!p3.isEmpty())
-        proc << p3;
-
-    proc.start(KProcess::Block);
-
-    return proc.normalExit() && proc.exitStatus()==0;
-}
-
-QString changeExt(const QString &f, const QString &newExt)
-{
-    QString newStr(f);
-    int     dotPos=newStr.findRev('.');
-
-    if(-1==dotPos)
-        newStr+=QChar('.')+newExt;
-    else
+    // Get a list of files associated with a file, e.g.:
+    //
+    //    File: /home/a/courier.pfa
+    //
+    //    Associated: /home/a/courier.afm /home/a/courier.pfm
+    //
+    void getAssociatedUrls(const KURL &url, KURL::List &list, bool afmAndPfm, QWidget *widget)
     {
-        newStr.remove(dotPos+1, newStr.length());
-        newStr+=newExt;
-    }
-    return newStr;
-}
+        const char *afm[] = {"afm", "AFM", "Afm", "AFm", "AfM", "aFM", "aFm", "afM", NULL},
+                   *pfm[] = {"pfm", "PFM", "Pfm", "PFm", "PfM", "pFM", "pFm", "pfM", NULL};
+        bool gotAfm = false, localFile = url.isLocalFile();
+        int e;
 
-void createBackup(const QString &f)
-{
-    const QString constExt(".bak");
-
-    if(!fExists(f+constExt) && fExists(f))
-        doCmd("cp", "-f", f, f+constExt);
-}
-
-//
-// Get a list of files associated with a file, e.g.:
-//
-//    File: /home/a/courier.pfa
-//
-//    Associated: /home/a/courier.afm /home/a/courier.pfm
-//
-void getAssociatedUrls(const KURL &url, KURL::List &list, bool afmAndPfm, QWidget *widget)
-{
-    const char *afm[]={"afm", "AFM", "Afm", "AFm", "AfM", "aFM", "aFm", "afM", NULL},
-               *pfm[]={"pfm", "PFM", "Pfm", "PFm", "PfM", "pFM", "pFm", "pfM", NULL};
-    bool       gotAfm=false,
-               localFile=url.isLocalFile();
-    int        e;
-
-    for(e=0; afm[e]; ++e)
-    {
-        KURL statUrl(url);
-        KIO::UDSEntry uds;
-
-        statUrl.setPath(changeExt(url.path(), afm[e]));
-
-        if(localFile ? fExists(statUrl.path()) : KIO::NetAccess::stat(statUrl, uds, widget))
+        for(e = 0; afm[e]; ++e)
         {
-            list.append(statUrl);
-            gotAfm=true;
-            break;
-        }
-    }
-
-    if(afmAndPfm || !gotAfm)
-        for(e=0; pfm[e]; ++e)
-        {
-            KURL          statUrl(url);
+            KURL statUrl(url);
             KIO::UDSEntry uds;
 
-            statUrl.setPath(changeExt(url.path(), pfm[e]));
+            statUrl.setPath(changeExt(url.path(), afm[e]));
+
             if(localFile ? fExists(statUrl.path()) : KIO::NetAccess::stat(statUrl, uds, widget))
             {
                 list.append(statUrl);
+                gotAfm = true;
                 break;
             }
         }
+
+        if(afmAndPfm || !gotAfm)
+            for(e = 0; pfm[e]; ++e)
+            {
+                KURL statUrl(url);
+                KIO::UDSEntry uds;
+
+                statUrl.setPath(changeExt(url.path(), pfm[e]));
+                if(localFile ? fExists(statUrl.path()) : KIO::NetAccess::stat(statUrl, uds, widget))
+                {
+                    list.append(statUrl);
+                    break;
+                }
+            }
+    }
+
+    time_t getTimeStamp(const QString &item)
+    {
+        KDE_struct_stat info;
+
+        return !item.isEmpty() && 0 == KDE_lstat(QFile::encodeName(item), &info) ? info.st_mtime : 0;
+    }
+
+
+    bool check(const QString &path, unsigned int fmt, bool checkW)
+    {
+        KDE_struct_stat info;
+        QCString pathC(QFile::encodeName(path));
+
+        return 0 == KDE_lstat(pathC, &info) && (info.st_mode & S_IFMT) == fmt && (!checkW || 0 == ::access(pathC, W_OK));
+    }
 }
-
-time_t getTimeStamp(const QString &item)
-{
-    KDE_struct_stat info;
-
-    return !item.isEmpty() && 0==KDE_lstat(QFile::encodeName(item), &info) ? info.st_mtime : 0;
-}
-
-
-bool check(const QString &path, unsigned int fmt, bool checkW)
-{ 
-    KDE_struct_stat info;
-    QCString        pathC(QFile::encodeName(path));
-
-    return 0==KDE_lstat(pathC, &info) && (info.st_mode&S_IFMT)==fmt && (!checkW || 0==::access(pathC, W_OK));
-}
-
-}
-
 }

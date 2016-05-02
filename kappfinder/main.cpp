@@ -24,29 +24,25 @@
 
 #include "toplevel.h"
 
-static const char description[] = I18N_NOOP( "KDE's application finder" );
+static const char description[] = I18N_NOOP("KDE's application finder");
 
-static KCmdLineOptions options[] = {
-  { "dir <dir>", I18N_NOOP( "Install .desktop files into directory <dir>" ), 0 },
-  KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"dir <dir>", I18N_NOOP("Install .desktop files into directory <dir>"), 0}, KCmdLineLastOption};
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  KAboutData aboutData( "kappfinder", I18N_NOOP( "KAppfinder" ),
-                        "1.0", description, KAboutData::License_GPL,
-                        "(c) 1998-2000, Matthias Hoelzer-Kluepfel" );
-  aboutData.addAuthor( "Matthias Hoelzer-Kluepfel", 0, "hoelzer@kde.org" );
-  aboutData.addAuthor( "Tobias Koenig", 0, "tokoe@kde.org" );
+    KAboutData aboutData("kappfinder", I18N_NOOP("KAppfinder"), "1.0", description, KAboutData::License_GPL,
+                         "(c) 1998-2000, Matthias Hoelzer-Kluepfel");
+    aboutData.addAuthor("Matthias Hoelzer-Kluepfel", 0, "hoelzer@kde.org");
+    aboutData.addAuthor("Tobias Koenig", 0, "tokoe@kde.org");
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KApplication app;
+    KApplication app;
 
-  TopLevel *dlg = new TopLevel( args->getOption( "dir" ) );
-  app.setMainWidget( dlg );
+    TopLevel *dlg = new TopLevel(args->getOption("dir"));
+    app.setMainWidget(dlg);
 
-  return dlg->exec();
+    return dlg->exec();
 }

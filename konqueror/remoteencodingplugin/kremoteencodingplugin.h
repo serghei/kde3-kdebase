@@ -30,34 +30,32 @@ class KActionMenu;
 class KConfig;
 class KonqDirPart;
 
-class KRemoteEncodingPlugin: public KParts::Plugin
-{
-  Q_OBJECT
+class KRemoteEncodingPlugin : public KParts::Plugin {
+    Q_OBJECT
 public:
-  KRemoteEncodingPlugin(QObject * parent, const char *name,
-			const QStringList &);
-  ~KRemoteEncodingPlugin();
+    KRemoteEncodingPlugin(QObject *parent, const char *name, const QStringList &);
+    ~KRemoteEncodingPlugin();
 
 protected slots:
-  void slotAboutToOpenURL();
-  void slotAboutToShow();
-  void slotItemSelected(int);
-  void slotReload();
-  void slotDefault();
+    void slotAboutToOpenURL();
+    void slotAboutToShow();
+    void slotItemSelected(int);
+    void slotReload();
+    void slotDefault();
 
 private:
-  void updateBrowser();
-  void loadSettings();
-  void fillMenu();
-  void updateMenu();
+    void updateBrowser();
+    void loadSettings();
+    void fillMenu();
+    void updateMenu();
 
-  KonqDirPart *m_part;
-  KActionMenu *m_menu;
-  QStringList m_encodingDescriptions;
-  KURL m_currentURL;
+    KonqDirPart *m_part;
+    KActionMenu *m_menu;
+    QStringList m_encodingDescriptions;
+    KURL m_currentURL;
 
-  bool m_loaded;
-  int m_idDefault;
+    bool m_loaded;
+    int m_idDefault;
 };
 
 #endif

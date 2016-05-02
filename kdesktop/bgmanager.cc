@@ -40,19 +40,18 @@
 
 #include "pixmapserver.h"
 
-template class QPtrVector<KBackgroundRenderer>;
-template class QPtrVector<KBackgroundCacheEntry>;
-template class QMemArray<int>;
+template class QPtrVector< KBackgroundRenderer >;
+template class QPtrVector< KBackgroundCacheEntry >;
+template class QMemArray< int >;
 
 static Atom prop_root;
 static bool properties_inited = false;
 
 /**** KBackgroundManager ****/
 
-KBackgroundManager::KBackgroundManager(QWidget *desktop, KWinModule* kwinModule)
-    : DCOPObject("KBackgroundIface")
+KBackgroundManager::KBackgroundManager(QWidget *desktop, KWinModule *kwinModule) : DCOPObject("KBackgroundIface")
 {
-    if( !properties_inited )
+    if(!properties_inited)
     {
         prop_root = XInternAtom(qt_xdisplay(), "_XROOTPMAP_ID", False);
         properties_inited = true;
@@ -61,53 +60,52 @@ KBackgroundManager::KBackgroundManager(QWidget *desktop, KWinModule* kwinModule)
     m_bEnabled = true;
 
     m_pDesktop = desktop;
-    if (desktop == 0L)
+    if(desktop == 0L)
         desktop = QApplication::desktop()->screen();
 
-    m_Renderer.resize( 1 );
-    m_Cache.resize( 1 );
+    m_Renderer.resize(1);
+    m_Cache.resize(1);
 
-    m_Serial = 0; m_Hash = 0;
+    m_Serial = 0;
+    m_Hash = 0;
     m_pConfig = KGlobal::config();
     m_bExport = m_bCommon = m_bInit = false;
     m_pKwinmodule = kwinModule;
     m_pPixmapServer = new KPixmapServer();
     m_xrootpmap = None;
 
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
     {
-	m_Cache.insert(i, new KBackgroundCacheEntry);
+        m_Cache.insert(i, new KBackgroundCacheEntry);
         m_Cache[i]->pixmap = 0L;
         m_Cache[i]->hash = 0;
         m_Cache[i]->exp_from = -1;
-        m_Renderer.insert (i, new KVirtualBGRenderer(i,m_pConfig));
+        m_Renderer.insert(i, new KVirtualBGRenderer(i, m_pConfig));
         connect(m_Renderer[i], SIGNAL(imageDone(int)), SLOT(slotImageDone(int)));
-        m_Renderer[i]->enableTiling( true ); // optimize
+        m_Renderer[i]->enableTiling(true); // optimize
     }
 
     configure();
 
     m_pTimer = new QTimer(this);
     connect(m_pTimer, SIGNAL(timeout()), SLOT(slotTimeout()));
-    m_pTimer->start( 60000 );
+    m_pTimer->start(60000);
 
-    connect(m_pKwinmodule, SIGNAL(currentDesktopChanged(int)),
-	    SLOT(slotChangeDesktop(int)));
-    connect(m_pKwinmodule, SIGNAL(numberOfDesktopsChanged(int)),
-	    SLOT(slotChangeNumberOfDesktops(int)));
+    connect(m_pKwinmodule, SIGNAL(currentDesktopChanged(int)), SLOT(slotChangeDesktop(int)));
+    connect(m_pKwinmodule, SIGNAL(numberOfDesktopsChanged(int)), SLOT(slotChangeNumberOfDesktops(int)));
 
-#if (QT_VERSION-0 >= 0x030200)
-    connect( kapp->desktop(), SIGNAL( resized( int )), SLOT( desktopResized())); // RANDR support
+#if(QT_VERSION - 0 >= 0x030200)
+    connect(kapp->desktop(), SIGNAL(resized(int)), SLOT(desktopResized())); // RANDR support
 #endif
 }
 
 
 KBackgroundManager::~KBackgroundManager()
 {
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
         delete m_Renderer[i];
 
-    //delete m_pConfig; Very bad idea, this is KGlobal::config !
+    // delete m_pConfig; Very bad idea, this is KGlobal::config !
     delete m_pPixmapServer;
     delete m_pTimer;
 
@@ -116,23 +114,24 @@ KBackgroundManager::~KBackgroundManager()
     Atom type;
     int format;
     unsigned long length, after;
-    unsigned char* data_root;
-    if( XGetWindowProperty( qt_xdisplay(), qt_xrootwin(), prop_root, 0L, 1L, False, AnyPropertyType,
-	&type, &format, &length, &after, &data_root) == Success && data_root != NULL )
+    unsigned char *data_root;
+    if(XGetWindowProperty(qt_xdisplay(), qt_xrootwin(), prop_root, 0L, 1L, False, AnyPropertyType, &type, &format, &length, &after, &data_root)
+           == Success
+       && data_root != NULL)
     {
-	if (type == XA_PIXMAP)
-	    pm = *((Pixmap*)data_root);
-        XFree( data_root );
+        if(type == XA_PIXMAP)
+            pm = *((Pixmap *)data_root);
+        XFree(data_root);
     }
     // only if it's our pixmap
-    if( pm == m_xrootpmap )
-	XDeleteProperty(qt_xdisplay(), qt_xrootwin(), prop_root);
+    if(pm == m_xrootpmap)
+        XDeleteProperty(qt_xdisplay(), qt_xrootwin(), prop_root);
     m_xrootpmap = None;
 
-    if (m_bExport)
+    if(m_bExport)
         return;
 
-    for (unsigned i=0; i<m_Cache.size(); i++)
+    for(unsigned i = 0; i < m_Cache.size(); i++)
     {
         delete m_Cache[i]->pixmap;
         delete m_Cache[i];
@@ -142,18 +141,19 @@ KBackgroundManager::~KBackgroundManager()
 
 void KBackgroundManager::applyExport(bool exp)
 {
-    if (exp == m_bExport)
-	return;
+    if(exp == m_bExport)
+        return;
 
     // If export mode changed from true -> false, remove all shared pixmaps.
     // If it changed false -> true force a redraw because the current screen
     // image might not have an associated pixmap in the cache.
-    if (!exp)
+    if(!exp)
     {
-	for (unsigned i=0; i<m_Cache.size(); i++)
-	    removeCache(i);
-    } else
-	m_Hash = 0;
+        for(unsigned i = 0; i < m_Cache.size(); i++)
+            removeCache(i);
+    }
+    else
+        m_Hash = 0;
 
     m_bExport = exp;
 }
@@ -161,18 +161,18 @@ void KBackgroundManager::applyExport(bool exp)
 
 void KBackgroundManager::applyCommon(bool common)
 {
-    if (common == m_bCommon)
-	return;
+    if(common == m_bCommon)
+        return;
     m_bCommon = common;
 
     // If common changed from false -> true, remove all cache entries, except
     // at index 0 if exports are on.
-    if (m_bCommon)
+    if(m_bCommon)
     {
-	if (!m_bExport)
-	    removeCache(0);
-	for (unsigned i=1; i<m_Cache.size(); i++)
-	    removeCache(i);
+        if(!m_bExport)
+            removeCache(0);
+        for(unsigned i = 1; i < m_Cache.size(); i++)
+            removeCache(i);
     }
 }
 
@@ -197,12 +197,12 @@ void KBackgroundManager::configure()
 
     // Read individual settings
     KVirtualBGRenderer *r;
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
     {
         r = m_Renderer[i];
         int ohash = r->hash();
-        r->load(i,false);
-        if ((r->hash() != ohash))
+        r->load(i, false);
+        if((r->hash() != ohash))
             removeCache(i);
     }
 
@@ -220,7 +220,8 @@ void KBackgroundManager::configure()
 int KBackgroundManager::realDesktop()
 {
     int desk = m_pKwinmodule->currentDesktop();
-    if (desk) desk--;
+    if(desk)
+        desk--;
     return desk;
 }
 
@@ -236,38 +237,39 @@ int KBackgroundManager::effectiveDesktop()
  */
 void KBackgroundManager::slotChangeNumberOfDesktops(int num)
 {
-    if (m_Renderer.size() == (unsigned) num)
-	return;
+    if(m_Renderer.size() == (unsigned)num)
+        return;
 
-    if (m_Renderer.size() > (unsigned) num)
+    if(m_Renderer.size() > (unsigned)num)
     {
-	for (unsigned i=num; i<m_Renderer.size(); i++)
-	{
-	    if (m_Renderer[i]->isActive())
-		m_Renderer[i]->stop();
-	    delete m_Renderer[i];
-	    removeCache(i);
-	}
-	for (unsigned i=num; i<m_Renderer.size(); i++)
-	    delete m_Cache[i];
-	m_Renderer.resize(num);
-	m_Cache.resize(num);
-    } else
+        for(unsigned i = num; i < m_Renderer.size(); i++)
+        {
+            if(m_Renderer[i]->isActive())
+                m_Renderer[i]->stop();
+            delete m_Renderer[i];
+            removeCache(i);
+        }
+        for(unsigned i = num; i < m_Renderer.size(); i++)
+            delete m_Cache[i];
+        m_Renderer.resize(num);
+        m_Cache.resize(num);
+    }
+    else
     {
-	// allocate new renderers and caches
-	int oldsz = m_Renderer.size();
-	m_Renderer.resize(num);
-	m_Cache.resize(num);
-	for (int i=oldsz; i<num; i++)
-	{
-	    m_Cache.insert(i, new KBackgroundCacheEntry);
-	    m_Cache[i]->pixmap = 0L;
-	    m_Cache[i]->hash = 0;
-	    m_Cache[i]->exp_from = -1;
-            m_Renderer.insert(i, new KVirtualBGRenderer(i,m_pConfig));
-	    connect(m_Renderer[i], SIGNAL(imageDone(int)), SLOT(slotImageDone(int)));
-            m_Renderer[i]->enableTiling( true ); // optimize
-	}
+        // allocate new renderers and caches
+        int oldsz = m_Renderer.size();
+        m_Renderer.resize(num);
+        m_Cache.resize(num);
+        for(int i = oldsz; i < num; i++)
+        {
+            m_Cache.insert(i, new KBackgroundCacheEntry);
+            m_Cache[i]->pixmap = 0L;
+            m_Cache[i]->hash = 0;
+            m_Cache[i]->exp_from = -1;
+            m_Renderer.insert(i, new KVirtualBGRenderer(i, m_pConfig));
+            connect(m_Renderer[i], SIGNAL(imageDone(int)), SLOT(slotImageDone(int)));
+            m_Renderer[i]->enableTiling(true); // optimize
+        }
     }
 }
 
@@ -278,46 +280,45 @@ void KBackgroundManager::slotChangeNumberOfDesktops(int num)
  */
 void KBackgroundManager::slotChangeDesktop(int desk)
 {
-    if (desk == 0)
-	desk = realDesktop();
+    if(desk == 0)
+        desk = realDesktop();
     else
-	desk--;
+        desk--;
 
     // Lazy initialisation of # of desktops
-    if ((unsigned) desk >= m_Renderer.size())
-	slotChangeNumberOfDesktops( m_pKwinmodule->numberOfDesktops() );
+    if((unsigned)desk >= m_Renderer.size())
+        slotChangeNumberOfDesktops(m_pKwinmodule->numberOfDesktops());
 
     int edesk = effectiveDesktop();
     m_Serial++;
 
     // If the background is the same: do nothing
-    if (m_Hash == m_Renderer[edesk]->hash())
+    if(m_Hash == m_Renderer[edesk]->hash())
     {
-	exportBackground(m_Current, desk);
+        exportBackground(m_Current, desk);
         return;
     }
     m_Renderer[edesk]->stop();
     m_Renderer[edesk]->cleanup();
 
     // If we have the background already rendered: set it
-    for (unsigned i=0; i<m_Cache.size(); i++)
+    for(unsigned i = 0; i < m_Cache.size(); i++)
     {
-	if (!m_Cache[i]->pixmap)
-	    continue;
-	if (m_Cache[i]->hash != m_Renderer[edesk]->hash())
-	    continue;
-//        kdDebug() << "slotChangeDesktop i=" << i << endl;
-	setPixmap(m_Cache[i]->pixmap, m_Cache[i]->hash, i);
-	m_Cache[i]->atime = m_Serial;
-	exportBackground(i, desk);
-	return;
+        if(!m_Cache[i]->pixmap)
+            continue;
+        if(m_Cache[i]->hash != m_Renderer[edesk]->hash())
+            continue;
+        //        kdDebug() << "slotChangeDesktop i=" << i << endl;
+        setPixmap(m_Cache[i]->pixmap, m_Cache[i]->hash, i);
+        m_Cache[i]->atime = m_Serial;
+        exportBackground(i, desk);
+        return;
     }
 
     // Do we have this or an identical config already running?
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
     {
-        if ((m_Renderer[i]->hash() == m_Renderer[edesk]->hash()) &&
-            (m_Renderer[i]->isActive()))
+        if((m_Renderer[i]->hash() == m_Renderer[edesk]->hash()) && (m_Renderer[i]->isActive()))
             return;
     }
 
@@ -330,13 +331,12 @@ void KBackgroundManager::slotChangeDesktop(int desk)
  */
 void KBackgroundManager::exportBackground(int pixmap, int desk)
 {
-    if (!m_bExport || (m_Cache[desk]->exp_from == pixmap))
+    if(!m_bExport || (m_Cache[desk]->exp_from == pixmap))
         return;
 
     m_Cache[desk]->exp_from = pixmap;
-    m_pPixmapServer->add(KRootPixmap::pixmapName(desk+1),
-	    m_Cache[pixmap]->pixmap);
-    KIPC::sendMessageAll(KIPC::BackgroundChanged, desk+1);
+    m_pPixmapServer->add(KRootPixmap::pixmapName(desk + 1), m_Cache[pixmap]->pixmap);
+    KIPC::sendMessageAll(KIPC::BackgroundChanged, desk + 1);
 }
 
 
@@ -345,40 +345,40 @@ void KBackgroundManager::exportBackground(int pixmap, int desk)
  */
 void KBackgroundManager::setPixmap(KPixmap *pm, int hash, int desk)
 {
-    if (m_pDesktop)
+    if(m_pDesktop)
     {
-       QScrollView* sv = dynamic_cast<QScrollView*>( m_pDesktop );
-       if ( sv ) {
-         // Qt eats repaint events in this case :-((
-         sv->viewport()->update();
-       }
-       m_pDesktop->setErasePixmap(*pm);
-       m_pDesktop->repaint();
-       static bool root_cleared = false;
-       if( !root_cleared )
-       { // clear the root window pixmap set by kdm
-          root_cleared = true;
-	  QTimer::singleShot( 0, this, SLOT( clearRoot()));
-          // but make the pixmap visible until m_pDesktop is visible
-          QApplication::desktop()->screen()->setErasePixmap(*pm);
-          QApplication::desktop()->screen()->erase();
-       }
+        QScrollView *sv = dynamic_cast< QScrollView * >(m_pDesktop);
+        if(sv)
+        {
+            // Qt eats repaint events in this case :-((
+            sv->viewport()->update();
+        }
+        m_pDesktop->setErasePixmap(*pm);
+        m_pDesktop->repaint();
+        static bool root_cleared = false;
+        if(!root_cleared)
+        { // clear the root window pixmap set by kdm
+            root_cleared = true;
+            QTimer::singleShot(0, this, SLOT(clearRoot()));
+            // but make the pixmap visible until m_pDesktop is visible
+            QApplication::desktop()->screen()->setErasePixmap(*pm);
+            QApplication::desktop()->screen()->erase();
+        }
     }
     else
     {
-       QApplication::desktop()->screen()->setErasePixmap(*pm);
-       QApplication::desktop()->screen()->erase();
+        QApplication::desktop()->screen()->setErasePixmap(*pm);
+        QApplication::desktop()->screen()->erase();
     }
 
-     // and export it via Esetroot-style for gnome/GTK apps to share in the pretties
+    // and export it via Esetroot-style for gnome/GTK apps to share in the pretties
     Pixmap bgPm = pm->handle(); // fetch the actual X handle to it
-    //kdDebug() << "Esetroot compat:  setting pixmap to " << bgPm << endl;
+    // kdDebug() << "Esetroot compat:  setting pixmap to " << bgPm << endl;
 
     // don't set the ESETROOT_PMAP_ID property - that would result in possible XKillClient()
     // done on kdesktop
 
-    XChangeProperty(qt_xdisplay(), qt_xrootwin(), prop_root, XA_PIXMAP, 32, PropModeReplace,
-                    (unsigned char *) &bgPm, 1);
+    XChangeProperty(qt_xdisplay(), qt_xrootwin(), prop_root, XA_PIXMAP, 32, PropModeReplace, (unsigned char *)&bgPm, 1);
     m_xrootpmap = bgPm;
 
     m_Hash = hash;
@@ -387,8 +387,8 @@ void KBackgroundManager::setPixmap(KPixmap *pm, int hash, int desk)
 
 void KBackgroundManager::clearRoot()
 {
-   QApplication::desktop()->screen()->setErasePixmap( QPixmap());
-   QApplication::desktop()->screen()->erase();
+    QApplication::desktop()->screen()->setErasePixmap(QPixmap());
+    QApplication::desktop()->screen()->erase();
 }
 
 /*
@@ -397,7 +397,7 @@ void KBackgroundManager::clearRoot()
 void KBackgroundManager::renderBackground(int desk)
 {
     KVirtualBGRenderer *r = m_Renderer[desk];
-    if (r->isActive())
+    if(r->isActive())
     {
         kdDebug() << "renderer " << desk << " already active" << endl;
         return;
@@ -419,26 +419,26 @@ void KBackgroundManager::slotImageDone(int desk)
     *pm = r->pixmap();
     // If current: paint it
     bool current = (r->hash() == m_Renderer[effectiveDesktop()]->hash());
-    if (current)
+    if(current)
     {
         setPixmap(pm, r->hash(), desk);
-        if (!m_bBgInitDone)
+        if(!m_bBgInitDone)
         {
             m_bBgInitDone = true;
             emit initDone();
-            QTimer::singleShot( 30000, this, SLOT( saveImages()));
+            QTimer::singleShot(30000, this, SLOT(saveImages()));
             do_cleanup = false;
         }
     }
-    if (m_bExport || !m_bCommon)
-	addCache(pm, r->hash(), desk);
+    if(m_bExport || !m_bCommon)
+        addCache(pm, r->hash(), desk);
     else
         delete pm;
 
-    if (current)
+    if(current)
         exportBackground(desk, realDesktop());
 
-    if( do_cleanup )
+    if(do_cleanup)
     {
         r->saveCacheFile();
         r->cleanup();
@@ -448,7 +448,7 @@ void KBackgroundManager::slotImageDone(int desk)
 
 void KBackgroundManager::saveImages()
 {
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
     {
         m_Renderer[i]->saveCacheFile();
         m_Renderer[i]->cleanup();
@@ -470,9 +470,9 @@ int KBackgroundManager::pixmapSize(QPixmap *pm)
 int KBackgroundManager::cacheSize()
 {
     int total = 0;
-    for (unsigned i=0; i<m_Cache.size(); i++)
+    for(unsigned i = 0; i < m_Cache.size(); i++)
     {
-        if (m_Cache[i]->pixmap)
+        if(m_Cache[i]->pixmap)
             total += pixmapSize(m_Cache[i]->pixmap);
     }
     return total;
@@ -484,8 +484,8 @@ int KBackgroundManager::cacheSize()
  */
 void KBackgroundManager::removeCache(int desk)
 {
-    if (m_bExport)
-	m_pPixmapServer->remove(KRootPixmap::pixmapName(desk+1));
+    if(m_bExport)
+        m_pPixmapServer->remove(KRootPixmap::pixmapName(desk + 1));
     else
         delete m_Cache[desk]->pixmap;
     m_Cache[desk]->pixmap = 0L;
@@ -494,14 +494,14 @@ void KBackgroundManager::removeCache(int desk)
     m_Cache[desk]->atime = 0;
 
     // Remove cache entries pointing to the removed entry
-    for (unsigned i=0; i<m_Cache.size(); i++)
+    for(unsigned i = 0; i < m_Cache.size(); i++)
     {
-	if (m_Cache[i]->exp_from == desk)
-	{
-	    assert(m_bExport);
-	    m_Cache[i]->exp_from = -1;
-	    m_pPixmapServer->remove(KRootPixmap::pixmapName(i+1));
-	}
+        if(m_Cache[i]->exp_from == desk)
+        {
+            assert(m_bExport);
+            m_Cache[i]->exp_from = -1;
+            m_pPixmapServer->remove(KRootPixmap::pixmapName(i + 1));
+        }
     }
 }
 
@@ -511,27 +511,28 @@ void KBackgroundManager::removeCache(int desk)
  */
 bool KBackgroundManager::freeCache(int size)
 {
-    if (m_bExport || !m_bLimitCache)
-	return true;
+    if(m_bExport || !m_bLimitCache)
+        return true;
 
     // If it doesn't fit at all, return now.
-    if (size > m_CacheLimit)
-	return false;
+    if(size > m_CacheLimit)
+        return false;
 
     // If cache is too full, purge it (LRU)
-    while (size+cacheSize() > m_CacheLimit)
+    while(size + cacheSize() > m_CacheLimit)
     {
-	int j, min;
-	min = m_Serial+1; j = 0;
-	for (unsigned i=0; i<m_Cache.size(); i++)
-	{
-	    if (m_Cache[i]->pixmap && (m_Cache[i]->atime < min))
-	    {
-		min = m_Cache[i]->atime;
-		j = i;
-	    }
-	}
-	removeCache(j);
+        int j, min;
+        min = m_Serial + 1;
+        j = 0;
+        for(unsigned i = 0; i < m_Cache.size(); i++)
+        {
+            if(m_Cache[i]->pixmap && (m_Cache[i]->atime < min))
+            {
+                min = m_Cache[i]->atime;
+                j = i;
+            }
+        }
+        removeCache(j);
     }
     return true;
 }
@@ -543,14 +544,14 @@ bool KBackgroundManager::freeCache(int size)
  */
 void KBackgroundManager::addCache(KPixmap *pm, int hash, int desk)
 {
-    if (m_Cache[desk]->pixmap)
-	removeCache(desk);
+    if(m_Cache[desk]->pixmap)
+        removeCache(desk);
 
-    if (m_bLimitCache && !m_bExport && !freeCache(pixmapSize(pm)))
+    if(m_bLimitCache && !m_bExport && !freeCache(pixmapSize(pm)))
     {
-	// pixmap does not fit in cache
-	delete pm;
-	return;
+        // pixmap does not fit in cache
+        delete pm;
+        return;
     }
 
     m_Cache[desk]->pixmap = pm;
@@ -566,47 +567,47 @@ void KBackgroundManager::addCache(KPixmap *pm, int hash, int desk)
  */
 void KBackgroundManager::slotTimeout()
 {
-    QMemArray<int> running(m_Renderer.size());
+    QMemArray< int > running(m_Renderer.size());
     running.fill(0);
 
     int NumDesks = m_Renderer.size();
-    if (m_bCommon)
-       NumDesks = 1;
+    if(m_bCommon)
+        NumDesks = 1;
 
     int edesk = effectiveDesktop();
 
-    for (int i=0; i<NumDesks; i++)
+    for(int i = 0; i < NumDesks; i++)
     {
         KVirtualBGRenderer *r = m_Renderer[i];
         bool change = false;
-        
-        if (r->needProgramUpdate())
+
+        if(r->needProgramUpdate())
         {
             r->programUpdate();
             change = true;
         }
-        
-        if (r->needWallpaperChange())
+
+        if(r->needWallpaperChange())
         {
             r->changeWallpaper();
             change = true;
         }
 
-        if (change && (i == edesk))
-	{
-	    running[i] = r->hash();
+        if(change && (i == edesk))
+        {
+            running[i] = r->hash();
             r->start();
-	}
+        }
     }
 }
 
 // Return a valid desk number.
 int KBackgroundManager::validateDesk(int desk)
 {
-    if (desk > (int)m_Renderer.size())
-	slotChangeNumberOfDesktops( m_pKwinmodule->numberOfDesktops() );
+    if(desk > (int)m_Renderer.size())
+        slotChangeNumberOfDesktops(m_pKwinmodule->numberOfDesktops());
 
-    if ( (desk <= 0) || (desk > (int)m_Renderer.size()) )
+    if((desk <= 0) || (desk > (int)m_Renderer.size()))
         return realDesktop();
 
     return desk - 1;
@@ -617,7 +618,7 @@ int KBackgroundManager::validateDesk(int desk)
 // 0 is for the current visible desktop.
 QString KBackgroundManager::currentWallpaper(int desk)
 {
-    //TODO Is the behaviour of this function appropriate for multiple screens?
+    // TODO Is the behaviour of this function appropriate for multiple screens?
     KBackgroundRenderer *r = m_Renderer[validateDesk(desk)]->renderer(0);
 
     return r->currentWallpaper();
@@ -644,7 +645,7 @@ void KBackgroundManager::setExport(int _export)
 void KBackgroundManager::setCommon(int common)
 {
     applyCommon(common);
-    KDesktopSettings::setCommonDesktop( m_bCommon );
+    KDesktopSettings::setCommonDesktop(m_bCommon);
     KDesktopSettings::writeConfig();
     slotChangeDesktop(0);
 }
@@ -652,13 +653,14 @@ void KBackgroundManager::setCommon(int common)
 // DCOP exported
 void KBackgroundManager::setWallpaper(QString wallpaper, int mode)
 {
-    if (mode < 0 || mode >= KBackgroundSettings::lastWallpaperMode) {
-      kdDebug() << "Invalid background mode " << mode << " passed to " << k_funcinfo << "\n";
-      return;
+    if(mode < 0 || mode >= KBackgroundSettings::lastWallpaperMode)
+    {
+        kdDebug() << "Invalid background mode " << mode << " passed to " << k_funcinfo << "\n";
+        return;
     }
 
-    //TODO Is the behaviour of this function appropriate for multiple screens?
-    for (unsigned i=0; i < m_Renderer[effectiveDesktop()]->numRenderers(); ++i)
+    // TODO Is the behaviour of this function appropriate for multiple screens?
+    for(unsigned i = 0; i < m_Renderer[effectiveDesktop()]->numRenderers(); ++i)
     {
         KBackgroundRenderer *r = m_Renderer[effectiveDesktop()]->renderer(i);
         r->stop();
@@ -672,11 +674,11 @@ void KBackgroundManager::setWallpaper(QString wallpaper, int mode)
 
 void KBackgroundManager::setWallpaper(QString wallpaper)
 {
-    //TODO Is the behaviour of this function appropriate for multiple screens?
+    // TODO Is the behaviour of this function appropriate for multiple screens?
     KBackgroundRenderer *r = m_Renderer[effectiveDesktop()]->renderer(0);
     int mode = r->wallpaperMode();
-    if (mode == KBackgroundSettings::NoWallpaper)
-       mode = KBackgroundSettings::Tiled;
+    if(mode == KBackgroundSettings::NoWallpaper)
+        mode = KBackgroundSettings::Tiled;
     setWallpaper(wallpaper, mode);
 }
 
@@ -685,7 +687,7 @@ void KBackgroundManager::setWallpaper(QString wallpaper)
 // 0 is for current visible desktop.
 QStringList KBackgroundManager::wallpaperFiles(int desk)
 {
-    //TODO Is the behaviour of this function appropriate for multiple screens?
+    // TODO Is the behaviour of this function appropriate for multiple screens?
     KBackgroundRenderer *r = m_Renderer[validateDesk(desk)]->renderer(0);
 
     return r->wallpaperFiles();
@@ -696,38 +698,40 @@ QStringList KBackgroundManager::wallpaperFiles(int desk)
 // show window) for specified desk.  0 is for current visible desktop.
 QStringList KBackgroundManager::wallpaperList(int desk)
 {
-    //TODO Is the behaviour of this function appropriate for multiple screens?
-    KBackgroundRenderer *r = m_Renderer[validateDesk(desk)]->renderer(0);;
+    // TODO Is the behaviour of this function appropriate for multiple screens?
+    KBackgroundRenderer *r = m_Renderer[validateDesk(desk)]->renderer(0);
+    ;
 
     return r->wallpaperList();
 }
 
 // DCOP exported
-void KBackgroundManager::setCache( int bLimit, int size )
+void KBackgroundManager::setCache(int bLimit, int size)
 {
-    applyCache( bLimit, size*1024 );
-    KDesktopSettings::setLimitCache( (bool) bLimit );
-    KDesktopSettings::setCacheSize( size );
+    applyCache(bLimit, size * 1024);
+    KDesktopSettings::setLimitCache((bool)bLimit);
+    KDesktopSettings::setCacheSize(size);
     KDesktopSettings::writeConfig();
 }
 
 // DCOP exported
 void KBackgroundManager::setWallpaper(int desk, QString wallpaper, int mode)
 {
-    if (mode < 0 || mode >= KBackgroundSettings::lastWallpaperMode) {
-      kdDebug() << "Invalid background mode " << mode << " passed to " << k_funcinfo << "\n";
-      return;
+    if(mode < 0 || mode >= KBackgroundSettings::lastWallpaperMode)
+    {
+        kdDebug() << "Invalid background mode " << mode << " passed to " << k_funcinfo << "\n";
+        return;
     }
 
     int sdesk = validateDesk(desk);
 
-    //TODO Is the behaviour of this function appropriate for multiple screens?
-    for (unsigned i=0; i < m_Renderer[sdesk]->numRenderers(); ++i)
+    // TODO Is the behaviour of this function appropriate for multiple screens?
+    for(unsigned i = 0; i < m_Renderer[sdesk]->numRenderers(); ++i)
     {
         KBackgroundRenderer *r = m_Renderer[sdesk]->renderer(i);
-    
-        setCommon(false);   // Force each desktop to have it's own wallpaper
-    
+
+        setCommon(false); // Force each desktop to have it's own wallpaper
+
         r->stop();
         r->setWallpaperMode(mode);
         r->setMultiWallpaperMode(KBackgroundSettings::NoMulti);
@@ -739,73 +743,73 @@ void KBackgroundManager::setWallpaper(int desk, QString wallpaper, int mode)
 
 void KBackgroundManager::repaintBackground()
 {
-    if (m_pDesktop)
-       m_pDesktop->repaint();
+    if(m_pDesktop)
+        m_pDesktop->repaint();
     else
-       QApplication::desktop()->screen()->erase();
+        QApplication::desktop()->screen()->erase();
 }
 
 void KBackgroundManager::desktopResized()
 {
-    for (unsigned i=0; i<m_Renderer.size(); i++)
+    for(unsigned i = 0; i < m_Renderer.size(); i++)
     {
-        KVirtualBGRenderer * r = m_Renderer[i];
-        if( r->isActive())
+        KVirtualBGRenderer *r = m_Renderer[i];
+        if(r->isActive())
             r->stop();
         removeCache(i);
         // make the renderer update its desktop size
         r->desktopResized();
     }
     m_Hash = 0;
-    if( m_pDesktop )
-        m_pDesktop->resize( kapp->desktop()->size());
+    if(m_pDesktop)
+        m_pDesktop->resize(kapp->desktop()->size());
     // Repaint desktop
     slotChangeDesktop(0);
 }
 
 // DCOP exported
-void KBackgroundManager::setColor(const QColor & c, bool isColorA)
+void KBackgroundManager::setColor(const QColor &c, bool isColorA)
 {
-    //TODO Is the behaviour of this function appropriate for multiple screens?
-    for (unsigned i=0; i < m_Renderer[effectiveDesktop()]->numRenderers(); ++i)
+    // TODO Is the behaviour of this function appropriate for multiple screens?
+    for(unsigned i = 0; i < m_Renderer[effectiveDesktop()]->numRenderers(); ++i)
     {
         KBackgroundRenderer *r = m_Renderer[effectiveDesktop()]->renderer(i);
         r->stop();
-    
-        if (isColorA)
+
+        if(isColorA)
             r->setColorA(c);
         else
             r->setColorB(c);
-    
+
         int mode = r->backgroundMode();
-        if (mode == KBackgroundSettings::Program)
-        mode = KBackgroundSettings::Flat;
-    
-        if (!isColorA && (mode == KBackgroundSettings::Flat))
-        mode = KBackgroundSettings::VerticalGradient;
+        if(mode == KBackgroundSettings::Program)
+            mode = KBackgroundSettings::Flat;
+
+        if(!isColorA && (mode == KBackgroundSettings::Flat))
+            mode = KBackgroundSettings::VerticalGradient;
         r->setBackgroundMode(mode);
-    
+
         r->writeSettings();
     }
     slotChangeDesktop(0);
 }
 
-void KBackgroundManager::setBackgroundEnabled( const bool enable )
+void KBackgroundManager::setBackgroundEnabled(const bool enable)
 {
-  if (m_bEnabled == enable)
-    return;
+    if(m_bEnabled == enable)
+        return;
 
-  m_bEnabled= enable;
+    m_bEnabled = enable;
 
-  int NumDesks = m_Renderer.size();
-  if (m_bCommon)
-    NumDesks = 1;
+    int NumDesks = m_Renderer.size();
+    if(m_bCommon)
+        NumDesks = 1;
 
-  for (int i=0; i<NumDesks; i++)
+    for(int i = 0; i < NumDesks; i++)
     {
-      m_Renderer[i]->setEnabled(enable);
+        m_Renderer[i]->setEnabled(enable);
     }
-  slotChangeDesktop(0);
+    slotChangeDesktop(0);
 }
 
 #include "bgmanager.moc"

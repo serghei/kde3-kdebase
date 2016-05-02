@@ -36,40 +36,78 @@ class MenuEntryInfo;
 class MenuSeparatorInfo;
 class KShortcut;
 
-class TreeItem : public QListViewItem
-{
+class TreeItem : public QListViewItem {
 public:
-  TreeItem(QListViewItem *parent, QListViewItem *after, const QString &menuIdn, bool __init = false);
-    TreeItem(QListView *parent, QListViewItem* after, const QString &menuId, bool __init = false);
+    TreeItem(QListViewItem *parent, QListViewItem *after, const QString &menuIdn, bool __init = false);
+    TreeItem(QListView *parent, QListViewItem *after, const QString &menuId, bool __init = false);
 
-    QString menuId() const { return _menuId; }
+    QString menuId() const
+    {
+        return _menuId;
+    }
 
-    QString directory() const { return _directoryPath; }
-    void setDirectoryPath(const QString& path) { _directoryPath = path; }
+    QString directory() const
+    {
+        return _directoryPath;
+    }
+    void setDirectoryPath(const QString &path)
+    {
+        _directoryPath = path;
+    }
 
-    MenuFolderInfo *folderInfo() { return m_folderInfo; }
-    void setMenuFolderInfo(MenuFolderInfo *folderInfo) { m_folderInfo = folderInfo; }
+    MenuFolderInfo *folderInfo()
+    {
+        return m_folderInfo;
+    }
+    void setMenuFolderInfo(MenuFolderInfo *folderInfo)
+    {
+        m_folderInfo = folderInfo;
+    }
 
-    MenuEntryInfo *entryInfo() { return m_entryInfo; }
-    void setMenuEntryInfo(MenuEntryInfo *entryInfo) { m_entryInfo = entryInfo; }
+    MenuEntryInfo *entryInfo()
+    {
+        return m_entryInfo;
+    }
+    void setMenuEntryInfo(MenuEntryInfo *entryInfo)
+    {
+        m_entryInfo = entryInfo;
+    }
 
-    QString name() const { return _name; }
+    QString name() const
+    {
+        return _name;
+    }
     void setName(const QString &name);
 
-    bool isDirectory() const { return m_folderInfo; }
-    bool isEntry() const { return m_entryInfo; }
+    bool isDirectory() const
+    {
+        return m_folderInfo;
+    }
+    bool isEntry() const
+    {
+        return m_entryInfo;
+    }
 
-    bool isHidden() const { return _hidden; }
+    bool isHidden() const
+    {
+        return _hidden;
+    }
     void setHidden(bool b);
 
-    bool isLayoutDirty() { return _layoutDirty; }
-    void setLayoutDirty() { _layoutDirty = true; }
+    bool isLayoutDirty()
+    {
+        return _layoutDirty;
+    }
+    void setLayoutDirty()
+    {
+        _layoutDirty = true;
+    }
     QStringList layout();
 
     virtual void setOpen(bool o);
     void load();
 
-    virtual void paintCell(QPainter * p, const QColorGroup & cg, int column, int width, int align);
+    virtual void paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int align);
     virtual void setup();
 
 private:
@@ -85,15 +123,14 @@ private:
     MenuEntryInfo *m_entryInfo;
 };
 
-class TreeView : public KListView
-{
+class TreeView : public KListView {
     friend class TreeItem;
     Q_OBJECT
 public:
-    TreeView(bool controlCenter, KActionCollection *ac, QWidget *parent=0, const char *name=0);
+    TreeView(bool controlCenter, KActionCollection *ac, QWidget *parent = 0, const char *name = 0);
     ~TreeView();
 
-    void readMenuFolderInfo(MenuFolderInfo *folderInfo=0, KServiceGroup::Ptr folder=0, const QString &prefix=QString::null);
+    void readMenuFolderInfo(MenuFolderInfo *folderInfo = 0, KServiceGroup::Ptr folder = 0, const QString &prefix = QString::null);
     void setViewMode(bool showHidden);
     bool save();
 
@@ -101,11 +138,11 @@ public:
 
     void selectMenu(const QString &menu);
     void selectMenuEntry(const QString &menuEntry);
-    
+
 public slots:
     void currentChanged(MenuFolderInfo *folderInfo);
     void currentChanged(MenuEntryInfo *entryInfo);
-    void findServiceShortcut(const KShortcut&, KService::Ptr &);
+    void findServiceShortcut(const KShortcut &, KService::Ptr &);
 
 signals:
     void entrySelected(MenuFolderInfo *folderInfo);
@@ -114,7 +151,7 @@ signals:
 protected slots:
     void itemSelected(QListViewItem *);
     void slotDropped(QDropEvent *, QListViewItem *, QListViewItem *);
-    void slotRMBPressed(QListViewItem*, const QPoint&);
+    void slotRMBPressed(QListViewItem *, const QPoint &);
 
     void newsubmenu();
     void newitem();
@@ -138,41 +175,41 @@ protected:
     void closeAllItems(QListViewItem *item);
 
     // moving = src will be removed later
-    void copy( bool moving );
+    void copy(bool moving);
 
     void cleanupClipboard();
-    
+
     bool isLayoutDirty();
     void setLayoutDirty(TreeItem *);
     void saveLayout();
 
-    QStringList fileList(const QString& relativePath);
-    QStringList dirList(const QString& relativePath);
+    QStringList fileList(const QString &relativePath);
+    QStringList dirList(const QString &relativePath);
 
-    virtual bool acceptDrag(QDropEvent* event) const;
+    virtual bool acceptDrag(QDropEvent *event) const;
     virtual QDragObject *dragObject();
     virtual void startDrag();
 
 private:
     KActionCollection *m_ac;
-    QPopupMenu        *m_rmb;
-    int                m_clipboard;
-    MenuFolderInfo    *m_clipboardFolderInfo;
-    MenuEntryInfo     *m_clipboardEntryInfo;
-    int                m_drag;
-    MenuFolderInfo    *m_dragInfo;
-    TreeItem          *m_dragItem;
-    QString            m_dragPath;
-    bool               m_showHidden;
-    bool               m_controlCenter;
-    MenuFile          *m_menuFile;
-    MenuFolderInfo    *m_rootFolder;
+    QPopupMenu *m_rmb;
+    int m_clipboard;
+    MenuFolderInfo *m_clipboardFolderInfo;
+    MenuEntryInfo *m_clipboardEntryInfo;
+    int m_drag;
+    MenuFolderInfo *m_dragInfo;
+    TreeItem *m_dragItem;
+    QString m_dragPath;
+    bool m_showHidden;
+    bool m_controlCenter;
+    MenuFile *m_menuFile;
+    MenuFolderInfo *m_rootFolder;
     MenuSeparatorInfo *m_separator;
-    QStringList        m_newMenuIds;
-    QStringList        m_newDirectoryList;
-    bool               m_detailedMenuEntries;
-    bool               m_detailedEntriesNamesFirst;
-    bool               m_layoutDirty;
+    QStringList m_newMenuIds;
+    QStringList m_newDirectoryList;
+    bool m_detailedMenuEntries;
+    bool m_detailedEntriesNamesFirst;
+    bool m_layoutDirty;
 };
 
 

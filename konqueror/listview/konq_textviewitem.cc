@@ -24,11 +24,11 @@
 #include <stdio.h>
 #include <kglobal.h>
 
-int KonqTextViewItem::compare( QListViewItem *item, int col, bool ascending ) const
+int KonqTextViewItem::compare(QListViewItem *item, int col, bool ascending) const
 {
-   if (col==1)
-      return KonqBaseListViewItem::compare(item, 0, ascending);
-   return KonqBaseListViewItem::compare(item, col, ascending);
+    if(col == 1)
+        return KonqBaseListViewItem::compare(item, 0, ascending);
+    return KonqBaseListViewItem::compare(item, col, ascending);
 }
 
 /*QString KonqTextViewItem::key( int _column, bool asc) const
@@ -67,148 +67,147 @@ int KonqTextViewItem::compare( QListViewItem *item, int col, bool ascending ) co
 
 void KonqTextViewItem::updateContents()
 {
-   QString tmp;
-   KIO::filesize_t size=m_fileitem->size();
-   mode_t m=m_fileitem->mode();
+    QString tmp;
+    KIO::filesize_t size = m_fileitem->size();
+    mode_t m = m_fileitem->mode();
 
-   // The order is: .dir (0), dir (1), .file (2), file (3)
-   sortChar = S_ISDIR( m_fileitem->mode() ) ? 1 : 3;
-   if ( m_fileitem->text()[0] == '.' )
-       --sortChar;
+    // The order is: .dir (0), dir (1), .file (2), file (3)
+    sortChar = S_ISDIR(m_fileitem->mode()) ? 1 : 3;
+    if(m_fileitem->text()[0] == '.')
+        --sortChar;
 
-   if (m_fileitem->isLink())
-   {
-      if (S_ISDIR(m))
-      {
-         type=KTVI_DIRLINK;
-         tmp="~";
-      }
-      else if ((S_ISREG(m)) || (S_ISCHR(m)) || (S_ISBLK(m)) || (S_ISSOCK(m)) || (S_ISFIFO(m)))
-      {
-         tmp="@";
-         type=KTVI_REGULARLINK;
-      }
-      else
-      {
-         tmp="!";
-         type=KTVI_UNKNOWN;
-         size=0;
-      };
-   }
-   else if (S_ISREG(m))
-   {
-      if ((m_fileitem->permissions() & (S_IXUSR|S_IXGRP|S_IXOTH)) !=0 )
-      {
-         tmp="*";
-         type=KTVI_EXEC;
-      }
-      else
-      {
-         tmp="";
-         type=KTVI_REGULAR;
-      };
-   }
-   else if (S_ISDIR(m))
-   {
-      type=KTVI_DIR;
-      tmp="/";
-   }
-   else if (S_ISCHR(m))
-   {
-      type=KTVI_CHARDEV;
-      tmp="-";
-   }
-   else if (S_ISBLK(m))
-   {
-      type=KTVI_BLOCKDEV;
-      tmp="+";
-   }
-   else if (S_ISSOCK(m))
-   {
-      type=KTVI_SOCKET;
-      tmp="=";
-   }
-   else if (S_ISFIFO(m))
-   {
-      type=KTVI_FIFO;
-      tmp=">";
-   }
-   else
-   {
-      tmp="!";
-      type=KTVI_UNKNOWN;
-      size=0;
-   };
-   setText(1,tmp);
-   setText(0,m_fileitem->text());
-   //now we have the first two columns, so let's do the rest
-   KonqTextViewWidget* lv = static_cast<KonqTextViewWidget *>(listView());
+    if(m_fileitem->isLink())
+    {
+        if(S_ISDIR(m))
+        {
+            type = KTVI_DIRLINK;
+            tmp = "~";
+        }
+        else if((S_ISREG(m)) || (S_ISCHR(m)) || (S_ISBLK(m)) || (S_ISSOCK(m)) || (S_ISFIFO(m)))
+        {
+            tmp = "@";
+            type = KTVI_REGULARLINK;
+        }
+        else
+        {
+            tmp = "!";
+            type = KTVI_UNKNOWN;
+            size = 0;
+        };
+    }
+    else if(S_ISREG(m))
+    {
+        if((m_fileitem->permissions() & (S_IXUSR | S_IXGRP | S_IXOTH)) != 0)
+        {
+            tmp = "*";
+            type = KTVI_EXEC;
+        }
+        else
+        {
+            tmp = "";
+            type = KTVI_REGULAR;
+        };
+    }
+    else if(S_ISDIR(m))
+    {
+        type = KTVI_DIR;
+        tmp = "/";
+    }
+    else if(S_ISCHR(m))
+    {
+        type = KTVI_CHARDEV;
+        tmp = "-";
+    }
+    else if(S_ISBLK(m))
+    {
+        type = KTVI_BLOCKDEV;
+        tmp = "+";
+    }
+    else if(S_ISSOCK(m))
+    {
+        type = KTVI_SOCKET;
+        tmp = "=";
+    }
+    else if(S_ISFIFO(m))
+    {
+        type = KTVI_FIFO;
+        tmp = ">";
+    }
+    else
+    {
+        tmp = "!";
+        type = KTVI_UNKNOWN;
+        size = 0;
+    };
+    setText(1, tmp);
+    setText(0, m_fileitem->text());
+    // now we have the first two columns, so let's do the rest
+    KonqTextViewWidget *lv = static_cast< KonqTextViewWidget * >(listView());
 
-   for (unsigned int i=0; i<lv->NumberOfAtoms; i++)
-   {
-      ColumnInfo *tmpColumn=&lv->confColumns[i];
-      if (tmpColumn->displayThisOne)
-      {
-         switch (tmpColumn->udsId)
-         {
-         case KIO::UDS_USER:
-            setText(tmpColumn->displayInColumn,m_fileitem->user());
-            break;
-         case KIO::UDS_GROUP:
-            setText(tmpColumn->displayInColumn,m_fileitem->group());
-            break;
-         case KIO::UDS_LINK_DEST:
-            setText(tmpColumn->displayInColumn,m_fileitem->linkDest());
-            break;
-         case KIO::UDS_FILE_TYPE:
-            setText(tmpColumn->displayInColumn,m_fileitem->mimeComment());
-            break;
-         case KIO::UDS_MIME_TYPE:
-            setText(tmpColumn->displayInColumn,m_fileitem->mimetype());
-            break;
-         case KIO::UDS_URL:
-            setText(tmpColumn->displayInColumn,m_fileitem->url().prettyURL());
-            break;
-         case KIO::UDS_SIZE:
-            if ( static_cast<KonqBaseListViewWidget *>(listView())->m_pSettings->fileSizeInBytes() )
-                setText(tmpColumn->displayInColumn,KGlobal::locale()->formatNumber(size, 0)+" ");
-            else
-                setText(tmpColumn->displayInColumn,KIO::convertSize(size)+" ");
-            break;
-         case KIO::UDS_ACCESS:
-            setText(tmpColumn->displayInColumn,m_fileitem->permissionsString());
-            break;
-         case KIO::UDS_MODIFICATION_TIME:
-         case KIO::UDS_ACCESS_TIME:
-         case KIO::UDS_CREATION_TIME:
-            for( KIO::UDSEntry::ConstIterator it = m_fileitem->entry().begin(); it != m_fileitem->entry().end(); it++ )
+    for(unsigned int i = 0; i < lv->NumberOfAtoms; i++)
+    {
+        ColumnInfo *tmpColumn = &lv->confColumns[i];
+        if(tmpColumn->displayThisOne)
+        {
+            switch(tmpColumn->udsId)
             {
-               if ((*it).m_uds==(unsigned int)tmpColumn->udsId)
-               {
-                  QDateTime dt;
-                  dt.setTime_t((time_t) (*it).m_long);
-                  setText(tmpColumn->displayInColumn,KGlobal::locale()->formatDateTime(dt));
-                  break;
-               };
-
+                case KIO::UDS_USER:
+                    setText(tmpColumn->displayInColumn, m_fileitem->user());
+                    break;
+                case KIO::UDS_GROUP:
+                    setText(tmpColumn->displayInColumn, m_fileitem->group());
+                    break;
+                case KIO::UDS_LINK_DEST:
+                    setText(tmpColumn->displayInColumn, m_fileitem->linkDest());
+                    break;
+                case KIO::UDS_FILE_TYPE:
+                    setText(tmpColumn->displayInColumn, m_fileitem->mimeComment());
+                    break;
+                case KIO::UDS_MIME_TYPE:
+                    setText(tmpColumn->displayInColumn, m_fileitem->mimetype());
+                    break;
+                case KIO::UDS_URL:
+                    setText(tmpColumn->displayInColumn, m_fileitem->url().prettyURL());
+                    break;
+                case KIO::UDS_SIZE:
+                    if(static_cast< KonqBaseListViewWidget * >(listView())->m_pSettings->fileSizeInBytes())
+                        setText(tmpColumn->displayInColumn, KGlobal::locale()->formatNumber(size, 0) + " ");
+                    else
+                        setText(tmpColumn->displayInColumn, KIO::convertSize(size) + " ");
+                    break;
+                case KIO::UDS_ACCESS:
+                    setText(tmpColumn->displayInColumn, m_fileitem->permissionsString());
+                    break;
+                case KIO::UDS_MODIFICATION_TIME:
+                case KIO::UDS_ACCESS_TIME:
+                case KIO::UDS_CREATION_TIME:
+                    for(KIO::UDSEntry::ConstIterator it = m_fileitem->entry().begin(); it != m_fileitem->entry().end(); it++)
+                    {
+                        if((*it).m_uds == (unsigned int)tmpColumn->udsId)
+                        {
+                            QDateTime dt;
+                            dt.setTime_t((time_t)(*it).m_long);
+                            setText(tmpColumn->displayInColumn, KGlobal::locale()->formatDateTime(dt));
+                            break;
+                        };
+                    };
+                    break;
+                default:
+                    break;
             };
-            break;
-         default:
-            break;
-         };
-      };
-   };
+        };
+    };
 }
 
-void KonqTextViewItem::paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment )
+void KonqTextViewItem::paintCell(QPainter *_painter, const QColorGroup &_cg, int _column, int _width, int _alignment)
 {
-   QColorGroup cg( _cg );
-   cg.setColor(QColorGroup::Text, static_cast<KonqTextViewWidget *>(listView())->colors[type]);
-   // Don't do that! Keep things readable whatever the selection background color is
-//   cg.setColor(QColorGroup::HighlightedText, static_cast<KonqTextViewWidget *>(listView())->highlight[type]);
-//   cg.setColor(QColorGroup::Highlight, Qt::darkGray);
+    QColorGroup cg(_cg);
+    cg.setColor(QColorGroup::Text, static_cast< KonqTextViewWidget * >(listView())->colors[type]);
+    // Don't do that! Keep things readable whatever the selection background color is
+    //   cg.setColor(QColorGroup::HighlightedText, static_cast<KonqTextViewWidget *>(listView())->highlight[type]);
+    //   cg.setColor(QColorGroup::Highlight, Qt::darkGray);
 
-   KListViewItem::paintCell( _painter, cg, _column, _width, _alignment );
+    KListViewItem::paintCell(_painter, cg, _column, _width, _alignment);
 }
 
 /*void KonqTextViewItem::paintFocus( QPainter *_p, const QColorGroup &_cg, const QRect &_r )
@@ -225,8 +224,9 @@ void KonqTextViewItem::paintCell( QPainter *_painter, const QColorGroup & _cg, i
 
 void KonqTextViewItem::setup()
 {
-   widthChanged();
-   int h(listView()->fontMetrics().height());
-   if ( h % 2 > 0 ) h++;
-   setHeight(h);
+    widthChanged();
+    int h(listView()->fontMetrics().height());
+    if(h % 2 > 0)
+        h++;
+    setHeight(h);
 }

@@ -32,25 +32,25 @@ QColor ListViewSettingsWidget::textColor()
 }
 
 
-void ListViewSettingsWidget::setTitle( const QString &t )
+void ListViewSettingsWidget::setTitle(const QString &t)
 {
     m_title->setText(t);
 }
 
 
-void ListViewSettingsWidget::setBackgroundColor( const QColor &c )
+void ListViewSettingsWidget::setBackgroundColor(const QColor &c)
 {
     m_backgroundColor->setColor(c);
 }
 
 
-void ListViewSettingsWidget::setTextColor( const QColor &c )
+void ListViewSettingsWidget::setTextColor(const QColor &c)
 {
     m_textColor->setColor(c);
 }
 
 
-void ListViewSettingsWidget::setGridColor( const QColor &c )
+void ListViewSettingsWidget::setGridColor(const QColor &c)
 {
     m_gridColor->setColor(c);
 }

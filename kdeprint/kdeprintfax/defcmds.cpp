@@ -22,17 +22,17 @@
 #include <qregexp.h>
 #include <kstandarddirs.h>
 
-QString defaultCommand(const QString& cmd)
+QString defaultCommand(const QString &cmd)
 {
-	QString	str(cmd);
-	QRegExp	r("%exe_(\\w+)");
-	int	p(-1);
-	if ((p=r.search(str)) != -1)
-	{
-		QString	exe = KStandardDirs::findExe(r.cap(1));
-		if (exe.isEmpty())
-			exe = "/usr/bin/"+r.cap(1);
-		str.replace(p, r.matchedLength(), exe);
-	}
-	return str;
+    QString str(cmd);
+    QRegExp r("%exe_(\\w+)");
+    int p(-1);
+    if((p = r.search(str)) != -1)
+    {
+        QString exe = KStandardDirs::findExe(r.cap(1));
+        if(exe.isEmpty())
+            exe = "/usr/bin/" + r.cap(1);
+        str.replace(p, r.matchedLength(), exe);
+    }
+    return str;
 }

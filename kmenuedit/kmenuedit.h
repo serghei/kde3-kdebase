@@ -28,16 +28,21 @@ class QSplitter;
 class KAction;
 class KToggleAction;
 
-class KMenuEdit : public KMainWindow
-{
+class KMenuEdit : public KMainWindow {
     Q_OBJECT
 
 public:
-    KMenuEdit( bool controlCenter, QWidget *parent=0, const char *name=0 );
+    KMenuEdit(bool controlCenter, QWidget *parent = 0, const char *name = 0);
     ~KMenuEdit();
 
-    void selectMenu(const QString &menu) { m_tree->selectMenu(menu); }
-    void selectMenuEntry(const QString &menuEntry) { m_tree->selectMenuEntry(menuEntry); }
+    void selectMenu(const QString &menu)
+    {
+        m_tree->selectMenu(menu);
+    }
+    void selectMenuEntry(const QString &menuEntry)
+    {
+        m_tree->selectMenuEntry(menuEntry);
+    }
 
 protected:
     void setupView();
@@ -48,10 +53,11 @@ protected slots:
     void slotSave();
     void slotChangeView();
     void slotConfigureToolbars();
+
 protected:
-    TreeView           *m_tree;
-    BasicTab           *m_basicTab;
-    QSplitter          *m_splitter;
+    TreeView *m_tree;
+    BasicTab *m_basicTab;
+    QSplitter *m_splitter;
 
     KAction *m_actionDelete;
     KToggleAction *m_actionShowHidden;

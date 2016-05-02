@@ -16,24 +16,22 @@ License. See the file "COPYING" for the exact licensing terms.
 #include "workspace.h"
 #include "utils.h"
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
-class Application : public  KApplication
-    {
+class Application : public KApplication {
     Q_OBJECT
-    public:
-        Application();
-        ~Application();
+public:
+    Application();
+    ~Application();
 
-    protected:
-        bool x11EventFilter( XEvent * );
-    private slots:
-        void lostSelection();
+protected:
+    bool x11EventFilter(XEvent *);
+private slots:
+    void lostSelection();
 
-    private:
-        KWinSelectionOwner owner;
-    };
+private:
+    KWinSelectionOwner owner;
+};
 
 } // namespace
 

@@ -36,67 +36,60 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "taskbarapplet.h"
 #include "taskbarapplet.moc"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-    KDE_EXPORT KPanelApplet* init( QWidget *parent, const QString& configFile )
-    {
-        // FIXME: what about two taskbars? perhaps this should be inserted just once
-        KGlobal::locale()->insertCatalogue( "ktaskbarapplet" );
-        int options = 0;
-        if (kapp->authorizeControlModule("kde-kcmtaskbar.desktop"))
-           options = KPanelApplet::Preferences;
-        TaskbarApplet *taskbar = new TaskbarApplet( configFile, KPanelApplet::Stretch,
-                                                    options, parent, "ktaskbarapplet" );
-        return taskbar;
-    }
+    // FIXME: what about two taskbars? perhaps this should be inserted just once
+    KGlobal::locale()->insertCatalogue("ktaskbarapplet");
+    int options = 0;
+    if(kapp->authorizeControlModule("kde-kcmtaskbar.desktop"))
+        options = KPanelApplet::Preferences;
+    TaskbarApplet *taskbar = new TaskbarApplet(configFile, KPanelApplet::Stretch, options, parent, "ktaskbarapplet");
+    return taskbar;
+}
 }
 
-TaskbarApplet::TaskbarApplet( const QString& configFile, Type type, int actions,
-                             QWidget *parent, const char *name )
-    : KPanelApplet( configFile, type, actions, parent, name )
+TaskbarApplet::TaskbarApplet(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelApplet(configFile, type, actions, parent, name)
 {
-    setBackgroundOrigin( AncestorOrigin );
-    QHBoxLayout* layout = new QHBoxLayout( this );
-    container = new TaskBarContainer( false, this );
-    container->setBackgroundOrigin( AncestorOrigin );
+    setBackgroundOrigin(AncestorOrigin);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    container = new TaskBarContainer(false, this);
+    container->setBackgroundOrigin(AncestorOrigin);
     connect(container, SIGNAL(containerCountChanged()), this, SIGNAL(updateLayout()));
-    layout->addWidget( container, 1 );
+    layout->addWidget(container, 1);
     container->popupDirectionChange(popupDirection());
 }
 
 TaskbarApplet::~TaskbarApplet()
 {
     // FIXME: what about TWO taskbars?
-    KGlobal::locale()->removeCatalogue( "ktaskbarapplet" );
+    KGlobal::locale()->removeCatalogue("ktaskbarapplet");
 }
 
 int TaskbarApplet::widthForHeight(int h) const
 {
-    if (orientation() == Qt::Vertical)
+    if(orientation() == Qt::Vertical)
     {
         return width();
     }
 
     // FIXME KDE4: when either TaskBarContainer or Applet smartens up
     //             simplify this
-    KPanelExtension::Position d = orientation() == Qt::Horizontal ?
-                                  KPanelExtension::Top :
-                                  KPanelExtension::Left;
+    KPanelExtension::Position d = orientation() == Qt::Horizontal ? KPanelExtension::Top : KPanelExtension::Left;
     return container->sizeHint(d, QSize(200, h)).width();
 }
 
 int TaskbarApplet::heightForWidth(int w) const
 {
-    if (orientation() == Qt::Horizontal)
+    if(orientation() == Qt::Horizontal)
     {
         return height();
     }
 
     // FIXME KDE4: when either TaskBarContainer or Applet smartens up
     //             simplify this
-    KPanelExtension::Position d = orientation() == Qt::Horizontal ?
-                                  KPanelExtension::Top :
-                                  KPanelExtension::Left;
+    KPanelExtension::Position d = orientation() == Qt::Horizontal ? KPanelExtension::Top : KPanelExtension::Left;
     return container->sizeHint(d, QSize(w, 200)).height();
 }
 
@@ -105,14 +98,14 @@ void TaskbarApplet::preferences()
     container->preferences();
 }
 
-void TaskbarApplet::orientationChange( Orientation o )
+void TaskbarApplet::orientationChange(Orientation o)
 {
-    container->orientationChange( o );
+    container->orientationChange(o);
 }
 
-void TaskbarApplet::popupDirectionChange( Direction d )
+void TaskbarApplet::popupDirectionChange(Direction d)
 {
-    container->popupDirectionChange( d );
+    container->popupDirectionChange(d);
 }
 
 void TaskbarApplet::moveEvent(QMoveEvent *)

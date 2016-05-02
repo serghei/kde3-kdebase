@@ -33,45 +33,44 @@
 class KURL;
 
 
-class KURISearchFilterEngine
-{
+class KURISearchFilterEngine {
 public:
-  typedef QMap <QString, QString> SubstMap;
-  
-  KURISearchFilterEngine();
-  ~KURISearchFilterEngine() {};
+    typedef QMap< QString, QString > SubstMap;
 
-  QCString name() const;
-  
-  QString webShortcutQuery (const QString&) const;
-  
-  QString autoWebSearchQuery (const QString&) const;
-  
-  bool verbose() const { return m_bVerbose; }
+    KURISearchFilterEngine();
+    ~KURISearchFilterEngine(){};
 
-  void loadConfig();
-  
-  static KURISearchFilterEngine *self();
+    QCString name() const;
+
+    QString webShortcutQuery(const QString &) const;
+
+    QString autoWebSearchQuery(const QString &) const;
+
+    bool verbose() const
+    {
+        return m_bVerbose;
+    }
+
+    void loadConfig();
+
+    static KURISearchFilterEngine *self();
 
 protected:
-  QString formatResult (const QString& url, const QString& cset1, const QString& cset2,
-                        const QString& query, bool isMalformed) const;
-  
-  QString formatResult (const QString& url, const QString& cset1, const QString& cset2,
-                        const QString& query, bool isMalformed, SubstMap& map) const;
+    QString formatResult(const QString &url, const QString &cset1, const QString &cset2, const QString &query, bool isMalformed) const;
+
+    QString formatResult(const QString &url, const QString &cset1, const QString &cset2, const QString &query, bool isMalformed, SubstMap &map) const;
 
 private:
-  QStringList modifySubstitutionMap (SubstMap& map, const QString& query) const;  
-  
-  QString substituteQuery (const QString& url, SubstMap &map, 
-                           const QString& userquery, const int encodingMib) const;
-  
-  bool m_bVerbose;  
-  bool m_bWebShortcutsEnabled;
-  char m_cKeywordDelimiter;
+    QStringList modifySubstitutionMap(SubstMap &map, const QString &query) const;
 
-  QString m_defaultSearchEngine;
-  static KURISearchFilterEngine *s_pSelf;
+    QString substituteQuery(const QString &url, SubstMap &map, const QString &userquery, const int encodingMib) const;
+
+    bool m_bVerbose;
+    bool m_bWebShortcutsEnabled;
+    char m_cKeywordDelimiter;
+
+    QString m_defaultSearchEngine;
+    static KURISearchFilterEngine *s_pSelf;
 };
 
 #endif

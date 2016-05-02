@@ -10,7 +10,7 @@
  ***************************************************************************/
 
 #ifdef HAVE_CONFIG_H
-# include <config.h>
+#include <config.h>
 #endif
 
 #include <kapplication.h>
@@ -27,8 +27,8 @@
 #include <X11/Xlib.h>
 
 #ifdef HAVE_XCURSOR
-# include <X11/Xlib.h>
-# include <X11/Xcursor/Xcursor.h>
+#include <X11/Xlib.h>
+#include <X11/Xcursor/Xcursor.h>
 #endif
 
 #include "objkstheme.h"
@@ -40,23 +40,20 @@ struct ThemeEngine::ThemeEnginePrivate
     QValueList< Window > mSplashWindows;
 };
 
-ThemeEngine::ThemeEngine( QWidget *, const char *, const QStringList& args )
-  : QVBox( 0, "wndSplash", WStyle_Customize|WX11BypassWM ), d(0)
+ThemeEngine::ThemeEngine(QWidget *, const char *, const QStringList &args) : QVBox(0, "wndSplash", WStyle_Customize | WX11BypassWM), d(0)
 {
-  d = new ThemeEnginePrivate;
-  kapp->installX11EventFilter( this );
-  kapp->installEventFilter( this );
-  (void)kapp->desktop();
-  XWindowAttributes rootAttr;
-  XGetWindowAttributes(qt_xdisplay(), RootWindow(qt_xdisplay(),
-                        qt_xscreen()), &rootAttr);
-  XSelectInput( qt_xdisplay(), qt_xrootwin(),
-        SubstructureNotifyMask | rootAttr.your_event_mask );
-  if (args.isEmpty())
-    mTheme = new ObjKsTheme( "Default" );
-  else
-    mTheme = new ObjKsTheme( args.first() );
-  mTheme->loadCmdLineArgs( KCmdLineArgs::parsedArgs() );
+    d = new ThemeEnginePrivate;
+    kapp->installX11EventFilter(this);
+    kapp->installEventFilter(this);
+    (void)kapp->desktop();
+    XWindowAttributes rootAttr;
+    XGetWindowAttributes(qt_xdisplay(), RootWindow(qt_xdisplay(), qt_xscreen()), &rootAttr);
+    XSelectInput(qt_xdisplay(), qt_xrootwin(), SubstructureNotifyMask | rootAttr.your_event_mask);
+    if(args.isEmpty())
+        mTheme = new ObjKsTheme("Default");
+    else
+        mTheme = new ObjKsTheme(args.first());
+    mTheme->loadCmdLineArgs(KCmdLineArgs::parsedArgs());
 }
 
 ThemeEngine::~ThemeEngine()
@@ -71,66 +68,65 @@ ThemeEngine::~ThemeEngine()
  force them to be WX11BypassWM (so that ksplash can handle their stacking),
  and keep them on top, even above all windows handled by KWin.
 */
-bool ThemeEngine::eventFilter( QObject* o, QEvent* e )
+bool ThemeEngine::eventFilter(QObject *o, QEvent *e)
 {
-    if( e->type() == QEvent::Show && o->isWidgetType())
-        addSplashWindow( static_cast< QWidget* >( o ));
+    if(e->type() == QEvent::Show && o->isWidgetType())
+        addSplashWindow(static_cast< QWidget * >(o));
     return false;
 }
 
-namespace
-{
-class HackWidget : public QWidget { friend class ::ThemeEngine; };
+namespace {
+class HackWidget : public QWidget {
+    friend class ::ThemeEngine;
+};
 }
 
-void ThemeEngine::addSplashWindow( QWidget* w )
+void ThemeEngine::addSplashWindow(QWidget *w)
 {
-    if( !w->isTopLevel())
+    if(!w->isTopLevel())
         return;
-    if( d->mSplashWindows.contains( w->winId()))
+    if(d->mSplashWindows.contains(w->winId()))
         return;
-    if( !w->testWFlags( WX11BypassWM ))
-    { // All toplevel widgets should be probably required to be WX11BypassWM
-      // for KDE4 instead of this ugly hack.
-        static_cast< HackWidget* >( w )->setWFlags( WX11BypassWM );
+    if(!w->testWFlags(WX11BypassWM))
+    {   // All toplevel widgets should be probably required to be WX11BypassWM
+        // for KDE4 instead of this ugly hack.
+        static_cast< HackWidget * >(w)->setWFlags(WX11BypassWM);
         XSetWindowAttributes attrs;
         attrs.override_redirect = True;
-        XChangeWindowAttributes( qt_xdisplay(), w->winId(), CWOverrideRedirect, &attrs );
+        XChangeWindowAttributes(qt_xdisplay(), w->winId(), CWOverrideRedirect, &attrs);
     }
-    d->mSplashWindows.prepend( w->winId());
-    connect( w, SIGNAL( destroyed( QObject* )), SLOT( splashWindowDestroyed( QObject* )));
+    d->mSplashWindows.prepend(w->winId());
+    connect(w, SIGNAL(destroyed(QObject *)), SLOT(splashWindowDestroyed(QObject *)));
     w->raise();
 }
 
-void ThemeEngine::splashWindowDestroyed( QObject* obj )
+void ThemeEngine::splashWindowDestroyed(QObject *obj)
 {
-    d->mSplashWindows.remove( static_cast< QWidget* >( obj )->winId());
+    d->mSplashWindows.remove(static_cast< QWidget * >(obj)->winId());
 }
 
-bool ThemeEngine::x11Event( XEvent* e )
+bool ThemeEngine::x11Event(XEvent *e)
 {
-    if( e->type != ConfigureNotify && e->type != MapNotify )
+    if(e->type != ConfigureNotify && e->type != MapNotify)
         return false;
-    if( e->type == ConfigureNotify && e->xconfigure.event != qt_xrootwin())
+    if(e->type == ConfigureNotify && e->xconfigure.event != qt_xrootwin())
         return false;
-    if( e->type == MapNotify && e->xmap.event != qt_xrootwin())
+    if(e->type == MapNotify && e->xmap.event != qt_xrootwin())
         return false;
-    if( d->mSplashWindows.count() == 0 )
+    if(d->mSplashWindows.count() == 0)
         return false;
     // this restacking is written in a way so that
     // if the stacking positions actually don't change,
     // all restacking operations will be no-op,
     // and no ConfigureNotify will be generated,
     // thus avoiding possible infinite loops
-    XRaiseWindow( qt_xdisplay(), d->mSplashWindows.first()); // raise topmost
+    XRaiseWindow(qt_xdisplay(), d->mSplashWindows.first()); // raise topmost
     // and stack others below it
-    Window* stack = new Window[ d->mSplashWindows.count() ];
+    Window *stack = new Window[d->mSplashWindows.count()];
     int count = 0;
-    for( QValueList< Window >::ConstIterator it = d->mSplashWindows.begin();
-         it != d->mSplashWindows.end();
-         ++it )
-        stack[ count++ ] = *it;
-    XRestackWindows( x11Display(), stack, count );
+    for(QValueList< Window >::ConstIterator it = d->mSplashWindows.begin(); it != d->mSplashWindows.end(); ++it)
+        stack[count++] = *it;
+    XRestackWindows(x11Display(), stack, count);
     delete[] stack;
     return false;
 }

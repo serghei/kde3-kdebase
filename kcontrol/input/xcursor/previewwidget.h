@@ -24,22 +24,20 @@
 class PreviewCursor;
 
 
-class PreviewWidget : public QWidget
-{
-	public:
-		PreviewWidget( QWidget *parent = NULL, const char *name = NULL );
-		~PreviewWidget();
+class PreviewWidget : public QWidget {
+public:
+    PreviewWidget(QWidget *parent = NULL, const char *name = NULL);
+    ~PreviewWidget();
 
-		void setTheme( const QString & );
+    void setTheme(const QString &);
 
-		void paintEvent( QPaintEvent * );
-		void mouseMoveEvent( QMouseEvent * );
+    void paintEvent(QPaintEvent *);
+    void mouseMoveEvent(QMouseEvent *);
 
-	private:
-		PreviewCursor **cursors;
-		int current;
+private:
+    PreviewCursor **cursors;
+    int current;
 }; // class CursorPreview
-
 
 
 #endif

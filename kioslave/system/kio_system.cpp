@@ -30,36 +30,31 @@
 #include "kio_system.h"
 
 
-static const KCmdLineOptions options[] =
-{
-	{ "+protocol", I18N_NOOP( "Protocol name" ), 0 },
-	{ "+pool", I18N_NOOP( "Socket name" ), 0 },
-	{ "+app", I18N_NOOP( "Socket name" ), 0 },
-	KCmdLineLastOption
-};
+static const KCmdLineOptions options[] = {{"+protocol", I18N_NOOP("Protocol name"), 0},
+                                          {"+pool", I18N_NOOP("Socket name"), 0},
+                                          {"+app", I18N_NOOP("Socket name"), 0},
+                                          KCmdLineLastOption};
 
 extern "C" {
-	KDE_EXPORT int kdemain( int argc, char **argv )
-	{
-		// KApplication is necessary to use other ioslaves
-		putenv(strdup("SESSION_MANAGER="));
-		KCmdLineArgs::init(argc, argv, "kio_system", 0, 0, 0, 0);
-		KCmdLineArgs::addCmdLineOptions( options );
-		KApplication app( false, false );
-		// We want to be anonymous even if we use DCOP
-		app.dcopClient()->attach();
+KDE_EXPORT int kdemain(int argc, char **argv)
+{
+    // KApplication is necessary to use other ioslaves
+    putenv(strdup("SESSION_MANAGER="));
+    KCmdLineArgs::init(argc, argv, "kio_system", 0, 0, 0, 0);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KApplication app(false, false);
+    // We want to be anonymous even if we use DCOP
+    app.dcopClient()->attach();
 
-		KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-		SystemProtocol slave( args->arg(0), args->arg(1), args->arg(2) );
-		slave.dispatchLoop();
-		return 0;
-	}
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    SystemProtocol slave(args->arg(0), args->arg(1), args->arg(2));
+    slave.dispatchLoop();
+    return 0;
+}
 }
 
 
-SystemProtocol::SystemProtocol(const QCString &protocol,
-                               const QCString &pool, const QCString &app)
-	: ForwardingSlaveBase(protocol, pool, app)
+SystemProtocol::SystemProtocol(const QCString &protocol, const QCString &pool, const QCString &app) : ForwardingSlaveBase(protocol, pool, app)
 {
 }
 
@@ -69,120 +64,120 @@ SystemProtocol::~SystemProtocol()
 
 bool SystemProtocol::rewriteURL(const KURL &url, KURL &newUrl)
 {
-	QString name, path;
+    QString name, path;
 
-	if ( !m_impl.parseURL(url, name, path) )
-	{
-		error(KIO::ERR_MALFORMED_URL, url.prettyURL());
-		return false;
-	}
+    if(!m_impl.parseURL(url, name, path))
+    {
+        error(KIO::ERR_MALFORMED_URL, url.prettyURL());
+        return false;
+    }
 
-	if ( !m_impl.realURL(name, path, newUrl) )
-	{
-		error( m_impl.lastErrorCode(), m_impl.lastErrorMessage() );
-		return false;
-	}
+    if(!m_impl.realURL(name, path, newUrl))
+    {
+        error(m_impl.lastErrorCode(), m_impl.lastErrorMessage());
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 
 void SystemProtocol::stat(const KURL &url)
 {
-	kdDebug() << "SystemProtocol::stat: " << url << endl;
+    kdDebug() << "SystemProtocol::stat: " << url << endl;
 
-	QString path = url.path();
-	if ( path.isEmpty() || path == "/" )
-	{
-		// The root is "virtual" - it's not a single physical directory
-		KIO::UDSEntry entry;
-		m_impl.createTopLevelEntry( entry );
-		statEntry( entry );
-		finished();
-		return;
-	}
+    QString path = url.path();
+    if(path.isEmpty() || path == "/")
+    {
+        // The root is "virtual" - it's not a single physical directory
+        KIO::UDSEntry entry;
+        m_impl.createTopLevelEntry(entry);
+        statEntry(entry);
+        finished();
+        return;
+    }
 
-	QString name;
-	bool ok = m_impl.parseURL(url, name, path);
+    QString name;
+    bool ok = m_impl.parseURL(url, name, path);
 
-	if ( !ok )
-	{
-		error(KIO::ERR_MALFORMED_URL, url.prettyURL());
-		return;
-	}
+    if(!ok)
+    {
+        error(KIO::ERR_MALFORMED_URL, url.prettyURL());
+        return;
+    }
 
-	if( path.isEmpty() )
-	{
-		KIO::UDSEntry entry;
+    if(path.isEmpty())
+    {
+        KIO::UDSEntry entry;
 
-		if ( m_impl.statByName(name, entry) )
-		{
-			statEntry(entry);
-			finished();
-		}
-		else
-		{
-			error(KIO::ERR_DOES_NOT_EXIST, url.prettyURL());
-		}
-	}
-	else
-	{
-		ForwardingSlaveBase::stat(url);
-	}
+        if(m_impl.statByName(name, entry))
+        {
+            statEntry(entry);
+            finished();
+        }
+        else
+        {
+            error(KIO::ERR_DOES_NOT_EXIST, url.prettyURL());
+        }
+    }
+    else
+    {
+        ForwardingSlaveBase::stat(url);
+    }
 }
 
 void SystemProtocol::listDir(const KURL &url)
 {
-	kdDebug() << "SystemProtocol::listDir: " << url << endl;
+    kdDebug() << "SystemProtocol::listDir: " << url << endl;
 
-	if ( url.path().length() <= 1 )
-	{
-		listRoot();
-		return;
-	}
+    if(url.path().length() <= 1)
+    {
+        listRoot();
+        return;
+    }
 
-	QString name, path;
-	bool ok = m_impl.parseURL(url, name, path);
+    QString name, path;
+    bool ok = m_impl.parseURL(url, name, path);
 
-	if ( !ok )
-	{
-		error(KIO::ERR_MALFORMED_URL, url.prettyURL());
-		return;
-	}
+    if(!ok)
+    {
+        error(KIO::ERR_MALFORMED_URL, url.prettyURL());
+        return;
+    }
 
-	ForwardingSlaveBase::listDir(url);
+    ForwardingSlaveBase::listDir(url);
 }
 
 void SystemProtocol::listRoot()
 {
-	KIO::UDSEntry entry;
+    KIO::UDSEntry entry;
 
-	KIO::UDSEntryList system_entries;
-	bool ok = m_impl.listRoot(system_entries);
+    KIO::UDSEntryList system_entries;
+    bool ok = m_impl.listRoot(system_entries);
 
-	if (!ok)
-	{
-		error( m_impl.lastErrorCode(), m_impl.lastErrorMessage() );
-		return;
-	}
+    if(!ok)
+    {
+        error(m_impl.lastErrorCode(), m_impl.lastErrorMessage());
+        return;
+    }
 
-	totalSize(system_entries.count()+1);
+    totalSize(system_entries.count() + 1);
 
-	m_impl.createTopLevelEntry(entry);
-	listEntry(entry, false);
+    m_impl.createTopLevelEntry(entry);
+    listEntry(entry, false);
 
-	KIO::UDSEntryListIterator it = system_entries.begin();
-	KIO::UDSEntryListIterator end = system_entries.end();
+    KIO::UDSEntryListIterator it = system_entries.begin();
+    KIO::UDSEntryListIterator end = system_entries.end();
 
-	for(; it!=end; ++it)
-	{
-		listEntry(*it, false);
-	}
+    for(; it != end; ++it)
+    {
+        listEntry(*it, false);
+    }
 
-	entry.clear();
-	listEntry(entry, true);
+    entry.clear();
+    listEntry(entry, true);
 
-	finished();
+    finished();
 }
 
 

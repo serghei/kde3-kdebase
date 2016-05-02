@@ -47,176 +47,164 @@
 #include "toplevel.h"
 #include "toplevel.moc"
 
-Toplevel :: Toplevel(KrashConfig *krashconf, QWidget *parent, const char *name)
-  : KDialogBase( Tabbed,
-                 krashconf->programName(),
-                 User3 | User2 | User1 | Close,
-                 Close,
-                 parent,
-                 name,
-                 true, // modal
-                 false, // no separator
-                 i18n("&Bug report"),
-                 i18n("&Debugger")
-                 ),
-    m_krashconf(krashconf), m_bugreport(0)
+Toplevel::Toplevel(KrashConfig *krashconf, QWidget *parent, const char *name)
+    : KDialogBase(Tabbed, krashconf->programName(), User3 | User2 | User1 | Close, Close, parent, name,
+                  true,  // modal
+                  false, // no separator
+                  i18n("&Bug report"), i18n("&Debugger"))
+    , m_krashconf(krashconf)
+    , m_bugreport(0)
 {
-  QHBox *page = addHBoxPage(i18n("&General"));
-  page->setSpacing(20);
+    QHBox *page = addHBoxPage(i18n("&General"));
+    page->setSpacing(20);
 
-  // picture of konqi
-  QLabel *lab = new QLabel(page);
-  lab->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  QPixmap pix(locate("appdata", QString::fromLatin1("pics/konqi.png")));
-  lab->setPixmap(pix);
-  lab->setFixedSize( lab->sizeHint() );
+    // picture of konqi
+    QLabel *lab = new QLabel(page);
+    lab->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    QPixmap pix(locate("appdata", QString::fromLatin1("pics/konqi.png")));
+    lab->setPixmap(pix);
+    lab->setFixedSize(lab->sizeHint());
 
-  QLabel * info = new QLabel(generateText(), page);
-  info->setMinimumSize(info->sizeHint());
+    QLabel *info = new QLabel(generateText(), page);
+    info->setMinimumSize(info->sizeHint());
 
-  if (m_krashconf->showBacktrace())
-  {
-    page = addHBoxPage(i18n("&Backtrace"));
-    new KrashDebugger(m_krashconf, page);
-  }
+    if(m_krashconf->showBacktrace())
+    {
+        page = addHBoxPage(i18n("&Backtrace"));
+        new KrashDebugger(m_krashconf, page);
+    }
 
-  showButton( User1, m_krashconf->showBugReport() );
-  showButton( User2, m_krashconf->showDebugger() );
-  showButton( User3, false );
+    showButton(User1, m_krashconf->showBugReport());
+    showButton(User2, m_krashconf->showDebugger());
+    showButton(User3, false);
 
-  connect(this, SIGNAL(closeClicked()), SLOT(accept()));
-  connect(m_krashconf, SIGNAL(newDebuggingApplication(const QString&)), SLOT(slotNewDebuggingApp(const QString&)));
+    connect(this, SIGNAL(closeClicked()), SLOT(accept()));
+    connect(m_krashconf, SIGNAL(newDebuggingApplication(const QString &)), SLOT(slotNewDebuggingApp(const QString &)));
 
-  if ( !m_krashconf->safeMode() && kapp->dcopClient()->attach() )
-    kapp->dcopClient()->registerAs( kapp->name() );
+    if(!m_krashconf->safeMode() && kapp->dcopClient()->attach())
+        kapp->dcopClient()->registerAs(kapp->name());
 }
 
-Toplevel :: ~Toplevel()
+Toplevel::~Toplevel()
 {
 }
 
-QString Toplevel :: generateText() const
+QString Toplevel::generateText() const
 {
-  QString str;
+    QString str;
 
-  if (!m_krashconf->errorDescriptionText().isEmpty())
-    str += i18n("<p><b>Short description</b></p><p>%1</p>")
-      .arg(m_krashconf->errorDescriptionText());
+    if(!m_krashconf->errorDescriptionText().isEmpty())
+        str += i18n("<p><b>Short description</b></p><p>%1</p>").arg(m_krashconf->errorDescriptionText());
 
-  if (!m_krashconf->signalText().isEmpty())
-    str += i18n("<p><b>What is this?</b></p><p>%1</p>")
-      .arg(m_krashconf->signalText());
+    if(!m_krashconf->signalText().isEmpty())
+        str += i18n("<p><b>What is this?</b></p><p>%1</p>").arg(m_krashconf->signalText());
 
-  if (!m_krashconf->whatToDoText().isEmpty())
-    str += i18n("<p><b>What can I do?</b></p><p>%1</p>")
-      .arg(m_krashconf->whatToDoText());
+    if(!m_krashconf->whatToDoText().isEmpty())
+        str += i18n("<p><b>What can I do?</b></p><p>%1</p>").arg(m_krashconf->whatToDoText());
 
-  // check if the string is still empty. if so, display a default.
-  if (str.isEmpty())
-    str = i18n("<p><b>Application crashed</b></p>"
-               "<p>The program %appname crashed.</p>");
+    // check if the string is still empty. if so, display a default.
+    if(str.isEmpty())
+        str = i18n(
+            "<p><b>Application crashed</b></p>"
+            "<p>The program %appname crashed.</p>");
 
-  // scan the string for %appname etc
-  m_krashconf->expandString(str, false);
+    // scan the string for %appname etc
+    m_krashconf->expandString(str, false);
 
-  return str;
+    return str;
 }
 
 // starting bug report
-void Toplevel :: slotUser1()
+void Toplevel::slotUser1()
 {
-  if (m_bugreport)
-    return;
+    if(m_bugreport)
+        return;
 
-  int i = KMessageBox::No;
-  if ( m_krashconf->pid() != 0 )
-    i = KMessageBox::warningYesNoCancel
-      (0,
-       i18n("<p>Do you want to generate a "
-            "backtrace? This will help the "
-            "developers to figure out what went "
-            "wrong.</p>\n"
-            "<p>Unfortunately this will take some "
-            "time on slow machines.</p>"
-            "<p><b>Note: A backtrace is not a "
-            "substitute for a proper description "
-            "of the bug and information on how to "
-            "reproduce it. It is not possible "
-            "to fix the bug without a proper "
-            "description.</b></p>"),
-       i18n("Include Backtrace"),i18n("Generate"),i18n("Do Not Generate"));
+    int i = KMessageBox::No;
+    if(m_krashconf->pid() != 0)
+        i = KMessageBox::warningYesNoCancel(0, i18n("<p>Do you want to generate a "
+                                                    "backtrace? This will help the "
+                                                    "developers to figure out what went "
+                                                    "wrong.</p>\n"
+                                                    "<p>Unfortunately this will take some "
+                                                    "time on slow machines.</p>"
+                                                    "<p><b>Note: A backtrace is not a "
+                                                    "substitute for a proper description "
+                                                    "of the bug and information on how to "
+                                                    "reproduce it. It is not possible "
+                                                    "to fix the bug without a proper "
+                                                    "description.</b></p>"),
+                                            i18n("Include Backtrace"), i18n("Generate"), i18n("Do Not Generate"));
 
-    if (i == KMessageBox::Cancel) return;
+    if(i == KMessageBox::Cancel)
+        return;
 
-  m_bugreport = new DrKBugReport(0, true, m_krashconf->aboutData());
+    m_bugreport = new DrKBugReport(0, true, m_krashconf->aboutData());
 
-  if (i == KMessageBox::Yes) {
-    QApplication::setOverrideCursor ( waitCursor );
+    if(i == KMessageBox::Yes)
+    {
+        QApplication::setOverrideCursor(waitCursor);
 
-    // generate the backtrace
-    BackTrace *backtrace = new BackTrace(m_krashconf, this);
-    connect(backtrace, SIGNAL(someError()), SLOT(slotBacktraceSomeError()));
-    connect(backtrace, SIGNAL(done(const QString &)),
-            SLOT(slotBacktraceDone(const QString &)));
+        // generate the backtrace
+        BackTrace *backtrace = new BackTrace(m_krashconf, this);
+        connect(backtrace, SIGNAL(someError()), SLOT(slotBacktraceSomeError()));
+        connect(backtrace, SIGNAL(done(const QString &)), SLOT(slotBacktraceDone(const QString &)));
 
-    backtrace->start();
+        backtrace->start();
 
-    return;
-  }
+        return;
+    }
 
-  int result = m_bugreport->exec();
-  delete m_bugreport;
-  m_bugreport = 0;
-  if (result == KDialogBase::Accepted)
-     close();
+    int result = m_bugreport->exec();
+    delete m_bugreport;
+    m_bugreport = 0;
+    if(result == KDialogBase::Accepted)
+        close();
 }
 
-void Toplevel :: slotUser2()
+void Toplevel::slotUser2()
 {
-  QString str = m_krashconf->debugger();
-  m_krashconf->expandString(str, true);
+    QString str = m_krashconf->debugger();
+    m_krashconf->expandString(str, true);
 
-  KProcess proc;
-  proc.setUseShell(true);
-  proc << str;
-  proc.start(KProcess::DontCare);
+    KProcess proc;
+    proc.setUseShell(true);
+    proc << str;
+    proc.start(KProcess::DontCare);
 }
 
-void Toplevel :: slotNewDebuggingApp(const QString& launchName)
+void Toplevel::slotNewDebuggingApp(const QString &launchName)
 {
-  setButtonText( User3, launchName );
-  showButton( User3, true );
+    setButtonText(User3, launchName);
+    showButton(User3, true);
 }
 
-void Toplevel :: slotUser3()
+void Toplevel::slotUser3()
 {
-  m_krashconf->acceptDebuggingApp();
+    m_krashconf->acceptDebuggingApp();
 }
 
-void Toplevel :: slotBacktraceDone(const QString &str)
+void Toplevel::slotBacktraceDone(const QString &str)
 {
-  // Do not translate.. This will be included in the _MAIL_.
-  QString buf = QString::fromLatin1
-    ("\n\n\nHere is a backtrace generated by DrKonqi:\n") + str;
+    // Do not translate.. This will be included in the _MAIL_.
+    QString buf = QString::fromLatin1("\n\n\nHere is a backtrace generated by DrKonqi:\n") + str;
 
-  m_bugreport->setText(buf);
+    m_bugreport->setText(buf);
 
-  QApplication::restoreOverrideCursor();
+    QApplication::restoreOverrideCursor();
 
-  m_bugreport->exec();
-  delete m_bugreport;
-  m_bugreport = 0;
+    m_bugreport->exec();
+    delete m_bugreport;
+    m_bugreport = 0;
 }
 
-void Toplevel :: slotBacktraceSomeError()
+void Toplevel::slotBacktraceSomeError()
 {
-  QApplication::restoreOverrideCursor();
+    QApplication::restoreOverrideCursor();
 
-  KMessageBox::sorry(0, i18n("It was not possible to generate a backtrace."),
-                     i18n("Backtrace Not Possible"));
+    KMessageBox::sorry(0, i18n("It was not possible to generate a backtrace."), i18n("Backtrace Not Possible"));
 
-  m_bugreport->exec();
-  delete m_bugreport;
-  m_bugreport = 0;
+    m_bugreport->exec();
+    delete m_bugreport;
+    m_bugreport = 0;
 }
-

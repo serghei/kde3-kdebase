@@ -28,11 +28,10 @@
 class KDirLister;
 class KFileIVI;
 
-class LIBKONQ_EXPORT KIVDirectoryOverlay : public QObject
-{
+class LIBKONQ_EXPORT KIVDirectoryOverlay : public QObject {
     Q_OBJECT
 public:
-    KIVDirectoryOverlay(KFileIVI* directory);
+    KIVDirectoryOverlay(KFileIVI *directory);
     virtual ~KIVDirectoryOverlay();
     void start();
 
@@ -44,15 +43,15 @@ protected:
 
 private slots:
     void slotCompleted();
-    void slotNewItems( const KFileItemList& items );
+    void slotNewItems(const KFileItemList &items);
 
 private:
-    KDirLister* m_lister;
+    KDirLister *m_lister;
     bool m_foundItems;
     bool m_containsFolder;
-    QDict<int>* m_popularIcons;
+    QDict< int > *m_popularIcons;
     QString m_bestIcon;
-    KFileIVI* m_directory;
+    KFileIVI *m_directory;
 };
 
 #endif

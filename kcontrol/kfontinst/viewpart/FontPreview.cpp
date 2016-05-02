@@ -33,37 +33,31 @@
 #include <qimage.h>
 #include <stdlib.h>
 
-namespace KFI
-{
+namespace KFI {
 
 CFontPreview::CFontPreview(QWidget *parent, const char *name)
-            : QWidget(parent, name),
-              itsCurrentFace(1),
-              itsLastWidth(0),
-              itsLastHeight(0),
-              itsBgndCol(eraseColor())
+    : QWidget(parent, name), itsCurrentFace(1), itsLastWidth(0), itsLastHeight(0), itsBgndCol(eraseColor())
 {
 }
 
 void CFontPreview::showFont(const KURL &url)
 {
-    itsCurrentUrl=url;
+    itsCurrentUrl = url;
     showFace(1);
 }
 
 void CFontPreview::showFace(int face)
 {
-    itsCurrentFace=face;
+    itsCurrentFace = face;
     showFont();
 }
 
 void CFontPreview::showFont()
 {
-    itsLastWidth=width();
-    itsLastHeight=height();
+    itsLastWidth = width();
+    itsLastHeight = height();
 
-    if(!itsCurrentUrl.isEmpty() &&
-       itsEngine.draw(itsCurrentUrl, itsLastWidth, itsLastHeight, itsPixmap, itsCurrentFace-1, false))
+    if(!itsCurrentUrl.isEmpty() && itsEngine.draw(itsCurrentUrl, itsLastWidth, itsLastHeight, itsPixmap, itsCurrentFace - 1, false))
     {
         setEraseColor(Qt::white);
         update();
@@ -74,7 +68,7 @@ void CFontPreview::showFont()
         QPixmap nullPix;
 
         setEraseColor(itsBgndCol);
-        itsPixmap=nullPix;
+        itsPixmap = nullPix;
         update();
         emit status(false);
     }
@@ -83,7 +77,7 @@ void CFontPreview::showFont()
 void CFontPreview::paintEvent(QPaintEvent *)
 {
     QPainter paint(this);
- 
+
     if(itsPixmap.isNull())
     {
         if(!itsCurrentUrl.isEmpty())
@@ -94,11 +88,11 @@ void CFontPreview::paintEvent(QPaintEvent *)
     }
     else
     {
-        static const int constStepSize=16;
+        static const int constStepSize = 16;
 
-        if(abs(width()-itsLastWidth)>constStepSize || abs(height()-itsLastHeight)>constStepSize)
+        if(abs(width() - itsLastWidth) > constStepSize || abs(height() - itsLastHeight) > constStepSize)
             showFont();
-        else            
+        else
             paint.drawPixmap(0, 0, itsPixmap);
     }
 }
@@ -112,7 +106,6 @@ QSize CFontPreview::minimumSizeHint() const
 {
     return QSize(32, 32);
 }
-
 }
 
 #include "FontPreview.moc"

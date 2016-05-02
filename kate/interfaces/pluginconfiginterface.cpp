@@ -16,20 +16,21 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "pluginconfiginterface.h"    
+#include "pluginconfiginterface.h"
 
 #include "plugin.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivatePluginConfigInterface
-{
-  public:
-    PrivatePluginConfigInterface() {}
-    ~PrivatePluginConfigInterface() {}
+class PrivatePluginConfigInterface {
+public:
+    PrivatePluginConfigInterface()
+    {
+    }
+    ~PrivatePluginConfigInterface()
+    {
+    }
 };
-
 }
 
 using namespace Kate;
@@ -38,26 +39,26 @@ unsigned int PluginConfigInterface::globalPluginConfigInterfaceNumber = 0;
 
 PluginConfigInterface::PluginConfigInterface()
 {
-  globalPluginConfigInterfaceNumber++;
-  myPluginConfigInterfaceNumber = globalPluginConfigInterfaceNumber++;
+    globalPluginConfigInterfaceNumber++;
+    myPluginConfigInterfaceNumber = globalPluginConfigInterfaceNumber++;
 
-  d = new PrivatePluginConfigInterface();
+    d = new PrivatePluginConfigInterface();
 }
 
 PluginConfigInterface::~PluginConfigInterface()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int PluginConfigInterface::pluginConfigInterfaceNumber () const
+unsigned int PluginConfigInterface::pluginConfigInterfaceNumber() const
 {
-  return myPluginConfigInterfaceNumber;
-} 
+    return myPluginConfigInterfaceNumber;
+}
 
-PluginConfigInterface *Kate::pluginConfigInterface (Plugin *plugin)
-{                       
-  if (!plugin)
-    return 0;
+PluginConfigInterface *Kate::pluginConfigInterface(Plugin *plugin)
+{
+    if(!plugin)
+        return 0;
 
-  return static_cast<PluginConfigInterface*>(plugin->qt_cast("Kate::PluginConfigInterface"));
+    return static_cast< PluginConfigInterface * >(plugin->qt_cast("Kate::PluginConfigInterface"));
 }

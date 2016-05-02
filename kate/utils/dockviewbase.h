@@ -21,82 +21,80 @@
 
 #include <qvbox.h>
 
-/** 
-* Namespace collecting as much of the internal Kate classes as we 
+/**
+* Namespace collecting as much of the internal Kate classes as we
 * can manage.
 */
-namespace Kate
-{
+namespace Kate {
 
 /**
     Base class for dockwidget views
     This class creates a widget meant to be set as the main widget
     for a KDockWidget.
-    
+
     This class provides a title in two parts, titlePrefix and title. The
     size policies are set so that neither will prevent resizing the view to
     a width smaller than the texts, the titlePrefix (on the left) will remain
     fully visible for as long as possible.
-    
+
     Use the titlePrefix to describe the nature of the view contents, for
     example "Messages".
-        
+
     Use the title to inform the user what is currently in the view,
     for example the name of a related file, a command or similar.
-    
+
     To add widgets, just create them with this as the parent.
-    
+
     @author Anders Lund <anders@alweb.dk>
 */
 
 
 class DockViewBase : public QVBox {
-  Q_OBJECT
-  public:
-  /**
-      Create a KateDockViewBase.
-  */
-  DockViewBase( QWidget *parent=0, const char *name=0 );
-  
-  /**
-      Create a KateDockViewBase with the title prefix @p prefix
-      and the title @p title.
-  */
-  DockViewBase( const QString &prefix, const QString &title, QWidget *parent=0, const char *name=0 );
-  
-  ~DockViewBase();
-  
-  /**
-      Set the title prefix to @p prefix.
-  */
-  void setTitlePrefix( const QString &prefix );
-  
-  /**
-      @return The title prefix.
-  */
-  QString titlePrefix() const;
-  
-  /**
-      Set the title to @p title 
-  */
-  void setTitle( const QString &title );
-  
-  /**
-     Convenience method, sets both the prefix and title
-  */
-  void setTitle( const QString &prefix, const QString &title );
-  
-  /**
-      @return the title of the KateDockViewBase
-  */
-  QString title() const;
-  
-  private:
-  /** Private initialization */
-  void init( const QString &, const QString &);
-  class DockViewBasePrivate *d;
-};
+    Q_OBJECT
+public:
+    /**
+        Create a KateDockViewBase.
+    */
+    DockViewBase(QWidget *parent = 0, const char *name = 0);
 
+    /**
+        Create a KateDockViewBase with the title prefix @p prefix
+        and the title @p title.
+    */
+    DockViewBase(const QString &prefix, const QString &title, QWidget *parent = 0, const char *name = 0);
+
+    ~DockViewBase();
+
+    /**
+        Set the title prefix to @p prefix.
+    */
+    void setTitlePrefix(const QString &prefix);
+
+    /**
+        @return The title prefix.
+    */
+    QString titlePrefix() const;
+
+    /**
+        Set the title to @p title
+    */
+    void setTitle(const QString &title);
+
+    /**
+       Convenience method, sets both the prefix and title
+    */
+    void setTitle(const QString &prefix, const QString &title);
+
+    /**
+        @return the title of the KateDockViewBase
+    */
+    QString title() const;
+
+private:
+    /** Private initialization */
+    void init(const QString &, const QString &);
+    class DockViewBasePrivate *d;
+};
 }
 
 #endif // _KATE_DOCKVIEW_BASE_H_

@@ -39,105 +39,109 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 
-KateConsole::KateConsole (KateMainWindow *mw, KateMDI::ToolView* parent)
- : QVBox (parent)
- , m_part (0)
- , m_mw (mw)
- , m_toolView (parent)
+KateConsole::KateConsole(KateMainWindow *mw, KateMDI::ToolView *parent) : QVBox(parent), m_part(0), m_mw(mw), m_toolView(parent)
 {
 }
 
-KateConsole::~KateConsole ()
+KateConsole::~KateConsole()
 {
-  if (m_part)
-    disconnect ( m_part, SIGNAL(destroyed()), this, SLOT(slotDestroyed()) );
+    if(m_part)
+        disconnect(m_part, SIGNAL(destroyed()), this, SLOT(slotDestroyed()));
 }
 
 void KateConsole::loadConsoleIfNeeded()
 {
-  if (m_part) return;
+    if(m_part)
+        return;
 
-  if (!topLevelWidget() || !parentWidget()) return;
-  if (!topLevelWidget() || !isVisibleTo(topLevelWidget())) return;
+    if(!topLevelWidget() || !parentWidget())
+        return;
+    if(!topLevelWidget() || !isVisibleTo(topLevelWidget()))
+        return;
 
-  KLibFactory *factory = KLibLoader::self()->factory("libkonsolepart");
+    KLibFactory *factory = KLibLoader::self()->factory("libkonsolepart");
 
-  if (!factory) return;
+    if(!factory)
+        return;
 
-  m_part = static_cast<KParts::ReadOnlyPart *>(factory->create(this,"libkonsolepart", "KParts::ReadOnlyPart"));
+    m_part = static_cast< KParts::ReadOnlyPart * >(factory->create(this, "libkonsolepart", "KParts::ReadOnlyPart"));
 
-  if (!m_part) return;
+    if(!m_part)
+        return;
 
-  setFocusProxy(m_part->widget());
+    setFocusProxy(m_part->widget());
 
-  KGlobal::locale()->insertCatalogue("konsole");
+    KGlobal::locale()->insertCatalogue("konsole");
 
-  m_part->widget()->show();
+    m_part->widget()->show();
 
-  connect ( m_part, SIGNAL(destroyed()), this, SLOT(slotDestroyed()) );
+    connect(m_part, SIGNAL(destroyed()), this, SLOT(slotDestroyed()));
 
-  if (m_mw->viewManager()->activeView())
-    if (m_mw->viewManager()->activeView()->getDoc()->url().isValid())
-      cd(KURL( m_mw->viewManager()->activeView()->getDoc()->url().path() ));
+    if(m_mw->viewManager()->activeView())
+        if(m_mw->viewManager()->activeView()->getDoc()->url().isValid())
+            cd(KURL(m_mw->viewManager()->activeView()->getDoc()->url().path()));
 }
 
-void KateConsole::slotDestroyed ()
+void KateConsole::slotDestroyed()
 {
-  m_part = 0;
+    m_part = 0;
 
-  // hide the dockwidget
-  if (parentWidget())
-  {
-    m_mw->hideToolView (m_toolView);
-    m_mw->centralWidget()->setFocus ();
-  }
+    // hide the dockwidget
+    if(parentWidget())
+    {
+        m_mw->hideToolView(m_toolView);
+        m_mw->centralWidget()->setFocus();
+    }
 }
 
 void KateConsole::showEvent(QShowEvent *)
 {
-  if (m_part) return;
+    if(m_part)
+        return;
 
-  loadConsoleIfNeeded();
+    loadConsoleIfNeeded();
 }
 
-void KateConsole::cd (const KURL &url)
+void KateConsole::cd(const KURL &url)
 {
-  loadConsoleIfNeeded();
+    loadConsoleIfNeeded();
 
-  if (!m_part) return;
+    if(!m_part)
+        return;
 
-  m_part->openURL (url);
+    m_part->openURL(url);
 }
 
-void KateConsole::sendInput( const QString& text )
+void KateConsole::sendInput(const QString &text)
 {
-  loadConsoleIfNeeded();
+    loadConsoleIfNeeded();
 
-  if (!m_part) return;
+    if(!m_part)
+        return;
 
-  TerminalInterface *t = static_cast<TerminalInterface*>( m_part->qt_cast( "TerminalInterface" ) );
+    TerminalInterface *t = static_cast< TerminalInterface * >(m_part->qt_cast("TerminalInterface"));
 
-  if (!t) return;
+    if(!t)
+        return;
 
-  t->sendInput (text);
+    t->sendInput(text);
 }
 
-void KateConsole::slotPipeToConsole ()
+void KateConsole::slotPipeToConsole()
 {
-  if (KMessageBox::warningContinueCancel
-      (m_mw
-       , i18n ("Do you really want to pipe the text to the console? This will execute any contained commands with your user rights.")
-       , i18n ("Pipe to Console?")
-       , i18n("Pipe to Console"), "Pipe To Console Warning") != KMessageBox::Continue)
-    return;
+    if(KMessageBox::warningContinueCancel(
+           m_mw, i18n("Do you really want to pipe the text to the console? This will execute any contained commands with your user rights."),
+           i18n("Pipe to Console?"), i18n("Pipe to Console"), "Pipe To Console Warning")
+       != KMessageBox::Continue)
+        return;
 
-  Kate::View *v = m_mw->viewManager()->activeView();
+    Kate::View *v = m_mw->viewManager()->activeView();
 
-  if (!v)
-    return;
+    if(!v)
+        return;
 
-  if (v->getDoc()->hasSelection ())
-    sendInput (v->getDoc()->selection());
-  else
-    sendInput (v->getDoc()->text());
+    if(v->getDoc()->hasSelection())
+        sendInput(v->getDoc()->selection());
+    else
+        sendInput(v->getDoc()->text());
 }

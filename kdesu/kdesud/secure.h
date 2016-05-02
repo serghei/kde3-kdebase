@@ -16,10 +16,11 @@
 
 // `struct ucred' is not defined in glibc 2.0.
 
-struct ucred {
-    pid_t     pid;
-    uid_t     uid;
-    gid_t     gid;
+struct ucred
+{
+    pid_t pid;
+    uid_t uid;
+    gid_t gid;
 };
 
 #endif // HAVE_STRUCT_UCRED
@@ -36,13 +37,28 @@ public:
     SocketSecurity(int fd);
 
     /** Returns the peer's process-id. */
-    int peerPid() { if (!ok) return -1; return cred.pid; }
+    int peerPid()
+    {
+        if(!ok)
+            return -1;
+        return cred.pid;
+    }
 
     /** Returns the peer's user-id */
-    int peerUid() { if (!ok) return -1; return cred.uid; }
+    int peerUid()
+    {
+        if(!ok)
+            return -1;
+        return cred.uid;
+    }
 
     /** Returns the peer's group-id */
-    int peerGid() { if (!ok) return -1; return cred.gid; }
+    int peerGid()
+    {
+        if(!ok)
+            return -1;
+        return cred.gid;
+    }
 
 private:
     bool ok;

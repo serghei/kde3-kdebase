@@ -24,25 +24,23 @@
 
 class QTabWidget;
 
-class KCMDisplay : public KCModule
-{
-  Q_OBJECT
+class KCMDisplay : public KCModule {
+    Q_OBJECT
 
-  public:
-    KCMDisplay( QWidget *parent, const char *name, const QStringList& );
+public:
+    KCMDisplay(QWidget *parent, const char *name, const QStringList &);
     void load();
     void save();
 
-  private slots:
+private slots:
     void moduleChanged(bool isChanged);
 
-  private:
-    void addTab( const QString &name, const QString &label );
-    
+private:
+    void addTab(const QString &name, const QString &label);
+
     QTabWidget *m_tabs;
-    QMap<KCModule*, bool> m_modules;
+    QMap< KCModule *, bool > m_modules;
     bool m_changed;
 };
 
 #endif // DISPLAY_H
-

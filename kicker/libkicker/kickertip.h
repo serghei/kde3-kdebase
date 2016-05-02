@@ -38,46 +38,48 @@ class QPaintEvent;
 class QSimpleRichText;
 class QTimer;
 
-class KDE_EXPORT KickerTip : public QWidget
-{
+class KDE_EXPORT KickerTip : public QWidget {
     Q_OBJECT
 
 public:
-    enum MaskEffect { Plain, Dissolve };
+    enum MaskEffect
+    {
+        Plain,
+        Dissolve
+    };
 
     struct Data
     {
-            QString message;
-            QString subtext;
-            QPixmap icon;
-            KickerTip::MaskEffect maskEffect;
-            int duration;
-            KPanelApplet::Direction direction;
+        QString message;
+        QString subtext;
+        QPixmap icon;
+        KickerTip::MaskEffect maskEffect;
+        int duration;
+        KPanelApplet::Direction direction;
 
-            // do NOT delete this in the client!
-            QMimeSourceFactory* mimeFactory;
+        // do NOT delete this in the client!
+        QMimeSourceFactory *mimeFactory;
     };
 
-    class KDE_EXPORT Client
-    {
-        public:
-            virtual void updateKickerTip(KickerTip::Data&) = 0;
-            void updateKickerTip() const;
+    class KDE_EXPORT Client {
+    public:
+        virtual void updateKickerTip(KickerTip::Data &) = 0;
+        void updateKickerTip() const;
     };
 
-    static KickerTip* the();
+    static KickerTip *the();
     static void enableTipping(bool tip);
     static bool tippingEnabled();
 
-    void untipFor(const QWidget* w);
+    void untipFor(const QWidget *w);
     bool eventFilter(QObject *o, QEvent *e);
 
 protected:
-    KickerTip(QWidget * parent);
+    KickerTip(QWidget *parent);
     ~KickerTip();
 
-    void paintEvent(QPaintEvent * e);
-    void mousePressEvent(QMouseEvent * e);
+    void paintEvent(QPaintEvent *e);
+    void mousePressEvent(QMouseEvent *e);
 
     void plainMask();
     void dissolveMask();
@@ -85,11 +87,11 @@ protected:
     void displayInternal();
     void hide();
 
-    void tipFor(const QWidget* w);
-    bool isTippingFor(const QWidget* w) const;
+    void tipFor(const QWidget *w);
+    bool isTippingFor(const QWidget *w) const;
 
 protected slots:
-    void tipperDestroyed(QObject* o);
+    void tipperDestroyed(QObject *o);
     void internalUpdate();
     void display();
 
@@ -98,8 +100,8 @@ private:
     QPixmap m_pixmap;
     QPixmap m_icon;
     MaskEffect m_maskEffect;
-    QSimpleRichText* m_richText;
-    QMimeSourceFactory* m_mimeFactory;
+    QSimpleRichText *m_richText;
+    QMimeSourceFactory *m_mimeFactory;
 
     int m_dissolveSize;
     int m_dissolveDelta;
@@ -110,9 +112,9 @@ private:
     bool m_dirty;
     bool m_toolTipsEnabled;
 
-    const QWidget* m_tippingFor;
+    const QWidget *m_tippingFor;
 
-    static KickerTip* m_self;
+    static KickerTip *m_self;
     static int m_tippingEnabled;
 
     friend class KickerTip::Client;

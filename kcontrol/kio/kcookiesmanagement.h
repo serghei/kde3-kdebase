@@ -36,35 +36,43 @@ class KCookiesManagementDlgUI;
 
 struct CookieProp;
 
-class CookieListViewItem : public QListViewItem
-{
+class CookieListViewItem : public QListViewItem {
 public:
     CookieListViewItem(QListView *parent, QString dom);
     CookieListViewItem(QListViewItem *parent, CookieProp *cookie);
     ~CookieListViewItem();
 
-    QString domain() const { return mDomain; }
-    CookieProp* cookie() const { return mCookie; }
-    CookieProp* leaveCookie();
-    void setCookiesLoaded() { mCookiesLoaded = true; }
-    bool cookiesLoaded() const { return mCookiesLoaded; }
+    QString domain() const
+    {
+        return mDomain;
+    }
+    CookieProp *cookie() const
+    {
+        return mCookie;
+    }
+    CookieProp *leaveCookie();
+    void setCookiesLoaded()
+    {
+        mCookiesLoaded = true;
+    }
+    bool cookiesLoaded() const
+    {
+        return mCookiesLoaded;
+    }
     virtual QString text(int f) const;
 
 private:
-    void init( CookieProp* cookie,
-               QString domain = QString::null,
-               bool cookieLoaded=false );
+    void init(CookieProp *cookie, QString domain = QString::null, bool cookieLoaded = false);
     CookieProp *mCookie;
     QString mDomain;
     bool mCookiesLoaded;
 };
 
-class KCookiesManagement : public KCModule
-{
+class KCookiesManagement : public KCModule {
     Q_OBJECT
 
 public:
-    KCookiesManagement(QWidget *parent = 0 );
+    KCookiesManagement(QWidget *parent = 0);
     ~KCookiesManagement();
 
     virtual void load();
@@ -76,13 +84,13 @@ private slots:
     void deleteCookie();
     void deleteAllCookies();
     void getDomains();
-    void getCookies(QListViewItem*);
-    void showCookieDetails(QListViewItem*);
+    void getCookies(QListViewItem *);
+    void showCookieDetails(QListViewItem *);
     void doPolicy();
 
 private:
-    void reset ();
-    void deleteCookie(QListViewItem*);
+    void reset();
+    void deleteCookie(QListViewItem *);
     bool cookieDetails(CookieProp *cookie);
     void clearCookieDetails();
     bool policyenabled();
@@ -90,12 +98,12 @@ private:
 private:
     bool m_bDeleteAll;
 
-    QWidget* mainWidget;
-    KCookiesManagementDlgUI* dlg;
+    QWidget *mainWidget;
+    KCookiesManagementDlgUI *dlg;
 
     QStringList deletedDomains;
-    typedef QPtrList<CookieProp> CookiePropList;
-    QDict<CookiePropList> deletedCookies;
+    typedef QPtrList< CookieProp > CookiePropList;
+    QDict< CookiePropList > deletedCookies;
 };
 
 #endif // __KCOOKIESMANAGEMENT_H

@@ -24,8 +24,6 @@
 #include <kdebug.h>
 
 
-
-
 Sound::Sound()
 {
 }
@@ -36,137 +34,141 @@ Sound::~Sound()
 }
 
 
-#define READ_FROM_STREAM(FORMAT,NAME)  FORMAT NAME; stream >> NAME;
-#define MAGIC(CH) { \
-   stream >> magic;  \
-   if( magic != ( (CH)[0] | (CH)[1]<<8 | (CH)[2]<< 16 | (CH)[3] << 24 ) ) \
-   {  \
-      kdWarning() << k_funcinfo << "bad format " << magic << " != " << CH "\n";\
-      return;\
-   } }   
+#define READ_FROM_STREAM(FORMAT, NAME)                                                                                                               \
+    FORMAT NAME;                                                                                                                                     \
+    stream >> NAME;
+#define MAGIC(CH)                                                                                                                                    \
+    {                                                                                                                                                \
+        stream >> magic;                                                                                                                             \
+        if(magic != ((CH)[0] | (CH)[1] << 8 | (CH)[2] << 16 | (CH)[3] << 24))                                                                        \
+        {                                                                                                                                            \
+            kdWarning() << k_funcinfo << "bad format " << magic << " != " << CH "\n";                                                                \
+            return;                                                                                                                                  \
+        }                                                                                                                                            \
+    }
 
-#define ABS(X)  ( (X>0) ? X : -X )
+#define ABS(X) ((X > 0) ? X : -X)
 
-void Sound::load(const QString& filename)
+void Sound::load(const QString &filename)
 {
-	kdDebug() << k_funcinfo << filename << endl;
-	data=QMemArray<Q_INT32>();
-	QFile file(filename);
-	if(!file.open(IO_ReadOnly))
-	{
-		kdWarning() << k_funcinfo <<"unable to open file" << endl;
-		return;
-	}
-	QDataStream stream(&file);
-	stream.setByteOrder( QDataStream::LittleEndian );
-	Q_INT32 magic;
-	
-	MAGIC("RIFF");
-	READ_FROM_STREAM(Q_UINT32,ChunkSize);
-	MAGIC("WAVE");
-	MAGIC("fmt ");
-	READ_FROM_STREAM(Q_UINT32,ChunkSize2);
-	READ_FROM_STREAM(Q_INT16,AudioFormat);
-	READ_FROM_STREAM(Q_UINT16,NumberOfChannels);
-	READ_FROM_STREAM(Q_UINT32,SampleRate);
-	_fs=SampleRate;
-	READ_FROM_STREAM(Q_UINT32,ByteRate);
-	READ_FROM_STREAM(Q_UINT16,BlockAlign);
-	READ_FROM_STREAM(Q_UINT16,BitsPerSample);
-	MAGIC("data");
-	READ_FROM_STREAM(QByteArray,SoundData);
-	NumberOfChannels=1; //Wav i play are broken
+    kdDebug() << k_funcinfo << filename << endl;
+    data = QMemArray< Q_INT32 >();
+    QFile file(filename);
+    if(!file.open(IO_ReadOnly))
+    {
+        kdWarning() << k_funcinfo << "unable to open file" << endl;
+        return;
+    }
+    QDataStream stream(&file);
+    stream.setByteOrder(QDataStream::LittleEndian);
+    Q_INT32 magic;
 
-	file.close();
+    MAGIC("RIFF");
+    READ_FROM_STREAM(Q_UINT32, ChunkSize);
+    MAGIC("WAVE");
+    MAGIC("fmt ");
+    READ_FROM_STREAM(Q_UINT32, ChunkSize2);
+    READ_FROM_STREAM(Q_INT16, AudioFormat);
+    READ_FROM_STREAM(Q_UINT16, NumberOfChannels);
+    READ_FROM_STREAM(Q_UINT32, SampleRate);
+    _fs = SampleRate;
+    READ_FROM_STREAM(Q_UINT32, ByteRate);
+    READ_FROM_STREAM(Q_UINT16, BlockAlign);
+    READ_FROM_STREAM(Q_UINT16, BitsPerSample);
+    MAGIC("data");
+    READ_FROM_STREAM(QByteArray, SoundData);
+    NumberOfChannels = 1; // Wav i play are broken
 
-	uint BytePS=BitsPerSample/8;
-	uint NumberOfSamples = (SoundData.size())/(NumberOfChannels*BytePS);
-	
+    file.close();
 
-	data.resize(NumberOfSamples);
+    uint BytePS = BitsPerSample / 8;
+    uint NumberOfSamples = (SoundData.size()) / (NumberOfChannels * BytePS);
 
-//	kdDebug() << k_funcinfo << NumberOfSamples << " samples" << endl;
 
-	max=0;
-	for(unsigned long int f=0;f<NumberOfSamples;f++)
-	{
-		Q_INT32 nb=0;
-		for(uint k=0;k<BytePS;k++)
-		{
-			nb |= (SoundData[f*BytePS+k]&0x000000FF) << (k*8);
-		}
-		if(nb & (1 << (BytePS*8 -1)) )
-			nb = nb-(1<<BytePS*8);
-		data[f]=nb;
-		if(ABS(nb)>max)
-		{
-			max=ABS(nb);
-		}
-	}
+    data.resize(NumberOfSamples);
 
-/*	static int q=0;
-	QString name="test" + QString::number(q++) + ".wav";
-	save(name);*/
+    //	kdDebug() << k_funcinfo << NumberOfSamples << " samples" << endl;
 
+    max = 0;
+    for(unsigned long int f = 0; f < NumberOfSamples; f++)
+    {
+        Q_INT32 nb = 0;
+        for(uint k = 0; k < BytePS; k++)
+        {
+            nb |= (SoundData[f * BytePS + k] & 0x000000FF) << (k * 8);
+        }
+        if(nb & (1 << (BytePS * 8 - 1)))
+            nb = nb - (1 << BytePS * 8);
+        data[f] = nb;
+        if(ABS(nb) > max)
+        {
+            max = ABS(nb);
+        }
+    }
+
+    /*	static int q=0;
+        QString name="test" + QString::number(q++) + ".wav";
+        save(name);*/
 }
 
-#define SMAGIC(CH) { stream << ( Q_INT32) ( (CH)[0] | (CH)[1]<<8 | (CH)[2]<< 16 | (CH)[3] << 24 ) ; }
+#define SMAGIC(CH)                                                                                                                                   \
+    {                                                                                                                                                \
+        stream << (Q_INT32)((CH)[0] | (CH)[1] << 8 | (CH)[2] << 16 | (CH)[3] << 24);                                                                 \
+    }
 
-void Sound::save(const QString& filename) const
+void Sound::save(const QString &filename) const
 {
-	kdDebug( 1217 ) << k_funcinfo << filename << " - " << data.size() <<  endl;
-	QFile file(filename);
-	if(!file.open(IO_WriteOnly))
-	{
-		kdWarning() << k_funcinfo <<"unable to open file" << endl;
-		return;
-	}
-	QDataStream stream(&file);
-	stream.setByteOrder( QDataStream::LittleEndian );
+    kdDebug(1217) << k_funcinfo << filename << " - " << data.size() << endl;
+    QFile file(filename);
+    if(!file.open(IO_WriteOnly))
+    {
+        kdWarning() << k_funcinfo << "unable to open file" << endl;
+        return;
+    }
+    QDataStream stream(&file);
+    stream.setByteOrder(QDataStream::LittleEndian);
 
 
-	QByteArray SoundData(data.size()*2);
-	
-	for(unsigned long int f=0;f<data.size();f++)
-	{
-		Q_UINT16 val= (signed short int) ( (data.at(f) * ((double)(1<<13)/(signed)max)  ) );
-		SoundData[ 2*f ]=   val & 0x00FF;
-		SoundData[2*f+1]=  (val & 0xFF00) >> 8;
-		
-//		kdDebug( 1217 ) << k_funcinfo << data.at(f) << " / " << max << " = " << val << "  |  " <<   SoundData[ 2*f ] << " "<< SoundData[ 2*f+1 ] <<  endl;
-	}
+    QByteArray SoundData(data.size() * 2);
 
-	Q_UINT16 NumberOfChannels=2;
-	Q_UINT32 SampleRate=_fs;
+    for(unsigned long int f = 0; f < data.size(); f++)
+    {
+        Q_UINT16 val = (signed short int)((data.at(f) * ((double)(1 << 13) / (signed)max)));
+        SoundData[2 * f] = val & 0x00FF;
+        SoundData[2 * f + 1] = (val & 0xFF00) >> 8;
 
-	SMAGIC("RIFF");
-	//READ_FROM_STREAM(Q_UINT32,ChunkSize);
-	stream <<  (Q_UINT32)(36+ SoundData.size());
-	SMAGIC("WAVE");
-	SMAGIC("fmt ");
-	//READ_FROM_STREAM(Q_UINT32,ChunkSize2);
-	stream <<  (Q_UINT32)(16);
-	//READ_FROM_STREAM(Q_INT16,AudioFormat);
-	stream <<  (Q_INT16)(1);
-	//READ_FROM_STREAM(Q_UINT16,NumberOfChannels);
-	stream <<  (Q_UINT16)(NumberOfChannels);
-	//READ_FROM_STREAM(Q_UINT32,SampleRate);
-	stream <<  (Q_UINT32)(SampleRate);
-	//READ_FROM_STREAM(Q_UINT32,ByteRate);
-	stream <<  (Q_UINT32)(NumberOfChannels*SampleRate*16/8);
-	//READ_FROM_STREAM(Q_UINT16,BlockAlign);
-	stream <<  (Q_UINT16)(16/8 *NumberOfChannels);
-	//READ_FROM_STREAM(Q_UINT16,BitsPerSample);
-	stream <<  (Q_UINT16)(16);
-	SMAGIC("data");
-	//READ_FROM_STREAM(QByteArray,SoundData);
-	stream <<  SoundData;
+        //		kdDebug( 1217 ) << k_funcinfo << data.at(f) << " / " << max << " = " << val << "  |  " <<   SoundData[ 2*f ] << " "<< SoundData[ 2*f+1 ]
+        //<<  endl;
+    }
 
-	file.close();
-	
+    Q_UINT16 NumberOfChannels = 2;
+    Q_UINT32 SampleRate = _fs;
+
+    SMAGIC("RIFF");
+    // READ_FROM_STREAM(Q_UINT32,ChunkSize);
+    stream << (Q_UINT32)(36 + SoundData.size());
+    SMAGIC("WAVE");
+    SMAGIC("fmt ");
+    // READ_FROM_STREAM(Q_UINT32,ChunkSize2);
+    stream << (Q_UINT32)(16);
+    // READ_FROM_STREAM(Q_INT16,AudioFormat);
+    stream << (Q_INT16)(1);
+    // READ_FROM_STREAM(Q_UINT16,NumberOfChannels);
+    stream << (Q_UINT16)(NumberOfChannels);
+    // READ_FROM_STREAM(Q_UINT32,SampleRate);
+    stream << (Q_UINT32)(SampleRate);
+    // READ_FROM_STREAM(Q_UINT32,ByteRate);
+    stream << (Q_UINT32)(NumberOfChannels * SampleRate * 16 / 8);
+    // READ_FROM_STREAM(Q_UINT16,BlockAlign);
+    stream << (Q_UINT16)(16 / 8 * NumberOfChannels);
+    // READ_FROM_STREAM(Q_UINT16,BitsPerSample);
+    stream << (Q_UINT16)(16);
+    SMAGIC("data");
+    // READ_FROM_STREAM(QByteArray,SoundData);
+    stream << SoundData;
+
+    file.close();
 }
-
-
 
 
 #if 0

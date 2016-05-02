@@ -35,8 +35,8 @@ class KateTabWidget;
 class GrepTool;
 
 namespace Kate {
-  class MainWindow;
-  class ToolViewManager;
+class MainWindow;
+class ToolViewManager;
 }
 
 class KFileItem;
@@ -45,46 +45,60 @@ class DCOPObject;
 
 class KateExternalToolsMenuAction;
 
-class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBase
-{
-  Q_OBJECT
+class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBase {
+    Q_OBJECT
 
-  friend class KateConfigDialog;
-  friend class KateViewManager;
+    friend class KateConfigDialog;
+    friend class KateViewManager;
 
-  public:
+public:
     /**
      * Construct the window and restore it's state from given config if any
      * @param sconfig session config for this window, 0 if none
      * @param sgroup session config group to use
      */
-    KateMainWindow (KConfig *sconfig, const QString &sgroup);
+    KateMainWindow(KConfig *sconfig, const QString &sgroup);
 
     /**
      * Destruct the nice window
      */
     ~KateMainWindow();
 
-  /**
-   * Accessor methodes for interface and child objects
-   */
-  public:
-    Kate::MainWindow *mainWindow () { return m_mainWindow; }
-    Kate::ToolViewManager *toolViewManager () { return m_toolViewManager; }
+    /**
+     * Accessor methodes for interface and child objects
+     */
+public:
+    Kate::MainWindow *mainWindow()
+    {
+        return m_mainWindow;
+    }
+    Kate::ToolViewManager *toolViewManager()
+    {
+        return m_toolViewManager;
+    }
 
-    KateViewManager *viewManager () { return m_viewManager; }
+    KateViewManager *viewManager()
+    {
+        return m_viewManager;
+    }
 
-    DCOPObject *dcopObject () { return m_dcop; }
+    DCOPObject *dcopObject()
+    {
+        return m_dcop;
+    }
 
-  /**
-   * various methodes to get some little info out of this
-   */
-  public:
+    /**
+     * various methodes to get some little info out of this
+     */
+public:
     /** Returns the URL of the current document.
      * anders: I add this for use from the file selector. */
     KURL activeDocumentUrl();
 
-    uint mainWindowNumber () const { return myID; }
+    uint mainWindowNumber() const
+    {
+        return myID;
+    }
 
     /**
      * Prompts the user for what to do with files that are modified on disk if any.
@@ -99,17 +113,17 @@ class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBa
      * central tabwidget ;)
      * @return tab widget
      */
-    KateTabWidget *tabWidget ();
+    KateTabWidget *tabWidget();
 
-  public:
+public:
     void readProperties(KConfig *config);
     void saveProperties(KConfig *config);
-    void saveGlobalProperties( KConfig* sessionConfig );
+    void saveGlobalProperties(KConfig *sessionConfig);
 
-  public:
+public:
     bool queryClose_internal();
 
-  private:
+private:
     void setupMainWindow();
     void setupActions();
     bool queryClose();
@@ -124,27 +138,27 @@ class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBa
      */
     void saveOptions();
 
-    void dragEnterEvent( QDragEnterEvent * );
-    void dropEvent( QDropEvent * );
+    void dragEnterEvent(QDragEnterEvent *);
+    void dropEvent(QDropEvent *);
 
-  /**
-   * slots used for actions in the menus/toolbars
-   * or internal signal connections
-   */
-  private slots:
-    void newWindow ();
+    /**
+     * slots used for actions in the menus/toolbars
+     * or internal signal connections
+     */
+private slots:
+    void newWindow();
 
     void slotConfigure();
 
     void slotOpenWithMenuAction(int idx);
 
-    void slotGrepToolItemSelected ( const QString &filename, int linenumber );
+    void slotGrepToolItemSelected(const QString &filename, int linenumber);
     void slotMail();
 
     void slotFileQuit();
     void slotEditToolbars();
     void slotNewToolbarConfig();
-    void slotWindowActivated ();
+    void slotWindowActivated();
     void slotUpdateOpenWith();
     void documentMenuAboutToShow();
     void slotDropEvent(QDropEvent *);
@@ -156,25 +170,25 @@ class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBa
     void tipOfTheDay();
 
     /* to update the caption */
-    void slotDocumentCreated (Kate::Document *doc);
-    void updateCaption (Kate::Document *doc);
+    void slotDocumentCreated(Kate::Document *doc);
+    void updateCaption(Kate::Document *doc);
 
-    void pluginHelp ();
+    void pluginHelp();
     void slotFullScreen(bool);
 
-  public:
-    void openURL (const QString &name=0L);
+public:
+    void openURL(const QString &name = 0L);
 
-  private slots:
-    void updateGrepDir (bool visible);
+private slots:
+    void updateGrepDir(bool visible);
 
-  protected:
-    bool event( QEvent * );
+protected:
+    bool event(QEvent *);
 
-  private slots:
+private slots:
     void slotDocumentCloseAll();
 
-  private:
+private:
     static uint uniqueID;
     uint myID;
 
@@ -197,15 +211,15 @@ class KateMainWindow : public KateMDI::MainWindow, virtual public KParts::PartBa
     KateFileList *filelist;
     KateFileSelector *fileselector;
 
-    KActionMenu* documentOpenWith;
+    KActionMenu *documentOpenWith;
 
     QPopupMenu *documentMenu;
 
-    KToggleAction* settingsShowFilelist;
-    KToggleAction* settingsShowFileselector;
+    KToggleAction *settingsShowFilelist;
+    KToggleAction *settingsShowFileselector;
 
     KateExternalToolsMenuAction *externalTools;
-    GrepTool * greptool;
+    GrepTool *greptool;
     bool m_modignore, m_grrr;
 
     KateTabWidget *m_tabWidget;

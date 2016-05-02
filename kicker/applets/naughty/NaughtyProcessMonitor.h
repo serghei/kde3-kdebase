@@ -25,19 +25,11 @@
 
 class NaughtyProcessMonitorPrivate;
 
-class NaughtyProcessMonitor : public QObject
-{
-  Q_OBJECT
+class NaughtyProcessMonitor : public QObject {
+    Q_OBJECT
 
-  public:
-
-    NaughtyProcessMonitor
-      (
-       uint interval,
-       uint triggerLevel,
-       QObject * parent = 0,
-       const char * name = 0
-      );
+public:
+    NaughtyProcessMonitor(uint interval, uint triggerLevel, QObject *parent = 0, const char *name = 0);
 
     virtual ~NaughtyProcessMonitor();
 
@@ -50,27 +42,25 @@ class NaughtyProcessMonitor : public QObject
     void setInterval(uint);
 
     virtual uint cpuLoad() const;
-    virtual QValueList<ulong> pidList() const;
-    virtual bool getLoad(ulong pid, uint & load) const;
+    virtual QValueList< ulong > pidList() const;
+    virtual bool getLoad(ulong pid, uint &load) const;
     virtual QString processName(ulong pid) const;
     virtual bool canKill(ulong pid) const;
     virtual bool kill(ulong pid) const;
 
-  protected slots:
+protected slots:
 
     void slotTimeout();
 
-  signals:
+signals:
 
     void load(uint);
-    void runawayProcess(ulong pid, const QString & name);
+    void runawayProcess(ulong pid, const QString &name);
 
-  private:
-
+private:
     void _process(ulong pid, uint load);
 
-    NaughtyProcessMonitorPrivate * d;
+    NaughtyProcessMonitorPrivate *d;
 };
 
 #endif
-

@@ -31,52 +31,50 @@ class QTabWidget;
 class KProxyData;
 class KProxyDialogUI;
 
-class KProxyOptions : public KCModule
-{
-  Q_OBJECT
+class KProxyOptions : public KCModule {
+    Q_OBJECT
 
 public:
-  KProxyOptions( QWidget* parent = 0 );
-  ~KProxyOptions();
+    KProxyOptions(QWidget *parent = 0);
+    ~KProxyOptions();
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
-  virtual QString quickHelp() const;
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    virtual QString quickHelp() const;
 
 private:
-  KCModule* mProxy;
-  KCModule* mSocks;
-  QTabWidget* mTab;
+    KCModule *mProxy;
+    KCModule *mSocks;
+    QTabWidget *mTab;
 };
 
-class KProxyDialog : public KCModule
-{
-  Q_OBJECT
+class KProxyDialog : public KCModule {
+    Q_OBJECT
 
 public:
-  KProxyDialog( QWidget* parent = 0 );
-  ~KProxyDialog();
+    KProxyDialog(QWidget *parent = 0);
+    ~KProxyDialog();
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
-  QString quickHelp() const;
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    QString quickHelp() const;
 
 private slots:
-  void slotChanged();
-  void slotUseProxyChanged();
+    void slotChanged();
+    void slotUseProxyChanged();
 
-  void setupManProxy();
-  void setupEnvProxy();
-
-private:
-  void showInvalidMessage( const QString& _msg = QString::null );
+    void setupManProxy();
+    void setupEnvProxy();
 
 private:
-  KProxyDialogUI* mDlg;
-  KProxyData* mData;
-  bool mDefaultData;
+    void showInvalidMessage(const QString &_msg = QString::null);
+
+private:
+    KProxyDialogUI *mDlg;
+    KProxyData *mData;
+    bool mDefaultData;
 };
 
 #endif

@@ -41,90 +41,95 @@ class KSeparator;
 class KProgress;
 class KAction;
 
-class KonqFrameTabs : public KTabWidget, public KonqFrameContainerBase
-{
-  Q_OBJECT
-  friend class KonqFrame; //for emitting ctrlTabPressed() only, aleXXX
+class KonqFrameTabs : public KTabWidget, public KonqFrameContainerBase {
+    Q_OBJECT
+    friend class KonqFrame; // for emitting ctrlTabPressed() only, aleXXX
 
 public:
-  KonqFrameTabs(QWidget* parent, KonqFrameContainerBase* parentContainer,
-		KonqViewManager* viewManager, const char * name = 0);
-  virtual ~KonqFrameTabs();
+    KonqFrameTabs(QWidget *parent, KonqFrameContainerBase *parentContainer, KonqViewManager *viewManager, const char *name = 0);
+    virtual ~KonqFrameTabs();
 
-  virtual void listViews( ChildViewList *viewList );
+    virtual void listViews(ChildViewList *viewList);
 
-  virtual void saveConfig( KConfig* config, const QString &prefix, bool saveURLs,
-			   KonqFrameBase* docContainer, int id = 0, int depth = 0 );
-  virtual void copyHistory( KonqFrameBase *other );
+    virtual void saveConfig(KConfig *config, const QString &prefix, bool saveURLs, KonqFrameBase *docContainer, int id = 0, int depth = 0);
+    virtual void copyHistory(KonqFrameBase *other);
 
-  virtual void printFrameInfo( const QString& spaces );
+    virtual void printFrameInfo(const QString &spaces);
 
-  QPtrList<KonqFrameBase>* childFrameList() { return m_pChildFrameList; }
+    QPtrList< KonqFrameBase > *childFrameList()
+    {
+        return m_pChildFrameList;
+    }
 
-  virtual void setTitle( const QString &title, QWidget* sender );
-  virtual void setTabIcon( const KURL &url, QWidget* sender );
+    virtual void setTitle(const QString &title, QWidget *sender);
+    virtual void setTabIcon(const KURL &url, QWidget *sender);
 
-  virtual QWidget* widget() { return this; }
-  virtual QCString frameType() { return QCString("Tabs"); }
+    virtual QWidget *widget()
+    {
+        return this;
+    }
+    virtual QCString frameType()
+    {
+        return QCString("Tabs");
+    }
 
-  void activateChild();
+    void activateChild();
 
-  /**
-   * Call this after inserting a new frame into the splitter.
-   */
-  void insertChildFrame( KonqFrameBase * frame, int index = -1);
+    /**
+     * Call this after inserting a new frame into the splitter.
+     */
+    void insertChildFrame(KonqFrameBase *frame, int index = -1);
 
-  /**
-   * Call this before deleting one of our children.
-   */
-  void removeChildFrame( KonqFrameBase * frame );
+    /**
+     * Call this before deleting one of our children.
+     */
+    void removeChildFrame(KonqFrameBase *frame);
 
-  //inherited
-  virtual void reparentFrame(QWidget * parent,
-                             const QPoint & p, bool showIt=FALSE );
+    // inherited
+    virtual void reparentFrame(QWidget *parent, const QPoint &p, bool showIt = FALSE);
 
-  void moveTabBackward(int index);
-  void moveTabForward(int index);
+    void moveTabBackward(int index);
+    void moveTabForward(int index);
 
 
 public slots:
-  void slotCurrentChanged( QWidget* newPage );
-  void setAlwaysTabbedMode( bool );
+    void slotCurrentChanged(QWidget *newPage);
+    void setAlwaysTabbedMode(bool);
 
 signals:
-  void ctrlTabPressed();
-  void removeTabPopup();
+    void ctrlTabPressed();
+    void removeTabPopup();
 
 protected:
-  void refreshSubPopupMenuTab();
-  void hideTabBar();
+    void refreshSubPopupMenuTab();
+    void hideTabBar();
 
-  QPtrList<KonqFrameBase>* m_pChildFrameList;
+    QPtrList< KonqFrameBase > *m_pChildFrameList;
 
 private slots:
-  void slotContextMenu( const QPoint& );
-  void slotContextMenu( QWidget*, const QPoint& );
-  void slotCloseRequest( QWidget* );
-  void slotMovedTab( int, int );
-  void slotMouseMiddleClick();
-  void slotMouseMiddleClick( QWidget* );
+    void slotContextMenu(const QPoint &);
+    void slotContextMenu(QWidget *, const QPoint &);
+    void slotCloseRequest(QWidget *);
+    void slotMovedTab(int, int);
+    void slotMouseMiddleClick();
+    void slotMouseMiddleClick(QWidget *);
 
-  void slotTestCanDecode(const QDragMoveEvent *e, bool &accept /* result */);
-  void slotReceivedDropEvent( QDropEvent* );
-  void slotInitiateDrag( QWidget * );
-  void slotReceivedDropEvent( QWidget *, QDropEvent * );
-  void slotSubPopupMenuTabActivated( int );
+    void slotTestCanDecode(const QDragMoveEvent *e, bool &accept /* result */);
+    void slotReceivedDropEvent(QDropEvent *);
+    void slotInitiateDrag(QWidget *);
+    void slotReceivedDropEvent(QWidget *, QDropEvent *);
+    void slotSubPopupMenuTabActivated(int);
 
 private:
-  KonqViewManager* m_pViewManager;
-  QPopupMenu* m_pPopupMenu;
-  QPopupMenu* m_pSubPopupMenuTab;
-  QToolButton* m_rightWidget;
-  QToolButton* m_leftWidget;
-  bool m_permanentCloseButtons;
-  bool m_alwaysTabBar;
-  bool m_MouseMiddleClickClosesTab;
-  int m_closeOtherTabsId;
+    KonqViewManager *m_pViewManager;
+    QPopupMenu *m_pPopupMenu;
+    QPopupMenu *m_pSubPopupMenuTab;
+    QToolButton *m_rightWidget;
+    QToolButton *m_leftWidget;
+    bool m_permanentCloseButtons;
+    bool m_alwaysTabBar;
+    bool m_MouseMiddleClickClosesTab;
+    int m_closeOtherTabsId;
 };
 
 #endif

@@ -30,118 +30,118 @@
 #include "konq_extensionmanager.h"
 #include "konq_mainwindow.h"
 
-class KonqExtensionManagerPrivate
-{
+class KonqExtensionManagerPrivate {
 public:
-	KPluginSelector *pluginSelector;
-	KonqMainWindow *mainWindow;
-	KParts::ReadOnlyPart* activePart;
-	bool isChanged;
+    KPluginSelector *pluginSelector;
+    KonqMainWindow *mainWindow;
+    KParts::ReadOnlyPart *activePart;
+    bool isChanged;
 };
 
-KonqExtensionManager::KonqExtensionManager(QWidget *parent, KonqMainWindow *mainWindow, KParts::ReadOnlyPart* activePart) :
-  KDialogBase(Plain, i18n("Configure"), Default | Cancel | Apply | Ok | User1,
-              Ok, parent, "extensionmanager", false, true, KGuiItem(i18n("&Reset"), "undo"))
+KonqExtensionManager::KonqExtensionManager(QWidget *parent, KonqMainWindow *mainWindow, KParts::ReadOnlyPart *activePart)
+    : KDialogBase(Plain, i18n("Configure"), Default | Cancel | Apply | Ok | User1, Ok, parent, "extensionmanager", false, true,
+                  KGuiItem(i18n("&Reset"), "undo"))
 {
-	d = new KonqExtensionManagerPrivate;
-	showButton(User1, false);
-	setChanged(false);
+    d = new KonqExtensionManagerPrivate;
+    showButton(User1, false);
+    setChanged(false);
 
-	setInitialSize(QSize(640, 480));
+    setInitialSize(QSize(640, 480));
 
-	(new QVBoxLayout(plainPage(), 0, 0))->setAutoAdd(true);
-	d->pluginSelector = new KPluginSelector(plainPage());
-	setMainWidget(d->pluginSelector);
-	connect(d->pluginSelector, SIGNAL(changed(bool)), this, SLOT(setChanged(bool)));
-	connect(d->pluginSelector, SIGNAL(configCommitted(const QCString &)),
-	        KSettings::Dispatcher::self(), SLOT(reparseConfiguration(const QCString &)));
+    (new QVBoxLayout(plainPage(), 0, 0))->setAutoAdd(true);
+    d->pluginSelector = new KPluginSelector(plainPage());
+    setMainWidget(d->pluginSelector);
+    connect(d->pluginSelector, SIGNAL(changed(bool)), this, SLOT(setChanged(bool)));
+    connect(d->pluginSelector, SIGNAL(configCommitted(const QCString &)), KSettings::Dispatcher::self(),
+            SLOT(reparseConfiguration(const QCString &)));
 
-	d->mainWindow = mainWindow;
-	d->activePart = activePart;
+    d->mainWindow = mainWindow;
+    d->activePart = activePart;
 
-	// There's a limitation of KPluginSelector here... It assumes that all plugins in a given widget (as created by addPlugins)
-	// have their config in the same KConfig[Group]. So we can't show konqueror extensions and khtml extensions in the same tab.
-	d->pluginSelector->addPlugins("konqueror", i18n("Extensions"), "Extensions", KGlobal::config());
-	if ( activePart ) {
-		KInstance* instance = activePart->instance();
-		d->pluginSelector->addPlugins(instance->instanceName(), i18n("Tools"), "Tools", instance->config());
-		d->pluginSelector->addPlugins(instance->instanceName(), i18n("Statusbar"), "Statusbar", instance->config());
-	}
+    // There's a limitation of KPluginSelector here... It assumes that all plugins in a given widget (as created by addPlugins)
+    // have their config in the same KConfig[Group]. So we can't show konqueror extensions and khtml extensions in the same tab.
+    d->pluginSelector->addPlugins("konqueror", i18n("Extensions"), "Extensions", KGlobal::config());
+    if(activePart)
+    {
+        KInstance *instance = activePart->instance();
+        d->pluginSelector->addPlugins(instance->instanceName(), i18n("Tools"), "Tools", instance->config());
+        d->pluginSelector->addPlugins(instance->instanceName(), i18n("Statusbar"), "Statusbar", instance->config());
+    }
 }
 
 KonqExtensionManager::~KonqExtensionManager()
 {
-	delete d;
+    delete d;
 }
 
 void KonqExtensionManager::setChanged(bool c)
 {
-	d->isChanged = c;
-	enableButton(Apply, c);
+    d->isChanged = c;
+    enableButton(Apply, c);
 }
 
 void KonqExtensionManager::slotDefault()
 {
-	d->pluginSelector->defaults();
-	setChanged(false);
+    d->pluginSelector->defaults();
+    setChanged(false);
 }
 
 void KonqExtensionManager::slotUser1()
 {
-	d->pluginSelector->load();
-	setChanged(false);
+    d->pluginSelector->load();
+    setChanged(false);
 }
 
 void KonqExtensionManager::apply()
 {
-	if(d->isChanged)
-	{
-		d->pluginSelector->save();
-		setChanged(false);
-		if( d->mainWindow )
-		{
-			KParts::Plugin::loadPlugins(d->mainWindow, d->mainWindow, KGlobal::instance());
-			QPtrList<KParts::Plugin> plugins = KParts::Plugin::pluginObjects(d->mainWindow);
-			QPtrListIterator<KParts::Plugin> it(plugins);
-			KParts::Plugin *plugin;
-			while((plugin = it.current()) != 0)
-			{
-				++it;
-				d->mainWindow->factory()->addClient(plugin);
-			}
-		}
-		if ( d->activePart )
-		{
-			KParts::Plugin::loadPlugins( d->activePart, d->activePart, d->activePart->instance() );
-			QPtrList<KParts::Plugin> plugins = KParts::Plugin::pluginObjects( d->activePart );
-			QPtrListIterator<KParts::Plugin> it(plugins);
-			KParts::Plugin *plugin;
-			while((plugin = it.current()) != 0)
-			{
-				++it;
-				d->activePart->factory()->addClient(plugin);
-			}
-		}
-	}
+    if(d->isChanged)
+    {
+        d->pluginSelector->save();
+        setChanged(false);
+        if(d->mainWindow)
+        {
+            KParts::Plugin::loadPlugins(d->mainWindow, d->mainWindow, KGlobal::instance());
+            QPtrList< KParts::Plugin > plugins = KParts::Plugin::pluginObjects(d->mainWindow);
+            QPtrListIterator< KParts::Plugin > it(plugins);
+            KParts::Plugin *plugin;
+            while((plugin = it.current()) != 0)
+            {
+                ++it;
+                d->mainWindow->factory()->addClient(plugin);
+            }
+        }
+        if(d->activePart)
+        {
+            KParts::Plugin::loadPlugins(d->activePart, d->activePart, d->activePart->instance());
+            QPtrList< KParts::Plugin > plugins = KParts::Plugin::pluginObjects(d->activePart);
+            QPtrListIterator< KParts::Plugin > it(plugins);
+            KParts::Plugin *plugin;
+            while((plugin = it.current()) != 0)
+            {
+                ++it;
+                d->activePart->factory()->addClient(plugin);
+            }
+        }
+    }
 }
 
 void KonqExtensionManager::slotApply()
 {
-	apply();
+    apply();
 }
 
 void KonqExtensionManager::slotOk()
 {
-	emit okClicked();
-	apply();
-	accept();
+    emit okClicked();
+    apply();
+    accept();
 }
 
 void KonqExtensionManager::show()
 {
-	d->pluginSelector->load();
+    d->pluginSelector->load();
 
-	KDialogBase::show();
+    KDialogBase::show();
 }
 
 #include "konq_extensionmanager.moc"

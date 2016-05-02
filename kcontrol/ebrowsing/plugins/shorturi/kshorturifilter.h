@@ -37,25 +37,22 @@ class KInstance;
 * @author Dawit Alemayehu <adawit@kde.org>
 * @author Malte Starostik <starosti@zedat.fu-berlin.de>
 */
-class KShortURIFilter : public KURIFilterPlugin , public DCOPObject
-{
+class KShortURIFilter : public KURIFilterPlugin, public DCOPObject {
     K_DCOP
     Q_OBJECT
 public:
-
     /**
      * Creates a Short URI filter object
      *
      * @param parent the parent of this class.
      * @param name the internal name for this object.
      */
-    KShortURIFilter( QObject *parent = 0, const char *name = 0,
-	             const QStringList &args = QStringList() );
+    KShortURIFilter(QObject *parent = 0, const char *name = 0, const QStringList &args = QStringList());
 
     /**
      * Destructor
      */
-    virtual ~KShortURIFilter() {};
+    virtual ~KShortURIFilter(){};
 
     /**
      * Converts short URIs into fully qualified valid URIs
@@ -68,7 +65,7 @@ public:
      * @param data the data to be filtered
      * @return true if the url has been filtered
      */
-    virtual bool filterURI( KURIFilterData &data ) const;
+    virtual bool filterURI(KURIFilterData &data) const;
 
     /**
      * Returns the name of the config module for
@@ -84,26 +81,26 @@ public:
          *
          * @return the config module
          */
-    virtual KCModule* configModule( QWidget*, const char* ) const;
+    virtual KCModule *configModule(QWidget *, const char *) const;
 
 public:
-k_dcop:
-    virtual void configure();
+    k_dcop : virtual void configure();
 
 private:
-
     struct URLHint
     {
-        URLHint() {}
-        URLHint( QString r, QString p, 
-                 KURIFilterData::URITypes t = KURIFilterData::NET_PROTOCOL )
-               : regexp(r), prepend(p), type(t) {}
-        QString regexp; // if this matches, then...
+        URLHint()
+        {
+        }
+        URLHint(QString r, QString p, KURIFilterData::URITypes t = KURIFilterData::NET_PROTOCOL) : regexp(r), prepend(p), type(t)
+        {
+        }
+        QString regexp;  // if this matches, then...
         QString prepend; // ...prepend this to the url
         KURIFilterData::URITypes type;
     };
 
-    QValueList<URLHint> m_urlHints;
+    QValueList< URLHint > m_urlHints;
     QString m_strDefaultProtocol;
     bool m_bVerbose;
 };

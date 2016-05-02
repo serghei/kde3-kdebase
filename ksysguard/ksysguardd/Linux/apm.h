@@ -21,14 +21,14 @@
 #ifndef KSG_APM_H
 #define KSG_APM_H
 
-void initApm( struct SensorModul* );
-void exitApm( void );
+void initApm(struct SensorModul *);
+void exitApm(void);
 
-int updateApm( void );
+int updateApm(void);
 
-void printApmBatFill( const char* );
-void printApmBatFillInfo( const char* );
-void printApmBatTime( const char* );
-void printApmBatTimeInfo( const char* );
+void printApmBatFill(const char *);
+void printApmBatFillInfo(const char *);
+void printApmBatTime(const char *);
+void printApmBatTimeInfo(const char *);
 
 #endif

@@ -21,12 +21,11 @@
 
 using namespace KHC;
 
-TreeBuilder::TreeBuilder( QObject *parent, const char *name )
-  : QObject( parent, name )
+TreeBuilder::TreeBuilder(QObject *parent, const char *name) : QObject(parent, name)
 {
 }
 
-void TreeBuilder::selectURL( const QString & )
+void TreeBuilder::selectURL(const QString &)
 {
 }
 

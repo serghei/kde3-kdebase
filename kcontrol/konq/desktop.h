@@ -30,28 +30,27 @@ class KIntNumInput;
 // if you change this, update also the number of keyboard shortcuts in kwin/kwinbindings.cpp
 static const int maxDesktops = 20;
 
-class KDesktopConfig : public KCModule
-{
-  Q_OBJECT
+class KDesktopConfig : public KCModule {
+    Q_OBJECT
 
- public:
-  KDesktopConfig(QWidget *parent = 0L, const char *name = 0L);
+public:
+    KDesktopConfig(QWidget *parent = 0L, const char *name = 0L);
 
-  void load();
-  void load( bool useDefaults );
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
- protected slots:
-  void slotValueChanged(int);
+protected slots:
+    void slotValueChanged(int);
 
- private:
-  KIntNumInput *_numInput;
-  QLabel       *_nameLabel[maxDesktops];
-  KLineEdit    *_nameInput[maxDesktops];
-  QCheckBox    *_wheelOption;
-  bool         _wheelOptionImmutable;
-  bool         _labelImmutable[maxDesktops];
+private:
+    KIntNumInput *_numInput;
+    QLabel *_nameLabel[maxDesktops];
+    KLineEdit *_nameInput[maxDesktops];
+    QCheckBox *_wheelOption;
+    bool _wheelOptionImmutable;
+    bool _labelImmutable[maxDesktops];
 };
 
 #endif

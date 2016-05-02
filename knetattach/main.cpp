@@ -25,22 +25,19 @@
 
 #include "knetattach.h"
 
-int main(int argc, char **argv) {
-	KAboutData about("knetattach", I18N_NOOP("KDE Network Wizard"), "1.0",
-		I18N_NOOP("KDE Network Wizard"),
-		KAboutData::License_GPL,
-		I18N_NOOP("(c) 2004 George Staikos"), 0,
-		"http://www.kde.org/");
+int main(int argc, char **argv)
+{
+    KAboutData about("knetattach", I18N_NOOP("KDE Network Wizard"), "1.0", I18N_NOOP("KDE Network Wizard"), KAboutData::License_GPL,
+                     I18N_NOOP("(c) 2004 George Staikos"), 0, "http://www.kde.org/");
 
-	about.addAuthor("George Staikos", I18N_NOOP("Primary author and maintainer"), "staikos@kde.org");
+    about.addAuthor("George Staikos", I18N_NOOP("Primary author and maintainer"), "staikos@kde.org");
 
-	KCmdLineArgs::init(argc, argv, &about);
-	KApplication a;
+    KCmdLineArgs::init(argc, argv, &about);
+    KApplication a;
 
-	KNetAttach na;
-	a.setMainWidget(&na);
-	na.show();
+    KNetAttach na;
+    a.setMainWidget(&na);
+    na.show();
 
-	return a.exec();
+    return a.exec();
 }
-

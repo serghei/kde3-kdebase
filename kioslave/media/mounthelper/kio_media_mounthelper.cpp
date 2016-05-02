@@ -37,173 +37,177 @@
 
 const Medium MountHelper::findMedium(const KURL &url)
 {
-	DCOPRef mediamanager("kded", "mediamanager");
+    DCOPRef mediamanager("kded", "mediamanager");
 
-	// Try filename first
-	DCOPReply reply = mediamanager.call( "properties", url.fileName() );
-	if ( !reply.isValid() ) {
-		m_errorStr = i18n("The KDE mediamanager is not running.")+"\n";
-		return Medium(QString::null, QString::null);
-	}
-	const Medium& medium = Medium::create(reply);
-	if ( medium.id().isEmpty() ) {
-		// Try full URL now
-		reply = mediamanager.call( "properties", url.prettyURL() );
-		if ( !reply.isValid() ) {
-			m_errorStr = i18n("Internal Error");
-			return Medium(QString::null, QString::null);
-		}
-		return Medium::create(reply);
-	} else {
-		return medium;
-	}
+    // Try filename first
+    DCOPReply reply = mediamanager.call("properties", url.fileName());
+    if(!reply.isValid())
+    {
+        m_errorStr = i18n("The KDE mediamanager is not running.") + "\n";
+        return Medium(QString::null, QString::null);
+    }
+    const Medium &medium = Medium::create(reply);
+    if(medium.id().isEmpty())
+    {
+        // Try full URL now
+        reply = mediamanager.call("properties", url.prettyURL());
+        if(!reply.isValid())
+        {
+            m_errorStr = i18n("Internal Error");
+            return Medium(QString::null, QString::null);
+        }
+        return Medium::create(reply);
+    }
+    else
+    {
+        return medium;
+    }
 }
 
 MountHelper::MountHelper() : KApplication()
 {
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	m_errorStr = "";
+    m_errorStr = "";
 
-	KURL url(args->url(0));
-	const Medium medium = findMedium(url);
+    KURL url(args->url(0));
+    const Medium medium = findMedium(url);
 
-	if ( medium.id().isEmpty() )
-	{
-		if (m_errorStr.isEmpty())
-			m_errorStr+= i18n("%1 cannot be found.").arg(url.prettyURL());
-		QTimer::singleShot(0, this, SLOT(error()) );
-		return;
-	}
+    if(medium.id().isEmpty())
+    {
+        if(m_errorStr.isEmpty())
+            m_errorStr += i18n("%1 cannot be found.").arg(url.prettyURL());
+        QTimer::singleShot(0, this, SLOT(error()));
+        return;
+    }
 
-	if ( !medium.isMountable() && !args->isSet("e") && !args->isSet("s"))
-	{
-		m_errorStr = i18n("%1 is not a mountable media.").arg(url.prettyURL());
-		QTimer::singleShot(0, this, SLOT(error()) );
-		return;
-	}
+    if(!medium.isMountable() && !args->isSet("e") && !args->isSet("s"))
+    {
+        m_errorStr = i18n("%1 is not a mountable media.").arg(url.prettyURL());
+        QTimer::singleShot(0, this, SLOT(error()));
+        return;
+    }
 
-	QString device = medium.deviceNode();
-	QString mount_point = medium.mountPoint();
+    QString device = medium.deviceNode();
+    QString mount_point = medium.mountPoint();
 
-	m_isCdrom = medium.mimeType().find("dvd")!=-1
-	         || medium.mimeType().find("cd")!=-1;
+    m_isCdrom = medium.mimeType().find("dvd") != -1 || medium.mimeType().find("cd") != -1;
 
-	if (args->isSet("u"))
-	{
-	  DCOPRef mediamanager("kded", "mediamanager");
-	  DCOPReply reply = mediamanager.call( "unmount", medium.id());
-	  if (reply.isValid())
-	    reply.get(m_errorStr);
-	  kdDebug() << "medium unmount " << m_errorStr << endl;
-	  if (m_errorStr.isNull())
-	    ::exit(0);
-	  else
-	    error();
-	}
-	else if (args->isSet("s") || args->isSet("e"))
-	{
-		/*
-		* We want to call mediamanager unmount before invoking eject. That's
-		* because unmount would provide an informative error message in case of
-		* failure. However, there are cases when unmount would fail
-		* (supermount, slackware, see bug#116209) but eject would succeed.
-		* Thus if unmount fails, save unmount error message and invokeEject()
-		* anyway. Only if both unmount and eject fail, notify the user by
-		* displaying the saved error message (see ejectFinished()).
-		*/
-		if (medium.isMounted())
-		{
-			DCOPRef mediamanager("kded", "mediamanager");
-			DCOPReply reply = mediamanager.call( "unmount", medium.id());
-			if (reply.isValid())
-                            reply.get(m_errorStr);
-                        if (m_errorStr.isNull())
-                            invokeEject(device, true);
-                        else
-                            error();
-			m_device = device;
-		} else
-                    invokeEject(device, true);
-	}
-	else
-	{
-	  DCOPRef mediamanager("kded", "mediamanager");
-	  DCOPReply reply = mediamanager.call( "mount", medium.id());
-	  if (reply.isValid())
-	    reply.get(m_errorStr);
-	  if (m_errorStr.isNull())
-	    ::exit(0);
-	  else
-	    error();
-	}
+    if(args->isSet("u"))
+    {
+        DCOPRef mediamanager("kded", "mediamanager");
+        DCOPReply reply = mediamanager.call("unmount", medium.id());
+        if(reply.isValid())
+            reply.get(m_errorStr);
+        kdDebug() << "medium unmount " << m_errorStr << endl;
+        if(m_errorStr.isNull())
+            ::exit(0);
+        else
+            error();
+    }
+    else if(args->isSet("s") || args->isSet("e"))
+    {
+        /*
+        * We want to call mediamanager unmount before invoking eject. That's
+        * because unmount would provide an informative error message in case of
+        * failure. However, there are cases when unmount would fail
+        * (supermount, slackware, see bug#116209) but eject would succeed.
+        * Thus if unmount fails, save unmount error message and invokeEject()
+        * anyway. Only if both unmount and eject fail, notify the user by
+        * displaying the saved error message (see ejectFinished()).
+        */
+        if(medium.isMounted())
+        {
+            DCOPRef mediamanager("kded", "mediamanager");
+            DCOPReply reply = mediamanager.call("unmount", medium.id());
+            if(reply.isValid())
+                reply.get(m_errorStr);
+            if(m_errorStr.isNull())
+                invokeEject(device, true);
+            else
+                error();
+            m_device = device;
+        }
+        else
+            invokeEject(device, true);
+    }
+    else
+    {
+        DCOPRef mediamanager("kded", "mediamanager");
+        DCOPReply reply = mediamanager.call("mount", medium.id());
+        if(reply.isValid())
+            reply.get(m_errorStr);
+        if(m_errorStr.isNull())
+            ::exit(0);
+        else
+            error();
+    }
 }
 
 void MountHelper::invokeEject(const QString &device, bool quiet)
 {
-	KProcess *proc = new KProcess(this);
-	*proc << "kdeeject";
-	if (quiet)
-	{
-		*proc << "-q";
-	}
-	*proc << device;
-	connect( proc, SIGNAL(processExited(KProcess *)),
-		this, SLOT( ejectFinished(KProcess *) ) );
-	proc->start();
+    KProcess *proc = new KProcess(this);
+    *proc << "kdeeject";
+    if(quiet)
+    {
+        *proc << "-q";
+    }
+    *proc << device;
+    connect(proc, SIGNAL(processExited(KProcess *)), this, SLOT(ejectFinished(KProcess *)));
+    proc->start();
 }
 
-void MountHelper::ejectFinished(KProcess* proc)
+void MountHelper::ejectFinished(KProcess *proc)
 {
-	/*
-	* If eject failed, report the error stored in m_errorStr
-	*/
-	if (proc->normalExit() && proc->exitStatus() == 0) {
-		::exit(0);
-	} else {
-		if (m_errorStr.isEmpty()) {
-			if (m_isCdrom)
-				m_errorStr = i18n("The device was successfully unmounted, but the tray could not be opened");
-			else
-				m_errorStr = i18n("The device was successfully unmounted, but could not be ejected");
-		}
-		QTimer::singleShot(0, this, SLOT(error()));
-	}
+    /*
+    * If eject failed, report the error stored in m_errorStr
+    */
+    if(proc->normalExit() && proc->exitStatus() == 0)
+    {
+        ::exit(0);
+    }
+    else
+    {
+        if(m_errorStr.isEmpty())
+        {
+            if(m_isCdrom)
+                m_errorStr = i18n("The device was successfully unmounted, but the tray could not be opened");
+            else
+                m_errorStr = i18n("The device was successfully unmounted, but could not be ejected");
+        }
+        QTimer::singleShot(0, this, SLOT(error()));
+    }
 }
 
 void MountHelper::error()
 {
-	KMessageBox::error(0, m_errorStr);
-	::exit(1);
+    KMessageBox::error(0, m_errorStr);
+    ::exit(1);
 }
 
-static KCmdLineOptions options[] =
-{
-	{ "u", I18N_NOOP("Unmount given URL"), 0 },
-	{ "m", I18N_NOOP("Mount given URL (default)"), 0 },
-	{ "e", I18N_NOOP("Eject given URL via kdeeject"), 0},
-	{ "s", I18N_NOOP("Unmount and Eject given URL (necessary for some USB devices)"), 0},
-	{"!+URL",   I18N_NOOP("media:/ URL to mount/unmount/eject/remove"), 0 },
-	KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"u", I18N_NOOP("Unmount given URL"), 0},
+                                    {"m", I18N_NOOP("Mount given URL (default)"), 0},
+                                    {"e", I18N_NOOP("Eject given URL via kdeeject"), 0},
+                                    {"s", I18N_NOOP("Unmount and Eject given URL (necessary for some USB devices)"), 0},
+                                    {"!+URL", I18N_NOOP("media:/ URL to mount/unmount/eject/remove"), 0},
+                                    KCmdLineLastOption};
 
 
 int main(int argc, char **argv)
 {
-	KCmdLineArgs::init(argc, argv, "kio_media_mounthelper",
-	                   "kio_media_mounthelper", "kio_media_mounthelper",
-	                   "0.1");
+    KCmdLineArgs::init(argc, argv, "kio_media_mounthelper", "kio_media_mounthelper", "kio_media_mounthelper", "0.1");
 
-	KCmdLineArgs::addCmdLineOptions( options );
-	KGlobal::locale()->setMainCatalogue("kio_media");
-	KApplication::addCmdLineOptions();
+    KCmdLineArgs::addCmdLineOptions(options);
+    KGlobal::locale()->setMainCatalogue("kio_media");
+    KApplication::addCmdLineOptions();
 
-	if (KCmdLineArgs::parsedArgs()->count()==0) KCmdLineArgs::usage();
-	KApplication *app = new  MountHelper();
+    if(KCmdLineArgs::parsedArgs()->count() == 0)
+        KCmdLineArgs::usage();
+    KApplication *app = new MountHelper();
 
-	KStartupInfo::appStarted();
-	app->dcopClient()->attach();
-	return app->exec();
+    KStartupInfo::appStarted();
+    app->dcopClient()->attach();
+    return app->exec();
 }
 
 #include "kio_media_mounthelper.moc"

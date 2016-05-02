@@ -26,18 +26,17 @@
 class QLineEdit;
 class QCheckBox;
 
-class ConfGeneral : public QWidget
-{
+class ConfGeneral : public QWidget {
 public:
-	ConfGeneral(QWidget *parent = 0, const char *name = 0);
+    ConfGeneral(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
+    void load();
+    void save();
 
 private:
-	QLineEdit	*m_name, *m_company, *m_number;
-	QCheckBox   *m_replace_int_char;
-	QLineEdit   *m_replace_int_char_val;
+    QLineEdit *m_name, *m_company, *m_number;
+    QCheckBox *m_replace_int_char;
+    QLineEdit *m_replace_int_char_val;
 };
 
 #endif

@@ -28,23 +28,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qvaluevector.h>
 
-class KonquerorProfilesMenu : public KPanelMenu
-{
-   Q_OBJECT
+class KonquerorProfilesMenu : public KPanelMenu {
+    Q_OBJECT
 
-   public:
-      KonquerorProfilesMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
-      ~KonquerorProfilesMenu();
+public:
+    KonquerorProfilesMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
+    ~KonquerorProfilesMenu();
 
-   protected slots:
-      void slotExec(int id);
-      void initialize();
+protected slots:
+    void slotExec(int id);
+    void initialize();
     void slotAboutToShow();
 
-   protected:
-      void reload();
-      QValueVector<QString> m_profiles;
-
+protected:
+    void reload();
+    QValueVector< QString > m_profiles;
 };
 
 #endif

@@ -30,21 +30,20 @@ class QPopupMenu;
 class QWidget;
 class QptrListIterator;
 
-class History : public QObject
-{
+class History : public QObject {
     Q_OBJECT
 public:
-    History( QWidget* parent, const char* name );
+    History(QWidget *parent, const char *name);
     ~History();
     /**
      * Iterator for history
      */
-    typedef QPtrListIterator<HistoryItem> iterator;
+    typedef QPtrListIterator< HistoryItem > iterator;
 
     /**
      * Return (toplevel) popup menu (or default view, of you like)
      */
-    KlipperPopup* popup();
+    KlipperPopup *popup();
 
     /**
      * Inserts item into clipboard history top
@@ -52,7 +51,7 @@ public:
      * The duplicate concept is "deep", so that two text string
      * are considerd duplicate if identical.
      */
-    void insert( const HistoryItem* item );
+    void insert(const HistoryItem *item);
 
     /**
      * Inserts item into clipboard without any checks
@@ -60,22 +59,22 @@ public:
      * Don't use this unless you're reasonable certain
      * that no duplicates are introduced
      */
-    void forceInsert( const HistoryItem* item );
+    void forceInsert(const HistoryItem *item);
 
     /**
      * Remove (first) history item equal to item from history
      */
-    void remove( const HistoryItem* item  );
+    void remove(const HistoryItem *item);
 
     /**
      * Traversal: Get first item
      */
-    const HistoryItem* first();
+    const HistoryItem *first();
 
     /**
      * Traversal: Get current item
      */
-    const HistoryItem* next();
+    const HistoryItem *next();
 
     /**
      * Get an iterator pointing to the first (most recent) item
@@ -92,22 +91,29 @@ public:
     /**
      * True if no history items
      */
-    bool empty() const { return itemList.isEmpty(); }
+    bool empty() const
+    {
+        return itemList.isEmpty();
+    }
 
     /**
      * Set maximum history size
      */
-    void max_size( unsigned max_size );
+    void max_size(unsigned max_size);
 
     /**
      * Get the maximum history size
      */
-    unsigned max_size() const { return m_max_size; }
+    unsigned max_size() const
+    {
+        return m_max_size;
+    }
 
     /**
      * returns true if the user has selected the top item
      */
-    bool topIsUserSelected() {
+    bool topIsUserSelected()
+    {
         return m_topIsUserSelected;
     }
 
@@ -115,7 +121,7 @@ public slots:
     /**
      * move the history in position pos to top
      */
-    void slotMoveToTop(int pos );
+    void slotMoveToTop(int pos);
 
     /**
      * Clear history
@@ -131,11 +137,10 @@ signals:
     void topChanged();
 
 private:
-
     /**
      * The history
      */
-    QPtrList<HistoryItem> itemList;
+    QPtrList< HistoryItem > itemList;
 
     /**
      * ensure that the number of items does not exceed max_size()
@@ -147,7 +152,7 @@ private:
     /**
      * "Default view" --- a popupmenu containing the clipboard history.
      */
-    KlipperPopup* m_popup;
+    KlipperPopup *m_popup;
 
 
     /**
@@ -159,11 +164,16 @@ private:
      * True if the top is selected by the user
      */
     bool m_topIsUserSelected;
-
 };
 
-inline const HistoryItem* History::first() { return itemList.first(); }
+inline const HistoryItem *History::first()
+{
+    return itemList.first();
+}
 
-inline const HistoryItem* History::next() { return itemList.next();  }
+inline const HistoryItem *History::next()
+{
+    return itemList.next();
+}
 
 #endif

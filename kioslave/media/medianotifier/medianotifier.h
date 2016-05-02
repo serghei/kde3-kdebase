@@ -27,31 +27,26 @@
 #include <qstring.h>
 #include <qmap.h>
 
-class MediaNotifier:  public KDEDModule
-{
-	Q_OBJECT
-	K_DCOP
+class MediaNotifier : public KDEDModule {
+    Q_OBJECT
+    K_DCOP
 
 public:
-	MediaNotifier( const QCString &name );
-	virtual ~MediaNotifier();
+    MediaNotifier(const QCString &name);
+    virtual ~MediaNotifier();
 
-k_dcop:
-	void onMediumChange( const QString &name, bool allowNotification );
+    k_dcop : void onMediumChange(const QString &name, bool allowNotification);
 
 private slots:
-	void slotStatResult( KIO::Job *job );
-	
-private:
-	bool autostart( const KFileItem &medium );
-	void notify( KFileItem &medium );
-	
-	bool execAutorun( const KFileItem &medium, const QString &path,
-	                  const QString &autorunFile );
-	bool execAutoopen( const KFileItem &medium, const QString &path,
-	                   const QString &autoopenFile );
+    void slotStatResult(KIO::Job *job);
 
-	QMap<KIO::Job*,bool> m_allowNotificationMap;
+private:
+    bool autostart(const KFileItem &medium);
+    void notify(KFileItem &medium);
+
+    bool execAutorun(const KFileItem &medium, const QString &path, const QString &autorunFile);
+    bool execAutoopen(const KFileItem &medium, const QString &path, const QString &autoopenFile);
+
+    QMap< KIO::Job *, bool > m_allowNotificationMap;
 };
 #endif
-

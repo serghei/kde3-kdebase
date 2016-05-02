@@ -35,12 +35,11 @@ class KConfig;
 class KURLRequester;
 class QEvent;
 
-class GrepTool : public QWidget
-{
+class GrepTool : public QWidget {
     Q_OBJECT
 
 public:
-    GrepTool(QWidget *parent, const char *name=0);
+    GrepTool(QWidget *parent, const char *name = 0);
     ~GrepTool();
 
     // only updates if the dir you give to it differs from the last one given to it !
@@ -56,9 +55,9 @@ public slots:
     void slotSearchFor(const QString &pattern);
 
 protected:
-    bool eventFilter( QObject *, QEvent * );
-    void focusInEvent ( QFocusEvent * ); 
-    void showEvent( QShowEvent * );
+    bool eventFilter(QObject *, QEvent *);
+    void focusInEvent(QFocusEvent *);
+    void showEvent(QShowEvent *);
     bool m_fixFocus;
 
 private slots:
@@ -66,11 +65,12 @@ private slots:
     void childExited();
     void receivedOutput(KProcess *proc, char *buffer, int buflen);
     void receivedErrOutput(KProcess *proc, char *buffer, int buflen);
-    void itemSelected(const QString&);
+    void itemSelected(const QString &);
     void slotSearch();
     void slotCancel();
     void slotClear();
-    void patternTextChanged( const QString &);
+    void patternTextChanged(const QString &);
+
 private:
     void processOutput();
     void finish();
@@ -85,7 +85,7 @@ private:
     KProcess *childproc;
     QString buf;
     QString errbuf;
-    KConfig* config;
+    KConfig *config;
     QStringList lastSearchItems;
     QStringList lastSearchPaths;
     QStringList lastSearchFiles;

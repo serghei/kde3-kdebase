@@ -25,58 +25,76 @@ class QMouseEvent;
 /**
  * @short The base for the ThemeEngine's configuration widget.
  */
-class KDE_EXPORT ThemeEngineConfig: public QVBox
-{
-  Q_OBJECT
+class KDE_EXPORT ThemeEngineConfig : public QVBox {
+    Q_OBJECT
 public:
+    ThemeEngineConfig(QWidget *p, KConfig *c) : QVBox(p), mConfig(c)
+    {
+    }
 
-  ThemeEngineConfig( QWidget *p, KConfig *c )
-      :QVBox( p ), mConfig( c )
-  {}
-
-  KConfig* config()const { return mConfig; }
+    KConfig *config() const
+    {
+        return mConfig;
+    }
 
 public slots:
-  virtual void load() {}
-  virtual void save() {}
+    virtual void load()
+    {
+    }
+    virtual void save()
+    {
+    }
 
 protected:
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
 /**
  * @short Base class for all theme engines. Member functions need to be
  * overridden by derived classes in order to provide actual functionality.
  */
-class KDE_EXPORT ThemeEngine: public QVBox
-{
-  Q_OBJECT
+class KDE_EXPORT ThemeEngine : public QVBox {
+    Q_OBJECT
 public:
-  ThemeEngine( QWidget *parent, const char *name, const QStringList &args );
-  virtual ~ThemeEngine() = 0;
-  virtual const ThemeEngineConfig *config( QWidget *, KConfig * ) { return 0L; }
-  virtual ObjKsTheme *ksTheme() { return mTheme; }
-  virtual bool eventFilter( QObject* o, QEvent* e );
+    ThemeEngine(QWidget *parent, const char *name, const QStringList &args);
+    virtual ~ThemeEngine() = 0;
+    virtual const ThemeEngineConfig *config(QWidget *, KConfig *)
+    {
+        return 0L;
+    }
+    virtual ObjKsTheme *ksTheme()
+    {
+        return mTheme;
+    }
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
 public slots:
-  virtual void slotUpdateProgress( int ) {}
-  virtual void slotUpdateSteps( int ) {}
-  virtual void slotSetText( const QString& ) {}
-  virtual void slotSetPixmap( const QString& ) {} // use DesktopIcon() to load this.
+    virtual void slotUpdateProgress(int)
+    {
+    }
+    virtual void slotUpdateSteps(int)
+    {
+    }
+    virtual void slotSetText(const QString &)
+    {
+    }
+    virtual void slotSetPixmap(const QString &)
+    {
+    } // use DesktopIcon() to load this.
 
 protected:
-  void addSplashWindow( QWidget* );
+    void addSplashWindow(QWidget *);
 
 protected:
-  ObjKsTheme *mTheme;
-  virtual bool x11Event( XEvent* );
+    ObjKsTheme *mTheme;
+    virtual bool x11Event(XEvent *);
 
 private slots:
-  void splashWindowDestroyed( QObject* );
+    void splashWindowDestroyed(QObject *);
 
 private:
-  class ThemeEnginePrivate;
-  ThemeEnginePrivate *d;
+    class ThemeEnginePrivate;
+    ThemeEnginePrivate *d;
 };
 
 #endif

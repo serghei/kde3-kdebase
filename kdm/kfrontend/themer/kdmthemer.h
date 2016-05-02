@@ -40,7 +40,6 @@ class QEvent;
 */
 
 
-
 /*
 * The themer widget. Whatever drawn here is just themed
 * according to a XML file set by the user.
@@ -48,75 +47,79 @@ class QEvent;
 
 
 class KdmThemer : public QObject {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	/*
-	 * Construct and destruct the interface
-	 */
+    /*
+     * Construct and destruct the interface
+     */
 
-	KdmThemer( const QString &path, const QString &mode, QWidget *parent );
-	~KdmThemer();
+    KdmThemer(const QString &path, const QString &mode, QWidget *parent);
+    ~KdmThemer();
 
-	bool isOK() { return rootItem != 0; }
-	/*
-	 * Gives a sizeHint to the widget (parent size)
-	 */
-	//QSize sizeHint() const{ return parentWidget()->size(); }
+    bool isOK()
+    {
+        return rootItem != 0;
+    }
+    /*
+     * Gives a sizeHint to the widget (parent size)
+     */
+    // QSize sizeHint() const{ return parentWidget()->size(); }
 
-	/*
-	 * Takes a shot of the current widget
-	 */
-//	void pixmap( const QRect &r, QPixmap *px );
+    /*
+     * Takes a shot of the current widget
+     */
+    //	void pixmap( const QRect &r, QPixmap *px );
 
-	virtual // just to put the reference in the vmt
-	KdmItem *findNode( const QString & ) const;
+    virtual // just to put the reference in the vmt
+        KdmItem *
+        findNode(const QString &) const;
 
-	void updateGeometry( bool force ); // force = true for external calls
+    void updateGeometry(bool force); // force = true for external calls
 
-	// must be called by parent widget
-	void widgetEvent( QEvent *e );
+    // must be called by parent widget
+    void widgetEvent(QEvent *e);
 
 signals:
-	void activated( const QString &id );
+    void activated(const QString &id);
 
 private:
-	/*
-	 * Our display mode (e.g. console, remote, ...)
-	 */
-	QString m_currentMode;
+    /*
+     * Our display mode (e.g. console, remote, ...)
+     */
+    QString m_currentMode;
 
-	/*
-	 * The config file being used
-	 */
-	QDomDocument domTree;
+    /*
+     * The config file being used
+     */
+    QDomDocument domTree;
 
-	/*
-	 * Stores the root of the theme
-	 */
-	KdmItem *rootItem;
+    /*
+     * Stores the root of the theme
+     */
+    KdmItem *rootItem;
 
-	/*
-	 * The backbuffer
-	 */
-	QPixmap *backBuffer;
+    /*
+     * The backbuffer
+     */
+    QPixmap *backBuffer;
 
-	// methods
+    // methods
 
-	/*
-	 * Test whether item needs to be displayed
-	 */
-	bool willDisplay( const QDomNode &node );
+    /*
+     * Test whether item needs to be displayed
+     */
+    bool willDisplay(const QDomNode &node);
 
-	/*
-	 * Parses the XML file looking for the
-	 * item list and adds those to the themer
-	 */
-	void generateItems( KdmItem *parent = 0, const QDomNode &node = QDomNode() );
+    /*
+     * Parses the XML file looking for the
+     * item list and adds those to the themer
+     */
+    void generateItems(KdmItem *parent = 0, const QDomNode &node = QDomNode());
 
-	void showStructure( QObject *obj );
+    void showStructure(QObject *obj);
 
-	QWidget *widget();
+    QWidget *widget();
 };
 
 

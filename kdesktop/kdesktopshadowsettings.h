@@ -29,15 +29,15 @@
 
 #include <kshadowsettings.h>
 
-#define FX_GROUP	"FX"
+#define FX_GROUP "FX"
 
-#define ALGO_KEY	"Shadow.Algorithm"
-#define MULT_KEY	"Shadow.MultiplicationFactor"
-#define OPAC_KEY	"Shadow.MaxOpacity"
-#define OFSX_KEY	"Shadow.OffsetX"
-#define OFSY_KEY	"Shadow.OffsetY"
-#define THIK_KEY	"Shadow.Thickness"
-#define SELT_KEY	"Shadow.SelectionType"
+#define ALGO_KEY "Shadow.Algorithm"
+#define MULT_KEY "Shadow.MultiplicationFactor"
+#define OPAC_KEY "Shadow.MaxOpacity"
+#define OFSX_KEY "Shadow.OffsetX"
+#define OFSY_KEY "Shadow.OffsetY"
+#define THIK_KEY "Shadow.Thickness"
+#define SELT_KEY "Shadow.SelectionType"
 
 /**
  * This implementation of FxData will read a the default configuration
@@ -53,62 +53,70 @@
  *  Shadow.SelectionType   the selection type - inverse video or use
  *			   the selection colours.
  *
- * 06-Feb-03: Added simple UID algorithm 
+ * 06-Feb-03: Added simple UID algorithm
  *
  */
-class KDesktopShadowSettings : public KShadowSettings
-{
- public:
+class KDesktopShadowSettings : public KShadowSettings {
+public:
     /**
      * Constructor
      * @param cfg the configuration file
      */
     KDesktopShadowSettings(KConfig *cfg = NULL);
-    
+
     virtual ~KDesktopShadowSettings();
-    
+
     /**
      * Sets a specific configuration file after the object's creation
      * @param config new configuration object
      */
     void setConfig(KConfig *);
-    
+
     /**
      * Returns the text color as definied in the configuraiton
      * @return the text color as definied in the configuraiton
      */
-    QColor &textColor(){ return m_textColor; };
-    
+    QColor &textColor()
+    {
+        return m_textColor;
+    };
+
     /**
      * Returns the shadow color as definied in the configuraiton
      * @return the shadow color as definied in the configuraiton
      */
-    QColor &bgColor() {  return m_bgColor; };
-    
+    QColor &bgColor()
+    {
+        return m_bgColor;
+    };
+
     /**
      * Returns true if the shadow engine is enabled.
      * @return true if the shadow engine is enabled.
      */
-    bool isEnabled() { return m_isEnabled; };
-    
+    bool isEnabled()
+    {
+        return m_isEnabled;
+    };
+
     /**
      * Returns an UID for shadow rebuilding purposes
      * @return an UID for shadow rebuilding purposes
      */
     unsigned long UID();
-    
+
     /**
      * (Re)sets an UID for shadow rebuilding purposes
      * @param the new UID (if 0/default, increments the stored UID)
      */
     void setUID(unsigned long val = 0L);
-    
- private:
+
+private:
     KConfig *config;
     QColor m_textColor;
     QColor m_bgColor;
     bool m_isEnabled;
-    
+
     // uid of the object. Use this to determine the oportunity of a new
     // rebuild.
     unsigned long _UID;

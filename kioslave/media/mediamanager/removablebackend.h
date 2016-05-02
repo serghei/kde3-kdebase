@@ -24,29 +24,28 @@
 #include <qobject.h>
 #include <qstringlist.h>
 
-class RemovableBackend : public QObject, public BackendBase
-{
-Q_OBJECT
+class RemovableBackend : public QObject, public BackendBase {
+    Q_OBJECT
 
 public:
-	RemovableBackend(MediaList &list);
-	virtual ~RemovableBackend();
+    RemovableBackend(MediaList &list);
+    virtual ~RemovableBackend();
 
-	bool plug(const QString &devNode, const QString &label);
-	bool unplug(const QString &devNode);
-	bool camera(const QString &devNode);
+    bool plug(const QString &devNode, const QString &label);
+    bool unplug(const QString &devNode);
+    bool camera(const QString &devNode);
 
 private slots:
-	void slotDirty(const QString &path);
+    void slotDirty(const QString &path);
 
 private:
-	void handleMtabChange();
+    void handleMtabChange();
 
-	static QString generateId(const QString &devNode);
-	static QString generateName(const QString &devNode);
+    static QString generateId(const QString &devNode);
+    static QString generateName(const QString &devNode);
 
-	QStringList m_removableIds;
-	QStringList m_mtabIds;
+    QStringList m_removableIds;
+    QStringList m_mtabIds;
 };
 
 #endif

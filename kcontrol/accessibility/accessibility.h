@@ -1,12 +1,12 @@
 /****************************************************************************
   accessibility.h
   KDE Control Accessibility module to control Bell, Keyboard and ?Mouse?
-  ------------------- 
+  -------------------
   Copyright : (c) 2000 Matthias Hölzer-Klüpfel
   -------------------
   Original Author: Matthias Hölzer-Klüpfel
-  Contributors: José Pablo Ezequiel "Pupeno" Fernández <pupeno@kde.org> 
-  Current Maintainer: José Pablo Ezequiel "Pupeno" Fernández <pupeno@kde.org> 
+  Contributors: José Pablo Ezequiel "Pupeno" Fernández <pupeno@kde.org>
+  Current Maintainer: José Pablo Ezequiel "Pupeno" Fernández <pupeno@kde.org>
  ****************************************************************************/
 
 /****************************************************************************
@@ -26,46 +26,45 @@
 #include "accessibilityconfigwidget.h"
 
 class AccessibilityConfig : public AccessibilityConfigWidget {
-   Q_OBJECT
+    Q_OBJECT
 
-   public:
-      /**
-       * Constructor
-       */   
-      AccessibilityConfig(QWidget *parent = 0L, const char *name = 0L, const QStringList &foo = QStringList());
+public:
+    /**
+     * Constructor
+     */
+    AccessibilityConfig(QWidget *parent = 0L, const char *name = 0L, const QStringList &foo = QStringList());
 
-      /**
-       * Destructor
-       */            
-      virtual ~AccessibilityConfig();
-  
-      /**
-       * This method is invoked whenever the module should read its 
-       * configuration (most of the times from a config file) and update the 
-       * user interface. This happens when the user clicks the "Reset" button in 
-       * the control center, to undo all of his changes and restore the currently 
-       * valid settings. NOTE that this is not called after the modules is loaded,
-       * so you probably want to call this method in the constructor.
-       */
-      void load();
-      void load( bool useDefaults );
+    /**
+     * Destructor
+     */
+    virtual ~AccessibilityConfig();
 
-      /**
-       * This function gets called when the user wants to save the settings in 
-       * the user interface, updating the config files or wherever the 
-       * configuration is stored. The method is called when the user clicks "Apply" 
-       * or "Ok".
-       */
-      void save();
+    /**
+     * This method is invoked whenever the module should read its
+     * configuration (most of the times from a config file) and update the
+     * user interface. This happens when the user clicks the "Reset" button in
+     * the control center, to undo all of his changes and restore the currently
+     * valid settings. NOTE that this is not called after the modules is loaded,
+     * so you probably want to call this method in the constructor.
+     */
+    void load();
+    void load(bool useDefaults);
 
-      /**
-       * This function is called to set the settings in the module to sensible
-       * default values. It gets called when hitting the "Default" button. The 
-       * default values should probably be the same as the ones the application 
-       * uses when started without a config file.
-       */
-      void defaults();
+    /**
+     * This function gets called when the user wants to save the settings in
+     * the user interface, updating the config files or wherever the
+     * configuration is stored. The method is called when the user clicks "Apply"
+     * or "Ok".
+     */
+    void save();
 
+    /**
+     * This function is called to set the settings in the module to sensible
+     * default values. It gets called when hitting the "Default" button. The
+     * default values should probably be the same as the ones the application
+     * uses when started without a config file.
+     */
+    void defaults();
 };
 
 #endif // _ACCESSIBILITY_H_

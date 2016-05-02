@@ -3,19 +3,36 @@
 
 #include <qstring.h>
 
-class SaverConfig
-{
+class SaverConfig {
 public:
     SaverConfig();
 
     bool read(const QString &file);
 
-    QString exec() const { return mExec; }
-    QString setup() const { return mSetup; }
-    QString saver() const { return mSaver; }
-    QString name() const { return mName; }
-    QString file() const { return mFile; }
-    QString category() const { return mCategory; }
+    QString exec() const
+    {
+        return mExec;
+    }
+    QString setup() const
+    {
+        return mSetup;
+    }
+    QString saver() const
+    {
+        return mSaver;
+    }
+    QString name() const
+    {
+        return mName;
+    }
+    QString file() const
+    {
+        return mFile;
+    }
+    QString category() const
+    {
+        return mCategory;
+    }
 
 protected:
     QString mExec;

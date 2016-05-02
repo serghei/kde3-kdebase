@@ -32,64 +32,60 @@ class KDCOPActionProxy;
 /**
  * DCOP interface for a konqueror main window
  */
-class KonqMainWindowIface : public KMainWindowInterface
-{
-  K_DCOP
+class KonqMainWindowIface : public KMainWindowInterface {
+    K_DCOP
 public:
+    KonqMainWindowIface(KonqMainWindow *mainWindow);
+    ~KonqMainWindowIface();
 
-  KonqMainWindowIface( KonqMainWindow * mainWindow );
-  ~KonqMainWindowIface();
+    k_dcop :
 
-k_dcop:
+        void
+        openURL(QString url);
+    void newTab(QString url);
 
-  void openURL( QString url );
-  void newTab( QString url );
+    void openURL(QString url, bool tempFile);
+    void newTab(QString url, bool tempFile);
 
-  void openURL( QString url, bool tempFile );
-  void newTab( QString url, bool tempFile );
+    void newTabASN(QString url, const QCString &startup_id, bool tempFile);
 
-  void newTabASN( QString url, const QCString& startup_id, bool tempFile );
+    void splitViewHorizontally();
+    void splitViewVertically();
 
-  void splitViewHorizontally();
-  void splitViewVertically();
+    /**
+     * Reloads the current view.
+     */
+    void reload();
 
-  /**
-   * Reloads the current view.
-   */
-  void reload();
+    /**
+     * @return reference to the current KonqView
+     */
+    DCOPRef currentView();
+    /**
+     * @return reference to the current part
+     */
+    DCOPRef currentPart();
 
-  /**
-   * @return reference to the current KonqView
-   */
-  DCOPRef currentView();
-  /**
-   * @return reference to the current part
-   */
-  DCOPRef currentPart();
+    // viewCount is already exposed via the KonqMainWindow property
+    DCOPRef view(int viewNumber);
+    DCOPRef part(int partNumber);
 
-  // viewCount is already exposed via the KonqMainWindow property
-  DCOPRef view(int viewNumber);
-  DCOPRef part(int partNumber);
+    DCOPRef action(const QCString &name);
+    QCStringList actions();
+    QMap< QCString, DCOPRef > actionMap();
 
-  DCOPRef action( const QCString &name );
-  QCStringList actions();
-  QMap<QCString,DCOPRef> actionMap();
-
-  /**
-   * Used by kfmclient when searching a window to open a tab within
-   */
-  bool windowCanBeUsedForTab();
+    /**
+     * Used by kfmclient when searching a window to open a tab within
+     */
+    bool windowCanBeUsedForTab();
 
 public:
     virtual QCStringList functionsDynamic();
-    virtual bool processDynamic( const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData );
+    virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 private:
-
-  KonqMainWindow * m_pMainWindow;
-  KDCOPActionProxy *m_dcopActionProxy;
-
+    KonqMainWindow *m_pMainWindow;
+    KDCOPActionProxy *m_dcopActionProxy;
 };
 
 #endif
-

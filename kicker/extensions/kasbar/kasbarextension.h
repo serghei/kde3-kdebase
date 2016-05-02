@@ -64,38 +64,39 @@ class KasTasker;
 /**
  * A KPanelExtension that displays a KasTasker widget.
  */
-class KasBarExtension : public KPanelExtension
-{
+class KasBarExtension : public KPanelExtension {
     Q_OBJECT
 
 public:
-    KasBarExtension( const QString& configFile,
-                     Type t = Normal,
-                     int actions = 0,
-                     QWidget *parent = 0, const char *name = 0 );
+    KasBarExtension(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
 
     virtual ~KasBarExtension();
 
-    QSize sizeHint( Position, QSize maxSize ) const;
-    Position preferedPosition() const { return Right; }
+    QSize sizeHint(Position, QSize maxSize) const;
+    Position preferedPosition() const
+    {
+        return Right;
+    }
 
-    virtual void positionChange( Position position );
+    virtual void positionChange(Position position);
 
-    bool isDetached() const { return detached_; }
+    bool isDetached() const
+    {
+        return detached_;
+    }
     QSize detachedSize();
 
 public slots:
-    void setDetached( bool detach );
+    void setDetached(bool detach);
 
 protected:
-    void showEvent( QShowEvent *se );
+    void showEvent(QShowEvent *se);
     virtual void about();
     virtual void preferences();
-    
+
 private:
-    QGuardedPtr<KasTasker> kasbar;
+    QGuardedPtr< KasTasker > kasbar;
     bool detached_;
 };
 
 #endif // KASBAREXTENSION_H
-

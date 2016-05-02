@@ -22,12 +22,13 @@
 
 #include <kio/thumbcreator.h>
 
-class ImageCreator : public ThumbCreator
-{
+class ImageCreator : public ThumbCreator {
 public:
-    ImageCreator() {}
+    ImageCreator()
+    {
+    }
     virtual bool create(const QString &path, int, int, QImage &img);
-	virtual Flags flags() const;
+    virtual Flags flags() const;
 };
 
 #endif

@@ -45,13 +45,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "exe_dlg.h"
 #include "nonKDEButtonSettings.h"
 
-PanelExeDialog::PanelExeDialog(const QString& title, const QString& description,
-                               const QString &path, const QString &icon,
-                               const QString &cmd, bool inTerm,
-                               QWidget *parent, const char *name)
-    : KDialogBase(parent, name, false, i18n("Non-KDE Application Configuration"), Ok|Cancel, Ok, true),
-      m_icon(icon.isEmpty() ? "exec" : icon),
-      m_iconChanged(false)
+PanelExeDialog::PanelExeDialog(const QString &title, const QString &description, const QString &path, const QString &icon, const QString &cmd,
+                               bool inTerm, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, i18n("Non-KDE Application Configuration"), Ok | Cancel, Ok, true)
+    , m_icon(icon.isEmpty() ? "exec" : icon)
+    , m_iconChanged(false)
 {
     setCaption(i18n("Non-KDE Application Configuration"));
     QFileInfo fi(path);
@@ -68,18 +66,13 @@ PanelExeDialog::PanelExeDialog(const QString& title, const QString& description,
 
     updateIcon();
 
-    connect(ui->m_exec, SIGNAL(urlSelected(const QString &)),
-            this, SLOT(slotSelect(const QString &)));
-    connect(ui->m_exec, SIGNAL(textChanged(const QString &)),
-            this, SLOT(slotTextChanged(const QString &)));
-    connect(ui->m_exec, SIGNAL(returnPressed()),
-            this, SLOT(slotReturnPressed()));
-    connect(ui->m_icon, SIGNAL(iconChanged(QString)),
-            this, SLOT(slotIconChanged(QString)));
+    connect(ui->m_exec, SIGNAL(urlSelected(const QString &)), this, SLOT(slotSelect(const QString &)));
+    connect(ui->m_exec, SIGNAL(textChanged(const QString &)), this, SLOT(slotTextChanged(const QString &)));
+    connect(ui->m_exec, SIGNAL(returnPressed()), this, SLOT(slotReturnPressed()));
+    connect(ui->m_icon, SIGNAL(iconChanged(QString)), this, SLOT(slotIconChanged(QString)));
 
     // leave decent space for the commandline
-    resize(sizeHint().width() > 300 ? sizeHint().width() : 300,
-           sizeHint().height());
+    resize(sizeHint().width() > 300 ? sizeHint().width() : 300, sizeHint().height());
 }
 
 void PanelExeDialog::slotOk()
@@ -130,19 +123,20 @@ void PanelExeDialog::fillCompletion()
     KCompletion *comp = ui->m_exec->completionObject();
     QStringList exePaths = KStandardDirs::systemPaths();
 
-    for (QStringList::ConstIterator it = exePaths.begin(); it != exePaths.end(); it++)
+    for(QStringList::ConstIterator it = exePaths.begin(); it != exePaths.end(); it++)
     {
-        QDir d( (*it) );
-        d.setFilter( QDir::Files | QDir::Executable );
+        QDir d((*it));
+        d.setFilter(QDir::Files | QDir::Executable);
 
         const QFileInfoList *list = d.entryInfoList();
-        if (!list)
+        if(!list)
             continue;
 
-        QFileInfoListIterator it2( *list );
+        QFileInfoListIterator it2(*list);
         QFileInfo *fi;
 
-        while ( (fi = it2.current()) != 0 ) {
+        while((fi = it2.current()) != 0)
+        {
             m_partialPath2full.insert(fi->fileName(), fi->filePath(), false);
             comp->addItem(fi->fileName());
             comp->addItem(fi->filePath());
@@ -158,37 +152,38 @@ void PanelExeDialog::slotIconChanged(QString)
 
 void PanelExeDialog::slotTextChanged(const QString &str)
 {
-    if (m_iconChanged)
+    if(m_iconChanged)
     {
         return;
     }
 
     QString exeLocation = str;
-    QMap<QString, QString>::iterator it = m_partialPath2full.find(str);
+    QMap< QString, QString >::iterator it = m_partialPath2full.find(str);
 
-    if (it != m_partialPath2full.end())
+    if(it != m_partialPath2full.end())
         exeLocation = it.data();
-    KMimeType::pixmapForURL(KURL( exeLocation ), 0, KIcon::Panel, 0, KIcon::DefaultState, &m_icon);
+    KMimeType::pixmapForURL(KURL(exeLocation), 0, KIcon::Panel, 0, KIcon::DefaultState, &m_icon);
     updateIcon();
 }
 
 void PanelExeDialog::slotReturnPressed()
 {
-    if (m_partialPath2full.contains(ui->m_exec->url()))
+    if(m_partialPath2full.contains(ui->m_exec->url()))
         ui->m_exec->setURL(m_partialPath2full[ui->m_exec->url()]);
 }
 
-void PanelExeDialog::slotSelect(const QString& exec)
+void PanelExeDialog::slotSelect(const QString &exec)
 {
-    if ( exec.isEmpty() )
+    if(exec.isEmpty())
         return;
 
     QFileInfo fi(exec);
-    if (!fi.isExecutable())
+    if(!fi.isExecutable())
     {
         if(KMessageBox::warningYesNo(0, i18n("The selected file is not executable.\n"
-                                             "Do you want to select another file?"), i18n("Not Executable"), i18n("Select Other"), KStdGuiItem::cancel())
-                == KMessageBox::Yes)
+                                             "Do you want to select another file?"),
+                                     i18n("Not Executable"), i18n("Select Other"), KStdGuiItem::cancel())
+           == KMessageBox::Yes)
         {
             ui->m_exec->button()->animateClick();
         }
@@ -196,9 +191,8 @@ void PanelExeDialog::slotSelect(const QString& exec)
         return;
     }
 
-    KMimeType::pixmapForURL(KURL( exec ), 0, KIcon::Panel, 0, KIcon::DefaultState, &m_icon);
+    KMimeType::pixmapForURL(KURL(exec), 0, KIcon::Panel, 0, KIcon::DefaultState, &m_icon);
     updateIcon();
 }
 
 #include "exe_dlg.moc"
-

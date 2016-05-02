@@ -22,56 +22,54 @@
 
 #include <klocale.h>
 
-ListViewSettings::ListViewSettings( QWidget *parent, const char *name )
-    : KDialogBase( parent, name, true, i18n( "List View Settings" ),
-      Ok|Apply|Cancel, Ok, true )
+ListViewSettings::ListViewSettings(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("List View Settings"), Ok | Apply | Cancel, Ok, true)
 {
-  m_settingsWidget = new ListViewSettingsWidget( this, "m_settingsWidget" );
-  setMainWidget( m_settingsWidget );
+    m_settingsWidget = new ListViewSettingsWidget(this, "m_settingsWidget");
+    setMainWidget(m_settingsWidget);
 }
 
 QString ListViewSettings::title() const
 {
-  return m_settingsWidget->title();
+    return m_settingsWidget->title();
 }
 
 QColor ListViewSettings::textColor() const
 {
-  return m_settingsWidget->textColor();
+    return m_settingsWidget->textColor();
 }
 
 QColor ListViewSettings::backgroundColor() const
 {
-  return m_settingsWidget->backgroundColor();
+    return m_settingsWidget->backgroundColor();
 }
 
 QColor ListViewSettings::gridColor() const
 {
-  return m_settingsWidget->gridColor();
+    return m_settingsWidget->gridColor();
 }
 
-void ListViewSettings::setTitle( const QString &title )
+void ListViewSettings::setTitle(const QString &title)
 {
-  m_settingsWidget->setTitle( title );
+    m_settingsWidget->setTitle(title);
 }
 
-void ListViewSettings::setBackgroundColor( const QColor &c )
+void ListViewSettings::setBackgroundColor(const QColor &c)
 {
-  m_settingsWidget->setBackgroundColor( c );
+    m_settingsWidget->setBackgroundColor(c);
 }
 
-void ListViewSettings::setTextColor( const QColor &c )
+void ListViewSettings::setTextColor(const QColor &c)
 {
-  m_settingsWidget->setTextColor( c );
+    m_settingsWidget->setTextColor(c);
 }
 
-void ListViewSettings::setGridColor( const QColor &c )
+void ListViewSettings::setGridColor(const QColor &c)
 {
-  m_settingsWidget->setGridColor( c );
+    m_settingsWidget->setGridColor(c);
 }
 
 #include "ListViewSettings.moc"
 
 /* vim: et sw=2 ts=2
 */
-

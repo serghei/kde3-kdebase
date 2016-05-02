@@ -24,92 +24,94 @@
 
 #include <kglobalsettings.h>
 
-static QString qrichtextify( const QString& text )
+static QString qrichtextify(const QString &text)
 {
-  if ( text.isEmpty() || text[0] == '<' )
-    return text;
+    if(text.isEmpty() || text[0] == '<')
+        return text;
 
-  QStringList lines = QStringList::split('\n', text);
-  for(QStringList::Iterator it = lines.begin(); it != lines.end(); ++it)
-  {
-    *it = QStyleSheet::convertFromPlainText( *it, QStyleSheetItem::WhiteSpaceNormal );
-  }
+    QStringList lines = QStringList::split('\n', text);
+    for(QStringList::Iterator it = lines.begin(); it != lines.end(); ++it)
+    {
+        *it = QStyleSheet::convertFromPlainText(*it, QStyleSheetItem::WhiteSpaceNormal);
+    }
 
-  return lines.join(QString::null);
+    return lines.join(QString::null);
 }
 
-KRichTextLabel::KRichTextLabel( const QString &text , QWidget *parent, const char *name )
- : QLabel ( parent, name ) {
-  m_defaultWidth = QMIN(500, KGlobalSettings::desktopGeometry(this).width()*3/5);
-  setAlignment( Qt::WordBreak );
-  setText(text);
+KRichTextLabel::KRichTextLabel(const QString &text, QWidget *parent, const char *name) : QLabel(parent, name)
+{
+    m_defaultWidth = QMIN(500, KGlobalSettings::desktopGeometry(this).width() * 3 / 5);
+    setAlignment(Qt::WordBreak);
+    setText(text);
 }
 
-KRichTextLabel::KRichTextLabel( QWidget *parent, const char *name )
- : QLabel ( parent, name ) {
-  m_defaultWidth = QMIN(500, KGlobalSettings::desktopGeometry(this).width()*3/5);
-  setAlignment( Qt::WordBreak );
+KRichTextLabel::KRichTextLabel(QWidget *parent, const char *name) : QLabel(parent, name)
+{
+    m_defaultWidth = QMIN(500, KGlobalSettings::desktopGeometry(this).width() * 3 / 5);
+    setAlignment(Qt::WordBreak);
 }
 
 void KRichTextLabel::setDefaultWidth(int defaultWidth)
 {
-  m_defaultWidth = defaultWidth;
-  updateGeometry();
+    m_defaultWidth = defaultWidth;
+    updateGeometry();
 }
 
 QSizePolicy KRichTextLabel::sizePolicy() const
 {
-  return QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum, false);
+    return QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum, false);
 }
 
 QSize KRichTextLabel::minimumSizeHint() const
 {
-  QString qt_text = qrichtextify( text() );
-  int pref_width = 0;
-  int pref_height = 0;
-  QSimpleRichText rt(qt_text, font());
-  pref_width = m_defaultWidth;
-  rt.setWidth(pref_width);
-  int used_width = rt.widthUsed();
-  if (used_width <= pref_width)
-  {
-    while(true)
+    QString qt_text = qrichtextify(text());
+    int pref_width = 0;
+    int pref_height = 0;
+    QSimpleRichText rt(qt_text, font());
+    pref_width = m_defaultWidth;
+    rt.setWidth(pref_width);
+    int used_width = rt.widthUsed();
+    if(used_width <= pref_width)
     {
-      int new_width = (used_width * 9) / 10;
-      rt.setWidth(new_width);
-      int new_height = rt.height();
-      if (new_height > pref_height)
-        break;
-      used_width = rt.widthUsed();
-      if (used_width > new_width)
-        break;
+        while(true)
+        {
+            int new_width = (used_width * 9) / 10;
+            rt.setWidth(new_width);
+            int new_height = rt.height();
+            if(new_height > pref_height)
+                break;
+            used_width = rt.widthUsed();
+            if(used_width > new_width)
+                break;
+        }
+        pref_width = used_width;
     }
-    pref_width = used_width;
-  }
-  else
-  {
-    if (used_width > (pref_width *2))
-      pref_width = pref_width *2;
     else
-      pref_width = used_width;
-  }
+    {
+        if(used_width > (pref_width * 2))
+            pref_width = pref_width * 2;
+        else
+            pref_width = used_width;
+    }
 
-  return QSize(pref_width, rt.height());
+    return QSize(pref_width, rt.height());
 }
 
 QSize KRichTextLabel::sizeHint() const
 {
-  return minimumSizeHint();
+    return minimumSizeHint();
 }
 
-void KRichTextLabel::setText( const QString &text ) {
-  if (!text.startsWith("<qt>"))
-     QLabel::setText("<qt>"+text+"</qt>");
-  else
-     QLabel::setText(text);
+void KRichTextLabel::setText(const QString &text)
+{
+    if(!text.startsWith("<qt>"))
+        QLabel::setText("<qt>" + text + "</qt>");
+    else
+        QLabel::setText(text);
 }
 
-void KRichTextLabel::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
+void KRichTextLabel::virtual_hook(int, void *)
+{ /*BASE::virtual_hook( id, data );*/
+}
 
 #include "krichtextlabel.moc"

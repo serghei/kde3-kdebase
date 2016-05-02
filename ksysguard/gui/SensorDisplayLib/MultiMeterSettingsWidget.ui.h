@@ -9,10 +9,10 @@
 
 void MultiMeterSettingsWidget::init()
 {
-  m_lowerLimit->setValidator(new KDoubleValidator(m_lowerLimit));
-  m_upperLimit->setValidator(new KDoubleValidator(m_upperLimit));
+    m_lowerLimit->setValidator(new KDoubleValidator(m_lowerLimit));
+    m_upperLimit->setValidator(new KDoubleValidator(m_upperLimit));
 
-  m_title->setFocus();
+    m_title->setFocus();
 }
 
 QString MultiMeterSettingsWidget::title()
@@ -69,55 +69,55 @@ QColor MultiMeterSettingsWidget::meterBackgroundColor()
 }
 
 
-void MultiMeterSettingsWidget::setTitle( const QString &s )
+void MultiMeterSettingsWidget::setTitle(const QString &s)
 {
     m_title->setText(s);
 }
 
 
-void MultiMeterSettingsWidget::setShowUnit( bool b )
+void MultiMeterSettingsWidget::setShowUnit(bool b)
 {
     m_showUnit->setChecked(b);
 }
 
 
-void MultiMeterSettingsWidget::setLowerLimitActive( bool b )
+void MultiMeterSettingsWidget::setLowerLimitActive(bool b)
 {
     m_lowerLimitActive->setChecked(b);
 }
 
 
-void MultiMeterSettingsWidget::setLowerLimit( double d )
+void MultiMeterSettingsWidget::setLowerLimit(double d)
 {
     m_lowerLimit->setText(QString("%1").arg(d));
 }
 
 
-void MultiMeterSettingsWidget::setUpperLimitActive( bool b )
+void MultiMeterSettingsWidget::setUpperLimitActive(bool b)
 {
     m_upperLimitActive->setChecked(b);
 }
 
 
-void MultiMeterSettingsWidget::setUpperLimit( double d )
+void MultiMeterSettingsWidget::setUpperLimit(double d)
 {
     m_upperLimit->setText(QString("%1").arg(d));
 }
 
 
-void MultiMeterSettingsWidget::setNormalDigitColor( const QColor &c )
+void MultiMeterSettingsWidget::setNormalDigitColor(const QColor &c)
 {
     m_normalDigitColor->setColor(c);
 }
 
 
-void MultiMeterSettingsWidget::setAlarmDigitColor( const QColor &c )
+void MultiMeterSettingsWidget::setAlarmDigitColor(const QColor &c)
 {
     m_alarmDigitColor->setColor(c);
 }
 
 
-void MultiMeterSettingsWidget::setMeterBackgroundColor( const QColor &c )
+void MultiMeterSettingsWidget::setMeterBackgroundColor(const QColor &c)
 {
     m_backgroundColor->setColor(c);
 }

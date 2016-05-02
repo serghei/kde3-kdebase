@@ -26,58 +26,59 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #ifndef _KDM_GREET_H_
 #define _KDM_GREET_H_
 
-#include <greet.h> /* for the ATTR_ defines */
+#include <greet.h>   /* for the ATTR_ defines */
 #include <config.ci> /* for the HAVE_VTS define */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void GSet( int master );
-void GSendInt( int val );
-void GSendStr( const char *buf );
+void GSet(int master);
+void GSendInt(int val);
+void GSendStr(const char *buf);
 /*void GSendNStr( const char *buf, int len );*/
-void GSendArr( int len, const char *buf );
-int GRecvInt( void );
-char *GRecvStr( void );
-char **GRecvStrArr( int *len );
-char *GRecvArr( int *len );
+void GSendArr(int len, const char *buf);
+int GRecvInt(void);
+char *GRecvStr(void);
+char **GRecvStrArr(int *len);
+char *GRecvArr(int *len);
 
-int GetCfgInt( int id );
-char *GetCfgStr( int id );
-char **GetCfgStrArr( int id, int *len );
+int GetCfgInt(int id);
+char *GetCfgStr(int id);
+char **GetCfgStrArr(int id, int *len);
 
-typedef struct dpySpec {
-	struct dpySpec *next;
-	char *display, *from, *user, *session;
+typedef struct dpySpec
+{
+    struct dpySpec *next;
+    char *display, *from, *user, *session;
 #ifdef HAVE_VTS
-	int vt;
+    int vt;
 #endif
-	int flags;
-	int count;
+    int flags;
+    int count;
 } dpySpec;
 
-dpySpec *fetchSessions( int flags );
-void disposeSessions( dpySpec *sess );
+dpySpec *fetchSessions(int flags);
+void disposeSessions(dpySpec *sess);
 
-void freeStrArr( char **arr );
+void freeStrArr(char **arr);
 
-void Debug( const char *fmt, ... );
-void LogInfo( const char *fmt, ... );
-void LogWarn( const char *fmt, ... );
-void LogError( const char *fmt, ... );
-void LogPanic( const char *fmt, ... ) ATTR_NORETURN;
+void Debug(const char *fmt, ...);
+void LogInfo(const char *fmt, ...);
+void LogWarn(const char *fmt, ...);
+void LogError(const char *fmt, ...);
+void LogPanic(const char *fmt, ...) ATTR_NORETURN;
 
 struct _XDisplay;
 
-void SecureDisplay( struct _XDisplay *dpy );
-void UnsecureDisplay( struct _XDisplay *dpy );
-int PingServer( struct _XDisplay *dpy );
+void SecureDisplay(struct _XDisplay *dpy);
+void UnsecureDisplay(struct _XDisplay *dpy);
+int PingServer(struct _XDisplay *dpy);
 
-void setup_modifiers( struct _XDisplay *mdpy, int numlock );
-void restore_modifiers( void );
+void setup_modifiers(struct _XDisplay *mdpy, int numlock);
+void restore_modifiers(void);
 
-void setCursor( struct _XDisplay *mdpy, int window, int shape );
+void setCursor(struct _XDisplay *mdpy, int window, int shape);
 
 
 extern int rfd; /* for select() loops */

@@ -24,28 +24,26 @@
 #include <kxmlguifactory.h>
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 
 class ViewManager;
 
-class KDE_EXPORT MainWindow : public QObject
-{
-  friend class PrivateMainWindow;
+class KDE_EXPORT MainWindow : public QObject {
+    friend class PrivateMainWindow;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MainWindow (void *mainWindow);
-    virtual ~MainWindow ();
+public:
+    MainWindow(void *mainWindow);
+    virtual ~MainWindow();
 
-  public: /*these are slots for kjs*/
+public: /*these are slots for kjs*/
     KXMLGUIFactory *guiFactory() const;
 
-  public slots:
-    Kate::ViewManager *viewManager () const;
+public slots:
+    Kate::ViewManager *viewManager() const;
 
-  public :
+public:
     /**
      * Access the widget (in the middle of the 4 sidebars) in which the editor
      * component and the KateTabBar are embedded. This widget is a QVBox, so
@@ -54,10 +52,9 @@ class KDE_EXPORT MainWindow : public QObject
     class QWidget *centralWidget() const;
     class ToolViewManager *toolViewManager() const;
 
-  private:
+private:
     class PrivateMainWindow *d;
 };
-
 }
 
 #endif

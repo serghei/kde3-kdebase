@@ -28,31 +28,29 @@
 
 class QListBoxItem;
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
-class KCMRulesList
-    : public KCMRulesListBase
-    {
+class KCMRulesList : public KCMRulesListBase {
     Q_OBJECT
-    public:
-        KCMRulesList( QWidget* parent = NULL, const char* name = NULL );
-        virtual ~KCMRulesList();
-        void load();
-        void save();
-        void defaults();
-    signals:
-        void changed( bool );
-    private slots:
-        void newClicked();
-        void modifyClicked();
-        void deleteClicked();
-        void moveupClicked();
-        void movedownClicked();
-        void activeChanged( QListBoxItem* );
-    private:
-        QValueVector< Rules* > rules;
-    };
+public:
+    KCMRulesList(QWidget *parent = NULL, const char *name = NULL);
+    virtual ~KCMRulesList();
+    void load();
+    void save();
+    void defaults();
+signals:
+    void changed(bool);
+private slots:
+    void newClicked();
+    void modifyClicked();
+    void deleteClicked();
+    void moveupClicked();
+    void movedownClicked();
+    void activeChanged(QListBoxItem *);
+
+private:
+    QValueVector< Rules * > rules;
+};
 
 } // namespace
 

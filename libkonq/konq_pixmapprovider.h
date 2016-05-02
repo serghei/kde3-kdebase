@@ -29,27 +29,26 @@
 
 class KConfig;
 
-class LIBKONQ_EXPORT KonqPixmapProvider : public KonqFavIconMgr, virtual public KPixmapProvider
-{
+class LIBKONQ_EXPORT KonqPixmapProvider : public KonqFavIconMgr, virtual public KPixmapProvider {
 public:
-    static KonqPixmapProvider * self();
+    static KonqPixmapProvider *self();
 
     virtual ~KonqPixmapProvider();
 
     /**
      * Looks up a pixmap for @p url. Uses a cache for the iconname of url.
      */
-    virtual QPixmap pixmapFor( const QString& url, int size = 0 );
+    virtual QPixmap pixmapFor(const QString &url, int size = 0);
 
     /**
      * Loads the cache to @p kc from the current KConfig-group from key @p key.
      */
-    void load( KConfig * kc, const QString& key );
+    void load(KConfig *kc, const QString &key);
     /**
      * Saves the cache to @p kc into the current KConfig-group as key @p key.
      * Only those @p items are saved, otherwise the cache would grow forever.
      */
-    void save( KConfig *, const QString& key, const QStringList& items );
+    void save(KConfig *, const QString &key, const QStringList &items);
 
     /**
      * Clears the pixmap cache
@@ -60,21 +59,21 @@ public:
      * Looks up an iconname for @p url. Uses a cache for the iconname of url.
      * @since 3.4.1
      */
-    QString iconNameFor( const QString& url );
+    QString iconNameFor(const QString &url);
 
 protected:
-    KonqPixmapProvider( QObject *parent=0, const char *name=0 );
+    KonqPixmapProvider(QObject *parent = 0, const char *name = 0);
 
     /**
      * Overridden from KonqFavIconMgr to update the cache
      */
-    virtual void notifyChange( bool isHost, QString hostOrURL, QString iconName );
+    virtual void notifyChange(bool isHost, QString hostOrURL, QString iconName);
 
-    QPixmap loadIcon( const QString& url, const QString& icon, int size );
+    QPixmap loadIcon(const QString &url, const QString &icon, int size);
 
 private:
-    QMap<QString,QString> iconMap;
-    static KonqPixmapProvider * s_self;
+    QMap< QString, QString > iconMap;
+    static KonqPixmapProvider *s_self;
 };
 
 

@@ -10,5 +10,5 @@
 
 void XineramaWidget::emitConfigChanged()
 {
-emit configChanged();
+    emit configChanged();
 }

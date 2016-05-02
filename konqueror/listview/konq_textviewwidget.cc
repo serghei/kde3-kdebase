@@ -29,143 +29,142 @@
 #include <assert.h>
 
 
-KonqTextViewWidget::KonqTextViewWidget( KonqListView *parent, QWidget *parentWidget )
-:KonqBaseListViewWidget(parent,parentWidget)
+KonqTextViewWidget::KonqTextViewWidget(KonqListView *parent, QWidget *parentWidget) : KonqBaseListViewWidget(parent, parentWidget)
 {
-   kdDebug(1202) << "+KonqTextViewWidget" << endl;
-   m_filenameColumn=1;
+    kdDebug(1202) << "+KonqTextViewWidget" << endl;
+    m_filenameColumn = 1;
 
-   // David: This breaks dropping things towards the current directory
-   // using the columns != Name.
-   // I know, but I want to have it this way and I use it all the time.
-   // If I want to have free space, I disable some columns.
-   // If people don't like it, they can use a different view type. Alex
-   setAllColumnsShowFocus(TRUE);
-   setRootIsDecorated(false);
+    // David: This breaks dropping things towards the current directory
+    // using the columns != Name.
+    // I know, but I want to have it this way and I use it all the time.
+    // If I want to have free space, I disable some columns.
+    // If people don't like it, they can use a different view type. Alex
+    setAllColumnsShowFocus(TRUE);
+    setRootIsDecorated(false);
 
-   colors[KTVI_REGULAR]=Qt::black;
-   colors[KTVI_EXEC]=QColor(0,170,0);
-   colors[KTVI_REGULARLINK]=Qt::black;
-   colors[KTVI_DIR]=Qt::black;
-   colors[KTVI_DIRLINK]=Qt::black;
-   colors[KTVI_BADLINK]=Qt::red;
-   colors[KTVI_SOCKET]=Qt::magenta;
-   colors[KTVI_FIFO]=Qt::magenta;
-   colors[KTVI_UNKNOWN]=Qt::red;
-   colors[KTVI_CHARDEV]=Qt::blue;
-   colors[KTVI_BLOCKDEV]=Qt::blue;
+    colors[KTVI_REGULAR] = Qt::black;
+    colors[KTVI_EXEC] = QColor(0, 170, 0);
+    colors[KTVI_REGULARLINK] = Qt::black;
+    colors[KTVI_DIR] = Qt::black;
+    colors[KTVI_DIRLINK] = Qt::black;
+    colors[KTVI_BADLINK] = Qt::red;
+    colors[KTVI_SOCKET] = Qt::magenta;
+    colors[KTVI_FIFO] = Qt::magenta;
+    colors[KTVI_UNKNOWN] = Qt::red;
+    colors[KTVI_CHARDEV] = Qt::blue;
+    colors[KTVI_BLOCKDEV] = Qt::blue;
 
-   m_showIcons=FALSE;
+    m_showIcons = FALSE;
 }
 
 KonqTextViewWidget::~KonqTextViewWidget()
-{}
+{
+}
 
 void KonqTextViewWidget::createColumns()
 {
-   if (columns()<2)
-   {
-      addColumn( i18n("Name"), m_filenameColumnWidth );
-      addColumn( " ", fontMetrics().width("@") + 2 );
-      setColumnAlignment( 1, AlignRight );
-      //this way the column with the name has the index 0 and
-      //so the "jump to filename beginning with this character" works
-      header()->moveSection( 0, 2 );
-   }
-   KonqBaseListViewWidget::createColumns();
+    if(columns() < 2)
+    {
+        addColumn(i18n("Name"), m_filenameColumnWidth);
+        addColumn(" ", fontMetrics().width("@") + 2);
+        setColumnAlignment(1, AlignRight);
+        // this way the column with the name has the index 0 and
+        // so the "jump to filename beginning with this character" works
+        header()->moveSection(0, 2);
+    }
+    KonqBaseListViewWidget::createColumns();
 }
 
-void KonqTextViewWidget::slotNewItems( const KFileItemList & entries )
+void KonqTextViewWidget::slotNewItems(const KFileItemList &entries)
 {
-   //kdDebug(1202) << k_funcinfo << entries.count() << endl;
+    // kdDebug(1202) << k_funcinfo << entries.count() << endl;
 
-   for ( QPtrListIterator<KFileItem> kit ( entries ); kit.current(); ++kit )
-   {
-      KonqTextViewItem *tmp = new KonqTextViewItem( this, *kit );
-      if ( !m_itemFound && tmp->text(0) == m_itemToGoTo )
-      {
-         setCurrentItem( tmp );
-         m_itemFound = true;
-      }
-      if ( !m_itemsToSelect.isEmpty() ) {
-         QStringList::Iterator tsit = m_itemsToSelect.find( (*kit)->name() );
-         if ( tsit != m_itemsToSelect.end() ) {
-            m_itemsToSelect.remove( tsit );
-            setSelected( tmp, true );
-         }
-      }
+    for(QPtrListIterator< KFileItem > kit(entries); kit.current(); ++kit)
+    {
+        KonqTextViewItem *tmp = new KonqTextViewItem(this, *kit);
+        if(!m_itemFound && tmp->text(0) == m_itemToGoTo)
+        {
+            setCurrentItem(tmp);
+            m_itemFound = true;
+        }
+        if(!m_itemsToSelect.isEmpty())
+        {
+            QStringList::Iterator tsit = m_itemsToSelect.find((*kit)->name());
+            if(tsit != m_itemsToSelect.end())
+            {
+                m_itemsToSelect.remove(tsit);
+                setSelected(tmp, true);
+            }
+        }
+    }
 
-   }
+    m_pBrowserView->newItems(entries);
 
-   m_pBrowserView->newItems( entries );
-
-   if ( !viewport()->isUpdatesEnabled() )
-   {
-      viewport()->setUpdatesEnabled( true );
-      setUpdatesEnabled( true );
-      triggerUpdate();
-   }
-   slotUpdateBackground();
+    if(!viewport()->isUpdatesEnabled())
+    {
+        viewport()->setUpdatesEnabled(true);
+        setUpdatesEnabled(true);
+        triggerUpdate();
+    }
+    slotUpdateBackground();
 }
 
 void KonqTextViewWidget::setComplete()
 {
-   kdDebug(1202) << k_funcinfo << "Update Contents Pos: "
-                 << m_bUpdateContentsPosAfterListing << endl;
+    kdDebug(1202) << k_funcinfo << "Update Contents Pos: " << m_bUpdateContentsPosAfterListing << endl;
 
-   m_bTopLevelComplete = true;
+    m_bTopLevelComplete = true;
 
-   // Alex: this flag is set when we are just finishing a voluntary listing,
-   // so do the go-to-item thing only under here. When we update the
-   // current directory automatically (e.g. after a file has been deleted),
-   // we don't want to go to the first item ! (David)
-   if ( m_bUpdateContentsPosAfterListing )
-   {
-      m_bUpdateContentsPosAfterListing = false;
+    // Alex: this flag is set when we are just finishing a voluntary listing,
+    // so do the go-to-item thing only under here. When we update the
+    // current directory automatically (e.g. after a file has been deleted),
+    // we don't want to go to the first item ! (David)
+    if(m_bUpdateContentsPosAfterListing)
+    {
+        m_bUpdateContentsPosAfterListing = false;
 
-      if ( !m_itemFound )
-         setCurrentItem( firstChild() );
+        if(!m_itemFound)
+            setCurrentItem(firstChild());
 
-      if ( !m_restored && !m_pBrowserView->extension()->urlArgs().reload )
-         ensureItemVisible( currentItem() );
-      else
-         setContentsPos( m_pBrowserView->extension()->urlArgs().xOffset,
-                         m_pBrowserView->extension()->urlArgs().yOffset );
+        if(!m_restored && !m_pBrowserView->extension()->urlArgs().reload)
+            ensureItemVisible(currentItem());
+        else
+            setContentsPos(m_pBrowserView->extension()->urlArgs().xOffset, m_pBrowserView->extension()->urlArgs().yOffset);
 
-      activateAutomaticSelection();
-      emit selectionChanged();
-   }
+        activateAutomaticSelection();
+        emit selectionChanged();
+    }
 
-   m_itemToGoTo = "";
-   m_restored = false;
+    m_itemToGoTo = "";
+    m_restored = false;
 
-   // Show "cut" icons as such
-   m_pBrowserView->slotClipboardDataChanged();
-   // Show totals
-   slotOnViewport();
+    // Show "cut" icons as such
+    m_pBrowserView->slotClipboardDataChanged();
+    // Show totals
+    slotOnViewport();
 
-   if ( !isUpdatesEnabled() || !viewport()->isUpdatesEnabled() )
-   {
-      viewport()->setUpdatesEnabled( true );
-      setUpdatesEnabled( true );
-      triggerUpdate();
-   }
+    if(!isUpdatesEnabled() || !viewport()->isUpdatesEnabled())
+    {
+        viewport()->setUpdatesEnabled(true);
+        setUpdatesEnabled(true);
+        triggerUpdate();
+    }
 }
 
-bool KonqTextViewWidget::isExecuteArea( const QPoint& point )
+bool KonqTextViewWidget::isExecuteArea(const QPoint &point)
 {
-   if (!itemAt( point ) )
-      return false;
-   int x=point.x();
+    if(!itemAt(point))
+        return false;
+    int x = point.x();
 
-   int offset = 0;
-   int width = columnWidth( 0 );
-   int pos = header()->mapToIndex( 0 );
+    int offset = 0;
+    int width = columnWidth(0);
+    int pos = header()->mapToIndex(0);
 
-   for ( int index = 0; index < pos; index++ )
-      offset += columnWidth( header()->mapToSection( index ) );
+    for(int index = 0; index < pos; index++)
+        offset += columnWidth(header()->mapToSection(index));
 
-   return ( x > offset && x < ( offset + width ) );
+    return (x > offset && x < (offset + width));
 }
 
 /*void KonqTextViewWidget::viewportDragMoveEvent( QDragMoveEvent *_ev )

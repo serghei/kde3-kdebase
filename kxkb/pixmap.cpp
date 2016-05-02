@@ -18,66 +18,71 @@ static const int FLAG_MAX_WIDTH = 21;
 static const int FLAG_MAX_HEIGHT = 14;
 
 const QString LayoutIcon::flagTemplate("l10n/%1/flag.png");
-const QString& LayoutIcon::ERROR_CODE("error");
-LayoutIcon* LayoutIcon::instance;
+const QString &LayoutIcon::ERROR_CODE("error");
+LayoutIcon *LayoutIcon::instance;
 
 
-LayoutIcon& LayoutIcon::getInstance() {
-	if( instance == NULL ) {
-		instance = new LayoutIcon();
-	}
-	return *instance;
+LayoutIcon &LayoutIcon::getInstance()
+{
+    if(instance == NULL)
+    {
+        instance = new LayoutIcon();
+    }
+    return *instance;
 }
 
-LayoutIcon::LayoutIcon():
-		m_pixmapCache(80),
-		m_labelFont("sans")
+LayoutIcon::LayoutIcon() : m_pixmapCache(80), m_labelFont("sans")
 {
-	m_labelFont.setPixelSize(10);
-	m_labelFont.setWeight(QFont::Bold);
+    m_labelFont.setPixelSize(10);
+    m_labelFont.setWeight(QFont::Bold);
 }
 
-const QPixmap&
-LayoutIcon::findPixmap(const QString& code_, bool showFlag, const QString& displayName_)
+const QPixmap &LayoutIcon::findPixmap(const QString &code_, bool showFlag, const QString &displayName_)
 {
-	QPixmap* pm = NULL;
+    QPixmap *pm = NULL;
 
-	if( code_ == ERROR_CODE ) {
-		pm = m_pixmapCache[ERROR_CODE];
-		if( pm == NULL ) {
-			pm = createErrorPixmap();
-			m_pixmapCache.insert(ERROR_CODE, pm);
-		}
-		return *pm;
-	}
+    if(code_ == ERROR_CODE)
+    {
+        pm = m_pixmapCache[ERROR_CODE];
+        if(pm == NULL)
+        {
+            pm = createErrorPixmap();
+            m_pixmapCache.insert(ERROR_CODE, pm);
+        }
+        return *pm;
+    }
 
-	QString displayName(displayName_);
-	
-	if( displayName.isEmpty() ) {
-		displayName = KxkbConfig::getDefaultDisplayName(code_);
-	}
-	if( displayName.length() > 3 )
-		displayName = displayName.left(3);
+    QString displayName(displayName_);
 
-	const QString pixmapKey( showFlag ? code_ + "." + displayName : displayName );
-	
-	pm = m_pixmapCache[pixmapKey];
-	if( pm )
-		return *pm;
+    if(displayName.isEmpty())
+    {
+        displayName = KxkbConfig::getDefaultDisplayName(code_);
+    }
+    if(displayName.length() > 3)
+        displayName = displayName.left(3);
 
-	QString flag;
-	if( showFlag ) {
-		QString countryCode = getCountryFromLayoutName( code_ );
-		flag = locate("locale", flagTemplate.arg(countryCode));
-	}
+    const QString pixmapKey(showFlag ? code_ + "." + displayName : displayName);
 
-	if( flag.isEmpty() ) {
-		pm = new QPixmap(FLAG_MAX_WIDTH, FLAG_MAX_HEIGHT);
-		pm->fill(Qt::gray);
-	}
-	else {
-		pm = new QPixmap(flag);
-		dimPixmap( *pm );
+    pm = m_pixmapCache[pixmapKey];
+    if(pm)
+        return *pm;
+
+    QString flag;
+    if(showFlag)
+    {
+        QString countryCode = getCountryFromLayoutName(code_);
+        flag = locate("locale", flagTemplate.arg(countryCode));
+    }
+
+    if(flag.isEmpty())
+    {
+        pm = new QPixmap(FLAG_MAX_WIDTH, FLAG_MAX_HEIGHT);
+        pm->fill(Qt::gray);
+    }
+    else
+    {
+        pm = new QPixmap(flag);
+        dimPixmap(*pm);
 
 #if 0		
 		if( pm->height() < FLAG_MAX_HEIGHT ) {
@@ -96,145 +101,132 @@ LayoutIcon::findPixmap(const QString& code_, bool showFlag, const QString& displ
 			pm = pix;
 		}
 #endif
-	}
+    }
 
-	QPainter p(pm);
-	p.setFont(m_labelFont);
+    QPainter p(pm);
+    p.setFont(m_labelFont);
 
-	p.setPen(Qt::black);
-	p.drawText(1, 1, pm->width(), pm->height()-2, Qt::AlignCenter, displayName);
-	p.setPen(Qt::white);
-	p.drawText(0, 0, pm->width(), pm->height()-2, Qt::AlignCenter, displayName);
+    p.setPen(Qt::black);
+    p.drawText(1, 1, pm->width(), pm->height() - 2, Qt::AlignCenter, displayName);
+    p.setPen(Qt::white);
+    p.drawText(0, 0, pm->width(), pm->height() - 2, Qt::AlignCenter, displayName);
 
-	m_pixmapCache.insert(pixmapKey, pm);
+    m_pixmapCache.insert(pixmapKey, pm);
 
-	return *pm;
+    return *pm;
 }
 
 /**
 @brief Try to get country code from layout name in xkb before xorg 6.9.0
 */
-QString LayoutIcon::getCountryFromLayoutName(const QString& layoutName)
+QString LayoutIcon::getCountryFromLayoutName(const QString &layoutName)
 {
-	QString flag;
-	
-	if( X11Helper::areLayoutsClean() ) { // >= Xorg 6.9.0
-		if( layoutName == "mkd" )
-			flag = "mk";
-		else
-		if( layoutName == "srp" ) {
-			QString csFlagFile = locate("locale", flagTemplate.arg("cs"));
-			flag = csFlagFile.isEmpty() ? "yu" : "cs";
-		}
-		else
-			if( layoutName.endsWith("/jp") )
-				flag = "jp";
+    QString flag;
+
+    if(X11Helper::areLayoutsClean())
+    { // >= Xorg 6.9.0
+        if(layoutName == "mkd")
+            flag = "mk";
+        else if(layoutName == "srp")
+        {
+            QString csFlagFile = locate("locale", flagTemplate.arg("cs"));
+            flag = csFlagFile.isEmpty() ? "yu" : "cs";
+        }
+        else if(layoutName.endsWith("/jp"))
+            flag = "jp";
+        else if(layoutName == "trq" || layoutName == "trf" || layoutName == "tralt")
+            flag = "tr";
+        else if(layoutName.length() > 2)
+            flag = "";
         else
-            if( layoutName == "trq" || layoutName == "trf" || layoutName == "tralt" )
-                flag = "tr";
-		else
-			if( layoutName.length() > 2 )
-				flag = "";
-		else
-				flag = layoutName;
-	}
-	else {
-		if( layoutName == "ar" )	// Arabic - not argentina
-			;
-		else
-			if( layoutName == "sr" || layoutName == "cs")	// Serbian language - Yugoslavia
-				flag = "yu";
-		else
-			if( layoutName == "bs" )	// Bosnian language - Bosnia
-				flag = "ba";
-		else
-			if( layoutName == "la" )	// Latin America
-				;
-		else
-			if( layoutName == "lo" )	// Lao
-				flag = "la";
-		else
-			if( layoutName == "pl2" )	// Poland
-				flag = "pl";
-		else
-			if( layoutName == "iu" )	// Inuktitut - Canada
-				flag = "ca";
-		else
-			if( layoutName == "syr" )	// Syriac
-				flag = "sy";
-		else
-			if( layoutName == "dz" )	// Dzongka/Tibetian - Buthan
-				flag = "bt";
-		else
-			if( layoutName == "ogham" )	// Ogham - Ireland
-				flag = "ie";
-		else
-			if( layoutName == "ge_la" || layoutName == "ge_ru" )
-				flag = "ge";
-		else
-			if( layoutName == "el" )
-				flag = "gr";
-		else
-			if( layoutName.endsWith("/jp") )
-				flag = "jp";
-		else
-			if( layoutName == "ml" || layoutName == "dev" || layoutName == "gur" 
-						 || layoutName == "guj" || layoutName == "kan" || layoutName == "ori" 
-						 || layoutName == "tel" || layoutName == "tml" || layoutName == "ben" ) // some Indian languages
-				flag = "in";
-		else {
-			int sepPos = layoutName.find(QRegExp("[-_]"));
-			QString leftCode = layoutName.mid(0, sepPos);
-			QString rightCode;
-			if( sepPos != -1 )
-				rightCode = layoutName.mid(sepPos+1);
-//			kdDebug() << "layout name breakup: " << leftCode << ":" << rightCode << endl;
-	
-			if( rightCode.length() == 2 
-					&& QRegExp("[A-Z][A-Z]").exactMatch(rightCode) ) {
-				flag = rightCode.lower();
-			}
-			else {
-				flag = leftCode.length() == 2 ? leftCode : "";
-			}
-		}
-	}
-	
+            flag = layoutName;
+    }
+    else
+    {
+        if(layoutName == "ar") // Arabic - not argentina
+            ;
+        else if(layoutName == "sr" || layoutName == "cs") // Serbian language - Yugoslavia
+            flag = "yu";
+        else if(layoutName == "bs") // Bosnian language - Bosnia
+            flag = "ba";
+        else if(layoutName == "la") // Latin America
+            ;
+        else if(layoutName == "lo") // Lao
+            flag = "la";
+        else if(layoutName == "pl2") // Poland
+            flag = "pl";
+        else if(layoutName == "iu") // Inuktitut - Canada
+            flag = "ca";
+        else if(layoutName == "syr") // Syriac
+            flag = "sy";
+        else if(layoutName == "dz") // Dzongka/Tibetian - Buthan
+            flag = "bt";
+        else if(layoutName == "ogham") // Ogham - Ireland
+            flag = "ie";
+        else if(layoutName == "ge_la" || layoutName == "ge_ru")
+            flag = "ge";
+        else if(layoutName == "el")
+            flag = "gr";
+        else if(layoutName.endsWith("/jp"))
+            flag = "jp";
+        else if(layoutName == "ml" || layoutName == "dev" || layoutName == "gur" || layoutName == "guj" || layoutName == "kan" || layoutName == "ori"
+                || layoutName == "tel" || layoutName == "tml" || layoutName == "ben") // some Indian languages
+            flag = "in";
+        else
+        {
+            int sepPos = layoutName.find(QRegExp("[-_]"));
+            QString leftCode = layoutName.mid(0, sepPos);
+            QString rightCode;
+            if(sepPos != -1)
+                rightCode = layoutName.mid(sepPos + 1);
+            //			kdDebug() << "layout name breakup: " << leftCode << ":" << rightCode << endl;
+
+            if(rightCode.length() == 2 && QRegExp("[A-Z][A-Z]").exactMatch(rightCode))
+            {
+                flag = rightCode.lower();
+            }
+            else
+            {
+                flag = leftCode.length() == 2 ? leftCode : "";
+            }
+        }
+    }
+
     return flag;
 }
 
 
-void LayoutIcon::dimPixmap(QPixmap& pm)
+void LayoutIcon::dimPixmap(QPixmap &pm)
 {
-	QImage image = pm.convertToImage();
-	for (int y=0; y<image.height(); y++)
-		for(int x=0; x<image.width(); x++)
-	{
-		QRgb rgb = image.pixel(x,y);
-		QRgb dimRgb(qRgb(qRed(rgb)*3/4, qGreen(rgb)*3/4, qBlue(rgb)*3/4));
-		image.setPixel(x, y, dimRgb);
-	}
-	pm.convertFromImage(image);
+    QImage image = pm.convertToImage();
+    for(int y = 0; y < image.height(); y++)
+        for(int x = 0; x < image.width(); x++)
+        {
+            QRgb rgb = image.pixel(x, y);
+            QRgb dimRgb(qRgb(qRed(rgb) * 3 / 4, qGreen(rgb) * 3 / 4, qBlue(rgb) * 3 / 4));
+            image.setPixel(x, y, dimRgb);
+        }
+    pm.convertFromImage(image);
 }
 
-static const char* ERROR_LABEL = "err";
+static const char *ERROR_LABEL = "err";
 
-//private
-QPixmap* LayoutIcon::createErrorPixmap()
+// private
+QPixmap *LayoutIcon::createErrorPixmap()
 {
-	QPixmap* pm = new QPixmap(21, 14);
-	pm->fill(Qt::white);
+    QPixmap *pm = new QPixmap(21, 14);
+    pm->fill(Qt::white);
 
-	QPainter p(pm);
+    QPainter p(pm);
 
-	p.setFont(m_labelFont);
-	p.setPen(Qt::red);
-	p.drawText(1, 1, pm->width(), pm->height()-2, Qt::AlignCenter, ERROR_LABEL);
-	p.setPen(Qt::blue);
-	p.drawText(0, 0, pm->width(), pm->height()-2, Qt::AlignCenter, ERROR_LABEL);
-	m_pixmapCache.insert(ERROR_CODE, pm);
+    p.setFont(m_labelFont);
+    p.setPen(Qt::red);
+    p.drawText(1, 1, pm->width(), pm->height() - 2, Qt::AlignCenter, ERROR_LABEL);
+    p.setPen(Qt::blue);
+    p.drawText(0, 0, pm->width(), pm->height() - 2, Qt::AlignCenter, ERROR_LABEL);
+    m_pixmapCache.insert(ERROR_CODE, pm);
 
-	return pm;
+    return pm;
 }
 
 

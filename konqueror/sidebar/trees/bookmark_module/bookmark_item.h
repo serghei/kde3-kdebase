@@ -25,16 +25,16 @@
 /**
  * A bookmark item
  */
-class KonqSidebarBookmarkItem : public KonqSidebarTreeItem
-{
+class KonqSidebarBookmarkItem : public KonqSidebarTreeItem {
 public:
-    KonqSidebarBookmarkItem( KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem,
-                      const KBookmark & bk, int key );
+    KonqSidebarBookmarkItem(KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem, const KBookmark &bk, int key);
 
-    virtual ~KonqSidebarBookmarkItem() {}
+    virtual ~KonqSidebarBookmarkItem()
+    {
+    }
 
     // Create a drag object from this item.
-    virtual QDragObject * dragObject( QWidget * parent, bool move = false );
+    virtual QDragObject *dragObject(QWidget *parent, bool move = false);
 
     virtual void middleButtonClicked();
     virtual void rightButtonPressed();
@@ -50,7 +50,7 @@ public:
     // Called when this item is selected
     virtual void itemSelected();
 
-    virtual QString key( int column, bool /*ascending*/ ) const;
+    virtual QString key(int column, bool /*ascending*/) const;
 
     virtual KBookmark &bookmark();
 

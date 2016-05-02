@@ -32,93 +32,92 @@
 
 QStringList readAreaList()
 {
-  QStringList lst;
-  lst.append( "0 (generic)" );
+    QStringList lst;
+    lst.append("0 (generic)");
 
-  QString confAreasFile = locate( "config", "kdebug.areas" );
-  QFile file( confAreasFile );
-  if (!file.open(IO_ReadOnly)) {
-    kdWarning() << "Couldn't open " << confAreasFile << endl;
-    file.close();
-  }
-  else
-  {
-    QString data;
+    QString confAreasFile = locate("config", "kdebug.areas");
+    QFile file(confAreasFile);
+    if(!file.open(IO_ReadOnly))
+    {
+        kdWarning() << "Couldn't open " << confAreasFile << endl;
+        file.close();
+    }
+    else
+    {
+        QString data;
 
-    QTextStream *ts = new QTextStream(&file);
-    ts->setEncoding( QTextStream::Latin1 );
-    while (!ts->eof()) {
-      data = ts->readLine().simplifyWhiteSpace();
+        QTextStream *ts = new QTextStream(&file);
+        ts->setEncoding(QTextStream::Latin1);
+        while(!ts->eof())
+        {
+            data = ts->readLine().simplifyWhiteSpace();
 
-      int pos = data.find("#");
-      if ( pos != -1 )
-        data.truncate( pos );
+            int pos = data.find("#");
+            if(pos != -1)
+                data.truncate(pos);
 
-      if (data.isEmpty())
-        continue;
+            if(data.isEmpty())
+                continue;
 
-      lst.append( data );
+            lst.append(data);
+        }
+
+        delete ts;
+        file.close();
     }
 
-    delete ts;
-    file.close();
-  }
-
-  return lst;
+    return lst;
 }
 
-static KCmdLineOptions options[] =
+static KCmdLineOptions options[] = {{"fullmode", I18N_NOOP("Show the fully-fledged dialog instead of the default list dialog"), 0},
+                                    {"on <area>", /*I18N_NOOP TODO*/ "Turn area on", 0},
+                                    {"off <area>", /*I18N_NOOP TODO*/ "Turn area off", 0},
+                                    KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-  { "fullmode", I18N_NOOP("Show the fully-fledged dialog instead of the default list dialog"), 0 },
-  { "on <area>", /*I18N_NOOP TODO*/ "Turn area on", 0 },
-  { "off <area>", /*I18N_NOOP TODO*/ "Turn area off", 0 },
-  KCmdLineLastOption
-};
+    KAboutData data("kdebugdialog", I18N_NOOP("KDebugDialog"), "1.0", I18N_NOOP("A dialog box for setting preferences for debug output"),
+                    KAboutData::License_GPL, "(c) 1999-2000, David Faure <faure@kde.org>");
+    data.addAuthor("David Faure", I18N_NOOP("Maintainer"), "faure@kde.org");
+    KCmdLineArgs::init(argc, argv, &data);
+    KCmdLineArgs::addCmdLineOptions(options);
+    KUniqueApplication::addCmdLineOptions();
+    KUniqueApplication app;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-int main(int argc, char ** argv)
-{
-  KAboutData data( "kdebugdialog", I18N_NOOP( "KDebugDialog"),
-    "1.0", I18N_NOOP("A dialog box for setting preferences for debug output"),
-    KAboutData::License_GPL, "(c) 1999-2000, David Faure <faure@kde.org>");
-  data.addAuthor("David Faure", I18N_NOOP("Maintainer"), "faure@kde.org");
-  KCmdLineArgs::init( argc, argv, &data );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-  KUniqueApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QStringList areaList(readAreaList());
+    KAbstractDebugDialog *dialog;
+    if(args->isSet("fullmode"))
+        dialog = new KDebugDialog(areaList, 0L);
+    else
+    {
+        KListDebugDialog *listdialog = new KListDebugDialog(areaList, 0L);
+        if(args->isSet("on"))
+        {
+            listdialog->activateArea(args->getOption("on"), true);
+            /*listdialog->save();
+            listdialog->config()->sync();
+            return 0;*/
+        }
+        else if(args->isSet("off"))
+        {
+            listdialog->activateArea(args->getOption("off"), false);
+            /*listdialog->save();
+            listdialog->config()->sync();
+            return 0;*/
+        }
+        dialog = listdialog;
+    }
 
-  QStringList areaList ( readAreaList() );
-  KAbstractDebugDialog * dialog;
-  if (args->isSet("fullmode"))
-      dialog = new KDebugDialog(areaList, 0L);
-  else
-  {
-      KListDebugDialog * listdialog = new KListDebugDialog(areaList, 0L);
-      if (args->isSet("on"))
-      {
-          listdialog->activateArea( args->getOption("on"), true );
-          /*listdialog->save();
-          listdialog->config()->sync();
-          return 0;*/
-      } else if ( args->isSet("off") )
-      {
-          listdialog->activateArea( args->getOption("off"), false );
-          /*listdialog->save();
-          listdialog->config()->sync();
-          return 0;*/
-      }
-      dialog = listdialog;
-  }
+    /* Show dialog */
+    int nRet = dialog->exec();
+    if(nRet == QDialog::Accepted)
+    {
+        dialog->save();
+        dialog->config()->sync();
+    }
+    else
+        dialog->config()->rollback(true);
 
-  /* Show dialog */
-  int nRet = dialog->exec();
-  if( nRet == QDialog::Accepted )
-  {
-      dialog->save();
-      dialog->config()->sync();
-  }
-  else
-    dialog->config()->rollback( true );
-
-  return 0;
+    return 0;
 }

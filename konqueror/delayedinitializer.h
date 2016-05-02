@@ -22,19 +22,19 @@
 
 #include <qobject.h>
 
-class DelayedInitializer : public QObject
-{
+class DelayedInitializer : public QObject {
     Q_OBJECT
 public:
-    DelayedInitializer( int eventType, QObject *parent, const char *name = 0 );
+    DelayedInitializer(int eventType, QObject *parent, const char *name = 0);
 
-    virtual bool eventFilter( QObject *receiver, QEvent *event );
+    virtual bool eventFilter(QObject *receiver, QEvent *event);
 
 signals:
     void initialize();
 
 private slots:
     void slotInitialize();
+
 private:
     int m_eventType;
     bool m_signalEmitted;

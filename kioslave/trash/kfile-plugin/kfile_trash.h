@@ -26,16 +26,15 @@
 
 class QStringList;
 
-class KTrashPlugin: public KFilePlugin
-{
+class KTrashPlugin : public KFilePlugin {
     Q_OBJECT
 
 public:
-    KTrashPlugin(QObject *parent, const char *name, const QStringList& args);
-    virtual bool readInfo(KFileMetaInfo& info, uint what);
+    KTrashPlugin(QObject *parent, const char *name, const QStringList &args);
+    virtual bool readInfo(KFileMetaInfo &info, uint what);
 
 private:
-    void makeMimeTypeInfo(const QString& mimeType);
+    void makeMimeTypeInfo(const QString &mimeType);
     TrashImpl impl;
 };
 

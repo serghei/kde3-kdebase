@@ -35,15 +35,17 @@ namespace KWinPlastik {
 
 class PlastikClient;
 
-class PlastikButton : public KCommonDecorationButton
-{
+class PlastikButton : public KCommonDecorationButton {
     Q_OBJECT
 public:
     PlastikButton(ButtonType type, PlastikClient *parent, const char *name);
     ~PlastikButton();
 
     void reset(unsigned long changed);
-    PlastikClient * client() { return m_client; }
+    PlastikClient *client()
+    {
+        return m_client;
+    }
 
 protected slots:
     void animate();
@@ -69,20 +71,20 @@ private:
  * it has the important advantage that icons are more scalable and at the same
  * time sharp and not blurred.
  */
-class IconEngine
-{
-    public:
-        static QBitmap icon(ButtonIcon icon, int size);
+class IconEngine {
+public:
+    static QBitmap icon(ButtonIcon icon, int size);
 
-    private:
-        enum Object {
-            HorizontalLine,
-            VerticalLine,
-            DiagonalLine,
-            CrossDiagonalLine
-        };
+private:
+    enum Object
+    {
+        HorizontalLine,
+        VerticalLine,
+        DiagonalLine,
+        CrossDiagonalLine
+    };
 
-        static void drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth);
+    static void drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth);
 };
 
 } // namespace KWinPlastik

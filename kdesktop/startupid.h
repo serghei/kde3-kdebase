@@ -31,36 +31,39 @@
 
 class QStyle;
 
-class StartupId
-    : public QWidget
-    {
+class StartupId : public QWidget {
     Q_OBJECT
-    public:
-        StartupId( QWidget* parent = 0, const char* name = 0 );
-        virtual ~StartupId();
-        void configure();
-    protected:
-        virtual bool x11Event( XEvent* e );
-        void start_startupid( const QString& icon );
-        void stop_startupid();
-    protected slots:
-        void update_startupid();
-        void gotNewStartup( const KStartupInfoId& id, const KStartupInfoData& data );
-        void gotStartupChange( const KStartupInfoId& id, const KStartupInfoData& data );
-        void gotRemoveStartup( const KStartupInfoId& id );
-        void finishKDEStartup();
-    protected:
-        KStartupInfo startup_info;
-        QWidget* startup_widget;
-        QTimer update_timer;
-        QMap< KStartupInfoId, QString > startups; // QString == pixmap
-        KStartupInfoId current_startup;
-        bool blinking;
-        bool bouncing;
-        unsigned int color_index;
-        unsigned int frame;
-        enum { NUM_BLINKING_PIXMAPS = 5 };
-        QPixmap pixmaps[ NUM_BLINKING_PIXMAPS ];
+public:
+    StartupId(QWidget *parent = 0, const char *name = 0);
+    virtual ~StartupId();
+    void configure();
+
+protected:
+    virtual bool x11Event(XEvent *e);
+    void start_startupid(const QString &icon);
+    void stop_startupid();
+protected slots:
+    void update_startupid();
+    void gotNewStartup(const KStartupInfoId &id, const KStartupInfoData &data);
+    void gotStartupChange(const KStartupInfoId &id, const KStartupInfoData &data);
+    void gotRemoveStartup(const KStartupInfoId &id);
+    void finishKDEStartup();
+
+protected:
+    KStartupInfo startup_info;
+    QWidget *startup_widget;
+    QTimer update_timer;
+    QMap< KStartupInfoId, QString > startups; // QString == pixmap
+    KStartupInfoId current_startup;
+    bool blinking;
+    bool bouncing;
+    unsigned int color_index;
+    unsigned int frame;
+    enum
+    {
+        NUM_BLINKING_PIXMAPS = 5
     };
+    QPixmap pixmaps[NUM_BLINKING_PIXMAPS];
+};
 
 #endif

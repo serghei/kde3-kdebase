@@ -19,7 +19,7 @@ void scan_man_page(const char *man_page);
  * \since 3.5
  *
  */
-extern void setResourcePath(const QCString& _htmlPath, const QCString& _cssPath);
+extern void setResourcePath(const QCString &_htmlPath, const QCString &_cssPath);
 
 /** implement this somewhere. It will be called
    with HTML contents

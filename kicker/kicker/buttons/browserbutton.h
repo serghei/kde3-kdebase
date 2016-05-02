@@ -31,16 +31,15 @@ class PanelBrowserMenu;
 /**
  * Button that contains a Browser directory menu
  */
-class BrowserButton : public PanelPopupButton
-{
+class BrowserButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    BrowserButton( const QString& icon, const QString& startDir, QWidget* parent );
-    BrowserButton( const KConfigGroup& config, QWidget* parent );
+    BrowserButton(const QString &icon, const QString &startDir, QWidget *parent);
+    BrowserButton(const KConfigGroup &config, QWidget *parent);
     virtual ~BrowserButton();
 
-    void saveConfig( KConfigGroup& config ) const;
+    void saveConfig(KConfigGroup &config) const;
 
     virtual void properties();
 
@@ -49,18 +48,23 @@ protected slots:
     virtual void startDrag();
 
 protected:
-    void initialize( const QString& icon, const QString& startDir );
-    virtual QString tileName() { return "Browser"; }
+    void initialize(const QString &icon, const QString &startDir);
+    virtual QString tileName()
+    {
+        return "Browser";
+    }
     virtual void initPopup();
     virtual void dropEvent(QDropEvent *ev);
     virtual void dragEnterEvent(QDragEnterEvent *ev);
     virtual void dragLeaveEvent(QDragLeaveEvent *ev);
-    virtual QString defaultIcon() const { return "kdisknav"; };
+    virtual QString defaultIcon() const
+    {
+        return "kdisknav";
+    };
 
-    PanelBrowserMenu*    topMenu;
-    QString              _icon;
+    PanelBrowserMenu *topMenu;
+    QString _icon;
     QTimer *_menuTimer;
 };
 
 #endif
-

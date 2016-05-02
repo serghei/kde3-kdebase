@@ -26,22 +26,21 @@
 
 #include "imagecreator.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        KImageIO::registerFormats();
-        return new ImageCreator;
-    }
+    KImageIO::registerFormats();
+    return new ImageCreator;
+}
 }
 
 bool ImageCreator::create(const QString &path, int, int, QImage &img)
 {
     // create image preview
-    if (!img.load( path ))
-	return false;
-    if (img.depth() != 32)
-	img = img.convertDepth( 32 );
+    if(!img.load(path))
+        return false;
+    if(img.depth() != 32)
+        img = img.convertDepth(32);
     return true;
 }
 

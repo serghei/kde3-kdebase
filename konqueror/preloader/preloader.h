@@ -23,36 +23,35 @@
 #include <kdedmodule.h>
 #include <qtimer.h>
 
-class KonqyPreloader
-    : public KDEDModule
-    {
+class KonqyPreloader : public KDEDModule {
     Q_OBJECT
     K_DCOP
-    public:
-        KonqyPreloader( const QCString& obj );
-        virtual ~KonqyPreloader();
-    k_dcop:
-        bool registerPreloadedKonqy( QCString id, int screen );
-        QCString getPreloadedKonqy( int screen );
-        ASYNC unregisterPreloadedKonqy( QCString id );
-        void reconfigure();
-        void unloadAllPreloaded();
-    private slots:
-        void appRemoved( const QCString& id );
-	void checkAlwaysPreloaded();
-    private:
-        void updateCount();
-        struct KonqyData
-            {
-            KonqyData() {}; // for QValueList
-            KonqyData( const QCString& id_P, int screen_P )
-                : id( id_P ), screen( screen_P ) {}
-            QCString id;
-            int screen;
-            };
-        typedef QValueList< KonqyData > InstancesList;
-        InstancesList instances;
-	QTimer check_always_preloaded_timer;
+public:
+    KonqyPreloader(const QCString &obj);
+    virtual ~KonqyPreloader();
+    k_dcop : bool registerPreloadedKonqy(QCString id, int screen);
+    QCString getPreloadedKonqy(int screen);
+    ASYNC unregisterPreloadedKonqy(QCString id);
+    void reconfigure();
+    void unloadAllPreloaded();
+private slots:
+    void appRemoved(const QCString &id);
+    void checkAlwaysPreloaded();
+
+private:
+    void updateCount();
+    struct KonqyData
+    {
+        KonqyData(){}; // for QValueList
+        KonqyData(const QCString &id_P, int screen_P) : id(id_P), screen(screen_P)
+        {
+        }
+        QCString id;
+        int screen;
     };
+    typedef QValueList< KonqyData > InstancesList;
+    InstancesList instances;
+    QTimer check_always_preloaded_timer;
+};
 
 #endif

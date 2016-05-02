@@ -22,23 +22,30 @@ class QComboBox;
 class KDoubleNumInput;
 class FontAASettings;
 
-class FontUseItem : public KFontRequester
-{
-  Q_OBJECT
+class FontUseItem : public KFontRequester {
+    Q_OBJECT
 
 public:
-    FontUseItem(QWidget * parent, const QString &name, const QString &grp, 
-        const QString &key, const QString &rc, const QFont &default_fnt, 
-        bool fixed = false);
+    FontUseItem(QWidget *parent, const QString &name, const QString &grp, const QString &key, const QString &rc, const QFont &default_fnt,
+                bool fixed = false);
 
-    void readFont( bool useDefaults );
+    void readFont(bool useDefaults);
     void writeFont();
     void setDefault();
     void applyFontDiff(const QFont &fnt, int fontDiffFlags);
 
-    const QString& rcFile() { return _rcfile; }
-    const QString& rcGroup() { return _rcgroup; }
-    const QString& rcKey() { return _rckey; }
+    const QString &rcFile()
+    {
+        return _rcfile;
+    }
+    const QString &rcGroup()
+    {
+        return _rcgroup;
+    }
+    const QString &rcKey()
+    {
+        return _rckey;
+    }
 
 private:
     QString _rcfile;
@@ -47,17 +54,15 @@ private:
     QFont _default;
 };
 
-class FontAASettings : public KDialogBase
-{
-  Q_OBJECT
+class FontAASettings : public KDialogBase {
+    Q_OBJECT
 
 public:
-
     FontAASettings(QWidget *parent);
 
-    bool save( bool useAA );
+    bool save(bool useAA);
     bool load();
-    bool load( bool useDefaults );
+    bool load(bool useDefaults);
     void defaults();
     int getIndex(KXftConfig::SubPixel::Type spType);
     KXftConfig::SubPixel::Type getSubPixelType();
@@ -73,7 +78,6 @@ protected slots:
     void changed();
 
 private:
-
     QCheckBox *excludeRange;
     QCheckBox *useSubPixel;
     KDoubleNumInput *excludeFrom;
@@ -82,15 +86,14 @@ private:
 #ifdef HAVE_FONTCONFIG
     QComboBox *hintingStyle;
 #endif
-    QLabel    *excludeToLabel;
-    bool      changesMade;
+    QLabel *excludeToLabel;
+    bool changesMade;
 };
 
 /**
  * The Desktop/fonts tab in kcontrol.
  */
-class KFonts : public KCModule
-{
+class KFonts : public KCModule {
     Q_OBJECT
 
 public:
@@ -98,27 +101,36 @@ public:
     ~KFonts();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
 protected slots:
     void fontSelected();
-    void slotApplyFontDiff(); 
+    void slotApplyFontDiff();
     void slotUseAntiAliasing();
     void slotCfgAa();
 
 private:
-    enum AASetting { AAEnabled, AASystem, AADisabled };
-    enum DPISetting { DPINone, DPI96, DPI120 };
+    enum AASetting
+    {
+        AAEnabled,
+        AASystem,
+        AADisabled
+    };
+    enum DPISetting
+    {
+        DPINone,
+        DPI96,
+        DPI120
+    };
     AASetting useAA, useAA_original;
     DPISetting dpi_original;
     QComboBox *cbAA;
-    QComboBox* comboForceDpi;
+    QComboBox *comboForceDpi;
     QPushButton *aaSettingsButton;
-    QPtrList <FontUseItem> fontUseList;
+    QPtrList< FontUseItem > fontUseList;
     FontAASettings *aaSettings;
 };
 
 #endif
-

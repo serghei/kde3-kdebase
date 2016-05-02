@@ -26,61 +26,69 @@
 #include <qmap.h>
 #include <qtimer.h>
 
-class DiscType
-{
+class DiscType {
 public:
-	enum Type { None, Unknown, Audio, Data, DVD, Mixed,
-	            Blank, VCD, SVCD, UnknownType, Broken };
+    enum Type
+    {
+        None,
+        Unknown,
+        Audio,
+        Data,
+        DVD,
+        Mixed,
+        Blank,
+        VCD,
+        SVCD,
+        UnknownType,
+        Broken
+    };
 
-	DiscType(Type type = Unknown);
+    DiscType(Type type = Unknown);
 
-	bool isKnownDisc() const;
-	bool isDisc() const;
-	bool isNotDisc() const;
-	bool isData() const;
+    bool isKnownDisc() const;
+    bool isDisc() const;
+    bool isNotDisc() const;
+    bool isData() const;
 
-	operator int() const;
+    operator int() const;
 
 private:
-	Type m_type;
+    Type m_type;
 };
 
 class PollingThread;
 
-class LinuxCDPolling : public QObject, public BackendBase
-{
-Q_OBJECT
+class LinuxCDPolling : public QObject, public BackendBase {
+    Q_OBJECT
 
 public:
+    LinuxCDPolling(MediaList &list);
+    virtual ~LinuxCDPolling();
 
-	LinuxCDPolling(MediaList &list);
-	virtual ~LinuxCDPolling();
-
-	/**
-	 * Find the disc type of the medium inserted in a drive
-	 * (considered to be a cdrom or dvdrom)
-	 *
-	 * @param devNode the path to the device to test
-	 * @param current the current known state of the drive
-	 * @return the disc type
-	 */
-	static DiscType identifyDiscType(const QCString &devNode,
-		 const DiscType &current = DiscType::Unknown);
+    /**
+     * Find the disc type of the medium inserted in a drive
+     * (considered to be a cdrom or dvdrom)
+     *
+     * @param devNode the path to the device to test
+     * @param current the current known state of the drive
+     * @return the disc type
+     */
+    static DiscType identifyDiscType(const QCString &devNode, const DiscType &current = DiscType::Unknown);
 
 private slots:
-	void slotMediumAdded(const QString &id);
-	void slotMediumRemoved(const QString &id);
-	void slotMediumStateChanged(const QString &id);
-	void slotTimeout();
+    void slotMediumAdded(const QString &id);
+    void slotMediumRemoved(const QString &id);
+    void slotMediumStateChanged(const QString &id);
+    void slotTimeout();
 
 private:
-	void applyType(DiscType type, const Medium *medium);
+    void applyType(DiscType type, const Medium *medium);
 
-	static bool hasDirectory(const QCString &devNode, const QCString &dir);
+    static bool hasDirectory(const QCString &devNode, const QCString &dir);
 
-	QMap<QString, PollingThread*> m_threads;
-	QStringList m_excludeNotification;
-	QTimer m_timer;
+    QMap< QString, PollingThread * > m_threads;
+    QStringList m_excludeNotification;
+    QTimer m_timer;
 };
 
 #endif

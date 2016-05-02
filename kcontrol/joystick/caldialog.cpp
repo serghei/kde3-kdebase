@@ -34,148 +34,161 @@
 //--------------------------------------------------------------
 
 CalDialog::CalDialog(QWidget *parent, JoyDevice *joy)
-  : KDialogBase(parent, "calibrateDialog", true,
-      i18n("Calibration"),
-      KDialogBase::Cancel|KDialogBase::User1, KDialogBase::User1, true, KGuiItem(i18n("Next"))),
-    joydev(joy)
+    : KDialogBase(parent, "calibrateDialog", true, i18n("Calibration"), KDialogBase::Cancel | KDialogBase::User1, KDialogBase::User1, true,
+                  KGuiItem(i18n("Next")))
+    , joydev(joy)
 {
-  QVBox *main = makeVBoxMainWidget();
+    QVBox *main = makeVBoxMainWidget();
 
-  text = new QLabel(main);
-  text->setMinimumHeight(200);
-  valueLbl = new QLabel(main);
+    text = new QLabel(main);
+    text->setMinimumHeight(200);
+    valueLbl = new QLabel(main);
 }
 
 //--------------------------------------------------------------
 
 void CalDialog::calibrate()
 {
-  text->setText(i18n("Please wait a moment to calculate the precision"));
-  setResult(-1);
-  show();
+    text->setText(i18n("Please wait a moment to calculate the precision"));
+    setResult(-1);
+    show();
 
-  // calibrate precision (which min,max delivers the joystick in its center position)
-  // get values through the normal idle procedure
-  QTimer ti;
-  ti.start(2000, true); // single shot in 2 seconds
+    // calibrate precision (which min,max delivers the joystick in its center position)
+    // get values through the normal idle procedure
+    QTimer ti;
+    ti.start(2000, true); // single shot in 2 seconds
 
-  // normally I'd like to hide the 'Next' button in this step,
-  // but it does not work - which means: in the steps after the first,
-  // the 'Next' button does not have the focus (to be the default button)
+    // normally I'd like to hide the 'Next' button in this step,
+    // but it does not work - which means: in the steps after the first,
+    // the 'Next' button does not have the focus (to be the default button)
 
-  do
-  {
-    qApp->processEvents(2000);
-  }
-  while ( ti.isActive() && (result() != QDialog::Rejected) );
+    do
+    {
+        qApp->processEvents(2000);
+    } while(ti.isActive() && (result() != QDialog::Rejected));
 
-  if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+    if(result() == QDialog::Rejected)
+        return; // user cancelled the dialog
 
-  joydev->calcPrecision();
+    joydev->calcPrecision();
 
-  int i, lastVal;
-  int min[2], center[2], max[2];
-  QString hint;
+    int i, lastVal;
+    int min[2], center[2], max[2];
+    QString hint;
 
-  for (i = 0; i < joydev->numAxes(); i++)
-  {
-    if ( i == 0 )
-      hint = i18n("(usually X)");
-    else if ( i == 1 )
-      hint = i18n("(usually Y)");
-    else
-      hint = "";
+    for(i = 0; i < joydev->numAxes(); i++)
+    {
+        if(i == 0)
+            hint = i18n("(usually X)");
+        else if(i == 1)
+            hint = i18n("(usually Y)");
+        else
+            hint = "";
 
-    // minimum position
-    text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
-                       "Please move <b>axis %1 %2</b> on your device to the <b>minimum</b> position.<br><br>"
-                       "Press any button on the device or click on the 'Next' button "
-                       "to continue with the next step.</qt>").arg(i+1).arg(hint));
-    waitButton(i, true, lastVal);
+        // minimum position
+        text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
+                           "Please move <b>axis %1 %2</b> on your device to the <b>minimum</b> position.<br><br>"
+                           "Press any button on the device or click on the 'Next' button "
+                           "to continue with the next step.</qt>")
+                          .arg(i + 1)
+                          .arg(hint));
+        waitButton(i, true, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    joydev->resetMinMax(i, lastVal);
-    if ( result() != -2 ) waitButton(i, false, lastVal);
+        joydev->resetMinMax(i, lastVal);
+        if(result() != -2)
+            waitButton(i, false, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    min[0] = joydev->axisMin(i);
-    min[1] = joydev->axisMax(i);
+        min[0] = joydev->axisMin(i);
+        min[1] = joydev->axisMax(i);
 
-    // center position
-    text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
-                       "Please move <b>axis %1 %2</b> on your device to the <b>center</b> position.<br><br>"
-                       "Press any button on the device or click on the 'Next' button "
-                       "to continue with the next step.</qt>").arg(i+1).arg(hint));
-    waitButton(i, true, lastVal);
+        // center position
+        text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
+                           "Please move <b>axis %1 %2</b> on your device to the <b>center</b> position.<br><br>"
+                           "Press any button on the device or click on the 'Next' button "
+                           "to continue with the next step.</qt>")
+                          .arg(i + 1)
+                          .arg(hint));
+        waitButton(i, true, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    joydev->resetMinMax(i, lastVal);
-    if ( result() != -2 ) waitButton(i, false, lastVal);
+        joydev->resetMinMax(i, lastVal);
+        if(result() != -2)
+            waitButton(i, false, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    center[0] = joydev->axisMin(i);
-    center[1] = joydev->axisMax(i);
+        center[0] = joydev->axisMin(i);
+        center[1] = joydev->axisMax(i);
 
-    // maximum position
-    text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
-                       "Please move <b>axis %1 %2</b> on your device to the <b>maximum</b> position.<br><br>"
-                       "Press any button on the device or click on the 'Next' button "
-                       "to continue with the next step.</qt>").arg(i+1).arg(hint));
-    waitButton(i, true, lastVal);
+        // maximum position
+        text->setText(i18n("<qt>Calibration is about to check the value range your device delivers.<br><br>"
+                           "Please move <b>axis %1 %2</b> on your device to the <b>maximum</b> position.<br><br>"
+                           "Press any button on the device or click on the 'Next' button "
+                           "to continue with the next step.</qt>")
+                          .arg(i + 1)
+                          .arg(hint));
+        waitButton(i, true, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    joydev->resetMinMax(i, lastVal);
-    if ( result() != -2 ) waitButton(i, false, lastVal);
+        joydev->resetMinMax(i, lastVal);
+        if(result() != -2)
+            waitButton(i, false, lastVal);
 
-    if ( result() == QDialog::Rejected ) return;  // user cancelled the dialog
+        if(result() == QDialog::Rejected)
+            return; // user cancelled the dialog
 
-    max[0] = joydev->axisMin(i);
-    max[1] = joydev->axisMax(i);
+        max[0] = joydev->axisMin(i);
+        max[1] = joydev->axisMax(i);
 
-    joydev->calcCorrection(i, min, center, max);
-  }
+        joydev->calcCorrection(i, min, center, max);
+    }
 
-  JoyDevice::ErrorCode ret = joydev->applyCalibration();
+    JoyDevice::ErrorCode ret = joydev->applyCalibration();
 
-  if ( ret != JoyDevice::SUCCESS )
-  {
-    KMessageBox::error(this, joydev->errText(ret), i18n("Communication Error"));
-    reject();
-  }
+    if(ret != JoyDevice::SUCCESS)
+    {
+        KMessageBox::error(this, joydev->errText(ret), i18n("Communication Error"));
+        reject();
+    }
 
-  KMessageBox::information(this, i18n("You have successfully calibrated your device"), i18n("Calibration Success"));
-  accept();
+    KMessageBox::information(this, i18n("You have successfully calibrated your device"), i18n("Calibration Success"));
+    accept();
 }
 
 //--------------------------------------------------------------
 
 void CalDialog::waitButton(int axis, bool press, int &lastVal)
 {
-  JoyDevice::EventType type;
-  int number, value;
-  bool button = false;
-  lastVal = 0;
+    JoyDevice::EventType type;
+    int number, value;
+    bool button = false;
+    lastVal = 0;
 
-  setResult(-1);
-  // loop until the user presses a button on the device or on the dialog
-  do
-  {
-    qApp->processEvents(100);
-
-    if ( joydev->getEvent(type, number, value) )
+    setResult(-1);
+    // loop until the user presses a button on the device or on the dialog
+    do
     {
-      button = ( (type == JoyDevice::BUTTON) && (press ? (value == 1) : (value == 0)) );
+        qApp->processEvents(100);
 
-      if ( (type == JoyDevice::AXIS) && (number == axis) )
-        valueLbl->setText(i18n("Value Axis %1: %2").arg(axis+1).arg(lastVal = value));
-    }
-  }
-  while ( !button && (result() == -1) );
+        if(joydev->getEvent(type, number, value))
+        {
+            button = ((type == JoyDevice::BUTTON) && (press ? (value == 1) : (value == 0)));
+
+            if((type == JoyDevice::AXIS) && (number == axis))
+                valueLbl->setText(i18n("Value Axis %1: %2").arg(axis + 1).arg(lastVal = value));
+        }
+    } while(!button && (result() == -1));
 }
 
 //--------------------------------------------------------------
@@ -183,7 +196,7 @@ void CalDialog::waitButton(int axis, bool press, int &lastVal)
 
 void CalDialog::slotUser1()
 {
-  setResult(-2);
+    setResult(-2);
 }
 
 //--------------------------------------------------------------

@@ -21,60 +21,60 @@
 #include "kdebug.h"
 #include "widgets.h"
 
-ProgressDialog::ProgressDialog(QWidget* parent, const QString& caption, const QString& text, int totalSteps)
-    : DCOPObject( "ProgressDialog" ), KProgressDialog(parent, 0, caption, text, false)
+ProgressDialog::ProgressDialog(QWidget *parent, const QString &caption, const QString &text, int totalSteps)
+    : DCOPObject("ProgressDialog"), KProgressDialog(parent, 0, caption, text, false)
 {
-    setAutoClose( false );
-    setTotalSteps( totalSteps );
-    showCancelButton( false );
+    setAutoClose(false);
+    setTotalSteps(totalSteps);
+    showCancelButton(false);
     Widgets::handleXGeometry(this);
 }
 
-void ProgressDialog::setTotalSteps( int totalSteps )
+void ProgressDialog::setTotalSteps(int totalSteps)
 {
-    progressBar()->setTotalSteps( totalSteps );
-    if ( progress()>=totalSteps )
-      showCancelButton( false );
+    progressBar()->setTotalSteps(totalSteps);
+    if(progress() >= totalSteps)
+        showCancelButton(false);
 }
 
 int ProgressDialog::totalSteps() const
 {
     return progressBar()->totalSteps();
 }
-    
-void ProgressDialog::setProgress( int progress )
+
+void ProgressDialog::setProgress(int progress)
 {
-    progressBar()->setProgress( progress );
-    if (progress>=totalSteps() )
-      showCancelButton( false );
-}      
-      
+    progressBar()->setProgress(progress);
+    if(progress >= totalSteps())
+        showCancelButton(false);
+}
+
 int ProgressDialog::progress() const
 {
     return progressBar()->progress();
 }
 
-void ProgressDialog::setLabel(const QString& label)
+void ProgressDialog::setLabel(const QString &label)
 {
-    KProgressDialog::setLabel( label );
+    KProgressDialog::setLabel(label);
 }
 
-void ProgressDialog::showCancelButton( bool show )
+void ProgressDialog::showCancelButton(bool show)
 {
-    setAllowCancel( false );
-    KProgressDialog::showCancelButton( show );
+    setAllowCancel(false);
+    KProgressDialog::showCancelButton(show);
 }
 
 bool ProgressDialog::wasCancelled() const
 {
     return KProgressDialog::wasCancelled();
-}   
+}
 
-void ProgressDialog::setAutoClose( bool close )
+void ProgressDialog::setAutoClose(bool close)
 {
-    KProgressDialog::setAutoClose( close );
-}      
-      
+    KProgressDialog::setAutoClose(close);
+}
+
 bool ProgressDialog::autoClose() const
 {
     return KProgressDialog::autoClose();

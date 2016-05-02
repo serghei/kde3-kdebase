@@ -22,12 +22,13 @@
 
 #include <qobject.h>
 
-class TestTrash : public QObject
-{
+class TestTrash : public QObject {
     Q_OBJECT
 
 public:
-    TestTrash() {}
+    TestTrash()
+    {
+    }
     void setup();
     void cleanTrash();
     void runAll();
@@ -88,14 +89,14 @@ public:
     void emptyTrash();
 
 private slots:
-    void slotEntries( KIO::Job*, const KIO::UDSEntryList& );
+    void slotEntries(KIO::Job *, const KIO::UDSEntryList &);
 
 private:
-    void trashFile( const QString& origFilePath, const QString& fileId );
-    void trashSymlink( const QString& origFilePath, const QString& fileName, bool broken );
-    void trashDirectory( const QString& origPath, const QString& fileName );
-    void copyFromTrash( const QString& fileId, const QString& destPath, const QString& relativePath = QString::null );
-    void moveFromTrash( const QString& fileId, const QString& destPath, const QString& relativePath = QString::null );
+    void trashFile(const QString &origFilePath, const QString &fileId);
+    void trashSymlink(const QString &origFilePath, const QString &fileName, bool broken);
+    void trashDirectory(const QString &origPath, const QString &fileName);
+    void copyFromTrash(const QString &fileId, const QString &destPath, const QString &relativePath = QString::null);
+    void moveFromTrash(const QString &fileId, const QString &destPath, const QString &relativePath = QString::null);
 
     QString homeTmpDir() const;
     QString otherTmpDir() const;

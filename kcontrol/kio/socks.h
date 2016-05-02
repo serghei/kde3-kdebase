@@ -33,41 +33,39 @@
 
 class QVButtonGroup;
 
-class KSocksConfig : public KCModule
-{
-  Q_OBJECT
+class KSocksConfig : public KCModule {
+    Q_OBJECT
 public:
-  KSocksConfig(QWidget *parent);
-  virtual ~KSocksConfig();
+    KSocksConfig(QWidget *parent);
+    virtual ~KSocksConfig();
 
-  SocksBase *base;
+    SocksBase *base;
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
-  int buttons();
-  QString quickHelp() const;
+    int buttons();
+    QString quickHelp() const;
 
 public slots:
-  void configChanged();
+    void configChanged();
 
 private slots:
-  void enableChanged();
-  void methodChanged(int id);
-  void testClicked();
-  void chooseCustomLib(KURLRequester *url);
-  void customPathChanged(const QString&);
-  void addLibrary();
-  void libTextChanged(const QString& lib);
-  void addThisLibrary(const QString& lib);
-  void removeLibrary();
-  void libSelection();
+    void enableChanged();
+    void methodChanged(int id);
+    void testClicked();
+    void chooseCustomLib(KURLRequester *url);
+    void customPathChanged(const QString &);
+    void addLibrary();
+    void libTextChanged(const QString &lib);
+    void addThisLibrary(const QString &lib);
+    void removeLibrary();
+    void libSelection();
 
 private:
-
-  bool _socksEnabled;
-  int _useWhat;
+    bool _socksEnabled;
+    int _useWhat;
 };
 
 #endif

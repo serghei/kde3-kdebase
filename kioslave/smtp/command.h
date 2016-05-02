@@ -49,146 +49,166 @@ class QStrIList;
 
 namespace KioSMTP {
 
-  class Response;
-  class TransactionState;
+class Response;
+class TransactionState;
 
-  /**
-   * @short Represents an SMTP command
-   *
-   * Semantics: A command consists of a series of "command lines"
-   * (though that's stretching it a bit for @ref TransferJob and @ref
-   * AuthCommand) and responses. There's typically one response for
-   * one command line and the command is completed.
-   *
-   * However, some commands consist of a dialog (command line,
-   * response, command line, response,...) where each successive
-   * command line is dependant on the previously received response
-   * (and thus those commands are not pipelinable). That's why each
-   * command signals completion by having it's @ref #isComplete()
-   * method return true @em after the last command line to be sent,
-   * but @em before the last response to receive. @ref AuthCommand is
-   * the principal representative of this kind of command. Because
-   * @ref EHLOCommand automatically falls back to HELO in case EHLO
-   * isn't supported, it is also of this kind. If completion is
-   * signalled before the first command line is issued, it is not to
-   * be executed at all.
-   *
-   * Other commands need to send multiple "command lines" before
-   * receiving a single (final) response. @ref TransferCommand is the
-   * only representative of this kind of "command". That's why each
-   * command signals whether it now expects a response before being
-   * able to issue the next command line (if any) by having it's @ref
-   * #needsResponse() method return true.
-   *
-   * Commands whose @ref #nextCommandLine() does not support being
-   * called multiple times in a row without changing command state,
-   * must reimplement @ref #ungetCommandLine().
-   **/
-  class Command {
-  public:
-    enum Flags {
-      OnlyLastInPipeline = 1,
-      OnlyFirstInPipeline = 2,
-      CloseConnectionOnError = 4
+/**
+ * @short Represents an SMTP command
+ *
+ * Semantics: A command consists of a series of "command lines"
+ * (though that's stretching it a bit for @ref TransferJob and @ref
+ * AuthCommand) and responses. There's typically one response for
+ * one command line and the command is completed.
+ *
+ * However, some commands consist of a dialog (command line,
+ * response, command line, response,...) where each successive
+ * command line is dependant on the previously received response
+ * (and thus those commands are not pipelinable). That's why each
+ * command signals completion by having it's @ref #isComplete()
+ * method return true @em after the last command line to be sent,
+ * but @em before the last response to receive. @ref AuthCommand is
+ * the principal representative of this kind of command. Because
+ * @ref EHLOCommand automatically falls back to HELO in case EHLO
+ * isn't supported, it is also of this kind. If completion is
+ * signalled before the first command line is issued, it is not to
+ * be executed at all.
+ *
+ * Other commands need to send multiple "command lines" before
+ * receiving a single (final) response. @ref TransferCommand is the
+ * only representative of this kind of "command". That's why each
+ * command signals whether it now expects a response before being
+ * able to issue the next command line (if any) by having it's @ref
+ * #needsResponse() method return true.
+ *
+ * Commands whose @ref #nextCommandLine() does not support being
+ * called multiple times in a row without changing command state,
+ * must reimplement @ref #ungetCommandLine().
+ **/
+class Command {
+public:
+    enum Flags
+    {
+        OnlyLastInPipeline = 1,
+        OnlyFirstInPipeline = 2,
+        CloseConnectionOnError = 4
     };
 
-    Command( SMTPProtocol * smtp, int flags=0 );
+    Command(SMTPProtocol *smtp, int flags = 0);
     virtual ~Command();
 
-    enum Type {
-      STARTTLS, DATA, NOOP, RSET, QUIT
+    enum Type
+    {
+        STARTTLS,
+        DATA,
+        NOOP,
+        RSET,
+        QUIT
     };
 
-    static Command * createSimpleCommand( int which, SMTPProtocol * smtp );
+    static Command *createSimpleCommand(int which, SMTPProtocol *smtp);
 
-    virtual QCString nextCommandLine( TransactionState * ts=0 ) = 0;
+    virtual QCString nextCommandLine(TransactionState *ts = 0) = 0;
     /* Reimplement this if your @ref #nextCommandLine() implementation
        changes state other than @ref mComplete. The default
        implementation just resets @ref mComplete to false. */
-    virtual void ungetCommandLine( const QCString & cmdLine, TransactionState * ts=0 );
+    virtual void ungetCommandLine(const QCString &cmdLine, TransactionState *ts = 0);
     /* Reimplement this if your command need more sophisicated
        response processing than just checking for @ref
        Response::isOk(). The default implementation sets @ref
        mComplete to true, @ref mNeedResponse to false and returns
        whether the response isOk(). */
-    virtual bool processResponse( const Response & response, TransactionState * ts=0 );
-    
-    virtual bool doNotExecute( const TransactionState * ) const { return false; }
+    virtual bool processResponse(const Response &response, TransactionState *ts = 0);
 
-    bool isComplete() const { return mComplete; }
+    virtual bool doNotExecute(const TransactionState *) const
+    {
+        return false;
+    }
+
+    bool isComplete() const
+    {
+        return mComplete;
+    }
     /** @return whether the command expects a response now. Some
-	commands (most notably AUTH) may consist of a series of
-	commands and associated responses until they are
-	complete. Others (most notably @ref TransferCommand usually
-	send multiple "command lines" before expecting a response. */
-    bool needsResponse() const { return mNeedResponse; }
+    commands (most notably AUTH) may consist of a series of
+    commands and associated responses until they are
+    complete. Others (most notably @ref TransferCommand usually
+    send multiple "command lines" before expecting a response. */
+    bool needsResponse() const
+    {
+        return mNeedResponse;
+    }
     /** @return whether an error in executing this command is so fatal
-	that closing the connection is the only option */
-    bool closeConnectionOnError() const {
-      return mFlags & CloseConnectionOnError;
+    that closing the connection is the only option */
+    bool closeConnectionOnError() const
+    {
+        return mFlags & CloseConnectionOnError;
     }
-    bool mustBeLastInPipeline() const {
-      return mFlags & OnlyLastInPipeline;
+    bool mustBeLastInPipeline() const
+    {
+        return mFlags & OnlyLastInPipeline;
     }
-    bool mustBeFirstInPipeline() const {
-      return mFlags & OnlyFirstInPipeline;
+    bool mustBeFirstInPipeline() const
+    {
+        return mFlags & OnlyFirstInPipeline;
     }
 
-  protected:
-    SMTPProtocol * mSMTP;
+protected:
+    SMTPProtocol *mSMTP;
     bool mComplete;
     bool mNeedResponse;
     const int mFlags;
 
-  protected:
+protected:
     // only relay methods to enable access to slave-protected methods
     // for subclasses of Command:
-    void parseFeatures( const Response & r );
+    void parseFeatures(const Response &r);
     int startTLS();
     bool usingSSL() const;
     bool usingTLS() const;
-    bool haveCapability( const char * cap ) const;
-  };
+    bool haveCapability(const char *cap) const;
+};
 
-  class EHLOCommand : public Command {
-  public:
-    EHLOCommand( SMTPProtocol * smtp, const QString & hostname )
-      : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ),
-	mEHLONotSupported( false ),
-	mHostname( hostname.stripWhiteSpace() ) {}
+class EHLOCommand : public Command {
+public:
+    EHLOCommand(SMTPProtocol *smtp, const QString &hostname)
+        : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline), mEHLONotSupported(false), mHostname(hostname.stripWhiteSpace())
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-    bool processResponse( const Response & response, TransactionState * );
-  private:
+    QCString nextCommandLine(TransactionState *);
+    bool processResponse(const Response &response, TransactionState *);
+
+private:
     bool mEHLONotSupported;
     QString mHostname;
-  };
+};
 
-  class StartTLSCommand : public Command {
-  public:
-    StartTLSCommand( SMTPProtocol * smtp )
-      : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ) {}
+class StartTLSCommand : public Command {
+public:
+    StartTLSCommand(SMTPProtocol *smtp) : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-    bool processResponse( const Response & response, TransactionState * );
-  };
+    QCString nextCommandLine(TransactionState *);
+    bool processResponse(const Response &response, TransactionState *);
+};
 
-  class AuthCommand : public Command {
-  public:
-    AuthCommand( SMTPProtocol * smtp, const char *mechanisms,
-      const QString &aFQDN, KIO::AuthInfo &ai );
+class AuthCommand : public Command {
+public:
+    AuthCommand(SMTPProtocol *smtp, const char *mechanisms, const QString &aFQDN, KIO::AuthInfo &ai);
     ~AuthCommand();
-    bool doNotExecute( const TransactionState * ts ) const;
-    QCString nextCommandLine( TransactionState * );
-    void ungetCommandLine( const QCString & cmdLine, TransactionState * );
-    bool processResponse( const Response & response, TransactionState * );
-  private:
-    bool saslInteract( void *in );
+    bool doNotExecute(const TransactionState *ts) const;
+    QCString nextCommandLine(TransactionState *);
+    void ungetCommandLine(const QCString &cmdLine, TransactionState *);
+    bool processResponse(const Response &response, TransactionState *);
+
+private:
+    bool saslInteract(void *in);
 
 #ifdef HAVE_LIBSASL2
     sasl_conn_t *conn;
     sasl_interact_t *client_interact;
-#endif    
+#endif
     const char *mOut, *mMechusing;
     uint mOutlen;
     bool mOneStep;
@@ -197,86 +217,96 @@ namespace KioSMTP {
     QCString mLastChallenge;
     QCString mUngetSASLResponse;
     bool mFirstTime;
-  };
+};
 
-  class MailFromCommand : public Command {
-  public:
-    MailFromCommand( SMTPProtocol * smtp, const QCString & addr,
-		     bool eightBit=false, unsigned int size=0  )
-      : Command( smtp ), mAddr( addr ), m8Bit( eightBit ), mSize( size ) {}
+class MailFromCommand : public Command {
+public:
+    MailFromCommand(SMTPProtocol *smtp, const QCString &addr, bool eightBit = false, unsigned int size = 0)
+        : Command(smtp), mAddr(addr), m8Bit(eightBit), mSize(size)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-    bool processResponse( const Response & response, TransactionState * );
-  private:
+    QCString nextCommandLine(TransactionState *);
+    bool processResponse(const Response &response, TransactionState *);
+
+private:
     QCString mAddr;
     bool m8Bit;
     unsigned int mSize;
-  };
+};
 
-  class RcptToCommand : public Command {
-  public:
-    RcptToCommand( SMTPProtocol * smtp, const QCString & addr )
-      : Command( smtp ), mAddr( addr ) {}
+class RcptToCommand : public Command {
+public:
+    RcptToCommand(SMTPProtocol *smtp, const QCString &addr) : Command(smtp), mAddr(addr)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-    bool processResponse( const Response & response, TransactionState * );
-  private:
+    QCString nextCommandLine(TransactionState *);
+    bool processResponse(const Response &response, TransactionState *);
+
+private:
     QCString mAddr;
-  };
+};
 
-  /** Handles only the initial intermediate response and compltetes at
-      the point where the mail contents need to be sent */
-  class DataCommand : public Command {
-  public:
-    DataCommand( SMTPProtocol * smtp )
-      : Command( smtp, OnlyLastInPipeline ) {}
+/** Handles only the initial intermediate response and compltetes at
+    the point where the mail contents need to be sent */
+class DataCommand : public Command {
+public:
+    DataCommand(SMTPProtocol *smtp) : Command(smtp, OnlyLastInPipeline)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-    void ungetCommandLine( const QCString & cmd, TransactionState * ts );
-    bool processResponse( const Response & response, TransactionState * );
-  };
+    QCString nextCommandLine(TransactionState *);
+    void ungetCommandLine(const QCString &cmd, TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *);
+};
 
-  /** Handles the data transfer following a successful DATA command */
-  class TransferCommand : public Command {
-  public:
-    TransferCommand( SMTPProtocol * smtp, const QCString & initialBuffer )
-      : Command( smtp, OnlyFirstInPipeline ),
-	mUngetBuffer( initialBuffer ), mLastChar( '\n' ), mWasComplete( false ) {}
+/** Handles the data transfer following a successful DATA command */
+class TransferCommand : public Command {
+public:
+    TransferCommand(SMTPProtocol *smtp, const QCString &initialBuffer)
+        : Command(smtp, OnlyFirstInPipeline), mUngetBuffer(initialBuffer), mLastChar('\n'), mWasComplete(false)
+    {
+    }
 
-    bool doNotExecute( const TransactionState * ts ) const;
-    QCString nextCommandLine( TransactionState * );
-    void ungetCommandLine( const QCString & cmd, TransactionState * ts );
-    bool processResponse( const Response & response, TransactionState * );
-  private:
-    QCString prepare( const QByteArray & ba );
+    bool doNotExecute(const TransactionState *ts) const;
+    QCString nextCommandLine(TransactionState *);
+    void ungetCommandLine(const QCString &cmd, TransactionState *ts);
+    bool processResponse(const Response &response, TransactionState *);
+
+private:
+    QCString prepare(const QByteArray &ba);
     QCString mUngetBuffer;
     char mLastChar;
     bool mWasComplete; // ... before ungetting
-  };
+};
 
-  class NoopCommand : public Command {
-  public:
-    NoopCommand( SMTPProtocol * smtp )
-      : Command( smtp, OnlyLastInPipeline ) {}
+class NoopCommand : public Command {
+public:
+    NoopCommand(SMTPProtocol *smtp) : Command(smtp, OnlyLastInPipeline)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-  };
+    QCString nextCommandLine(TransactionState *);
+};
 
-  class RsetCommand : public Command {
-  public:
-    RsetCommand( SMTPProtocol * smtp )
-      : Command( smtp, CloseConnectionOnError ) {}
+class RsetCommand : public Command {
+public:
+    RsetCommand(SMTPProtocol *smtp) : Command(smtp, CloseConnectionOnError)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-  };
+    QCString nextCommandLine(TransactionState *);
+};
 
-  class QuitCommand : public Command {
-  public:
-    QuitCommand( SMTPProtocol * smtp )
-      : Command( smtp, CloseConnectionOnError|OnlyLastInPipeline ) {}
+class QuitCommand : public Command {
+public:
+    QuitCommand(SMTPProtocol *smtp) : Command(smtp, CloseConnectionOnError | OnlyLastInPipeline)
+    {
+    }
 
-    QCString nextCommandLine( TransactionState * );
-  };
+    QCString nextCommandLine(TransactionState *);
+};
 
 } // namespace KioSMTP
 

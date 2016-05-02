@@ -38,11 +38,10 @@ class QTabWidget;
 class QSpinBox;
 class KConfig;
 
-class KCMIOSlaveInfo : public KCModule
-{
+class KCMIOSlaveInfo : public KCModule {
     Q_OBJECT
 public:
-    KCMIOSlaveInfo(QWidget *parent = 0L, const char *name = 0L, const QStringList &lits=QStringList() );
+    KCMIOSlaveInfo(QWidget *parent = 0L, const char *name = 0L, const QStringList &lits = QStringList());
 
 protected:
     KListBox *m_ioslavesLb;
@@ -52,10 +51,9 @@ protected:
 
 protected slots:
 
-    void showInfo(const QString& protocol);
+    void showInfo(const QString &protocol);
     void showInfo(QListBoxItem *item);
-    void slaveHelp( KIO::Job *, const QByteArray &data);
-    void slotResult( KIO::Job * );
-
+    void slaveHelp(KIO::Job *, const QByteArray &data);
+    void slotResult(KIO::Job *);
 };
 #endif

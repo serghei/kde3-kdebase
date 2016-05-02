@@ -26,18 +26,16 @@
 #include <qptrlist.h>
 #include <qstring.h>
 
-class AppLnkCache
-{
-  public:
+class AppLnkCache {
+public:
     QString destDir;
     QString destName;
     QString templ;
     QCheckListItem *item;
 };
 
-bool scanDesktopFile( QPtrList<AppLnkCache> &appCache, const QString &templ,
-                      QString destDir = QString::null );
-void createDesktopFiles( QPtrList<AppLnkCache> &appCache, int &added );
-void decorateDirs( QString destDir = QString::null );
+bool scanDesktopFile(QPtrList< AppLnkCache > &appCache, const QString &templ, QString destDir = QString::null);
+void createDesktopFiles(QPtrList< AppLnkCache > &appCache, int &added);
+void decorateDirs(QString destDir = QString::null);
 
 #endif

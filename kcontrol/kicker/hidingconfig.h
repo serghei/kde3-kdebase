@@ -22,8 +22,7 @@
 
 class HidingTab;
 
-class HidingConfig : public KCModule
-{
+class HidingConfig : public KCModule {
     Q_OBJECT
 
 public:

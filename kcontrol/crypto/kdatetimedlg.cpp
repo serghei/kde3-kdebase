@@ -32,87 +32,91 @@
 #include <knuminput.h>
 #include <kstdguiitem.h>
 
-KDateTimeDlg::KDateTimeDlg(QWidget *parent, const char *name)
-                             : KDialog(parent, name, true) {
-QGridLayout *grid = new QGridLayout(this, 9, 6, marginHint(), spacingHint());
+KDateTimeDlg::KDateTimeDlg(QWidget *parent, const char *name) : KDialog(parent, name, true)
+{
+    QGridLayout *grid = new QGridLayout(this, 9, 6, marginHint(), spacingHint());
 
-   setCaption(i18n("Date & Time Selector"));
+    setCaption(i18n("Date & Time Selector"));
 
-   _date = new KDatePicker(this);
-   grid->addMultiCellWidget(_date, 0, 5, 0, 5);
+    _date = new KDatePicker(this);
+    grid->addMultiCellWidget(_date, 0, 5, 0, 5);
 
-   grid->addWidget(new QLabel(i18n("Hour:"), this), 7, 0);
-   _hours = new KIntNumInput(this);
-   _hours->setRange(0, 23, 1, false);
-   grid->addWidget(_hours, 7, 1);
+    grid->addWidget(new QLabel(i18n("Hour:"), this), 7, 0);
+    _hours = new KIntNumInput(this);
+    _hours->setRange(0, 23, 1, false);
+    grid->addWidget(_hours, 7, 1);
 
-   grid->addWidget(new QLabel(i18n("Minute:"), this), 7, 2);
-   _mins = new KIntNumInput(this);
-   _mins->setRange(0, 59, 1, false);
-   grid->addWidget(_mins, 7, 3);
+    grid->addWidget(new QLabel(i18n("Minute:"), this), 7, 2);
+    _mins = new KIntNumInput(this);
+    _mins->setRange(0, 59, 1, false);
+    grid->addWidget(_mins, 7, 3);
 
-   grid->addWidget(new QLabel(i18n("Second:"), this), 7, 4);
-   _secs = new KIntNumInput(this);
-   _secs->setRange(0, 59, 1, false);
-   grid->addWidget(_secs, 7, 5);
+    grid->addWidget(new QLabel(i18n("Second:"), this), 7, 4);
+    _secs = new KIntNumInput(this);
+    _secs->setRange(0, 59, 1, false);
+    grid->addWidget(_secs, 7, 5);
 
-   _ok = new KPushButton(KStdGuiItem::ok(), this);
-   grid->addWidget(_ok, 8, 4);
-   connect(_ok, SIGNAL(clicked()), SLOT(accept()));
+    _ok = new KPushButton(KStdGuiItem::ok(), this);
+    grid->addWidget(_ok, 8, 4);
+    connect(_ok, SIGNAL(clicked()), SLOT(accept()));
 
-   _cancel = new KPushButton(KStdGuiItem::cancel(), this);
-   grid->addWidget(_cancel, 8, 5);
-   connect(_cancel, SIGNAL(clicked()), SLOT(reject()));
-
+    _cancel = new KPushButton(KStdGuiItem::cancel(), this);
+    grid->addWidget(_cancel, 8, 5);
+    connect(_cancel, SIGNAL(clicked()), SLOT(reject()));
 }
 
 
-KDateTimeDlg::~KDateTimeDlg() {
-
+KDateTimeDlg::~KDateTimeDlg()
+{
 }
 
 
-QDate KDateTimeDlg::getDate() {
-   return _date->date();
+QDate KDateTimeDlg::getDate()
+{
+    return _date->date();
 }
 
 
-QTime KDateTimeDlg::getTime() {
-QTime rc(_hours->value(), _mins->value(), _secs->value());
-return rc;
+QTime KDateTimeDlg::getTime()
+{
+    QTime rc(_hours->value(), _mins->value(), _secs->value());
+    return rc;
 }
 
 
-QDateTime KDateTimeDlg::getDateTime() {
-QDateTime qdt;
-QTime qtime(_hours->value(), _mins->value(), _secs->value());
+QDateTime KDateTimeDlg::getDateTime()
+{
+    QDateTime qdt;
+    QTime qtime(_hours->value(), _mins->value(), _secs->value());
 
-   qdt.setDate(_date->date());
-   qdt.setTime(qtime);
+    qdt.setDate(_date->date());
+    qdt.setTime(qtime);
 
-return qdt;
+    return qdt;
 }
 
 
-void KDateTimeDlg::setDate(const QDate& qdate) {
-   _date->setDate(qdate);
+void KDateTimeDlg::setDate(const QDate &qdate)
+{
+    _date->setDate(qdate);
 }
 
 
-void KDateTimeDlg::setTime(const QTime& qtime) {
-   _hours->setValue(qtime.hour());
-   _mins->setValue(qtime.minute());
-   _secs->setValue(qtime.second());
+void KDateTimeDlg::setTime(const QTime &qtime)
+{
+    _hours->setValue(qtime.hour());
+    _mins->setValue(qtime.minute());
+    _secs->setValue(qtime.second());
 }
 
 
-void KDateTimeDlg::setDateTime(const QDateTime& qdatetime) {
-   _date->setDate(qdatetime.date());
-   _hours->setValue(qdatetime.time().hour());
-   _mins->setValue(qdatetime.time().minute());
-   _secs->setValue(qdatetime.time().second());
+void KDateTimeDlg::setDateTime(const QDateTime &qdatetime)
+{
+    _date->setDate(qdatetime.date());
+    _hours->setValue(qdatetime.time().hour());
+    _mins->setValue(qdatetime.time().minute());
+    _secs->setValue(qdatetime.time().second());
 }
 
 
 #include "kdatetimedlg.moc"
-

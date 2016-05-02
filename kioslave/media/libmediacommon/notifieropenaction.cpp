@@ -21,25 +21,23 @@
 
 #include <klocale.h>
 
-NotifierOpenAction::NotifierOpenAction()
-	: NotifierAction()
+NotifierOpenAction::NotifierOpenAction() : NotifierAction()
 {
-	setIconName("window_new");
-	setLabel(i18n("Open in New Window"));
+    setIconName("window_new");
+    setLabel(i18n("Open in New Window"));
 }
 
 QString NotifierOpenAction::id() const
 {
-	return "#OpenAction";
+    return "#OpenAction";
 }
 
 void NotifierOpenAction::execute(KFileItem &medium)
 {
-	medium.run();
+    medium.run();
 }
 
-bool NotifierOpenAction::supportsMimetype( const QString &mimetype ) const
+bool NotifierOpenAction::supportsMimetype(const QString &mimetype) const
 {
-	return !mimetype.contains( "blank" );
+    return !mimetype.contains("blank");
 }
-

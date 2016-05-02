@@ -31,25 +31,24 @@
 
 #include <kfileiconview.h>
 
-namespace KFI
-{
+namespace KFI {
 
-class CKFileFontIconView : public KFileIconView
-{
-    public:
+class CKFileFontIconView : public KFileIconView {
+public:
+    CKFileFontIconView(QWidget *parent, const char *name) : KFileIconView(parent, name)
+    {
+    }
+    virtual ~CKFileFontIconView()
+    {
+    }
 
-    CKFileFontIconView(QWidget *parent, const char *name) : KFileIconView(parent, name) {}
-    virtual ~CKFileFontIconView()                                                       {}
-
-    protected:
-
+protected:
     // DND support
     void contentsDragEnterEvent(QDragEnterEvent *e);
     void contentsDragMoveEvent(QDragMoveEvent *e);
     void contentsDropEvent(QDropEvent *e);
     bool acceptDrag(QDropEvent *e) const;
 };
-
 }
 
 #endif

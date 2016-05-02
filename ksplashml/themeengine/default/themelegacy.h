@@ -24,80 +24,79 @@ class QTimer;
 
 class QCheckBox;
 
-class DefaultConfig: public ThemeEngineConfig
-{
-  Q_OBJECT
+class DefaultConfig : public ThemeEngineConfig {
+    Q_OBJECT
 public:
-  DefaultConfig( QWidget *, KConfig * );
-  void save();
+    DefaultConfig(QWidget *, KConfig *);
+    void save();
+
 protected:
-  QCheckBox *mFlash, *mAlwaysShow;
+    QCheckBox *mFlash, *mAlwaysShow;
 };
 
 /**
  * @short Traditional KDE splash screen.
  */
 class ObjKsTheme;
-class KDE_EXPORT ThemeDefault : public ThemeEngine
-{
-  Q_OBJECT
+class KDE_EXPORT ThemeDefault : public ThemeEngine {
+    Q_OBJECT
 public:
-  ThemeDefault( QWidget *, const char *, const QStringList& );
-   virtual ~ThemeDefault();
+    ThemeDefault(QWidget *, const char *, const QStringList &);
+    virtual ~ThemeDefault();
 
-  inline const DefaultConfig *config( QWidget *p, KConfig *c )
-  {
-    return new DefaultConfig( p, c );
-  };
+    inline const DefaultConfig *config(QWidget *p, KConfig *c)
+    {
+        return new DefaultConfig(p, c);
+    };
 
-  static QStringList names()
-  {
-    QStringList Names;
-    Names << "Default";
-    Names << "Classic";
-    Names << "Klassic";
-    return( Names );
-  }
+    static QStringList names()
+    {
+        QStringList Names;
+        Names << "Default";
+        Names << "Classic";
+        Names << "Klassic";
+        return (Names);
+    }
 
 public slots:
-  inline void slotSetText( const QString& s )
-  {
-    if( mLabel )
-      mLabel->setText( s );
-    slotUpdateState();
-  };
-  inline void slotUpdateSteps( int s )
-  {
-    mProgressBar->show();
-    mProgressBar->setTotalSteps( s );
-  }
-  inline void slotUpdateProgress( int i )
-  {
-    mProgressBar->setProgress( i );
-  }
+    inline void slotSetText(const QString &s)
+    {
+        if(mLabel)
+            mLabel->setText(s);
+        slotUpdateState();
+    };
+    inline void slotUpdateSteps(int s)
+    {
+        mProgressBar->show();
+        mProgressBar->setTotalSteps(s);
+    }
+    inline void slotUpdateProgress(int i)
+    {
+        mProgressBar->setProgress(i);
+    }
 
 
 private slots:
-  void slotUpdateState();
-  QPixmap updateBarPixmap( int );
-  void flash();
+    void slotUpdateState();
+    QPixmap updateBarPixmap(int);
+    void flash();
 
 private:
-  void _initUi();
-  void _readSettings();
-  QString _findPicture( const QString &pic );
+    void _initUi();
+    void _readSettings();
+    QString _findPicture(const QString &pic);
 
-  // Configurable Options
-  bool mIconsFlashing;
-  QColor mLabelForeground;
+    // Configurable Options
+    bool mIconsFlashing;
+    QColor mLabelForeground;
 
-  // Internals.
-  KProgress *mProgressBar;
-  QLabel *mLabel, *mBarLabel;
-  QPixmap *mActivePixmap, *mInactivePixmap;
-  int mState;
-  QTimer *mFlashTimer;
-  QPixmap *mFlashPixmap1, *mFlashPixmap2;
+    // Internals.
+    KProgress *mProgressBar;
+    QLabel *mLabel, *mBarLabel;
+    QPixmap *mActivePixmap, *mInactivePixmap;
+    int mState;
+    QTimer *mFlashTimer;
+    QPixmap *mFlashPixmap1, *mFlashPixmap2;
 };
 
 #endif

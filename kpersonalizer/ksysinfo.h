@@ -24,37 +24,39 @@ class QFontDatabase;
 
 class KSysInfo {
 public:
-	KSysInfo();
-	~KSysInfo();
-	/* XServer - info */
-	bool isXfromXFreeInc();
-	bool isXfromXOrg();
-	int getXRelease();
-	bool getRenderSupport();
-	/* font - info */
-	QFont getNormalFont();
-	QFont getSmallFont();
-	QFont getBoldFont();
-	QFont getFixedWidthFont();
-	/* Hardware - info */
-	int getCpuSpeed();
+    KSysInfo();
+    ~KSysInfo();
+    /* XServer - info */
+    bool isXfromXFreeInc();
+    bool isXfromXOrg();
+    int getXRelease();
+    bool getRenderSupport();
+    /* font - info */
+    QFont getNormalFont();
+    QFont getSmallFont();
+    QFont getBoldFont();
+    QFont getFixedWidthFont();
+    /* Hardware - info */
+    int getCpuSpeed();
+
 private:
-	void initXInfo();
-	void initFontFamilies();
-	void initHWInfo();
+    void initXInfo();
+    void initFontFamilies();
+    void initHWInfo();
+
 private:
-	/* XServer - info */
-	QString m_xvendor;
-	bool m_xfree_inc;
-	bool m_xorg;
-	int m_xrelease;
-	bool m_xrender;
-	/* font - info */
-	QFontDatabase* m_fdb;
-	QString m_normal_font;
-	QString m_fixed_font;
-	/* Hardware - info */
-	int m_cpu_speed;
+    /* XServer - info */
+    QString m_xvendor;
+    bool m_xfree_inc;
+    bool m_xorg;
+    int m_xrelease;
+    bool m_xrender;
+    /* font - info */
+    QFontDatabase *m_fdb;
+    QString m_normal_font;
+    QString m_fixed_font;
+    /* Hardware - info */
+    int m_cpu_speed;
 };
 
 #endif

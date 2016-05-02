@@ -32,22 +32,20 @@
 #include <qlabel.h>
 #include <klocale.h>
 
-namespace KFI
-{
+namespace KFI {
 
-CPrintDialog::CPrintDialog(QWidget *parent)
-            : KDialogBase(Plain, i18n("Print Font Samples"), Ok|Cancel, Ok, parent, NULL, true, false)
+CPrintDialog::CPrintDialog(QWidget *parent) : KDialogBase(Plain, i18n("Print Font Samples"), Ok | Cancel, Ok, parent, NULL, true, false)
 {
-    QFrame      *page=plainPage();
-    QGridLayout *layout=new QGridLayout(page, 1, 1, 0, spacingHint());
+    QFrame *page = plainPage();
+    QGridLayout *layout = new QGridLayout(page, 1, 1, 0, spacingHint());
 
     layout->addWidget(new QLabel(i18n("Output:"), page), 0, 0);
-    itsOutput=new QComboBox(page);
+    itsOutput = new QComboBox(page);
     itsOutput->insertItem(i18n("All Fonts"), 0);
     itsOutput->insertItem(i18n("Selected Fonts"), 1);
     layout->addWidget(itsOutput, 0, 1);
     layout->addWidget(new QLabel(i18n("Font size:"), page), 1, 0);
-    itsSize=new QComboBox(page);
+    itsSize = new QComboBox(page);
     itsSize->insertItem(i18n("Waterfall"), 0);
     itsSize->insertItem(i18n("12pt"), 1);
     itsSize->insertItem(i18n("18pt"), 2);
@@ -68,7 +66,6 @@ bool CPrintDialog::exec(bool select, int size)
     else
         itsOutput->setCurrentItem(1);
     itsSize->setCurrentItem(size);
-    return QDialog::Accepted==QDialog::exec();
+    return QDialog::Accepted == QDialog::exec();
 }
-
 }

@@ -6,7 +6,7 @@
  * This is the 3rd generation of kasbar.
  *
  * @section completed Completed Features
- * 
+ *
  * <ul>
  * <li>Added the ability to detach the bar from the screen edge and drag it around.
  * <li>Added support for the 'demands attention' NET WM property.
@@ -35,35 +35,26 @@
  */
 
 
-
-class QObject
-{
+class QObject {
 };
 
-class QWidget : public QObject
-{
+class QWidget : public QObject {
 };
 
-class QDialog : public QWidget
-{
+class QDialog : public QWidget {
 };
 
-class QFrame : public QWidget
-{
+class QFrame : public QWidget {
 };
 
-class QHBox : public QFrame
-{
+class QHBox : public QFrame {
 };
 
-class QLCDNumber : public QFrame
-{
+class QLCDNumber : public QFrame {
 };
 
-class KDialogBase : public QDialog
-{
+class KDialogBase : public QDialog {
 };
 
-class KPanelExtension : public QWidget
-{
+class KPanelExtension : public QWidget {
 };

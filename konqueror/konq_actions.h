@@ -31,59 +31,50 @@ class QPopupMenu;
  * Plug this action into a menu to get a bidirectional history
  * (both back and forward, including current location)
  */
-class KonqBidiHistoryAction : public KAction
-{
-  Q_OBJECT
+class KonqBidiHistoryAction : public KAction {
+    Q_OBJECT
 public:
-    KonqBidiHistoryAction( const QString & text, QObject* parent = 0, const char* name = 0 );
+    KonqBidiHistoryAction(const QString &text, QObject *parent = 0, const char *name = 0);
 
-    virtual ~KonqBidiHistoryAction() {};
+    virtual ~KonqBidiHistoryAction(){};
 
-    virtual int plug( QWidget *widget, int index = -1 );
-    //virtual void unplug( QWidget *widget );
+    virtual int plug(QWidget *widget, int index = -1);
+    // virtual void unplug( QWidget *widget );
 
-    void fillGoMenu( const QPtrList<HistoryEntry> &history );
+    void fillGoMenu(const QPtrList< HistoryEntry > &history);
 
     // Used by KonqHistoryAction and KonqBidiHistoryAction
-    static void fillHistoryPopup( const QPtrList<HistoryEntry> &history,
-                           QPopupMenu * popup,
-                           bool onlyBack = false,
-                           bool onlyForward = false,
-                           bool checkCurrentItem = false,
-                           uint startPos = 0 );
+    static void fillHistoryPopup(const QPtrList< HistoryEntry > &history, QPopupMenu *popup, bool onlyBack = false, bool onlyForward = false,
+                                 bool checkCurrentItem = false, uint startPos = 0);
 
 protected slots:
-    void slotActivated( int );
+    void slotActivated(int);
 
 signals:
     void menuAboutToShow();
     // -1 for one step back, 0 for don't move, +1 for one step forward, etc.
-    void activated( int );
+    void activated(int);
+
 private:
     uint m_firstIndex; // first index in the Go menu
     int m_startPos;
-    int m_currentPos; // == history.at()
+    int m_currentPos;     // == history.at()
     QPopupMenu *m_goMenu; // hack
 };
 
 /////
 
-class KonqLogoAction : public KAction
-{
-  Q_OBJECT
+class KonqLogoAction : public KAction {
+    Q_OBJECT
 public:
-    KonqLogoAction( const QString& text, int accel = 0, QObject* parent = 0, const char* name = 0 );
-    KonqLogoAction( const QString& text, int accel,
-	            QObject* receiver, const char* slot, QObject* parent, const char* name = 0 );
-    KonqLogoAction( const QString& text, const QIconSet& pix, int accel = 0,
-	            QObject* parent = 0, const char* name = 0 );
-    KonqLogoAction( const QString& text, const QIconSet& pix, int accel,
-	            QObject* receiver, const char* slot, QObject* parent, const char* name = 0 );
+    KonqLogoAction(const QString &text, int accel = 0, QObject *parent = 0, const char *name = 0);
+    KonqLogoAction(const QString &text, int accel, QObject *receiver, const char *slot, QObject *parent, const char *name = 0);
+    KonqLogoAction(const QString &text, const QIconSet &pix, int accel = 0, QObject *parent = 0, const char *name = 0);
+    KonqLogoAction(const QString &text, const QIconSet &pix, int accel, QObject *receiver, const char *slot, QObject *parent, const char *name = 0);
     // text missing !
-    KonqLogoAction( const QStringList& icons, QObject* receiver,
-                    const char* slot, QObject* parent, const char* name = 0 );
+    KonqLogoAction(const QStringList &icons, QObject *receiver, const char *slot, QObject *parent, const char *name = 0);
 
-    virtual int plug( QWidget *widget, int index = -1 );
+    virtual int plug(QWidget *widget, int index = -1);
     virtual void updateIcon(int id);
 
     void start();
@@ -93,17 +84,18 @@ private:
     QStringList iconList;
 };
 
-class KonqViewModeAction : public KRadioAction
-{
+class KonqViewModeAction : public KRadioAction {
     Q_OBJECT
 public:
-    KonqViewModeAction( const QString &text, const QString &icon,
-                        QObject *parent, const char *name );
+    KonqViewModeAction(const QString &text, const QString &icon, QObject *parent, const char *name);
     virtual ~KonqViewModeAction();
 
-    virtual int plug( QWidget *widget, int index = -1 );
+    virtual int plug(QWidget *widget, int index = -1);
 
-    QPopupMenu *popupMenu() const { return m_menu; }
+    QPopupMenu *popupMenu() const
+    {
+        return m_menu;
+    }
 
 private slots:
     void slotPopupAboutToShow();
@@ -115,36 +107,33 @@ private:
     QPopupMenu *m_menu;
 };
 
-class MostOftenList : public KonqBaseHistoryList
-{
+class MostOftenList : public KonqBaseHistoryList {
 protected:
     /**
      * Ensures that the items are sorted by numberOfTimesVisited
      */
-    virtual int compareItems( QPtrCollection::Item, QPtrCollection::Item );
+    virtual int compareItems(QPtrCollection::Item, QPtrCollection::Item);
 };
 
-class KonqMostOftenURLSAction : public KActionMenu
-{
+class KonqMostOftenURLSAction : public KActionMenu {
     Q_OBJECT
 
 public:
-    KonqMostOftenURLSAction( const QString& text, QObject *parent,
-			     const char *name );
+    KonqMostOftenURLSAction(const QString &text, QObject *parent, const char *name);
     virtual ~KonqMostOftenURLSAction();
 
 signals:
-    void activated( const KURL& );
+    void activated(const KURL &);
 
 private slots:
     void slotHistoryCleared();
-    void slotEntryAdded( const KonqHistoryEntry *entry );
-    void slotEntryRemoved( const KonqHistoryEntry *entry );
+    void slotEntryAdded(const KonqHistoryEntry *entry);
+    void slotEntryRemoved(const KonqHistoryEntry *entry);
 
     void slotFillMenu();
-    //void slotClearMenu();
+    // void slotClearMenu();
 
-    void slotActivated( int );
+    void slotActivated(int);
 
 private:
     void init();

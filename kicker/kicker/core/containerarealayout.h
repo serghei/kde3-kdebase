@@ -28,93 +28,101 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ContainerAreaLayout;
 
-class ContainerAreaLayoutItem : public Qt
-{
-    public:
-        ContainerAreaLayoutItem(QLayoutItem* i, ContainerAreaLayout* layout)
-            : item(i),
-              m_freeSpaceRatio(0.0),
-              m_layout(layout)
-        {}
+class ContainerAreaLayoutItem : public Qt {
+public:
+    ContainerAreaLayoutItem(QLayoutItem *i, ContainerAreaLayout *layout) : item(i), m_freeSpaceRatio(0.0), m_layout(layout)
+    {
+    }
 
-        ~ContainerAreaLayoutItem()
-        { delete item; }
+    ~ContainerAreaLayoutItem()
+    {
+        delete item;
+    }
 
-        int heightForWidth(int w) const;
-        int widthForHeight(int h) const;
+    int heightForWidth(int w) const;
+    int widthForHeight(int h) const;
 
-        bool isStretch() const;
+    bool isStretch() const;
 
-        QRect geometry() const
-        { return item->geometry(); }
-        void setGeometry(const QRect& geometry)
-        { item->setGeometry(geometry); }
+    QRect geometry() const
+    {
+        return item->geometry();
+    }
+    void setGeometry(const QRect &geometry)
+    {
+        item->setGeometry(geometry);
+    }
 
-        double freeSpaceRatio() const;
-        void setFreeSpaceRatio(double ratio);
+    double freeSpaceRatio() const;
+    void setFreeSpaceRatio(double ratio);
 
-        Orientation orientation() const;
+    Orientation orientation() const;
 
-        // Relative geometry
-        QRect geometryR() const;
-        void setGeometryR(const QRect&);
-        int widthForHeightR(int w) const;
-        int widthR() const;
-        int heightR() const;
-        int leftR() const;
-        int rightR() const;
+    // Relative geometry
+    QRect geometryR() const;
+    void setGeometryR(const QRect &);
+    int widthForHeightR(int w) const;
+    int widthR() const;
+    int heightR() const;
+    int leftR() const;
+    int rightR() const;
 
-        QLayoutItem* item;
+    QLayoutItem *item;
 
-    private:
-        double m_freeSpaceRatio;
-        ContainerAreaLayout* m_layout;
+private:
+    double m_freeSpaceRatio;
+    ContainerAreaLayout *m_layout;
 };
 
-class ContainerAreaLayout : public QLayout
-{
-    public:
-        typedef ContainerAreaLayoutItem Item;
-        typedef QValueList<Item*> ItemList;
+class ContainerAreaLayout : public QLayout {
+public:
+    typedef ContainerAreaLayoutItem Item;
+    typedef QValueList< Item * > ItemList;
 
-        ContainerAreaLayout(QWidget* parent);
+    ContainerAreaLayout(QWidget *parent);
 
-        void addItem(QLayoutItem* item);
-        void insertIntoFreeSpace(QWidget* item, QPoint insertionPoint);
-        QStringList listItems() const;
-        QWidget* widgetAt(int index) const;
-        QSize sizeHint() const;
-        QSize minimumSize() const;
-        QLayoutIterator iterator();
-        void setGeometry(const QRect& rect);
+    void addItem(QLayoutItem *item);
+    void insertIntoFreeSpace(QWidget *item, QPoint insertionPoint);
+    QStringList listItems() const;
+    QWidget *widgetAt(int index) const;
+    QSize sizeHint() const;
+    QSize minimumSize() const;
+    QLayoutIterator iterator();
+    void setGeometry(const QRect &rect);
 
-        Orientation orientation() const { return m_orientation; }
-        void setOrientation(Orientation o) { m_orientation = o; }
-        int heightForWidth(int w) const;
-        int widthForHeight(int h) const;
-        void updateFreeSpaceValues();
-        void moveToFirstFreePosition(BaseContainer* a);
+    Orientation orientation() const
+    {
+        return m_orientation;
+    }
+    void setOrientation(Orientation o)
+    {
+        m_orientation = o;
+    }
+    int heightForWidth(int w) const;
+    int widthForHeight(int h) const;
+    void updateFreeSpaceValues();
+    void moveToFirstFreePosition(BaseContainer *a);
 
-        void setStretchEnabled(bool enable);
+    void setStretchEnabled(bool enable);
 
-        void moveContainerSwitch(QWidget* container, int distance);
-        int moveContainerPush(QWidget* container, int distance);
+    void moveContainerSwitch(QWidget *container, int distance);
+    int moveContainerPush(QWidget *container, int distance);
 
-        // Relative geometry
-        QRect transform(const QRect&) const;
-        int widthForHeightR(int w) const;
-        int widthR() const;
-        int heightR() const;
-        int leftR() const;
-        int rightR() const;
+    // Relative geometry
+    QRect transform(const QRect &) const;
+    int widthForHeightR(int w) const;
+    int widthR() const;
+    int heightR() const;
+    int leftR() const;
+    int rightR() const;
 
-    private:
-        int moveContainerPushRecursive(ItemList::const_iterator it, int distance);
-        int distanceToPreviousItem(ItemList::const_iterator it) const;
+private:
+    int moveContainerPushRecursive(ItemList::const_iterator it, int distance);
+    int distanceToPreviousItem(ItemList::const_iterator it) const;
 
-        Orientation m_orientation;
-        bool m_stretchEnabled;
-        ItemList m_items;
+    Orientation m_orientation;
+    bool m_stretchEnabled;
+    ItemList m_items;
 };
 
 #endif

@@ -32,43 +32,42 @@ class QPushButton;
 struct ThemeInfo;
 
 
-class ThemePage : public QWidget
-{
-	Q_OBJECT
+class ThemePage : public QWidget {
+    Q_OBJECT
 
-	public:
-		ThemePage( QWidget* parent = 0, const char* name = 0 );
-		~ThemePage();
+public:
+    ThemePage(QWidget *parent = 0, const char *name = 0);
+    ~ThemePage();
 
-		// Called by the KCM
-		void save();
-		void load();
-		void load( bool useDefaults );
-		void defaults();
+    // Called by the KCM
+    void save();
+    void load();
+    void load(bool useDefaults);
+    void defaults();
 
-	signals:
-		void changed( bool );
+signals:
+    void changed(bool);
 
-	private slots:
-		void selectionChanged( QListViewItem * );
-		void installClicked();
-		void removeClicked();
+private slots:
+    void selectionChanged(QListViewItem *);
+    void installClicked();
+    void removeClicked();
 
-	private:
-		bool installThemes( const QString &file );
-		void insertTheme( const QString & );
-		const QStringList getThemeBaseDirs() const;
-		bool isCursorTheme( const QString &theme, const int depth = 0 ) const;
-		void insertThemes();
-		QPixmap createIcon( const QString &, const QString & ) const;
+private:
+    bool installThemes(const QString &file);
+    void insertTheme(const QString &);
+    const QStringList getThemeBaseDirs() const;
+    bool isCursorTheme(const QString &theme, const int depth = 0) const;
+    void insertThemes();
+    QPixmap createIcon(const QString &, const QString &) const;
 
-		KListView *listview;
-		PreviewWidget *preview;
-		QPushButton *installButton, *removeButton;
-		QString selectedTheme;
-		QString currentTheme;
-		QStringList themeDirs;
-		QDict<ThemeInfo> themeInfo;
+    KListView *listview;
+    PreviewWidget *preview;
+    QPushButton *installButton, *removeButton;
+    QString selectedTheme;
+    QString currentTheme;
+    QStringList themeDirs;
+    QDict< ThemeInfo > themeInfo;
 };
 
 #endif // __THEMEPAGE_H

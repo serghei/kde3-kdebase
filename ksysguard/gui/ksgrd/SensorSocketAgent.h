@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -39,33 +39,30 @@ class SensorClient;
   one pending requests. Incoming requests are queued in an input
   FIFO.
  */
-class SensorSocketAgent : public SensorAgent
-{
-  Q_OBJECT
+class SensorSocketAgent : public SensorAgent {
+    Q_OBJECT
 
-  public:
-    SensorSocketAgent( SensorManager *sm );
+public:
+    SensorSocketAgent(SensorManager *sm);
     ~SensorSocketAgent();
 
-    bool start( const QString &host, const QString &shell,
-                const QString &command = "", int port = -1 );
+    bool start(const QString &host, const QString &shell, const QString &command = "", int port = -1);
 
-    void hostInfo( QString &shell, QString &command, int &port ) const;
+    void hostInfo(QString &shell, QString &command, int &port) const;
 
-  private slots:
+private slots:
     void connectionClosed();
-    void msgSent( int );
+    void msgSent(int);
     void msgRcvd();
-    void error( int );
+    void error(int);
 
-  private:
-    bool writeMsg( const char *msg, int len );
+private:
+    bool writeMsg(const char *msg, int len);
     bool txReady();
 
     KNetwork::KBufferedSocket mSocket;
     int mPort;
 };
-
 }
-	
+
 #endif

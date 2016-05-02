@@ -71,54 +71,66 @@ class Task;
 /**
  * A KasItem that holds a list of Tasks.
  */
-class KasGroupItem : public KasItem
-{
-   Q_OBJECT
+class KasGroupItem : public KasItem {
+    Q_OBJECT
 
 public:
-   enum GroupType {
-       GroupRelated, GroupDesktop
-   };
+    enum GroupType
+    {
+        GroupRelated,
+        GroupDesktop
+    };
 
-   KasGroupItem( KasTasker *parent/*, Group *group*/ );
-   virtual ~KasGroupItem();
+    KasGroupItem(KasTasker *parent /*, Group *group*/);
+    virtual ~KasGroupItem();
 
-   uint groupType() const { return groupType_; }
-   void setGroupType( uint type ) { groupType_ = type; }
+    uint groupType() const
+    {
+        return groupType_;
+    }
+    void setGroupType(uint type)
+    {
+        groupType_ = type;
+    }
 
-   /** Reimplemented to paint the item. */
-   virtual void paint( QPainter *p );
+    /** Reimplemented to paint the item. */
+    virtual void paint(QPainter *p);
 
-   KasTasker *kasbar() const;
+    KasTasker *kasbar() const;
 
-   Task::Ptr task( uint i ) { return items.at( i ); }
-   int taskCount() const { return items.count(); }
+    Task::Ptr task(uint i)
+    {
+        return items.at(i);
+    }
+    int taskCount() const
+    {
+        return items.count();
+    }
 
-   QPixmap icon();
-  
+    QPixmap icon();
+
 public slots:
-   void addTask( Task::Ptr t );
-   void removeTask( Task::Ptr t );
+    void addTask(Task::Ptr t);
+    void removeTask(Task::Ptr t);
 
-   void ungroup();
+    void ungroup();
 
-   void showGroupMenuAt( QMouseEvent *ev );   
-   void showGroupMenuAt( const QPoint &p );
+    void showGroupMenuAt(QMouseEvent *ev);
+    void showGroupMenuAt(const QPoint &p);
 
-   void updateIcon();
+    void updateIcon();
 
-   void updatePopup();
+    void updatePopup();
 
 protected:
-   /** Reimplemented to create a KasGroupPopup. */
-   virtual KasPopup *createPopup();
+    /** Reimplemented to create a KasGroupPopup. */
+    virtual KasPopup *createPopup();
 
 private:
-   QString title_;
-   Task::List items;
-   uint groupType_;
-   KasTasker *bar;
+    QString title_;
+    Task::List items;
+    uint groupType_;
+    KasTasker *bar;
 };
 
 #endif // KASGROUPITEM_H
-

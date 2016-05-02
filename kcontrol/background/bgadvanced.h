@@ -36,73 +36,70 @@ class BGAdvancedBase;
 class KBackgroundRenderer;
 class KBackgroundProgram;
 
-class BGAdvancedDialog : public KDialogBase
-{
-   Q_OBJECT
+class BGAdvancedDialog : public KDialogBase {
+    Q_OBJECT
 public:
-   BGAdvancedDialog(KBackgroundRenderer *_r, QWidget *parent, bool m_multidesktop);
+    BGAdvancedDialog(KBackgroundRenderer *_r, QWidget *parent, bool m_multidesktop);
 
-   void setCacheSize(int s);
-   int cacheSize();
-   QColor textColor();
-   void setTextColor(const QColor &color);
-   QColor textBackgroundColor();
-   void setTextBackgroundColor(const QColor &color);
-   bool shadowEnabled();
-   void setShadowEnabled(bool enabled);
-   void setTextLines(int lines);
-   int textLines() const;
-   void setTextWidth(int width);
-   int textWidth() const;
+    void setCacheSize(int s);
+    int cacheSize();
+    QColor textColor();
+    void setTextColor(const QColor &color);
+    QColor textBackgroundColor();
+    void setTextBackgroundColor(const QColor &color);
+    bool shadowEnabled();
+    void setShadowEnabled(bool enabled);
+    void setTextLines(int lines);
+    int textLines() const;
+    void setTextWidth(int width);
+    int textWidth() const;
 
-   void updateUI();
+    void updateUI();
 
-   void makeReadOnly();
+    void makeReadOnly();
 
-   QString backgroundProgram() const;
-   int backgroundMode() const;
+    QString backgroundProgram() const;
+    int backgroundMode() const;
 
 public slots:
-   void slotAdd();
-   void slotRemove();
-   void slotModify();
+    void slotAdd();
+    void slotRemove();
+    void slotModify();
 
 protected:
-   void addProgram(const QString &name);
-   void removeProgram(const QString &name);
-   void selectProgram(const QString &name);
+    void addProgram(const QString &name);
+    void removeProgram(const QString &name);
+    void selectProgram(const QString &name);
 
 protected slots:
-   void slotProgramItemClicked(QListViewItem *item);
-   void slotProgramItemDoubleClicked(QListViewItem *item);
-   void slotProgramChanged();
-   void slotEnableProgram(bool b);
+    void slotProgramItemClicked(QListViewItem *item);
+    void slotProgramItemDoubleClicked(QListViewItem *item);
+    void slotProgramChanged();
+    void slotEnableProgram(bool b);
 
 private:
-   KBackgroundRenderer *r;
+    KBackgroundRenderer *r;
 
-   BGAdvancedBase *dlg;
+    BGAdvancedBase *dlg;
 
-   QWidget *m_pMonitor;
-   QDict<QListViewItem> m_programItems;
-   QString m_selectedProgram;
-   int m_oldBackgroundMode;
-   int m_backgroundMode;
+    QWidget *m_pMonitor;
+    QDict< QListViewItem > m_programItems;
+    QString m_selectedProgram;
+    int m_oldBackgroundMode;
+    int m_backgroundMode;
 };
 
 /**
  * Dialog to edit a background program.
  */
-class KProgramEditDialog: public KDialogBase
-{
+class KProgramEditDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    KProgramEditDialog(const QString &program=QString::null, QWidget *parent=0L,
-	    char *name=0L);
+    KProgramEditDialog(const QString &program = QString::null, QWidget *parent = 0L, char *name = 0L);
 
     /** The program name is here in case the user changed it */
-    QString program()const;
+    QString program() const;
 
 public slots:
     void slotOk();
@@ -118,4 +115,3 @@ private:
 
 
 #endif
-

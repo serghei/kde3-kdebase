@@ -21,26 +21,24 @@
 
 #include "konqueror_ui.h"
 
-namespace KCMPerformance
-{
+namespace KCMPerformance {
 
-class Konqueror
-    : public Konqueror_ui
-    {
+class Konqueror : public Konqueror_ui {
     Q_OBJECT
-    public:
-        Konqueror( QWidget* parent_P = NULL );
-        void load(bool useDefaults);
-        void save();
-        void defaults();
-    signals:
-        void changed();
-    private slots:
-	void preload_count_changed( int );
-    private:
-        QString allowed_parts;
-    };
+public:
+    Konqueror(QWidget *parent_P = NULL);
+    void load(bool useDefaults);
+    void save();
+    void defaults();
+signals:
+    void changed();
+private slots:
+    void preload_count_changed(int);
 
-}  // namespace 
+private:
+    QString allowed_parts;
+};
+
+} // namespace
 
 #endif

@@ -28,29 +28,33 @@ class KPopupMenu;
 class KonsoleBookmarkMenu;
 class KBookmarkManager;
 
-class KonsoleBookmarkHandler : public QObject, public KBookmarkOwner
-{
+class KonsoleBookmarkHandler : public QObject, public KBookmarkOwner {
     Q_OBJECT
 
 public:
-    KonsoleBookmarkHandler( Konsole *konsole, bool toplevel );
+    KonsoleBookmarkHandler(Konsole *konsole, bool toplevel);
     ~KonsoleBookmarkHandler();
 
-    QPopupMenu * popupMenu();
+    QPopupMenu *popupMenu();
 
     // KBookmarkOwner interface:
-    virtual void openBookmarkURL( const QString& url, const QString& title )
-                                { emit openURL( url, title ); }
+    virtual void openBookmarkURL(const QString &url, const QString &title)
+    {
+        emit openURL(url, title);
+    }
     virtual QString currentURL() const;
     virtual QString currentTitle() const;
 
-    KPopupMenu *menu() const { return m_menu; }
+    KPopupMenu *menu() const
+    {
+        return m_menu;
+    }
 
 private slots:
-    void slotBookmarksChanged( const QString &, const QString & caller );
+    void slotBookmarksChanged(const QString &, const QString &caller);
 
 signals:
-    void openURL( const QString& url, const QString& title );
+    void openURL(const QString &url, const QString &title);
 
 private:
     Konsole *m_konsole;

@@ -29,41 +29,42 @@
 
 class KatePluginListItem;
 
-class KatePluginListView : public KListView
-{
-  Q_OBJECT
+class KatePluginListView : public KListView {
+    Q_OBJECT
 
-  friend class KatePluginListItem;
+    friend class KatePluginListItem;
 
-  public:
-    KatePluginListView (QWidget *parent = 0, const char *name = 0);
+public:
+    KatePluginListView(QWidget *parent = 0, const char *name = 0);
 
-  signals:
+signals:
     void stateChange(KatePluginListItem *, bool);
 
-  private:
+private:
     void stateChanged(KatePluginListItem *, bool);
 };
 
-class KateConfigPluginPage: public QVBox
-{
-  Q_OBJECT
+class KateConfigPluginPage : public QVBox {
+    Q_OBJECT
 
-  public:
+public:
     KateConfigPluginPage(QWidget *parent, class KateConfigDialog *dialog);
-    ~KateConfigPluginPage(){;};
+    ~KateConfigPluginPage()
+    {
+        ;
+    };
 
-  private:
+private:
     class KateConfigDialog *myDialog;
 
-  signals:
+signals:
     void changed();
 
-  private slots:
+private slots:
     void stateChange(KatePluginListItem *, bool);
 
-    void loadPlugin (KatePluginListItem *);
-    void unloadPlugin (KatePluginListItem *);
+    void loadPlugin(KatePluginListItem *);
+    void unloadPlugin(KatePluginListItem *);
 };
 
 #endif

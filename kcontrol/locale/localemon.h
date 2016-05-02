@@ -35,59 +35,58 @@ class KIntNumInput;
 class KLocale;
 class KLanguageCombo;
 
-class KLocaleConfigMoney : public QWidget
-{
-  Q_OBJECT
+class KLocaleConfigMoney : public QWidget {
+    Q_OBJECT
 
 public:
-  KLocaleConfigMoney(KLocale *locale, QWidget *parent = 0, const char *name = 0);
-  virtual ~KLocaleConfigMoney();
+    KLocaleConfigMoney(KLocale *locale, QWidget *parent = 0, const char *name = 0);
+    virtual ~KLocaleConfigMoney();
 
-  void save();
+    void save();
 
 public slots:
-  /**
-   * Loads all settings from the current locale into the current widget.
-   */
-  void slotLocaleChanged();
-  /**
-   * Retranslate all objects owned by this object using the current locale.
-   */
-  void slotTranslate();
+    /**
+     * Loads all settings from the current locale into the current widget.
+     */
+    void slotLocaleChanged();
+    /**
+     * Retranslate all objects owned by this object using the current locale.
+     */
+    void slotTranslate();
 
 signals:
-  void localeChanged();
+    void localeChanged();
 
 private slots:
-  // Money
-  void slotMonCurSymChanged(const QString &t);
-  void slotMonDecSymChanged(const QString &t);
-  void slotMonThoSepChanged(const QString &t);
-  void slotMonFraDigChanged(int value);
-  void slotMonPosPreCurSymChanged();
-  void slotMonNegPreCurSymChanged();
-  void slotMonPosMonSignPosChanged(int i);
-  void slotMonNegMonSignPosChanged(int i);
+    // Money
+    void slotMonCurSymChanged(const QString &t);
+    void slotMonDecSymChanged(const QString &t);
+    void slotMonThoSepChanged(const QString &t);
+    void slotMonFraDigChanged(int value);
+    void slotMonPosPreCurSymChanged();
+    void slotMonNegPreCurSymChanged();
+    void slotMonPosMonSignPosChanged(int i);
+    void slotMonNegMonSignPosChanged(int i);
 
 private:
-  KLocale *m_locale;
+    KLocale *m_locale;
 
-  // Money
-  QLabel *m_labMonCurSym;
-  QLineEdit *m_edMonCurSym;
-  QLabel *m_labMonDecSym;
-  QLineEdit *m_edMonDecSym;
-  QLabel *m_labMonThoSep;
-  QLineEdit *m_edMonThoSep;
-  QLabel *m_labMonFraDig;
-  KIntNumInput * m_inMonFraDig;
+    // Money
+    QLabel *m_labMonCurSym;
+    QLineEdit *m_edMonCurSym;
+    QLabel *m_labMonDecSym;
+    QLineEdit *m_edMonDecSym;
+    QLabel *m_labMonThoSep;
+    QLineEdit *m_edMonThoSep;
+    QLabel *m_labMonFraDig;
+    KIntNumInput *m_inMonFraDig;
 
-  QCheckBox *m_chMonPosPreCurSym;
-  QCheckBox *m_chMonNegPreCurSym;
-  QLabel *m_labMonPosMonSignPos;
-  QComboBox *m_cmbMonPosMonSignPos;
-  QLabel *m_labMonNegMonSignPos;
-  QComboBox *m_cmbMonNegMonSignPos;
+    QCheckBox *m_chMonPosPreCurSym;
+    QCheckBox *m_chMonNegPreCurSym;
+    QLabel *m_labMonPosMonSignPos;
+    QComboBox *m_cmbMonPosMonSignPos;
+    QLabel *m_labMonNegMonSignPos;
+    QComboBox *m_cmbMonNegMonSignPos;
 };
 
 #endif

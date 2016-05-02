@@ -26,11 +26,10 @@
 /**
   Widget to display the joystick-selected (x,y) position
 */
-class PosWidget : public QWidget
-{
-  Q_OBJECT
-  
-  public:
+class PosWidget : public QWidget {
+    Q_OBJECT
+
+public:
     PosWidget(QWidget *parent = 0, const char *name = 0);
 
     void changeX(int x);
@@ -41,13 +40,13 @@ class PosWidget : public QWidget
     // NOTE: the traced positions are not stored and will be erased if the widget is covered/redisplayed
     void showTrace(bool t);
 
-  protected:
+protected:
     virtual void paintEvent(QPaintEvent *);
 
-  private:
+private:
     void eraseOld();
 
-  private:
+private:
     int x, y;
     bool trace;
 };

@@ -29,22 +29,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /**
  * Button that contains the PanelKMenu and client menu manager.
  */
-class KButton : public PanelPopupButton
-{
+class KButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    KButton( QWidget *parent );
+    KButton(QWidget *parent);
     ~KButton();
 
-    void loadConfig( const KConfigGroup& config );
+    void loadConfig(const KConfigGroup &config);
 
     virtual void properties();
 
 protected:
-    virtual QString tileName() { return "KMenu"; }
+    virtual QString tileName()
+    {
+        return "KMenu";
+    }
     virtual void initPopup();
-    virtual QString defaultIcon() const { return "go"; }
+    virtual QString defaultIcon() const
+    {
+        return "go";
+    }
 };
 
 #endif

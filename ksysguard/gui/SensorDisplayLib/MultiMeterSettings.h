@@ -28,13 +28,11 @@
 
 class MultiMeterSettingsWidget;
 
-class MultiMeterSettings : public KDialogBase
-{
-  Q_OBJECT
+class MultiMeterSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
-    MultiMeterSettings( QWidget *parent=0, const char *name=0 );
+public:
+    MultiMeterSettings(QWidget *parent = 0, const char *name = 0);
 
     QString title();
     bool showUnit();
@@ -46,18 +44,17 @@ class MultiMeterSettings : public KDialogBase
     QColor alarmDigitColor();
     QColor meterBackgroundColor();
 
-    void setTitle( const QString & );
-    void setShowUnit( bool );
-    void setLowerLimitActive( bool );
-    void setUpperLimitActive( bool );
-    void setLowerLimit( double );
-    void setUpperLimit( double );
-    void setNormalDigitColor( const QColor & );
-    void setAlarmDigitColor( const QColor & );
-    void setMeterBackgroundColor( const QColor & );
+    void setTitle(const QString &);
+    void setShowUnit(bool);
+    void setLowerLimitActive(bool);
+    void setUpperLimitActive(bool);
+    void setLowerLimit(double);
+    void setUpperLimit(double);
+    void setNormalDigitColor(const QColor &);
+    void setAlarmDigitColor(const QColor &);
+    void setMeterBackgroundColor(const QColor &);
 
-  private:
-
+private:
     MultiMeterSettingsWidget *m_settingsWidget;
 };
 
@@ -65,4 +62,3 @@ class MultiMeterSettings : public KDialogBase
 
 /* vim: et sw=2 ts=2
 */
-

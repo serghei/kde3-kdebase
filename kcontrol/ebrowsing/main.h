@@ -36,7 +36,7 @@ public:
     KURIFilterModule(QWidget *parent, const char *name, const QStringList &);
 
     void load();
-    void load(bool useDefaults );
+    void load(bool useDefaults);
     void save();
     void defaults();
 
@@ -45,7 +45,7 @@ private:
 
     QWidget *widget;
     FilterOptions *opts;
-    QPtrList<KCModule> modules;
+    QPtrList< KCModule > modules;
 };
 
 #endif

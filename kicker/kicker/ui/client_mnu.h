@@ -38,28 +38,26 @@ class PanelKMenu;
 /**
  * Small additions to QPopupMenu to contain data we need for DCop handling
  */
-class KickerClientMenu : public QPopupMenu, DCOPObject
-{
+class KickerClientMenu : public QPopupMenu, DCOPObject {
     Q_OBJECT
 public:
-    KickerClientMenu( QWidget *parent=0, const char *name=0);
+    KickerClientMenu(QWidget *parent = 0, const char *name = 0);
     ~KickerClientMenu();
 
     // dcop exported
     void clear();
-    void insertItem( QPixmap icon, QString text, int id );
-    void insertItem( QString text, int id );
+    void insertItem(QPixmap icon, QString text, int id);
+    void insertItem(QString text, int id);
 
-    QCString insertMenu( QPixmap icon, QString test, int id );	
+    QCString insertMenu(QPixmap icon, QString test, int id);
 
     // dcop signals:
     //     void activated(int)
 
-    void connectDCOPSignal( QCString signal, QCString appId, QCString objId );
+    void connectDCOPSignal(QCString signal, QCString appId, QCString objId);
 
     // dcop internal
-    virtual bool process(const QCString &fun, const QByteArray &data,
-			 QCString &replyType, QByteArray &reply);
+    virtual bool process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &reply);
 
 protected slots:
     void slotActivated(int id);

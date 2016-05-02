@@ -25,24 +25,21 @@
 #include "notifierserviceaction.h"
 #include "serviceview.h"
 
-class ServiceConfigDialog : public KDialogBase
-{
-	Q_OBJECT
+class ServiceConfigDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-	ServiceConfigDialog(NotifierServiceAction *action,
-	                    const QStringList &mimetypesList,
-	                    QWidget* parent = 0, const char* name = 0);
-	
+    ServiceConfigDialog(NotifierServiceAction *action, const QStringList &mimetypesList, QWidget *parent = 0, const char *name = 0);
+
 public slots:
-	void slotOk();
-	void slotIconChanged();
-	void slotCommand();
+    void slotOk();
+    void slotIconChanged();
+    void slotCommand();
 
 private:
-	ServiceView *m_view;
-	NotifierServiceAction *m_action;
-	bool m_iconChanged;
+    ServiceView *m_view;
+    NotifierServiceAction *m_action;
+    bool m_iconChanged;
 };
 
 #endif

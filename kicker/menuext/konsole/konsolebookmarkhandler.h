@@ -12,37 +12,39 @@ class KPopupMenu;
 class KonsoleBookmarkMenu;
 class KonsoleMenu;
 
-class KonsoleBookmarkHandler : public QObject, public KBookmarkOwner
-{
+class KonsoleBookmarkHandler : public QObject, public KBookmarkOwner {
     Q_OBJECT
 
 public:
-    KonsoleBookmarkHandler( KonsoleMenu *konsole, bool toplevel );
+    KonsoleBookmarkHandler(KonsoleMenu *konsole, bool toplevel);
 
-    QPopupMenu * popupMenu();
+    QPopupMenu *popupMenu();
 
     // KBookmarkOwner interface:
-    virtual void openBookmarkURL( const QString& url, const QString& title )
-                                { emit openURL( url, title ); }
+    virtual void openBookmarkURL(const QString &url, const QString &title)
+    {
+        emit openURL(url, title);
+    }
     virtual QString currentURL() const;
 
-    KPopupMenu *menu() const { return m_menu; }
+    KPopupMenu *menu() const
+    {
+        return m_menu;
+    }
 
 signals:
-    void openURL( const QString& url, const QString& title );
+    void openURL(const QString &url, const QString &title);
 
 private slots:
     // for importing
-    void slotNewBookmark( const QString& text, const QCString& url,
-                          const QString& additionalInfo );
-    void slotNewFolder( const QString& text, bool open,
-                        const QString& additionalInfo );
-    void slotBookmarksChanged( const QString &, const QString & caller );
+    void slotNewBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void slotNewFolder(const QString &text, bool open, const QString &additionalInfo);
+    void slotBookmarksChanged(const QString &, const QString &caller);
     void newSeparator();
     void endFolder();
 
 private:
-    void importOldBookmarks( const QString& path, const QString& destinationPath );
+    void importOldBookmarks(const QString &path, const QString &destinationPath);
 
     KonsoleMenu *m_konsole;
     KPopupMenu *m_menu;
@@ -50,7 +52,8 @@ private:
     QTextStream *m_importStream;
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
     class KonsoleBookmarkHandlerPrivate;
     KonsoleBookmarkHandlerPrivate *d;

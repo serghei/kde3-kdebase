@@ -17,10 +17,9 @@
 #include "konqsidebartest.moc"
 #include <kinstance.h>
 
-extern "C"
+extern "C" {
+KDE_EXPORT void *create_konq_sidebartest(KInstance *instance, QObject *par, QWidget *widp, QString &desktopname, const char *name)
 {
-    KDE_EXPORT void* create_konq_sidebartest(KInstance *instance,QObject *par,QWidget *widp,QString &desktopname,const char *name)
-    {
-        return new SidebarTest(instance,par,widp,desktopname,name);
-    }
+    return new SidebarTest(instance, par, widp, desktopname, name);
+}
 };

@@ -36,24 +36,25 @@
 #include <kmimetype.h>
 
 //===========================================================================
-void SMBSlave::get( const KURL& kurl )
+void SMBSlave::get(const KURL &kurl)
 {
-    char        buf[MAX_XFER_BUF_SIZE];
-    int         filefd          = 0;
-    ssize_t     bytesread       = 0;
+    char buf[MAX_XFER_BUF_SIZE];
+    int filefd = 0;
+    ssize_t bytesread = 0;
     // time_t      curtime         = 0;
-    time_t      lasttime        = 0;
-    time_t      starttime       = 0;
-    KIO::filesize_t totalbytesread  = 0;
-    QByteArray  filedata;
-    SMBUrl      url;
+    time_t lasttime = 0;
+    time_t starttime = 0;
+    KIO::filesize_t totalbytesread = 0;
+    QByteArray filedata;
+    SMBUrl url;
 
     kdDebug(KIO_SMB) << "SMBSlave::get on " << kurl << endl;
 
     // check (correct) URL
     KURL kvurl = checkURL(kurl);
     // if URL is not valid we have to redirect to correct URL
-    if (kvurl != kurl) {
+    if(kvurl != kurl)
+    {
         redirection(kvurl);
         finished();
         return;
@@ -65,29 +66,30 @@ void SMBSlave::get( const KURL& kurl )
 
     // Stat
     url = kurl;
-    if(cache_stat(url,&st) == -1 )
+    if(cache_stat(url, &st) == -1)
     {
-        if ( errno == EACCES )
-           error( KIO::ERR_ACCESS_DENIED, url.prettyURL());
+        if(errno == EACCES)
+            error(KIO::ERR_ACCESS_DENIED, url.prettyURL());
         else
-           error( KIO::ERR_DOES_NOT_EXIST, url.prettyURL());
+            error(KIO::ERR_DOES_NOT_EXIST, url.prettyURL());
         return;
     }
-    if ( S_ISDIR( st.st_mode ) ) {
-        error( KIO::ERR_IS_DIRECTORY, url.prettyURL());
+    if(S_ISDIR(st.st_mode))
+    {
+        error(KIO::ERR_IS_DIRECTORY, url.prettyURL());
         return;
     }
 
     // Set the total size
-    totalSize( st.st_size );
+    totalSize(st.st_size);
 
     // Open and read the file
-    filefd = smbc_open(url.toSmbcUrl(),O_RDONLY,0);
+    filefd = smbc_open(url.toSmbcUrl(), O_RDONLY, 0);
     if(filefd >= 0)
     {
         if(buf)
         {
-	    bool isFirstPacket = true;
+            bool isFirstPacket = true;
             lasttime = starttime = time(NULL);
             while(1)
             {
@@ -99,47 +101,45 @@ void SMBSlave::get( const KURL& kurl )
                 }
                 else if(bytesread < 0)
                 {
-                    error( KIO::ERR_COULD_NOT_READ, url.prettyURL());
+                    error(KIO::ERR_COULD_NOT_READ, url.prettyURL());
                     return;
                 }
 
-                filedata.setRawData(buf,bytesread);
-		if (isFirstPacket)
-		{
+                filedata.setRawData(buf, bytesread);
+                if(isFirstPacket)
+                {
                     // We need a KMimeType::findByNameAndContent(filename,data)
                     // For now we do: find by extension, and if not found (or extension not reliable)
                     // then find by content.
                     bool accurate = false;
-                    KMimeType::Ptr mime = KMimeType::findByURL( kurl, st.st_mode, false, true, &accurate );
-                    if ( !mime || mime->name() == KMimeType::defaultMimeType()
-                         || !accurate )
+                    KMimeType::Ptr mime = KMimeType::findByURL(kurl, st.st_mode, false, true, &accurate);
+                    if(!mime || mime->name() == KMimeType::defaultMimeType() || !accurate)
                     {
                         KMimeType::Ptr p_mimeType = KMimeType::findByContent(filedata);
-                        if ( p_mimeType && p_mimeType->name() != KMimeType::defaultMimeType() )
+                        if(p_mimeType && p_mimeType->name() != KMimeType::defaultMimeType())
                             mime = p_mimeType;
                     }
-		    mimeType(mime->name());
-		    isFirstPacket = false;
-		}
-                data( filedata );
-                filedata.resetRawData(buf,bytesread);
+                    mimeType(mime->name());
+                    isFirstPacket = false;
+                }
+                data(filedata);
+                filedata.resetRawData(buf, bytesread);
 
                 // increment total bytes read
                 totalbytesread += bytesread;
 
-		processedSize(totalbytesread);
+                processedSize(totalbytesread);
             }
         }
 
         smbc_close(filefd);
-        data( QByteArray() );
-        processedSize(static_cast<KIO::filesize_t>(st.st_size));
-
+        data(QByteArray());
+        processedSize(static_cast< KIO::filesize_t >(st.st_size));
     }
     else
     {
-          error( KIO::ERR_CANNOT_OPEN_FOR_READING, url.prettyURL());
-	  return;
+        error(KIO::ERR_CANNOT_OPEN_FOR_READING, url.prettyURL());
+        return;
     }
 
     finished();
@@ -147,10 +147,7 @@ void SMBSlave::get( const KURL& kurl )
 
 
 //===========================================================================
-void SMBSlave::put( const KURL& kurl,
-                    int permissions,
-                    bool overwrite,
-                    bool resume )
+void SMBSlave::put(const KURL &kurl, int permissions, bool overwrite, bool resume)
 {
 
     void *buf;
@@ -158,70 +155,70 @@ void SMBSlave::put( const KURL& kurl,
 
     m_current_url = kurl;
 
-    int         filefd;
-    bool        exists;
-    mode_t      mode;
-    QByteArray  filedata;
+    int filefd;
+    bool exists;
+    mode_t mode;
+    QByteArray filedata;
 
     kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl << endl;
 
 
-    exists = (cache_stat(m_current_url, &st) != -1 );
-    if ( exists &&  !overwrite && !resume)
+    exists = (cache_stat(m_current_url, &st) != -1);
+    if(exists && !overwrite && !resume)
     {
-        if (S_ISDIR(st.st_mode))
+        if(S_ISDIR(st.st_mode))
         {
-            kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl <<" already isdir !!"<< endl;
-            error( KIO::ERR_DIR_ALREADY_EXIST,  m_current_url.prettyURL());
+            kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl << " already isdir !!" << endl;
+            error(KIO::ERR_DIR_ALREADY_EXIST, m_current_url.prettyURL());
         }
         else
         {
-            kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl <<" already exist !!"<< endl;
-            error( KIO::ERR_FILE_ALREADY_EXIST, m_current_url.prettyURL());
+            kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl << " already exist !!" << endl;
+            error(KIO::ERR_FILE_ALREADY_EXIST, m_current_url.prettyURL());
         }
         return;
     }
 
-    if (exists && !resume && overwrite)
+    if(exists && !resume && overwrite)
     {
-        kdDebug(KIO_SMB) << "SMBSlave::put exists try to remove " << m_current_url.toSmbcUrl()<< endl;
+        kdDebug(KIO_SMB) << "SMBSlave::put exists try to remove " << m_current_url.toSmbcUrl() << endl;
         //   remove(m_current_url.url().local8Bit());
     }
 
 
-    if (resume)
+    if(resume)
     {
         // append if resuming
-        kdDebug(KIO_SMB) << "SMBSlave::put resume " << m_current_url.toSmbcUrl()<< endl;
-        filefd = smbc_open(m_current_url.toSmbcUrl(), O_RDWR, 0 );
+        kdDebug(KIO_SMB) << "SMBSlave::put resume " << m_current_url.toSmbcUrl() << endl;
+        filefd = smbc_open(m_current_url.toSmbcUrl(), O_RDWR, 0);
         smbc_lseek(filefd, 0, SEEK_END);
     }
     else
     {
-        if (permissions != -1)
+        if(permissions != -1)
         {
             mode = permissions | S_IWUSR | S_IRUSR;
         }
         else
         {
-            mode = 600;//0666;
+            mode = 600; // 0666;
         }
 
-        kdDebug(KIO_SMB) << "SMBSlave::put NO resume " << m_current_url.toSmbcUrl()<< endl;
+        kdDebug(KIO_SMB) << "SMBSlave::put NO resume " << m_current_url.toSmbcUrl() << endl;
         filefd = smbc_open(m_current_url.toSmbcUrl(), O_CREAT | O_TRUNC | O_WRONLY, mode);
     }
 
-    if ( filefd < 0 )
+    if(filefd < 0)
     {
-        if ( errno == EACCES )
+        if(errno == EACCES)
         {
-            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl <<" access denied !!"<< endl;
-            error( KIO::ERR_WRITE_ACCESS_DENIED, m_current_url.prettyURL());
+            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl << " access denied !!" << endl;
+            error(KIO::ERR_WRITE_ACCESS_DENIED, m_current_url.prettyURL());
         }
         else
         {
-            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl <<" can not open for writing !!"<< endl;
-            error( KIO::ERR_CANNOT_OPEN_FOR_WRITING, m_current_url.prettyURL());
+            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl << " can not open for writing !!" << endl;
+            error(KIO::ERR_CANNOT_OPEN_FOR_WRITING, m_current_url.prettyURL());
         }
         finished();
         return;
@@ -230,40 +227,40 @@ void SMBSlave::put( const KURL& kurl,
     // Loop until we got 0 (end of data)
     while(1)
     {
-        kdDebug(KIO_SMB) << "SMBSlave::put request data "<< endl;
+        kdDebug(KIO_SMB) << "SMBSlave::put request data " << endl;
         dataReq(); // Request for data
-        kdDebug(KIO_SMB) << "SMBSlave::put write " << m_current_url.toSmbcUrl()<< endl;
+        kdDebug(KIO_SMB) << "SMBSlave::put write " << m_current_url.toSmbcUrl() << endl;
 
-        if (readData(filedata) <= 0)
+        if(readData(filedata) <= 0)
         {
             kdDebug(KIO_SMB) << "readData <= 0" << endl;
             break;
         }
-        kdDebug(KIO_SMB) << "SMBSlave::put write " << m_current_url.toSmbcUrl()<< endl;
-	buf = filedata.data();
-	bufsize = filedata.size();
+        kdDebug(KIO_SMB) << "SMBSlave::put write " << m_current_url.toSmbcUrl() << endl;
+        buf = filedata.data();
+        bufsize = filedata.size();
         int size = smbc_write(filefd, buf, bufsize);
-        if ( size < 0)
+        if(size < 0)
         {
-            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl <<" could not write !!"<< endl;
-            error( KIO::ERR_COULD_NOT_WRITE, m_current_url.prettyURL());
+            kdDebug(KIO_SMB) << "SMBSlave::put error " << kurl << " could not write !!" << endl;
+            error(KIO::ERR_COULD_NOT_WRITE, m_current_url.prettyURL());
             finished();
             return;
         }
-        kdDebug(KIO_SMB ) << "wrote " << size << endl;
+        kdDebug(KIO_SMB) << "wrote " << size << endl;
     }
-    kdDebug(KIO_SMB) << "SMBSlave::put close " << m_current_url.toSmbcUrl()<< endl;
+    kdDebug(KIO_SMB) << "SMBSlave::put close " << m_current_url.toSmbcUrl() << endl;
 
     if(smbc_close(filefd))
     {
-        kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl <<" could not write !!"<< endl;
-        error( KIO::ERR_COULD_NOT_WRITE, m_current_url.prettyURL());
+        kdDebug(KIO_SMB) << "SMBSlave::put on " << kurl << " could not write !!" << endl;
+        error(KIO::ERR_COULD_NOT_WRITE, m_current_url.prettyURL());
         finished();
         return;
     }
 
     // set final permissions, if the file was just created
-    if ( permissions != -1 && !exists )
+    if(permissions != -1 && !exists)
     {
         // TODO: did the smbc_chmod fail?
         // TODO: put in call to chmod when it is working!
@@ -273,7 +270,3 @@ void SMBSlave::put( const KURL& kurl,
     // We have done our job => finish
     finished();
 }
-
-
-
-

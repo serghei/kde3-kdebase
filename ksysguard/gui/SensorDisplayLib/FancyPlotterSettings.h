@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -36,81 +36,79 @@ class QListViewItem;
 class QPushButton;
 class QRadioButton;
 
-class FancyPlotterSettings : public KDialogBase
-{
-  Q_OBJECT
+class FancyPlotterSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    FancyPlotterSettings( QWidget* parent = 0, const char* name = 0 );
+public:
+    FancyPlotterSettings(QWidget *parent = 0, const char *name = 0);
     ~FancyPlotterSettings();
 
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
     QString title() const;
 
-    void setUseAutoRange( bool value );
+    void setUseAutoRange(bool value);
     bool useAutoRange() const;
 
-    void setMinValue( double min );
+    void setMinValue(double min);
     double minValue() const;
 
-    void setMaxValue( double max );
+    void setMaxValue(double max);
     double maxValue() const;
 
-    void setUsePolygonStyle( bool value );
+    void setUsePolygonStyle(bool value);
     bool usePolygonStyle() const;
 
-    void setHorizontalScale( int scale );
+    void setHorizontalScale(int scale);
     int horizontalScale() const;
 
-    void setShowVerticalLines( bool value );
+    void setShowVerticalLines(bool value);
     bool showVerticalLines() const;
 
-    void setVerticalLinesColor( const QColor &color );
+    void setVerticalLinesColor(const QColor &color);
     QColor verticalLinesColor() const;
 
-    void setVerticalLinesDistance( int distance );
+    void setVerticalLinesDistance(int distance);
     int verticalLinesDistance() const;
 
-    void setVerticalLinesScroll( bool value );
+    void setVerticalLinesScroll(bool value);
     bool verticalLinesScroll() const;
 
-    void setShowHorizontalLines( bool value );
+    void setShowHorizontalLines(bool value);
     bool showHorizontalLines() const;
 
-    void setHorizontalLinesColor( const QColor &color );
+    void setHorizontalLinesColor(const QColor &color);
     QColor horizontalLinesColor() const;
 
-    void setHorizontalLinesCount( int count );
+    void setHorizontalLinesCount(int count);
     int horizontalLinesCount() const;
 
-    void setShowLabels( bool value );
+    void setShowLabels(bool value);
     bool showLabels() const;
 
-    void setShowTopBar( bool value );
+    void setShowTopBar(bool value);
     bool showTopBar() const;
 
-    void setFontSize( int size );
+    void setFontSize(int size);
     int fontSize() const;
 
-    void setBackgroundColor( const QColor &color );
+    void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
 
-    void setSensors( const QValueList< QStringList > &list );
+    void setSensors(const QValueList< QStringList > &list);
     QValueList< QStringList > sensors() const;
-    QValueList<int> order() const;
-    QValueList<int> deleted() const;
+    QValueList< int > order() const;
+    QValueList< int > deleted() const;
     void clearDeleted();
     void resetOrder();
 
-  private slots:
+private slots:
     void editSensor();
     void removeSensor();
     void moveUpSensor();
     void moveDownSensor();
-    void selectionChanged( QListViewItem* );
+    void selectionChanged(QListViewItem *);
 
-  private:
-
+private:
     KColorButton *mVerticalLinesColor;
     KColorButton *mHorizontalLinesColor;
     KColorButton *mBackgroundColor;
@@ -137,7 +135,7 @@ class FancyPlotterSettings : public KDialogBase
     QRadioButton *mUseOriginalStyle;
 
     /** The numbers of the sensors to be delete.*/
-    QValueList<int> mDeleted;
+    QValueList< int > mDeleted;
 };
 
 #endif

@@ -16,24 +16,22 @@
 #include "kcookiespolicies.h"
 #include "kcookiesmanagement.h"
 
-KCookiesMain::KCookiesMain(QWidget *parent)
-  : KCModule(parent, "kcmkio")
+KCookiesMain::KCookiesMain(QWidget *parent) : KCModule(parent, "kcmkio")
 {
     management = 0;
     bool managerOK = true;
 
-    DCOPReply reply = DCOPRef( "kded", "kded" ).call( "loadModule", 
-        QCString( "kcookiejar" ) );
+    DCOPReply reply = DCOPRef("kded", "kded").call("loadModule", QCString("kcookiejar"));
 
-    if( !reply.isValid() )
+    if(!reply.isValid())
     {
-       managerOK = false;
-       kdDebug(7103) << "kcm_kio: KDED could not load KCookiejar!" << endl;
-       KMessageBox::sorry(0, i18n("Unable to start the cookie handler service.\n"
-                             "You will not be able to manage the cookies that "
-                             "are stored on your computer."));
+        managerOK = false;
+        kdDebug(7103) << "kcm_kio: KDED could not load KCookiejar!" << endl;
+        KMessageBox::sorry(0, i18n("Unable to start the cookie handler service.\n"
+                                   "You will not be able to manage the cookies that "
+                                   "are stored on your computer."));
     }
-    
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     tab = new QTabWidget(this);
     layout->addWidget(tab);
@@ -42,7 +40,7 @@ KCookiesMain::KCookiesMain(QWidget *parent)
     tab->addTab(policies, i18n("&Policy"));
     connect(policies, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
 
-    if( managerOK )
+    if(managerOK)
     {
         management = new KCookiesManagement(this);
         tab->addTab(management, i18n("&Management"));
@@ -56,44 +54,45 @@ KCookiesMain::~KCookiesMain()
 
 void KCookiesMain::load()
 {
-  policies->load();
-  if( management )
-      management->load();
+    policies->load();
+    if(management)
+        management->load();
 }
 
 void KCookiesMain::save()
 {
-  policies->save();
-  if ( management )
-      management->save();
+    policies->save();
+    if(management)
+        management->save();
 }
 
 void KCookiesMain::defaults()
 {
-  KCModule* module = static_cast<KCModule*>(tab->currentPage());
-  
-  if ( module == policies )
-    policies->defaults();
-  else if( management )
-    management->defaults();
+    KCModule *module = static_cast< KCModule * >(tab->currentPage());
+
+    if(module == policies)
+        policies->defaults();
+    else if(management)
+        management->defaults();
 }
 
 QString KCookiesMain::quickHelp() const
 {
-  return i18n("<h1>Cookies</h1> Cookies contain information that Konqueror"
-    " (or other KDE applications using the HTTP protocol) stores on your"
-    " computer, initiated by a remote Internet server. This means that"
-    " a web server can store information about you and your browsing activities"
-    " on your machine for later use. You might consider this an invasion of"
-    " privacy. <p> However, cookies are useful in certain situations. For example, they"
-    " are often used by Internet shops, so you can 'put things into a shopping basket'."
-    " Some sites require you have a browser that supports cookies. <p>"
-    " Because most people want a compromise between privacy and the benefits cookies offer,"
-    " KDE offers you the ability to customize the way it handles cookies. So you might want"
-    " to set KDE's default policy to ask you whenever a server wants to set a cookie,"
-    " allowing you to decide. For your favorite shopping web sites that you trust, you might"
-    " want to set the policy to accept, then you can access the web sites without being prompted"
-    " every time KDE receives a cookie." );
+    return i18n(
+        "<h1>Cookies</h1> Cookies contain information that Konqueror"
+        " (or other KDE applications using the HTTP protocol) stores on your"
+        " computer, initiated by a remote Internet server. This means that"
+        " a web server can store information about you and your browsing activities"
+        " on your machine for later use. You might consider this an invasion of"
+        " privacy. <p> However, cookies are useful in certain situations. For example, they"
+        " are often used by Internet shops, so you can 'put things into a shopping basket'."
+        " Some sites require you have a browser that supports cookies. <p>"
+        " Because most people want a compromise between privacy and the benefits cookies offer,"
+        " KDE offers you the ability to customize the way it handles cookies. So you might want"
+        " to set KDE's default policy to ask you whenever a server wants to set a cookie,"
+        " allowing you to decide. For your favorite shopping web sites that you trust, you might"
+        " want to set the policy to accept, then you can access the web sites without being prompted"
+        " every time KDE receives a cookie.");
 }
 
 #include "kcookiesmain.moc"

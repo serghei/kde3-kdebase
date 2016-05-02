@@ -27,31 +27,30 @@
 
 #include <qstring.h>
 
-class HomeImpl : public QObject
-{
-Q_OBJECT
+class HomeImpl : public QObject {
+    Q_OBJECT
 
 public:
-	HomeImpl();
-	bool parseURL(const KURL &url, QString &name, QString &path) const;
-	bool realURL(const QString &name, const QString &path, KURL &url);
-		
-	bool statHome(const QString &name, KIO::UDSEntry &entry);
-	bool listHomes(QValueList<KIO::UDSEntry> &list);
-	
-	void createTopLevelEntry(KIO::UDSEntry &entry) const;
+    HomeImpl();
+    bool parseURL(const KURL &url, QString &name, QString &path) const;
+    bool realURL(const QString &name, const QString &path, KURL &url);
+
+    bool statHome(const QString &name, KIO::UDSEntry &entry);
+    bool listHomes(QValueList< KIO::UDSEntry > &list);
+
+    void createTopLevelEntry(KIO::UDSEntry &entry) const;
 
 private slots:
-	void slotStatResult(KIO::Job *job);
-	
-private:
-	void createHomeEntry(KIO::UDSEntry& entry, const KUser &user);
+    void slotStatResult(KIO::Job *job);
 
-	KIO::UDSEntry extractUrlInfos(const KURL &url);
-	KIO::UDSEntry m_entryBuffer;
-		
-	
-	long m_effectiveUid;
+private:
+    void createHomeEntry(KIO::UDSEntry &entry, const KUser &user);
+
+    KIO::UDSEntry extractUrlInfos(const KURL &url);
+    KIO::UDSEntry m_entryBuffer;
+
+
+    long m_effectiveUid;
 };
 
 #endif

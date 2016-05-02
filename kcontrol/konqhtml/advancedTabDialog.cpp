@@ -34,28 +34,19 @@
 #include "advancedTabOptions.h"
 #include "main.h"
 
-advancedTabDialog::advancedTabDialog(QWidget* parent, KConfig* config, const char* name)
-    : KDialogBase(KDialogBase::Plain,
-                  i18n("Advanced Options"),
-                  KDialogBase::Ok |
-                  KDialogBase::Apply |
-                  KDialogBase::Cancel,
-                  KDialogBase::Ok,
-                  parent,
-                  name,
-                  true, true),
-                  m_pConfig(config)
+advancedTabDialog::advancedTabDialog(QWidget *parent, KConfig *config, const char *name)
+    : KDialogBase(KDialogBase::Plain, i18n("Advanced Options"), KDialogBase::Ok | KDialogBase::Apply | KDialogBase::Cancel, KDialogBase::Ok, parent,
+                  name, true, true)
+    , m_pConfig(config)
 {
-    connect(this, SIGNAL(applyClicked()),
-            this, SLOT(save()));
-    connect(this, SIGNAL(okClicked()),
-            this, SLOT(save()));
+    connect(this, SIGNAL(applyClicked()), this, SLOT(save()));
+    connect(this, SIGNAL(okClicked()), this, SLOT(save()));
     actionButton(Apply)->setEnabled(false);
-    QFrame* page = plainPage();
-    QVBoxLayout* layout = new QVBoxLayout(page);
+    QFrame *page = plainPage();
+    QVBoxLayout *layout = new QVBoxLayout(page);
     m_advancedWidget = new advancedTabOptions(page);
     layout->addWidget(m_advancedWidget);
-    layout->addSpacing( 20 );
+    layout->addSpacing(20);
     layout->addStretch();
 
     connect(m_advancedWidget->m_pNewTabsInBackground, SIGNAL(clicked()), this, SLOT(changed()));
@@ -76,15 +67,15 @@ advancedTabDialog::~advancedTabDialog()
 void advancedTabDialog::load()
 {
     m_pConfig->setGroup("FMSettings");
-    m_advancedWidget->m_pNewTabsInBackground->setChecked( ! (m_pConfig->readBoolEntry( "NewTabsInFront", false )) );
-    m_advancedWidget->m_pOpenAfterCurrentPage->setChecked( m_pConfig->readBoolEntry( "OpenAfterCurrentPage", false ) );
-    m_advancedWidget->m_pPermanentCloseButton->setChecked( m_pConfig->readBoolEntry( "PermanentCloseButton", false ) );
-    m_advancedWidget->m_pKonquerorTabforExternalURL->setChecked( m_pConfig->readBoolEntry( "KonquerorTabforExternalURL", false ) );
-    m_advancedWidget->m_pPopupsWithinTabs->setChecked( m_pConfig->readBoolEntry( "PopupsWithinTabs", false ) );
-    m_advancedWidget->m_pTabCloseActivatePrevious->setChecked( m_pConfig->readBoolEntry( "TabCloseActivatePrevious", false ) );
+    m_advancedWidget->m_pNewTabsInBackground->setChecked(!(m_pConfig->readBoolEntry("NewTabsInFront", false)));
+    m_advancedWidget->m_pOpenAfterCurrentPage->setChecked(m_pConfig->readBoolEntry("OpenAfterCurrentPage", false));
+    m_advancedWidget->m_pPermanentCloseButton->setChecked(m_pConfig->readBoolEntry("PermanentCloseButton", false));
+    m_advancedWidget->m_pKonquerorTabforExternalURL->setChecked(m_pConfig->readBoolEntry("KonquerorTabforExternalURL", false));
+    m_advancedWidget->m_pPopupsWithinTabs->setChecked(m_pConfig->readBoolEntry("PopupsWithinTabs", false));
+    m_advancedWidget->m_pTabCloseActivatePrevious->setChecked(m_pConfig->readBoolEntry("TabCloseActivatePrevious", false));
 
     m_pConfig->setGroup("Notification Messages");
-    m_advancedWidget->m_pTabConfirm->setChecked( !m_pConfig->hasKey("MultipleTabConfirm") );
+    m_advancedWidget->m_pTabConfirm->setChecked(!m_pConfig->hasKey("MultipleTabConfirm"));
 
     actionButton(Apply)->setEnabled(false);
 }
@@ -92,23 +83,25 @@ void advancedTabDialog::load()
 void advancedTabDialog::save()
 {
     m_pConfig->setGroup("FMSettings");
-    m_pConfig->writeEntry( "NewTabsInFront", !(m_advancedWidget->m_pNewTabsInBackground->isChecked()) );
-    m_pConfig->writeEntry( "OpenAfterCurrentPage", m_advancedWidget->m_pOpenAfterCurrentPage->isChecked() );
-    m_pConfig->writeEntry( "PermanentCloseButton", m_advancedWidget->m_pPermanentCloseButton->isChecked() );
-    m_pConfig->writeEntry( "KonquerorTabforExternalURL", m_advancedWidget->m_pKonquerorTabforExternalURL->isChecked() );
-    m_pConfig->writeEntry( "PopupsWithinTabs", m_advancedWidget->m_pPopupsWithinTabs->isChecked() );
-    m_pConfig->writeEntry( "TabCloseActivatePrevious", m_advancedWidget->m_pTabCloseActivatePrevious->isChecked() );
+    m_pConfig->writeEntry("NewTabsInFront", !(m_advancedWidget->m_pNewTabsInBackground->isChecked()));
+    m_pConfig->writeEntry("OpenAfterCurrentPage", m_advancedWidget->m_pOpenAfterCurrentPage->isChecked());
+    m_pConfig->writeEntry("PermanentCloseButton", m_advancedWidget->m_pPermanentCloseButton->isChecked());
+    m_pConfig->writeEntry("KonquerorTabforExternalURL", m_advancedWidget->m_pKonquerorTabforExternalURL->isChecked());
+    m_pConfig->writeEntry("PopupsWithinTabs", m_advancedWidget->m_pPopupsWithinTabs->isChecked());
+    m_pConfig->writeEntry("TabCloseActivatePrevious", m_advancedWidget->m_pTabCloseActivatePrevious->isChecked());
     m_pConfig->sync();
 
     // It only matters wether the key is present, its value has no meaning
     m_pConfig->setGroup("Notification Messages");
-    if ( m_advancedWidget->m_pTabConfirm->isChecked() ) m_pConfig->deleteEntry( "MultipleTabConfirm" );
-    else m_pConfig->writeEntry( "MultipleTabConfirm", true );
+    if(m_advancedWidget->m_pTabConfirm->isChecked())
+        m_pConfig->deleteEntry("MultipleTabConfirm");
+    else
+        m_pConfig->writeEntry("MultipleTabConfirm", true);
 
     QByteArray data;
-    if ( !KApplication::kApplication()->dcopClient()->isAttached() )
-      kapp->dcopClient()->attach();
-    KApplication::kApplication()->dcopClient()->send( "konqueror*", "KonquerorIface", "reparseConfiguration()", data );
+    if(!KApplication::kApplication()->dcopClient()->isAttached())
+        kapp->dcopClient()->attach();
+    KApplication::kApplication()->dcopClient()->send("konqueror*", "KonquerorIface", "reparseConfiguration()", data);
 
     actionButton(Apply)->setEnabled(false);
 }

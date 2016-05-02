@@ -47,70 +47,71 @@ QString KCGlobal::_baseGroup = "";
 
 void KCGlobal::init()
 {
-  char buf[256];
-  buf[0] = '\0';
-  if (!gethostname(buf, sizeof(buf)))
-    buf[sizeof(buf)-1] ='\0';
-  QString hostname(buf);
-  
-  setHostName(hostname);
-  setUserName(KUser().loginName());
-  setRoot(getuid() == 0);
+    char buf[256];
+    buf[0] = '\0';
+    if(!gethostname(buf, sizeof(buf)))
+        buf[sizeof(buf) - 1] = '\0';
+    QString hostname(buf);
 
-  setKDEVersion(KDE::versionString());
+    setHostName(hostname);
+    setUserName(KUser().loginName());
+    setRoot(getuid() == 0);
 
-  struct utsname info;
-  uname(&info);
+    setKDEVersion(KDE::versionString());
 
-  setSystemName(info.sysname);
-  setSystemRelease(info.release);
-  setSystemVersion(info.version);
-  setSystemMachine(info.machine);
+    struct utsname info;
+    uname(&info);
+
+    setSystemName(info.sysname);
+    setSystemRelease(info.release);
+    setSystemVersion(info.version);
+    setSystemMachine(info.machine);
 }
 
-void KCGlobal::setType(const QCString& s)
+void KCGlobal::setType(const QCString &s)
 {
-  QString string = s.lower();
-  _types = QStringList::split(',', string);
+    QString string = s.lower();
+    _types = QStringList::split(',', string);
 }
 
 QString KCGlobal::baseGroup()
 {
-  if ( _baseGroup.isEmpty() )
-  {
-    KServiceGroup::Ptr group = KServiceGroup::baseGroup( _infocenter ? "info" : "settings" );
-    if (group)
+    if(_baseGroup.isEmpty())
     {
-      _baseGroup = group->relPath();
-      kdDebug(1208) << "Found basegroup = " << _baseGroup << endl;
-      return _baseGroup;
+        KServiceGroup::Ptr group = KServiceGroup::baseGroup(_infocenter ? "info" : "settings");
+        if(group)
+        {
+            _baseGroup = group->relPath();
+            kdDebug(1208) << "Found basegroup = " << _baseGroup << endl;
+            return _baseGroup;
+        }
+        // Compatibility with old behaviour, in case of missing .directory files.
+        if(_baseGroup.isEmpty())
+        {
+            if(_infocenter)
+            {
+                kdWarning() << "No K menu group with X-KDE-BaseGroup=info found ! Defaulting to Settings/Information/" << endl;
+                _baseGroup = QString::fromLatin1("Settings/Information/");
+            }
+            else
+            {
+                kdWarning() << "No K menu group with X-KDE-BaseGroup=settings found ! Defaulting to Settings/" << endl;
+                _baseGroup = QString::fromLatin1("Settings/");
+            }
+        }
     }
-    // Compatibility with old behaviour, in case of missing .directory files.
-    if (_baseGroup.isEmpty())
-    {
-      if (_infocenter)
-      {
-        kdWarning() << "No K menu group with X-KDE-BaseGroup=info found ! Defaulting to Settings/Information/" << endl;
-        _baseGroup = QString::fromLatin1("Settings/Information/");
-      }
-      else
-      {
-        kdWarning() << "No K menu group with X-KDE-BaseGroup=settings found ! Defaulting to Settings/" << endl;
-        _baseGroup = QString::fromLatin1("Settings/");
-      }
-    }
-  }
-  return _baseGroup;
+    return _baseGroup;
 }
 
-void KCGlobal::repairAccels( QWidget * tw )
+void KCGlobal::repairAccels(QWidget *tw)
 {
-    QObjectList * l = tw->queryList( "QAccel" );
-    QObjectListIt it( *l );             // iterate over the buttons
-    QObject * obj;
-    while ( (obj=it.current()) != 0 ) { // for each found object...
+    QObjectList *l = tw->queryList("QAccel");
+    QObjectListIt it(*l); // iterate over the buttons
+    QObject *obj;
+    while((obj = it.current()) != 0)
+    { // for each found object...
         ++it;
-        ((QAccel*)obj)->repairEventFilter();
+        ((QAccel *)obj)->repairEventFilter();
     }
-    delete l;                           // delete the list, not the objects
+    delete l; // delete the list, not the objects
 }

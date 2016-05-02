@@ -37,82 +37,83 @@ class KConfig;
 class KSqueezedTextLabel;
 class KateViewSpaceContainer;
 
-class KateVSStatusBar : public KStatusBar
-{
-  Q_OBJECT
+class KateVSStatusBar : public KStatusBar {
+    Q_OBJECT
 
-   public:
-      KateVSStatusBar ( KateViewSpace *parent = 0L, const char *name = 0L );
-      virtual ~KateVSStatusBar ();
+public:
+    KateVSStatusBar(KateViewSpace *parent = 0L, const char *name = 0L);
+    virtual ~KateVSStatusBar();
 
-   public slots:
-      void setStatus( int r, int c, int ovr, bool block, int mod, const QString &msg );
-      void updateMod( bool );
-      /**
-       * changed the modified icon according to document state.
-       * @since Kate 2.4
-       */
-      void modifiedChanged();
+public slots:
+    void setStatus(int r, int c, int ovr, bool block, int mod, const QString &msg);
+    void updateMod(bool);
+    /**
+     * changed the modified icon according to document state.
+     * @since Kate 2.4
+     */
+    void modifiedChanged();
 
-   protected:
-      virtual bool eventFilter (QObject*,QEvent *);
-      virtual void showMenu ();
+protected:
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual void showMenu();
 
-   private:
-      QLabel* m_lineColLabel;
-      QLabel* m_modifiedLabel;
-      QLabel* m_insertModeLabel;
-      QLabel* m_selectModeLabel;
-      KSqueezedTextLabel* m_fileNameLabel;
-      QPixmap m_modPm, m_modDiscPm, m_modmodPm, m_noPm;
-      class KateViewSpace *m_viewSpace;
+private:
+    QLabel *m_lineColLabel;
+    QLabel *m_modifiedLabel;
+    QLabel *m_insertModeLabel;
+    QLabel *m_selectModeLabel;
+    KSqueezedTextLabel *m_fileNameLabel;
+    QPixmap m_modPm, m_modDiscPm, m_modmodPm, m_noPm;
+    class KateViewSpace *m_viewSpace;
 };
 
-class KateViewSpace : public QVBox
-{
-  friend class KateViewSpaceContainer;
-  friend class KateVSStatusBar;
+class KateViewSpace : public QVBox {
+    friend class KateViewSpaceContainer;
+    friend class KateVSStatusBar;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    KateViewSpace(KateViewSpaceContainer *, QWidget* parent=0, const char* name=0);
+public:
+    KateViewSpace(KateViewSpaceContainer *, QWidget *parent = 0, const char *name = 0);
     ~KateViewSpace();
     bool isActiveSpace();
-    void setActive(bool b, bool showled=false);
-    QWidgetStack* stack;
-    void addView(Kate::View* v, bool show=true);
-    void removeView(Kate::View* v);
-    bool showView(Kate::View* v);
+    void setActive(bool b, bool showled = false);
+    QWidgetStack *stack;
+    void addView(Kate::View *v, bool show = true);
+    void removeView(Kate::View *v);
+    bool showView(Kate::View *v);
     bool showView(uint docID);
-    Kate::View* currentView();
-    int viewCount() const { return mViewList.count(); }
+    Kate::View *currentView();
+    int viewCount() const
+    {
+        return mViewList.count();
+    }
 
-    void saveConfig (KConfig* config, int myIndex,const QString& viewConfGrp);
-    void restoreConfig ( class KateViewSpaceContainer *viewMan, KConfig* config, const QString &group );
+    void saveConfig(KConfig *config, int myIndex, const QString &viewConfGrp);
+    void restoreConfig(class KateViewSpaceContainer *viewMan, KConfig *config, const QString &group);
 
 
-  protected:
+protected:
     /** reimplemented to catch QEvent::PaletteChange,
     since we use a modified palette for the statusbar */
-    bool event( QEvent * );
+    bool event(QEvent *);
 
-  private:
+private:
     bool mIsActiveSpace;
-    KateVSStatusBar* mStatusBar;
-    QLabel* l;
+    KateVSStatusBar *mStatusBar;
+    QLabel *l;
     QPixmap i_active;
     QPixmap i_empty;
-    QPtrList<Kate::View> mViewList;
+    QPtrList< Kate::View > mViewList;
     int mViewCount;
     KVSSBSep *sep;
     KateViewSpaceContainer *m_viewManager;
     QString m_group;
 
-  private slots:
-    void slotStatusChanged (Kate::View *view, int r, int c, int ovr, bool block, int mod, const QString &msg);
+private slots:
+    void slotStatusChanged(Kate::View *view, int r, int c, int ovr, bool block, int mod, const QString &msg);
 
-  public slots:
+public slots:
     void polish();
     void modifiedOnDisc(Kate::Document *, bool, unsigned char);
 };

@@ -26,25 +26,20 @@
 
 G_BEGIN_DECLS
 
-#define POLKIT_KDE3_TYPE_AUTHENTICATOR          (polkit_kde3_authenticator_get_type())
-#define POLKIT_KDE3_AUTHENTICATOR(o)            (G_TYPE_CHECK_INSTANCE_CAST ((o), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3Authenticator))
-#define POLKIT_KDE3_AUTHENTICATOR_CLASS(k)      (G_TYPE_CHECK_CLASS_CAST((k), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3AuthenticatorClass))
-#define POLKIT_KDE3_AUTHENTICATOR_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3AuthenticatorClass))
-#define POLKIT_KDE3_IS_AUTHENTICATOR(o)         (G_TYPE_CHECK_INSTANCE_TYPE ((o), POLKIT_KDE3_TYPE_AUTHENTICATOR))
-#define POLKIT_KDE3_IS_AUTHENTICATOR_CLASS(k)   (G_TYPE_CHECK_CLASS_TYPE ((k), POLKIT_KDE3_TYPE_AUTHENTICATOR))
+#define POLKIT_KDE3_TYPE_AUTHENTICATOR (polkit_kde3_authenticator_get_type())
+#define POLKIT_KDE3_AUTHENTICATOR(o) (G_TYPE_CHECK_INSTANCE_CAST((o), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3Authenticator))
+#define POLKIT_KDE3_AUTHENTICATOR_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3AuthenticatorClass))
+#define POLKIT_KDE3_AUTHENTICATOR_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), POLKIT_KDE3_TYPE_AUTHENTICATOR, PolkitKDE3AuthenticatorClass))
+#define POLKIT_KDE3_IS_AUTHENTICATOR(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), POLKIT_KDE3_TYPE_AUTHENTICATOR))
+#define POLKIT_KDE3_IS_AUTHENTICATOR_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), POLKIT_KDE3_TYPE_AUTHENTICATOR))
 
 typedef struct _PolkitKDE3Authenticator PolkitKDE3Authenticator;
 typedef struct _PolkitKDE3AuthenticatorClass PolkitKDE3AuthenticatorClass;
 
 GType polkit_kde3_authenticator_get_type(void) G_GNUC_CONST;
 
-PolkitKDE3Authenticator *polkit_kde3_authenticator_new(
-        const gchar   *action_id,
-        const gchar   *message,
-        const gchar   *icon_name,
-        PolkitDetails *details,
-        const gchar   *cookie,
-        GList         *identities);
+PolkitKDE3Authenticator *polkit_kde3_authenticator_new(const gchar *action_id, const gchar *message, const gchar *icon_name, PolkitDetails *details,
+                                                       const gchar *cookie, GList *identities);
 
 void polkit_kde3_authenticator_initiate(PolkitKDE3Authenticator *authenticator);
 void polkit_kde3_authenticator_cancel(PolkitKDE3Authenticator *authenticator);

@@ -28,12 +28,10 @@
 
 #include "findmenu.h"
 
-K_EXPORT_KICKER_MENUEXT( find, FindMenu )
+K_EXPORT_KICKER_MENUEXT(find, FindMenu)
 
 
-FindMenu::FindMenu( QWidget *parent, const char *name,
-                    const QStringList &/*args*/)
-  : KPanelMenu( "", parent, name )
+FindMenu::FindMenu(QWidget *parent, const char *name, const QStringList & /*args*/) : KPanelMenu("", parent, name)
 {
 }
 
@@ -44,41 +42,42 @@ FindMenu::~FindMenu()
 
 void FindMenu::initialize()
 {
-  QStringList list = KGlobal::dirs()->findAllResources( "data", "kicker/menuext/find/*.desktop", false, true );
+    QStringList list = KGlobal::dirs()->findAllResources("data", "kicker/menuext/find/*.desktop", false, true);
 
-  list.sort();
+    list.sort();
 
-  int id = 0;
+    int id = 0;
 
-  mConfigList.clear();
-  for ( QStringList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
-    KSimpleConfig config( *it, true );
-    config.setDesktopGroup();
+    mConfigList.clear();
+    for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
+    {
+        KSimpleConfig config(*it, true);
+        config.setDesktopGroup();
 
-    mConfigList.append( *it );
-    QString text = config.readEntry( "Name" );
+        mConfigList.append(*it);
+        QString text = config.readEntry("Name");
 
-    insertItem( SmallIconSet( config.readEntry( "Icon" ) ), text, id );
-    id++;
-  }
+        insertItem(SmallIconSet(config.readEntry("Icon")), text, id);
+        id++;
+    }
 }
 
-void FindMenu::slotExec( int pos )
+void FindMenu::slotExec(int pos)
 {
-  QString app = mConfigList[ pos ];
+    QString app = mConfigList[pos];
 
-  kapp->propagateSessionManager();
+    kapp->propagateSessionManager();
 
-  KSimpleConfig config(app, true);
-  config.setDesktopGroup();
-  if (kapp && config.readEntry("Type") == "Link")
-  {
-    kapp->invokeBrowser(config.readEntry("URL"));
-  }
-  else
-  {
-    KApplication::startServiceByDesktopPath( app );
-  }
+    KSimpleConfig config(app, true);
+    config.setDesktopGroup();
+    if(kapp && config.readEntry("Type") == "Link")
+    {
+        kapp->invokeBrowser(config.readEntry("URL"));
+    }
+    else
+    {
+        KApplication::startServiceByDesktopPath(app);
+    }
 }
 
 #include "findmenu.moc"

@@ -30,12 +30,8 @@ class QLineEdit;
 
 class AuthenticationDialog : public KDialogBase {
 public:
-    AuthenticationDialog(
-            const QString &actionId,
-            const QString &iconName,
-            const QString &message,
-            const QMap<QString,QString> &details,
-            const QStringList &listUsers);
+    AuthenticationDialog(const QString &actionId, const QString &iconName, const QString &message, const QMap< QString, QString > &details,
+                         const QStringList &listUsers);
 
     ~AuthenticationDialog();
 

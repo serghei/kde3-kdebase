@@ -31,18 +31,20 @@ class KWindowListMenu;
 /**
  * Button that contains a windowlist menu
  */
-class WindowListButton : public PanelPopupButton
-{
+class WindowListButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    WindowListButton( QWidget* parent );
+    WindowListButton(QWidget *parent);
 
 protected:
-    virtual QString tileName() { return "WindowList"; }
+    virtual QString tileName()
+    {
+        return "WindowList";
+    }
     virtual void initPopup();
 
-    KWindowListMenu* topMenu;
+    KWindowListMenu *topMenu;
 };
 
 #endif

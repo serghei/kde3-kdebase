@@ -27,46 +27,49 @@
 
 #include <klocale.h>
 
-FilterDlg::FilterDlg(QWidget *parent, const char *name)
-: KDialogBase(parent, name, true, i18n("Filter Parameters"), Ok|Cancel, Ok)
+FilterDlg::FilterDlg(QWidget *parent, const char *name) : KDialogBase(parent, name, true, i18n("Filter Parameters"), Ok | Cancel, Ok)
 {
-	QWidget	*w = new QWidget(this);
+    QWidget *w = new QWidget(this);
 
-	m_mime = new QLineEdit(w);
-	m_cmd = new QLineEdit(w);
-	QLabel	*m_mimelabel = new QLabel(i18n("MIME type:"), w);
-	QLabel	*m_cmdlabel = new QLabel(i18n("Command:"), w);
+    m_mime = new QLineEdit(w);
+    m_cmd = new QLineEdit(w);
+    QLabel *m_mimelabel = new QLabel(i18n("MIME type:"), w);
+    QLabel *m_cmdlabel = new QLabel(i18n("Command:"), w);
 
-	QGridLayout	*l0 = new QGridLayout(w, 2, 2, 10, 5);
-	l0->setColStretch(1, 1);
-	l0->addWidget(m_mimelabel, 0, 0);
-	l0->addWidget(m_cmdlabel, 1, 0);
-	l0->addWidget(m_mime, 0, 1);
-	l0->addWidget(m_cmd, 1, 1);
+    QGridLayout *l0 = new QGridLayout(w, 2, 2, 10, 5);
+    l0->setColStretch(1, 1);
+    l0->addWidget(m_mimelabel, 0, 0);
+    l0->addWidget(m_cmdlabel, 1, 0);
+    l0->addWidget(m_mime, 0, 1);
+    l0->addWidget(m_cmd, 1, 1);
 
-	setMainWidget(w);
-	m_mime->setFocus();
-	resize(300, 100);
-	connect(m_mime, SIGNAL(textChanged ( const QString & )),this, SLOT(slotTextFilterChanged()));
-        connect(m_cmd, SIGNAL(textChanged ( const QString & )),this, SLOT(slotTextFilterChanged()));
-        slotTextFilterChanged();
+    setMainWidget(w);
+    m_mime->setFocus();
+    resize(300, 100);
+    connect(m_mime, SIGNAL(textChanged(const QString &)), this, SLOT(slotTextFilterChanged()));
+    connect(m_cmd, SIGNAL(textChanged(const QString &)), this, SLOT(slotTextFilterChanged()));
+    slotTextFilterChanged();
 }
 
-void FilterDlg::slotTextFilterChanged( )
+void FilterDlg::slotTextFilterChanged()
 {
     enableButtonOK(!m_mime->text().isEmpty() && !m_cmd->text().isEmpty());
 }
 
 bool FilterDlg::doIt(QWidget *parent, QString *mime, QString *cmd)
 {
-	FilterDlg	dlg(parent);
-	if (mime) dlg.m_mime->setText(*mime);
-	if (cmd) dlg.m_cmd->setText(*cmd);
-	if (dlg.exec())
-	{
-		if (mime) *mime = dlg.m_mime->text();
-		if (cmd) *cmd = dlg.m_cmd->text();
-		return true;
-	}
-	return false;
+    FilterDlg dlg(parent);
+    if(mime)
+        dlg.m_mime->setText(*mime);
+    if(cmd)
+        dlg.m_cmd->setText(*cmd);
+    if(dlg.exec())
+    {
+        if(mime)
+            *mime = dlg.m_mime->text();
+        if(cmd)
+            *cmd = dlg.m_cmd->text();
+        return true;
+    }
+    return false;
 }

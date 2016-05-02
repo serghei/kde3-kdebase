@@ -28,24 +28,24 @@ s
 
 #include "service_mnu.h"
 
-class QuickAddAppsMenu: public PanelServiceMenu {
-   Q_OBJECT
+class QuickAddAppsMenu : public PanelServiceMenu {
+    Q_OBJECT
 public:
-   QuickAddAppsMenu(const QString &label, const QString &relPath, QWidget *target, QWidget *parent=0, const char *name=0, const QString &sender=QString(""));
-   QuickAddAppsMenu(QWidget *target, QWidget *parent=0, const QString &sender=QString(""), const char *name=0);
+    QuickAddAppsMenu(const QString &label, const QString &relPath, QWidget *target, QWidget *parent = 0, const char *name = 0,
+                     const QString &sender = QString(""));
+    QuickAddAppsMenu(QWidget *target, QWidget *parent = 0, const QString &sender = QString(""), const char *name = 0);
 signals:
-   void addAppBefore(QString,QString);
+    void addAppBefore(QString, QString);
 protected slots:
-   virtual void slotExec(int id);
+    virtual void slotExec(int id);
+
 protected:
-   virtual PanelServiceMenu *newSubMenu(const QString &label,
-                                        const QString &relPath,
-                                        QWidget *parent,
-                                        const char *name,
-					const QString & _inlineHeader=QString::null);
+    virtual PanelServiceMenu *newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                         const QString &_inlineHeader = QString::null);
+
 private:
-   QWidget *_targetObject;
-   QString _sender;
+    QWidget *_targetObject;
+    QString _sender;
 };
 
 #endif

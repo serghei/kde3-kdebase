@@ -26,8 +26,8 @@
 #define DEFAULT_UNDERLINELINKS false
 #define DEFAULT_WORDWRAPTEXT true // kfm-like, sorry Reggie :-)
 #define DEFAULT_TEXTHEIGHT 2
-#define DEFAULT_TEXTWIDTH 0       // 0 = automatic (font depending)
-#define DEFAULT_TEXTWIDTH_MULTICOLUMN 600  // maxwidth, as the iconview has dynamic column width
+#define DEFAULT_TEXTWIDTH 0               // 0 = automatic (font depending)
+#define DEFAULT_TEXTWIDTH_MULTICOLUMN 600 // maxwidth, as the iconview has dynamic column width
 #define DEFAULT_FILESIZEINBYTES false
 
 #define DEFAULT_RENAMEICONDIRECTLY false

@@ -32,136 +32,136 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "filter.h"
 
-extern "C" { KDE_EXPORT int kdemain(int argc, char **argv); }
-
-int kdemain( int argc, char ** argv)
-{
-  KInstance instance( "kio_filter" );
-
-  kdDebug(7110) << "Starting " << getpid() << endl;
-
-  if (argc != 4)
-  {
-     fprintf(stderr, "Usage: kio_filter protocol domain-socket1 domain-socket2\n");
-     exit(-1);
-  }
-
-  FilterProtocol slave(argv[1], argv[2], argv[3]);
-  slave.dispatchLoop();
-
-  kdDebug(7110) << "Done" << endl;
-  return 0;
+extern "C" {
+KDE_EXPORT int kdemain(int argc, char **argv);
 }
 
-FilterProtocol::FilterProtocol( const QCString & protocol, const QCString &pool, const QCString &app )
- : KIO::SlaveBase( protocol, pool, app )
+int kdemain(int argc, char **argv)
+{
+    KInstance instance("kio_filter");
+
+    kdDebug(7110) << "Starting " << getpid() << endl;
+
+    if(argc != 4)
+    {
+        fprintf(stderr, "Usage: kio_filter protocol domain-socket1 domain-socket2\n");
+        exit(-1);
+    }
+
+    FilterProtocol slave(argv[1], argv[2], argv[3]);
+    slave.dispatchLoop();
+
+    kdDebug(7110) << "Done" << endl;
+    return 0;
+}
+
+FilterProtocol::FilterProtocol(const QCString &protocol, const QCString &pool, const QCString &app) : KIO::SlaveBase(protocol, pool, app)
 {
     QString mimetype = QString::fromLatin1("application/x-") + QString::fromLatin1(protocol);
-    filter = KFilterBase::findFilterByMimeType( mimetype );
+    filter = KFilterBase::findFilterByMimeType(mimetype);
     Q_ASSERT(filter);
 }
 
-void FilterProtocol::get( const KURL & )
+void FilterProtocol::get(const KURL &)
 {
-  if (subURL.isEmpty())
-  {
-     error( KIO::ERR_NO_SOURCE_PROTOCOL, mProtocol );
-     return;
-  }
-  if (!filter)
-  {
-      error( KIO::ERR_INTERNAL, mProtocol );
-      return;
-  }
-  needSubURLData();
+    if(subURL.isEmpty())
+    {
+        error(KIO::ERR_NO_SOURCE_PROTOCOL, mProtocol);
+        return;
+    }
+    if(!filter)
+    {
+        error(KIO::ERR_INTERNAL, mProtocol);
+        return;
+    }
+    needSubURLData();
 
-  filter->init(IO_ReadOnly);
+    filter->init(IO_ReadOnly);
 
-  bool bNeedHeader = true;
-  bool bNeedMimetype = true;
-  bool bError = true;
-  int result;
+    bool bNeedHeader = true;
+    bool bNeedMimetype = true;
+    bool bError = true;
+    int result;
 
-  QByteArray inputBuffer;
-  QByteArray outputBuffer(8*1024); // Start with a modest buffer
-  filter->setOutBuffer( outputBuffer.data(), outputBuffer.size() );
-  while(true)
-  {
-     if (filter->inBufferEmpty())
-     {
+    QByteArray inputBuffer;
+    QByteArray outputBuffer(8 * 1024); // Start with a modest buffer
+    filter->setOutBuffer(outputBuffer.data(), outputBuffer.size());
+    while(true)
+    {
+        if(filter->inBufferEmpty())
+        {
+            dataReq(); // Request data
+            result = readData(inputBuffer);
+            kdDebug(7110) << "requestData: got " << result << endl;
+            if(result <= 0)
+            {
+                bError = true;
+                break; // Unexpected EOF.
+            }
+            filter->setInBuffer(inputBuffer.data(), inputBuffer.size());
+        }
+        if(bNeedHeader)
+        {
+            bError = !filter->readHeader();
+            if(bError)
+                break;
+            bNeedHeader = false;
+        }
+        result = filter->uncompress();
+        if((filter->outBufferAvailable() == 0) || (result == KFilterBase::END))
+        {
+            kdDebug(7110) << "avail_out = " << filter->outBufferAvailable() << endl;
+            if(filter->outBufferAvailable() != 0)
+            {
+                // Discard unused space :-)
+                outputBuffer.resize(outputBuffer.size() - filter->outBufferAvailable());
+            }
+            if(bNeedMimetype)
+            {
+                KMimeMagicResult *result = KMimeMagic::self()->findBufferFileType(outputBuffer, subURL.fileName());
+                kdDebug(7110) << "Emitting mimetype " << result->mimeType() << endl;
+                mimeType(result->mimeType());
+                bNeedMimetype = false;
+            }
+            data(outputBuffer); // Send data
+            filter->setOutBuffer(outputBuffer.data(), outputBuffer.size());
+            if(result == KFilterBase::END)
+                break; // Finished.
+        }
+        if(result != KFilterBase::OK)
+        {
+            bError = true;
+            break; // Error
+        }
+    }
+
+    if(!bError)
+    {
         dataReq(); // Request data
-        result = readData( inputBuffer);
-  kdDebug(7110) << "requestData: got " << result << endl;
-        if (result <= 0)
-        {
-          bError = true;
-          break; // Unexpected EOF.
-        }
-        filter->setInBuffer( inputBuffer.data(), inputBuffer.size() );
-     }
-     if (bNeedHeader)
-     {
-        bError = !filter->readHeader();
-        if (bError)
-            break;
-        bNeedHeader = false;
-     }
-     result = filter->uncompress();
-     if ((filter->outBufferAvailable() == 0) || (result == KFilterBase::END))
-     {
-         kdDebug(7110) << "avail_out = " << filter->outBufferAvailable() << endl;
-        if (filter->outBufferAvailable() != 0)
-        {
-            // Discard unused space :-)
-            outputBuffer.resize(outputBuffer.size() - filter->outBufferAvailable());
-        }
-        if (bNeedMimetype)
-        {
-            KMimeMagicResult * result = KMimeMagic::self()->findBufferFileType( outputBuffer, subURL.fileName() );
-            kdDebug(7110) << "Emitting mimetype " << result->mimeType() << endl;
-            mimeType( result->mimeType() );
-            bNeedMimetype = false;
-        }
-        data( outputBuffer ); // Send data
-        filter->setOutBuffer( outputBuffer.data(), outputBuffer.size() );
-        if (result == KFilterBase::END)
-           break; // Finished.
-     }
-     if (result != KFilterBase::OK)
-     {
-        bError = true;
-        break; // Error
-     }
-  }
+        result = readData(inputBuffer);
+        kdDebug(7110) << "requestData: got " << result << "(expecting 0)" << endl;
+        data(QByteArray()); // Send EOF
+    }
 
-  if (!bError)
-  {
-     dataReq(); // Request data
-     result = readData( inputBuffer);
-  kdDebug(7110) << "requestData: got " << result << "(expecting 0)" << endl;
-     data( QByteArray() ); // Send EOF
-  }
+    filter->terminate();
 
-  filter->terminate();
+    if(bError)
+    {
+        error(KIO::ERR_COULD_NOT_READ, subURL.url());
+        subURL = KURL(); // Clear subURL
+        return;
+    }
 
-  if (bError)
-  {
-     error(KIO::ERR_COULD_NOT_READ, subURL.url());
-     subURL = KURL(); // Clear subURL
-     return;
-  }
-
-  subURL = KURL(); // Clear subURL
-  finished();
+    subURL = KURL(); // Clear subURL
+    finished();
 }
 
-void FilterProtocol::put( const KURL &/*url*/, int, bool /*_overwrite*/, bool /*_resume*/ )
+void FilterProtocol::put(const KURL & /*url*/, int, bool /*_overwrite*/, bool /*_resume*/)
 {
-  error( KIO::ERR_UNSUPPORTED_ACTION, QString::fromLatin1("put"));
+    error(KIO::ERR_UNSUPPORTED_ACTION, QString::fromLatin1("put"));
 }
 
 void FilterProtocol::setSubURL(const KURL &url)
 {
-   subURL = url;
+    subURL = url;
 }
-

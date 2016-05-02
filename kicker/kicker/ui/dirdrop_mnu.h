@@ -27,11 +27,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qpopupmenu.h>
 
 // The directory dropped menu
-class PanelDirDropMenu : public QPopupMenu
-{
+class PanelDirDropMenu : public QPopupMenu {
 public:
-    enum OpButton{Url=1, Browser};
-    PanelDirDropMenu(QWidget *parent=0, const char *name=0);
+    enum OpButton
+    {
+        Url = 1,
+        Browser
+    };
+    PanelDirDropMenu(QWidget *parent = 0, const char *name = 0);
 };
 
 #endif

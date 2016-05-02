@@ -3,9 +3,9 @@
  *
  * This file is part of the KDE project, module kdesu.
  * Copyright (C) 1999,2000 Geert Jansen <jansen@kde.org>
- * 
- * This is free software; you can use this library under the GNU Library 
- * General Public License, version 2. See the file "COPYING.LIB" for the 
+ *
+ * This is free software; you can use this library under the GNU Library
+ * General Public License, version 2. See the file "COPYING.LIB" for the
  * exact licensing terms.
  */
 
@@ -20,25 +20,24 @@
 #define PTYPROC 7120
 
 class PTY;
-typedef QValueList<QCString> QCStringList;
+typedef QValueList< QCString > QCStringList;
 
 /**
  * Synchronous communication with tty programs.
  *
- * PtyProcess provides synchronous communication with tty based programs. 
- * The communications channel used is a pseudo tty (as opposed to a pipe) 
+ * PtyProcess provides synchronous communication with tty based programs.
+ * The communications channel used is a pseudo tty (as opposed to a pipe)
  * This means that programs which require a terminal will work.
  */
 
-class MyPtyProcess
-{
+class MyPtyProcess {
 public:
     MyPtyProcess();
     virtual ~MyPtyProcess();
 
     /**
-     * Fork off and execute a command. The command's standard in and output 
-     * are connected to the pseudo tty. They are accessible with @ref #readLine 
+     * Fork off and execute a command. The command's standard in and output
+     * are connected to the pseudo tty. They are accessible with @ref #readLine
      * and @ref #writeLine.
      * @param command The command to execute.
      * @param args The arguments to the command.
@@ -46,29 +45,37 @@ public:
     int exec(QCString command, QCStringList args);
 
     /**
-     * Read a line from the program's standard out. Depending on the @em block 
-     * parameter, this call blocks until a single, full line is read. 
+     * Read a line from the program's standard out. Depending on the @em block
+     * parameter, this call blocks until a single, full line is read.
      * @param block Block until a full line is read?
      * @return The output string.
      */
     QCString readLine(bool block = true)
-        { return readLineFrom(m_Fd, m_ptyBuf, block); }
+    {
+        return readLineFrom(m_Fd, m_ptyBuf, block);
+    }
 
     QCString readLineFromPty(bool block = true)
-        { return readLineFrom(m_Fd, m_ptyBuf, block); }
+    {
+        return readLineFrom(m_Fd, m_ptyBuf, block);
+    }
 
     QCString readLineFromStdout(bool block = true)
-        { return readLineFrom(m_stdinout, m_stdoutBuf, block); }
+    {
+        return readLineFrom(m_stdinout, m_stdoutBuf, block);
+    }
 
     QCString readLineFromStderr(bool block = true)
-        { return readLineFrom(m_err, m_stderrBuf, block); }
+    {
+        return readLineFrom(m_err, m_stderrBuf, block);
+    }
 
     /**
      * Write a line of text to the program's standard in.
      * @param line The text to write.
      * @param addNewline Adds a '\n' to the line.
      */
-    void writeLine(QCString line, bool addNewline=true);
+    void writeLine(QCString line, bool addNewline = true);
 
     /**
      * Put back a line of input.
@@ -77,22 +84,33 @@ public:
      */
 
     void unreadLine(QCString line, bool addNewline = true)
-        { unreadLineFrom(m_ptyBuf, line, addNewline); }
+    {
+        unreadLineFrom(m_ptyBuf, line, addNewline);
+    }
 
     void unreadLineFromPty(QCString line, bool addNewline = true)
-        { unreadLineFrom(m_ptyBuf, line, addNewline); }
+    {
+        unreadLineFrom(m_ptyBuf, line, addNewline);
+    }
 
     void unreadLineFromStderr(QCString line, bool addNewline = true)
-        { unreadLineFrom(m_stderrBuf, line, addNewline); }
+    {
+        unreadLineFrom(m_stderrBuf, line, addNewline);
+    }
 
     void unreadLineFromStdout(QCString line, bool addNewline = true)
-        { unreadLineFrom(m_stdoutBuf, line, addNewline); }
+    {
+        unreadLineFrom(m_stdoutBuf, line, addNewline);
+    }
 
     /**
      * Set exit string. If a line of program output matches this,
      * @ref #waitForChild() will terminate the program and return.
      */
-    void setExitString(QCString exit) { m_Exit = exit; }
+    void setExitString(QCString exit)
+    {
+        m_Exit = exit;
+    }
 
     /**
      * Wait for the child to exit. See also @ref #setExitString.
@@ -100,31 +118,49 @@ public:
     int waitForChild();
 
     /**
-     * Wait until the pty has cleared the ECHO flag. This is useful 
+     * Wait until the pty has cleared the ECHO flag. This is useful
      * when programs write a password prompt before they disable ECHO.
      * Disabling it might flush any input that was written.
      */
     int WaitSlave();
 
     /** Enables/disables local echo on the pseudo tty. */
-    int enableLocalEcho(bool enable=true);
+    int enableLocalEcho(bool enable = true);
 
     /** Enable/disable terminal output. Relevant only to some subclasses. */
-    void setTerminal(bool terminal) { m_bTerminal = terminal; }
+    void setTerminal(bool terminal)
+    {
+        m_bTerminal = terminal;
+    }
 
     /** Overwritte the password as soon as it is used. Relevant only to
      * some subclasses. */
-    void setErase(bool erase) { m_bErase = erase; }
+    void setErase(bool erase)
+    {
+        m_bErase = erase;
+    }
 
     /** Return the filedescriptor of the process. */
-    int fd() {return m_Fd;}
+    int fd()
+    {
+        return m_Fd;
+    }
 
     /** Return the pid of the process. */
-    int pid() {return m_Pid;}
+    int pid()
+    {
+        return m_Pid;
+    }
 
-    int stdioFd() {return m_stdinout;}
+    int stdioFd()
+    {
+        return m_stdinout;
+    }
 
-    int stderrFd() {return m_err;}
+    int stderrFd()
+    {
+        return m_err;
+    }
 
 protected:
     bool m_bErase, m_bTerminal;
@@ -139,7 +175,7 @@ private:
     QCString m_TTY;
     QCString m_ptyBuf, m_stderrBuf, m_stdoutBuf;
 
-    QCString readLineFrom(int fd, QCString& inbuf, bool block);
+    QCString readLineFrom(int fd, QCString &inbuf, bool block);
     void unreadLineFrom(QCString inbuf, QCString line, bool addnl);
     class PtyProcessPrivate;
     PtyProcessPrivate *d;

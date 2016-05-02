@@ -30,80 +30,78 @@
 #include "previews.h"
 #include "browser.h"
 
-KBrowserOptions::KBrowserOptions(KConfig *config, QString group, QWidget *parent, const char *name)
-    : KCModule( parent, "kcmkonq" ) 
+KBrowserOptions::KBrowserOptions(KConfig *config, QString group, QWidget *parent, const char *name) : KCModule(parent, "kcmkonq")
 {
-  QVBoxLayout *layout = new QVBoxLayout(this);
-  QTabWidget *tab = new QTabWidget(this);
-  layout->addWidget(tab);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    QTabWidget *tab = new QTabWidget(this);
+    layout->addWidget(tab);
 
-  appearance = new KonqFontOptions(config, group, false, tab, name);
-  appearance->layout()->setMargin( KDialog::marginHint() );
+    appearance = new KonqFontOptions(config, group, false, tab, name);
+    appearance->layout()->setMargin(KDialog::marginHint());
 
-  behavior = new KBehaviourOptions(config, group, tab, name);
-  behavior->layout()->setMargin( KDialog::marginHint() );
+    behavior = new KBehaviourOptions(config, group, tab, name);
+    behavior->layout()->setMargin(KDialog::marginHint());
 
-  previews = new KPreviewOptions(tab, name);
-  previews->layout()->setMargin( KDialog::marginHint() );
+    previews = new KPreviewOptions(tab, name);
+    previews->layout()->setMargin(KDialog::marginHint());
 
-  kuick = KCModuleLoader::loadModule("kcmkuick", tab);
+    kuick = KCModuleLoader::loadModule("kcmkuick", tab);
 
-  tab->addTab(appearance, i18n("&Appearance"));
-  tab->addTab(behavior, i18n("&Behavior"));
-  tab->addTab(previews, i18n("&Previews && Meta-Data"));
-  if (kuick)
-  {
-    kuick->layout()->setMargin( KDialog::marginHint() );
-    tab->addTab(kuick, i18n("&Quick Copy && Move"));
-  }
+    tab->addTab(appearance, i18n("&Appearance"));
+    tab->addTab(behavior, i18n("&Behavior"));
+    tab->addTab(previews, i18n("&Previews && Meta-Data"));
+    if(kuick)
+    {
+        kuick->layout()->setMargin(KDialog::marginHint());
+        tab->addTab(kuick, i18n("&Quick Copy && Move"));
+    }
 
-  connect(appearance, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-  connect(behavior, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-  connect(previews, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
-  if (kuick)
-     connect(kuick, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    connect(appearance, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    connect(behavior, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    connect(previews, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
+    if(kuick)
+        connect(kuick, SIGNAL(changed(bool)), this, SIGNAL(changed(bool)));
 
-  connect(tab, SIGNAL(currentChanged(QWidget *)), 
-          this, SIGNAL(quickHelpChanged()));
-  m_tab = tab;
+    connect(tab, SIGNAL(currentChanged(QWidget *)), this, SIGNAL(quickHelpChanged()));
+    m_tab = tab;
 }
 
 void KBrowserOptions::load()
 {
-  appearance->load();
-  behavior->load();
-  previews->load();
-  if (kuick)
-     kuick->load();
+    appearance->load();
+    behavior->load();
+    previews->load();
+    if(kuick)
+        kuick->load();
 }
 
 void KBrowserOptions::defaults()
 {
-  appearance->defaults();
-  behavior->defaults();
-  previews->defaults();
-  if (kuick)
-     kuick->defaults();
+    appearance->defaults();
+    behavior->defaults();
+    previews->defaults();
+    if(kuick)
+        kuick->defaults();
 }
 
 void KBrowserOptions::save()
 {
-  appearance->save();
-  behavior->save();
-  previews->save();
-  if (kuick)
-     kuick->save();
+    appearance->save();
+    behavior->save();
+    previews->save();
+    if(kuick)
+        kuick->save();
 }
 
 QString KBrowserOptions::quickHelp() const
 {
-  QWidget *w = m_tab->currentPage();
-  if (w->inherits("KCModule"))
-  {
-     KCModule *m = static_cast<KCModule *>(w);
-     return m->quickHelp();
-  }
-  return QString::null;
+    QWidget *w = m_tab->currentPage();
+    if(w->inherits("KCModule"))
+    {
+        KCModule *m = static_cast< KCModule * >(w);
+        return m->quickHelp();
+    }
+    return QString::null;
 }
 
 #include "browser.moc"

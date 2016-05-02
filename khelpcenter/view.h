@@ -9,71 +9,85 @@
 class KActionCollection;
 
 namespace DOM {
-  class Node;
+class Node;
 }
 
 namespace KHC {
 
 class Formatter;
 
-class View : public KHTMLPart
-{
+class View : public KHTMLPart {
     Q_OBJECT
-  public:
-    View( QWidget *parentWidget, const char *widgetName,
-          QObject *parent, const char *name, KHTMLPart::GUIProfile prof,
-          KActionCollection *col );
+public:
+    View(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, KHTMLPart::GUIProfile prof, KActionCollection *col);
 
     ~View();
 
-    virtual bool openURL( const KURL &url );
+    virtual bool openURL(const KURL &url);
 
-    virtual void saveState( QDataStream &stream );
-    virtual void restoreState( QDataStream &stream );
+    virtual void saveState(QDataStream &stream);
+    virtual void restoreState(QDataStream &stream);
 
-    enum State { Docu, About, Search };
+    enum State
+    {
+        Docu,
+        About,
+        Search
+    };
 
-    int state() const { return mState; }
-    QString title() const { return mTitle; }
+    int state() const
+    {
+        return mState;
+    }
+    QString title() const
+    {
+        return mTitle;
+    }
 
-    static QString langLookup( const QString &fname );
+    static QString langLookup(const QString &fname);
 
     void beginSearchResult();
-    void writeSearchResult( const QString & );
+    void writeSearchResult(const QString &);
     void endSearchResult();
 
-    void beginInternal( const KURL & );
+    void beginInternal(const KURL &);
     KURL internalUrl() const;
 
-    int zoomStepping() const { return m_zoomStepping; }
+    int zoomStepping() const
+    {
+        return m_zoomStepping;
+    }
 
-    Formatter *formatter() const { return mFormatter; }
+    Formatter *formatter() const
+    {
+        return mFormatter;
+    }
 
     void copySelectedText();
 
-  public slots:
+public slots:
     void lastSearch();
     void slotIncFontSizes();
     void slotDecFontSizes();
-    void slotReload( const KURL &url = KURL() );
+    void slotReload(const KURL &url = KURL());
     void slotCopyLink();
     bool nextPage(bool checkOnly = false);
     bool prevPage(bool checkOnly = false);
 
-  signals:
+signals:
     void searchResultCacheAvailable();
 
-  protected:
-    bool eventFilter( QObject *o, QEvent *e );
+protected:
+    bool eventFilter(QObject *o, QEvent *e);
 
-  private slots:
-    void setTitle( const QString &title );
-    void showMenu( const QString& url, const QPoint& pos);
+private slots:
+    void setTitle(const QString &title);
+    void showMenu(const QString &url, const QPoint &pos);
 
-  private:
+private:
     void showAboutPage();
-    KURL urlFromLinkNode( const DOM::Node &n ) const;
- 
+    KURL urlFromLinkNode(const DOM::Node &n) const;
+
     int mState;
     QString mTitle;
 
@@ -86,7 +100,6 @@ class View : public KHTMLPart
     KActionCollection *mActionCollection;
     QString mCopyURL;
 };
-
 }
 
 #endif

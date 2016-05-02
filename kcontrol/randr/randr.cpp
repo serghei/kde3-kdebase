@@ -39,665 +39,682 @@
 #undef INT32
 #include <X11/extensions/Xrandr.h>
 
-class RandRScreenPrivate
-{
+class RandRScreenPrivate {
 public:
-	RandRScreenPrivate() : config(0L) {};
-	~RandRScreenPrivate()
-	{
-		if (config)
-			XRRFreeScreenConfigInfo(config);
-	}
+    RandRScreenPrivate() : config(0L){};
+    ~RandRScreenPrivate()
+    {
+        if(config)
+            XRRFreeScreenConfigInfo(config);
+    }
 
-	XRRScreenConfiguration* config;
+    XRRScreenConfiguration *config;
 };
 
-RandRScreen::RandRScreen(int screenIndex)
-	: d(new RandRScreenPrivate())
-	, m_screen(screenIndex)
-	, m_shownDialog(NULL)
+RandRScreen::RandRScreen(int screenIndex) : d(new RandRScreenPrivate()), m_screen(screenIndex), m_shownDialog(NULL)
 {
-	loadSettings();
-	setOriginal();
+    loadSettings();
+    setOriginal();
 }
 
 RandRScreen::~RandRScreen()
 {
-	delete d;
+    delete d;
 }
 
 void RandRScreen::loadSettings()
 {
-	if (d->config)
-		XRRFreeScreenConfigInfo(d->config);
+    if(d->config)
+        XRRFreeScreenConfigInfo(d->config);
 
-	d->config = XRRGetScreenInfo(qt_xdisplay(), RootWindow(qt_xdisplay(), m_screen));
-	Q_ASSERT(d->config);
+    d->config = XRRGetScreenInfo(qt_xdisplay(), RootWindow(qt_xdisplay(), m_screen));
+    Q_ASSERT(d->config);
 
-	Rotation rotation;
-	m_currentSize = m_proposedSize = XRRConfigCurrentConfiguration(d->config, &rotation);
-	m_currentRotation = m_proposedRotation = rotation;
+    Rotation rotation;
+    m_currentSize = m_proposedSize = XRRConfigCurrentConfiguration(d->config, &rotation);
+    m_currentRotation = m_proposedRotation = rotation;
 
-	m_pixelSizes.clear();
-	m_mmSizes.clear();
-	int numSizes;
-	XRRScreenSize* sizes = XRRSizes(qt_xdisplay(), m_screen, &numSizes);
-	for (int i = 0; i < numSizes; i++) {
-		m_pixelSizes.append(QSize(sizes[i].width, sizes[i].height));
-		m_mmSizes.append(QSize(sizes[i].mwidth, sizes[i].mheight));
-	}
+    m_pixelSizes.clear();
+    m_mmSizes.clear();
+    int numSizes;
+    XRRScreenSize *sizes = XRRSizes(qt_xdisplay(), m_screen, &numSizes);
+    for(int i = 0; i < numSizes; i++)
+    {
+        m_pixelSizes.append(QSize(sizes[i].width, sizes[i].height));
+        m_mmSizes.append(QSize(sizes[i].mwidth, sizes[i].mheight));
+    }
 
-	m_rotations = XRRRotations(qt_xdisplay(), m_screen, &rotation);
+    m_rotations = XRRRotations(qt_xdisplay(), m_screen, &rotation);
 
-	m_currentRefreshRate = m_proposedRefreshRate = refreshRateHzToIndex(m_currentSize, XRRConfigCurrentRate(d->config));
+    m_currentRefreshRate = m_proposedRefreshRate = refreshRateHzToIndex(m_currentSize, XRRConfigCurrentRate(d->config));
 }
 
 void RandRScreen::setOriginal()
 {
-	m_originalSize = m_currentSize;
-	m_originalRotation = m_currentRotation;
-	m_originalRefreshRate = m_currentRefreshRate;
+    m_originalSize = m_currentSize;
+    m_originalRotation = m_currentRotation;
+    m_originalRefreshRate = m_currentRefreshRate;
 }
 
 bool RandRScreen::applyProposed()
 {
-	//kdDebug() << k_funcinfo << " size " << (SizeID)proposedSize() << ", rotation " << proposedRotation() << ", refresh " << refreshRateIndexToHz(proposedSize(), proposedRefreshRate()) << endl;
+    // kdDebug() << k_funcinfo << " size " << (SizeID)proposedSize() << ", rotation " << proposedRotation() << ", refresh " <<
+    // refreshRateIndexToHz(proposedSize(), proposedRefreshRate()) << endl;
 
-	Status status;
+    Status status;
 
-	if (proposedRefreshRate() < 0)
-		status = XRRSetScreenConfig(qt_xdisplay(), d->config, DefaultRootWindow(qt_xdisplay()), (SizeID)proposedSize(), (Rotation)proposedRotation(), CurrentTime);
-	else {
-		if( refreshRateIndexToHz(proposedSize(), proposedRefreshRate()) <= 0 ) {
-			m_proposedRefreshRate = 0;
-		}
-		status = XRRSetScreenConfigAndRate(qt_xdisplay(), d->config, DefaultRootWindow(qt_xdisplay()), (SizeID)proposedSize(), (Rotation)proposedRotation(), refreshRateIndexToHz(proposedSize(), proposedRefreshRate()), CurrentTime);
-	}
+    if(proposedRefreshRate() < 0)
+        status = XRRSetScreenConfig(qt_xdisplay(), d->config, DefaultRootWindow(qt_xdisplay()), (SizeID)proposedSize(), (Rotation)proposedRotation(),
+                                    CurrentTime);
+    else
+    {
+        if(refreshRateIndexToHz(proposedSize(), proposedRefreshRate()) <= 0)
+        {
+            m_proposedRefreshRate = 0;
+        }
+        status = XRRSetScreenConfigAndRate(qt_xdisplay(), d->config, DefaultRootWindow(qt_xdisplay()), (SizeID)proposedSize(),
+                                           (Rotation)proposedRotation(), refreshRateIndexToHz(proposedSize(), proposedRefreshRate()), CurrentTime);
+    }
 
-	//kdDebug() << "New size: " << WidthOfScreen(ScreenOfDisplay(QPaintDevice::x11AppDisplay(), screen)) << ", " << HeightOfScreen(ScreenOfDisplay(QPaintDevice::x11AppDisplay(), screen)) << endl;
+    // kdDebug() << "New size: " << WidthOfScreen(ScreenOfDisplay(QPaintDevice::x11AppDisplay(), screen)) << ", " <<
+    // HeightOfScreen(ScreenOfDisplay(QPaintDevice::x11AppDisplay(), screen)) << endl;
 
-	if (status == RRSetConfigSuccess) {
-		m_currentSize = m_proposedSize;
-		m_currentRotation = m_proposedRotation;
-		m_currentRefreshRate = m_proposedRefreshRate;
-		return true;
-	}
+    if(status == RRSetConfigSuccess)
+    {
+        m_currentSize = m_proposedSize;
+        m_currentRotation = m_proposedRotation;
+        m_currentRefreshRate = m_proposedRefreshRate;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 bool RandRScreen::applyProposedAndConfirm()
 {
-	if (proposedChanged()) {
-		setOriginal();
+    if(proposedChanged())
+    {
+        setOriginal();
 
-		if (applyProposed()) {
-			if (!confirm()) {
-				proposeOriginal();
-				applyProposed();
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
+        if(applyProposed())
+        {
+            if(!confirm())
+            {
+                proposeOriginal();
+                applyProposed();
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	return true;
+    return true;
 }
 
 bool RandRScreen::confirm()
 {
-	// uncomment the line below and edit out the KTimerDialog stuff to get
-	// a version which works on today's kdelibs (no accept dialog is presented)
+    // uncomment the line below and edit out the KTimerDialog stuff to get
+    // a version which works on today's kdelibs (no accept dialog is presented)
 
-	// FIXME remember to put the dialog on the right screen
+    // FIXME remember to put the dialog on the right screen
 
-	KTimerDialog acceptDialog ( 15000, KTimerDialog::CountDown, 
-                KApplication::kApplication()->mainWidget(),
-											"mainKTimerDialog",
-											true,
-											i18n("Confirm Display Setting Change"),
-											KTimerDialog::Ok|KTimerDialog::Cancel,
-											KTimerDialog::Cancel);
+    KTimerDialog acceptDialog(15000, KTimerDialog::CountDown, KApplication::kApplication()->mainWidget(), "mainKTimerDialog", true,
+                              i18n("Confirm Display Setting Change"), KTimerDialog::Ok | KTimerDialog::Cancel, KTimerDialog::Cancel);
 
-	acceptDialog.setButtonOK(KGuiItem(i18n("&Accept Configuration"), "button_ok"));
-	acceptDialog.setButtonCancel(KGuiItem(i18n("&Return to Previous Configuration"), "button_cancel"));
+    acceptDialog.setButtonOK(KGuiItem(i18n("&Accept Configuration"), "button_ok"));
+    acceptDialog.setButtonCancel(KGuiItem(i18n("&Return to Previous Configuration"), "button_cancel"));
 
-	KActiveLabel *label = new KActiveLabel(i18n("Your screen orientation, size and refresh rate "
-                    "have been changed to the requested settings. Please indicate whether you wish to "
-                    "keep this configuration. In 15 seconds the display will revert to your previous "
-                    "settings."), &acceptDialog, "userSpecifiedLabel");
+    KActiveLabel *label = new KActiveLabel(i18n("Your screen orientation, size and refresh rate "
+                                                "have been changed to the requested settings. Please indicate whether you wish to "
+                                                "keep this configuration. In 15 seconds the display will revert to your previous "
+                                                "settings."),
+                                           &acceptDialog, "userSpecifiedLabel");
 
-	acceptDialog.setMainWidget(label);
+    acceptDialog.setMainWidget(label);
 
-	KDialog::centerOnScreen(&acceptDialog, m_screen);
+    KDialog::centerOnScreen(&acceptDialog, m_screen);
 
-	m_shownDialog = &acceptDialog;
-	connect( m_shownDialog, SIGNAL( destroyed()), this, SLOT( shownDialogDestroyed()));
-	connect( kapp->desktop(), SIGNAL( resized(int)), this, SLOT( desktopResized()));
+    m_shownDialog = &acceptDialog;
+    connect(m_shownDialog, SIGNAL(destroyed()), this, SLOT(shownDialogDestroyed()));
+    connect(kapp->desktop(), SIGNAL(resized(int)), this, SLOT(desktopResized()));
 
-        return acceptDialog.exec();
+    return acceptDialog.exec();
 }
 
 void RandRScreen::shownDialogDestroyed()
 {
     m_shownDialog = NULL;
-    disconnect( kapp->desktop(), SIGNAL( resized(int)), this, SLOT( desktopResized()));
+    disconnect(kapp->desktop(), SIGNAL(resized(int)), this, SLOT(desktopResized()));
 }
 
 void RandRScreen::desktopResized()
 {
-	if( m_shownDialog != NULL )
-		KDialog::centerOnScreen(m_shownDialog, m_screen);
+    if(m_shownDialog != NULL)
+        KDialog::centerOnScreen(m_shownDialog, m_screen);
 }
 
 QString RandRScreen::changedMessage() const
 {
-	if (currentRefreshRate() == -1)
-		return i18n("New configuration:\nResolution: %1 x %2\nOrientation: %3")
-			.arg(currentPixelWidth())
-			.arg(currentPixelHeight())
-			.arg(currentRotationDescription());
-	else
-		return i18n("New configuration:\nResolution: %1 x %2\nOrientation: %3\nRefresh rate: %4")
-			.arg(currentPixelWidth())
-			.arg(currentPixelHeight())
-			.arg(currentRotationDescription())
-			.arg(currentRefreshRateDescription());
+    if(currentRefreshRate() == -1)
+        return i18n("New configuration:\nResolution: %1 x %2\nOrientation: %3")
+            .arg(currentPixelWidth())
+            .arg(currentPixelHeight())
+            .arg(currentRotationDescription());
+    else
+        return i18n("New configuration:\nResolution: %1 x %2\nOrientation: %3\nRefresh rate: %4")
+            .arg(currentPixelWidth())
+            .arg(currentPixelHeight())
+            .arg(currentRotationDescription())
+            .arg(currentRefreshRateDescription());
 }
 
 bool RandRScreen::changedFromOriginal() const
 {
-	return m_currentSize != m_originalSize || m_currentRotation != m_originalRotation || m_currentRefreshRate != m_originalRefreshRate;
+    return m_currentSize != m_originalSize || m_currentRotation != m_originalRotation || m_currentRefreshRate != m_originalRefreshRate;
 }
 
 void RandRScreen::proposeOriginal()
 {
-	m_proposedSize = m_originalSize;
-	m_proposedRotation = m_originalRotation;
-	m_proposedRefreshRate = m_originalRefreshRate;
+    m_proposedSize = m_originalSize;
+    m_proposedRotation = m_originalRotation;
+    m_proposedRefreshRate = m_originalRefreshRate;
 }
 
 bool RandRScreen::proposedChanged() const
 {
-	return m_currentSize != m_proposedSize || m_currentRotation != m_proposedRotation || m_currentRefreshRate != m_proposedRefreshRate;
+    return m_currentSize != m_proposedSize || m_currentRotation != m_proposedRotation || m_currentRefreshRate != m_proposedRefreshRate;
 }
 
 QString RandRScreen::rotationName(int rotation, bool pastTense, bool capitalised)
 {
-	if (!pastTense)
-		switch (rotation) {
-			case RR_Rotate_0:
-				return i18n("Normal");
-			case RR_Rotate_90:
-				return i18n("Left (90 degrees)");
-			case RR_Rotate_180:
-				return i18n("Upside-down (180 degrees)");
-			case RR_Rotate_270:
-				return i18n("Right (270 degrees)");
-			case RR_Reflect_X:
-				return i18n("Mirror horizontally");
-			case RR_Reflect_Y:
-				return i18n("Mirror vertically");
-			default:
-				return i18n("Unknown orientation");
-		}
+    if(!pastTense)
+        switch(rotation)
+        {
+            case RR_Rotate_0:
+                return i18n("Normal");
+            case RR_Rotate_90:
+                return i18n("Left (90 degrees)");
+            case RR_Rotate_180:
+                return i18n("Upside-down (180 degrees)");
+            case RR_Rotate_270:
+                return i18n("Right (270 degrees)");
+            case RR_Reflect_X:
+                return i18n("Mirror horizontally");
+            case RR_Reflect_Y:
+                return i18n("Mirror vertically");
+            default:
+                return i18n("Unknown orientation");
+        }
 
-	switch (rotation) {
-		case RR_Rotate_0:
-			return i18n("Normal");
-		case RR_Rotate_90:
-			return i18n("Rotated 90 degrees counterclockwise");
-		case RR_Rotate_180:
-			return i18n("Rotated 180 degrees counterclockwise");
-		case RR_Rotate_270:
-			return i18n("Rotated 270 degrees counterclockwise");
-		default:
-			if (rotation & RR_Reflect_X)
-				if (rotation & RR_Reflect_Y)
-					if (capitalised)
-						return i18n("Mirrored horizontally and vertically");
-					else
-						return i18n("mirrored horizontally and vertically");
-				else
-					if (capitalised)
-						return i18n("Mirrored horizontally");
-					else
-						return i18n("mirrored horizontally");
-			else if (rotation & RR_Reflect_Y)
-				if (capitalised)
-					return i18n("Mirrored vertically");
-				else
-					return i18n("mirrored vertically");
-			else
-				if (capitalised)
-					return i18n("Unknown orientation");
-				else
-					return i18n("unknown orientation");
-	}
+    switch(rotation)
+    {
+        case RR_Rotate_0:
+            return i18n("Normal");
+        case RR_Rotate_90:
+            return i18n("Rotated 90 degrees counterclockwise");
+        case RR_Rotate_180:
+            return i18n("Rotated 180 degrees counterclockwise");
+        case RR_Rotate_270:
+            return i18n("Rotated 270 degrees counterclockwise");
+        default:
+            if(rotation & RR_Reflect_X)
+                if(rotation & RR_Reflect_Y)
+                    if(capitalised)
+                        return i18n("Mirrored horizontally and vertically");
+                    else
+                        return i18n("mirrored horizontally and vertically");
+                else if(capitalised)
+                    return i18n("Mirrored horizontally");
+                else
+                    return i18n("mirrored horizontally");
+            else if(rotation & RR_Reflect_Y)
+                if(capitalised)
+                    return i18n("Mirrored vertically");
+                else
+                    return i18n("mirrored vertically");
+            else if(capitalised)
+                return i18n("Unknown orientation");
+            else
+                return i18n("unknown orientation");
+    }
 }
 
 QPixmap RandRScreen::rotationIcon(int rotation) const
 {
-	// Adjust icons for current screen orientation
-	if (!(m_currentRotation & RR_Rotate_0) && rotation & (RR_Rotate_0 | RR_Rotate_90 | RR_Rotate_180 | RR_Rotate_270)) {
-		int currentAngle = m_currentRotation & (RR_Rotate_90 | RR_Rotate_180 | RR_Rotate_270);
-		switch (currentAngle) {
-			case RR_Rotate_90:
-				rotation <<= 3;
-				break;
-			case RR_Rotate_180:
-				rotation <<= 2;
-				break;
-			case RR_Rotate_270:
-				rotation <<= 1;
-				break;
-		}
+    // Adjust icons for current screen orientation
+    if(!(m_currentRotation & RR_Rotate_0) && rotation & (RR_Rotate_0 | RR_Rotate_90 | RR_Rotate_180 | RR_Rotate_270))
+    {
+        int currentAngle = m_currentRotation & (RR_Rotate_90 | RR_Rotate_180 | RR_Rotate_270);
+        switch(currentAngle)
+        {
+            case RR_Rotate_90:
+                rotation <<= 3;
+                break;
+            case RR_Rotate_180:
+                rotation <<= 2;
+                break;
+            case RR_Rotate_270:
+                rotation <<= 1;
+                break;
+        }
 
-		// Fix overflow
-		if (rotation > RR_Rotate_270) {
-			rotation >>= 4;
-		}
-	}
+        // Fix overflow
+        if(rotation > RR_Rotate_270)
+        {
+            rotation >>= 4;
+        }
+    }
 
-	switch (rotation) {
-		case RR_Rotate_0:
-			return SmallIcon("up");
-		case RR_Rotate_90:
-			return SmallIcon("back");
-		case RR_Rotate_180:
-			return SmallIcon("down");
-		case RR_Rotate_270:
-			return SmallIcon("forward");
-		case RR_Reflect_X:
-		case RR_Reflect_Y:
-		default:
-			return SmallIcon("stop");
-	}
+    switch(rotation)
+    {
+        case RR_Rotate_0:
+            return SmallIcon("up");
+        case RR_Rotate_90:
+            return SmallIcon("back");
+        case RR_Rotate_180:
+            return SmallIcon("down");
+        case RR_Rotate_270:
+            return SmallIcon("forward");
+        case RR_Reflect_X:
+        case RR_Reflect_Y:
+        default:
+            return SmallIcon("stop");
+    }
 }
 
 QString RandRScreen::currentRotationDescription() const
 {
-	QString ret = rotationName(m_currentRotation & RotateMask);
+    QString ret = rotationName(m_currentRotation & RotateMask);
 
-	if (m_currentRotation != m_currentRotation & RotateMask)
-		if (m_currentRotation & RR_Rotate_0)
-			ret = rotationName(m_currentRotation & (RR_Reflect_X + RR_Reflect_X), true, true);
-		else
-			ret += ", " + rotationName(m_currentRotation & (RR_Reflect_X + RR_Reflect_X), true, false);
+    if(m_currentRotation != m_currentRotation & RotateMask)
+        if(m_currentRotation & RR_Rotate_0)
+            ret = rotationName(m_currentRotation & (RR_Reflect_X + RR_Reflect_X), true, true);
+        else
+            ret += ", " + rotationName(m_currentRotation & (RR_Reflect_X + RR_Reflect_X), true, false);
 
-	return ret;
+    return ret;
 }
 
 int RandRScreen::rotationIndexToDegree(int rotation) const
 {
-	switch (rotation & RotateMask) {
-		case RR_Rotate_90:
-			return 90;
+    switch(rotation & RotateMask)
+    {
+        case RR_Rotate_90:
+            return 90;
 
-		case RR_Rotate_180:
-			return 180;
+        case RR_Rotate_180:
+            return 180;
 
-		case RR_Rotate_270:
-			return 270;
+        case RR_Rotate_270:
+            return 270;
 
-		default:
-			return 0;
-	}
+        default:
+            return 0;
+    }
 }
 
 int RandRScreen::rotationDegreeToIndex(int degree) const
 {
-	switch (degree) {
-		case 90:
-			return RR_Rotate_90;
+    switch(degree)
+    {
+        case 90:
+            return RR_Rotate_90;
 
-		case 180:
-			return RR_Rotate_180;
+        case 180:
+            return RR_Rotate_180;
 
-		case 270:
-			return RR_Rotate_270;
+        case 270:
+            return RR_Rotate_270;
 
-		default:
-			return RR_Rotate_0;
-	}
+        default:
+            return RR_Rotate_0;
+    }
 }
 
 int RandRScreen::currentPixelWidth() const
 {
-	return m_pixelSizes[m_currentSize].width();
+    return m_pixelSizes[m_currentSize].width();
 }
 
 int RandRScreen::currentPixelHeight() const
 {
-	return m_pixelSizes[m_currentSize].height();
+    return m_pixelSizes[m_currentSize].height();
 }
 
 int RandRScreen::currentMMWidth() const
 {
-	return m_pixelSizes[m_currentSize].width();
+    return m_pixelSizes[m_currentSize].width();
 }
 
 int RandRScreen::currentMMHeight() const
 {
-	return m_pixelSizes[m_currentSize].height();
+    return m_pixelSizes[m_currentSize].height();
 }
 
 QStringList RandRScreen::refreshRates(int size) const
 {
-	int nrates;
-	short* rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
+    int nrates;
+    short *rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
 
-	QStringList ret;
-	for (int i = 0; i < nrates; i++)
-		ret << refreshRateDirectDescription(rates[i]);
+    QStringList ret;
+    for(int i = 0; i < nrates; i++)
+        ret << refreshRateDirectDescription(rates[i]);
 
-	return ret;
+    return ret;
 }
 
 QString RandRScreen::refreshRateDirectDescription(int rate) const
 {
-	return i18n("Refresh rate in Hertz (Hz)", "%1 Hz").arg(rate);
+    return i18n("Refresh rate in Hertz (Hz)", "%1 Hz").arg(rate);
 }
 
 QString RandRScreen::refreshRateIndirectDescription(int size, int index) const
 {
-	return i18n("Refresh rate in Hertz (Hz)", "%1 Hz").arg(refreshRateIndexToHz(size, index));
+    return i18n("Refresh rate in Hertz (Hz)", "%1 Hz").arg(refreshRateIndexToHz(size, index));
 }
 
 QString RandRScreen::refreshRateDescription(int size, int index) const
 {
-	return refreshRates(size)[index];
+    return refreshRates(size)[index];
 }
 
 bool RandRScreen::proposeRefreshRate(int index)
 {
-	if (index >= 0 && (int)refreshRates(proposedSize()).count() > index) {
-		m_proposedRefreshRate = index;
-		return true;
-	}
+    if(index >= 0 && (int)refreshRates(proposedSize()).count() > index)
+    {
+        m_proposedRefreshRate = index;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 int RandRScreen::currentRefreshRate() const
 {
-	return m_currentRefreshRate;
+    return m_currentRefreshRate;
 }
 
 QString RandRScreen::currentRefreshRateDescription() const
 {
-	return refreshRateIndirectDescription(m_currentSize, m_currentRefreshRate);
+    return refreshRateIndirectDescription(m_currentSize, m_currentRefreshRate);
 }
 
 int RandRScreen::proposedRefreshRate() const
 {
-	return m_proposedRefreshRate;
+    return m_proposedRefreshRate;
 }
 
 int RandRScreen::refreshRateHzToIndex(int size, int hz) const
 {
-	int nrates;
-	short* rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
+    int nrates;
+    short *rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
 
-	for (int i = 0; i < nrates; i++)
-		if (hz == rates[i])
-			return i;
+    for(int i = 0; i < nrates; i++)
+        if(hz == rates[i])
+            return i;
 
-	if (nrates != 0)
-		// Wrong input Hz!
-		Q_ASSERT(false);
+    if(nrates != 0)
+        // Wrong input Hz!
+        Q_ASSERT(false);
 
-	return -1;
+    return -1;
 }
 
 int RandRScreen::refreshRateIndexToHz(int size, int index) const
 {
-	int nrates;
-	short* rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
+    int nrates;
+    short *rates = XRRRates(qt_xdisplay(), m_screen, (SizeID)size, &nrates);
 
-	if (nrates == 0 || index < 0)
-		return 0;
+    if(nrates == 0 || index < 0)
+        return 0;
 
-	// Wrong input Hz!
-	if(index >= nrates)
-		return 0;
+    // Wrong input Hz!
+    if(index >= nrates)
+        return 0;
 
-	return rates[index];
+    return rates[index];
 }
 
 int RandRScreen::numSizes() const
 {
-	return m_pixelSizes.count();
+    return m_pixelSizes.count();
 }
 
-const QSize& RandRScreen::pixelSize(int index) const
+const QSize &RandRScreen::pixelSize(int index) const
 {
-	return m_pixelSizes[index];
+    return m_pixelSizes[index];
 }
 
-const QSize& RandRScreen::mmSize(int index) const
+const QSize &RandRScreen::mmSize(int index) const
 {
-	return m_mmSizes[index];
+    return m_mmSizes[index];
 }
 
 int RandRScreen::sizeIndex(QSize pixelSize) const
 {
-	for (uint i = 0; i < m_pixelSizes.count(); i++)
-		if (m_pixelSizes[i] == pixelSize)
-			return i;
+    for(uint i = 0; i < m_pixelSizes.count(); i++)
+        if(m_pixelSizes[i] == pixelSize)
+            return i;
 
-	return -1;
+    return -1;
 }
 
 int RandRScreen::rotations() const
 {
-	return m_rotations;
+    return m_rotations;
 }
 
 int RandRScreen::currentRotation() const
 {
-	return m_currentRotation;
+    return m_currentRotation;
 }
 
 int RandRScreen::currentSize() const
 {
-	return m_currentSize;
+    return m_currentSize;
 }
 
 int RandRScreen::proposedRotation() const
 {
-	return m_proposedRotation;
+    return m_proposedRotation;
 }
 
 void RandRScreen::proposeRotation(int newRotation)
 {
-	m_proposedRotation = newRotation & OrientationMask;
+    m_proposedRotation = newRotation & OrientationMask;
 }
 
 int RandRScreen::proposedSize() const
 {
-	return m_proposedSize;
+    return m_proposedSize;
 }
 
 bool RandRScreen::proposeSize(int newSize)
 {
-	if ((int)m_pixelSizes.count() > newSize) {
-		m_proposedSize = newSize;
-		return true;
-	}
+    if((int)m_pixelSizes.count() > newSize)
+    {
+        m_proposedSize = newSize;
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
-void RandRScreen::load(KConfig& config)
+void RandRScreen::load(KConfig &config)
 {
-	config.setGroup(QString("Screen%1").arg(m_screen));
+    config.setGroup(QString("Screen%1").arg(m_screen));
 
-	if (proposeSize(sizeIndex(QSize(config.readNumEntry("width", currentPixelWidth()), config.readNumEntry("height", currentPixelHeight())))))
-		proposeRefreshRate(refreshRateHzToIndex(proposedSize(), config.readNumEntry("refresh", currentRefreshRate())));
+    if(proposeSize(sizeIndex(QSize(config.readNumEntry("width", currentPixelWidth()), config.readNumEntry("height", currentPixelHeight())))))
+        proposeRefreshRate(refreshRateHzToIndex(proposedSize(), config.readNumEntry("refresh", currentRefreshRate())));
 
-	proposeRotation(rotationDegreeToIndex(config.readNumEntry("rotation", 0)) + (config.readBoolEntry("reflectX") ? ReflectX : 0) + (config.readBoolEntry("reflectY") ? ReflectY : 0));
+    proposeRotation(rotationDegreeToIndex(config.readNumEntry("rotation", 0)) + (config.readBoolEntry("reflectX") ? ReflectX : 0)
+                    + (config.readBoolEntry("reflectY") ? ReflectY : 0));
 }
 
-void RandRScreen::save(KConfig& config) const
+void RandRScreen::save(KConfig &config) const
 {
-	config.setGroup(QString("Screen%1").arg(m_screen));
-	config.writeEntry("width", currentPixelWidth());
-	config.writeEntry("height", currentPixelHeight());
-	config.writeEntry("refresh", refreshRateIndexToHz(currentSize(), currentRefreshRate()));
-	config.writeEntry("rotation", rotationIndexToDegree(currentRotation()));
-	config.writeEntry("reflectX", (bool)(currentRotation() & ReflectMask) == ReflectX);
-	config.writeEntry("reflectY", (bool)(currentRotation() & ReflectMask) == ReflectY);
+    config.setGroup(QString("Screen%1").arg(m_screen));
+    config.writeEntry("width", currentPixelWidth());
+    config.writeEntry("height", currentPixelHeight());
+    config.writeEntry("refresh", refreshRateIndexToHz(currentSize(), currentRefreshRate()));
+    config.writeEntry("rotation", rotationIndexToDegree(currentRotation()));
+    config.writeEntry("reflectX", (bool)(currentRotation() & ReflectMask) == ReflectX);
+    config.writeEntry("reflectY", (bool)(currentRotation() & ReflectMask) == ReflectY);
 }
 
-RandRDisplay::RandRDisplay()
-	: m_valid(true)
+RandRDisplay::RandRDisplay() : m_valid(true)
 {
-	// Check extension
-	Status s = XRRQueryExtension(qt_xdisplay(), &m_eventBase, &m_errorBase);
-	if (!s) {
-		m_errorCode = QString("%1, base %1").arg(s).arg(m_errorBase);
-		m_valid = false;
-		return;
-	}
+    // Check extension
+    Status s = XRRQueryExtension(qt_xdisplay(), &m_eventBase, &m_errorBase);
+    if(!s)
+    {
+        m_errorCode = QString("%1, base %1").arg(s).arg(m_errorBase);
+        m_valid = false;
+        return;
+    }
 
-	int major_version, minor_version;
-	XRRQueryVersion(qt_xdisplay(), &major_version, &minor_version);
+    int major_version, minor_version;
+    XRRQueryVersion(qt_xdisplay(), &major_version, &minor_version);
 
-	m_version = QString("X Resize and Rotate extension version %1.%1").arg(major_version).arg(minor_version);
+    m_version = QString("X Resize and Rotate extension version %1.%1").arg(major_version).arg(minor_version);
 
-	m_numScreens = ScreenCount(qt_xdisplay());
+    m_numScreens = ScreenCount(qt_xdisplay());
 
-	// This assumption is WRONG with Xinerama
-	// Q_ASSERT(QApplication::desktop()->numScreens() == ScreenCount(qt_xdisplay()));
+    // This assumption is WRONG with Xinerama
+    // Q_ASSERT(QApplication::desktop()->numScreens() == ScreenCount(qt_xdisplay()));
 
-	m_screens.setAutoDelete(true);
-	for (int i = 0; i < m_numScreens; i++) {
-		m_screens.append(new RandRScreen(i));
-	}
+    m_screens.setAutoDelete(true);
+    for(int i = 0; i < m_numScreens; i++)
+    {
+        m_screens.append(new RandRScreen(i));
+    }
 
-	setCurrentScreen(QApplication::desktop()->primaryScreen());
+    setCurrentScreen(QApplication::desktop()->primaryScreen());
 }
 
 bool RandRDisplay::isValid() const
 {
-	return m_valid;
+    return m_valid;
 }
 
-const QString& RandRDisplay::errorCode() const
+const QString &RandRDisplay::errorCode() const
 {
-	return m_errorCode;
+    return m_errorCode;
 }
 
 int RandRDisplay::eventBase() const
 {
-	return m_eventBase;
+    return m_eventBase;
 }
 
 int RandRDisplay::screenChangeNotifyEvent() const
 {
-	return m_eventBase + RRScreenChangeNotify;
+    return m_eventBase + RRScreenChangeNotify;
 }
 
 int RandRDisplay::errorBase() const
 {
-	return m_errorBase;
+    return m_errorBase;
 }
 
-const QString& RandRDisplay::version() const
+const QString &RandRDisplay::version() const
 {
-	return m_version;
+    return m_version;
 }
 
 void RandRDisplay::setCurrentScreen(int index)
 {
-	m_currentScreenIndex = index;
-	m_currentScreen = m_screens.at(m_currentScreenIndex);
-	Q_ASSERT(m_currentScreen);
+    m_currentScreenIndex = index;
+    m_currentScreen = m_screens.at(m_currentScreenIndex);
+    Q_ASSERT(m_currentScreen);
 }
 
-int RandRDisplay::screenIndexOfWidget(QWidget* widget)
+int RandRDisplay::screenIndexOfWidget(QWidget *widget)
 {
-	int ret = QApplication::desktop()->screenNumber(widget);
-	return ret != -1 ? ret : QApplication::desktop()->primaryScreen();
+    int ret = QApplication::desktop()->screenNumber(widget);
+    return ret != -1 ? ret : QApplication::desktop()->primaryScreen();
 }
 
 int RandRDisplay::currentScreenIndex() const
 {
-	return m_currentScreenIndex;
+    return m_currentScreenIndex;
 }
 
 void RandRDisplay::refresh()
 {
-	for (RandRScreen* s = m_screens.first(); s; s = m_screens.next())
-		s->loadSettings();
+    for(RandRScreen *s = m_screens.first(); s; s = m_screens.next())
+        s->loadSettings();
 }
 
 int RandRDisplay::numScreens() const
 {
-	return m_numScreens;
+    return m_numScreens;
 }
 
-RandRScreen* RandRDisplay::screen(int index)
+RandRScreen *RandRDisplay::screen(int index)
 {
-	return m_screens.at(index);
+    return m_screens.at(index);
 }
 
-RandRScreen* RandRDisplay::currentScreen()
+RandRScreen *RandRDisplay::currentScreen()
 {
-	return m_currentScreen;
+    return m_currentScreen;
 }
 
-bool RandRDisplay::loadDisplay(KConfig& config, bool loadScreens)
+bool RandRDisplay::loadDisplay(KConfig &config, bool loadScreens)
 {
-	if (loadScreens)
-		for (RandRScreen* s = m_screens.first(); s; s = m_screens.next())
-			s->load(config);
+    if(loadScreens)
+        for(RandRScreen *s = m_screens.first(); s; s = m_screens.next())
+            s->load(config);
 
-	return applyOnStartup(config);
+    return applyOnStartup(config);
 }
 
-bool RandRDisplay::applyOnStartup(KConfig& config)
+bool RandRDisplay::applyOnStartup(KConfig &config)
 {
-	config.setGroup("Display");
-	return config.readBoolEntry("ApplyOnStartup", false);
+    config.setGroup("Display");
+    return config.readBoolEntry("ApplyOnStartup", false);
 }
 
-bool RandRDisplay::syncTrayApp(KConfig& config)
+bool RandRDisplay::syncTrayApp(KConfig &config)
 {
-	config.setGroup("Display");
-	return config.readBoolEntry("SyncTrayApp", false);
+    config.setGroup("Display");
+    return config.readBoolEntry("SyncTrayApp", false);
 }
 
-void RandRDisplay::saveDisplay(KConfig& config, bool applyOnStartup, bool syncTrayApp)
+void RandRDisplay::saveDisplay(KConfig &config, bool applyOnStartup, bool syncTrayApp)
 {
-	Q_ASSERT(!config.isReadOnly());
+    Q_ASSERT(!config.isReadOnly());
 
-	config.setGroup("Display");
-	config.writeEntry("ApplyOnStartup", applyOnStartup);
-	config.writeEntry("SyncTrayApp", syncTrayApp);
+    config.setGroup("Display");
+    config.writeEntry("ApplyOnStartup", applyOnStartup);
+    config.writeEntry("SyncTrayApp", syncTrayApp);
 
-	for (RandRScreen* s = m_screens.first(); s; s = m_screens.next())
-		s->save(config);
+    for(RandRScreen *s = m_screens.first(); s; s = m_screens.next())
+        s->save(config);
 }
 
 void RandRDisplay::applyProposed(bool confirm)
 {
-	for (int screenIndex = 0; screenIndex < numScreens(); screenIndex++) {
-		if (screen(screenIndex)->proposedChanged()) {
-			if (confirm)
-					screen(screenIndex)->applyProposedAndConfirm();
-			else
-					screen(screenIndex)->applyProposed();
-		}
-	}
+    for(int screenIndex = 0; screenIndex < numScreens(); screenIndex++)
+    {
+        if(screen(screenIndex)->proposedChanged())
+        {
+            if(confirm)
+                screen(screenIndex)->applyProposedAndConfirm();
+            else
+                screen(screenIndex)->applyProposed();
+        }
+    }
 }
 
-int RandRScreen::pixelCount( int index ) const
+int RandRScreen::pixelCount(int index) const
 {
-	QSize sz = pixelSize(index);
-	return sz.width() * sz.height();
+    QSize sz = pixelSize(index);
+    return sz.width() * sz.height();
 }
 
 #include "randr.moc"

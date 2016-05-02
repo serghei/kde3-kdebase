@@ -18,11 +18,10 @@ License. See the file "COPYING" for the exact licensing terms.
 
 class QSocketNotifier;
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
 struct SessionInfo
-    {
+{
     QCString sessionId;
     QCString windowRole;
     QCString wmCommand;
@@ -47,41 +46,41 @@ struct SessionInfo
     NET::WindowType windowType;
     QString shortcut;
     bool active; // means 'was active in the saved session'
-    };
+};
 
 
 enum SMSavePhase
-    {
-    SMSavePhase0,     // saving global state in "phase 0"
-    SMSavePhase2,     // saving window state in phase 2
-    SMSavePhase2Full  // complete saving in phase2, there was no phase 0
-    };
-    
-class SessionSaveDoneHelper
-    : public QObject
-    {
+{
+    SMSavePhase0,    // saving global state in "phase 0"
+    SMSavePhase2,    // saving window state in phase 2
+    SMSavePhase2Full // complete saving in phase2, there was no phase 0
+};
+
+class SessionSaveDoneHelper : public QObject {
     Q_OBJECT
-    public:
-        SessionSaveDoneHelper();
-        virtual ~SessionSaveDoneHelper();
-        SmcConn connection() const { return conn; }
-        void saveDone();
-        void close();
-    private slots:
-        void processData();
-    private:
-        QSocketNotifier* notifier;
-        SmcConn conn;
-    };
-
-
-class SessionManaged
-    : public KSessionManaged
+public:
+    SessionSaveDoneHelper();
+    virtual ~SessionSaveDoneHelper();
+    SmcConn connection() const
     {
-    public:
-        virtual bool saveState( QSessionManager& sm );
-        virtual bool commitData( QSessionManager& sm );
-    };
+        return conn;
+    }
+    void saveDone();
+    void close();
+private slots:
+    void processData();
+
+private:
+    QSocketNotifier *notifier;
+    SmcConn conn;
+};
+
+
+class SessionManaged : public KSessionManaged {
+public:
+    virtual bool saveState(QSessionManager &sm);
+    virtual bool commitData(QSessionManager &sm);
+};
 
 } // namespace
 

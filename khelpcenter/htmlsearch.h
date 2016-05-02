@@ -10,23 +10,21 @@ namespace KHC {
 
 class DocEntry;
 
-class HTMLSearch : public QObject
-{
+class HTMLSearch : public QObject {
     Q_OBJECT
-  public:
+public:
     HTMLSearch();
     ~HTMLSearch();
 
-    void setupDocEntry( KHC::DocEntry * );
+    void setupDocEntry(KHC::DocEntry *);
 
-    QString defaultSearch( KHC::DocEntry * );
-    QString defaultIndexer( KHC::DocEntry * );
-    QString defaultIndexTestFile( KHC::DocEntry * );
+    QString defaultSearch(KHC::DocEntry *);
+    QString defaultIndexer(KHC::DocEntry *);
+    QString defaultIndexTestFile(KHC::DocEntry *);
 
-  private:
+private:
     KConfig *mConfig;
 };
-
 }
 
 #endif

@@ -29,207 +29,206 @@
 class KTimerDialog;
 class RandRScreenPrivate;
 
-class RandRScreen : public QObject
-{
-	Q_OBJECT
+class RandRScreen : public QObject {
+    Q_OBJECT
 
 public:
-	enum orientations {
-		Rotate0			= 0x1,
-		Rotate90		= 0x2,
-		Rotate180		= 0x4,
-		Rotate270		= 0x8,
-		RotateMask		= 15,
-		RotationCount	= 4,
-		ReflectX		= 0x10,
-		ReflectY		= 0x20,
-		ReflectMask		= 48,
-		OrientationMask	= 63,
-		OrientationCount = 6
-	};
+    enum orientations
+    {
+        Rotate0 = 0x1,
+        Rotate90 = 0x2,
+        Rotate180 = 0x4,
+        Rotate270 = 0x8,
+        RotateMask = 15,
+        RotationCount = 4,
+        ReflectX = 0x10,
+        ReflectY = 0x20,
+        ReflectMask = 48,
+        OrientationMask = 63,
+        OrientationCount = 6
+    };
 
-	RandRScreen(int screenIndex);
-	~RandRScreen();
+    RandRScreen(int screenIndex);
+    ~RandRScreen();
 
-	void		loadSettings();
-	void		setOriginal();
+    void loadSettings();
+    void setOriginal();
 
-	bool		applyProposed();
+    bool applyProposed();
 
-	/**
-	 * @returns false if the user did not confirm in time, or cancelled, or the change failed
-	 */
-	bool		applyProposedAndConfirm();
+    /**
+     * @returns false if the user did not confirm in time, or cancelled, or the change failed
+     */
+    bool applyProposedAndConfirm();
 
 public slots:
-	bool		confirm();
+    bool confirm();
 
 public:
-	QString		changedMessage() const;
+    QString changedMessage() const;
 
-	bool		changedFromOriginal() const;
-	void		proposeOriginal();
+    bool changedFromOriginal() const;
+    void proposeOriginal();
 
-	bool		proposedChanged() const;
+    bool proposedChanged() const;
 
-	static QString	rotationName(int rotation, bool pastTense = false, bool capitalised = true);
-	QPixmap	        rotationIcon(int rotation) const;
-	QString			currentRotationDescription() const;
+    static QString rotationName(int rotation, bool pastTense = false, bool capitalised = true);
+    QPixmap rotationIcon(int rotation) const;
+    QString currentRotationDescription() const;
 
-	int				rotationIndexToDegree(int rotation) const;
-	int				rotationDegreeToIndex(int degree) const;
+    int rotationIndexToDegree(int rotation) const;
+    int rotationDegreeToIndex(int degree) const;
 
-	/**
-	 * Refresh rate functions.
-	 */
-	QStringList refreshRates(int size) const;
+    /**
+     * Refresh rate functions.
+     */
+    QStringList refreshRates(int size) const;
 
-	QString		refreshRateDirectDescription(int rate) const;
-	QString		refreshRateIndirectDescription(int size, int index) const;
-	QString		refreshRateDescription(int size, int index) const;
+    QString refreshRateDirectDescription(int rate) const;
+    QString refreshRateIndirectDescription(int size, int index) const;
+    QString refreshRateDescription(int size, int index) const;
 
-	int			currentRefreshRate() const;
-	QString		currentRefreshRateDescription() const;
+    int currentRefreshRate() const;
+    QString currentRefreshRateDescription() const;
 
-	// Refresh rate hz <==> index conversion
-	int			refreshRateHzToIndex(int size, int hz) const;
-	int			refreshRateIndexToHz(int size, int index) const;
+    // Refresh rate hz <==> index conversion
+    int refreshRateHzToIndex(int size, int hz) const;
+    int refreshRateIndexToHz(int size, int index) const;
 
-	/**
-	 * Screen size functions.
-	 */
-	int				numSizes() const;
-	const QSize&	pixelSize(int index) const;
-	const QSize&	mmSize(int index) const;
-	int				pixelCount(int index) const;
+    /**
+     * Screen size functions.
+     */
+    int numSizes() const;
+    const QSize &pixelSize(int index) const;
+    const QSize &mmSize(int index) const;
+    int pixelCount(int index) const;
 
-	/**
-	 * Retrieve the index of a screen size with a specified pixel size.
-	 *
-	 * @param pixelSize dimensions of the screen in pixels
-	 * @returns the index of the requested screen size
-	 */
-	int				sizeIndex(QSize pixelSize) const;
+    /**
+     * Retrieve the index of a screen size with a specified pixel size.
+     *
+     * @param pixelSize dimensions of the screen in pixels
+     * @returns the index of the requested screen size
+     */
+    int sizeIndex(QSize pixelSize) const;
 
-	int			rotations() const;
+    int rotations() const;
 
-	/**
-	 * Current setting functions.
-	 */
-	int			currentPixelWidth() const;
-	int			currentPixelHeight() const;
-	int			currentMMWidth() const;
-	int			currentMMHeight() const;
+    /**
+     * Current setting functions.
+     */
+    int currentPixelWidth() const;
+    int currentPixelHeight() const;
+    int currentMMWidth() const;
+    int currentMMHeight() const;
 
-	int			currentRotation() const;
-	int			currentSize() const;
+    int currentRotation() const;
+    int currentSize() const;
 
-	/**
-	 * Proposed setting functions.
-	 */
-	int			proposedSize() const;
-	bool		proposeSize(int newSize);
+    /**
+     * Proposed setting functions.
+     */
+    int proposedSize() const;
+    bool proposeSize(int newSize);
 
-	int			proposedRotation() const;
-	void		proposeRotation(int newRotation);
+    int proposedRotation() const;
+    void proposeRotation(int newRotation);
 
-	int			proposedRefreshRate() const;
-	/**
-	 * Propose a refresh rate.
-	 * Please note that you must propose the target size first for this to work.
-	 *
-	 * @param index the index of the refresh rate (not a refresh rate in hz!)
-	 * @returns true if successful, false otherwise.
-	 */
-	bool		proposeRefreshRate(int index);
+    int proposedRefreshRate() const;
+    /**
+     * Propose a refresh rate.
+     * Please note that you must propose the target size first for this to work.
+     *
+     * @param index the index of the refresh rate (not a refresh rate in hz!)
+     * @returns true if successful, false otherwise.
+     */
+    bool proposeRefreshRate(int index);
 
-	/**
-	 * Configuration functions.
-	 */
-	void		load(KConfig& config);
-	void		save(KConfig& config) const;
+    /**
+     * Configuration functions.
+     */
+    void load(KConfig &config);
+    void save(KConfig &config) const;
 
 private:
-	RandRScreenPrivate*	d;
+    RandRScreenPrivate *d;
 
-	int			m_screen;
+    int m_screen;
 
-	QValueList<QSize>	m_pixelSizes;
-	QValueList<QSize>	m_mmSizes;
-	int					m_rotations;
+    QValueList< QSize > m_pixelSizes;
+    QValueList< QSize > m_mmSizes;
+    int m_rotations;
 
-	int			m_originalRotation;
-	int			m_originalSize;
-	int			m_originalRefreshRate;
+    int m_originalRotation;
+    int m_originalSize;
+    int m_originalRefreshRate;
 
-	int			m_currentRotation;
-	int			m_currentSize;
-	int			m_currentRefreshRate;
+    int m_currentRotation;
+    int m_currentSize;
+    int m_currentRefreshRate;
 
-	int			m_proposedRotation;
-	int			m_proposedSize;
-	int			m_proposedRefreshRate;
+    int m_proposedRotation;
+    int m_proposedSize;
+    int m_proposedRefreshRate;
 
-	KTimerDialog*	m_shownDialog;
+    KTimerDialog *m_shownDialog;
 
 private slots:
-	void		desktopResized();
-	void		shownDialogDestroyed();
+    void desktopResized();
+    void shownDialogDestroyed();
 };
 
-typedef QPtrList<RandRScreen> ScreenList;
+typedef QPtrList< RandRScreen > ScreenList;
 
-class RandRDisplay
-{
+class RandRDisplay {
 public:
-	RandRDisplay();
+    RandRDisplay();
 
-	bool			isValid() const;
-	const QString&	errorCode() const;
-	const QString&	version() const;
+    bool isValid() const;
+    const QString &errorCode() const;
+    const QString &version() const;
 
-	int		eventBase() const;
-	int		screenChangeNotifyEvent() const;
-	int		errorBase() const;
+    int eventBase() const;
+    int screenChangeNotifyEvent() const;
+    int errorBase() const;
 
-	int		screenIndexOfWidget(QWidget* widget);
+    int screenIndexOfWidget(QWidget *widget);
 
-	int				numScreens() const;
-	RandRScreen*	screen(int index);
+    int numScreens() const;
+    RandRScreen *screen(int index);
 
-	void			setCurrentScreen(int index);
-	int				currentScreenIndex() const;
-	RandRScreen*	currentScreen();
+    void setCurrentScreen(int index);
+    int currentScreenIndex() const;
+    RandRScreen *currentScreen();
 
-	void	refresh();
+    void refresh();
 
-	/**
-	 * Loads saved settings.
-	 *
-	 * @param config the KConfig object to load from
-	 * @param loadScreens whether to call RandRScreen::load() for each screen
-	 * @retuns true if the settings should be applied on KDE startup.
-	 */
-	bool	loadDisplay(KConfig& config, bool loadScreens = true);
-	void	saveDisplay(KConfig& config, bool applyOnStartup, bool syncTrayApp);
+    /**
+     * Loads saved settings.
+     *
+     * @param config the KConfig object to load from
+     * @param loadScreens whether to call RandRScreen::load() for each screen
+     * @retuns true if the settings should be applied on KDE startup.
+     */
+    bool loadDisplay(KConfig &config, bool loadScreens = true);
+    void saveDisplay(KConfig &config, bool applyOnStartup, bool syncTrayApp);
 
-	static bool		applyOnStartup(KConfig& config);
-	static bool		syncTrayApp(KConfig& config);
+    static bool applyOnStartup(KConfig &config);
+    static bool syncTrayApp(KConfig &config);
 
-	void	applyProposed(bool confirm = true);
+    void applyProposed(bool confirm = true);
 
 private:
-	int				m_numScreens;
-	int				m_currentScreenIndex;
-	RandRScreen*	m_currentScreen;
-	ScreenList		m_screens;
+    int m_numScreens;
+    int m_currentScreenIndex;
+    RandRScreen *m_currentScreen;
+    ScreenList m_screens;
 
-	bool			m_valid;
-	QString			m_errorCode;
-	QString			m_version;
+    bool m_valid;
+    QString m_errorCode;
+    QString m_version;
 
-	int				m_eventBase;
-	int				m_errorBase;
+    int m_eventBase;
+    int m_errorBase;
 };
 
 #endif

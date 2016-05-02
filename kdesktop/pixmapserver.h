@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project, module kdesktop.
  * Copyright (C) 1999 Geert Jansen <g.t.jansen@stud.tue.nl>
- * 
+ *
  * You can Freely distribute this program under the GNU General Public
  * License. See the file "COPYING" for the exact licensing terms.
  */
@@ -22,7 +22,7 @@
  * Used internally by KPixmapServer.
  */
 
-struct KPixmapInode 
+struct KPixmapInode
 {
     Qt::HANDLE handle;
     Atom selection;
@@ -43,13 +43,12 @@ struct KSelectionInode
 
 /**
  * KPixmapServer: Share pixmaps between X clients with deletion and
- * multi-server capabilities. 
+ * multi-server capabilities.
  * The sharing is implemented using X11 Selections.
  *
  * @author Geert Jansen <g.t.jansen@stud.tue.nl>
  */
-class KPixmapServer: public QWidget
-{
+class KPixmapServer : public QWidget {
     Q_OBJECT
 
 public:
@@ -60,8 +59,8 @@ public:
      * Adds a pixmap to this server. This will make it available to all
      * other X clients on the current display.
      *
-     * You must never delete a pixmap that you add()'ed. The pixmap is 
-     * deleted when you call remove() and after all clients have stopped 
+     * You must never delete a pixmap that you add()'ed. The pixmap is
+     * deleted when you call remove() and after all clients have stopped
      * using it.
      *
      * You can add the same pixmap under multiple names.
@@ -70,10 +69,10 @@ public:
      * @param pm A pointer to the pixmap.
      * @param overwrite Should an pixmap with the same name be overwritten?
      */
-    void add(QString name, QPixmap *pm, bool overwrite=true);
+    void add(QString name, QPixmap *pm, bool overwrite = true);
 
     /**
-     * Remove a pixmap from the server. This will delete the pixmap after 
+     * Remove a pixmap from the server. This will delete the pixmap after
      * all clients have stopped using it.
      *
      * @param name The name of the shared pixmap.
@@ -82,7 +81,7 @@ public:
 
     /**
      * List all pixmaps currently served by this server.
-     * 
+     *
      * @return A QStringList containing all the shared pixmaps.
      */
     QStringList list();
@@ -95,9 +94,9 @@ public:
     void setOwner(QString name);
 
 signals:
-    /** 
+    /**
      * This signal is emitted when the selection providing the named pixmap
-     * is disowned. This means that said pixmap won't be served anymore by 
+     * is disowned. This means that said pixmap won't be served anymore by
      * this server, though it can be served by another. You can re-aqcuire
      * the selection by calling setOwner().
      */
@@ -109,15 +108,15 @@ protected:
 private:
     Atom pixmap;
 
-    QMap<QString,KPixmapInode> m_Names;
-    QMap<Atom,KSelectionInode> m_Selections;
-    QMap<HANDLE,KPixmapData> m_Data;
-    QMap<Atom,HANDLE> m_Active;
+    QMap< QString, KPixmapInode > m_Names;
+    QMap< Atom, KSelectionInode > m_Selections;
+    QMap< HANDLE, KPixmapData > m_Data;
+    QMap< Atom, HANDLE > m_Active;
 
-    typedef QMap<QString,KPixmapInode>::Iterator NameIterator;
-    typedef QMap<Atom,KSelectionInode>::Iterator SelectionIterator;
-    typedef QMap<HANDLE,KPixmapData>::Iterator DataIterator;
-    typedef QMap<Atom,HANDLE>::Iterator AtomIterator;
+    typedef QMap< QString, KPixmapInode >::Iterator NameIterator;
+    typedef QMap< Atom, KSelectionInode >::Iterator SelectionIterator;
+    typedef QMap< HANDLE, KPixmapData >::Iterator DataIterator;
+    typedef QMap< Atom, HANDLE >::Iterator AtomIterator;
 };
 
 

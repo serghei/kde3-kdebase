@@ -44,62 +44,58 @@ ModuleMenu::ModuleMenu(ConfigModuleList *list, QWidget * parent, const char * na
   : KPopupMenu(parent, name)
   , _modules(list)
 {
-  // use large id's to start with...
-  id = 10000;
+    // use large id's to start with...
+    id = 10000;
 
-  fill(this, KCGlobal::baseGroup());
+    fill(this, KCGlobal::baseGroup());
 
-  connect(this, SIGNAL(activated(int)), this, SLOT(moduleSelected(int)));
+    connect(this, SIGNAL(activated(int)), this, SLOT(moduleSelected(int)));
 }
 
 void ModuleMenu::fill(KPopupMenu *parentMenu, const QString &parentPath)
 {
-  QStringList subMenus = _modules->submenus(parentPath);
-  for(QStringList::ConstIterator it = subMenus.begin();
-      it != subMenus.end(); ++it)
-  {
-     QString path = *it;
-     KServiceGroup::Ptr group = KServiceGroup::group(path);
-     if (!group)
-        continue;
-     
-     // create new menu
-     KPopupMenu *menu = new KPopupMenu(parentMenu);
-     connect(menu, SIGNAL(activated(int)), this, SLOT(moduleSelected(int)));
+    QStringList subMenus = _modules->submenus(parentPath);
+    for(QStringList::ConstIterator it = subMenus.begin(); it != subMenus.end(); ++it)
+    {
+        QString path = *it;
+        KServiceGroup::Ptr group = KServiceGroup::group(path);
+        if(!group)
+            continue;
 
-     // Item names may contain ampersands. To avoid them being converted to 
-     // accelators, replace them with two ampersands.
-     QString name = group->caption();
-     name.replace("&", "&&");
-  
-     parentMenu->insertItem(KGlobal::iconLoader()->loadIcon(group->icon(), KIcon::Desktop, KIcon::SizeSmall)
-                        , name, menu);
+        // create new menu
+        KPopupMenu *menu = new KPopupMenu(parentMenu);
+        connect(menu, SIGNAL(activated(int)), this, SLOT(moduleSelected(int)));
 
-     fill(menu, path);
-  }
+        // Item names may contain ampersands. To avoid them being converted to
+        // accelators, replace them with two ampersands.
+        QString name = group->caption();
+        name.replace("&", "&&");
 
-  ConfigModule *module;
-  QPtrList<ConfigModule> moduleList = _modules->modules(parentPath);
-  for (module=moduleList.first(); module != 0; module=moduleList.next())
-  {
-     // Item names may contain ampersands. To avoid them being converted to 
-     // accelators, replace them with two ampersands.
-     QString name = module->moduleName();
-     name.replace("&", "&&");
+        parentMenu->insertItem(KGlobal::iconLoader()->loadIcon(group->icon(), KIcon::Desktop, KIcon::SizeSmall), name, menu);
 
-     int realid = parentMenu->insertItem(KGlobal::iconLoader()->loadIcon(module->icon(), KIcon::Desktop, KIcon::SizeSmall)
-                                     , name, id);
-     _moduleDict.insert(realid, module);
+        fill(menu, path);
+    }
 
-      id++;
-  }
-  
+    ConfigModule *module;
+    QPtrList< ConfigModule > moduleList = _modules->modules(parentPath);
+    for(module = moduleList.first(); module != 0; module = moduleList.next())
+    {
+        // Item names may contain ampersands. To avoid them being converted to
+        // accelators, replace them with two ampersands.
+        QString name = module->moduleName();
+        name.replace("&", "&&");
+
+        int realid = parentMenu->insertItem(KGlobal::iconLoader()->loadIcon(module->icon(), KIcon::Desktop, KIcon::SizeSmall), name, id);
+        _moduleDict.insert(realid, module);
+
+        id++;
+    }
 }
 
 void ModuleMenu::moduleSelected(int id)
 {
-  kdDebug(1208) << "Item " << id << " selected" << endl;
-  ConfigModule *module = _moduleDict[id];
-  if (module)
-    emit moduleActivated(module);
+    kdDebug(1208) << "Item " << id << " selected" << endl;
+    ConfigModule *module = _moduleDict[id];
+    if(module)
+        emit moduleActivated(module);
 }

@@ -30,52 +30,55 @@
 
 #include "medium.h"
 
-class MediaImpl : public QObject, public DCOPObject
-{
-Q_OBJECT
-K_DCOP
+class MediaImpl : public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 public:
-	MediaImpl();
-	bool parseURL(const KURL &url, QString &name, QString &path) const;
-	bool realURL(const QString &name, const QString &path, KURL &url);
+    MediaImpl();
+    bool parseURL(const KURL &url, QString &name, QString &path) const;
+    bool realURL(const QString &name, const QString &path, KURL &url);
 
-	bool statMedium(const QString &name, KIO::UDSEntry &entry);
-	bool statMediumByLabel(const QString &label, KIO::UDSEntry &entry);
-	bool listMedia(QValueList<KIO::UDSEntry> &list);
-	bool setUserLabel(const QString &name, const QString &label);
+    bool statMedium(const QString &name, KIO::UDSEntry &entry);
+    bool statMediumByLabel(const QString &label, KIO::UDSEntry &entry);
+    bool listMedia(QValueList< KIO::UDSEntry > &list);
+    bool setUserLabel(const QString &name, const QString &label);
 
-	void createTopLevelEntry(KIO::UDSEntry& entry) const;
+    void createTopLevelEntry(KIO::UDSEntry &entry) const;
 
-	int lastErrorCode() const { return m_lastErrorCode; }
-	QString lastErrorMessage() const { return m_lastErrorMessage; }
+    int lastErrorCode() const
+    {
+        return m_lastErrorCode;
+    }
+    QString lastErrorMessage() const
+    {
+        return m_lastErrorMessage;
+    }
 
-k_dcop:
-	void slotMediumChanged(const QString &name);
+    k_dcop : void slotMediumChanged(const QString &name);
 
 signals:
-	void warning(const QString &msg);
+    void warning(const QString &msg);
 
 private slots:
-	void slotWarning(KIO::Job *job, const QString &msg);
-	void slotMountResult(KIO::Job *job);
-	void slotStatResult(KIO::Job *job);
+    void slotWarning(KIO::Job *job, const QString &msg);
+    void slotMountResult(KIO::Job *job);
+    void slotStatResult(KIO::Job *job);
 
 private:
-	const Medium findMediumByName(const QString &name, bool &ok);
-	bool ensureMediumMounted(Medium &medium);
+    const Medium findMediumByName(const QString &name, bool &ok);
+    bool ensureMediumMounted(Medium &medium);
 
-	KIO::UDSEntry extractUrlInfos(const KURL &url);
-	KIO::UDSEntry m_entryBuffer;
+    KIO::UDSEntry extractUrlInfos(const KURL &url);
+    KIO::UDSEntry m_entryBuffer;
 
-	void createMediumEntry(KIO::UDSEntry& entry,
-	                       const Medium &medium);
+    void createMediumEntry(KIO::UDSEntry &entry, const Medium &medium);
 
-	Medium *mp_mounting;
-	
-	/// Last error code stored in class to simplify API.
-	/// Note that this means almost no method can be const.
-	int m_lastErrorCode;
-	QString m_lastErrorMessage;
+    Medium *mp_mounting;
+
+    /// Last error code stored in class to simplify API.
+    /// Note that this means almost no method can be const.
+    int m_lastErrorCode;
+    QString m_lastErrorMessage;
 };
 
 #endif

@@ -27,37 +27,36 @@
 #include "notifierserviceaction.h"
 
 
-class NotifierSettings
-{
+class NotifierSettings {
 public:
-	NotifierSettings();
-	~NotifierSettings();
+    NotifierSettings();
+    ~NotifierSettings();
 
-	QValueList<NotifierAction*> actions();
-	QValueList<NotifierAction*> actionsForMimetype( const QString &mimetype );
-	
-	bool addAction( NotifierServiceAction *action );
-	bool deleteAction( NotifierServiceAction *action );
+    QValueList< NotifierAction * > actions();
+    QValueList< NotifierAction * > actionsForMimetype(const QString &mimetype);
 
-	void setAutoAction( const QString &mimetype, NotifierAction *action );
-	void resetAutoAction( const QString &mimetype );
-	void clearAutoActions();
-	NotifierAction *autoActionForMimetype( const QString &mimetype );
+    bool addAction(NotifierServiceAction *action);
+    bool deleteAction(NotifierServiceAction *action);
 
-	const QStringList &supportedMimetypes();
-	
-	void reload();
-	void save();
-	
+    void setAutoAction(const QString &mimetype, NotifierAction *action);
+    void resetAutoAction(const QString &mimetype);
+    void clearAutoActions();
+    NotifierAction *autoActionForMimetype(const QString &mimetype);
+
+    const QStringList &supportedMimetypes();
+
+    void reload();
+    void save();
+
 private:
-	QValueList<NotifierServiceAction*> listServices( const QString &mimetype = QString() ) const;
-	bool shouldLoadActions( KDesktopFile &desktop, const QString &mimetype ) const;
-	QValueList<NotifierServiceAction*> loadActions( KDesktopFile &desktop ) const;
+    QValueList< NotifierServiceAction * > listServices(const QString &mimetype = QString()) const;
+    bool shouldLoadActions(KDesktopFile &desktop, const QString &mimetype) const;
+    QValueList< NotifierServiceAction * > loadActions(KDesktopFile &desktop) const;
 
-	QStringList m_supportedMimetypes;
-	QValueList<NotifierAction*> m_actions;
-	QValueList<NotifierServiceAction*> m_deletedActions;
-	QMap<QString,NotifierAction*> m_idMap;
-	QMap<QString,NotifierAction*> m_autoMimetypesMap;
+    QStringList m_supportedMimetypes;
+    QValueList< NotifierAction * > m_actions;
+    QValueList< NotifierServiceAction * > m_deletedActions;
+    QMap< QString, NotifierAction * > m_idMap;
+    QMap< QString, NotifierAction * > m_autoMimetypesMap;
 };
 #endif

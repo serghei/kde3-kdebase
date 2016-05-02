@@ -32,16 +32,16 @@
  *
  * It has also support for sub menues.
  */
-class KLanguageCombo : public KTagComboBox
-{
-  Q_OBJECT
+class KLanguageCombo : public KTagComboBox {
+    Q_OBJECT
 
 public:
-  KLanguageCombo(QWidget *parent=0, const char *name=0);
-  ~KLanguageCombo();
+    KLanguageCombo(QWidget *parent = 0, const char *name = 0);
+    ~KLanguageCombo();
 
-  void insertLanguage(const QString& path, const QString& name, const QString& sub = QString::null, const QString &submenu = QString::null, int index = -1);
-  void changeLanguage(const QString& name, int i);
+    void insertLanguage(const QString &path, const QString &name, const QString &sub = QString::null, const QString &submenu = QString::null,
+                        int index = -1);
+    void changeLanguage(const QString &name, int i);
 };
 
 #endif

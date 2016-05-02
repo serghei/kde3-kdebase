@@ -24,24 +24,22 @@
 
 class QListViewItem;
 
-namespace KHC
-{
-  class NavigatorItem;
-  class InfoTree : public TreeBuilder
-  {
+namespace KHC {
+class NavigatorItem;
+class InfoTree : public TreeBuilder {
     Q_OBJECT
-    public:
-      InfoTree( QObject *parent, const char *name = 0 );
+public:
+    InfoTree(QObject *parent, const char *name = 0);
 
-      virtual void build( NavigatorItem  *parentItem );
+    virtual void build(NavigatorItem *parentItem);
 
-    private:
-      void parseInfoDirFile( const QString &fileName );
+private:
+    void parseInfoDirFile(const QString &fileName);
 
-      NavigatorItem *m_parentItem;
-      NavigatorItem *m_alphabItem;
-      NavigatorItem *m_categoryItem;
-  };
+    NavigatorItem *m_parentItem;
+    NavigatorItem *m_alphabItem;
+    NavigatorItem *m_categoryItem;
+};
 }
 
 #endif // KHC_INFOTREE_H

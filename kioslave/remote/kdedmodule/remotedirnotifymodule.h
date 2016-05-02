@@ -23,14 +23,14 @@
 
 #include "remotedirnotify.h"
 
-class RemoteDirNotifyModule : public KDEDModule
-{
-K_DCOP
+class RemoteDirNotifyModule : public KDEDModule {
+    K_DCOP
 
 public:
-	RemoteDirNotifyModule(const QCString &obj);
+    RemoteDirNotifyModule(const QCString &obj);
+
 private:
-	RemoteDirNotify notifier;
+    RemoteDirNotify notifier;
 };
 
 #endif

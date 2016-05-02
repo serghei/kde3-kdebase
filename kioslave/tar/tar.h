@@ -25,18 +25,17 @@
 #include <kio/global.h>
 #include <kio/slavebase.h>
 
-class ArchiveProtocol : public KIO::SlaveBase
-{
+class ArchiveProtocol : public KIO::SlaveBase {
 public:
-    ArchiveProtocol( const QCString &pool, const QCString &app );
+    ArchiveProtocol(const QCString &pool, const QCString &app);
     virtual ~ArchiveProtocol();
 
-    virtual void listDir( const KURL & url );
-    virtual void stat( const KURL & url );
-    virtual void get( const KURL & url );
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
+    virtual void get(const KURL &url);
 
 protected:
-    void createUDSEntry( const KArchiveEntry * tarEntry, KIO::UDSEntry & entry );
+    void createUDSEntry(const KArchiveEntry *tarEntry, KIO::UDSEntry &entry);
 
     /**
      * \brief find, check and open the archive file
@@ -45,9 +44,9 @@ protected:
      * \param errNum KIO error number (undefined if the function returns true)
      * \return true if file was found, false if there was an error
      */
-    bool checkNewFile( const KURL & url, QString & path, KIO::Error& errorNum );
+    bool checkNewFile(const KURL &url, QString &path, KIO::Error &errorNum);
 
-    KArchive * m_archiveFile;
+    KArchive *m_archiveFile;
     QString m_archiveName;
     time_t m_mtime;
 };

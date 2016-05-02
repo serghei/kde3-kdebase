@@ -68,33 +68,31 @@
 
 static const int TITLE_HEIGHT = 13;
 
-KasTaskPopup::KasTaskPopup( KasTaskItem *item, const char *name )
-    : KasPopup( item, name )
+KasTaskPopup::KasTaskPopup(KasTaskItem *item, const char *name) : KasPopup(item, name)
 {
     this->item = item;
 
     setFont(KGlobalSettings::generalFont());
-    setMouseTracking( true );
+    setMouseTracking(true);
 
     QString text = item->task()->visibleIconicName();
-    if ( item->kasbar()->thumbnailsEnabled() && item->task()->hasThumbnail() ) {
-        titleBg.resize( width(), TITLE_HEIGHT );
+    if(item->kasbar()->thumbnailsEnabled() && item->task()->hasThumbnail())
+    {
+        titleBg.resize(width(), TITLE_HEIGHT);
 
-        setFixedSize( item->task()->thumbnail().width() + 2, 
-		      TITLE_HEIGHT + item->task()->thumbnail().height() + 2 );
+        setFixedSize(item->task()->thumbnail().width() + 2, TITLE_HEIGHT + item->task()->thumbnail().height() + 2);
     }
-    else {
-        int w = fontMetrics().width( text ) + 4;
+    else
+    {
+        int w = fontMetrics().width(text) + 4;
         int h = TITLE_HEIGHT + 1;
-        titleBg.resize( w, h );
-        setFixedSize( w, h );
+        titleBg.resize(w, h);
+        setFixedSize(w, h);
     }
 
-    KPixmapEffect::gradient( titleBg, 
-                             Qt::black, colorGroup().mid(),
-                             KPixmapEffect::DiagonalGradient );
+    KPixmapEffect::gradient(titleBg, Qt::black, colorGroup().mid(), KPixmapEffect::DiagonalGradient);
 
-    connect( item->task(), SIGNAL( thumbnailChanged() ), SLOT( refresh() ) );
+    connect(item->task(), SIGNAL(thumbnailChanged()), SLOT(refresh()));
 }
 
 KasTaskPopup::~KasTaskPopup()
@@ -104,36 +102,34 @@ KasTaskPopup::~KasTaskPopup()
 void KasTaskPopup::refresh()
 {
     QString text = item->task()->visibleIconicName();
-    if (  item->kasbar()->thumbnailsEnabled() && item->task()->hasThumbnail() ) {
-        resize( item->task()->thumbnail().width() + 2,
-		TITLE_HEIGHT + item->task()->thumbnail().height() + 2 );
-        titleBg.resize( width(), TITLE_HEIGHT );
+    if(item->kasbar()->thumbnailsEnabled() && item->task()->hasThumbnail())
+    {
+        resize(item->task()->thumbnail().width() + 2, TITLE_HEIGHT + item->task()->thumbnail().height() + 2);
+        titleBg.resize(width(), TITLE_HEIGHT);
     }
     update();
 }
 
-void KasTaskPopup::paintEvent( QPaintEvent * )
+void KasTaskPopup::paintEvent(QPaintEvent *)
 {
-    QPainter p( this );
-    p.drawPixmap( 0, 0, titleBg );
+    QPainter p(this);
+    p.drawPixmap(0, 0, titleBg);
 
     QString text = item->task()->visibleIconicName();
 
-    p.setPen( Qt::white );
-    if ( fontMetrics().width( text ) > width() - 4 )
-        p.drawText( 1, 1, width() - 4, TITLE_HEIGHT - 1, AlignLeft | AlignVCenter,
-                     text );
+    p.setPen(Qt::white);
+    if(fontMetrics().width(text) > width() - 4)
+        p.drawText(1, 1, width() - 4, TITLE_HEIGHT - 1, AlignLeft | AlignVCenter, text);
     else
-        p.drawText( 1, 1, width() - 4, TITLE_HEIGHT - 1, AlignCenter, text );
+        p.drawText(1, 1, width() - 4, TITLE_HEIGHT - 1, AlignCenter, text);
 
     QPixmap thumb = item->task()->thumbnail();
-    if ( !thumb.isNull() )
-        p.drawPixmap( 1, TITLE_HEIGHT, thumb );
+    if(!thumb.isNull())
+        p.drawPixmap(1, TITLE_HEIGHT, thumb);
 
     //
     // Draw border
     //
-    p.setPen( Qt::black );
-    p.drawRect( 0, 0, width(), height() );
+    p.setPen(Qt::black);
+    p.drawRect(0, 0, width(), height());
 }
-

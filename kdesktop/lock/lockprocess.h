@@ -24,7 +24,8 @@
 
 class KLibrary;
 
-struct GreeterPluginHandle {
+struct GreeterPluginHandle
+{
     KLibrary *library;
     kgreeterplugin_info *info;
 };
@@ -34,9 +35,7 @@ struct GreeterPluginHandle {
 // Screen saver handling process.  Handles screensaver window,
 // starting screensaver hacks, and password entry.
 //
-class LockProcess
-    : public QWidget
-{
+class LockProcess : public QWidget {
     Q_OBJECT
 public:
     LockProcess(bool child_saver = false, bool useBlankOnly = false);
@@ -48,12 +47,18 @@ public:
 
     bool dontLock();
 
-    void setChildren(QValueList<int> children) { child_sockets = children; }
-    void setParent(int fd) { mParent = fd; }
+    void setChildren(QValueList< int > children)
+    {
+        child_sockets = children;
+    }
+    void setParent(int fd)
+    {
+        mParent = fd;
+    }
 
-    void msgBox( QMessageBox::Icon type, const QString &txt );
-    int execDialog( QDialog* dlg );
-    
+    void msgBox(QMessageBox::Icon type, const QString &txt);
+    int execDialog(QDialog *dlg);
+
 public slots:
     void quitSaver();
     void preparePopup();
@@ -93,39 +98,38 @@ private:
     void stayOnTop();
     void lockXF86();
     void unlockXF86();
-    void resume( bool force );
+    void resume(bool force);
     static QVariant getConf(void *ctx, const char *key, const QVariant &dflt);
 
-    bool        mLocked;
-    int         mLockGrace;
-    int         mPriority;
-    bool        mBusy;
-    KProcess    mHackProc;
-    int         mRootWidth;
-    int         mRootHeight;
-    QString     mSaverExec;
-    QString     mSaver;
-    bool        mOpenGLVisual;
-    bool        child_saver;
-    QValueList<int> child_sockets;
-    int         mParent;
-    bool        mUseBlankOnly;
-    bool        mSuspended;
-    QTimer      mSuspendTimer;
-    bool        mVisibility;
-    bool        mDPMSDepend;
-    QTimer      mCheckDPMS;
-    QValueStack< QWidget* > mDialogs;
-    bool        mRestoreXF86Lock;
-    bool        mForbidden;
+    bool mLocked;
+    int mLockGrace;
+    int mPriority;
+    bool mBusy;
+    KProcess mHackProc;
+    int mRootWidth;
+    int mRootHeight;
+    QString mSaverExec;
+    QString mSaver;
+    bool mOpenGLVisual;
+    bool child_saver;
+    QValueList< int > child_sockets;
+    int mParent;
+    bool mUseBlankOnly;
+    bool mSuspended;
+    QTimer mSuspendTimer;
+    bool mVisibility;
+    bool mDPMSDepend;
+    QTimer mCheckDPMS;
+    QValueStack< QWidget * > mDialogs;
+    bool mRestoreXF86Lock;
+    bool mForbidden;
     QStringList mPlugins, mPluginOptions;
-    QString     mMethod;
+    QString mMethod;
     GreeterPluginHandle greetPlugin;
-    QPixmap     mSavedScreen;
-    int         mAutoLogoutTimerId;
-    int         mAutoLogoutTimeout;
-    bool        mAutoLogout;
+    QPixmap mSavedScreen;
+    int mAutoLogoutTimerId;
+    int mAutoLogoutTimeout;
+    bool mAutoLogout;
 };
 
 #endif
-

@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -43,79 +43,77 @@ class HostInfo;
  * The SensorBrowser is the graphical front-end of the SensorManager. It
  * displays the currently available hosts and their sensors.
  */
-class SensorBrowser : public KListView, public KSGRD::SensorClient
-{
-  Q_OBJECT
+class SensorBrowser : public KListView, public KSGRD::SensorClient {
+    Q_OBJECT
 
-  public:
-    SensorBrowser( QWidget* parent, KSGRD::SensorManager* sm, const char* name = 0 );
+public:
+    SensorBrowser(QWidget *parent, KSGRD::SensorManager *sm, const char *name = 0);
     ~SensorBrowser();
 
     QStringList listHosts();
-    QStringList listSensors( const QString &hostName );
+    QStringList listSensors(const QString &hostName);
 
-  public slots:
+public slots:
     void disconnect();
-    void hostReconfigured( const QString &hostName );
+    void hostReconfigured(const QString &hostName);
     void update();
-    void newItemSelected( QListViewItem *item );
+    void newItemSelected(QListViewItem *item);
 
-  protected:
-    virtual void viewportMouseMoveEvent( QMouseEvent* );
+protected:
+    virtual void viewportMouseMoveEvent(QMouseEvent *);
 
-  private:
-    void answerReceived( int id, const QString& );
+private:
+    void answerReceived(int id, const QString &);
 
-    KSGRD::SensorManager* mSensorManager;
+    KSGRD::SensorManager *mSensorManager;
 
-    QPtrList<HostInfo> mHostInfoList;
+    QPtrList< HostInfo > mHostInfoList;
     QString mDragText;
-
 };
 
 /**
  Helper classes
  */
-class SensorInfo
-{
-  public:
-    SensorInfo( QListViewItem *lvi, const QString &name, const QString &desc,
-                const QString &type );
-    ~SensorInfo() {}
+class SensorInfo {
+public:
+    SensorInfo(QListViewItem *lvi, const QString &name, const QString &desc, const QString &type);
+    ~SensorInfo()
+    {
+    }
 
     /**
       Returns a pointer to the list view item of the sensor.
      */
-    QListViewItem* listViewItem() const;
+    QListViewItem *listViewItem() const;
 
     /**
       Returns the name of the sensor.
      */
-    const QString& name() const;
+    const QString &name() const;
 
     /**
       Returns the description of the sensor.
      */
-    const QString& description() const;
+    const QString &description() const;
 
     /**
       Returns the type of the sensor.
      */
-    const QString& type() const;
+    const QString &type() const;
 
-  private:
-    QListViewItem* mLvi;
+private:
+    QListViewItem *mLvi;
     QString mName;
     QString mDesc;
     QString mType;
 };
 
-class HostInfo
-{
-  public:
-    HostInfo( int id, const KSGRD::SensorAgent *agent, const QString &name,
-              QListViewItem *lvi );
-    ~HostInfo() { }
+class HostInfo {
+public:
+    HostInfo(int id, const KSGRD::SensorAgent *agent, const QString &name, QListViewItem *lvi);
+    ~HostInfo()
+    {
+    }
 
     /**
       Returns the unique id of the host.
@@ -125,22 +123,22 @@ class HostInfo
     /**
       Returns a pointer to the sensor agent of the host.
      */
-    const KSGRD::SensorAgent* sensorAgent() const;
+    const KSGRD::SensorAgent *sensorAgent() const;
 
     /**
       Returns the name of the host.
      */
-    const QString& hostName() const;
+    const QString &hostName() const;
 
     /**
       Returns the a pointer to the list view item of the host.
      */
-    QListViewItem* listViewItem() const;
+    QListViewItem *listViewItem() const;
 
     /**
       Returns the sensor name of a special list view item.
      */
-    const QString& sensorName( const QListViewItem *lvi ) const;
+    const QString &sensorName(const QListViewItem *lvi) const;
 
     /**
       Returns all sensor names of the host.
@@ -150,44 +148,43 @@ class HostInfo
     /**
       Returns the type of a special list view item.
      */
-    const QString& sensorType( const QListViewItem *lvi ) const;
+    const QString &sensorType(const QListViewItem *lvi) const;
 
     /**
       Returns the description of a special list view item.
      */
-    const QString& sensorDescription( const QListViewItem *lvi ) const;
+    const QString &sensorDescription(const QListViewItem *lvi) const;
 
     /**
       Adds a new Sensor to the host.
-      
+
       @param lvi  The list view item.
       @param name The sensor name.
       @param desc A description.
       @param type The type of the sensor.
      */
-    void addSensor( QListViewItem *lvi, const QString& name,
-                    const QString& desc, const QString& type );
+    void addSensor(QListViewItem *lvi, const QString &name, const QString &desc, const QString &type);
 
     /**
       Returns whether the sensor with @ref name
       is registered at the host.
      */
-    bool isRegistered( const QString& name ) const;
+    bool isRegistered(const QString &name) const;
 
     /**
       Returns whether the sensor with @ref lvi
       is registered at the host.
      */
-    bool isRegistered( QListViewItem *lvi ) const;
+    bool isRegistered(QListViewItem *lvi) const;
 
-  private:
+private:
     int mId;
 
-    const KSGRD::SensorAgent* mSensorAgent;
+    const KSGRD::SensorAgent *mSensorAgent;
     const QString mHostName;
-    QListViewItem* mLvi;
+    QListViewItem *mLvi;
 
-    QPtrList<SensorInfo> mSensorList;
+    QPtrList< SensorInfo > mSensorList;
 };
 
 #endif

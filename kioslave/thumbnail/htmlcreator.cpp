@@ -27,16 +27,14 @@
 
 #include "htmlcreator.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        return new HTMLCreator;
-    }
+    return new HTMLCreator;
+}
 }
 
-HTMLCreator::HTMLCreator()
-    : m_html(0)
+HTMLCreator::HTMLCreator() : m_html(0)
 {
 }
 
@@ -47,7 +45,7 @@ HTMLCreator::~HTMLCreator()
 
 bool HTMLCreator::create(const QString &path, int width, int height, QImage &img)
 {
-    if (!m_html)
+    if(!m_html)
     {
         m_html = new KHTMLPart;
         connect(m_html, SIGNAL(completed()), SLOT(slotCompleted()));
@@ -70,9 +68,9 @@ bool HTMLCreator::create(const QString &path, int width, int height, QImage &img
     // render the HTML page on a bigger pixmap and use smoothScale,
     // looks better than directly scaling with the QPainter (malte)
     QPixmap pix;
-    if (width > 400 || height > 600)
+    if(width > 400 || height > 600)
     {
-        if (height * 3 > width * 4)
+        if(height * 3 > width * 4)
             pix.resize(width, width * 4 / 3);
         else
             pix.resize(height * 3 / 4, height);
@@ -81,11 +79,10 @@ bool HTMLCreator::create(const QString &path, int width, int height, QImage &img
         pix.resize(400, 600);
 
     // light-grey background, in case loadind the page failed
-    pix.fill( QColor( 245, 245, 245 ) );
+    pix.fill(QColor(245, 245, 245));
 
     int borderX = pix.width() / width, borderY = pix.height() / height;
-    QRect rc(borderX, borderY, pix.width() - borderX * 2,
-             pix.height() - borderY * 2);
+    QRect rc(borderX, borderY, pix.width() - borderX * 2, pix.height() - borderY * 2);
 
     QPainter p;
     p.begin(&pix);
@@ -115,4 +112,3 @@ ThumbCreator::Flags HTMLCreator::flags() const
 }
 
 #include "htmlcreator.moc"
-

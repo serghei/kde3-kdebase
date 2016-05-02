@@ -27,17 +27,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <qframe.h>
 #include <qvaluevector.h>
 
-class DockContainer : public QFrame
-{
+class DockContainer : public QFrame {
     Q_OBJECT
 
 public:
-    typedef QValueVector<DockContainer*> Vector;
+    typedef QValueVector< DockContainer * > Vector;
 
-    DockContainer( QString command, QWidget *parent, 
-                   QString resname,
-                   QString resclass,
-                   bool undocked_style=false);
+    DockContainer(QString command, QWidget *parent, QString resname, QString resclass, bool undocked_style = false);
 
     void embed(WId);
     void unembed();
@@ -47,16 +43,16 @@ public:
     QString command() const;
     QString resClass() const;
     QString resName() const;
-    void askNewCommand(bool bad_command=true);
+    void askNewCommand(bool bad_command = true);
     void popupMenu(QPoint p);
-    static int& sz();
-    static int& border();
+    static int &sz();
+    static int &border();
 signals:
-    void embeddedWindowDestroyed(DockContainer*);
-    void settingsChanged(DockContainer*);
+    void embeddedWindowDestroyed(DockContainer *);
+    void settingsChanged(DockContainer *);
 
 protected:
-    bool x11Event( XEvent * );
+    bool x11Event(XEvent *);
 
 private:
     WId _embeddedWinId;
@@ -87,4 +83,3 @@ inline QString DockContainer::resName() const
 
 
 #endif
-

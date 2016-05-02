@@ -30,37 +30,36 @@
 #include <kpanelapplet.h>
 #include <kactioncollection.h>
 
-class MediumButton : public PanelPopupButton
-{
-Q_OBJECT
+class MediumButton : public PanelPopupButton {
+    Q_OBJECT
 
 public:
-	MediumButton(QWidget *parent, const KFileItem &fileItem);
-	~MediumButton();
-	const KFileItem &fileItem() const;
-	void setFileItem(const KFileItem &fileItem);
-	void setPanelPosition(KPanelApplet::Position position);
+    MediumButton(QWidget *parent, const KFileItem &fileItem);
+    ~MediumButton();
+    const KFileItem &fileItem() const;
+    void setFileItem(const KFileItem &fileItem);
+    void setPanelPosition(KPanelApplet::Position position);
 
 protected:
-	QString tileName();
-	void refreshType();
-	void initPopup();
-	void dragEnterEvent( QDragEnterEvent* );
-	void dragLeaveEvent( QDragLeaveEvent* );
-	void dropEvent(QDropEvent *e);
+    QString tileName();
+    void refreshType();
+    void initPopup();
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragLeaveEvent(QDragLeaveEvent *);
+    void dropEvent(QDropEvent *e);
 
 protected slots:
-	// Activate this code only if we find a way to have both an
-	// action and a popup menu for the same kicker button
-	//void slotClicked();
-	void slotPaste();
-	void slotCopy();
-	void slotDragOpen();
+    // Activate this code only if we find a way to have both an
+    // action and a popup menu for the same kicker button
+    // void slotClicked();
+    void slotPaste();
+    void slotCopy();
+    void slotDragOpen();
 
 private:
-	KActionCollection mActions;
-	KFileItem mFileItem;
-	QTimer mOpenTimer;
+    KActionCollection mActions;
+    KFileItem mFileItem;
+    QTimer mOpenTimer;
 };
 
 #endif

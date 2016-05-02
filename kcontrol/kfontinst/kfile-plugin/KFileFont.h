@@ -32,27 +32,23 @@
 #include <kfilemetainfo.h>
 #include "FcEngine.h"
 
-namespace KFI
-{
+namespace KFI {
 
-class KFileFontPlugin : public KFilePlugin
-{
-    public:
+class KFileFontPlugin : public KFilePlugin {
+public:
+    KFileFontPlugin(QObject *parent, const char *name, const QStringList &args);
+    virtual ~KFileFontPlugin()
+    {
+    }
 
-    KFileFontPlugin(QObject *parent, const char *name, const QStringList& args);
-    virtual ~KFileFontPlugin() {}
+    bool readInfo(KFileMetaInfo &info, uint what = KFileMetaInfo::Fastest);
 
-    bool readInfo(KFileMetaInfo& info, uint what = KFileMetaInfo::Fastest);
-
-    private:
-
+private:
     void addMimeType(const char *mime);
 
-    private:
-
+private:
     CFcEngine itsEngine;
 };
-
 }
 
 #endif

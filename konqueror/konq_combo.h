@@ -30,55 +30,54 @@ class KConfig;
 
 // we use KHistoryCombo _only_ for the up/down keyboard handling, otherwise
 // KComboBox would do fine.
-class KonqCombo : public KHistoryCombo
-{
+class KonqCombo : public KHistoryCombo {
     Q_OBJECT
 
 public:
-    KonqCombo( QWidget *parent, const char *name );
+    KonqCombo(QWidget *parent, const char *name);
     ~KonqCombo();
 
     // initializes with the completion object and calls loadItems()
-    void init( KCompletion * );
+    void init(KCompletion *);
 
     // determines internally if it's temporary or final
-    void setURL( const QString& url );
+    void setURL(const QString &url);
 
-    void setTemporary( const QString& );
-    void setTemporary( const QString&, const QPixmap& );
-    void clearTemporary( bool makeCurrent = true );
-    void removeURL( const QString& url );
+    void setTemporary(const QString &);
+    void setTemporary(const QString &, const QPixmap &);
+    void clearTemporary(bool makeCurrent = true);
+    void removeURL(const QString &url);
 
-    void insertPermanent( const QString& );
+    void insertPermanent(const QString &);
 
     void updatePixmaps();
 
     void loadItems();
     void saveItems();
 
-    static void setConfig( KConfig * );
+    static void setConfig(KConfig *);
 
     virtual void popup();
 
-    void setPageSecurity( int );
+    void setPageSecurity(int);
 
-    void insertItem( const QString &text, int index=-1, const QString& title=QString::null );
-    void insertItem( const QPixmap &pixmap, const QString &text, int index=-1, const QString& title=QString::null );
+    void insertItem(const QString &text, int index = -1, const QString &title = QString::null);
+    void insertItem(const QPixmap &pixmap, const QString &text, int index = -1, const QString &title = QString::null);
 
 protected:
-    virtual void keyPressEvent( QKeyEvent * );
-    virtual bool eventFilter( QObject *, QEvent * );
-    virtual void mousePressEvent( QMouseEvent * );
-    virtual void mouseMoveEvent( QMouseEvent * );
-    void paintEvent( QPaintEvent * );
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    void paintEvent(QPaintEvent *);
     void selectWord(QKeyEvent *e);
 
 signals:
-    /** 
+    /**
       Specialized signal that emits the state of the modifier
       keys along with the actual activated text.
-     */    
-    void activated( const QString &, int );
+     */
+    void activated(const QString &, int);
 
     /**
       User has clicked on the security lock in the combobar
@@ -87,16 +86,19 @@ signals:
 
 private slots:
     void slotCleared();
-    void slotSetIcon( int index );
-    void slotActivated( const QString& text );
+    void slotSetIcon(int index);
+    void slotActivated(const QString &text);
 
 private:
-    void updateItem( const QPixmap& pix, const QString&, int index, const QString& title );
+    void updateItem(const QPixmap &pix, const QString &, int index, const QString &title);
     void saveState();
     void restoreState();
     void applyPermanent();
-    QString temporaryItem() const { return text( temporary ); }
-    void removeDuplicates( int index );
+    QString temporaryItem() const
+    {
+        return text(temporary);
+    }
+    void removeDuplicates(int index);
     bool hasSufficientContrast(const QColor &c1, const QColor &c2);
 
     bool m_returnPressed;

@@ -25,17 +25,16 @@
 
 class JoyWidget;
 
-class joystick: public KCModule
-{
-  Q_OBJECT
+class joystick : public KCModule {
+    Q_OBJECT
 
-  public:
+public:
     joystick(QWidget *parent = 0, const char *name = 0, const QStringList &list = QStringList());
 
     virtual void load();
     virtual void defaults();
 
-  private:
+private:
     JoyWidget *joyWidget;
 };
 

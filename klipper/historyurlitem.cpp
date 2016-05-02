@@ -22,42 +22,42 @@
 #include <kmultipledrag.h>
 #include <kurldrag.h>
 
-HistoryURLItem::HistoryURLItem( const KURL::List &_urls, QMap<QString, QString> _metaData, bool _cut )
-    : urls( _urls ), metaData( _metaData ), cut( _cut )
+HistoryURLItem::HistoryURLItem(const KURL::List &_urls, QMap< QString, QString > _metaData, bool _cut) : urls(_urls), metaData(_metaData), cut(_cut)
 {
 }
 
 /* virtual */
-void HistoryURLItem::write( QDataStream& stream ) const
+void HistoryURLItem::write(QDataStream &stream) const
 {
-    stream << QString( "url" ) << urls << metaData << (int)cut;
+    stream << QString("url") << urls << metaData << (int)cut;
 }
 
-QString HistoryURLItem::text() const {
-    return urls.toStringList().join( " " );
+QString HistoryURLItem::text() const
+{
+    return urls.toStringList().join(" ");
 }
 
-QMimeSource* HistoryURLItem::mimeSource() const {
-    KMultipleDrag* drag = new KMultipleDrag;
-    drag->addDragObject( new KURLDrag( urls, metaData ));
+QMimeSource *HistoryURLItem::mimeSource() const
+{
+    KMultipleDrag *drag = new KMultipleDrag;
+    drag->addDragObject(new KURLDrag(urls, metaData));
     // from KonqDrag (libkonq)
-    QStoredDrag* cutdrag = new QStoredDrag( "application/x-kde-cutselection" );
+    QStoredDrag *cutdrag = new QStoredDrag("application/x-kde-cutselection");
     QByteArray a;
-    QCString s ( cut ? "1" : "0" );
-    a.resize( s.length() + 1 ); // trailing zero
-    memcpy( a.data(), s.data(), s.length() + 1 );
-    cutdrag->setEncodedData( a );
-    drag->addDragObject( cutdrag );
+    QCString s(cut ? "1" : "0");
+    a.resize(s.length() + 1); // trailing zero
+    memcpy(a.data(), s.data(), s.length() + 1);
+    cutdrag->setEncodedData(a);
+    drag->addDragObject(cutdrag);
     return drag;
 }
 
-bool HistoryURLItem::operator==( const HistoryItem& rhs) const
+bool HistoryURLItem::operator==(const HistoryItem &rhs) const
 {
-    if ( const HistoryURLItem* casted_rhs = dynamic_cast<const HistoryURLItem*>( &rhs ) ) {
-        return casted_rhs->urls == urls
-            && casted_rhs->metaData.count() == metaData.count()
-            && qEqual( casted_rhs->metaData.begin(), casted_rhs->metaData.end(), metaData.begin())
-            && casted_rhs->cut == cut;
+    if(const HistoryURLItem *casted_rhs = dynamic_cast< const HistoryURLItem * >(&rhs))
+    {
+        return casted_rhs->urls == urls && casted_rhs->metaData.count() == metaData.count()
+               && qEqual(casted_rhs->metaData.begin(), casted_rhs->metaData.end(), metaData.begin()) && casted_rhs->cut == cut;
     }
     return false;
 }

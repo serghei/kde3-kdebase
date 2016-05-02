@@ -29,21 +29,20 @@ class QLabel;
 class QRadioButton;
 class QSpinBox;
 
-class HostConnector : public KDialogBase
-{
-  Q_OBJECT
+class HostConnector : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    HostConnector( QWidget *parent, const char *name = 0 );
+public:
+    HostConnector(QWidget *parent, const char *name = 0);
     ~HostConnector();
 
-    void setHostNames( const QStringList &list );
+    void setHostNames(const QStringList &list);
     QStringList hostNames() const;
 
-    void setCommands( const QStringList &list );
+    void setCommands(const QStringList &list);
     QStringList commands() const;
 
-    void setCurrentHostName( const QString &hostName );
+    void setCurrentHostName(const QString &hostName);
 
     QString currentHostName() const;
     QString currentCommand() const;
@@ -54,10 +53,11 @@ class HostConnector : public KDialogBase
     bool useDaemon() const;
     bool useCustom() const;
 
-  protected slots:
+protected slots:
     virtual void slotHelp();
-    void slotHostNameChanged( const QString &_text );
-  private:
+    void slotHostNameChanged(const QString &_text);
+
+private:
     KComboBox *mCommands;
     KComboBox *mHostNames;
 

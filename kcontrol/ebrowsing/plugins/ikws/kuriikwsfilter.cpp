@@ -35,12 +35,11 @@
  * kdelibs/kio/tests/kurifiltertest
  */
 
-typedef KGenericFactory<KAutoWebSearch> KAutoWebSearchFactory;
-K_EXPORT_COMPONENT_FACTORY (libkuriikwsfilter, KAutoWebSearchFactory("kcmkurifilt"))
+typedef KGenericFactory< KAutoWebSearch > KAutoWebSearchFactory;
+K_EXPORT_COMPONENT_FACTORY(libkuriikwsfilter, KAutoWebSearchFactory("kcmkurifilt"))
 
-KAutoWebSearch::KAutoWebSearch(QObject *parent, const char *name, const QStringList&)
-               :KURIFilterPlugin(parent, name ? name : "kuriikwsfilter", 1.0),
-                DCOPObject("KURIIKWSFilterIface")
+KAutoWebSearch::KAutoWebSearch(QObject *parent, const char *name, const QStringList &)
+    : KURIFilterPlugin(parent, name ? name : "kuriikwsfilter", 1.0), DCOPObject("KURIIKWSFilterIface")
 {
 }
 
@@ -50,32 +49,32 @@ KAutoWebSearch::~KAutoWebSearch()
 
 void KAutoWebSearch::configure()
 {
-  if ( KURISearchFilterEngine::self()->verbose() )
-    kdDebug() << "KAutoWebSearch::configure: Config reload requested..." << endl;
+    if(KURISearchFilterEngine::self()->verbose())
+        kdDebug() << "KAutoWebSearch::configure: Config reload requested..." << endl;
 
-  KURISearchFilterEngine::self()->loadConfig();
+    KURISearchFilterEngine::self()->loadConfig();
 }
 
-bool KAutoWebSearch::filterURI( KURIFilterData &data ) const
+bool KAutoWebSearch::filterURI(KURIFilterData &data) const
 {
-  if (KURISearchFilterEngine::self()->verbose())
-    kdDebug() << "KAutoWebSearch::filterURI: '" <<  data.uri().url() << "'" << endl;
+    if(KURISearchFilterEngine::self()->verbose())
+        kdDebug() << "KAutoWebSearch::filterURI: '" << data.uri().url() << "'" << endl;
 
-  KURL u = data.uri();
-  if ( u.pass().isEmpty() )
-  {
-    QString result = KURISearchFilterEngine::self()->autoWebSearchQuery( data.typedString() );
-    if( !result.isEmpty() )
+    KURL u = data.uri();
+    if(u.pass().isEmpty())
     {
-      if ( KURISearchFilterEngine::self()->verbose() )
-        kdDebug () << "Filtered URL: " << result << endl;
+        QString result = KURISearchFilterEngine::self()->autoWebSearchQuery(data.typedString());
+        if(!result.isEmpty())
+        {
+            if(KURISearchFilterEngine::self()->verbose())
+                kdDebug() << "Filtered URL: " << result << endl;
 
-      setFilteredURI( data, KURL( result ) );
-      setURIType( data, KURIFilterData::NET_PROTOCOL );
-      return true;
+            setFilteredURI(data, KURL(result));
+            setURIType(data, KURIFilterData::NET_PROTOCOL);
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 }
 
 #include "kuriikwsfilter.moc"

@@ -75,18 +75,17 @@
 #include "kasgroupitem.moc"
 
 
-KasGroupItem::KasGroupItem( KasTasker *parent )
-    : KasItem( parent ), items(), groupType_( GroupRelated )
-     
-{
-    setCustomPopup( true );
-    setGroupItem( true );
-    setText( i18n("Group") );
+KasGroupItem::KasGroupItem(KasTasker *parent) : KasItem(parent), items(), groupType_(GroupRelated)
 
-    connect( parent, SIGNAL( layoutChanged() ), this, SLOT( hidePopup() ) );
-    connect( parent, SIGNAL( layoutChanged() ), this, SLOT( update() ) );
-    connect( this, SIGNAL(leftButtonClicked(QMouseEvent *)), SLOT(togglePopup()) );
-    connect( this, SIGNAL(rightButtonClicked(QMouseEvent *)), SLOT(showGroupMenuAt(QMouseEvent *) ) );
+{
+    setCustomPopup(true);
+    setGroupItem(true);
+    setText(i18n("Group"));
+
+    connect(parent, SIGNAL(layoutChanged()), this, SLOT(hidePopup()));
+    connect(parent, SIGNAL(layoutChanged()), this, SLOT(update()));
+    connect(this, SIGNAL(leftButtonClicked(QMouseEvent *)), SLOT(togglePopup()));
+    connect(this, SIGNAL(rightButtonClicked(QMouseEvent *)), SLOT(showGroupMenuAt(QMouseEvent *)));
 }
 
 KasGroupItem::~KasGroupItem()
@@ -95,34 +94,35 @@ KasGroupItem::~KasGroupItem()
 
 KasTasker *KasGroupItem::kasbar() const
 {
-    return static_cast<KasTasker *> (KasItem::kasbar());
+    return static_cast< KasTasker * >(KasItem::kasbar());
 }
 
-void KasGroupItem::addTask( Task::Ptr t )
+void KasGroupItem::addTask(Task::Ptr t)
 {
-    if (!t)
-	return;
+    if(!t)
+        return;
 
-    items.append( t );
-    if ( items.count() == 1 ) {
-	setText( t->visibleName() );
-	updateIcon();
+    items.append(t);
+    if(items.count() == 1)
+    {
+        setText(t->visibleName());
+        updateIcon();
     }
 
-    connect( t, SIGNAL( changed(bool) ), this, SLOT( update() ) );
+    connect(t, SIGNAL(changed(bool)), this, SLOT(update()));
     update();
 }
 
-void KasGroupItem::removeTask( Task::Ptr t )
+void KasGroupItem::removeTask(Task::Ptr t)
 {
-    if ( !t )
-	return;
+    if(!t)
+        return;
 
     hidePopup();
 
-    for (Task::List::iterator it = items.begin(); it != items.end();)
+    for(Task::List::iterator it = items.begin(); it != items.end();)
     {
-        if ((*it) == t)
+        if((*it) == t)
         {
             it = items.erase(it);
         }
@@ -134,8 +134,8 @@ void KasGroupItem::removeTask( Task::Ptr t )
 
     updateIcon();
 
-    if ( items.count() == 1 )
-	kasbar()->moveToMain( this, items.first() );
+    if(items.count() == 1)
+        kasbar()->moveToMain(this, items.first());
 }
 
 void KasGroupItem::updateIcon()
@@ -143,163 +143,158 @@ void KasGroupItem::updateIcon()
     QPixmap p;
     bool usedIconLoader = false;
     Task::Ptr t = items.first();
-    if (!t)
-	p = KGlobal::iconLoader()->loadIcon( "kicker",
-					     KIcon::NoGroup,
-					     KIcon::SizeSmall );
+    if(!t)
+        p = KGlobal::iconLoader()->loadIcon("kicker", KIcon::NoGroup, KIcon::SizeSmall);
 
-    int sizes[] = { KIcon::SizeEnormous,
-		    KIcon::SizeHuge,
-		    KIcon::SizeLarge,
-		    KIcon::SizeMedium,
-		    KIcon::SizeSmall };
+    int sizes[] = {KIcon::SizeEnormous, KIcon::SizeHuge, KIcon::SizeLarge, KIcon::SizeMedium, KIcon::SizeSmall};
 
-    p = t->bestIcon( sizes[kasbar()->itemSize()], usedIconLoader );
+    p = t->bestIcon(sizes[kasbar()->itemSize()], usedIconLoader);
 
-    if ( p.isNull() )
-	p = KGlobal::iconLoader()->loadIcon( "error", KIcon::NoGroup, KIcon::SizeSmall );
+    if(p.isNull())
+        p = KGlobal::iconLoader()->loadIcon("error", KIcon::NoGroup, KIcon::SizeSmall);
 
-    setIcon( p );
+    setIcon(p);
 }
 
-void KasGroupItem::paint( QPainter *p )
+void KasGroupItem::paint(QPainter *p)
 {
-    KasItem::paint( p );
+    KasItem::paint(p);
 
     //
     // Item summary info
     //
     int modCount = 0;
-    for ( Task::List::iterator it = items.begin(); it != items.end() ; ++it ) {
-	if ( (*it)->isModified() )
-	    modCount++;
+    for(Task::List::iterator it = items.begin(); it != items.end(); ++it)
+    {
+        if((*it)->isModified())
+            modCount++;
     }
 
     KasResources *res = resources();
 
-    p->setPen( isShowingPopup() ? res->activePenColor() : res->inactivePenColor() );
+    p->setPen(isShowingPopup() ? res->activePenColor() : res->inactivePenColor());
 
-    if ( modCount ) {
-	QString modCountStr;
-	modCountStr.setNum( modCount );
-	p->drawText( extent()-fontMetrics().width( modCountStr )-3,
-		     15+fontMetrics().ascent(),
-		     modCountStr );
+    if(modCount)
+    {
+        QString modCountStr;
+        modCountStr.setNum(modCount);
+        p->drawText(extent() - fontMetrics().width(modCountStr) - 3, 15 + fontMetrics().ascent(), modCountStr);
 
-	p->drawPixmap( extent()-12, 29, res->modifiedIcon() );
+        p->drawPixmap(extent() - 12, 29, res->modifiedIcon());
     }
 
     int microsPerCol;
-    switch( kasbar()->itemSize() ) {
-	default:
-	case KasBar::Small:
-	    microsPerCol = 2;
-	    break;
-	case KasBar::Medium:
-	    microsPerCol = 4;
-	    break;
-	case KasBar::Large:
-	    microsPerCol = 7;
-	    break;
-	case KasBar::Huge:
-	    microsPerCol = 9;
-	    break;
-	case KasBar::Enormous:
-	    microsPerCol = 16;
-	    break;
+    switch(kasbar()->itemSize())
+    {
+        default:
+        case KasBar::Small:
+            microsPerCol = 2;
+            break;
+        case KasBar::Medium:
+            microsPerCol = 4;
+            break;
+        case KasBar::Large:
+            microsPerCol = 7;
+            break;
+        case KasBar::Huge:
+            microsPerCol = 9;
+            break;
+        case KasBar::Enormous:
+            microsPerCol = 16;
+            break;
     }
 
     int xpos = 3;
     int ypos = 16;
 
-    for ( int i = 0; ( i < (int) items.count() ) && ( i < microsPerCol ); i++ ) {
-	Task::Ptr t = items.at( i );
+    for(int i = 0; (i < (int)items.count()) && (i < microsPerCol); i++)
+    {
+        Task::Ptr t = items.at(i);
 
-	if( t->isIconified() )
-	    p->drawPixmap( xpos, ypos, res->microMinIcon() );
-	else if ( t->isShaded() )
-	    p->drawPixmap( xpos, ypos, res->microShadeIcon() );
-	else
-	    p->drawPixmap( xpos, ypos, res->microMaxIcon() );
+        if(t->isIconified())
+            p->drawPixmap(xpos, ypos, res->microMinIcon());
+        else if(t->isShaded())
+            p->drawPixmap(xpos, ypos, res->microShadeIcon());
+        else
+            p->drawPixmap(xpos, ypos, res->microMaxIcon());
 
-	ypos += 7;
+        ypos += 7;
     }
 
-    if ( ((int) items.count() > microsPerCol) && ( kasbar()->itemSize() != KasBar::Small ) ) {
-	QString countStr;
-	countStr.setNum( items.count() );
-	p->drawText( extent()-fontMetrics().width( countStr )-3,
-		     extent()+fontMetrics().ascent()-16,
-		     countStr );
+    if(((int)items.count() > microsPerCol) && (kasbar()->itemSize() != KasBar::Small))
+    {
+        QString countStr;
+        countStr.setNum(items.count());
+        p->drawText(extent() - fontMetrics().width(countStr) - 3, extent() + fontMetrics().ascent() - 16, countStr);
     }
 }
 
 void KasGroupItem::updatePopup()
 {
-    if ( bar ) {
-	bar->rereadMaster();
+    if(bar)
+    {
+        bar->rereadMaster();
 
-	bar->clear();
-	if ( items.count() ) {
-	    for ( Task::List::iterator t = items.begin(); t != items.end(); ++t ) {
-		bar->addTask( *t );
-	    }
-	}
+        bar->clear();
+        if(items.count())
+        {
+            for(Task::List::iterator t = items.begin(); t != items.end(); ++t)
+            {
+                bar->addTask(*t);
+            }
+        }
 
-	bar->updateLayout();
-	if ( popup() )
-	    popup()->resize( bar->size() );
+        bar->updateLayout();
+        if(popup())
+            popup()->resize(bar->size());
     }
 }
 
 KasPopup *KasGroupItem::createPopup()
 {
-    KasPopup *pop = new KasPopup( this );
-    bar = kasbar()->createChildBar( ( kasbar()->orientation() == Horizontal ) ? Vertical : Horizontal, pop );
+    KasPopup *pop = new KasPopup(this);
+    bar = kasbar()->createChildBar((kasbar()->orientation() == Horizontal) ? Vertical : Horizontal, pop);
 
-    connect( pop, SIGNAL(shown()), SLOT(updatePopup()) );
+    connect(pop, SIGNAL(shown()), SLOT(updatePopup()));
 
     return pop;
 
-//     // Test code
-//     //
-//     // This generates cool looking fractal-like patterns if you keep unfolding the
-//     // groups!
-//     int pos = (int) this; 
-//     if ( pos % 2 )
-//        bar->append( new KasItem( bar ) );
-//     if ( pos % 5 )
-//        bar->append( new KasItem( bar ) );
-//     bar->append( new KasGroupItem( bar ) );
-//     if ( pos % 3 )
-//        bar->append( new KasItem( bar ) );
-//     if ( pos % 7 )
-//        bar->append( new KasItem( bar ) );
-//     ////////////
+    //     // Test code
+    //     //
+    //     // This generates cool looking fractal-like patterns if you keep unfolding the
+    //     // groups!
+    //     int pos = (int) this;
+    //     if ( pos % 2 )
+    //        bar->append( new KasItem( bar ) );
+    //     if ( pos % 5 )
+    //        bar->append( new KasItem( bar ) );
+    //     bar->append( new KasGroupItem( bar ) );
+    //     if ( pos % 3 )
+    //        bar->append( new KasItem( bar ) );
+    //     if ( pos % 7 )
+    //        bar->append( new KasItem( bar ) );
+    //     ////////////
 }
 
 void KasGroupItem::ungroup()
 {
-    kasbar()->moveToMain( this );
+    kasbar()->moveToMain(this);
 }
 
-void KasGroupItem::showGroupMenuAt( QMouseEvent *ev )
+void KasGroupItem::showGroupMenuAt(QMouseEvent *ev)
 {
-    showGroupMenuAt( ev->globalPos() );
+    showGroupMenuAt(ev->globalPos());
 }
 
-void KasGroupItem::showGroupMenuAt( const QPoint &p )
+void KasGroupItem::showGroupMenuAt(const QPoint &p)
 {
     TaskRMBMenu *tm = new TaskRMBMenu(items, true, kasbar());
-    tm->insertItem( i18n("&Ungroup" ), this, SLOT( ungroup() ) );
+    tm->insertItem(i18n("&Ungroup"), this, SLOT(ungroup()));
     tm->insertSeparator();
-    tm->insertItem( i18n("&Kasbar"), kasbar()->contextMenu() );
+    tm->insertItem(i18n("&Kasbar"), kasbar()->contextMenu());
 
-    setLockPopup( true );
-    tm->exec( p );
+    setLockPopup(true);
+    tm->exec(p);
     delete tm;
-    setLockPopup( false );
+    setLockPopup(false);
 }
-
-
-

@@ -25,22 +25,24 @@
 class QDropEvent;
 class KFileItem;
 
-class KonqSidebarDirTreeItem : public KonqSidebarTreeItem
-{
+class KonqSidebarDirTreeItem : public KonqSidebarTreeItem {
 public:
-    KonqSidebarDirTreeItem( KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem, KFileItem *fileItem );
-    KonqSidebarDirTreeItem( KonqSidebarTree *parent, KonqSidebarTreeTopLevelItem *topLevelItem, KFileItem *fileItem );
+    KonqSidebarDirTreeItem(KonqSidebarTreeItem *parentItem, KonqSidebarTreeTopLevelItem *topLevelItem, KFileItem *fileItem);
+    KonqSidebarDirTreeItem(KonqSidebarTree *parent, KonqSidebarTreeTopLevelItem *topLevelItem, KFileItem *fileItem);
     ~KonqSidebarDirTreeItem();
 
-    KFileItem *fileItem() const { return m_fileItem; }
+    KFileItem *fileItem() const
+    {
+        return m_fileItem;
+    }
 
-    virtual void setOpen( bool open );
+    virtual void setOpen(bool open);
 
-    virtual void paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment );
+    virtual void paintCell(QPainter *_painter, const QColorGroup &_cg, int _column, int _width, int _alignment);
 
-    virtual bool acceptsDrops( const QStrList & formats );
-    virtual void drop( QDropEvent * ev );
-    virtual QDragObject * dragObject( QWidget * parent, bool move = false );
+    virtual bool acceptsDrops(const QStrList &formats);
+    virtual void drop(QDropEvent *ev);
+    virtual QDragObject *dragObject(QWidget *parent, bool move = false);
 
     virtual void middleButtonClicked();
     virtual void rightButtonPressed();
@@ -49,8 +51,8 @@ public:
     virtual void trash();
     virtual void del();
     virtual void shred();
-    virtual void rename(); // start a rename operation
-    void rename( const QString & name ); // do the actual renaming
+    virtual void rename();            // start a rename operation
+    void rename(const QString &name); // do the actual renaming
 
     // The URL to open when this link is clicked
     virtual KURL externalURL() const;
@@ -66,7 +68,7 @@ public:
     QString id;
 
 private:
-    void delOperation( int method );
+    void delOperation(int method);
     KFileItem *m_fileItem;
 };
 

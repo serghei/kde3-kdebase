@@ -28,39 +28,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "unhidetrigger.h"
 #include "unhidetrigger.moc"
 
-UnhideTrigger* UnhideTrigger::the()
+UnhideTrigger *UnhideTrigger::the()
 {
-	static UnhideTrigger UnhideTrigger;
-	return &UnhideTrigger;
+    static UnhideTrigger UnhideTrigger;
+    return &UnhideTrigger;
 }
 
-UnhideTrigger::UnhideTrigger()
-	: _lastTrigger( None )
-	, _lastXineramaScreen( -1 )
-	, enabledCount( 0 )
+UnhideTrigger::UnhideTrigger() : _lastTrigger(None), _lastXineramaScreen(-1), enabledCount(0)
 {
-	_timer = new QTimer( this );
-	connect( _timer, SIGNAL(timeout()), SLOT(pollMouse()) );
+    _timer = new QTimer(this);
+    connect(_timer, SIGNAL(timeout()), SLOT(pollMouse()));
 }
 
-void UnhideTrigger::setEnabled( bool enable )
+void UnhideTrigger::setEnabled(bool enable)
 {
-	if( enable ) {
-		enabledCount++;
-	} else {
-		enabledCount--;
-	}
+    if(enable)
+    {
+        enabledCount++;
+    }
+    else
+    {
+        enabledCount--;
+    }
 
-	if ( enabledCount > 0 && !_timer->isActive() ) {
-		_timer->start( 100 );
-	} else if( enabledCount <= 0 ) {
-		_timer->stop();
-	}
+    if(enabledCount > 0 && !_timer->isActive())
+    {
+        _timer->start(100);
+    }
+    else if(enabledCount <= 0)
+    {
+        _timer->stop();
+    }
 }
 
 bool UnhideTrigger::isEnabled() const
 {
-	return _timer->isActive();
+    return _timer->isActive();
 }
 
 void UnhideTrigger::pollMouse()
@@ -69,13 +72,13 @@ void UnhideTrigger::pollMouse()
     for(int s = 0; s < QApplication::desktop()->numScreens(); s++)
     {
         QRect r = QApplication::desktop()->screenGeometry(s);
-        if (pos.x() == r.left())
+        if(pos.x() == r.left())
         {
-            if (pos.y() == r.top())
+            if(pos.y() == r.top())
             {
                 emitTrigger(TopLeft, s);
             }
-            else if (pos.y() == r.bottom())
+            else if(pos.y() == r.bottom())
             {
                 emitTrigger(BottomLeft, s);
             }
@@ -84,13 +87,13 @@ void UnhideTrigger::pollMouse()
                 emitTrigger(Left, s);
             }
         }
-        else if (pos.x() == r.right())
+        else if(pos.x() == r.right())
         {
-            if (pos.y() == r.top())
+            if(pos.y() == r.top())
             {
                 emitTrigger(TopRight, s);
             }
-            else if (pos.y() == r.bottom())
+            else if(pos.y() == r.bottom())
             {
                 emitTrigger(BottomRight, s);
             }
@@ -99,15 +102,15 @@ void UnhideTrigger::pollMouse()
                 emitTrigger(Right, s);
             }
         }
-        else if (pos.y() == r.top())
+        else if(pos.y() == r.top())
         {
             emitTrigger(Top, s);
         }
-        else if (pos.y() == r.bottom())
+        else if(pos.y() == r.bottom())
         {
             emitTrigger(Bottom, s);
         }
-        else if (_lastTrigger != None)
+        else if(_lastTrigger != None)
         {
             emitTrigger(None, -1);
         }
@@ -116,22 +119,21 @@ void UnhideTrigger::pollMouse()
 
 void UnhideTrigger::resetTriggerThrottle()
 {
-	_lastTrigger = None;
-	_lastXineramaScreen = -1;
+    _lastTrigger = None;
+    _lastXineramaScreen = -1;
 }
 
-void UnhideTrigger::emitTrigger( Trigger t, int XineramaScreen )
+void UnhideTrigger::emitTrigger(Trigger t, int XineramaScreen)
 {
-	if( _lastTrigger == t  && _lastXineramaScreen == XineramaScreen)
-		return;
+    if(_lastTrigger == t && _lastXineramaScreen == XineramaScreen)
+        return;
 
-	resetTriggerThrottle();
-	emit triggerUnhide( t, XineramaScreen );
+    resetTriggerThrottle();
+    emit triggerUnhide(t, XineramaScreen);
 }
 
-void UnhideTrigger::triggerAccepted( Trigger t, int XineramaScreen )
+void UnhideTrigger::triggerAccepted(Trigger t, int XineramaScreen)
 {
-	_lastTrigger = t;
-	_lastXineramaScreen = XineramaScreen;
+    _lastTrigger = t;
+    _lastXineramaScreen = XineramaScreen;
 }
-

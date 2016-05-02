@@ -34,49 +34,47 @@ class QLineEdit;
 class KLocale;
 class KLanguageCombo;
 
-class KLocaleConfigNumber : public QWidget
-{
-  Q_OBJECT
+class KLocaleConfigNumber : public QWidget {
+    Q_OBJECT
 
 public:
-  KLocaleConfigNumber( KLocale *_locale,
-		       QWidget *parent=0, const char *name=0);
-  virtual ~KLocaleConfigNumber( );
+    KLocaleConfigNumber(KLocale *_locale, QWidget *parent = 0, const char *name = 0);
+    virtual ~KLocaleConfigNumber();
 
-  void save();
+    void save();
 
 public slots:
-  /**
-   * Loads all settings from the current locale into the current widget.
-   */
-  void slotLocaleChanged();
-  /**
-   * Retranslate all objects owned by this object using the current locale.
-   */
-  void slotTranslate();
+    /**
+     * Loads all settings from the current locale into the current widget.
+     */
+    void slotLocaleChanged();
+    /**
+     * Retranslate all objects owned by this object using the current locale.
+     */
+    void slotTranslate();
 
 signals:
-  void localeChanged();
+    void localeChanged();
 
 private slots:
-  // Numbers
-  void slotMonPosSignChanged(const QString &t);
-  void slotMonNegSignChanged(const QString &t);
-  void slotDecSymChanged(const QString &t);
-  void slotThoSepChanged(const QString &t);
+    // Numbers
+    void slotMonPosSignChanged(const QString &t);
+    void slotMonNegSignChanged(const QString &t);
+    void slotDecSymChanged(const QString &t);
+    void slotThoSepChanged(const QString &t);
 
 private:
-  KLocale *m_locale;
+    KLocale *m_locale;
 
-  // Numbers
-  QLabel *m_labDecSym;
-  QLineEdit *m_edDecSym;
-  QLabel *m_labThoSep;
-  QLineEdit *m_edThoSep;
-  QLabel *m_labMonPosSign;
-  QLineEdit *m_edMonPosSign;
-  QLabel *m_labMonNegSign;
-  QLineEdit *m_edMonNegSign;
+    // Numbers
+    QLabel *m_labDecSym;
+    QLineEdit *m_edDecSym;
+    QLabel *m_labThoSep;
+    QLineEdit *m_edThoSep;
+    QLabel *m_labMonPosSign;
+    QLineEdit *m_edMonPosSign;
+    QLabel *m_labMonNegSign;
+    QLineEdit *m_edMonNegSign;
 };
 
 #endif

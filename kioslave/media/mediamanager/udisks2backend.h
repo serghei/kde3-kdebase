@@ -23,7 +23,7 @@
 
 
 namespace UDisks2 {
-    class ObjectManager;
+class ObjectManager;
 }
 
 

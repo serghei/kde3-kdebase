@@ -34,27 +34,23 @@
 class KInstance;
 class KAboutData;
 
-namespace KFI
-{
+namespace KFI {
 
-class CFontViewPartFactory : public KLibFactory
-{
+class CFontViewPartFactory : public KLibFactory {
     Q_OBJECT
 
-    public:
-
+public:
     CFontViewPartFactory();
     virtual ~CFontViewPartFactory();
-    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *classname = "QObject", const QStringList &args = QStringList());
+    virtual QObject *createObject(QObject *parent = 0, const char *name = 0, const char *classname = "QObject",
+                                  const QStringList &args = QStringList());
 
-    static KInstance * instance();
+    static KInstance *instance();
 
-    private:
-
-    static KInstance  *theirInstance;
+private:
+    static KInstance *theirInstance;
     static KAboutData *theirAbout;
 };
-
 }
 
 #endif

@@ -20,7 +20,7 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
- 
+
 #include <qcolor.h>
 #include <kdebug.h>
 #include "kdesktopshadowsettings.h"
@@ -28,10 +28,7 @@
 
 //#define DEBUG
 
-KDesktopShadowSettings::KDesktopShadowSettings(KConfig *cfg) : 
-    KShadowSettings(),
-    m_textColor(QColor(255,255,255)),
-    _UID(0L)
+KDesktopShadowSettings::KDesktopShadowSettings(KConfig *cfg) : KShadowSettings(), m_textColor(QColor(255, 255, 255)), _UID(0L)
 {
     setConfig(cfg);
 }
@@ -45,10 +42,10 @@ KDesktopShadowSettings::~KDesktopShadowSettings()
  */
 void KDesktopShadowSettings::setUID(unsigned long val)
 {
-    if (val == 0L || val == _UID)
-	_UID++;
+    if(val == 0L || val == _UID)
+        _UID++;
     else
-	_UID = val;
+        _UID = val;
 }
 
 unsigned long KDesktopShadowSettings::UID()
@@ -63,8 +60,8 @@ void KDesktopShadowSettings::setConfig(KConfig *val)
 {
     config = val;
 
-    if (val == NULL)
-	return;
+    if(val == NULL)
+        return;
 
     // increment the UID so the items will rebuild their
     // pixmaps
@@ -80,9 +77,9 @@ void KDesktopShadowSettings::setConfig(KConfig *val)
     kdDebug(1204) << "setConfig()" << endl;
 #endif
 
-    if (config->hasKey(SHADOW_CONFIG_ENTRY))
-	fromString(config->readEntry(SHADOW_CONFIG_ENTRY));
-    
+    if(config->hasKey(SHADOW_CONFIG_ENTRY))
+        fromString(config->readEntry(SHADOW_CONFIG_ENTRY));
+
 #ifdef DEBUG
     // debug
     kdDebug(1204) << "           \t" << SHADOW_TEXT_COLOR << "=" << m_textColor << endl;

@@ -35,27 +35,30 @@ class KStandardDirs;
  * rendering is finished. It also has support for preview images, like
  * the monitor in kcmdisplay.
  */
-class KBackgroundRenderer:
-	public QObject,
-	public KBackgroundSettings
-{
+class KBackgroundRenderer : public QObject, public KBackgroundSettings {
     Q_OBJECT
 
 public:
-    KBackgroundRenderer(int desk, int screen, bool drawBackgroundPerScreen, KConfig *config=0);
+    KBackgroundRenderer(int desk, int screen, bool drawBackgroundPerScreen, KConfig *config = 0);
     ~KBackgroundRenderer();
-    
-    void load(int desk, int screen, bool drawBackgroundPerScreen, bool reparseConfig=true);
+
+    void load(int desk, int screen, bool drawBackgroundPerScreen, bool reparseConfig = true);
 
     void setPreview(const QSize &size);
     void setSize(const QSize &size);
-    
+
     QPixmap pixmap();
     QImage image();
-    bool isActive() { return m_State & Rendering; }
+    bool isActive()
+    {
+        return m_State & Rendering;
+    }
     void cleanup();
     void saveCacheFile();
-    void enableTiling( bool enable ) { m_TilingEnabled = enable; }
+    void enableTiling(bool enable)
+    {
+        m_TilingEnabled = enable;
+    }
 
 public slots:
     void start(bool enableBusyCursor = false);
@@ -64,8 +67,8 @@ public slots:
 
 signals:
     void imageDone(int desk, int screen);
-    void programFailure(int desk, int exitstatus); //Guaranteed either programFailure or 
-    void programSuccess(int desk);                //programSuccess is emitted after imageDone
+    void programFailure(int desk, int exitstatus); // Guaranteed either programFailure or
+    void programSuccess(int desk);                 // programSuccess is emitted after imageDone
 
 private slots:
     void slotBackgroundDone(KProcess *);
@@ -73,28 +76,40 @@ private slots:
     void done();
 
 private:
-    enum { Error, Wait, WaitUpdate, Done };
-    enum { Rendering = 1, InitCheck = 2,
-	BackgroundStarted = 4, BackgroundDone = 8,
-	WallpaperStarted = 0x10, WallpaperDone = 0x20,
-	AllDone = 0x40 };
+    enum
+    {
+        Error,
+        Wait,
+        WaitUpdate,
+        Done
+    };
+    enum
+    {
+        Rendering = 1,
+        InitCheck = 2,
+        BackgroundStarted = 4,
+        BackgroundDone = 8,
+        WallpaperStarted = 0x10,
+        WallpaperDone = 0x20,
+        AllDone = 0x40
+    };
 
     QString buildCommand();
     void createTempFile();
-    void tile(QImage& dst, QRect rect, const QImage& src);
-    void blend(QImage& dst, QRect dr, const QImage& src, QPoint soffs = QPoint(0, 0), int blendFactor=100);
+    void tile(QImage &dst, QRect rect, const QImage &src);
+    void blend(QImage &dst, QRect dr, const QImage &src, QPoint soffs = QPoint(0, 0), int blendFactor = 100);
 
     void wallpaperBlend();
     void fastWallpaperBlend();
     void fullWallpaperBlend();
 
-    int doBackground(bool quit=false);
-    int doWallpaper(bool quit=false);
+    int doBackground(bool quit = false);
+    int doWallpaper(bool quit = false);
     void setBusyCursor(bool isBusy);
     QString cacheFileName();
     bool useCacheFile() const;
     bool canTile() const;
-    
+
     bool m_isBusyCursor;
     bool m_enableBusyCursor;
     bool m_bPreview;
@@ -102,7 +117,7 @@ private:
     bool m_Cached;
     bool m_TilingEnabled;
 
-    KTempFile* m_Tempfile;
+    KTempFile *m_Tempfile;
     QSize m_Size, m_rSize;
     QRect m_WallpaperRect;
     QImage m_Image, m_Background, m_Wallpaper;
@@ -111,7 +126,6 @@ private:
 
     KStandardDirs *m_pDirs;
     KShellProcess *m_pProc;
-    
 };
 
 /**
@@ -120,37 +134,39 @@ private:
  * images. Usage is similar to KBackgroundRenderer: connect to the imageDone
  * signal.
  */
-class KVirtualBGRenderer : public QObject
-{
+class KVirtualBGRenderer : public QObject {
     Q_OBJECT
 public:
-    KVirtualBGRenderer(int desk, KConfig *config=0l);
+    KVirtualBGRenderer(int desk, KConfig *config = 0l);
     ~KVirtualBGRenderer();
-    
-    KBackgroundRenderer * renderer(unsigned screen);
-    unsigned numRenderers() const { return m_numRenderers; }
+
+    KBackgroundRenderer *renderer(unsigned screen);
+    unsigned numRenderers() const
+    {
+        return m_numRenderers;
+    }
 
     QPixmap pixmap();
-    
-    void setPreview(const QSize & size);
-    
+
+    void setPreview(const QSize &size);
+
     bool needProgramUpdate();
     void programUpdate();
-    
+
     bool needWallpaperChange();
     void changeWallpaper();
-    
+
     int hash();
     bool isActive();
-    void setEnabled( bool enable );
+    void setEnabled(bool enable);
     void desktopResized();
-    
-    void load(int desk, bool reparseConfig=true);
+
+    void load(int desk, bool reparseConfig = true);
     void start();
     void stop();
     void cleanup();
     void saveCacheFile();
-    void enableTiling( bool enable );
+    void enableTiling(bool enable);
 
 signals:
     void imageDone(int desk);
@@ -161,7 +177,7 @@ private slots:
 private:
     QSize renderSize(int screen); // the size the renderer should be
     void initRenderers();
-    
+
     KConfig *m_pConfig;
     float m_scaleX;
     float m_scaleY;
@@ -171,12 +187,11 @@ private:
     bool m_bCommonScreen;
     bool m_bDeleteConfig;
     QSize m_size;
-    
-    QMemArray<bool> m_bFinished;
-    QPtrVector<KBackgroundRenderer> m_renderer;
+
+    QMemArray< bool > m_bFinished;
+    QPtrVector< KBackgroundRenderer > m_renderer;
     QPixmap *m_pPixmap;
 };
 
 
 #endif // BGRender_h_Included
-

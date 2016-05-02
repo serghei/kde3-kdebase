@@ -25,33 +25,30 @@
 class KFontRequester;
 class QCheckBox;
 
-class KDMFontWidget : public QWidget
-{
-	Q_OBJECT
+class KDMFontWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	KDMFontWidget(QWidget *parent=0, const char *name=0);
+    KDMFontWidget(QWidget *parent = 0, const char *name = 0);
 
-        void load();
-        void save();
-	void defaults();
-	void makeReadOnly();
+    void load();
+    void save();
+    void defaults();
+    void makeReadOnly();
 
 signals:
-	void changed( bool state );
+    void changed(bool state);
 
 protected slots:
     void configChanged();
     void set_def();
 
 private:
-	QCheckBox	*aacb;
-        KFontRequester *greetingFontChooser;
-        KFontRequester *failFontChooser;
-        KFontRequester *stdFontChooser;
+    QCheckBox *aacb;
+    KFontRequester *greetingFontChooser;
+    KFontRequester *failFontChooser;
+    KFontRequester *stdFontChooser;
 };
 
 
 #endif
-
-

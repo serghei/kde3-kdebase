@@ -27,14 +27,13 @@
 #include <qstringlist.h>
 #include <qdatetime.h>
 
-typedef KGenericFactory<KTrashPlugin> TrashFactory;
+typedef KGenericFactory< KTrashPlugin > TrashFactory;
 
 K_EXPORT_COMPONENT_FACTORY(kfile_trash, TrashFactory("kfile_trash"))
 
-KTrashPlugin::KTrashPlugin(QObject *parent, const char *name,
-        const QStringList &args) : KFilePlugin(parent, name, args)
+KTrashPlugin::KTrashPlugin(QObject *parent, const char *name, const QStringList &args) : KFilePlugin(parent, name, args)
 {
-    KGlobal::locale()->insertCatalogue( "kio_trash" );
+    KGlobal::locale()->insertCatalogue("kio_trash");
 
     kdDebug(7034) << "Trash file meta info plugin\n";
 
@@ -44,43 +43,41 @@ KTrashPlugin::KTrashPlugin(QObject *parent, const char *name,
     (void)impl.init();
 }
 
-void KTrashPlugin::makeMimeTypeInfo(const QString& mimeType)
+void KTrashPlugin::makeMimeTypeInfo(const QString &mimeType)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( mimeType );
+    KFileMimeTypeInfo *info = addMimeTypeInfo(mimeType);
 
-    KFileMimeTypeInfo::GroupInfo* group =
-            addGroupInfo(info, "General", i18n("General"));
+    KFileMimeTypeInfo::GroupInfo *group = addGroupInfo(info, "General", i18n("General"));
 
-    KFileMimeTypeInfo::ItemInfo* item;
+    KFileMimeTypeInfo::ItemInfo *item;
     item = addItemInfo(group, "OriginalPath", i18n("Original Path"), QVariant::String);
     item = addItemInfo(group, "DateOfDeletion", i18n("Date of Deletion"), QVariant::DateTime);
 }
 
-bool KTrashPlugin::readInfo(KFileMetaInfo& info, uint)
+bool KTrashPlugin::readInfo(KFileMetaInfo &info, uint)
 {
     KURL url = info.url();
 
-    if ( url.protocol()=="system"
-      && url.path().startsWith("/trash") )
+    if(url.protocol() == "system" && url.path().startsWith("/trash"))
     {
         QString path = url.path();
         path.remove(0, 6);
         url.setProtocol("trash");
         url.setPath(path);
     }
-    
-    //kdDebug() << k_funcinfo << info.url() << endl;
-    if ( url.protocol() != "trash" )
+
+    // kdDebug() << k_funcinfo << info.url() << endl;
+    if(url.protocol() != "trash")
         return false;
 
     int trashId;
     QString fileId;
     QString relativePath;
-    if ( !TrashImpl::parseURL( url, trashId, fileId, relativePath ) )
+    if(!TrashImpl::parseURL(url, trashId, fileId, relativePath))
         return false;
 
     TrashImpl::TrashedFileInfo trashInfo;
-    if ( !impl.infoForFile( trashId, fileId, trashInfo ) )
+    if(!impl.infoForFile(trashId, fileId, trashInfo))
         return false;
 
     KFileMetaInfoGroup group = appendGroup(info, "General");

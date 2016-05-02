@@ -57,19 +57,17 @@
 
 #include "kicker.moc"
 
-Kicker* Kicker::the() { return static_cast<Kicker*>(kapp); }
+Kicker *Kicker::the()
+{
+    return static_cast< Kicker * >(kapp);
+}
 
-Kicker::Kicker()
-    : KUniqueApplication(),
-      keys(0),
-      m_kwinModule(0),
-      m_configDialog(0),
-      m_canAddContainers(true)
+Kicker::Kicker() : KUniqueApplication(), keys(0), m_kwinModule(0), m_configDialog(0), m_canAddContainers(true)
 {
     // initialize the configuration object
     KickerSettings::instance(instanceName() + "rc");
 
-    if (KCrash::crashHandler() == 0 )
+    if(KCrash::crashHandler() == 0)
     {
         // this means we've most likely crashed once. so let's see if we
         // stay up for more than 2 minutes time, and if so reset the
@@ -85,7 +83,7 @@ Kicker::Kicker()
     }
 
     // Make kicker immutable if configuration modules have been marked immutable
-    if (isKioskImmutable() && kapp->authorizeControlModules(Kicker::configModules(true)).isEmpty())
+    if(isKioskImmutable() && kapp->authorizeControlModules(Kicker::configModules(true)).isEmpty())
     {
         config()->setReadOnly(true);
         config()->reparseConfiguration();
@@ -100,7 +98,7 @@ Kicker::Kicker()
     KGlobal::dirs()->addResourceType("specialbuttons", dataPathBase + "menuext");
     KGlobal::dirs()->addResourceType("applets", dataPathBase + "applets");
     KGlobal::dirs()->addResourceType("tiles", dataPathBase + "tiles");
-    KGlobal::dirs()->addResourceType("extensions", dataPathBase +  "extensions");
+    KGlobal::dirs()->addResourceType("extensions", dataPathBase + "extensions");
 
     KImageIO::registerFormats();
 
@@ -112,7 +110,7 @@ Kicker::Kicker()
 
     // initialize our keys
     // note that this creates the KMenu by calling MenuManager::the()
-    keys = new KGlobalAccel( this );
+    keys = new KGlobalAccel(this);
 #define KICKER_ALL_BINDINGS
 #include "kickerbindings.cpp"
     keys->readSettings();
@@ -125,15 +123,15 @@ Kicker::Kicker()
     connect(this, SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
     connect(this, SIGNAL(kdisplayStyleChanged()), SLOT(slotStyleChanged()));
 
-#if (QT_VERSION-0 >= 0x030200) // XRANDR support
+#if(QT_VERSION - 0 >= 0x030200) // XRANDR support
     connect(desktop(), SIGNAL(resized(int)), SLOT(slotDesktopResized()));
 #endif
 
     // the panels, aka extensions
     QTimer::singleShot(0, ExtensionManager::the(), SLOT(initialize()));
 
-    connect(ExtensionManager::the(), SIGNAL(desktopIconsAreaChanged(const QRect &, int)),
-            this, SLOT(slotDesktopIconsAreaChanged(const QRect &, int)));
+    connect(ExtensionManager::the(), SIGNAL(desktopIconsAreaChanged(const QRect &, int)), this,
+            SLOT(slotDesktopIconsAreaChanged(const QRect &, int)));
 }
 
 Kicker::~Kicker()
@@ -185,7 +183,7 @@ bool Kicker::desktopShowing()
 
 void Kicker::slotSettingsChanged(int category)
 {
-    if (category == (int)KApplication::SETTINGS_SHORTCUTS)
+    if(category == (int)KApplication::SETTINGS_SHORTCUTS)
     {
         keys->readSettings();
         keys->updateConnections();
@@ -195,19 +193,18 @@ void Kicker::slotSettingsChanged(int category)
 void Kicker::paletteChanged()
 {
     KConfigGroup c(KGlobal::config(), "General");
-    KickerSettings::setTintColor(c.readColorEntry("TintColor",
-                                           &palette().active().mid()));
+    KickerSettings::setTintColor(c.readColorEntry("TintColor", &palette().active().mid()));
     KickerSettings::self()->writeConfig();
 }
 
 void Kicker::slotStyleChanged()
 {
-	restart();
+    restart();
 }
 
 bool Kicker::highlightMenuItem(const QString &menuId)
 {
-    return MenuManager::the()->kmenu()->highlightMenuItem( menuId );
+    return MenuManager::the()->kmenu()->highlightMenuItem(menuId);
 }
 
 void Kicker::showKMenu()
@@ -224,7 +221,7 @@ void Kicker::configure()
 {
     static bool notFirstConfig = false;
 
-    KConfig* c = KGlobal::config();
+    KConfig *c = KGlobal::config();
     c->reparseConfiguration();
     c->setGroup("General");
     m_canAddContainers = !c->entryIsImmutable("Applets2");
@@ -233,7 +230,7 @@ void Kicker::configure()
 
     QToolTip::setGloballyEnabled(KickerSettings::showToolTips());
 
-    if (notFirstConfig)
+    if(notFirstConfig)
     {
         emit configurationChanged();
         {
@@ -243,7 +240,7 @@ void Kicker::configure()
     }
 
     notFirstConfig = true;
-//    kdDebug(1210) << "tooltips " << ( _showToolTips ? "enabled" : "disabled" ) << endl;
+    //    kdDebug(1210) << "tooltips " << ( _showToolTips ? "enabled" : "disabled" ) << endl;
 }
 
 void Kicker::quit()
@@ -264,7 +261,7 @@ void Kicker::slotRestart()
     // dtor's to this for us.
     PluginManager::the()->clearUntrustedLists();
 
-    char ** o_argv = new char*[2];
+    char **o_argv = new char *[2];
     o_argv[0] = strdup("kicker");
     o_argv[1] = 0L;
     execv(QFile::encodeName(locate("exe", "kdeinit_wrapper")), o_argv);
@@ -282,16 +279,16 @@ bool Kicker::isKioskImmutable() const
     return config()->isImmutable();
 }
 
-void Kicker::addExtension( const QString &desktopFile )
+void Kicker::addExtension(const QString &desktopFile)
 {
-   ExtensionManager::the()->addExtension( desktopFile );
+    ExtensionManager::the()->addExtension(desktopFile);
 }
 
 QStringList Kicker::configModules(bool controlCenter)
 {
     QStringList args;
 
-    if (controlCenter)
+    if(controlCenter)
     {
         args << "kde-panel.desktop";
     }
@@ -317,23 +314,23 @@ void Kicker::setInsertionPoint(const QPoint &p)
 }
 
 
-void Kicker::showConfig(const QString& configPath, int page)
+void Kicker::showConfig(const QString &configPath, int page)
 {
-    if (!m_configDialog)
+    if(!m_configDialog)
     {
-         m_configDialog = new KCMultiDialog(0);
+        m_configDialog = new KCMultiDialog(0);
 
-         QStringList modules = configModules(false);
-         QStringList::ConstIterator end(modules.end());
-         for (QStringList::ConstIterator it = modules.begin(); it != end; ++it)
-         {
+        QStringList modules = configModules(false);
+        QStringList::ConstIterator end(modules.end());
+        for(QStringList::ConstIterator it = modules.begin(); it != end; ++it)
+        {
             m_configDialog->addModule(*it);
-         }
+        }
 
-         connect(m_configDialog, SIGNAL(finished()), SLOT(configDialogFinished()));
+        connect(m_configDialog, SIGNAL(finished()), SLOT(configDialogFinished()));
     }
 
-    if (!configPath.isEmpty())
+    if(!configPath.isEmpty())
     {
         QByteArray data;
         QDataStream stream(data, IO_WriteOnly);
@@ -344,7 +341,7 @@ void Kicker::showConfig(const QString& configPath, int page)
     KWin::setOnDesktop(m_configDialog->winId(), KWin::currentDesktop());
     m_configDialog->show();
     m_configDialog->raise();
-    if (page > -1)
+    if(page > -1)
     {
         m_configDialog->showPage(page);
     }
@@ -376,9 +373,9 @@ void Kicker::clearQuickStartMenu()
     MenuManager::the()->kmenu()->clearRecentMenuItems();
 }
 
-KWinModule* Kicker::kwinModule()
+KWinModule *Kicker::kwinModule()
 {
-    if (!m_kwinModule)
+    if(!m_kwinModule)
     {
         m_kwinModule = new KWinModule();
     }

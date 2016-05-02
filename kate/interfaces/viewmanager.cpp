@@ -26,48 +26,44 @@
 
 #include "../app/kateviewmanager.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivateViewManager
-  {
-  public:
-    PrivateViewManager ()
+class PrivateViewManager {
+public:
+    PrivateViewManager()
     {
     }
 
-    ~PrivateViewManager ()
-    {    
-    }          
-        
-    KateViewManager *viewMan; 
-  };
-            
-ViewManager::ViewManager (void *viewManager) : QObject ((KateViewManager*) viewManager)
+    ~PrivateViewManager()
+    {
+    }
+
+    KateViewManager *viewMan;
+};
+
+ViewManager::ViewManager(void *viewManager) : QObject((KateViewManager *)viewManager)
 {
-  d = new PrivateViewManager ();
-  d->viewMan = (KateViewManager*) viewManager;
+    d = new PrivateViewManager();
+    d->viewMan = (KateViewManager *)viewManager;
 }
 
-ViewManager::~ViewManager ()
+ViewManager::~ViewManager()
 {
-  delete d;
+    delete d;
 }
 
 View *ViewManager::activeView()
 {
-  return d->viewMan->activeView();
+    return d->viewMan->activeView();
 }
 
-void ViewManager::activateView ( uint documentNumber )
+void ViewManager::activateView(uint documentNumber)
 {
-  d->viewMan->activateView( documentNumber );
+    d->viewMan->activateView(documentNumber);
 }
 
-void ViewManager::openURL (const KURL &url)
+void ViewManager::openURL(const KURL &url)
 {
-  d->viewMan->openURL (url, QString::null, true);
+    d->viewMan->openURL(url, QString::null, true);
 }
-
 }
-

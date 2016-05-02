@@ -26,16 +26,14 @@
 
 class KateMainWindow;
 
-class KateMainWindowDCOPIface : public DCOPObject
-{
-  K_DCOP
+class KateMainWindowDCOPIface : public DCOPObject {
+    K_DCOP
 
-  public:
-    KateMainWindowDCOPIface (KateMainWindow *w);
+public:
+    KateMainWindowDCOPIface(KateMainWindow *w);
 
-  k_dcop:
+    k_dcop :
 
-  private:
-    KateMainWindow *m_w;
+        private : KateMainWindow *m_w;
 };
 #endif

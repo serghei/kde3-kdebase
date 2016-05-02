@@ -26,61 +26,59 @@
 
 #include <kdemacros.h>
 
-class KDE_EXPORT SimpleButton : public QButton
-{
+class KDE_EXPORT SimpleButton : public QButton {
     Q_OBJECT
 
-    public:
-        SimpleButton(QWidget *parent, const char *name = 0);
-        void setPixmap(const QPixmap &pix);
-        void setOrientation(Qt::Orientation orientaton);
-        QSize sizeHint() const;
-        QSize minimumSizeHint() const;
+public:
+    SimpleButton(QWidget *parent, const char *name = 0);
+    void setPixmap(const QPixmap &pix);
+    void setOrientation(Qt::Orientation orientaton);
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
 
-    protected:
-        void drawButton( QPainter *p );
-        void drawButtonLabel( QPainter *p );
-        void generateIcons();
+protected:
+    void drawButton(QPainter *p);
+    void drawButtonLabel(QPainter *p);
+    void generateIcons();
 
-        void enterEvent( QEvent *e );
-        void leaveEvent( QEvent *e );
-        void resizeEvent( QResizeEvent *e );
+    void enterEvent(QEvent *e);
+    void leaveEvent(QEvent *e);
+    void resizeEvent(QResizeEvent *e);
 
-    protected slots:
-        virtual void slotSettingsChanged( int category );
-        virtual void slotIconChanged( int group );
+protected slots:
+    virtual void slotSettingsChanged(int category);
+    virtual void slotIconChanged(int group);
 
-    private:
-        bool m_highlight;
-        QPixmap m_normalIcon;
-        QPixmap m_activeIcon;
-        QPixmap m_disabledIcon;
-        Qt::Orientation m_orientation;
-        class SimpleButtonPrivate;
-        SimpleButtonPrivate* d;
+private:
+    bool m_highlight;
+    QPixmap m_normalIcon;
+    QPixmap m_activeIcon;
+    QPixmap m_disabledIcon;
+    Qt::Orientation m_orientation;
+    class SimpleButtonPrivate;
+    SimpleButtonPrivate *d;
 };
 
-class KDE_EXPORT SimpleArrowButton: public SimpleButton
-{
+class KDE_EXPORT SimpleArrowButton : public SimpleButton {
     Q_OBJECT
-    
-    public:
-        SimpleArrowButton(QWidget *parent = 0, Qt::ArrowType arrow = Qt::UpArrow, const char *name = 0);
-        virtual ~SimpleArrowButton() {};
-        QSize sizeHint() const;
-    
-    protected:
-        virtual void enterEvent( QEvent *e );
-        virtual void leaveEvent( QEvent *e );
-        virtual void drawButton(QPainter *p);
-        Qt::ArrowType arrowType() const;
-    
-    public slots:
-        void setArrowType(Qt::ArrowType a);
-    
-    private:
-        Qt::ArrowType _arrow;
-        bool _inside;
+
+public:
+    SimpleArrowButton(QWidget *parent = 0, Qt::ArrowType arrow = Qt::UpArrow, const char *name = 0);
+    virtual ~SimpleArrowButton(){};
+    QSize sizeHint() const;
+
+protected:
+    virtual void enterEvent(QEvent *e);
+    virtual void leaveEvent(QEvent *e);
+    virtual void drawButton(QPainter *p);
+    Qt::ArrowType arrowType() const;
+
+public slots:
+    void setArrowType(Qt::ArrowType a);
+
+private:
+    Qt::ArrowType _arrow;
+    bool _inside;
 };
 
 

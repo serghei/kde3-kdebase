@@ -31,8 +31,8 @@
 
 #include "accessibility.moc"
 
-typedef KGenericFactory<AccessibilityConfig, QWidget> AccessibilityFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_accessibility, AccessibilityFactory("kcmaccessibility") )
+typedef KGenericFactory< AccessibilityConfig, QWidget > AccessibilityFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_accessibility, AccessibilityFactory("kcmaccessibility"))
 
 /**
  * This function checks if the kaccess daemon needs to be run
@@ -53,89 +53,89 @@ K_EXPORT_COMPONENT_FACTORY( kcm_accessibility, AccessibilityFactory("kcmaccessib
 //    return false; // don't need it
 // }
 
-AccessibilityConfig::AccessibilityConfig(QWidget *parent, const char *name, const QStringList &)
-  : AccessibilityConfigWidget( parent, name){
+AccessibilityConfig::AccessibilityConfig(QWidget *parent, const char *name, const QStringList &) : AccessibilityConfigWidget(parent, name)
+{
 
-   KAboutData *about =
-   new KAboutData(I18N_NOOP("kcmaccessiblity"), I18N_NOOP("KDE Accessibility Tool"),
-                  0, 0, KAboutData::License_GPL,
-                  I18N_NOOP("(c) 2000, Matthias Hoelzer-Kluepfel"));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmaccessiblity"), I18N_NOOP("KDE Accessibility Tool"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2000, Matthias Hoelzer-Kluepfel"));
 
-   about->addAuthor("Matthias Hoelzer-Kluepfel", I18N_NOOP("Author") , "hoelzer@kde.org");
-   about->addAuthor("José Pablo Ezequiel Fernández", I18N_NOOP("Author") , "pupeno@kde.org");
-   setAboutData( about );
+    about->addAuthor("Matthias Hoelzer-Kluepfel", I18N_NOOP("Author"), "hoelzer@kde.org");
+    about->addAuthor("José Pablo Ezequiel Fernández", I18N_NOOP("Author"), "pupeno@kde.org");
+    setAboutData(about);
 
-   kdDebug() << "Running: AccessibilityConfig::AccessibilityConfig(QWidget *parent, const char *name, const QStringList &)" << endl;
-   // TODO: set the KURL Dialog to open just audio files
-   connect( mainTab, SIGNAL(currentChanged(QWidget*)), this, SIGNAL(quickHelpChanged()) );
-   load();
+    kdDebug() << "Running: AccessibilityConfig::AccessibilityConfig(QWidget *parent, const char *name, const QStringList &)" << endl;
+    // TODO: set the KURL Dialog to open just audio files
+    connect(mainTab, SIGNAL(currentChanged(QWidget *)), this, SIGNAL(quickHelpChanged()));
+    load();
 }
 
 
-AccessibilityConfig::~AccessibilityConfig(){
-   kdDebug() << "Running: AccessibilityConfig::~AccessibilityConfig()" << endl;
+AccessibilityConfig::~AccessibilityConfig()
+{
+    kdDebug() << "Running: AccessibilityConfig::~AccessibilityConfig()" << endl;
 }
 
 void AccessibilityConfig::load()
 {
-   load( false );
+    load(false);
 }
 
-void AccessibilityConfig::load( bool useDefaults )
+void AccessibilityConfig::load(bool useDefaults)
 {
-   kdDebug() << "Running: AccessibilityConfig::load()" << endl;
-   
-   KConfig *bell = new KConfig("bellrc", true);
-  
-   bell->setReadDefaults( useDefaults );
+    kdDebug() << "Running: AccessibilityConfig::load()" << endl;
 
-   bell->setGroup("General");
-   systemBell->setChecked(bell->readBoolEntry("SystemBell", false));
-   customBell->setChecked(bell->readBoolEntry("CustomBell", false));
-   visibleBell->setChecked(bell->readBoolEntry("VisibleBell", false));
-   
-   bell->setGroup("CustomBell");
-   soundToPlay->setURL(bell->readPathEntry("Sound", ""));
+    KConfig *bell = new KConfig("bellrc", true);
 
-   bell->setGroup("Visible");
-   invertScreen->setChecked(bell->readBoolEntry("Invert", true));
-   flashScreen->setChecked(bell->readBoolEntry("Flash", false));
-   // TODO: There has to be a cleaner way.
-   QColor *redColor = new QColor(Qt::red);
-   flashScreenColor->setColor(bell->readColorEntry("FlashColor", redColor));
-   delete redColor;
-   visibleBellDuration->setValue(bell->readNumEntry("Duration", 500));
-  
-   delete bell;
-   emit changed( useDefaults );
+    bell->setReadDefaults(useDefaults);
+
+    bell->setGroup("General");
+    systemBell->setChecked(bell->readBoolEntry("SystemBell", false));
+    customBell->setChecked(bell->readBoolEntry("CustomBell", false));
+    visibleBell->setChecked(bell->readBoolEntry("VisibleBell", false));
+
+    bell->setGroup("CustomBell");
+    soundToPlay->setURL(bell->readPathEntry("Sound", ""));
+
+    bell->setGroup("Visible");
+    invertScreen->setChecked(bell->readBoolEntry("Invert", true));
+    flashScreen->setChecked(bell->readBoolEntry("Flash", false));
+    // TODO: There has to be a cleaner way.
+    QColor *redColor = new QColor(Qt::red);
+    flashScreenColor->setColor(bell->readColorEntry("FlashColor", redColor));
+    delete redColor;
+    visibleBellDuration->setValue(bell->readNumEntry("Duration", 500));
+
+    delete bell;
+    emit changed(useDefaults);
 }
 
 
-void AccessibilityConfig::save(){
-   kdDebug() << "Running: AccessibilityConfig::save()" << endl;
-   
-   KConfig *bell = new KConfig("bellrc");
-   
-   bell->setGroup("General");
-   bell->writeEntry("SystemBell", systemBell->isChecked());
-   bell->writeEntry("CustomBell", customBell->isChecked());
-   bell->writeEntry("VisibleBell", visibleBell->isChecked());
-   
-   bell->setGroup("CustomBell");
-   bell->writePathEntry("Sound", soundToPlay->url());
+void AccessibilityConfig::save()
+{
+    kdDebug() << "Running: AccessibilityConfig::save()" << endl;
 
-   bell->setGroup("Visible");
-   bell->writeEntry("Invert", invertScreen->isChecked());
-   bell->writeEntry("Flash", flashScreen->isChecked());
-   bell->writeEntry("FlashColor", flashScreenColor->color());
-   bell->writeEntry("Duration", visibleBellDuration->value());
-   
-   bell->sync();
-   delete bell;
+    KConfig *bell = new KConfig("bellrc");
+
+    bell->setGroup("General");
+    bell->writeEntry("SystemBell", systemBell->isChecked());
+    bell->writeEntry("CustomBell", customBell->isChecked());
+    bell->writeEntry("VisibleBell", visibleBell->isChecked());
+
+    bell->setGroup("CustomBell");
+    bell->writePathEntry("Sound", soundToPlay->url());
+
+    bell->setGroup("Visible");
+    bell->writeEntry("Invert", invertScreen->isChecked());
+    bell->writeEntry("Flash", flashScreen->isChecked());
+    bell->writeEntry("FlashColor", flashScreenColor->color());
+    bell->writeEntry("Duration", visibleBellDuration->value());
+
+    bell->sync();
+    delete bell;
 }
 
 
 void AccessibilityConfig::defaults()
 {
-   load( true );
+    load(true);
 }

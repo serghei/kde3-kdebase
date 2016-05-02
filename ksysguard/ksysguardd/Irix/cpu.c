@@ -1,9 +1,9 @@
 /*
     KSysGuard, the KDE System Guard
 
-	Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
-	
-	Irix support by Carsten Kroll <ckroll@pinnaclesys.com>
+    Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
+
+    Irix support by Carsten Kroll <ckroll@pinnaclesys.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,154 +36,147 @@
 
 long percentages(int cnt, int *out, long *new, long *old, long *diffs);
 
-static int nCPUs=0;
+static int nCPUs = 0;
 
 
 long cp_time[CPUSTATES];
 long cp_old[CPUSTATES];
 long cp_diff[CPUSTATES];
-int  cpu_states[CPUSTATES];
+int cpu_states[CPUSTATES];
 
-struct cpu_info{
-	long cp_time[CPUSTATES];
-	long cp_old[CPUSTATES];
-	long cp_diff[CPUSTATES];
-	int  cpu_states[CPUSTATES];
+struct cpu_info
+{
+    long cp_time[CPUSTATES];
+    long cp_old[CPUSTATES];
+    long cp_diff[CPUSTATES];
+    int cpu_states[CPUSTATES];
 };
 
 static struct cpu_info *g_ci;
 
 /* returns the requested cpu number starting at 0*/
-int getID(const char *cmd){
-	int id;
-	sscanf(cmd + 7, "%d", &id);
-	return id-1;
+int getID(const char *cmd)
+{
+    int id;
+    sscanf(cmd + 7, "%d", &id);
+    return id - 1;
 }
 
-void
-initCpuInfo(struct SensorModul* sm)
+void initCpuInfo(struct SensorModul *sm)
 {
-	char mname[50];
-	int i;
-	if (sysmp(MP_NPROCS,&nCPUs) < 0) nCPUs=0;
-	nCPUs++;
-	g_ci = malloc(sizeof(struct cpu_info) * nCPUs);
-	memset(g_ci,0,sizeof(struct cpu_info) * nCPUs);
+    char mname[50];
+    int i;
+    if(sysmp(MP_NPROCS, &nCPUs) < 0)
+        nCPUs = 0;
+    nCPUs++;
+    g_ci = malloc(sizeof(struct cpu_info) * nCPUs);
+    memset(g_ci, 0, sizeof(struct cpu_info) * nCPUs);
 
-	registerMonitor("cpu/user", "integer", printCPUUser,
-		printCPUUserInfo, sm);
-	registerMonitor("cpu/sys",  "integer", printCPUSys,
-		printCPUSysInfo, sm);
-	registerMonitor("cpu/idle", "integer", printCPUIdle,
-		printCPUIdleInfo, sm);
+    registerMonitor("cpu/user", "integer", printCPUUser, printCPUUserInfo, sm);
+    registerMonitor("cpu/sys", "integer", printCPUSys, printCPUSysInfo, sm);
+    registerMonitor("cpu/idle", "integer", printCPUIdle, printCPUIdleInfo, sm);
 
-	if (nCPUs > 1) for (i=0;i<nCPUs;i++){
-		/* indidividual CPU load */
-		sprintf(mname,"cpu/cpu%d/user",i+1);
-		registerMonitor(mname, "integer", printCPUxUser,
-				printCPUUserInfo, sm);
-		sprintf(mname,"cpu/cpu%d/sys",i+1);
-		registerMonitor(mname, "integer", printCPUxSys,
-				printCPUSysInfo, sm);
-		sprintf(mname,"cpu/cpu%d/idle",i+1);
-		registerMonitor(mname, "integer", printCPUxIdle,
-				printCPUIdleInfo, sm);
-	}
+    if(nCPUs > 1)
+        for(i = 0; i < nCPUs; i++)
+        {
+            /* indidividual CPU load */
+            sprintf(mname, "cpu/cpu%d/user", i + 1);
+            registerMonitor(mname, "integer", printCPUxUser, printCPUUserInfo, sm);
+            sprintf(mname, "cpu/cpu%d/sys", i + 1);
+            registerMonitor(mname, "integer", printCPUxSys, printCPUSysInfo, sm);
+            sprintf(mname, "cpu/cpu%d/idle", i + 1);
+            registerMonitor(mname, "integer", printCPUxIdle, printCPUIdleInfo, sm);
+        }
 
-	updateCpuInfo();
+    updateCpuInfo();
 }
 
-void
-exitCpuInfo(void)
+void exitCpuInfo(void)
 {
-	free(g_ci);
+    free(g_ci);
 }
 
-int
-updateCpuInfo(void)
+int updateCpuInfo(void)
 {
-	struct sysinfo si;
-	int rv=0;
-	int i;
-	/* overall summary */
-	if (sysmp(MP_SAGET,MPSA_SINFO,&si,sizeof(struct sysinfo)) >=0){
-		cp_time[CPU_IDLE]  =si.cpu[CPU_IDLE];
-		cp_time[CPU_USER]  =si.cpu[CPU_USER];
-		cp_time[CPU_KERNEL]=si.cpu[CPU_KERNEL];
-		cp_time[CPU_SXBRK] =si.cpu[CPU_SXBRK];
-		cp_time[CPU_INTR]  =si.cpu[CPU_INTR];
-		cp_time[CPU_WAIT]  =si.cpu[CPU_WAIT];
-		percentages(CPUSTATES,cpu_states,cp_time,cp_old,cp_diff);
-	}
-	/* individual CPU statistics*/
-	if (nCPUs > 1) for (i=0;i<nCPUs;i++){
-		if (sysmp(MP_SAGET1,MPSA_SINFO,&si,sizeof(struct sysinfo),i) >=0){
-			g_ci[i].cp_time[CPU_IDLE]  =si.cpu[CPU_IDLE];
-			g_ci[i].cp_time[CPU_USER]  =si.cpu[CPU_USER];
-			g_ci[i].cp_time[CPU_KERNEL]=si.cpu[CPU_KERNEL];
-			g_ci[i].cp_time[CPU_SXBRK] =si.cpu[CPU_SXBRK];
-			g_ci[i].cp_time[CPU_INTR]  =si.cpu[CPU_INTR];
-			g_ci[i].cp_time[CPU_WAIT]  =si.cpu[CPU_WAIT];
-			percentages(CPUSTATES, g_ci[i].cpu_states, g_ci[i].cp_time, g_ci[i].cp_old,g_ci[i].cp_diff);
-		}else{
-			rv =-1;
-		}
-	}
-	return (rv);
+    struct sysinfo si;
+    int rv = 0;
+    int i;
+    /* overall summary */
+    if(sysmp(MP_SAGET, MPSA_SINFO, &si, sizeof(struct sysinfo)) >= 0)
+    {
+        cp_time[CPU_IDLE] = si.cpu[CPU_IDLE];
+        cp_time[CPU_USER] = si.cpu[CPU_USER];
+        cp_time[CPU_KERNEL] = si.cpu[CPU_KERNEL];
+        cp_time[CPU_SXBRK] = si.cpu[CPU_SXBRK];
+        cp_time[CPU_INTR] = si.cpu[CPU_INTR];
+        cp_time[CPU_WAIT] = si.cpu[CPU_WAIT];
+        percentages(CPUSTATES, cpu_states, cp_time, cp_old, cp_diff);
+    }
+    /* individual CPU statistics*/
+    if(nCPUs > 1)
+        for(i = 0; i < nCPUs; i++)
+        {
+            if(sysmp(MP_SAGET1, MPSA_SINFO, &si, sizeof(struct sysinfo), i) >= 0)
+            {
+                g_ci[i].cp_time[CPU_IDLE] = si.cpu[CPU_IDLE];
+                g_ci[i].cp_time[CPU_USER] = si.cpu[CPU_USER];
+                g_ci[i].cp_time[CPU_KERNEL] = si.cpu[CPU_KERNEL];
+                g_ci[i].cp_time[CPU_SXBRK] = si.cpu[CPU_SXBRK];
+                g_ci[i].cp_time[CPU_INTR] = si.cpu[CPU_INTR];
+                g_ci[i].cp_time[CPU_WAIT] = si.cpu[CPU_WAIT];
+                percentages(CPUSTATES, g_ci[i].cpu_states, g_ci[i].cp_time, g_ci[i].cp_old, g_ci[i].cp_diff);
+            }
+            else
+            {
+                rv = -1;
+            }
+        }
+    return (rv);
 }
 
-void
-printCPUUser(const char* cmd)
+void printCPUUser(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CPU_USER]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CPU_USER] / 10);
 }
 
-void
-printCPUUserInfo(const char* cmd)
+void printCPUUserInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU User Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU User Load\t0\t100\t%%\n");
 }
 
-void
-printCPUSys(const char* cmd)
+void printCPUSys(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CPU_KERNEL]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CPU_KERNEL] / 10);
 }
 
-void
-printCPUSysInfo(const char* cmd)
+void printCPUSysInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU System Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU System Load\t0\t100\t%%\n");
 }
 
-void
-printCPUIdle(const char* cmd)
+void printCPUIdle(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CPU_IDLE]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CPU_IDLE] / 10);
 }
 
-void
-printCPUIdleInfo(const char* cmd)
+void printCPUIdleInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU Idle Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU Idle Load\t0\t100\t%%\n");
 }
 /* same as above but for individual CPUs */
-void
-printCPUxUser(const char* cmd)
+void printCPUxUser(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_USER]/10);
+    fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_USER] / 10);
 }
 
-void
-printCPUxSys(const char* cmd)
+void printCPUxSys(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_KERNEL]/10);
+    fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_KERNEL] / 10);
 }
 
-void
-printCPUxIdle(const char* cmd)
+void printCPUxIdle(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_IDLE]/10);
+    fprintf(CurrentClient, "%d\n", g_ci[getID(cmd)].cpu_states[CPU_IDLE] / 10);
 }
 
 
@@ -210,7 +203,7 @@ printCPUxIdle(const char* cmd)
 
 long percentages(cnt, out, new, old, diffs)
 
-int cnt;
+    int cnt;
 int *out;
 register long *new;
 register long *old;
@@ -228,35 +221,35 @@ long *diffs;
     dp = diffs;
 
     /* calculate changes for each state and the overall change */
-    for (i = 0; i < cnt; i++)
+    for(i = 0; i < cnt; i++)
     {
-	if ((change = *new - *old) < 0)
-	{
-	    /* this only happens when the counter wraps */
-	    change = (int)
-		((unsigned long)*new-(unsigned long)*old);
-	}
-	total_change += (*dp++ = change);
-	*old++ = *new++;
+        if((change = *new - *old) < 0)
+        {
+            /* this only happens when the counter wraps */
+            change = (int)((unsigned long)*new - (unsigned long)*old);
+        }
+        total_change += (*dp++ = change);
+        *old++ = *new ++;
     }
 
     /* avoid divide by zero potential */
-    if (total_change == 0)
+    if(total_change == 0)
     {
-	total_change = 1;
+        total_change = 1;
     }
 
     /* calculate percentages based on overall change, rounding up */
     half_total = total_change / 2l;
 
     /* Do not divide by 0. Causes Floating point exception */
-    if(total_change) {
-        for (i = 0; i < cnt; i++)
+    if(total_change)
+    {
+        for(i = 0; i < cnt; i++)
         {
-          *out++ = (int)((*diffs++ * 1000 + half_total) / total_change);
+            *out++ = (int)((*diffs++ * 1000 + half_total) / total_change);
         }
     }
 
     /* return the total in case the caller wants to use it */
-    return(total_change);
+    return (total_change);
 }

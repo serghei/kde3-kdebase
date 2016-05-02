@@ -40,23 +40,24 @@ class KonqSidebarTree_Internal;
 #define VIRT_Link 0
 #define VIRT_Folder 1 // A directory which is parsed for .desktop files
 
-typedef KonqSidebarTreeModule*(*getModule)(KonqSidebarTree*, const bool); 
+typedef KonqSidebarTreeModule *(*getModule)(KonqSidebarTree *, const bool);
 
 typedef struct DirTreeConfigData_
 {
-  KURL dir;
-  int type;
-  QString relDir;
+    KURL dir;
+    int type;
+    QString relDir;
 } DirTreeConfigData;
 
 
-class KonqSidebarTreeToolTip : public QToolTip
-{
+class KonqSidebarTreeToolTip : public QToolTip {
 public:
-    KonqSidebarTreeToolTip( QListView *view ) : QToolTip( view->viewport() ), m_view( view ) {}
+    KonqSidebarTreeToolTip(QListView *view) : QToolTip(view->viewport()), m_view(view)
+    {
+    }
 
 protected:
-    virtual void maybeTip( const QPoint & );
+    virtual void maybeTip(const QPoint &);
 
 private:
     QListView *m_view;
@@ -73,69 +74,76 @@ typedef enum {
  * a toplevel item, and creates the modules that will handle the contents
  * of those items.
  */
-class KonqSidebarTree : public KListView, public KDirNotify
-{
+class KonqSidebarTree : public KListView, public KDirNotify {
     Q_OBJECT
 public:
-    KonqSidebarTree( KonqSidebar_Tree *parent, QWidget *parentWidget, int virt, const QString& path );
+    KonqSidebarTree(KonqSidebar_Tree *parent, QWidget *parentWidget, int virt, const QString &path);
     virtual ~KonqSidebarTree();
 
-    void followURL( const KURL &url );
+    void followURL(const KURL &url);
 
     /**
      * @return the current (i.e. selected) item
      */
-    KonqSidebarTreeItem * currentItem() const;
+    KonqSidebarTreeItem *currentItem() const;
 
-    void startAnimation( KonqSidebarTreeItem * item, const char * iconBaseName = "kde", uint iconCount = 6, const QPixmap * originalPixmap = 0L );
-    void stopAnimation( KonqSidebarTreeItem * item );
+    void startAnimation(KonqSidebarTreeItem *item, const char *iconBaseName = "kde", uint iconCount = 6, const QPixmap *originalPixmap = 0L);
+    void stopAnimation(KonqSidebarTreeItem *item);
 
     // Reimplemented from KDirNotify
-    void FilesAdded( const KURL & dir );
-    void FilesRemoved( const KURL::List & urls );
-    void FilesChanged( const KURL::List & urls );
+    void FilesAdded(const KURL &dir);
+    void FilesRemoved(const KURL::List &urls);
+    void FilesChanged(const KURL::List &urls);
 
-    KonqSidebarPlugin * part() { return m_part; }
+    KonqSidebarPlugin *part()
+    {
+        return m_part;
+    }
 
-    void lockScrolling( bool lock ) { m_scrollingLocked = lock; }
+    void lockScrolling(bool lock)
+    {
+        m_scrollingLocked = lock;
+    }
 
-    bool isOpeningFirstChild() const { return m_bOpeningFirstChild; }
- 
-    void enableActions( bool copy, bool cut, bool paste,
-                        bool trash, bool del, bool rename = false );
+    bool isOpeningFirstChild() const
+    {
+        return m_bOpeningFirstChild;
+    }
 
-    void itemDestructed( KonqSidebarTreeItem *item );
+    void enableActions(bool copy, bool cut, bool paste, bool trash, bool del, bool rename = false);
 
-    void setDropFormats( const QStringList &formats ); // used in KListView mode
-    
+    void itemDestructed(KonqSidebarTreeItem *item);
+
+    void setDropFormats(const QStringList &formats); // used in KListView mode
+
     // Show context menu for toplevel items
     void showToplevelContextMenu();
 
     // Add an URL
-    void addURL(KonqSidebarTreeTopLevelItem* item, const KURL&url);
+    void addURL(KonqSidebarTreeTopLevelItem *item, const KURL &url);
 
     // If we can use dcop to open tabs
     bool tabSupport();
 
 public slots:
-    virtual void setContentsPos( int x, int y );
+    virtual void setContentsPos(int x, int y);
 
 protected:
-    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
-    virtual void contentsDragMoveEvent( QDragMoveEvent *e );
-    virtual void contentsDragLeaveEvent( QDragLeaveEvent *e );
-    virtual void contentsDropEvent( QDropEvent *ev );
-    virtual bool acceptDrag(QDropEvent* e) const; // used in KListView mode
+    virtual void contentsDragEnterEvent(QDragEnterEvent *e);
+    virtual void contentsDragMoveEvent(QDragMoveEvent *e);
+    virtual void contentsDragLeaveEvent(QDragLeaveEvent *e);
+    virtual void contentsDropEvent(QDropEvent *ev);
+    virtual bool acceptDrag(QDropEvent *e) const; // used in KListView mode
 
-    virtual void leaveEvent( QEvent * );
+    virtual void leaveEvent(QEvent *);
 
-    virtual QDragObject* dragObject();
+    virtual QDragObject *dragObject();
 
 private slots:
-    void slotDoubleClicked( QListViewItem *item );
-    void slotExecuted( QListViewItem *item );
-    void slotMouseButtonPressed(int _button, QListViewItem* _item, const QPoint&, int col);
-    void slotMouseButtonClicked(int _button, QListViewItem* _item, const QPoint&, int col);
+    void slotDoubleClicked(QListViewItem *item);
+    void slotExecuted(QListViewItem *item);
+    void slotMouseButtonPressed(int _button, QListViewItem *_item, const QPoint &, int col);
+    void slotMouseButtonClicked(int _button, QListViewItem *_item, const QPoint &, int col);
     void slotSelectionChanged();
 
     void slotAnimation();
@@ -144,7 +152,7 @@ private slots:
 
     void rescanConfiguration();
 
-    void slotItemRenamed(QListViewItem*, const QString &, int);
+    void slotItemRenamed(QListViewItem *, const QString &, int);
 
     void slotCreateFolder();
     void slotDelete();
@@ -156,53 +164,57 @@ private slots:
 
 private:
     void clearTree();
-    void scanDir( KonqSidebarTreeItem *parent, const QString &path, bool isRoot = false );
-    void loadTopLevelGroup( KonqSidebarTreeItem *parent, const QString &path );
-    void loadTopLevelItem( KonqSidebarTreeItem *parent, const QString &filename );
+    void scanDir(KonqSidebarTreeItem *parent, const QString &path, bool isRoot = false);
+    void loadTopLevelGroup(KonqSidebarTreeItem *parent, const QString &path);
+    void loadTopLevelItem(KonqSidebarTreeItem *parent, const QString &filename);
 
     void loadModuleFactories();
-    
+
 
 private:
-    QPtrList<KonqSidebarTreeTopLevelItem> m_topLevelItems;
+    QPtrList< KonqSidebarTreeTopLevelItem > m_topLevelItems;
     KonqSidebarTreeTopLevelItem *m_currentTopLevelItem;
 
-    QPtrList<KonqSidebarTreeModule> m_lstModules;
+    QPtrList< KonqSidebarTreeModule > m_lstModules;
 
-    KonqSidebarPlugin  *m_part;
+    KonqSidebarPlugin *m_part;
 
     struct AnimationInfo
     {
-        AnimationInfo( const char * _iconBaseName, uint _iconCount, const QPixmap & _originalPixmap )
-            : iconBaseName(_iconBaseName), iconCount(_iconCount), iconNumber(1), originalPixmap(_originalPixmap) {}
-        AnimationInfo() : iconCount(0) {}
+        AnimationInfo(const char *_iconBaseName, uint _iconCount, const QPixmap &_originalPixmap)
+            : iconBaseName(_iconBaseName), iconCount(_iconCount), iconNumber(1), originalPixmap(_originalPixmap)
+        {
+        }
+        AnimationInfo() : iconCount(0)
+        {
+        }
         QCString iconBaseName;
         uint iconCount;
         uint iconNumber;
         QPixmap originalPixmap;
     };
-    typedef QMap<KonqSidebarTreeItem *, AnimationInfo> MapCurrentOpeningFolders;
+    typedef QMap< KonqSidebarTreeItem *, AnimationInfo > MapCurrentOpeningFolders;
     MapCurrentOpeningFolders m_mapCurrentOpeningFolders;
 
     QTimer *m_animationTimer;
 
     QListViewItem *m_currentBeforeDropItem; // The item that was current before the drag-enter event happened
-    QListViewItem *m_dropItem; // The item we are moving the mouse over (during a drag)
+    QListViewItem *m_dropItem;              // The item we are moving the mouse over (during a drag)
     QStrList m_lstDropFormats;
 
     QTimer *m_autoOpenTimer;
 
     // The base URL for our configuration directory
-    //KURL m_dirtreeDir;
+    // KURL m_dirtreeDir;
     DirTreeConfigData m_dirtreeDir;
 
     KonqSidebarTreeToolTip m_toolTip;
     bool m_scrollingLocked;
 
     getModule getPluginFactory(QString name);
-    
-    QMap<QString, QString>   pluginInfo;
-    QMap<QString, getModule> pluginFactories;
+
+    QMap< QString, QString > pluginInfo;
+    QMap< QString, getModule > pluginFactories;
 
     bool m_bOpeningFirstChild;
     KActionCollection *m_collection;
@@ -214,12 +226,11 @@ private:
 signals:
 #undef signals
 #define signals protected
-    void openURLRequest( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
-    void createNewWindow( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
-    void popupMenu( const QPoint &global, const KURL &url,
-         const QString &mimeType, mode_t mode = (mode_t)-1 );
-    void popupMenu( const QPoint &global, const KFileItemList &items );
-    void enableAction( const char * name, bool enabled );
+    void openURLRequest(const KURL &url, const KParts::URLArgs &args = KParts::URLArgs());
+    void createNewWindow(const KURL &url, const KParts::URLArgs &args = KParts::URLArgs());
+    void popupMenu(const QPoint &global, const KURL &url, const QString &mimeType, mode_t mode = (mode_t)-1);
+    void popupMenu(const QPoint &global, const KFileItemList &items);
+    void enableAction(const char *name, bool enabled);
 };
 
 #endif

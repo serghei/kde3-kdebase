@@ -49,26 +49,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define CICON(a) (*_icons)[a]
 
-QMap<QString, QPixmap> *PanelBrowserMenu::_icons = 0;
+QMap< QString, QPixmap > *PanelBrowserMenu::_icons = 0;
 
 PanelBrowserMenu::PanelBrowserMenu(QString path, QWidget *parent, const char *name, int startid)
-    : KPanelMenu(path, parent, name)
-    , _mimecheckTimer(0)
-    , _startid(startid)
-    , _dirty(false)
-    , _filesOnly(false)
+    : KPanelMenu(path, parent, name), _mimecheckTimer(0), _startid(startid), _dirty(false), _filesOnly(false)
 {
     _lastpress = QPoint(-1, -1);
     setAcceptDrops(true); // Should depend on permissions of path.
 
     // we are not interested for dirty events on files inside the
     // directory (see slotClearIfNeeded)
-    connect( &_dirWatch, SIGNAL(dirty(const QString&)),
-             this, SLOT(slotClearIfNeeded(const QString&)) );
-    connect( &_dirWatch, SIGNAL(created(const QString&)),
-             this, SLOT(slotClear()) );
-    connect( &_dirWatch, SIGNAL(deleted(const QString&)),
-             this, SLOT(slotClear()) );
+    connect(&_dirWatch, SIGNAL(dirty(const QString &)), this, SLOT(slotClearIfNeeded(const QString &)));
+    connect(&_dirWatch, SIGNAL(created(const QString &)), this, SLOT(slotClear()));
+    connect(&_dirWatch, SIGNAL(deleted(const QString &)), this, SLOT(slotClear()));
 
     kdDebug() << "PanelBrowserMenu Constructor " << path << endl;
 }
@@ -78,9 +71,9 @@ PanelBrowserMenu::~PanelBrowserMenu()
     kdDebug() << "PanelBrowserMenu Destructor " << path() << endl;
 }
 
-void PanelBrowserMenu::slotClearIfNeeded(const QString& p)
+void PanelBrowserMenu::slotClearIfNeeded(const QString &p)
 {
-    if (p == path())
+    if(p == path())
         slotClear();
 }
 
@@ -89,22 +82,24 @@ void PanelBrowserMenu::initialize()
     _lastpress = QPoint(-1, -1);
 
     // don't change menu if already visible
-    if (isVisible())
+    if(isVisible())
         return;
 
-    if (_dirty) {
+    if(_dirty)
+    {
         // directory content changed while menu was visible
         slotClear();
         setInitialized(false);
         _dirty = false;
     }
 
-    if (initialized()) return;
+    if(initialized())
+        return;
     setInitialized(true);
 
     // start watching if not already done
-    if (!_dirWatch.contains(path()))
-        _dirWatch.addDir( path() );
+    if(!_dirWatch.contains(path()))
+        _dirWatch.addDir(path());
 
     // setup icon map
     initIconMap();
@@ -114,7 +109,7 @@ void PanelBrowserMenu::initialize()
     _mimemap.clear();
 
     int filter = QDir::Dirs | QDir::Files;
-    if (KickerSettings::showHiddenFiles())
+    if(KickerSettings::showHiddenFiles())
     {
         filter |= QDir::Hidden;
     }
@@ -122,23 +117,25 @@ void PanelBrowserMenu::initialize()
     QDir dir(path(), QString::null, QDir::DirsFirst | QDir::Name | QDir::IgnoreCase, filter);
 
     // does the directory exist?
-    if (!dir.exists()) {
+    if(!dir.exists())
+    {
         insertItem(i18n("Failed to Read Folder"));
-	return;
+        return;
     }
 
     // get entry list
     const QFileInfoList *list = dir.entryInfoList();
 
     // no list -> read error
-    if (!list) {
-	insertItem(i18n("Failed to Read Folder"));
-	return;
+    if(!list)
+    {
+        insertItem(i18n("Failed to Read Folder"));
+        return;
     }
 
     KURL url;
     url.setPath(path());
-    if (!kapp->authorizeURLAction("list", KURL(), url))
+    if(!kapp->authorizeURLAction("list", KURL(), url))
     {
         insertItem(i18n("Not Authorized to Read Folder"));
         return;
@@ -146,10 +143,11 @@ void PanelBrowserMenu::initialize()
 
     // insert file manager and terminal entries
     // only the first part menu got them
-    if(_startid == 0 && !_filesOnly) {
-       insertTitle(path());
-       insertItem(CICON("kfm"), i18n("Open in File Manager"), this, SLOT(slotOpenFileManager()));
-        if (kapp->authorize("shell_access"))
+    if(_startid == 0 && !_filesOnly)
+    {
+        insertTitle(path());
+        insertItem(CICON("kfm"), i18n("Open in File Manager"), this, SLOT(slotOpenFileManager()));
+        if(kapp->authorize("shell_access"))
             insertItem(CICON("terminal"), i18n("Open in Terminal"), this, SLOT(slotOpenTerminal()));
     }
 
@@ -166,48 +164,49 @@ void PanelBrowserMenu::initialize()
     it += _startid;
 
     // iterate over entry list
-    for (; it.current(); ++it)
+    for(; it.current(); ++it)
     {
         // bump id
         run_id++;
 
         QFileInfo *fi = it.current();
         // handle directories
-        if (fi->isDir())
+        if(fi->isDir())
         {
             QString name = fi->fileName();
 
             // ignore . and .. entries
-            if (name == "." || name == "..") continue;
+            if(name == "." || name == "..")
+                continue;
 
             QPixmap icon;
             QString path = fi->absFilePath();
 
             // parse .directory if it does exist
-            if (QFile::exists(path + "/.directory")) {
+            if(QFile::exists(path + "/.directory"))
+            {
 
                 KSimpleConfig c(path + "/.directory", true);
                 c.setDesktopGroup();
                 QString iconPath = c.readEntry("Icon");
 
-                if ( iconPath.startsWith("./") )
+                if(iconPath.startsWith("./"))
                     iconPath = path + '/' + iconPath.mid(2);
 
-                icon = KGlobal::iconLoader()->loadIcon(iconPath,
-                                                       KIcon::Small, KIcon::SizeSmall,
-                                                       KIcon::DefaultState, 0, true);
+                icon = KGlobal::iconLoader()->loadIcon(iconPath, KIcon::Small, KIcon::SizeSmall, KIcon::DefaultState, 0, true);
                 if(icon.isNull())
                     icon = CICON("folder");
                 name = c.readEntry("Name", name);
             }
 
             // use cached folder icon for directories without special icon
-            if (icon.isNull())
+            if(icon.isNull())
                 icon = CICON("folder");
 
             // insert separator if we are the first menu entry
-            if(first_entry) {
-                if (_startid == 0 && !_filesOnly)
+            if(first_entry)
+            {
+                if(_startid == 0 && !_filesOnly)
                     insertSeparator();
                 first_entry = false;
             }
@@ -241,17 +240,18 @@ void PanelBrowserMenu::initialize()
                 title = c.readEntry("Name", title);
 
                 QString s = c.readEntry("Icon");
-                if(!_icons->contains(s)) {
-                    icon  = KGlobal::iconLoader()->loadIcon(s, KIcon::Small, KIcon::SizeSmall,
-                                                            KIcon::DefaultState, 0, true);
+                if(!_icons->contains(s))
+                {
+                    icon = KGlobal::iconLoader()->loadIcon(s, KIcon::Small, KIcon::SizeSmall, KIcon::DefaultState, 0, true);
 
-                    if(icon.isNull()) {
+                    if(icon.isNull())
+                    {
                         QString type = c.readEntry("Type", "Application");
-                        if (type == "Directory")
+                        if(type == "Directory")
                             icon = CICON("folder");
-                        else if (type == "Mimetype")
+                        else if(type == "Mimetype")
                             icon = CICON("txt");
-                        else if (type == "FSDevice")
+                        else if(type == "FSDevice")
                             icon = CICON("chardevice");
                         else
                             icon = CICON("exec");
@@ -262,7 +262,8 @@ void PanelBrowserMenu::initialize()
                 else
                     icon = CICON(s);
             }
-            else {
+            else
+            {
                 // set unknown icon
                 icon = CICON("unknown");
 
@@ -271,14 +272,16 @@ void PanelBrowserMenu::initialize()
             }
 
             // insert separator if we are the first menu entry
-            if(first_entry) {
+            if(first_entry)
+            {
                 if(_startid == 0 && !_filesOnly)
                     insertSeparator();
                 first_entry = false;
             }
 
             // insert separator if we we first file after at least one directory
-            if (dirfile_separator) {
+            if(dirfile_separator)
+            {
                 insertSeparator();
                 dirfile_separator = false;
             }
@@ -290,11 +293,12 @@ void PanelBrowserMenu::initialize()
             item_count++;
         }
 
-        if (item_count == KickerSettings::maxEntries2())
+        if(item_count == KickerSettings::maxEntries2())
         {
             // Only insert a "More" item if there are actually more items.
             ++it;
-            if( it.current() ) {
+            if(it.current())
+            {
                 insertSeparator();
                 append(CICON("kdisknav"), i18n("More"), new PanelBrowserMenu(path(), this, 0, run_id));
             }
@@ -318,15 +322,17 @@ void PanelBrowserMenu::initialize()
     if(item_count == 0)
         maxlen = fontMetrics().width(dirname);
 
-    if (fontMetrics().width(dirname) > maxlen) {
-        while ((!dirname.isEmpty()) && (fontMetrics().width(dirname) > (maxlen - fontMetrics().width("..."))))
+    if(fontMetrics().width(dirname) > maxlen)
+    {
+        while((!dirname.isEmpty()) && (fontMetrics().width(dirname) > (maxlen - fontMetrics().width("..."))))
             dirname = dirname.remove(0, 1);
         dirname.prepend("...");
     }
     setCaption(dirname);
 
     // setup and start delayed mimetype check timer
-    if(_mimemap.count() > 0) {
+    if(_mimemap.count() > 0)
+    {
 
         if(!_mimecheckTimer)
             _mimecheckTimer = new QTimer(this);
@@ -340,7 +346,7 @@ void PanelBrowserMenu::append(const QPixmap &pixmap, const QString &title, const
 {
     // avoid &'s being converted to accelerators
     QString newTitle = title;
-    newTitle = KStringHandler::cEmSqueeze( newTitle, fontMetrics(), 20 );
+    newTitle = KStringHandler::cEmSqueeze(newTitle, fontMetrics(), 20);
     newTitle.replace("&", "&&");
 
     // insert menu item
@@ -358,7 +364,7 @@ void PanelBrowserMenu::append(const QPixmap &pixmap, const QString &title, Panel
 {
     // avoid &'s being converted to accelerators
     QString newTitle = title;
-    newTitle = KStringHandler::cEmSqueeze( newTitle, fontMetrics(), 20 );
+    newTitle = KStringHandler::cEmSqueeze(newTitle, fontMetrics(), 20);
     newTitle.replace("&", "&&");
 
     // insert submenu
@@ -377,15 +383,19 @@ void PanelBrowserMenu::mouseMoveEvent(QMouseEvent *e)
 {
     QPopupMenu::mouseMoveEvent(e);
 
-    if (!(e->state() & LeftButton)) return;
-    if(_lastpress == QPoint(-1, -1)) return;
+    if(!(e->state() & LeftButton))
+        return;
+    if(_lastpress == QPoint(-1, -1))
+        return;
 
     // DND delay
-    if((_lastpress - e->pos()).manhattanLength() < 12) return;
+    if((_lastpress - e->pos()).manhattanLength() < 12)
+        return;
 
     // get id
     int id = idAt(_lastpress);
-    if(!_filemap.contains(id)) return;
+    if(!_filemap.contains(id))
+        return;
 
     // reset _lastpress
     _lastpress = QPoint(-1, -1);
@@ -402,15 +412,15 @@ void PanelBrowserMenu::mouseMoveEvent(QMouseEvent *e)
 
 void PanelBrowserMenu::slotDragObjectDestroyed()
 {
-    if (KURLDrag::target() != this)
+    if(KURLDrag::target() != this)
     {
         close();
     }
 }
 
-void PanelBrowserMenu::dragEnterEvent( QDragEnterEvent *ev )
+void PanelBrowserMenu::dragEnterEvent(QDragEnterEvent *ev)
 {
-    if (KURLDrag::canDecode(ev))
+    if(KURLDrag::canDecode(ev))
     {
         ev->accept();
     }
@@ -423,11 +433,11 @@ void PanelBrowserMenu::dragMoveEvent(QDragMoveEvent *ev)
     QPopupMenu::mouseMoveEvent(&mev);
 }
 
-void PanelBrowserMenu::dropEvent( QDropEvent *ev )
+void PanelBrowserMenu::dropEvent(QDropEvent *ev)
 {
-    KURL u( path() );
-    KFileItem item( u, QString::fromLatin1( "inode/directory" ),  KFileItem::Unknown );
-    KonqOperations::doDrop( &item, u, ev, this );
+    KURL u(path());
+    KFileItem item(u, QString::fromLatin1("inode/directory"), KFileItem::Unknown);
+    KonqOperations::doDrop(&item, u, ev, this);
     KPanelMenu::dropEvent(ev);
     // ### TODO: Update list
 }
@@ -436,7 +446,8 @@ void PanelBrowserMenu::slotExec(int id)
 {
     kapp->propagateSessionManager();
 
-    if(!_filemap.contains(id)) return;
+    if(!_filemap.contains(id))
+        return;
 
     KURL url;
     url.setPath(path() + "/" + _filemap[id]);
@@ -446,16 +457,16 @@ void PanelBrowserMenu::slotExec(int id)
 
 void PanelBrowserMenu::slotOpenTerminal()
 {
-    KConfig * config = kapp->config();
+    KConfig *config = kapp->config();
     config->setGroup("General");
     QString term = config->readPathEntry("TerminalApplication", "konsole");
 
     KProcess proc;
     proc << term;
-    if (term == "konsole")
-      proc << "--workdir" << path();
+    if(term == "konsole")
+        proc << "--workdir" << path();
     else
-      proc.setWorkingDirectory(path());
+        proc.setWorkingDirectory(path());
     proc.start(KProcess::DontCare);
 }
 
@@ -467,10 +478,11 @@ void PanelBrowserMenu::slotOpenFileManager()
 void PanelBrowserMenu::slotMimeCheck()
 {
     // get the first map entry
-    QMap<int, bool>::Iterator it = _mimemap.begin();
+    QMap< int, bool >::Iterator it = _mimemap.begin();
 
     // no mime types left to check -> stop timer
-    if(it == _mimemap.end()) {
+    if(it == _mimemap.end())
+    {
         _mimecheckTimer->stop();
         delete _mimecheckTimer;
         _mimecheckTimer = 0;
@@ -483,22 +495,23 @@ void PanelBrowserMenu::slotMimeCheck()
     _mimemap.remove(it);
 
     KURL url;
-    url.setPath( path() + '/' + file );
+    url.setPath(path() + '/' + file);
 
-//    KMimeType::Ptr mt = KMimeType::findByURL(url, 0, true, false);
-//    QString icon(mt->icon(url, true));
-    QString icon = KMimeType::iconForURL( url );
-//    kdDebug() << url.url() << ": " << icon << endl;
+    //    KMimeType::Ptr mt = KMimeType::findByURL(url, 0, true, false);
+    //    QString icon(mt->icon(url, true));
+    QString icon = KMimeType::iconForURL(url);
+    //    kdDebug() << url.url() << ": " << icon << endl;
 
-    file = KStringHandler::cEmSqueeze( file, fontMetrics(), 20 );
+    file = KStringHandler::cEmSqueeze(file, fontMetrics(), 20);
     file.replace("&", "&&");
 
-    if(!_icons->contains(icon)) {
+    if(!_icons->contains(icon))
+    {
         QPixmap pm = SmallIcon(icon);
-        if( pm.height() > 16 )
+        if(pm.height() > 16)
         {
-            QPixmap cropped( 16, 16 );
-            copyBlt( &cropped, 0, 0, &pm, 0, 0, 16, 16 );
+            QPixmap cropped(16, 16);
+            copyBlt(&cropped, 0, 0, &pm, 0, 0, 16, 16);
             pm = cropped;
         }
         _icons->insert(icon, pm);
@@ -511,19 +524,18 @@ void PanelBrowserMenu::slotMimeCheck()
 void PanelBrowserMenu::slotClear()
 {
     // no need to watch any further
-    if (_dirWatch.contains(path()))
-        _dirWatch.removeDir( path() );
+    if(_dirWatch.contains(path()))
+        _dirWatch.removeDir(path());
 
     // don't change menu if already visible
-    if (isVisible()) {
+    if(isVisible())
+    {
         _dirty = true;
         return;
     }
     KPanelMenu::slotClear();
 
-    for (QValueVector<PanelBrowserMenu*>::iterator it = _subMenus.begin();
-         it != _subMenus.end();
-         ++it)
+    for(QValueVector< PanelBrowserMenu * >::iterator it = _subMenus.begin(); it != _subMenus.end(); ++it)
     {
         delete *it;
     }
@@ -532,11 +544,12 @@ void PanelBrowserMenu::slotClear()
 
 void PanelBrowserMenu::initIconMap()
 {
-    if(_icons) return;
+    if(_icons)
+        return;
 
-//    kdDebug() << "PanelBrowserMenu::initIconMap" << endl;
+    //    kdDebug() << "PanelBrowserMenu::initIconMap" << endl;
 
-    _icons = new QMap<QString, QPixmap>;
+    _icons = new QMap< QString, QPixmap >;
 
     _icons->insert("folder", SmallIcon("folder"));
     _icons->insert("unknown", SmallIcon("mime_empty"));

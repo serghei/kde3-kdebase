@@ -45,9 +45,8 @@ class KShadowEngine;
  * to its parent.
  * @since 3.2
  */
-class KFileIVIDesktop : public KFileIVI
-{
- public:
+class KFileIVIDesktop : public KFileIVI {
+public:
     /**
      * Constructor. It replicates the KFileIVI constructor and adds an
      * optional shadow object.
@@ -56,20 +55,19 @@ class KFileIVIDesktop : public KFileIVI
      * @param size the default size of the drawn object
      * @param shadow reference to the shadow object
      */
-    KFileIVIDesktop(KonqIconViewWidget *iconview, KFileItem* fileitem, int
-		     size, KShadowEngine *shadow = 0L);
+    KFileIVIDesktop(KonqIconViewWidget *iconview, KFileItem *fileitem, int size, KShadowEngine *shadow = 0L);
 
     /**
      * Default destructor. Doesn't really do anything.
      */
     ~KFileIVIDesktop();
 
- protected:
+protected:
     /**
      * Reimplements KIconView::calcRect to take the shadow metrics
      * into account
      */
-     virtual void calcRect( const QString& _text );
+    virtual void calcRect(const QString &_text);
 
     /**
      * Paints this item. Takes care of using the normal or alpha
@@ -83,7 +81,7 @@ class KFileIVIDesktop : public KFileIVI
      * Reimplements QIconView::paintFocus() to take the shadow
      * metrics into account();
      */
-    virtual void paintFocus( QPainter *p, const QColorGroup &cg );
+    virtual void paintFocus(QPainter *p, const QColorGroup &cg);
 
     /**
      * Draws the shadow text.
@@ -101,27 +99,40 @@ class KFileIVIDesktop : public KFileIVI
      */
     virtual QImage *buildShadow(QPainter *p, const int align, QColor &shadowColor);
 
- protected:
-    void setNormalImage(QImage *newImage) { delete m_normalImage; m_normalImage = newImage; };
-    void setSelectedImage(QImage *newImage) { delete m_selectedImage; m_selectedImage = newImage; };
+protected:
+    void setNormalImage(QImage *newImage)
+    {
+        delete m_normalImage;
+        m_normalImage = newImage;
+    };
+    void setSelectedImage(QImage *newImage)
+    {
+        delete m_selectedImage;
+        m_selectedImage = newImage;
+    };
 
-    QImage *normalImage() { return m_normalImage; };
-    QImage *selectedImage() { return m_selectedImage; };
+    QImage *normalImage()
+    {
+        return m_normalImage;
+    };
+    QImage *selectedImage()
+    {
+        return m_selectedImage;
+    };
 
- private:
+private:
     bool shouldUpdateShadow(bool selected);
     int shadowThickness() const;
 
     KShadowEngine *m_shadow;
 
-    QImage  *m_selectedImage;
-    QImage  *m_normalImage;
+    QImage *m_selectedImage;
+    QImage *m_normalImage;
 
     QString oldText;
 
     unsigned long _selectedUID;
     unsigned long _normalUID;
-
 };
 
 #endif

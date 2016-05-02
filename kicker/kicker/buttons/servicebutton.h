@@ -28,23 +28,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <kservice.h>
 
-class ServiceButton : public PanelButton
-{
+class ServiceButton : public PanelButton {
     Q_OBJECT
 
 public:
-    ServiceButton( const QString& desktopFile, QWidget* parent );
-    ServiceButton( const KService::Ptr& service, QWidget* parent );
-    ServiceButton( const KConfigGroup& config, QWidget* parent );
+    ServiceButton(const QString &desktopFile, QWidget *parent);
+    ServiceButton(const KService::Ptr &service, QWidget *parent);
+    ServiceButton(const KConfigGroup &config, QWidget *parent);
 
     ~ServiceButton();
 
-    virtual void saveConfig(KConfigGroup& config) const;
+    virtual void saveConfig(KConfigGroup &config) const;
     virtual void properties();
 
 protected slots:
     void slotUpdate();
-    void slotSaveAs(const KURL&, KURL&);
+    void slotSaveAs(const KURL &, KURL &);
     void slotExec();
     void performExec();
 
@@ -52,15 +51,21 @@ protected:
     void initialize();
     void loadServiceFromId(const QString &id);
     void readDesktopFile();
-    virtual QString tileName() { return "URL"; }
+    virtual QString tileName()
+    {
+        return "URL";
+    }
     virtual void startDrag();
     virtual void dropEvent(QDropEvent *);
     virtual void dragEnterEvent(QDragEnterEvent *);
-    QString defaultIcon() const { return "exec"; };
+    QString defaultIcon() const
+    {
+        return "exec";
+    };
     bool checkForBackingFile();
 
-    KService::Ptr  _service;
-    QString        _id;
+    KService::Ptr _service;
+    QString _id;
 };
 
 #endif

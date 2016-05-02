@@ -38,27 +38,25 @@ class KIntNumInput;
 class KAction;
 class KURL;
 
-namespace KFI
-{
+namespace KFI {
 
 class CFontPreview;
 
-class CFontViewPart : public KParts::ReadOnlyPart
-{
+class CFontViewPart : public KParts::ReadOnlyPart {
     Q_OBJECT
 
-    public:
-
-    CFontViewPart(QWidget *parent=0, const char *name=0);
-    virtual ~CFontViewPart() {}
+public:
+    CFontViewPart(QWidget *parent = 0, const char *name = 0);
+    virtual ~CFontViewPart()
+    {
+    }
 
     bool openURL(const KURL &url);
 
-    protected:
-
+protected:
     bool openFile();
 
-    private slots:
+private slots:
 
     void previewStatus(bool st);
     void timeout();
@@ -66,20 +64,16 @@ class CFontViewPart : public KParts::ReadOnlyPart
     void changeText();
     void print();
 
-    private:
-
-    CFontPreview  *itsPreview;
-    QPushButton   *itsInstallButton;
-    QFrame        *itsFrame,
-                  *itsToolsFrame;
-    QLabel        *itsFaceLabel;
-    KIntNumInput  *itsFaceSelector;
-    KAction       *itsChangeTextAction,
-                  *itsPrintAction;
-    bool          itsShowInstallButton;
-    int           itsFace;
+private:
+    CFontPreview *itsPreview;
+    QPushButton *itsInstallButton;
+    QFrame *itsFrame, *itsToolsFrame;
+    QLabel *itsFaceLabel;
+    KIntNumInput *itsFaceSelector;
+    KAction *itsChangeTextAction, *itsPrintAction;
+    bool itsShowInstallButton;
+    int itsFace;
 };
-
 }
 
 #endif

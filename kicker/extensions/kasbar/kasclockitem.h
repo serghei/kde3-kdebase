@@ -9,21 +9,20 @@
 /**
  * An item that displays a clock.
  */
-class KDE_EXPORT KasClockItem : public KasItem
-{
+class KDE_EXPORT KasClockItem : public KasItem {
     Q_OBJECT
 
 public:
-    KasClockItem( KasBar *parent );
+    KasClockItem(KasBar *parent);
     virtual ~KasClockItem();
 
-    void paint( QPainter *p );
+    void paint(QPainter *p);
 
 public slots:
     void updateTime();
 
-    void showMenuAt( QMouseEvent *ev );
-    void showMenuAt( QPoint p );
+    void showMenuAt(QMouseEvent *ev);
+    void showMenuAt(QPoint p);
 
 protected:
     /** Reimplemented from KasItem to create a date picker. */
@@ -34,4 +33,3 @@ private:
 };
 
 #endif // KASCLOCKITEM_H
-

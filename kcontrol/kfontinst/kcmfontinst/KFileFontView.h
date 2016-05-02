@@ -48,43 +48,48 @@ class QKeyEvent;
  * An item for the listiew, that has a reference to its corresponding
  * @ref KFileItem.
  */
-class CFontListViewItem : public KListViewItem
-{
-    public:
-
-    CFontListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi)
-	: KListViewItem(parent, text),
-          itsInf(fi)
+class CFontListViewItem : public KListViewItem {
+public:
+    CFontListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi) : KListViewItem(parent, text), itsInf(fi)
     {
         setPixmap(0, icon);
         setText(0, text);
     }
 
-    CFontListViewItem(QListView *parent, KFileItem *fi)
-        : KListViewItem(parent),
-          itsInf(fi)
+    CFontListViewItem(QListView *parent, KFileItem *fi) : KListViewItem(parent), itsInf(fi)
     {
         init();
     }
 
     CFontListViewItem(QListView *parent, const QString &text, const QPixmap &icon, KFileItem *fi, QListViewItem *after)
-	: KListViewItem(parent, after),
-          itsInf(fi)
+        : KListViewItem(parent, after), itsInf(fi)
     {
         setPixmap(0, icon);
         setText(0, text);
     }
 
-    ~CFontListViewItem() { itsInf->removeExtraData(listView()); }
+    ~CFontListViewItem()
+    {
+        itsInf->removeExtraData(listView());
+    }
 
     /**
      * @returns the corresponding KFileItem
      */
-    KFileItem *fileInfo() const { return itsInf; }
+    KFileItem *fileInfo() const
+    {
+        return itsInf;
+    }
 
-    virtual QString key( int /*column*/, bool /*ascending*/ ) const { return itsKey; }
+    virtual QString key(int /*column*/, bool /*ascending*/) const
+    {
+        return itsKey;
+    }
 
-    void setKey( const QString& key ) { itsKey = key; }
+    void setKey(const QString &key)
+    {
+        itsKey = key;
+    }
 
     QRect rect() const
     {
@@ -95,10 +100,9 @@ class CFontListViewItem : public KListViewItem
 
     void init();
 
-    private:
-
+private:
     KFileItem *itsInf;
-    QString   itsKey;
+    QString itsKey;
 
     class CFontListViewItemPrivate;
 
@@ -113,105 +117,116 @@ class CFontListViewItem : public KListViewItem
  * @see KCombiView
  * @see KFileIconView
  */
-class CKFileFontView : public KListView, public KFileView
-{
+class CKFileFontView : public KListView, public KFileView {
     Q_OBJECT
 
-    public:
-
+public:
     CKFileFontView(QWidget *parent, const char *name);
     virtual ~CKFileFontView();
 
-    virtual QWidget *   widget() { return this; }
-    virtual void        clearView();
-    virtual void        setAutoUpdate(bool) {} // ### unused. remove in KDE4
-    virtual void        setSelectionMode( KFile::SelectionMode sm );
-    virtual void        updateView(bool b);
-    virtual void        updateView(const KFileItem *i);
-    virtual void        removeItem(const KFileItem *i);
-    virtual void        listingCompleted();
-    virtual void        setSelected(const KFileItem *i, bool b);
-    virtual bool        isSelected(const KFileItem *i) const;
-    virtual void        clearSelection();
-    virtual void        selectAll();
-    virtual void        invertSelection();
-    virtual void        setCurrentItem( const KFileItem *i);
-    virtual KFileItem * currentFileItem() const;
-    virtual KFileItem * firstFileItem() const;
-    virtual KFileItem * nextItem(const KFileItem *i) const;
-    virtual KFileItem * prevItem(const KFileItem *i) const;
-    virtual void        insertItem( KFileItem *i);
+    virtual QWidget *widget()
+    {
+        return this;
+    }
+    virtual void clearView();
+    virtual void setAutoUpdate(bool)
+    {
+    } // ### unused. remove in KDE4
+    virtual void setSelectionMode(KFile::SelectionMode sm);
+    virtual void updateView(bool b);
+    virtual void updateView(const KFileItem *i);
+    virtual void removeItem(const KFileItem *i);
+    virtual void listingCompleted();
+    virtual void setSelected(const KFileItem *i, bool b);
+    virtual bool isSelected(const KFileItem *i) const;
+    virtual void clearSelection();
+    virtual void selectAll();
+    virtual void invertSelection();
+    virtual void setCurrentItem(const KFileItem *i);
+    virtual KFileItem *currentFileItem() const;
+    virtual KFileItem *firstFileItem() const;
+    virtual KFileItem *nextItem(const KFileItem *i) const;
+    virtual KFileItem *prevItem(const KFileItem *i) const;
+    virtual void insertItem(KFileItem *i);
 
-    void                readConfig(KConfig *kc, const QString &group);
-    void                writeConfig(KConfig *kc, const QString &group);
+    void readConfig(KConfig *kc, const QString &group);
+    void writeConfig(KConfig *kc, const QString &group);
 
     // implemented to get noticed about sorting changes (for sortingIndicator)
-    virtual void        setSorting(QDir::SortSpec s);
-    void                ensureItemVisible(const KFileItem *i);
+    virtual void setSorting(QDir::SortSpec s);
+    void ensureItemVisible(const KFileItem *i);
 
     // for KMimeTypeResolver
-    void                mimeTypeDeterminationFinished();
-    void                determineIcon(CFontListViewItem *item);
-    QScrollView *       scrollWidget() const { return (QScrollView*) this; }
+    void mimeTypeDeterminationFinished();
+    void determineIcon(CFontListViewItem *item);
+    QScrollView *scrollWidget() const
+    {
+        return (QScrollView *)this;
+    }
 
-    signals:
+signals:
     // The user dropped something.
     // fileItem points to the item dropped on or can be 0 if the
     // user dropped on empty space.
-    void                dropped(QDropEvent *event, KFileItem *fileItem);
+    void dropped(QDropEvent *event, KFileItem *fileItem);
     // The user dropped the URLs urls.
     // url points to the item dropped on or can be empty if the
     // user dropped on empty space.
-    void                dropped(QDropEvent *event, const KURL::List &urls, const KURL &url);
+    void dropped(QDropEvent *event, const KURL::List &urls, const KURL &url);
 
-    protected:
-
-    virtual void        keyPressEvent(QKeyEvent *e);
+protected:
+    virtual void keyPressEvent(QKeyEvent *e);
     // DND support
-    QDragObject *       dragObject();
-    void                contentsDragEnterEvent(QDragEnterEvent *e);
-    void                contentsDragMoveEvent(QDragMoveEvent *e);
-    void                contentsDragLeaveEvent(QDragLeaveEvent *e);
-    void                contentsDropEvent(QDropEvent *e);
-    bool                acceptDrag(QDropEvent *e) const;
+    QDragObject *dragObject();
+    void contentsDragEnterEvent(QDragEnterEvent *e);
+    void contentsDragMoveEvent(QDragMoveEvent *e);
+    void contentsDragLeaveEvent(QDragLeaveEvent *e);
+    void contentsDropEvent(QDropEvent *e);
+    bool acceptDrag(QDropEvent *e) const;
 
     int itsSortingCol;
 
-    protected slots:
+protected slots:
 
-    void                slotSelectionChanged();
+    void slotSelectionChanged();
 
-    private slots:
+private slots:
 
-    void                slotSortingChanged(int c);
-    void                selected(QListViewItem *item);
-    void                slotActivate(QListViewItem *item);
-    void                highlighted(QListViewItem *item);
-    void                slotActivateMenu(QListViewItem *item, const QPoint& pos);
-    void                slotAutoOpen();
+    void slotSortingChanged(int c);
+    void selected(QListViewItem *item);
+    void slotActivate(QListViewItem *item);
+    void highlighted(QListViewItem *item);
+    void slotActivateMenu(QListViewItem *item, const QPoint &pos);
+    void slotAutoOpen();
 
-    private:
-
-    virtual void        insertItem(QListViewItem *i)          { KListView::insertItem(i); }
-    virtual void        setSorting(int i, bool b)             { KListView::setSorting(i, b); }
-    virtual void        setSelected(QListViewItem *i, bool b) { KListView::setSelected(i, b); }
-
-    inline CFontListViewItem * viewItem( const KFileItem *item ) const
+private:
+    virtual void insertItem(QListViewItem *i)
     {
-        return item ? (CFontListViewItem *) item->extraData(this) : NULL;
+        KListView::insertItem(i);
+    }
+    virtual void setSorting(int i, bool b)
+    {
+        KListView::setSorting(i, b);
+    }
+    virtual void setSelected(QListViewItem *i, bool b)
+    {
+        KListView::setSelected(i, b);
     }
 
-    void                setSortingKey( CFontListViewItem *item, const KFileItem *i);
+    inline CFontListViewItem *viewItem(const KFileItem *item) const
+    {
+        return item ? (CFontListViewItem *)item->extraData(this) : NULL;
+    }
 
-    bool                                                itsBlockSortingSignal;
-    KMimeTypeResolver<CFontListViewItem,CKFileFontView> *itsResolver;
+    void setSortingKey(CFontListViewItem *item, const KFileItem *i);
 
-    protected:
+    bool itsBlockSortingSignal;
+    KMimeTypeResolver< CFontListViewItem, CKFileFontView > *itsResolver;
 
+protected:
     virtual void virtual_hook(int id, void *data);
 
-    private:
-
+private:
     class CKFileFontViewPrivate;
     CKFileFontViewPrivate *d;
 };

@@ -41,9 +41,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <time.h>
 #include <stdlib.h> // for getenv()
 
-Zone::Zone(KConfig* conf):
-    config(conf),
-    _zoneIndex(0)
+Zone::Zone(KConfig *conf) : config(conf), _zoneIndex(0)
 {
     _defaultTZ = ::getenv("TZ");
     tzset();
@@ -63,7 +61,7 @@ Zone::~Zone()
 
 void Zone::setZone(int z)
 {
-    if (_zoneIndex > _remotezonelist.count())
+    if(_zoneIndex > _remotezonelist.count())
         z = 0;
 
     _zoneIndex = z;
@@ -71,110 +69,115 @@ void Zone::setZone(int z)
 
 QString Zone::zone(int z) const
 {
-    return (z == 0 ? _defaultTZ : _remotezonelist[z-1]);
+    return (z == 0 ? _defaultTZ : _remotezonelist[z - 1]);
 }
 
-int Zone::calc_TZ_offset(const QString& zone, bool /* reset */)
+int Zone::calc_TZ_offset(const QString &zone, bool /* reset */)
 {
-  const KTimezone *z = zone.isEmpty() ? m_zoneDb.local() : m_zoneDb.zone(zone);
+    const KTimezone *z = zone.isEmpty() ? m_zoneDb.local() : m_zoneDb.zone(zone);
 
-  if (!z)
-  {
-    z = m_zoneDb.local();
-  }
-
-  if (z)
-  {
-    return -z->offset(Qt::LocalTime);
-  }
-
-  return 0;
-}
-
-void Zone::readZoneList(KListView *listView )
-{
-  const KTimezones::ZoneMap zones = m_zoneDb.allZones();
-  QMap<QString, QListViewItem*> KontinentMap;
-
-  listView->setRootIsDecorated(true);
-  for (KTimezones::ZoneMap::ConstIterator it = zones.begin(); it != zones.end(); ++it)
-  {
-    const KTimezone *zone = it.data();
-    QString tzName = zone->name();
-    QString comment = zone->comment();
-    if (!comment.isEmpty())
-      comment = i18n(comment.utf8());
-
-    const QStringList KontCity = QStringList::split("/", i18n(tzName.utf8()).replace("_", " "));
-    QListViewItem* Kontinent = KontinentMap[KontCity[0]];
-    if (!Kontinent) {
-	KontinentMap[KontCity[0]] = new QListViewItem(listView, KontCity[0]);
-	Kontinent = KontinentMap[KontCity[0]];
-	Kontinent->setExpandable(true);
+    if(!z)
+    {
+        z = m_zoneDb.local();
     }
 
-    QCheckListItem *li = new QCheckListItem(Kontinent, KontCity[1], QCheckListItem::CheckBox);
-    li->setText(1, comment);
-    li->setText(2, tzName); /* store complete path in ListView */
+    if(z)
+    {
+        return -z->offset(Qt::LocalTime);
+    }
 
-    if (_remotezonelist.findIndex(tzName) != -1)
-       li->setOn(true);
+    return 0;
+}
 
-    // locate the flag from /l10n/%1/flag.png
-    // if not available select default "C" flag
-    QString flag = locate( "locale", QString("l10n/%1/flag.png").arg(zone->countryCode().lower()) );
-    if (!QFile::exists(flag))
-       flag = locate( "locale", "l10n/C/flag.png" );
-    if (QFile::exists(flag))
-       li->setPixmap(0, QPixmap(flag));
-  }
+void Zone::readZoneList(KListView *listView)
+{
+    const KTimezones::ZoneMap zones = m_zoneDb.allZones();
+    QMap< QString, QListViewItem * > KontinentMap;
+
+    listView->setRootIsDecorated(true);
+    for(KTimezones::ZoneMap::ConstIterator it = zones.begin(); it != zones.end(); ++it)
+    {
+        const KTimezone *zone = it.data();
+        QString tzName = zone->name();
+        QString comment = zone->comment();
+        if(!comment.isEmpty())
+            comment = i18n(comment.utf8());
+
+        const QStringList KontCity = QStringList::split("/", i18n(tzName.utf8()).replace("_", " "));
+        QListViewItem *Kontinent = KontinentMap[KontCity[0]];
+        if(!Kontinent)
+        {
+            KontinentMap[KontCity[0]] = new QListViewItem(listView, KontCity[0]);
+            Kontinent = KontinentMap[KontCity[0]];
+            Kontinent->setExpandable(true);
+        }
+
+        QCheckListItem *li = new QCheckListItem(Kontinent, KontCity[1], QCheckListItem::CheckBox);
+        li->setText(1, comment);
+        li->setText(2, tzName); /* store complete path in ListView */
+
+        if(_remotezonelist.findIndex(tzName) != -1)
+            li->setOn(true);
+
+        // locate the flag from /l10n/%1/flag.png
+        // if not available select default "C" flag
+        QString flag = locate("locale", QString("l10n/%1/flag.png").arg(zone->countryCode().lower()));
+        if(!QFile::exists(flag))
+            flag = locate("locale", "l10n/C/flag.png");
+        if(QFile::exists(flag))
+            li->setPixmap(0, QPixmap(flag));
+    }
 }
 
 void Zone::getSelectedZonelist(KListView *listView)
 {
-     _remotezonelist.clear();
+    _remotezonelist.clear();
 
-     /* loop through all entries */
-     QListViewItem *root = listView->firstChild();
-     while (root) {
-	if (root->firstChild()) {
-		root = root->firstChild();
-		continue;
-	}
+    /* loop through all entries */
+    QListViewItem *root = listView->firstChild();
+    while(root)
+    {
+        if(root->firstChild())
+        {
+            root = root->firstChild();
+            continue;
+        }
 
-	QCheckListItem *cl = (QCheckListItem*) root;
-	if (cl->isOn()) {
-		_remotezonelist.append(cl->text(2));
-	}
+        QCheckListItem *cl = (QCheckListItem *)root;
+        if(cl->isOn())
+        {
+            _remotezonelist.append(cl->text(2));
+        }
 
-	if (root->nextSibling()) {
-		root = root->nextSibling();
-		continue;
-	}
-	root = root->parent();
-	if (root)
-		root = root->nextSibling();
-     }
+        if(root->nextSibling())
+        {
+            root = root->nextSibling();
+            continue;
+        }
+        root = root->parent();
+        if(root)
+            root = root->nextSibling();
+    }
 }
 
 void Zone::nextZone()
 {
-    if (++_zoneIndex > _remotezonelist.count())
-	_zoneIndex = 0;
+    if(++_zoneIndex > _remotezonelist.count())
+        _zoneIndex = 0;
 }
 
 void Zone::prevZone()
 {
-    if (_zoneIndex == 0)
-	_zoneIndex = _remotezonelist.count();
+    if(_zoneIndex == 0)
+        _zoneIndex = _remotezonelist.count();
     else
-	--_zoneIndex;
+        --_zoneIndex;
 }
 
 void Zone::writeSettings()
 {
     config->setGroup("General");
     config->writeEntry("RemoteZones", _remotezonelist.join(","));
-    config->writeEntry("Initial_TZ",_zoneIndex);
+    config->writeEntry("Initial_TZ", _zoneIndex);
     config->sync();
 }

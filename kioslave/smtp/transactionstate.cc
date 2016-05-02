@@ -40,75 +40,88 @@
 
 namespace KioSMTP {
 
-  void TransactionState::setFailedFatally( int code, const QString & msg ) {
+void TransactionState::setFailedFatally(int code, const QString &msg)
+{
     mFailed = mFailedFatally = true;
     mErrorCode = code;
     mErrorMessage = msg;
-  }
+}
 
-  void TransactionState::setMailFromFailed( const QString & addr, const Response & r ) {
+void TransactionState::setMailFromFailed(const QString &addr, const Response &r)
+{
     setFailed();
     mErrorCode = KIO::ERR_NO_CONTENT;
-    if ( addr.isEmpty() )
-      mErrorMessage = i18n("The server did not accept a blank sender address.\n"
-			   "%1").arg( r.errorMessage() );
+    if(addr.isEmpty())
+        mErrorMessage = i18n(
+                            "The server did not accept a blank sender address.\n"
+                            "%1")
+                            .arg(r.errorMessage());
     else
-      mErrorMessage = i18n("The server did not accept the sender address \"%1\".\n"
-			   "%2").arg( addr ).arg( r.errorMessage() );
-  }
+        mErrorMessage = i18n(
+                            "The server did not accept the sender address \"%1\".\n"
+                            "%2")
+                            .arg(addr)
+                            .arg(r.errorMessage());
+}
 
-  void TransactionState::addRejectedRecipient( const RecipientRejection & r ) {
-    mRejectedRecipients.push_back( r );
-    if ( mRcptToDenyIsFailure )
-      setFailed();
-  }
+void TransactionState::addRejectedRecipient(const RecipientRejection &r)
+{
+    mRejectedRecipients.push_back(r);
+    if(mRcptToDenyIsFailure)
+        setFailed();
+}
 
-  void TransactionState::setDataCommandSucceeded( bool succeeded, const Response & r ) {
+void TransactionState::setDataCommandSucceeded(bool succeeded, const Response &r)
+{
     mDataCommandSucceeded = succeeded;
     mDataResponse = r;
-    if ( !succeeded )
-      setFailed();
-    else if ( failed() )
-      // can happen with pipelining: the server accepts the DATA, but
-      // we don't want to send the data, so force a connection
-      // shutdown:
-      setFailedFatally();
-  }
+    if(!succeeded)
+        setFailed();
+    else if(failed())
+        // can happen with pipelining: the server accepts the DATA, but
+        // we don't want to send the data, so force a connection
+        // shutdown:
+        setFailedFatally();
+}
 
-  int TransactionState::errorCode() const {
-    if ( !failed() )
-      return 0;
-    if ( mErrorCode )
-      return mErrorCode;
-    if ( haveRejectedRecipients() || !dataCommandSucceeded() )
-      return KIO::ERR_NO_CONTENT;
+int TransactionState::errorCode() const
+{
+    if(!failed())
+        return 0;
+    if(mErrorCode)
+        return mErrorCode;
+    if(haveRejectedRecipients() || !dataCommandSucceeded())
+        return KIO::ERR_NO_CONTENT;
     // ### what else?
     return KIO::ERR_INTERNAL;
-  }
+}
 
-  QString TransactionState::errorMessage() const {
-    if ( !failed() )
-      return QString::null;
+QString TransactionState::errorMessage() const
+{
+    if(!failed())
+        return QString::null;
 
-    if ( !mErrorMessage.isEmpty() )
-      return mErrorMessage;
+    if(!mErrorMessage.isEmpty())
+        return mErrorMessage;
 
-    if ( haveRejectedRecipients() ) {
-      QString msg = i18n("Message sending failed since the following recipients were rejected by the server:\n"
-			 "%1");
-      QStringList recip;
-      for ( RejectedRecipientList::const_iterator it = mRejectedRecipients.begin() ;
-	    it != mRejectedRecipients.end() ; ++it )
-	recip.push_back( (*it).recipient + " (" + (*it).reason + ')' );
-      return msg.arg( recip.join("\n") );
+    if(haveRejectedRecipients())
+    {
+        QString msg = i18n(
+            "Message sending failed since the following recipients were rejected by the server:\n"
+            "%1");
+        QStringList recip;
+        for(RejectedRecipientList::const_iterator it = mRejectedRecipients.begin(); it != mRejectedRecipients.end(); ++it)
+            recip.push_back((*it).recipient + " (" + (*it).reason + ')');
+        return msg.arg(recip.join("\n"));
     }
 
-    if ( !dataCommandSucceeded() )
-      return i18n("The attempt to start sending the message content failed.\n"
-		  "%1").arg( mDataResponse.errorMessage() );
+    if(!dataCommandSucceeded())
+        return i18n(
+                   "The attempt to start sending the message content failed.\n"
+                   "%1")
+            .arg(mDataResponse.errorMessage());
 
     // ### what else?
     return i18n("Unhandled error condition. Please send a bug report.");
-  }
-
+}
 }

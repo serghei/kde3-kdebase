@@ -31,32 +31,30 @@ class KConfig;
 class QWidget;
 
 class KCMXinerama : public KCModule {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	KCMXinerama(QWidget *parent = 0L, const char *name = 0L);
-	virtual ~KCMXinerama();
+    KCMXinerama(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KCMXinerama();
 
-	void load();
-	void load(bool useDefaults );
-	void save();
-	void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
 public slots:
-	void windowIndicator(int dpy);
-	void clearIndicator();
+    void windowIndicator(int dpy);
+    void clearIndicator();
 
-	void indicateWindows();
+    void indicateWindows();
 
 private:
-	QWidget* indicator(int dpy);
-	KConfig *config, *ksplashrc;
-	XineramaWidget *xw;
-	QTimer _timer;
-	QPtrList<QWidget> _indicators;
+    QWidget *indicator(int dpy);
+    KConfig *config, *ksplashrc;
+    XineramaWidget *xw;
+    QTimer _timer;
+    QPtrList< QWidget > _indicators;
 
-	int _displays;
-
+    int _displays;
 };
 
 #endif
-

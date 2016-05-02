@@ -35,54 +35,52 @@
 #endif
 
 
-SMBRoOptions::SMBRoOptions(QWidget *parent)
-  : KCModule(parent, "kcmkio")
+SMBRoOptions::SMBRoOptions(QWidget *parent) : KCModule(parent, "kcmkio")
 {
-   QGridLayout *layout = new QGridLayout(this,2,-1,KDialog::marginHint(),
-         KDialog::spacingHint());
-   QLabel *label=new QLabel(i18n("This is the configuration for the samba client only, not the server."),this);
-   layout->addMultiCellWidget(label,0,0,0,1);
+    QGridLayout *layout = new QGridLayout(this, 2, -1, KDialog::marginHint(), KDialog::spacingHint());
+    QLabel *label = new QLabel(i18n("This is the configuration for the samba client only, not the server."), this);
+    layout->addMultiCellWidget(label, 0, 0, 0, 1);
 
-   m_userLe=new QLineEdit(this);
-   label=new QLabel(m_userLe,i18n("Default user name:"),this);
-   layout->addWidget(label,1,0);
-   layout->addWidget(m_userLe,1,1);
+    m_userLe = new QLineEdit(this);
+    label = new QLabel(m_userLe, i18n("Default user name:"), this);
+    layout->addWidget(label, 1, 0);
+    layout->addWidget(m_userLe, 1, 1);
 
-   m_passwordLe=new QLineEdit(this);
-   m_passwordLe->setEchoMode(QLineEdit::Password);
-   label=new QLabel(m_passwordLe,i18n("Default password:"),this);
-   layout->addWidget(label,2,0);
-   layout->addWidget(m_passwordLe,2,1);
+    m_passwordLe = new QLineEdit(this);
+    m_passwordLe->setEchoMode(QLineEdit::Password);
+    label = new QLabel(m_passwordLe, i18n("Default password:"), this);
+    layout->addWidget(label, 2, 0);
+    layout->addWidget(m_passwordLe, 2, 1);
 
-/*   m_workgroupLe=new QLineEdit(this);
-   label=new QLabel(m_workgroupLe,i18n("Workgroup:"),this);
-   layout->addWidget(label,3,0);
-   layout->addWidget(m_workgroupLe,3,1);
+    /*   m_workgroupLe=new QLineEdit(this);
+       label=new QLabel(m_workgroupLe,i18n("Workgroup:"),this);
+       layout->addWidget(label,3,0);
+       layout->addWidget(m_workgroupLe,3,1);
 
-   m_showHiddenShares=new QCheckBox(i18n("Show hidden shares"),this);
-   layout->addMultiCellWidget(m_showHiddenShares,4,4,0,1);
+       m_showHiddenShares=new QCheckBox(i18n("Show hidden shares"),this);
+       layout->addMultiCellWidget(m_showHiddenShares,4,4,0,1);
 
-   m_encodingList = new KComboBox( false, this );
-   QStringList _strList = KGlobal::charsets()->availableEncodingNames();
-   m_encodingList->insertStringList( _strList );
+       m_encodingList = new KComboBox( false, this );
+       QStringList _strList = KGlobal::charsets()->availableEncodingNames();
+       m_encodingList->insertStringList( _strList );
 
-   label = new QLabel( m_encodingList, i18n( "MS Windows encoding:" ), this );
-   layout->addWidget( label, 3, 0 );
-   layout->addWidget( m_encodingList, 3, 1 );
-   */
+       label = new QLabel( m_encodingList, i18n( "MS Windows encoding:" ), this );
+       layout->addWidget( label, 3, 0 );
+       layout->addWidget( m_encodingList, 3, 1 );
+       */
 
-   layout->addWidget(new QWidget(this),4,0);
+    layout->addWidget(new QWidget(this), 4, 0);
 
-//   connect(m_showHiddenShares, SIGNAL(toggled(bool)), this, SLOT(changed()));
-   connect(m_userLe, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
-   connect(m_passwordLe, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
-//   connect(m_workgroupLe, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
-//   connect( m_encodingList, SIGNAL( activated( const QString & ) ), this , SLOT( changed() ) );
+    //   connect(m_showHiddenShares, SIGNAL(toggled(bool)), this, SLOT(changed()));
+    connect(m_userLe, SIGNAL(textChanged(const QString &)), this, SLOT(changed()));
+    connect(m_passwordLe, SIGNAL(textChanged(const QString &)), this, SLOT(changed()));
+    //   connect(m_workgroupLe, SIGNAL(textChanged(const QString&)), this, SLOT(changed()));
+    //   connect( m_encodingList, SIGNAL( activated( const QString & ) ), this , SLOT( changed() ) );
 
-   layout->setRowStretch(4, 1);
+    layout->setRowStretch(4, 1);
 
-   // finaly read the options
-   load();
+    // finaly read the options
+    load();
 }
 
 SMBRoOptions::~SMBRoOptions()
@@ -91,84 +89,85 @@ SMBRoOptions::~SMBRoOptions()
 
 void SMBRoOptions::load()
 {
-   KConfig *cfg = new KConfig("kioslaverc");
+    KConfig *cfg = new KConfig("kioslaverc");
 
-   QString tmp;
-   cfg->setGroup( "Browser Settings/SMBro" );
-   m_userLe->setText(cfg->readEntry("User"));
-//   m_workgroupLe->setText(cfg->readEntry("Workgroup"));
-//   m_showHiddenShares->setChecked(cfg->readBoolEntry("ShowHiddenShares",false));
+    QString tmp;
+    cfg->setGroup("Browser Settings/SMBro");
+    m_userLe->setText(cfg->readEntry("User"));
+    //   m_workgroupLe->setText(cfg->readEntry("Workgroup"));
+    //   m_showHiddenShares->setChecked(cfg->readBoolEntry("ShowHiddenShares",false));
 
-//   QStringList _strList = KGlobal::charsets()->availableEncodingNames();
-//   QString m_encoding = QTextCodec::codecForLocale()->name();
-//   m_encodingList->setCurrentItem( _strList.findIndex( cfg->readEntry( "Encoding", m_encoding.lower() ) ) );
+    //   QStringList _strList = KGlobal::charsets()->availableEncodingNames();
+    //   QString m_encoding = QTextCodec::codecForLocale()->name();
+    //   m_encodingList->setCurrentItem( _strList.findIndex( cfg->readEntry( "Encoding", m_encoding.lower() ) ) );
 
-   // unscramble
-   QString scrambled = cfg->readEntry( "Password" );
-   QString password = "";
-   for (uint i=0; i<scrambled.length()/3; i++)
-   {
-      QChar qc1 = scrambled[i*3];
-      QChar qc2 = scrambled[i*3+1];
-      QChar qc3 = scrambled[i*3+2];
-      unsigned int a1 = qc1.latin1() - '0';
-      unsigned int a2 = qc2.latin1() - 'A';
-      unsigned int a3 = qc3.latin1() - '0';
-      unsigned int num = ((a1 & 0x3F) << 10) | ((a2& 0x1F) << 5) | (a3 & 0x1F);
-      password[i] = QChar((uchar)((num - 17) ^ 173)); // restore
-   }
-   m_passwordLe->setText(password);
+    // unscramble
+    QString scrambled = cfg->readEntry("Password");
+    QString password = "";
+    for(uint i = 0; i < scrambled.length() / 3; i++)
+    {
+        QChar qc1 = scrambled[i * 3];
+        QChar qc2 = scrambled[i * 3 + 1];
+        QChar qc3 = scrambled[i * 3 + 2];
+        unsigned int a1 = qc1.latin1() - '0';
+        unsigned int a2 = qc2.latin1() - 'A';
+        unsigned int a3 = qc3.latin1() - '0';
+        unsigned int num = ((a1 & 0x3F) << 10) | ((a2 & 0x1F) << 5) | (a3 & 0x1F);
+        password[i] = QChar((uchar)((num - 17) ^ 173)); // restore
+    }
+    m_passwordLe->setText(password);
 
-   delete cfg;
+    delete cfg;
 }
 
 void SMBRoOptions::save()
 {
-   KConfig *cfg = new KConfig("kioslaverc");
+    KConfig *cfg = new KConfig("kioslaverc");
 
-   cfg->setGroup( "Browser Settings/SMBro" );
-   cfg->writeEntry( "User", m_userLe->text());
-//   cfg->writeEntry( "Workgroup", m_workgroupLe->text());
-//   cfg->writeEntry( "ShowHiddenShares", m_showHiddenShares->isChecked());
-//   cfg->writeEntry( "Encoding", m_encodingList->currentText() );
+    cfg->setGroup("Browser Settings/SMBro");
+    cfg->writeEntry("User", m_userLe->text());
+    //   cfg->writeEntry( "Workgroup", m_workgroupLe->text());
+    //   cfg->writeEntry( "ShowHiddenShares", m_showHiddenShares->isChecked());
+    //   cfg->writeEntry( "Encoding", m_encodingList->currentText() );
 
-   //taken from Nicola Brodu's smb ioslave
-   //it's not really secure, but at
-   //least better than storing the plain password
-   QString password(m_passwordLe->text());
-   QString scrambled;
-   for (uint i=0; i<password.length(); i++)
-   {
-      QChar c = password[i];
-      unsigned int num = (c.unicode() ^ 173) + 17;
-      unsigned int a1 = (num & 0xFC00) >> 10;
-      unsigned int a2 = (num & 0x3E0) >> 5;
-      unsigned int a3 = (num & 0x1F);
-      scrambled += (char)(a1+'0');
-      scrambled += (char)(a2+'A');
-      scrambled += (char)(a3+'0');
-   }
-   cfg->writeEntry( "Password", scrambled);
+    // taken from Nicola Brodu's smb ioslave
+    // it's not really secure, but at
+    // least better than storing the plain password
+    QString password(m_passwordLe->text());
+    QString scrambled;
+    for(uint i = 0; i < password.length(); i++)
+    {
+        QChar c = password[i];
+        unsigned int num = (c.unicode() ^ 173) + 17;
+        unsigned int a1 = (num & 0xFC00) >> 10;
+        unsigned int a2 = (num & 0x3E0) >> 5;
+        unsigned int a3 = (num & 0x1F);
+        scrambled += (char)(a1 + '0');
+        scrambled += (char)(a2 + 'A');
+        scrambled += (char)(a3 + '0');
+    }
+    cfg->writeEntry("Password", scrambled);
 
-   delete cfg;
+    delete cfg;
 }
 
 void SMBRoOptions::defaults()
 {
-   m_userLe->setText("");
-   m_passwordLe->setText("");
-//   m_workgroupLe->setText("");
-//   m_showHiddenShares->setChecked(false);
+    m_userLe->setText("");
+    m_passwordLe->setText("");
+    //   m_workgroupLe->setText("");
+    //   m_showHiddenShares->setChecked(false);
 }
 
 void SMBRoOptions::changed()
 {
-   emit KCModule::changed(true);
+    emit KCModule::changed(true);
 }
 
 QString SMBRoOptions::quickHelp() const
 {
-   return i18n("<h1>Windows Shares</h1>Konqueror is able to access shared "
+    return i18n(
+        "<h1>Windows Shares</h1>Konqueror is able to access shared "
         "windows filesystems if properly configured. If there is a "
         "specific computer from which you want to browse, fill in "
         "the <em>Browse server</em> field. This is mandatory if you "

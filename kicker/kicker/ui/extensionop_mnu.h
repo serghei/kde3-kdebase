@@ -26,11 +26,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qpopupmenu.h>
 
-class PanelExtensionOpMenu : public QPopupMenu
-{
+class PanelExtensionOpMenu : public QPopupMenu {
 public:
-    enum OpButton{Move = 9900, Remove = 9901, Help = 9902, About = 9903, Preferences = 9904, ReportBug = 9905, Shade = 9906 };
-    PanelExtensionOpMenu(const QString& extension, int actions, QWidget *parent=0, const char *name=0);
+    enum OpButton
+    {
+        Move = 9900,
+        Remove = 9901,
+        Help = 9902,
+        About = 9903,
+        Preferences = 9904,
+        ReportBug = 9905,
+        Shade = 9906
+    };
+    PanelExtensionOpMenu(const QString &extension, int actions, QWidget *parent = 0, const char *name = 0);
 };
 
 #endif

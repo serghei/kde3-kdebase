@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2001 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -33,37 +33,36 @@ class KColorButton;
 class QListBoxItem;
 class QPushButton;
 
-class StyleSettings : public KDialogBase
-{
-  Q_OBJECT
+class StyleSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    StyleSettings( QWidget *parent = 0, const char *name = 0 );
+public:
+    StyleSettings(QWidget *parent = 0, const char *name = 0);
     ~StyleSettings();
 
-    void setFirstForegroundColor( const QColor &color );
+    void setFirstForegroundColor(const QColor &color);
     QColor firstForegroundColor() const;
 
-    void setSecondForegroundColor( const QColor &color );
+    void setSecondForegroundColor(const QColor &color);
     QColor secondForegroundColor() const;
 
-    void setAlarmColor( const QColor &color );
+    void setAlarmColor(const QColor &color);
     QColor alarmColor() const;
 
-    void setBackgroundColor( const QColor &color );
+    void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
 
-    void setFontSize( uint size );
+    void setFontSize(uint size);
     uint fontSize() const;
 
-    void setSensorColors( const QValueList<QColor> &list );
-    QValueList<QColor> sensorColors();
+    void setSensorColors(const QValueList< QColor > &list);
+    QValueList< QColor > sensorColors();
 
-  private slots:
+private slots:
     void editSensorColor();
-    void selectionChanged( QListBoxItem* );
+    void selectionChanged(QListBoxItem *);
 
-  private:
+private:
     KColorButton *mFirstForegroundColor;
     KColorButton *mSecondForegroundColor;
     KColorButton *mAlarmColor;

@@ -26,14 +26,13 @@
 #include <kio/slavebase.h>
 
 
-class AboutProtocol : public KIO::SlaveBase
-{
+class AboutProtocol : public KIO::SlaveBase {
 public:
     AboutProtocol(const QCString &pool_socket, const QCString &app_socket);
     virtual ~AboutProtocol();
 
-    virtual void get(const KURL& url);
-    virtual void mimetype(const KURL& url);
+    virtual void get(const KURL &url);
+    virtual void mimetype(const KURL &url);
 };
 
 #endif

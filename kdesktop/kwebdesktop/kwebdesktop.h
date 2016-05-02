@@ -24,46 +24,46 @@
 #include <kparts/browserextension.h>
 #include <khtml_part.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
-class KWebDesktop : public QObject
-{
+class KWebDesktop : public QObject {
     Q_OBJECT
 public:
-    KWebDesktop( QObject* parent, const QCString & imageFile, int width, int height )
-        : QObject( parent ),
-          m_part( 0 ),
-          m_imageFile( imageFile ),
-          m_width( width ),
-          m_height( height ) {}
+    KWebDesktop(QObject *parent, const QCString &imageFile, int width, int height)
+        : QObject(parent), m_part(0), m_imageFile(imageFile), m_width(width), m_height(height)
+    {
+    }
     ~KWebDesktop();
 
-    KParts::ReadOnlyPart* createPart( const QString& mimeType );
+    KParts::ReadOnlyPart *createPart(const QString &mimeType);
 
 private slots:
     void slotCompleted();
 
 private:
-    KParts::ReadOnlyPart* m_part;
+    KParts::ReadOnlyPart *m_part;
     QCString m_imageFile;
     int m_width;
     int m_height;
 };
 
 
-class KWebDesktopRun : public QObject
-{
+class KWebDesktopRun : public QObject {
     Q_OBJECT
 public:
-    KWebDesktopRun( KWebDesktop* webDesktop, const KURL & url );
-    ~KWebDesktopRun() {}
+    KWebDesktopRun(KWebDesktop *webDesktop, const KURL &url);
+    ~KWebDesktopRun()
+    {
+    }
 
 protected slots:
-    void slotMimetype( KIO::Job *job, const QString &_type );
-    void slotFinished( KIO::Job * job );
+    void slotMimetype(KIO::Job *job, const QString &_type);
+    void slotFinished(KIO::Job *job);
 
 private:
-    KWebDesktop* m_webDesktop;
+    KWebDesktop *m_webDesktop;
     KURL m_url;
 };
 

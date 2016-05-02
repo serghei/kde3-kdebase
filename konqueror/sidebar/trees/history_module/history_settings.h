@@ -25,15 +25,18 @@
 
 #include <dcopobject.h>
 
-class KonqSidebarHistorySettings : public QObject, public DCOPObject
-{
+class KonqSidebarHistorySettings : public QObject, public DCOPObject {
     K_DCOP
     Q_OBJECT
 
 public:
-    enum { MINUTES, DAYS };
+    enum
+    {
+        MINUTES,
+        DAYS
+    };
 
-    KonqSidebarHistorySettings( QObject *parent, const char *name );
+    KonqSidebarHistorySettings(QObject *parent, const char *name);
     virtual ~KonqSidebarHistorySettings();
 
     void readSettings(bool global);
@@ -55,10 +58,9 @@ signals:
 
 protected:
     KonqSidebarHistorySettings();
-    KonqSidebarHistorySettings( const KonqSidebarHistorySettings& );
+    KonqSidebarHistorySettings(const KonqSidebarHistorySettings &);
 
-k_dcop:
-    void notifySettingsChanged();
+    k_dcop : void notifySettingsChanged();
 
 private: // to make dcopidl happy :-/
 };

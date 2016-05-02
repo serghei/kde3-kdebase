@@ -70,18 +70,16 @@
 #include "kasstartupitem.h"
 #include "kasstartupitem.moc"
 
-KasStartupItem::KasStartupItem( KasBar *parent, Startup::Ptr startup )
-    : KasItem( parent ),
-      startup_(startup), frame(0)
+KasStartupItem::KasStartupItem(KasBar *parent, Startup::Ptr startup) : KasItem(parent), startup_(startup), frame(0)
 {
-    setText( startup_->text() );
-    setIcon( icon() );
-    setShowFrame( false );
-    setAnimation( resources()->startupAnimation() );
+    setText(startup_->text());
+    setIcon(icon());
+    setShowFrame(false);
+    setAnimation(resources()->startupAnimation());
 
-    aniTimer = new QTimer( this );
-    connect( aniTimer, SIGNAL( timeout() ), SLOT( aniTimerFired() ) );
-    aniTimer->start( 100 );
+    aniTimer = new QTimer(this);
+    connect(aniTimer, SIGNAL(timeout()), SLOT(aniTimerFired()));
+    aniTimer->start(100);
 }
 
 KasStartupItem::~KasStartupItem()
@@ -90,72 +88,62 @@ KasStartupItem::~KasStartupItem()
 
 QPixmap KasStartupItem::icon() const
 {
-   /**
-    * This icon stuff should all be handled by the task manager api, but isn't yet.
-    */
-   QPixmap pixmap;
-
-   switch( kasbar()->itemSize() ) {
-   case KasBar::Small:
-     /* ***** NOP ******
-	pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
-						  KIcon::NoGroup,
-						  KIcon::SizeSmall );
+    /**
+     * This icon stuff should all be handled by the task manager api, but isn't yet.
      */
-      break;
-   case KasBar::Medium:
-	pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
-						  KIcon::NoGroup,
-						  KIcon::SizeMedium );
-      break;
-   case KasBar::Large:
-	pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
-						  KIcon::NoGroup,
-						  KIcon::SizeLarge );
-      break;
-   case KasBar::Huge:
-	pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
-						  KIcon::NoGroup,
-						  KIcon::SizeHuge );
-      break;
-   case KasBar::Enormous:
-	pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
-						  KIcon::NoGroup,
-						  KIcon::SizeEnormous );
-      break;
-   default:
-	pixmap = KGlobal::iconLoader()->loadIcon( "error",
-						  KIcon::NoGroup,
-						  KIcon::SizeSmall );
-   }
+    QPixmap pixmap;
 
-   return pixmap;
+    switch(kasbar()->itemSize())
+    {
+        case KasBar::Small:
+            /* ***** NOP ******
+           pixmap = KGlobal::iconLoader()->loadIcon( startup_->icon(),
+                                 KIcon::NoGroup,
+                                 KIcon::SizeSmall );
+            */
+            break;
+        case KasBar::Medium:
+            pixmap = KGlobal::iconLoader()->loadIcon(startup_->icon(), KIcon::NoGroup, KIcon::SizeMedium);
+            break;
+        case KasBar::Large:
+            pixmap = KGlobal::iconLoader()->loadIcon(startup_->icon(), KIcon::NoGroup, KIcon::SizeLarge);
+            break;
+        case KasBar::Huge:
+            pixmap = KGlobal::iconLoader()->loadIcon(startup_->icon(), KIcon::NoGroup, KIcon::SizeHuge);
+            break;
+        case KasBar::Enormous:
+            pixmap = KGlobal::iconLoader()->loadIcon(startup_->icon(), KIcon::NoGroup, KIcon::SizeEnormous);
+            break;
+        default:
+            pixmap = KGlobal::iconLoader()->loadIcon("error", KIcon::NoGroup, KIcon::SizeSmall);
+    }
+
+    return pixmap;
 }
 
 void KasStartupItem::aniTimerFired()
 {
 
-    if ( frame == 40 )
-	frame = 0;
+    if(frame == 40)
+        frame = 0;
     else
-	frame++;
+        frame++;
 
     advanceAnimation();
 }
 
-void KasStartupItem::paint( QPainter *p )
+void KasStartupItem::paint(QPainter *p)
 {
     p->save();
 
-    p->setClipRect( 0, 0, extent(), extent(), QPainter::CoordPainter );
-    p->translate( extent()/2, extent()/2 );
-    p->rotate( 9.0L * frame );
-    p->scale( 0.7L, 0.7L );
-    p->translate( -extent()/2, -extent()/2 );
+    p->setClipRect(0, 0, extent(), extent(), QPainter::CoordPainter);
+    p->translate(extent() / 2, extent() / 2);
+    p->rotate(9.0L * frame);
+    p->scale(0.7L, 0.7L);
+    p->translate(-extent() / 2, -extent() / 2);
 
-    KasItem::paint( p );
+    KasItem::paint(p);
 
     p->restore();
-    paintAnimation( p );
+    paintAnimation(p);
 }
-

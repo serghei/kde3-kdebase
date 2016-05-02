@@ -21,8 +21,7 @@
 #include <kdialogbase.h>
 #include <kservice.h>
 
-class KServiceSelectDlg : public KDialogBase
-{
+class KServiceSelectDlg : public KDialogBase {
     Q_OBJECT
 public:
     /**
@@ -32,7 +31,7 @@ public:
      * @param value is the initial service to select (not implemented currently)
      * @param parent parent widget
      */
-    KServiceSelectDlg( const QString& serviceType, const QString& value = QString::null, QWidget *parent = 0L );
+    KServiceSelectDlg(const QString &serviceType, const QString &value = QString::null, QWidget *parent = 0L);
 
     ~KServiceSelectDlg();
 
@@ -40,8 +39,9 @@ public:
      * @return the chosen service
      */
     KService::Ptr service();
+
 private:
-    KListBox * m_listbox;
+    KListBox *m_listbox;
 };
 
 #endif

@@ -28,93 +28,89 @@
 
 #include "../app/katedocmanager.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivateDocumentManager
-  {
-  public:
-    PrivateDocumentManager ()
+class PrivateDocumentManager {
+public:
+    PrivateDocumentManager()
     {
     }
 
-    ~PrivateDocumentManager ()
+    ~PrivateDocumentManager()
     {
     }
 
     KateDocManager *docMan;
-  };
+};
 
-DocumentManager::DocumentManager (void *documentManager) : QObject ((KateDocManager*) documentManager)
+DocumentManager::DocumentManager(void *documentManager) : QObject((KateDocManager *)documentManager)
 {
-  d = new PrivateDocumentManager ();
-  d->docMan = (KateDocManager*) documentManager;
+    d = new PrivateDocumentManager();
+    d->docMan = (KateDocManager *)documentManager;
 }
 
-DocumentManager::~DocumentManager ()
+DocumentManager::~DocumentManager()
 {
-  delete d;
+    delete d;
 }
 
-Document *DocumentManager::document (uint n)
+Document *DocumentManager::document(uint n)
 {
-  return d->docMan->document (n);
+    return d->docMan->document(n);
 }
 
-Document *DocumentManager::activeDocument ()
+Document *DocumentManager::activeDocument()
 {
-  return d->docMan->activeDocument ();
+    return d->docMan->activeDocument();
 }
 
-Document *DocumentManager::documentWithID (uint id)
+Document *DocumentManager::documentWithID(uint id)
 {
-  return d->docMan->documentWithID (id);
+    return d->docMan->documentWithID(id);
 }
 
-int DocumentManager::findDocument (const KURL &url)
+int DocumentManager::findDocument(const KURL &url)
 {
-  return d->docMan->findDocument (url);
+    return d->docMan->findDocument(url);
 }
 
-bool DocumentManager::isOpen (const KURL &url)
+bool DocumentManager::isOpen(const KURL &url)
 {
-  return d->docMan->isOpen (url);
+    return d->docMan->isOpen(url);
 }
 
-uint DocumentManager::documents ()
+uint DocumentManager::documents()
 {
-  return d->docMan->documents ();
+    return d->docMan->documents();
 }
 
-Document *DocumentManager::openURL(const KURL&url,const QString &encoding,uint *id)
+Document *DocumentManager::openURL(const KURL &url, const QString &encoding, uint *id)
 {
-  return d->docMan->openURL (url, encoding, id);
+    return d->docMan->openURL(url, encoding, id);
 }
 
 bool DocumentManager::closeDocument(Document *document)
 {
-  return d->docMan->closeDocument (document);
+    return d->docMan->closeDocument(document);
 }
 
 bool DocumentManager::closeDocument(uint n)
 {
-  return d->docMan->closeDocument (n);
+    return d->docMan->closeDocument(n);
 }
 
 bool DocumentManager::closeDocumentWithID(uint id)
 {
-  return d->docMan->closeDocument (id);
+    return d->docMan->closeDocument(id);
 }
 
 bool DocumentManager::closeAllDocuments()
 {
-  return d->docMan->closeAllDocuments ();
+    return d->docMan->closeAllDocuments();
 }
 
-DocumentManager *documentManager ()
+DocumentManager *documentManager()
 {
-  return application()->documentManager ();
+    return application()->documentManager();
 }
-
 }
-

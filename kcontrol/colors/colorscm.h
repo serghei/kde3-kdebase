@@ -34,8 +34,7 @@ class KColorSchemeList;
 /**
  * The Desktop/Colors tab in kcontrol.
  */
-class KColorScheme: public KCModule
-{
+class KColorScheme : public KCModule {
     Q_OBJECT
 
 public:
@@ -43,7 +42,7 @@ public:
     ~KColorScheme();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
@@ -60,13 +59,13 @@ private slots:
     void slotShadeSortColumnChanged(bool);
 
 private:
-    void setColorName( const QString &name, int id );
-    void readScheme(int index=0);
+    void setColorName(const QString &name, int id);
+    void readScheme(int index = 0);
     void readSchemeNames();
-	void insertEntry(const QString &sFile, const QString &sName);
+    void insertEntry(const QString &sFile, const QString &sName);
     int findSchemeByName(const QString &scheme);
     QPalette createPalette();
-    
+
     QColor &color(int index);
 
     int nSysSchemes;
@@ -82,7 +81,7 @@ private:
 
     KColorButton *colorButton;
     WidgetCanvas *cs;
-    
+
     QCheckBox *cbExportColors;
     QCheckBox *cbShadeList;
 };

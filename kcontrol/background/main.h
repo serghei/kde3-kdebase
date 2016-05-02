@@ -18,8 +18,7 @@ class BGDialog;
 /**
  * The Desktop/Background tab in kcontrol.
  */
-class KBackground: public KCModule
-{
+class KBackground : public KCModule {
     Q_OBJECT
 
 public:
@@ -27,13 +26,13 @@ public:
     ~KBackground();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
 private:
-    BGDialog      *m_base;
-    KConfig       *m_pConfig;
+    BGDialog *m_base;
+    KConfig *m_pConfig;
 };
 
 

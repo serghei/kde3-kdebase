@@ -21,83 +21,82 @@
 class KFontCombo;
 class QCheckBox;
 
-class CfgRedmond: public ThemeEngineConfig
-{
-  Q_OBJECT
+class CfgRedmond : public ThemeEngineConfig {
+    Q_OBJECT
 public:
-  CfgRedmond( QWidget *, KConfig * );
+    CfgRedmond(QWidget *, KConfig *);
 
 protected:
-  QCheckBox *mShowUsername;
-  QCheckBox *mShowIcon;
-  QCheckBox *mShowWelcome;
-  KFontCombo *mWelcomeFont;
-  KFontCombo *mUsernameFont;
-  KFontCombo *mActionFont;
+    QCheckBox *mShowUsername;
+    QCheckBox *mShowIcon;
+    QCheckBox *mShowWelcome;
+    KFontCombo *mWelcomeFont;
+    KFontCombo *mUsernameFont;
+    KFontCombo *mActionFont;
 };
 
 class ObjKsTheme;
-class ThemeRedmond: public ThemeEngine
-{
-  Q_OBJECT
+class ThemeRedmond : public ThemeEngine {
+    Q_OBJECT
 public:
-  ThemeRedmond( QWidget *, const char *, const QStringList& );
+    ThemeRedmond(QWidget *, const char *, const QStringList &);
 
-  inline const QString name() { return( QString("Redmond") );  }
-  static QStringList names()
-  {
-    QStringList Names;
-    Names << "Redmond";
-    return( Names );
-  };
+    inline const QString name()
+    {
+        return (QString("Redmond"));
+    }
+    static QStringList names()
+    {
+        QStringList Names;
+        Names << "Redmond";
+        return (Names);
+    };
 
 public slots:
-  inline void slotSetText( const QString& s )
-  {
-    if( mText != s )
+    inline void slotSetText(const QString &s)
     {
-      mText = s;
-      repaint( false );
-    }
-  };
+        if(mText != s)
+        {
+            mText = s;
+            repaint(false);
+        }
+    };
 
 private:
-  void paintEvent( QPaintEvent * );
+    void paintEvent(QPaintEvent *);
 
-  void _initUi();
-  void _readSettings();
+    void _initUi();
+    void _readSettings();
 
-  QString mText;
-  QPixmap mPixmap;
-  bool mRedrawKonqi;
-  QPoint mMsgPos;
-  KPixmap mImage;
+    QString mText;
+    QPixmap mPixmap;
+    bool mRedrawKonqi;
+    QPoint mMsgPos;
+    KPixmap mImage;
 
-  // ThemeEngine configuration.
-  bool mShowWelcomeText;
-  bool mShowWelcomeTextShadow;
-  bool mWelcomeFontItalic;
-  bool mShowUsernameText;
-  bool mShowActionText;
-  bool mShowIcon;
-  bool mUseKdmUserIcon;
-  QString mBackgroundImage;
-  QString mWelcomeText;
-  QString mUsernameText; // Leave this undefined to autodetect the username.
-  QString mIcon;
-  QFont mWelcomeFont;
-  QFont mUsernameFont;
-  QFont mActionFont;
-  QColor mWelcomeTextColor;
-  QColor mWelcomeTextShadowColor;
-  QColor mUsernameTextColor;
-  QColor mActionTextColor;
-  QPoint mWelcomeTextPosition; // Set this to (0,0) to autoposition the text.
-  QPoint mUsernameTextPosition; // Likewise.
-  QPoint mActionTextPosition; // Likewise likewise.
-  QPoint mIconPosition; // ...
-
-}
-;
+    // ThemeEngine configuration.
+    bool mShowWelcomeText;
+    bool mShowWelcomeTextShadow;
+    bool mWelcomeFontItalic;
+    bool mShowUsernameText;
+    bool mShowActionText;
+    bool mShowIcon;
+    bool mUseKdmUserIcon;
+    QString mBackgroundImage;
+    QString mWelcomeText;
+    QString mUsernameText; // Leave this undefined to autodetect the username.
+    QString mIcon;
+    QFont mWelcomeFont;
+    QFont mUsernameFont;
+    QFont mActionFont;
+    QColor mWelcomeTextColor;
+    QColor mWelcomeTextShadowColor;
+    QColor mUsernameTextColor;
+    QColor mActionTextColor;
+    QPoint mWelcomeTextPosition;  // Set this to (0,0) to autoposition the text.
+    QPoint mUsernameTextPosition; // Likewise.
+    QPoint mActionTextPosition;   // Likewise likewise.
+    QPoint mIconPosition;         // ...
+};
 
 #endif

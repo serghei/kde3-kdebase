@@ -21,48 +21,53 @@
 
 #include "plugin.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivatePluginConfigInterfaceExtension
-{
-  public:
-    PrivatePluginConfigInterfaceExtension() {}
-     ~PrivatePluginConfigInterfaceExtension() {}
+class PrivatePluginConfigInterfaceExtension {
+public:
+    PrivatePluginConfigInterfaceExtension()
+    {
+    }
+    ~PrivatePluginConfigInterfaceExtension()
+    {
+    }
 };
-
 }
 
 using namespace Kate;
 
-PluginConfigPage::PluginConfigPage ( QWidget *parent, const char *name ) : QWidget (parent, name) { }
- 
-PluginConfigPage::~PluginConfigPage () { }
+PluginConfigPage::PluginConfigPage(QWidget *parent, const char *name) : QWidget(parent, name)
+{
+}
+
+PluginConfigPage::~PluginConfigPage()
+{
+}
 
 unsigned int PluginConfigInterfaceExtension::globalPluginConfigInterfaceExtensionNumber = 0;
 
 PluginConfigInterfaceExtension::PluginConfigInterfaceExtension()
 {
-  globalPluginConfigInterfaceExtensionNumber++;
-  myPluginConfigInterfaceExtensionNumber = globalPluginConfigInterfaceExtensionNumber++;
+    globalPluginConfigInterfaceExtensionNumber++;
+    myPluginConfigInterfaceExtensionNumber = globalPluginConfigInterfaceExtensionNumber++;
 
-  d = new PrivatePluginConfigInterfaceExtension();
+    d = new PrivatePluginConfigInterfaceExtension();
 }
 
 PluginConfigInterfaceExtension::~PluginConfigInterfaceExtension()
 {
-  delete d;
+    delete d;
 }
 
-unsigned int PluginConfigInterfaceExtension::pluginConfigInterfaceExtensionNumber () const
+unsigned int PluginConfigInterfaceExtension::pluginConfigInterfaceExtensionNumber() const
 {
-  return myPluginConfigInterfaceExtensionNumber;
+    return myPluginConfigInterfaceExtensionNumber;
 }
-                      
-PluginConfigInterfaceExtension *Kate::pluginConfigInterfaceExtension (Plugin *plugin)
-{                       
-  if (!plugin)
-    return 0;
 
-  return static_cast<PluginConfigInterfaceExtension*>(plugin->qt_cast("Kate::PluginConfigInterfaceExtension"));
+PluginConfigInterfaceExtension *Kate::pluginConfigInterfaceExtension(Plugin *plugin)
+{
+    if(!plugin)
+        return 0;
+
+    return static_cast< PluginConfigInterfaceExtension * >(plugin->qt_cast("Kate::PluginConfigInterfaceExtension"));
 }

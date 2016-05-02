@@ -1,9 +1,9 @@
 /*
 
-	1998 by Helge Deller (deller@gmx.de)
-	free source under GPL
-	
-	!!!!! this file will be included by info.cpp !!!!!
+    1998 by Helge Deller (deller@gmx.de)
+    free source under GPL
+
+    !!!!! this file will be included by info.cpp !!!!!
 */
 
 
@@ -25,64 +25,64 @@
 #define INFO_CD_ROM_AVAILABLE
 
 
-/*  all following functions should return TRUE, when the Information 
+/*  all following functions should return TRUE, when the Information
     was filled into the lBox-Widget.
     returning false indicates, that information was not available.
 */
-       
 
-bool GetInfo_CPU( QListView * )
+
+bool GetInfo_CPU(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_IRQ( QListView * )
+bool GetInfo_IRQ(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_DMA( QListView * )
+bool GetInfo_DMA(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_PCI( QListView * )
+bool GetInfo_PCI(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_IO_Ports( QListView * )
+bool GetInfo_IO_Ports(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Sound( QListView * )
+bool GetInfo_Sound(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Devices( QListView * )
+bool GetInfo_Devices(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_SCSI( QListView * )
+bool GetInfo_SCSI(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Partitions( QListView * )
+bool GetInfo_Partitions(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_XServer_and_Video( QListView *lBox )
+bool GetInfo_XServer_and_Video(QListView *lBox)
 {
-	return GetInfo_XServer_Generic( lBox );
+    return GetInfo_XServer_Generic(lBox);
 }
 
 /* Generic GetInfo? ~Jahshan */
-bool GetInfo_CD_ROM(QListView * lBox)
+bool GetInfo_CD_ROM(QListView *lBox)
 {
-	return false;
+    return false;
 }

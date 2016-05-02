@@ -55,22 +55,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #undef FocusOut
 #endif
 
-KSharedPixmap* KMiniPagerButton::s_commonSharedPixmap;
-KPixmap* KMiniPagerButton::s_commonBgPixmap;
+KSharedPixmap *KMiniPagerButton::s_commonSharedPixmap;
+KPixmap *KMiniPagerButton::s_commonBgPixmap;
 
-KMiniPagerButton::KMiniPagerButton(int desk, bool useViewPorts, const QPoint& viewport,
-        KMiniPager *parent, const char *name)
-    : QButton(parent, name),
-      m_pager(parent),
-      m_desktop(desk),
-      m_useViewports(useViewPorts),
-      m_viewport(viewport),
-      m_lineEdit(0),
-      m_sharedPixmap(0),
-      m_bgPixmap(0),
-      m_isCommon(false),
-      m_currentWindow(0),
-      m_inside(false)
+KMiniPagerButton::KMiniPagerButton(int desk, bool useViewPorts, const QPoint &viewport, KMiniPager *parent, const char *name)
+    : QButton(parent, name)
+    , m_pager(parent)
+    , m_desktop(desk)
+    , m_useViewports(useViewPorts)
+    , m_viewport(viewport)
+    , m_lineEdit(0)
+    , m_sharedPixmap(0)
+    , m_bgPixmap(0)
+    , m_isCommon(false)
+    , m_currentWindow(0)
+    , m_inside(false)
 {
     setToggleButton(true);
     setAcceptDrops(true);
@@ -86,7 +85,7 @@ KMiniPagerButton::KMiniPagerButton(int desk, bool useViewPorts, const QPoint& vi
     connect(&m_dragSwitchTimer, SIGNAL(timeout()), this, SLOT(slotDragSwitch()));
     connect(&m_updateCompressor, SIGNAL(timeout()), this, SLOT(update()));
 
-    if (m_pager->desktopPreview())
+    if(m_pager->desktopPreview())
     {
         setMouseTracking(true);
     }
@@ -99,31 +98,29 @@ KMiniPagerButton::~KMiniPagerButton()
     delete m_bgPixmap;
 }
 
-QRect KMiniPagerButton::mapGeometryToViewport(const KWin::WindowInfo& info) const
+QRect KMiniPagerButton::mapGeometryToViewport(const KWin::WindowInfo &info) const
 {
-    if (!m_useViewports)
+    if(!m_useViewports)
         return info.frameGeometry();
 
     // ### fix vertically layouted viewports
     QRect _r(info.frameGeometry());
     QPoint vx(m_pager->kwin()->currentViewport(m_pager->kwin()->currentDesktop()));
 
-    _r.moveBy( - (m_desktop - vx.x()) * QApplication::desktop()->width(),
-               0);
+    _r.moveBy(-(m_desktop - vx.x()) * QApplication::desktop()->width(), 0);
 
-    if ((info.state() & NET::Sticky))
+    if((info.state() & NET::Sticky))
     {
-        _r.moveTopLeft(QPoint(_r.x() % QApplication::desktop()->width(),
-                    _r.y() % QApplication::desktop()->height()));
-
+        _r.moveTopLeft(QPoint(_r.x() % QApplication::desktop()->width(), _r.y() % QApplication::desktop()->height()));
     }
 
     return _r;
 }
 
-QPoint KMiniPagerButton::mapPointToViewport(const QPoint& _p) const
+QPoint KMiniPagerButton::mapPointToViewport(const QPoint &_p) const
 {
-    if (!m_useViewports) return _p;
+    if(!m_useViewports)
+        return _p;
 
     QPoint vx(m_pager->kwin()->currentViewport(m_pager->kwin()->currentDesktop()));
 
@@ -133,48 +130,47 @@ QPoint KMiniPagerButton::mapPointToViewport(const QPoint& _p) const
     return p;
 }
 
-bool KMiniPagerButton::shouldPaintWindow( KWin::WindowInfo *info ) const
+bool KMiniPagerButton::shouldPaintWindow(KWin::WindowInfo *info) const
 {
-    if (!info)
-      return false;
+    if(!info)
+        return false;
 
-//  if (info->mappingState != NET::Visible)
-//    return false;
+    //  if (info->mappingState != NET::Visible)
+    //    return false;
 
-    NET::WindowType type = info->windowType( NET::NormalMask | NET::DesktopMask
-        | NET::DockMask | NET::ToolbarMask | NET::MenuMask | NET::DialogMask
-        | NET::OverrideMask | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask );
+    NET::WindowType type = info->windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask | NET::ToolbarMask | NET::MenuMask | NET::DialogMask
+                                            | NET::OverrideMask | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask);
 
-    if (type == NET::Desktop || type == NET::Dock || type == NET::TopMenu)
-      return false;
+    if(type == NET::Desktop || type == NET::Dock || type == NET::TopMenu)
+        return false;
 
-    if (!m_useViewports && !info->isOnDesktop(m_desktop))
-      return false;
+    if(!m_useViewports && !info->isOnDesktop(m_desktop))
+        return false;
 
-    if (m_useViewports) {
+    if(m_useViewports)
+    {
         QRect r = mapGeometryToViewport(*info);
 
-        if (!info->hasState(NET::Sticky) &&
-            !QApplication::desktop()->geometry().contains(r.topLeft()) &&
-            !QApplication::desktop()->geometry().contains(r.topRight()))
+        if(!info->hasState(NET::Sticky) && !QApplication::desktop()->geometry().contains(r.topLeft())
+           && !QApplication::desktop()->geometry().contains(r.topRight()))
             return false;
     }
 
-    if (info->state() & NET::SkipPager || info->state() & NET::Shaded )
-      return false;
+    if(info->state() & NET::SkipPager || info->state() & NET::Shaded)
+        return false;
 
-    if (info->win() == m_pager->winId())
-      return false;
+    if(info->win() == m_pager->winId())
+        return false;
 
-    if ( info->isMinimized() )
-      return false;
+    if(info->isMinimized())
+        return false;
 
     return true;
 }
 
 void KMiniPagerButton::resizeEvent(QResizeEvent *ev)
 {
-    if (m_lineEdit)
+    if(m_lineEdit)
     {
         m_lineEdit->setGeometry(rect());
     }
@@ -189,7 +185,7 @@ void KMiniPagerButton::windowsChanged()
 {
     m_currentWindow = 0;
 
-    if (!m_updateCompressor.isActive())
+    if(!m_updateCompressor.isActive())
     {
         m_updateCompressor.start(50, true);
     }
@@ -206,70 +202,66 @@ void KMiniPagerButton::backgroundChanged()
 
 void KMiniPagerButton::loadBgPixmap()
 {
-    if (m_pager->bgType() != PagerSettings::EnumBackgroundType::BgLive)
+    if(m_pager->bgType() != PagerSettings::EnumBackgroundType::BgLive)
         return; // not needed
 
     DCOPClient *client = kapp->dcopClient();
-    if (!client->isAttached())
+    if(!client->isAttached())
     {
         client->attach();
     }
 
     QCString kdesktop_name;
     int screen_number = DefaultScreen(qt_xdisplay());
-    if (screen_number == 0)
+    if(screen_number == 0)
         kdesktop_name = "kdesktop";
     else
         kdesktop_name.sprintf("kdesktop-screen-%d", screen_number);
 
     QByteArray data, replyData;
     QCString replyType;
-    if (client->call(kdesktop_name, "KBackgroundIface", "isCommon()",
-                     data, replyType, replyData))
+    if(client->call(kdesktop_name, "KBackgroundIface", "isCommon()", data, replyType, replyData))
     {
-        if (replyType == "bool")
+        if(replyType == "bool")
         {
             QDataStream reply(replyData, IO_ReadOnly);
             reply >> m_isCommon;
         }
     }
 
-    if (m_isCommon)
+    if(m_isCommon)
     {
-        if (s_commonBgPixmap)
+        if(s_commonBgPixmap)
         { // pixmap is already ready, just use it
-            backgroundLoaded( true );
+            backgroundLoaded(true);
             return;
         }
-        else if (s_commonSharedPixmap)
+        else if(s_commonSharedPixmap)
         { // other button is already fetching the pixmap
-            connect(s_commonSharedPixmap, SIGNAL(done(bool)),
-                    SLOT(backgroundLoaded(bool)));
+            connect(s_commonSharedPixmap, SIGNAL(done(bool)), SLOT(backgroundLoaded(bool)));
             return;
         }
     }
 
-    QDataStream args( data, IO_WriteOnly );
+    QDataStream args(data, IO_WriteOnly);
     args << 1;
     client->send(kdesktop_name, "KBackgroundIface", "setExport(int)", data);
 
-    if (m_isCommon)
+    if(m_isCommon)
     {
-        if (!s_commonSharedPixmap)
+        if(!s_commonSharedPixmap)
         {
             s_commonSharedPixmap = new KSharedPixmap;
-            connect(s_commonSharedPixmap, SIGNAL(done(bool)),
-                    SLOT(backgroundLoaded(bool)));
+            connect(s_commonSharedPixmap, SIGNAL(done(bool)), SLOT(backgroundLoaded(bool)));
         }
         s_commonSharedPixmap->loadFromShared(QString("DESKTOP1"));
     }
     else
     {
-        if (!m_sharedPixmap)
+        if(!m_sharedPixmap)
         {
             m_sharedPixmap = new KSharedPixmap;
-            connect(m_sharedPixmap, SIGNAL(done(bool)),
-                    SLOT(backgroundLoaded(bool)));
+            connect(m_sharedPixmap, SIGNAL(done(bool)), SLOT(backgroundLoaded(bool)));
         }
         m_sharedPixmap->loadFromShared(QString("DESKTOP%1").arg(m_desktop));
     }
@@ -277,31 +269,31 @@ void KMiniPagerButton::loadBgPixmap()
 
 static QPixmap scalePixmap(const QPixmap &pixmap, int width, int height)
 {
-    if (pixmap.width()>100)
+    if(pixmap.width() > 100)
     {
         KPixmapIO io;
-        QImage img( io.convertToImage( pixmap ) );
-        return io.convertToPixmap( img.smoothScale( width, height ) );
+        QImage img(io.convertToImage(pixmap));
+        return io.convertToPixmap(img.smoothScale(width, height));
     }
 
-    QImage img( pixmap.convertToImage().smoothScale( width, height ) );
+    QImage img(pixmap.convertToImage().smoothScale(width, height));
     QPixmap pix;
-    pix.convertFromImage( img );
+    pix.convertFromImage(img);
 
     return pix;
 }
 
-void KMiniPagerButton::backgroundLoaded( bool loaded )
+void KMiniPagerButton::backgroundLoaded(bool loaded)
 {
-    if (loaded)
+    if(loaded)
     {
-        if (!m_bgPixmap)
+        if(!m_bgPixmap)
         {
             m_bgPixmap = new KPixmap;
         }
-        if (m_isCommon)
+        if(m_isCommon)
         {
-            if (!s_commonBgPixmap)
+            if(!s_commonBgPixmap)
             {
                 s_commonBgPixmap = new KPixmap;
                 *s_commonBgPixmap = scalePixmap(*s_commonSharedPixmap, width(), height());
@@ -351,7 +343,7 @@ void KMiniPagerButton::drawButton(QPainter *bp)
 
     // background
 
-    if (backgroundPixmap())
+    if(backgroundPixmap())
     {
         QPoint pt = backgroundOffset();
         bp->drawTiledPixmap(0, 0, width(), height(), *backgroundPixmap(), pt.x(), pt.y());
@@ -360,15 +352,15 @@ void KMiniPagerButton::drawButton(QPainter *bp)
     {
         bp->fillRect(0, 0, width(), height(), paletteBackgroundColor());
     }
-    
+
 
     // desktop background
-    
-    if (liveBkgnd)
+
+    if(liveBkgnd)
     {
-        if (m_bgPixmap && !m_bgPixmap->isNull())
+        if(m_bgPixmap && !m_bgPixmap->isNull())
         {
-            if (on)
+            if(on)
             {
                 KPixmap tmp = *m_bgPixmap;
                 KPixmapEffect::intensity(tmp, 0.33);
@@ -385,19 +377,18 @@ void KMiniPagerButton::drawButton(QPainter *bp)
         }
     }
 
-    if (!liveBkgnd)
+    if(!liveBkgnd)
     {
-        if (transparent)
+        if(transparent)
         {
             // transparent windows get an 1 pixel frame...
-            if (on)
+            if(on)
             {
                 bp->setPen(colorGroup().midlight());
             }
-            else if (down)
+            else if(down)
             {
-                bp->setPen(KickerLib::blendColors(colorGroup().mid(),
-                                                 colorGroup().midlight()));
+                bp->setPen(KickerLib::blendColors(colorGroup().mid(), colorGroup().midlight()));
             }
             else
             {
@@ -410,14 +401,13 @@ void KMiniPagerButton::drawButton(QPainter *bp)
         {
             QBrush background;
 
-            if (on)
+            if(on)
             {
                 background = colorGroup().brush(QColorGroup::Midlight);
             }
-            else if (down)
+            else if(down)
             {
-                background = KickerLib::blendColors(colorGroup().mid(),
-                                                    colorGroup().midlight());
+                background = KickerLib::blendColors(colorGroup().mid(), colorGroup().midlight());
             }
             else
             {
@@ -429,26 +419,25 @@ void KMiniPagerButton::drawButton(QPainter *bp)
     }
 
     // window preview...
-    if (m_pager->desktopPreview())
+    if(m_pager->desktopPreview())
     {
-        KWinModule* kwin = m_pager->kwin();
+        KWinModule *kwin = m_pager->kwin();
         KWin::WindowInfo *info = 0;
         int dw = QApplication::desktop()->width();
         int dh = QApplication::desktop()->height();
 
-        QValueList<WId> windows = kwin->stackingOrder();
-        QValueList<WId>::const_iterator itEnd = windows.constEnd();
-        for (QValueList<WId>::ConstIterator it = windows.constBegin(); it != itEnd; ++it)
+        QValueList< WId > windows = kwin->stackingOrder();
+        QValueList< WId >::const_iterator itEnd = windows.constEnd();
+        for(QValueList< WId >::ConstIterator it = windows.constBegin(); it != itEnd; ++it)
         {
             info = m_pager->info(*it);
 
-            if (shouldPaintWindow(info))
+            if(shouldPaintWindow(info))
             {
                 QRect r = mapGeometryToViewport(*info);
-                r = QRect(r.x() * width() / dw, 2 + r.y() * height() / dh,
-                          r.width() * width() / dw, r.height() * height() / dh);
+                r = QRect(r.x() * width() / dw, 2 + r.y() * height() / dh, r.width() * width() / dw, r.height() * height() / dh);
 
-                if (kwin->activeWindow() == info->win())
+                if(kwin->activeWindow() == info->win())
                 {
                     QBrush brush = colorGroup().brush(QColorGroup::Highlight);
                     qDrawShadeRect(bp, r, colorGroup(), false, 1, 0, &brush);
@@ -457,7 +446,7 @@ void KMiniPagerButton::drawButton(QPainter *bp)
                 {
                     QBrush brush = colorGroup().brush(QColorGroup::Button);
 
-                    if (on)
+                    if(on)
                     {
                         brush.setColor(brush.color().light(120));
                     }
@@ -466,25 +455,23 @@ void KMiniPagerButton::drawButton(QPainter *bp)
                     qDrawShadeRect(bp, r, colorGroup(), true, 1, 0);
                 }
 
-                if (m_pager->windowIcons() && r.width() > 15 && r.height() > 15)
+                if(m_pager->windowIcons() && r.width() > 15 && r.height() > 15)
                 {
                     QPixmap icon = KWin::icon(*it, 16, 16, true);
-                    if (!icon.isNull())
+                    if(!icon.isNull())
                     {
-                        bp->drawPixmap(r.left() + ((r.width() - 16) / 2),
-                                      r.top() + ((r.height() - 16) / 2),
-                                      icon);
+                        bp->drawPixmap(r.left() + ((r.width() - 16) / 2), r.top() + ((r.height() - 16) / 2), icon);
                     }
                 }
             }
         }
     }
 
-    if (liveBkgnd)
+    if(liveBkgnd)
     {
         // draw a little border around the individual buttons
         // makes it look a bit more finished.
-        if (on)
+        if(on)
         {
             bp->setPen(colorGroup().midlight());
         }
@@ -496,12 +483,11 @@ void KMiniPagerButton::drawButton(QPainter *bp)
         bp->drawRect(0, 0, w, h);
     }
 
-    if (m_pager->labelType() != PagerSettings::EnumLabelType::LabelNone)
+    if(m_pager->labelType() != PagerSettings::EnumLabelType::LabelNone)
     {
-        QString label = (m_pager->labelType() == PagerSettings::EnumLabelType::LabelNumber) ?
-                            QString::number(m_desktop) : m_desktopName;
-        
-        if (transparent || liveBkgnd)
+        QString label = (m_pager->labelType() == PagerSettings::EnumLabelType::LabelNumber) ? QString::number(m_desktop) : m_desktopName;
+
+        if(transparent || liveBkgnd)
         {
             bp->setPen(on ? colorGroup().midlight() : colorGroup().buttonText());
             m_pager->shadowEngine()->drawText(*bp, QRect(0, 0, w, h), AlignCenter, label, size());
@@ -509,24 +495,24 @@ void KMiniPagerButton::drawButton(QPainter *bp)
         else
             bp->drawText(0, 0, w, h, AlignCenter, label);
     }
-    
-    if (m_inside)
+
+    if(m_inside)
         KickerLib::drawBlendedRect(bp, QRect(1, 1, width() - 2, height() - 2), colorGroup().foreground());
 }
 
-void KMiniPagerButton::mousePressEvent(QMouseEvent * e)
+void KMiniPagerButton::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == RightButton)
+    if(e->button() == RightButton)
     {
         // prevent LMB down -> RMB down -> LMB up sequence
-        if ((e->state() & MouseButtonMask ) == NoButton)
+        if((e->state() & MouseButtonMask) == NoButton)
         {
             emit showMenu(e->globalPos(), m_desktop);
             return;
         }
     }
 
-    if (m_pager->desktopPreview())
+    if(m_pager->desktopPreview())
     {
         m_pager->clickPos = e->pos();
     }
@@ -534,15 +520,15 @@ void KMiniPagerButton::mousePressEvent(QMouseEvent * e)
     QButton::mousePressEvent(e);
 }
 
-void KMiniPagerButton::mouseReleaseEvent(QMouseEvent* e)
+void KMiniPagerButton::mouseReleaseEvent(QMouseEvent *e)
 {
     m_pager->clickPos = QPoint();
     QButton::mouseReleaseEvent(e);
 }
 
-void KMiniPagerButton::mouseMoveEvent(QMouseEvent* e)
+void KMiniPagerButton::mouseMoveEvent(QMouseEvent *e)
 {
-    if (!m_pager->desktopPreview())
+    if(!m_pager->desktopPreview())
     {
         return;
     }
@@ -558,13 +544,12 @@ void KMiniPagerButton::mouseMoveEvent(QMouseEvent* e)
     Task::Ptr wasWindow = m_currentWindow;
     m_currentWindow = TaskManager::the()->findTask(m_useViewports ? 1 : m_desktop, p);
 
-    if (wasWindow != m_currentWindow)
+    if(wasWindow != m_currentWindow)
     {
         KickerTip::Client::updateKickerTip();
     }
 
-    if (m_currentWindow && !m_pager->clickPos.isNull() &&
-        (m_pager->clickPos - e->pos()).manhattanLength() > KGlobalSettings::dndEventDelay())
+    if(m_currentWindow && !m_pager->clickPos.isNull() && (m_pager->clickPos - e->pos()).manhattanLength() > KGlobalSettings::dndEventDelay())
     {
         QRect r = m_currentWindow->geometry();
 
@@ -580,13 +565,12 @@ void KMiniPagerButton::mouseMoveEvent(QMouseEvent* e)
 
         Task::List tasklist;
         tasklist.append(m_currentWindow);
-        TaskDrag* drag = new TaskDrag(tasklist, this);
-        QPoint offset(m_pager->clickPos.x() - (r.x() * w / dw),
-                m_pager->clickPos.y() - (r.y() * h / dh));
+        TaskDrag *drag = new TaskDrag(tasklist, this);
+        QPoint offset(m_pager->clickPos.x() - (r.x() * w / dw), m_pager->clickPos.y() - (r.y() * h / dh));
         drag->setPixmap(windowImage, offset);
         drag->dragMove();
 
-        if (isDown())
+        if(isDown())
         {
             setDown(false);
         }
@@ -595,14 +579,14 @@ void KMiniPagerButton::mouseMoveEvent(QMouseEvent* e)
     }
 }
 
-void KMiniPagerButton::dragEnterEvent(QDragEnterEvent* e)
+void KMiniPagerButton::dragEnterEvent(QDragEnterEvent *e)
 {
-    if (PanelDrag::canDecode(e))
+    if(PanelDrag::canDecode(e))
     {
         // ignore container drags
         return;
     }
-    else if (TaskDrag::canDecode(e))
+    else if(TaskDrag::canDecode(e))
     {
         // if it's a task drag don't switch the desktop, just accept it
         e->accept();
@@ -617,14 +601,14 @@ void KMiniPagerButton::dragEnterEvent(QDragEnterEvent* e)
     }
 }
 
-void KMiniPagerButton::dropEvent(QDropEvent* e)
+void KMiniPagerButton::dropEvent(QDropEvent *e)
 {
-    if (TaskDrag::canDecode(e))
+    if(TaskDrag::canDecode(e))
     {
         e->accept();
         Task::List tasks(TaskDrag::decode(e));
 
-        if ((m_useViewports || e->source() == this) && tasks.count() == 1)
+        if((m_useViewports || e->source() == this) && tasks.count() == 1)
         {
             Task::Ptr task = tasks[0];
             int dw = QApplication::desktop()->width();
@@ -636,7 +620,7 @@ void KMiniPagerButton::dropEvent(QDropEvent* e)
             int deltaX = pos.x() - m_pager->clickPos.x();
             int deltaY = pos.y() - m_pager->clickPos.y();
 
-            if (abs(deltaX) < 3)
+            if(abs(deltaX) < 3)
             {
                 deltaX = 0;
             }
@@ -645,7 +629,7 @@ void KMiniPagerButton::dropEvent(QDropEvent* e)
                 deltaX = deltaX * dw / w;
             }
 
-            if (abs(deltaY) < 3)
+            if(abs(deltaY) < 3)
             {
                 deltaY = 0;
             }
@@ -657,8 +641,7 @@ void KMiniPagerButton::dropEvent(QDropEvent* e)
             location.moveBy(deltaX, deltaY);
 
             XMoveWindow(x11Display(), task->window(), location.x(), location.y());
-            if ((e->source() != this || !task->isOnAllDesktops()) &&
-                task->desktop() != m_desktop)
+            if((e->source() != this || !task->isOnAllDesktops()) && task->desktop() != m_desktop)
             {
                 task->toDesktop(m_desktop);
             }
@@ -666,7 +649,7 @@ void KMiniPagerButton::dropEvent(QDropEvent* e)
         else
         {
             Task::List::iterator itEnd = tasks.end();
-            for (Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
+            for(Task::List::iterator it = tasks.begin(); it != itEnd; ++it)
             {
                 (*it)->toDesktop(m_desktop);
             }
@@ -675,12 +658,12 @@ void KMiniPagerButton::dropEvent(QDropEvent* e)
         setDown(false);
     }
 
-    QButton::dropEvent( e );
+    QButton::dropEvent(e);
 }
 
-void KMiniPagerButton::enabledChange( bool oldEnabled )
+void KMiniPagerButton::enabledChange(bool oldEnabled)
 {
-    if (m_pager->bgType() == PagerSettings::EnumBackgroundType::BgLive)
+    if(m_pager->bgType() == PagerSettings::EnumBackgroundType::BgLive)
     {
         m_pager->refresh();
     }
@@ -688,16 +671,16 @@ void KMiniPagerButton::enabledChange( bool oldEnabled )
     QButton::enabledChange(oldEnabled);
 }
 
-void KMiniPagerButton::dragLeaveEvent( QDragLeaveEvent* e )
+void KMiniPagerButton::dragLeaveEvent(QDragLeaveEvent *e)
 {
     m_dragSwitchTimer.stop();
 
-    if (m_pager->kwin()->currentDesktop() != m_desktop)
+    if(m_pager->kwin()->currentDesktop() != m_desktop)
     {
         setDown(false);
     }
 
-    QButton::dragLeaveEvent( e );
+    QButton::dragLeaveEvent(e);
 }
 
 void KMiniPagerButton::slotDragSwitch()
@@ -712,35 +695,35 @@ void KMiniPagerButton::slotClicked()
 
 void KMiniPagerButton::rename()
 {
-  if ( !m_lineEdit ) {
-    m_lineEdit = new QLineEdit( this );
-    connect( m_lineEdit, SIGNAL( returnPressed() ), m_lineEdit, SLOT( hide() ) );
-    m_lineEdit->installEventFilter( this );
-  }
-  m_lineEdit->setGeometry( rect() );
-  m_lineEdit->setText(m_desktopName);
-  m_lineEdit->show();
-  m_lineEdit->setFocus();
-  m_lineEdit->selectAll();
-  m_pager->emitRequestFocus();
+    if(!m_lineEdit)
+    {
+        m_lineEdit = new QLineEdit(this);
+        connect(m_lineEdit, SIGNAL(returnPressed()), m_lineEdit, SLOT(hide()));
+        m_lineEdit->installEventFilter(this);
+    }
+    m_lineEdit->setGeometry(rect());
+    m_lineEdit->setText(m_desktopName);
+    m_lineEdit->show();
+    m_lineEdit->setFocus();
+    m_lineEdit->selectAll();
+    m_pager->emitRequestFocus();
 }
 
-void KMiniPagerButton::slotToggled( bool b )
+void KMiniPagerButton::slotToggled(bool b)
 {
-    if ( !b && m_lineEdit )
+    if(!b && m_lineEdit)
     {
         m_lineEdit->hide();
     }
 }
 
-bool KMiniPagerButton::eventFilter( QObject *o, QEvent * e)
+bool KMiniPagerButton::eventFilter(QObject *o, QEvent *e)
 {
-    if (o && o == m_lineEdit &&
-        (e->type() == QEvent::FocusOut || e->type() == QEvent::Hide))
+    if(o && o == m_lineEdit && (e->type() == QEvent::FocusOut || e->type() == QEvent::Hide))
     {
-        m_pager->kwin()->setDesktopName( m_desktop, m_lineEdit->text() );
+        m_pager->kwin()->setDesktopName(m_desktop, m_lineEdit->text());
         m_desktopName = m_lineEdit->text();
-        QTimer::singleShot( 0, m_lineEdit, SLOT( deleteLater() ) );
+        QTimer::singleShot(0, m_lineEdit, SLOT(deleteLater()));
         m_lineEdit = 0;
         return true;
     }
@@ -756,12 +739,12 @@ void KMiniPagerButton::updateKickerTip(KickerTip::Data &data)
     uint taskLimiter = 4;
     QString lastWindow;
 
-    for (Task::Dict::iterator it = tasks.begin(); it != taskEnd; ++it)
+    for(Task::Dict::iterator it = tasks.begin(); it != taskEnd; ++it)
     {
-        if (it.data()->desktop() == m_desktop || it.data()->isOnAllDesktops())
+        if(it.data()->desktop() == m_desktop || it.data()->isOnAllDesktops())
         {
             taskCounter++;
-            if (taskCounter > taskLimiter)
+            if(taskCounter > taskLimiter)
             {
                 lastWindow = it.data()->visibleName();
                 continue;
@@ -770,7 +753,7 @@ void KMiniPagerButton::updateKickerTip(KickerTip::Data &data)
             QPixmap winIcon = it.data()->pixmap();
             QString bullet;
 
-            if (winIcon.isNull())
+            if(winIcon.isNull())
             {
                 bullet = "&bull;";
             }
@@ -782,7 +765,7 @@ void KMiniPagerButton::updateKickerTip(KickerTip::Data &data)
 
             QString name = KStringHandler::cPixelSqueeze(it.data()->visibleName(), fontMetrics(), 400);
             name = QStyleSheet::escape(name);
-            if (it.data() == m_currentWindow)
+            if(it.data() == m_currentWindow)
             {
                 data.subtext.append(QString("<br>%1&nbsp; <u>").arg(bullet));
                 data.subtext.append(name).append("</u>");
@@ -795,25 +778,21 @@ void KMiniPagerButton::updateKickerTip(KickerTip::Data &data)
         }
     }
 
-    if (taskCounter > taskLimiter)
+    if(taskCounter > taskLimiter)
     {
-        if (taskCounter - taskLimiter == 1)
+        if(taskCounter - taskLimiter == 1)
         {
             data.subtext.append("<br>&bull; ").append(lastWindow);
         }
         else
         {
-            data.subtext.append("<br>&bull; <i>")
-                        .append(i18n("and 1 other", "and %n others", taskCounter - taskLimiter))
-                        .append("</i>");
+            data.subtext.append("<br>&bull; <i>").append(i18n("and 1 other", "and %n others", taskCounter - taskLimiter)).append("</i>");
         }
     }
 
-    if (taskCounter > 0)
+    if(taskCounter > 0)
     {
-        data.subtext.prepend(i18n("One window:",
-                                  "%n windows:",
-                                  taskCounter));
+        data.subtext.prepend(i18n("One window:", "%n windows:", taskCounter));
     }
 
     data.duration = 4000;
@@ -821,4 +800,3 @@ void KMiniPagerButton::updateKickerTip(KickerTip::Data &data)
     data.message = QStyleSheet::escape(m_desktopName);
     data.direction = m_pager->popupDirection();
 }
-

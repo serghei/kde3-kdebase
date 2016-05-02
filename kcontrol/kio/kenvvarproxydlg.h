@@ -27,16 +27,15 @@
 
 class EnvVarProxyDlgUI;
 
-class KEnvVarProxyDlg : public KProxyDialogBase
-{
+class KEnvVarProxyDlg : public KProxyDialogBase {
     Q_OBJECT
 
 public:
-    KEnvVarProxyDlg( QWidget* parent = 0, const char* name = 0 );
+    KEnvVarProxyDlg(QWidget *parent = 0, const char *name = 0);
     ~KEnvVarProxyDlg();
 
     virtual const KProxyData data() const;
-    virtual void setProxyData( const KProxyData &data );
+    virtual void setProxyData(const KProxyData &data);
 
 protected slots:
     virtual void slotOk();
@@ -51,7 +50,7 @@ protected:
     void updateVariables();
 
 private:
-    EnvVarProxyDlgUI* mDlg;
-    QMap<QString, QString> mEnvVarsMap;
+    EnvVarProxyDlgUI *mDlg;
+    QMap< QString, QString > mEnvVarsMap;
 };
 #endif

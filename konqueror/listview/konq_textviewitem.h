@@ -43,33 +43,31 @@ class QPainter;
 #define KTVI_UNKNOWN 10
 
 
-class KonqTextViewItem : public KonqBaseListViewItem
-{
-   public:
-      /**
-       * Create an item in the text toplevel representing a file
-       * @param _parent the parent widget, the text view
-       * @param _fileitem the file item created by KDirLister
-       */
-      KonqTextViewItem( KonqTextViewWidget *_parent, KFileItem* _fileitem );
-      virtual ~KonqTextViewItem() {/*cerr<<"~KonqTextViewItem: "<<text(1)<<endl;*/ };
-      virtual int compare( QListViewItem* i, int col, bool ascending ) const;
-//      virtual QString key( int _column, bool asc) const;
-      /** Call this before destroying the text view (decreases reference count
-       * on the view)*/
-      virtual void paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment );
-//      virtual void paintFocus( QPainter *_painter, const QColorGroup & _cg, const QRect & r );
-      virtual void updateContents();
+class KonqTextViewItem : public KonqBaseListViewItem {
+public:
+    /**
+     * Create an item in the text toplevel representing a file
+     * @param _parent the parent widget, the text view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqTextViewItem(KonqTextViewWidget *_parent, KFileItem *_fileitem);
+    virtual ~KonqTextViewItem(){/*cerr<<"~KonqTextViewItem: "<<text(1)<<endl;*/};
+    virtual int compare(QListViewItem *i, int col, bool ascending) const;
+    //      virtual QString key( int _column, bool asc) const;
+    /** Call this before destroying the text view (decreases reference count
+     * on the view)*/
+    virtual void paintCell(QPainter *_painter, const QColorGroup &_cg, int _column, int _width, int _alignment);
+    //      virtual void paintFocus( QPainter *_painter, const QColorGroup & _cg, const QRect & r );
+    virtual void updateContents();
 
-   protected:
-      virtual void setup();
-      int type;
+protected:
+    virtual void setup();
+    int type;
 };
 
-inline KonqTextViewItem::KonqTextViewItem( KonqTextViewWidget *_parent, KFileItem* _fileitem )
-:KonqBaseListViewItem( _parent,_fileitem )
+inline KonqTextViewItem::KonqTextViewItem(KonqTextViewWidget *_parent, KFileItem *_fileitem) : KonqBaseListViewItem(_parent, _fileitem)
 {
-   updateContents();
+    updateContents();
 }
 
 #endif

@@ -25,61 +25,57 @@
 
 class ExtensionInfo;
 
-typedef QValueList<ExtensionInfo*> ExtensionInfoList;
+typedef QValueList< ExtensionInfo * > ExtensionInfoList;
 
-class ExtensionInfo
-{
-    public:
-        ExtensionInfo(const QString& destopFile,
-                      const QString& configFile,
-                      const QString& configPath);
-        ~ExtensionInfo() {};
+class ExtensionInfo {
+public:
+    ExtensionInfo(const QString &destopFile, const QString &configFile, const QString &configPath);
+    ~ExtensionInfo(){};
 
-        void setDefaults();
-        void save();
-        void load();
-        void configChanged();
+    void setDefaults();
+    void save();
+    void load();
+    void configChanged();
 
-        QString _configFile;
-        QString _configPath;
-        QString _desktopFile;
+    QString _configFile;
+    QString _configPath;
+    QString _desktopFile;
 
-        // Configuration settings
-        QString  _name;
-        int      _position;
-        int      _alignment;
-        int      _xineramaScreen;
-        int      _size;
-        int      _customSize;
-        bool     _showLeftHB;
-        bool     _showRightHB;
-        int      _hideButtonSize;
-        bool     _autohidePanel;
-        bool     _backgroundHide;
-        bool     _autoHideSwitch;
-        int      _autoHideDelay;
-        bool     _hideAnim;
-        int      _hideAnimSpeed;
-        int      _unhideLocation;
-        int      _sizePercentage;
-        bool     _expandSize;
+    // Configuration settings
+    QString _name;
+    int _position;
+    int _alignment;
+    int _xineramaScreen;
+    int _size;
+    int _customSize;
+    bool _showLeftHB;
+    bool _showRightHB;
+    int _hideButtonSize;
+    bool _autohidePanel;
+    bool _backgroundHide;
+    bool _autoHideSwitch;
+    int _autoHideDelay;
+    bool _hideAnim;
+    int _hideAnimSpeed;
+    int _unhideLocation;
+    int _sizePercentage;
+    bool _expandSize;
 
-        // Original settings to ensure that we can figure out
-        // what has changed externally to the panel vs within the panel
-        int      _orig_position;
-        int      _orig_alignment;
-        int      _orig_size;
-        int      _orig_customSize;
+    // Original settings to ensure that we can figure out
+    // what has changed externally to the panel vs within the panel
+    int _orig_position;
+    int _orig_alignment;
+    int _orig_size;
+    int _orig_customSize;
 
-        // Size info
-        bool    _resizeable;
-        bool    _useStdSizes;
-        int     _customSizeMin;
-        int     _customSizeMax;
+    // Size info
+    bool _resizeable;
+    bool _useStdSizes;
+    int _customSizeMin;
+    int _customSizeMax;
 
-	// position handling
-	bool	_allowedPosition[4];
+    // position handling
+    bool _allowedPosition[4];
 };
 
 #endif
-

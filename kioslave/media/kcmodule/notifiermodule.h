@@ -25,33 +25,32 @@
 #include "notifiersettings.h"
 #include "notifiermoduleview.h"
 
-class NotifierModule : public KCModule
-{
-	Q_OBJECT
+class NotifierModule : public KCModule {
+    Q_OBJECT
 
 public:
-	NotifierModule( QWidget* parent = 0, const char* name = 0);
-	~NotifierModule();
+    NotifierModule(QWidget *parent = 0, const char *name = 0);
+    ~NotifierModule();
 
-	void load();
-	void save();
-	void defaults();
+    void load();
+    void save();
+    void defaults();
 
 private slots:
-	void slotAdd();
-	void slotDelete();
-	void slotEdit();
-	void slotToggleAuto();
+    void slotAdd();
+    void slotDelete();
+    void slotEdit();
+    void slotToggleAuto();
 
-	void slotActionSelected( QListBoxItem * item );
-	void slotMimeTypeChanged( int index );
+    void slotActionSelected(QListBoxItem *item);
+    void slotMimeTypeChanged(int index);
 
 private:
-	void updateListBox();
+    void updateListBox();
 
-	QString m_mimetype;
-	NotifierSettings m_settings;
-	NotifierModuleView *m_view;
+    QString m_mimetype;
+    NotifierSettings m_settings;
+    NotifierModuleView *m_view;
 };
 
 #endif

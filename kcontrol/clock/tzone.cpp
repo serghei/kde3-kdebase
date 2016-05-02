@@ -46,13 +46,12 @@
 #include <sys/stat.h>
 #endif
 
-Tzone::Tzone(QWidget * parent, const char *name)
-  : QVGroupBox(parent, name)
+Tzone::Tzone(QWidget *parent, const char *name) : QVGroupBox(parent, name)
 {
     setTitle(i18n("To change the timezone, select your area from the list below"));
 
     tzonelist = new KTimezoneWidget(this, "ComboBox_1", &m_zoneDb);
-    connect( tzonelist, SIGNAL(selectionChanged()), SLOT(handleZoneChange()) );
+    connect(tzonelist, SIGNAL(selectionChanged()), SLOT(handleZoneChange()));
 
     m_local = new QLabel(this);
 
@@ -86,34 +85,33 @@ void Tzone::save()
 {
     QStringList selectedZones(tzonelist->selection());
 
-    if (selectedZones.count() > 0)
+    if(selectedZones.count() > 0)
     {
-      // Find untranslated selected zone
-      QString selectedzone(selectedZones[0]);
+        // Find untranslated selected zone
+        QString selectedzone(selectedZones[0]);
 
-#if defined(USE_SOLARIS)	// MARCO
+#if defined(USE_SOLARIS) // MARCO
 
-        KTempFile tf( locateLocal( "tmp", "kde-tzone" ) );
-        tf.setAutoDelete( true );
+        KTempFile tf(locateLocal("tmp", "kde-tzone"));
+        tf.setAutoDelete(true);
         QTextStream *ts = tf.textStream();
 
-# ifndef INITFILE
-#  define INITFILE	"/etc/default/init"
-# endif
+#ifndef INITFILE
+#define INITFILE "/etc/default/init"
+#endif
 
         QFile fTimezoneFile(INITFILE);
         bool updatedFile = false;
 
-        if (tf.status() == 0 && fTimezoneFile.open(IO_ReadOnly))
+        if(tf.status() == 0 && fTimezoneFile.open(IO_ReadOnly))
         {
             bool found = false;
 
             QTextStream is(&fTimezoneFile);
 
-            for (QString line = is.readLine(); !line.isNull();
-                 line = is.readLine())
+            for(QString line = is.readLine(); !line.isNull(); line = is.readLine())
             {
-                if (line.find("TZ=") == 0)
+                if(line.find("TZ=") == 0)
                 {
                     *ts << "TZ=" << selectedzone << endl;
                     found = true;
@@ -124,7 +122,7 @@ void Tzone::save()
                 }
             }
 
-            if (!found)
+            if(!found)
             {
                 *ts << "TZ=" << selectedzone << endl;
             }
@@ -133,24 +131,21 @@ void Tzone::save()
             fTimezoneFile.close();
         }
 
-        if (updatedFile)
+        if(updatedFile)
         {
             ts->device()->reset();
             fTimezoneFile.remove();
 
-            if (fTimezoneFile.open(IO_WriteOnly | IO_Truncate))
+            if(fTimezoneFile.open(IO_WriteOnly | IO_Truncate))
             {
                 QTextStream os(&fTimezoneFile);
 
-                for (QString line = ts->readLine(); !line.isNull();
-                     line = ts->readLine())
+                for(QString line = ts->readLine(); !line.isNull(); line = ts->readLine())
                 {
                     os << line << endl;
                 }
 
-                fchmod(fTimezoneFile.handle(),
-                       S_IXUSR | S_IRUSR | S_IRGRP | S_IXGRP |
-                       S_IROTH | S_IXOTH);
+                fchmod(fTimezoneFile.handle(), S_IXUSR | S_IRUSR | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
                 fTimezoneFile.close();
             }
         }
@@ -160,7 +155,7 @@ void Tzone::save()
 #else
         QFile fTimezoneFile("/etc/timezone");
 
-        if (fTimezoneFile.open(IO_WriteOnly | IO_Truncate) )
+        if(fTimezoneFile.open(IO_WriteOnly | IO_Truncate))
         {
             QTextStream t(&fTimezoneFile);
             t << selectedzone;
@@ -171,25 +166,24 @@ void Tzone::save()
 
         kdDebug() << "Set time zone " << tz << endl;
 
-	if (!QFile::remove("/etc/localtime"))
-	{
-		//After the KDE 3.2 release, need to add an error message
-	}
-	else
-		if (!KIO::NetAccess::file_copy(KURL(tz),KURL("/etc/localtime")))
-			KMessageBox::error( 0,  i18n("Error setting new timezone."),
-                        		    i18n("Timezone Error"));
+        if(!QFile::remove("/etc/localtime"))
+        {
+            // After the KDE 3.2 release, need to add an error message
+        }
+        else if(!KIO::NetAccess::file_copy(KURL(tz), KURL("/etc/localtime")))
+            KMessageBox::error(0, i18n("Error setting new timezone."), i18n("Timezone Error"));
 
         QString val = ":" + tz;
 #endif // !USE_SOLARIS
 
         setenv("TZ", val.ascii(), 1);
         tzset();
-
-    } else {
+    }
+    else
+    {
 #if !defined(USE_SOLARIS) // Do not update the System!
-        unlink( "/etc/timezone" );
-        unlink( "/etc/localtime" );
+        unlink("/etc/timezone");
+        unlink("/etc/localtime");
 
         setenv("TZ", "", 1);
         tzset();

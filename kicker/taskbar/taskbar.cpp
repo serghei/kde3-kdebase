@@ -50,27 +50,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "taskbar.moc"
 
 
-TaskBar::TaskBar( QWidget *parent, const char *name )
-    : Panner( parent, name ),
-      m_showAllWindows(false),
-      m_currentScreen(-1),
-      m_showOnlyCurrentScreen(false),
-      m_sortByDesktop(false),
-      m_showIcon(false),
-      m_showOnlyIconified(false),
-      m_textShadowEngine(0),
-      m_ignoreUpdates(false)
+TaskBar::TaskBar(QWidget *parent, const char *name)
+    : Panner(parent, name)
+    , m_showAllWindows(false)
+    , m_currentScreen(-1)
+    , m_showOnlyCurrentScreen(false)
+    , m_sortByDesktop(false)
+    , m_showIcon(false)
+    , m_showOnlyIconified(false)
+    , m_textShadowEngine(0)
+    , m_ignoreUpdates(false)
 {
-    setFrameStyle( NoFrame );
+    setFrameStyle(NoFrame);
 
     arrowType = LeftArrow;
     blocklayout = true;
-    
+
     // init
-    setSizePolicy( QSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding ) );
+    setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 
     // setup animation frames
-    for (int i = 1; i < 11; i++)
+    for(int i = 1; i < 11; i++)
     {
         frames.append(new QPixmap(locate("data", "kicker/pics/disk" + QString::number(i) + ".png")));
     }
@@ -78,29 +78,22 @@ TaskBar::TaskBar( QWidget *parent, const char *name )
     // configure
     configure();
 
-    connect(&m_relayoutTimer, SIGNAL(timeout()),
-            this, SLOT(reLayout()));
+    connect(&m_relayoutTimer, SIGNAL(timeout()), this, SLOT(reLayout()));
 
     // connect manager
-    connect(TaskManager::the(), SIGNAL(taskAdded(Task::Ptr)),
-            this, SLOT(add(Task::Ptr)));
-    connect(TaskManager::the(), SIGNAL(taskRemoved(Task::Ptr)),
-            this, SLOT(remove(Task::Ptr)));
-    connect(TaskManager::the(), SIGNAL(startupAdded(Startup::Ptr)),
-            this, SLOT(add(Startup::Ptr)));
-    connect(TaskManager::the(), SIGNAL(startupRemoved(Startup::Ptr)),
-            this, SLOT(remove(Startup::Ptr)));
-    connect(TaskManager::the(), SIGNAL(desktopChanged(int)),
-            this, SLOT(desktopChanged(int)));
-    connect(TaskManager::the(), SIGNAL(windowChanged(Task::Ptr)),
-            this, SLOT(windowChanged(Task::Ptr)));
+    connect(TaskManager::the(), SIGNAL(taskAdded(Task::Ptr)), this, SLOT(add(Task::Ptr)));
+    connect(TaskManager::the(), SIGNAL(taskRemoved(Task::Ptr)), this, SLOT(remove(Task::Ptr)));
+    connect(TaskManager::the(), SIGNAL(startupAdded(Startup::Ptr)), this, SLOT(add(Startup::Ptr)));
+    connect(TaskManager::the(), SIGNAL(startupRemoved(Startup::Ptr)), this, SLOT(remove(Startup::Ptr)));
+    connect(TaskManager::the(), SIGNAL(desktopChanged(int)), this, SLOT(desktopChanged(int)));
+    connect(TaskManager::the(), SIGNAL(windowChanged(Task::Ptr)), this, SLOT(windowChanged(Task::Ptr)));
 
     isGrouping = shouldGroup();
 
     // register existant tasks
     Task::Dict tasks = TaskManager::the()->tasks();
     Task::Dict::iterator taskEnd = tasks.end();
-    for (Task::Dict::iterator it = tasks.begin(); it != taskEnd; ++it)
+    for(Task::Dict::iterator it = tasks.begin(); it != taskEnd; ++it)
     {
         add(it.data());
     }
@@ -108,7 +101,7 @@ TaskBar::TaskBar( QWidget *parent, const char *name )
     // register existant startups
     Startup::List startups = TaskManager::the()->startups();
     Startup::List::iterator startupEnd = startups.end();
-    for (Startup::List::iterator sIt = startups.begin(); sIt != startupEnd; ++sIt)
+    for(Startup::List::iterator sIt = startups.begin(); sIt != startupEnd; ++sIt)
     {
         add((*sIt));
     }
@@ -116,7 +109,7 @@ TaskBar::TaskBar( QWidget *parent, const char *name )
     blocklayout = false;
 
     connect(kapp, SIGNAL(settingsChanged(int)), SLOT(slotSettingsChanged(int)));
-    keys = new KGlobalAccel( this );
+    keys = new KGlobalAccel(this);
 #include "taskbarbindings.cpp"
     keys->readSettings();
     keys->updateConnections();
@@ -126,23 +119,17 @@ TaskBar::TaskBar( QWidget *parent, const char *name )
 
 TaskBar::~TaskBar()
 {
-    for (TaskContainer::Iterator it = m_hiddenContainers.begin();
-         it != m_hiddenContainers.end();
-         ++it)
+    for(TaskContainer::Iterator it = m_hiddenContainers.begin(); it != m_hiddenContainers.end(); ++it)
     {
         (*it)->deleteLater();
     }
 
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-         it != containers.constEnd();
-         ++it)
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
         (*it)->deleteLater();
     }
 
-    for (PixmapList::const_iterator it = frames.constBegin();
-         it != frames.constEnd();
-         ++it)
+    for(PixmapList::const_iterator it = frames.constBegin(); it != frames.constEnd(); ++it)
     {
         delete *it;
     }
@@ -152,7 +139,7 @@ TaskBar::~TaskBar()
 
 KTextShadowEngine *TaskBar::textShadowEngine()
 {
-    if (!m_textShadowEngine)
+    if(!m_textShadowEngine)
         m_textShadowEngine = new KTextShadowEngine();
 
     return m_textShadowEngine;
@@ -164,67 +151,63 @@ QSize TaskBar::sizeHint() const
     // get our minimum height based on the minimum button height or the
     // height of the font in use, which is largest
     QFontMetrics fm(KGlobalSettings::taskbarFont());
-    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ?
-                          fm.height() : TaskBarSettings::minimumButtonHeight();
+    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ? fm.height() : TaskBarSettings::minimumButtonHeight();
 
     return QSize(BUTTON_MIN_WIDTH, minButtonHeight);
 }
 
-QSize TaskBar::sizeHint( KPanelExtension::Position p, QSize maxSize) const
+QSize TaskBar::sizeHint(KPanelExtension::Position p, QSize maxSize) const
 {
     // get our minimum height based on the minimum button height or the
     // height of the font in use, which is largest
     QFontMetrics fm(KGlobalSettings::taskbarFont());
-    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ?
-                          fm.height() : TaskBarSettings::minimumButtonHeight();
+    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ? fm.height() : TaskBarSettings::minimumButtonHeight();
 
-    if ( p == KPanelExtension::Left || p == KPanelExtension::Right )
+    if(p == KPanelExtension::Left || p == KPanelExtension::Right)
     {
         int actualMax = minButtonHeight * containerCount();
 
-        if (containerCount() == 0)
+        if(containerCount() == 0)
         {
             actualMax = minButtonHeight;
         }
 
-        if (actualMax > maxSize.height())
+        if(actualMax > maxSize.height())
         {
             return maxSize;
         }
-        return QSize( maxSize.width(), actualMax );
+        return QSize(maxSize.width(), actualMax);
     }
     else
     {
-        int rows = KickerSettings::conserveSpace() ?
-                   contentsRect().height() / minButtonHeight :
-                   1;
-        if ( rows < 1 )
+        int rows = KickerSettings::conserveSpace() ? contentsRect().height() / minButtonHeight : 1;
+        if(rows < 1)
         {
             rows = 1;
         }
 
         int maxWidth = TaskBarSettings::maximumButtonWidth();
-        if (maxWidth == 0)
+        if(maxWidth == 0)
         {
             maxWidth = BUTTON_MAX_WIDTH;
         }
 
         int actualMax = maxWidth * (containerCount() / rows);
 
-        if (containerCount() % rows > 0)
+        if(containerCount() % rows > 0)
         {
             actualMax += maxWidth;
         }
-        if (containerCount() == 0)
+        if(containerCount() == 0)
         {
             actualMax = maxWidth;
         }
 
-        if (actualMax > maxSize.width())
+        if(actualMax > maxSize.width())
         {
-           return maxSize;
+            return maxSize;
         }
-        return QSize( actualMax, maxSize.height() );
+        return QSize(actualMax, maxSize.height());
     }
 }
 
@@ -240,33 +223,26 @@ void TaskBar::configure()
     m_showIcon = TaskBarSettings::showIcon();
     m_showOnlyIconified = TaskBarSettings::showOnlyIconified();
 
-    m_currentScreen = -1;    // Show all screens or re-get our screen
-    m_showOnlyCurrentScreen = TaskBarSettings::showCurrentScreenOnly() &&
-                              QApplication::desktop()->isVirtualDesktop() &&
-                              QApplication::desktop()->numScreens() > 1;
+    m_currentScreen = -1; // Show all screens or re-get our screen
+    m_showOnlyCurrentScreen =
+        TaskBarSettings::showCurrentScreenOnly() && QApplication::desktop()->isVirtualDesktop() && QApplication::desktop()->numScreens() > 1;
 
     // we need to watch geometry issues if we aren't showing windows when we
     // are paying attention to the current Xinerama screen
-    if (m_showOnlyCurrentScreen)
+    if(m_showOnlyCurrentScreen)
     {
         // disconnect first in case we've been here before
         // to avoid multiple connections
-        disconnect(TaskManager::the(), SIGNAL(windowChangedGeometry(Task::Ptr)),
-                    this, SLOT(windowChangedGeometry(Task::Ptr)));
-        connect(TaskManager::the(), SIGNAL(windowChangedGeometry(Task::Ptr)),
-                 this, SLOT(windowChangedGeometry(Task::Ptr)));
+        disconnect(TaskManager::the(), SIGNAL(windowChangedGeometry(Task::Ptr)), this, SLOT(windowChangedGeometry(Task::Ptr)));
+        connect(TaskManager::the(), SIGNAL(windowChangedGeometry(Task::Ptr)), this, SLOT(windowChangedGeometry(Task::Ptr)));
     }
     TaskManager::the()->trackGeometry(m_showOnlyCurrentScreen);
 
-    if (wasShowWindows != m_showAllWindows ||
-        wasSortByDesktop != m_sortByDesktop ||
-        wasShowIcon != m_showIcon ||
-        wasShowOnlyIconified != m_showOnlyIconified)
+    if(wasShowWindows != m_showAllWindows || wasSortByDesktop != m_sortByDesktop || wasShowIcon != m_showIcon
+       || wasShowOnlyIconified != m_showOnlyIconified)
     {
         // relevant settings changed, update our task containers
-        for (TaskContainer::Iterator it = containers.begin();
-             it != containers.end();
-             ++it)
+        for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
         {
             (*it)->settingsChanged();
         }
@@ -277,24 +253,24 @@ void TaskBar::configure()
     reLayoutEventually();
 }
 
-void TaskBar::setOrientation( Orientation o )
+void TaskBar::setOrientation(Orientation o)
 {
-    Panner::setOrientation( o );
+    Panner::setOrientation(o);
     reLayoutEventually();
 }
 
-void TaskBar::moveEvent( QMoveEvent* e )
+void TaskBar::moveEvent(QMoveEvent *e)
 {
     Panner::moveEvent(e);
     setViewportBackground();
 }
 
-void TaskBar::resizeEvent( QResizeEvent* e )
+void TaskBar::resizeEvent(QResizeEvent *e)
 {
-    if (m_showOnlyCurrentScreen)
+    if(m_showOnlyCurrentScreen)
     {
         QPoint topLeft = mapToGlobal(this->geometry().topLeft());
-        if (m_currentScreen != QApplication::desktop()->screenNumber(topLeft))
+        if(m_currentScreen != QApplication::desktop()->screenNumber(topLeft))
         {
             // we have been moved to another screen!
             m_currentScreen = -1;
@@ -308,23 +284,19 @@ void TaskBar::resizeEvent( QResizeEvent* e )
 
 void TaskBar::add(Task::Ptr task)
 {
-    if (!task ||
-        (m_showOnlyCurrentScreen &&
-         !TaskManager::isOnScreen(showScreen(), task->window())))
+    if(!task || (m_showOnlyCurrentScreen && !TaskManager::isOnScreen(showScreen(), task->window())))
     {
         return;
     }
 
     // try to group
-    if (isGrouping)
+    if(isGrouping)
     {
-        for (TaskContainer::Iterator it = containers.begin();
-             it != containers.end();
-             ++it)
+        for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
         {
-            TaskContainer* c = *it;
+            TaskContainer *c = *it;
 
-            if (idMatch(task->classClass(), c->id()))
+            if(idMatch(task->classClass(), c->id()))
             {
                 c->add(task);
                 reLayoutEventually();
@@ -347,16 +319,14 @@ void TaskBar::add(Task::Ptr task)
 
 void TaskBar::add(Startup::Ptr startup)
 {
-    if (!startup)
+    if(!startup)
     {
         return;
     }
 
-    for (TaskContainer::Iterator it = containers.begin();
-         it != containers.end();
-         ++it)
+    for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
-        if ((*it)->contains(startup))
+        if((*it)->contains(startup))
         {
             return;
         }
@@ -365,38 +335,38 @@ void TaskBar::add(Startup::Ptr startup)
     // create new container
     TaskContainer *container = new TaskContainer(startup, frames, this, viewport());
     m_hiddenContainers.append(container);
-    connect(container, SIGNAL(showMe(TaskContainer*)), this, SLOT(showTaskContainer(TaskContainer*)));
+    connect(container, SIGNAL(showMe(TaskContainer *)), this, SLOT(showTaskContainer(TaskContainer *)));
 }
 
-void TaskBar::showTaskContainer(TaskContainer* container)
+void TaskBar::showTaskContainer(TaskContainer *container)
 {
     TaskContainer::List::iterator it = m_hiddenContainers.find(container);
-    if (it != m_hiddenContainers.end())
+    if(it != m_hiddenContainers.end())
     {
         m_hiddenContainers.erase(it);
     }
 
-    if (container->isEmpty())
+    if(container->isEmpty())
     {
         return;
     }
 
     // try to place the container after one of the same app
-    if (TaskBarSettings::sortByApp())
+    if(TaskBarSettings::sortByApp())
     {
         TaskContainer::Iterator it = containers.begin();
-        for (; it != containers.end(); ++it)
+        for(; it != containers.end(); ++it)
         {
-            TaskContainer* c = *it;
+            TaskContainer *c = *it;
 
-            if (container->id().lower() == c->id().lower())
+            if(container->id().lower() == c->id().lower())
             {
                 // search for the last occurrence of this app
-                for (; it != containers.end(); ++it)
+                for(; it != containers.end(); ++it)
                 {
                     c = *it;
 
-                    if (container->id().lower() != c->id().lower())
+                    if(container->id().lower() != c->id().lower())
                     {
                         break;
                     }
@@ -405,7 +375,7 @@ void TaskBar::showTaskContainer(TaskContainer* container)
             }
         }
 
-        if (it != containers.end())
+        if(it != containers.end())
         {
             containers.insert(it, container);
         }
@@ -424,13 +394,11 @@ void TaskBar::showTaskContainer(TaskContainer* container)
     emit containerCountChanged();
 }
 
-void TaskBar::remove(Task::Ptr task, TaskContainer* container)
+void TaskBar::remove(Task::Ptr task, TaskContainer *container)
 {
-    for (TaskContainer::Iterator it = m_hiddenContainers.begin();
-         it != m_hiddenContainers.end();
-         ++it)
+    for(TaskContainer::Iterator it = m_hiddenContainers.begin(); it != m_hiddenContainers.end(); ++it)
     {
-        if ((*it)->contains(task))
+        if((*it)->contains(task))
         {
             (*it)->finish();
             m_deletableContainers.append(*it);
@@ -439,20 +407,18 @@ void TaskBar::remove(Task::Ptr task, TaskContainer* container)
         }
     }
 
-    if (!container)
+    if(!container)
     {
-        for (TaskContainer::Iterator it = containers.begin();
-             it != containers.end();
-             ++it)
+        for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
         {
-            if ((*it)->contains(task))
+            if((*it)->contains(task))
             {
                 container = *it;
                 break;
             }
         }
 
-        if (!container)
+        if(!container)
         {
             return;
         }
@@ -460,10 +426,10 @@ void TaskBar::remove(Task::Ptr task, TaskContainer* container)
 
     container->remove(task);
 
-    if (container->isEmpty())
+    if(container->isEmpty())
     {
         TaskContainer::List::iterator it = containers.find(container);
-        if (it != containers.end())
+        if(it != containers.end())
         {
             containers.erase(it);
         }
@@ -475,24 +441,22 @@ void TaskBar::remove(Task::Ptr task, TaskContainer* container)
         reLayoutEventually();
         emit containerCountChanged();
     }
-    else if (container->filteredTaskCount() < 1)
+    else if(container->filteredTaskCount() < 1)
     {
         reLayoutEventually();
         emit containerCountChanged();
     }
 }
 
-void TaskBar::remove(Startup::Ptr startup, TaskContainer* container)
+void TaskBar::remove(Startup::Ptr startup, TaskContainer *container)
 {
-    for (TaskContainer::Iterator it = m_hiddenContainers.begin();
-         it != m_hiddenContainers.end();
-         ++it)
+    for(TaskContainer::Iterator it = m_hiddenContainers.begin(); it != m_hiddenContainers.end(); ++it)
     {
-        if ((*it)->contains(startup))
+        if((*it)->contains(startup))
         {
             (*it)->remove(startup);
 
-            if ((*it)->isEmpty())
+            if((*it)->isEmpty())
             {
                 (*it)->finish();
                 m_deletableContainers.append(*it);
@@ -503,33 +467,31 @@ void TaskBar::remove(Startup::Ptr startup, TaskContainer* container)
         }
     }
 
-    if (!container)
+    if(!container)
     {
-        for (TaskContainer::Iterator it = containers.begin();
-             it != containers.end();
-             ++it)
+        for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
         {
-            if ((*it)->contains(startup))
+            if((*it)->contains(startup))
             {
                 container = *it;
                 break;
             }
         }
 
-        if (!container)
+        if(!container)
         {
             return;
         }
     }
 
     container->remove(startup);
-    if (!container->isEmpty())
+    if(!container->isEmpty())
     {
         return;
     }
 
     TaskContainer::List::iterator it = containers.find(container);
-    if (it != containers.end())
+    if(it != containers.end())
     {
         containers.erase(it);
     }
@@ -544,16 +506,14 @@ void TaskBar::remove(Startup::Ptr startup, TaskContainer* container)
 
 void TaskBar::desktopChanged(int desktop)
 {
-    if (m_showAllWindows)
+    if(m_showAllWindows)
     {
         return;
     }
 
     m_relayoutTimer.stop();
     m_ignoreUpdates = true;
-    for (TaskContainer::Iterator it = containers.begin();
-         it != containers.end();
-         ++it)
+    for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
         (*it)->desktopChanged(desktop);
     }
@@ -565,20 +525,17 @@ void TaskBar::desktopChanged(int desktop)
 
 void TaskBar::windowChanged(Task::Ptr task)
 {
-    if (m_showOnlyCurrentScreen &&
-        !TaskManager::isOnScreen(showScreen(), task->window()))
+    if(m_showOnlyCurrentScreen && !TaskManager::isOnScreen(showScreen(), task->window()))
     {
         return; // we don't care about this window
     }
 
-    TaskContainer* container = 0;
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-         it != containers.constEnd();
-         ++it)
+    TaskContainer *container = 0;
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
-        TaskContainer* c = *it;
+        TaskContainer *c = *it;
 
-        if (c->contains(task))
+        if(c->contains(task))
         {
             container = c;
             break;
@@ -588,17 +545,14 @@ void TaskBar::windowChanged(Task::Ptr task)
     // if we don't have a container or we're showing only windows on this
     // desktop and the container is neither on the desktop nor currently visible
     // just skip it
-    if (!container ||
-        (!m_showAllWindows &&
-         !container->onCurrentDesktop() &&
-         !container->isVisibleTo(this)))
+    if(!container || (!m_showAllWindows && !container->onCurrentDesktop() && !container->isVisibleTo(this)))
     {
         return;
     }
 
     container->windowChanged(task);
 
-    if (!m_showAllWindows || m_showOnlyIconified)
+    if(!m_showAllWindows || m_showOnlyIconified)
     {
         emit containerCountChanged();
     }
@@ -608,30 +562,28 @@ void TaskBar::windowChanged(Task::Ptr task)
 
 void TaskBar::windowChangedGeometry(Task::Ptr task)
 {
-    //TODO: this gets called every time a window's geom changes
+    // TODO: this gets called every time a window's geom changes
     //      when we are in "show only on the same Xinerama screen"
     //      mode it would be Good(tm) to compress these events so this
     //      gets run less often, but always when needed
-    TaskContainer* container = 0;
-    for (TaskContainer::Iterator it = containers.begin();
-         it != containers.end();
-         ++it)
+    TaskContainer *container = 0;
+    for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
-        TaskContainer* c = *it;
-        if (c->contains(task))
+        TaskContainer *c = *it;
+        if(c->contains(task))
         {
             container = c;
             break;
         }
     }
 
-    if ((!!container) == TaskManager::isOnScreen(showScreen(), task->window()))
+    if((!!container) == TaskManager::isOnScreen(showScreen(), task->window()))
     {
         // we have this window covered, so we don't need to do anything
         return;
     }
 
-    if (container)
+    if(container)
     {
         remove(task, container);
     }
@@ -645,7 +597,7 @@ void TaskBar::reLayoutEventually()
 {
     m_relayoutTimer.stop();
 
-    if (!blocklayout && !m_ignoreUpdates)
+    if(!blocklayout && !m_ignoreUpdates)
     {
         m_relayoutTimer.start(100, true);
     }
@@ -659,9 +611,10 @@ void TaskBar::reLayout()
     //
     // To get around this, we collect the containers and delete them manually
     // when doing a relayout. (kling)
-    if (!m_deletableContainers.isEmpty()) {
+    if(!m_deletableContainers.isEmpty())
+    {
         TaskContainer::List::iterator it = m_deletableContainers.begin();
-        for (; it != m_deletableContainers.end(); ++it)
+        for(; it != m_deletableContainers.end(); ++it)
             delete *it;
         m_deletableContainers.clear();
     }
@@ -669,20 +622,20 @@ void TaskBar::reLayout()
     // filter task container list
     TaskContainer::List list = filteredContainers();
 
-    if (list.count() < 1)
+    if(list.count() < 1)
     {
         resizeContents(contentsRect().width(), contentsRect().height());
         return;
     }
 
-    if (isGrouping != shouldGroup())
+    if(isGrouping != shouldGroup())
     {
         reGroup();
         return;
     }
 
     // sort container list by desktop
-    if (m_sortByDesktop)
+    if(m_sortByDesktop)
     {
         sortContainersByDesktop(list);
     }
@@ -695,16 +648,15 @@ void TaskBar::reLayout()
     // minimum button height or the height of the font in use, whichever is
     // largest
     QFontMetrics fm(KGlobalSettings::taskbarFont());
-    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ?
-                          fm.height() : TaskBarSettings::minimumButtonHeight();
+    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ? fm.height() : TaskBarSettings::minimumButtonHeight();
 
     // horizontal layout
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         int bwidth = BUTTON_MIN_WIDTH;
         int rows = contentsRect().height() / minButtonHeight;
 
-        if ( rows < 1 )
+        if(rows < 1)
         {
             rows = 1;
         }
@@ -713,29 +665,29 @@ void TaskBar::reLayout()
         int bheight = contentsRect().height() / rows;
 
         // avoid zero devision later
-        if (bheight < 1)
+        if(bheight < 1)
         {
             bheight = 1;
         }
 
         // buttons per row
-        int bpr = (int)ceil( (double)list.count() / rows);
+        int bpr = (int)ceil((double)list.count() / rows);
 
         // adjust content size
-        if ( contentsRect().width() < bpr * BUTTON_MIN_WIDTH )
+        if(contentsRect().width() < bpr * BUTTON_MIN_WIDTH)
         {
-            resizeContents( bpr * BUTTON_MIN_WIDTH, contentsRect().height() );
+            resizeContents(bpr * BUTTON_MIN_WIDTH, contentsRect().height());
         }
 
         // maximum number of buttons per row
         int mbpr = contentsRect().width() / BUTTON_MIN_WIDTH;
 
         // expand button width if space permits
-        if (mbpr > bpr)
+        if(mbpr > bpr)
         {
             bwidth = contentsRect().width() / bpr;
             int maxWidth = TaskBarSettings::maximumButtonWidth();
-            if (maxWidth > 0 && bwidth > maxWidth)
+            if(maxWidth > 0 && bwidth > maxWidth)
             {
                 bwidth = maxWidth;
             }
@@ -749,72 +701,68 @@ void TaskBar::reLayout()
         // popping it on the top. this preserves Fitt's Law behaviour
         // for taskbars on the bottom
         int topPadding = 0;
-        if (arrowType == UpArrow)
+        if(arrowType == UpArrow)
         {
             topPadding = contentsRect().height() % (rows * bheight);
         }
 
         int i = 0;
         bool reverseLayout = QApplication::reverseLayout();
-        for (TaskContainer::Iterator it = list.begin();
-             it != list.end();
-             ++it, i++)
+        for(TaskContainer::Iterator it = list.begin(); it != list.end(); ++it, i++)
         {
-            TaskContainer* c = *it;
+            TaskContainer *c = *it;
 
             int row = i % rows;
 
-            int x = ( i / rows ) * bwidth;
-            if (reverseLayout)
+            int x = (i / rows) * bwidth;
+            if(reverseLayout)
             {
                 x = contentsRect().width() - x - bwidth;
             }
             int y = (row * bheight) + topPadding;
 
             c->setArrowType(arrowType);
-            
-            if (childX(c) != x || childY(c) != y)
+
+            if(childX(c) != x || childY(c) != y)
                 moveChild(c, x, y);
-                
-            if (c->width() != bwidth || c->height() != bheight)
-                c->resize( bwidth, bheight );
-                
+
+            if(c->width() != bwidth || c->height() != bheight)
+                c->resize(bwidth, bheight);
+
             c->setBackground();
         }
     }
     else // vertical layout
     {
         // adjust content size
-        if (contentsRect().height() < (int)list.count() * minButtonHeight)
+        if(contentsRect().height() < (int)list.count() * minButtonHeight)
         {
             resizeContents(contentsRect().width(), list.count() * minButtonHeight);
         }
 
         // layout containers
         int i = 0;
-        for (TaskContainer::Iterator it = list.begin();
-             it != list.end();
-             ++it)
+        for(TaskContainer::Iterator it = list.begin(); it != list.end(); ++it)
         {
-            TaskContainer* c = *it;
+            TaskContainer *c = *it;
 
             c->setArrowType(arrowType);
-            
-            if (c->width() != contentsRect().width() || c->height() != minButtonHeight)
+
+            if(c->width() != contentsRect().width() || c->height() != minButtonHeight)
                 c->resize(contentsRect().width(), minButtonHeight);
 
-            if (childX(c) != 0 || childY(c) != (i * minButtonHeight))
+            if(childX(c) != 0 || childY(c) != (i * minButtonHeight))
                 moveChild(c, 0, i * minButtonHeight);
-            
+
             c->setBackground();
             i++;
         }
     }
-    
+
     QTimer::singleShot(100, this, SLOT(publishIconGeometry()));
 }
 
-void TaskBar::viewportResizeEvent( QResizeEvent* e )
+void TaskBar::viewportResizeEvent(QResizeEvent *e)
 {
     Panner::viewportResizeEvent(e);
     setViewportBackground();
@@ -823,15 +771,15 @@ void TaskBar::viewportResizeEvent( QResizeEvent* e )
 void TaskBar::setViewportBackground()
 {
     const QPixmap *bg = parentWidget()->backgroundPixmap();
-    
+
     viewport()->unsetPalette();
-    
-    if (bg)
+
+    if(bg)
     {
         QPixmap pm(parentWidget()->size());
         pm.fill(parentWidget(), pos() + viewport()->pos());
         viewport()->setPaletteBackgroundPixmap(pm);
-        viewport()->setBackgroundOrigin( WidgetOrigin );
+        viewport()->setBackgroundOrigin(WidgetOrigin);
     }
     else
         viewport()->setPaletteBackgroundColor(paletteBackgroundColor());
@@ -840,29 +788,25 @@ void TaskBar::setViewportBackground()
 void TaskBar::setBackground()
 {
     setViewportBackground();
-    
+
     TaskContainer::List list = filteredContainers();
-    
-    for (TaskContainer::Iterator it = list.begin();
-            it != list.end();
-            ++it)
+
+    for(TaskContainer::Iterator it = list.begin(); it != list.end(); ++it)
     {
-        TaskContainer* c = *it;
+        TaskContainer *c = *it;
         c->setBackground();
     }
 }
 
 void TaskBar::setArrowType(Qt::ArrowType at)
 {
-    if (arrowType == at)
+    if(arrowType == at)
     {
         return;
     }
 
     arrowType = at;
-    for (TaskContainer::Iterator it = containers.begin();
-         it != containers.end();
-         ++it)
+    for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
         (*it)->setArrowType(arrowType);
     }
@@ -870,49 +814,46 @@ void TaskBar::setArrowType(Qt::ArrowType at)
 
 void TaskBar::publishIconGeometry()
 {
-    QPoint p = mapToGlobal(QPoint(0,0)); // roundtrip, don't do that too often
+    QPoint p = mapToGlobal(QPoint(0, 0)); // roundtrip, don't do that too often
 
-    for (TaskContainer::Iterator it = containers.begin();
-         it != containers.end();
-         ++it)
+    for(TaskContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
         (*it)->publishIconGeometry(p);
     }
 }
 
-void TaskBar::viewportMousePressEvent( QMouseEvent* e )
+void TaskBar::viewportMousePressEvent(QMouseEvent *e)
 {
-    propagateMouseEvent( e );
+    propagateMouseEvent(e);
 }
 
-void TaskBar::viewportMouseReleaseEvent( QMouseEvent* e )
+void TaskBar::viewportMouseReleaseEvent(QMouseEvent *e)
 {
-    propagateMouseEvent( e );
+    propagateMouseEvent(e);
 }
 
-void TaskBar::viewportMouseDoubleClickEvent( QMouseEvent* e )
+void TaskBar::viewportMouseDoubleClickEvent(QMouseEvent *e)
 {
-    propagateMouseEvent( e );
+    propagateMouseEvent(e);
 }
 
-void TaskBar::viewportMouseMoveEvent( QMouseEvent* e )
+void TaskBar::viewportMouseMoveEvent(QMouseEvent *e)
 {
-    propagateMouseEvent( e );
+    propagateMouseEvent(e);
 }
 
-void TaskBar::propagateMouseEvent( QMouseEvent* e )
+void TaskBar::propagateMouseEvent(QMouseEvent *e)
 {
-    if ( !isTopLevel()  )
+    if(!isTopLevel())
     {
-        QMouseEvent me( e->type(), mapTo( topLevelWidget(), e->pos() ),
-                        e->globalPos(), e->button(), e->state() );
-        QApplication::sendEvent( topLevelWidget(), &me );
+        QMouseEvent me(e->type(), mapTo(topLevelWidget(), e->pos()), e->globalPos(), e->button(), e->state());
+        QApplication::sendEvent(topLevelWidget(), &me);
     }
 }
 
-bool TaskBar::idMatch( const QString& id1, const QString& id2 )
+bool TaskBar::idMatch(const QString &id1, const QString &id2)
 {
-    if ( id1.isEmpty() || id2.isEmpty() )
+    if(id1.isEmpty() || id2.isEmpty())
         return false;
 
     return id1.lower() == id2.lower();
@@ -922,12 +863,9 @@ int TaskBar::containerCount() const
 {
     int i = 0;
 
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-         it != containers.constEnd();
-         ++it)
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
-        if ((m_showAllWindows || (*it)->onCurrentDesktop()) &&
-            ((showScreen() == -1) || ((*it)->isOnScreen())))
+        if((m_showAllWindows || (*it)->onCurrentDesktop()) && ((showScreen() == -1) || ((*it)->isOnScreen())))
         {
             i++;
         }
@@ -940,12 +878,9 @@ int TaskBar::taskCount() const
 {
     int i = 0;
 
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-         it != containers.constEnd();
-         ++it)
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
-        if ((m_showAllWindows || (*it)->onCurrentDesktop()) &&
-            ((showScreen() == -1) || ((*it)->isOnScreen())))
+        if((m_showAllWindows || (*it)->onCurrentDesktop()) && ((showScreen() == -1) || ((*it)->isOnScreen())))
         {
             i += (*it)->filteredTaskCount();
         }
@@ -957,19 +892,19 @@ int TaskBar::taskCount() const
 int TaskBar::maximumButtonsWithoutShrinking() const
 {
     QFontMetrics fm(KGlobalSettings::taskbarFont());
-    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ?
-                          fm.height() : TaskBarSettings::minimumButtonHeight();
+    int minButtonHeight = fm.height() > TaskBarSettings::minimumButtonHeight() ? fm.height() : TaskBarSettings::minimumButtonHeight();
     int rows = contentsRect().height() / minButtonHeight;
 
-    if (rows < 1)
+    if(rows < 1)
     {
         rows = 1;
     }
 
-    if ( orientation() == Horizontal ) {
+    if(orientation() == Horizontal)
+    {
         // maxWidth of 0 means no max width, drop back to default
         int maxWidth = TaskBarSettings::maximumButtonWidth();
-        if (maxWidth == 0)
+        if(maxWidth == 0)
         {
             maxWidth = BUTTON_MAX_WIDTH;
         }
@@ -986,9 +921,8 @@ int TaskBar::maximumButtonsWithoutShrinking() const
 
 bool TaskBar::shouldGroup() const
 {
-    return TaskBarSettings::groupTasks() == TaskBarSettings::GroupAlways ||
-           (TaskBarSettings::groupTasks() == TaskBarSettings::GroupWhenFull &&
-            taskCount() > maximumButtonsWithoutShrinking());
+    return TaskBarSettings::groupTasks() == TaskBarSettings::GroupAlways
+           || (TaskBarSettings::groupTasks() == TaskBarSettings::GroupWhenFull && taskCount() > maximumButtonsWithoutShrinking());
 }
 
 void TaskBar::reGroup()
@@ -997,18 +931,14 @@ void TaskBar::reGroup()
     blocklayout = true;
 
     TaskContainer::Iterator lastContainer = m_hiddenContainers.end();
-    for (TaskContainer::Iterator it = m_hiddenContainers.begin();
-         it != lastContainer;
-         ++it)
+    for(TaskContainer::Iterator it = m_hiddenContainers.begin(); it != lastContainer; ++it)
     {
         (*it)->finish();
         m_deletableContainers.append(*it);
     }
     m_hiddenContainers.clear();
 
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-         it != containers.constEnd();
-         ++it)
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
         (*it)->finish();
         m_deletableContainers.append(*it);
@@ -1017,10 +947,10 @@ void TaskBar::reGroup()
 
     Task::Dict tasks = TaskManager::the()->tasks();
     Task::Dict::iterator lastTask = tasks.end();
-    for (Task::Dict::iterator it = tasks.begin(); it != lastTask; ++it)
+    for(Task::Dict::iterator it = tasks.begin(); it != lastTask; ++it)
     {
         Task::Ptr task = it.data();
-        if (showScreen() == -1 || task->isOnScreen(showScreen()))
+        if(showScreen() == -1 || task->isOnScreen(showScreen()))
         {
             add(task);
         }
@@ -1028,7 +958,7 @@ void TaskBar::reGroup()
 
     Startup::List startups = TaskManager::the()->startups();
     Startup::List::iterator itEnd = startups.end();
-    for (Startup::List::iterator sIt = startups.begin(); sIt != itEnd; ++sIt)
+    for(Startup::List::iterator sIt = startups.begin(); sIt != itEnd; ++sIt)
     {
         add(*sIt);
     }
@@ -1043,14 +973,10 @@ TaskContainer::List TaskBar::filteredContainers()
     // filter task container list
     TaskContainer::List list;
 
-    for (TaskContainer::List::const_iterator it = containers.constBegin();
-        it != containers.constEnd();
-        ++it)
+    for(TaskContainer::List::const_iterator it = containers.constBegin(); it != containers.constEnd(); ++it)
     {
-        TaskContainer* c = *it;
-        if ((m_showAllWindows || c->onCurrentDesktop()) &&
-            (!m_showOnlyIconified || c->isIconified()) &&
-            ((showScreen() == -1) || c->isOnScreen()))
+        TaskContainer *c = *it;
+        if((m_showAllWindows || c->onCurrentDesktop()) && (!m_showOnlyIconified || c->isIconified()) && ((showScreen() == -1) || c->isOnScreen()))
         {
             list.append(c);
             c->show();
@@ -1060,7 +986,7 @@ TaskContainer::List TaskBar::filteredContainers()
             c->hide();
         }
     }
-        
+
     return list;
 }
 
@@ -1071,31 +997,31 @@ void TaskBar::activateNextTask(bool forward)
 
     // this is necessary here, because 'containers' is unsorted and
     // we want to iterate over the _shown_ task containers in a linear way
-    if (m_sortByDesktop)
+    if(m_sortByDesktop)
     {
         sortContainersByDesktop(list);
     }
 
     int numContainers = list.count();
     TaskContainer::List::iterator it;
-    for (int i = 0; i < numContainers; ++i)
+    for(int i = 0; i < numContainers; ++i)
     {
         it = forward ? list.at(i) : list.at(numContainers - i - 1);
 
-        if (it != list.end() && (*it)->activateNextTask(forward, forcenext))
+        if(it != list.end() && (*it)->activateNextTask(forward, forcenext))
         {
             return;
         }
     }
 
-    if (forcenext)
+    if(forcenext)
     {
         // moving forward from the last, or backward from the first, loop around
-        for (int i = 0; i < numContainers; ++i)
+        for(int i = 0; i < numContainers; ++i)
         {
             it = forward ? list.at(i) : list.at(numContainers - i - 1);
 
-            if (it != list.end() && (*it)->activateNextTask(forward, forcenext))
+            if(it != list.end() && (*it)->activateNextTask(forward, forcenext))
             {
                 return;
             }
@@ -1105,35 +1031,34 @@ void TaskBar::activateNextTask(bool forward)
     }
 
     forcenext = true; // select first
-    for (int i = 0; i < numContainers; ++i)
+    for(int i = 0; i < numContainers; ++i)
     {
         it = forward ? list.at(i) : list.at(numContainers - i - 1);
 
-        if (it == list.end())
+        if(it == list.end())
         {
             break;
         }
 
-        TaskContainer* c = *it;
-        if (m_sortByDesktop)
+        TaskContainer *c = *it;
+        if(m_sortByDesktop)
         {
-            if (forward ? c->desktop() < TaskManager::the()->currentDesktop()
-                        : c->desktop() > TaskManager::the()->currentDesktop())
+            if(forward ? c->desktop() < TaskManager::the()->currentDesktop() : c->desktop() > TaskManager::the()->currentDesktop())
             {
                 continue;
             }
         }
 
-        if (c->activateNextTask(forward, forcenext))
+        if(c->activateNextTask(forward, forcenext))
         {
             return;
         }
     }
 }
 
-void TaskBar::wheelEvent(QWheelEvent* e)
+void TaskBar::wheelEvent(QWheelEvent *e)
 {
-    if (e->delta() > 0)
+    if(e->delta() > 0)
     {
         // scroll away from user, previous task
         activateNextTask(false);
@@ -1147,17 +1072,17 @@ void TaskBar::wheelEvent(QWheelEvent* e)
 
 void TaskBar::slotActivateNextTask()
 {
-    activateNextTask( true );
+    activateNextTask(true);
 }
 
 void TaskBar::slotActivatePreviousTask()
 {
-    activateNextTask( false );
+    activateNextTask(false);
 }
 
-void TaskBar::slotSettingsChanged( int category )
+void TaskBar::slotSettingsChanged(int category)
 {
-    if( category == (int) KApplication::SETTINGS_SHORTCUTS )
+    if(category == (int)KApplication::SETTINGS_SHORTCUTS)
     {
         keys->readSettings();
         keys->updateConnections();
@@ -1166,39 +1091,32 @@ void TaskBar::slotSettingsChanged( int category )
 
 int TaskBar::showScreen() const
 {
-    if (m_showOnlyCurrentScreen && m_currentScreen == -1)
+    if(m_showOnlyCurrentScreen && m_currentScreen == -1)
     {
-        const_cast<TaskBar*>(this)->m_currentScreen =
-            QApplication::desktop()->screenNumber(mapToGlobal(this->geometry().topLeft()));
+        const_cast< TaskBar * >(this)->m_currentScreen = QApplication::desktop()->screenNumber(mapToGlobal(this->geometry().topLeft()));
     }
 
     return m_currentScreen;
 }
 
-QImage* TaskBar::blendGradient(const QSize& size)
+QImage *TaskBar::blendGradient(const QSize &size)
 {
-    if (m_blendGradient.isNull() || m_blendGradient.size() != size)
+    if(m_blendGradient.isNull() || m_blendGradient.size() != size)
     {
         QPixmap bgpm(size);
         QPainter bgp(&bgpm);
         bgpm.fill(black);
 
-        if (QApplication::reverseLayout())
+        if(QApplication::reverseLayout())
         {
-            QImage gradient = KImageEffect::gradient(
-                    QSize(30, size.height()),
-                    QColor(255,255,255),
-                    QColor(0,0,0),
-                    KImageEffect::HorizontalGradient);
+            QImage gradient =
+                KImageEffect::gradient(QSize(30, size.height()), QColor(255, 255, 255), QColor(0, 0, 0), KImageEffect::HorizontalGradient);
             bgp.drawImage(0, 0, gradient);
         }
         else
         {
-            QImage gradient = KImageEffect::gradient(
-                    QSize(30, size.height()),
-                    QColor(0,0,0),
-                    QColor(255,255,255),
-                    KImageEffect::HorizontalGradient);
+            QImage gradient =
+                KImageEffect::gradient(QSize(30, size.height()), QColor(0, 0, 0), QColor(255, 255, 255), KImageEffect::HorizontalGradient);
             bgp.drawImage(size.width() - 30, 0, gradient);
         }
 
@@ -1208,17 +1126,15 @@ QImage* TaskBar::blendGradient(const QSize& size)
     return &m_blendGradient;
 }
 
-void TaskBar::sortContainersByDesktop(TaskContainer::List& list)
+void TaskBar::sortContainersByDesktop(TaskContainer::List &list)
 {
-    typedef QValueVector<QPair<int, QPair<int, TaskContainer*> > > SortVector;
+    typedef QValueVector< QPair< int, QPair< int, TaskContainer * > > > SortVector;
     SortVector sorted;
     sorted.resize(list.count());
     int i = 0;
 
     TaskContainer::List::ConstIterator lastUnsorted(list.constEnd());
-    for (TaskContainer::List::ConstIterator it = list.constBegin();
-            it != lastUnsorted;
-            ++it)
+    for(TaskContainer::List::ConstIterator it = list.constBegin(); it != lastUnsorted; ++it)
     {
         sorted[i] = qMakePair((*it)->desktop(), qMakePair(i, *it));
         ++i;
@@ -1228,11 +1144,8 @@ void TaskBar::sortContainersByDesktop(TaskContainer::List& list)
 
     list.clear();
     SortVector::const_iterator lastSorted(sorted.constEnd());
-    for (SortVector::const_iterator it = sorted.constBegin();
-         it != lastSorted;
-         ++it)
+    for(SortVector::const_iterator it = sorted.constBegin(); it != lastSorted; ++it)
     {
         list.append((*it).second.second);
     }
 }
-

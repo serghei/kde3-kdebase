@@ -35,8 +35,7 @@ class KIVDirectoryOverlay;
  * All the information about the file is contained in the KFileItem
  * pointer.
  */
-class LIBKONQ_EXPORT KFileIVI : public KIconViewItem
-{
+class LIBKONQ_EXPORT KFileIVI : public KIconViewItem {
 public:
     /**
      * Create an icon, within a qlistview, representing a file
@@ -44,7 +43,7 @@ public:
      * @param fileitem the file item created by KDirLister
      * @param size the icon size
      */
-    KFileIVI( KonqIconViewWidget *iconview, KFileItem* fileitem, int size );
+    KFileIVI(KonqIconViewWidget *iconview, KFileItem *fileitem, int size);
     virtual ~KFileIVI();
 
     /**
@@ -56,13 +55,16 @@ public:
     /**
      * @return the file item held by this instance
      */
-    KFileItem * item() const { return m_fileitem; }
+    KFileItem *item() const
+    {
+        return m_fileitem;
+    }
 
     /**
      * @return true if dropping on this file is allowed
      * Overloads QIconView::acceptDrop()
      */
-    virtual bool acceptDrop( const QMimeSource *mime ) const;
+    virtual bool acceptDrop(const QMimeSource *mime) const;
 
     /**
      * Changes the icon for this item.
@@ -71,10 +73,7 @@ public:
      * @param recalc whether to update the layout of the icon view when setting the icon
      * @param redraw whether to redraw the item after setting the icon
      */
-    virtual void setIcon( int size,
-                          int state=KIcon::DefaultState,
-                          bool recalc=false,
-                          bool redraw=false);
+    virtual void setIcon(int size, int state = KIcon::DefaultState, bool recalc = false, bool redraw = false);
 
     /**
      * Bypass @ref setIcon. This is for animated icons, you should use setIcon
@@ -83,9 +82,7 @@ public:
      * @param recalc whether to update the layout of the icon view when setting the icon
      * @param redraw whether to redraw the item after setting the icon
      */
-    void setPixmapDirect( const QPixmap & pixmap,
-                          bool recalc=false,
-                          bool redraw=false);
+    void setPixmapDirect(const QPixmap &pixmap, bool recalc = false, bool redraw = false);
 
     /**
      * Notifies that all icon effects on thumbs should be invalidated,
@@ -95,7 +92,7 @@ public:
      * @param state the state of the icon (enum in KIcon)
      * @param redraw whether to redraw the item after setting the icon
      */
-    void invalidateThumb( int state, bool redraw = false );
+    void invalidateThumb(int state, bool redraw = false);
 
     /**
      * Our current thumbnail is not longer "current".
@@ -104,69 +101,81 @@ public:
     void invalidateThumbnail();
     bool isThumbnailInvalid() const;
 
-    bool hasValidThumbnail() const { return isThumbnail() && !isThumbnailInvalid(); }
+    bool hasValidThumbnail() const
+    {
+        return isThumbnail() && !isThumbnailInvalid();
+    }
 
     /**
      * Return the current state of the icon
      * (KIcon::DefaultState, KIcon::ActiveState etc.)
      */
-    int state() const { return m_state; }
+    int state() const
+    {
+        return m_state;
+    }
 
     /**
      * Return the theorical size of the icon
      */
-    int iconSize() const { return m_size; }
+    int iconSize() const
+    {
+        return m_size;
+    }
 
     /**
      * Set to true when this icon is 'cut'
      */
-    void setDisabled( bool disabled );
+    void setDisabled(bool disabled);
 
     /**
      * Set this when the thumbnail was loaded
      */
-    void setThumbnailPixmap( const QPixmap & pixmap );
+    void setThumbnailPixmap(const QPixmap &pixmap);
 
     /**
      * Set the icon to use the specified KIconEffect
      * See the docs for KIconEffect for details.
      */
-    void setEffect( /*int group,*/ int state );
+    void setEffect(/*int group,*/ int state);
 
     /**
      * @return true if this item is a thumbnail
      */
-    bool isThumbnail() const { return m_bThumbnail; }
+    bool isThumbnail() const
+    {
+        return m_bThumbnail;
+    }
 
     /**
      * Sets an icon to be shown over the bottom left corner of the icon.
      * Currently used for directory overlays.
      * setOverlay(QString::null) to remove icon.
      */
-    void setOverlay( const QString & iconName);
+    void setOverlay(const QString &iconName);
 
     /**
      * Redetermines the icon (useful if KFileItem might return another icon).
      * Does nothing with thumbnails
      */
-    virtual void refreshIcon( bool redraw );
+    virtual void refreshIcon(bool redraw);
 
-    virtual void setKey( const QString &key );
+    virtual void setKey(const QString &key);
 
     /**
      * Paints this item. Takes care of using the normal or alpha
      * blending methods depending on the configuration.
      */
-    virtual void paintItem( QPainter *p, const QColorGroup &cg );
+    virtual void paintItem(QPainter *p, const QColorGroup &cg);
 
-    virtual bool move( int x, int y );
+    virtual bool move(int x, int y);
 
     /**
      * Enable an animation on mouseover, if there is an available mng.
      * @param movieFileName the base name for the mng, e.g. "folder".
      * Nothing happens if there is no animation available.
      */
-    void setMouseOverAnimation( const QString& movieFileName );
+    void setMouseOverAnimation(const QString &movieFileName);
     QString mouseOverAnimation() const;
 
     /**
@@ -179,27 +188,27 @@ public:
 
     /** Return true if we are currently animating this icon */
     bool isAnimated() const;
-    void setAnimated( bool );
+    void setAnimated(bool);
 
     /** Called when the mouse is over the icon */
-    void setActive( bool active );
+    void setActive(bool active);
 
     /**
      * Sets showing of directory overlays. Does nothing if this does
      * not represent a folder.
      */
-    KIVDirectoryOverlay* setShowDirectoryOverlay( bool );
-    bool showDirectoryOverlay( );
+    KIVDirectoryOverlay *setShowDirectoryOverlay(bool);
+    bool showDirectoryOverlay();
 
-    virtual int compare( QIconViewItem *i ) const;
+    virtual int compare(QIconViewItem *i) const;
 
 protected:
-    virtual void dropped( QDropEvent *e, const QValueList<QIconDragItem> &  );
+    virtual void dropped(QDropEvent *e, const QValueList< QIconDragItem > &);
 
     /**
      * Contains the logic and code for painting the overlay pixmap.
      */
-    void paintOverlay( QPainter *p ) const;
+    void paintOverlay(QPainter *p) const;
 
     /**
      * Updates the colorgroup.
@@ -209,23 +218,28 @@ protected:
     /**
      * Contains the logic and code for painting links.
      */
-    void paintFontUpdate( QPainter *p ) const;
+    void paintFontUpdate(QPainter *p) const;
 
 private:
     /** You are not supposed to call this on a KFileIVI, from the outside,
      * it bypasses the icons cache */
-    virtual void setPixmap ( const QPixmap & icon ) { KIconViewItem::setPixmap( icon ); }
-    virtual void setPixmap ( const QPixmap & icon, bool recalc, bool redraw = TRUE )
-        { KIconViewItem::setPixmap( icon, recalc, redraw ); }
+    virtual void setPixmap(const QPixmap &icon)
+    {
+        KIconViewItem::setPixmap(icon);
+    }
+    virtual void setPixmap(const QPixmap &icon, bool recalc, bool redraw = TRUE)
+    {
+        KIconViewItem::setPixmap(icon, recalc, redraw);
+    }
 
     /** Check if a thumbnail will be generated and calc the size of the icon */
     void updatePixmapSize();
-    
+
     int m_size, m_state;
     bool m_bDisabled;
     bool m_bThumbnail;
     /** Pointer to the file item in KDirLister's list */
-    KFileItem* m_fileitem;
+    KFileItem *m_fileitem;
 
     /**
      * Private data for KFileIVI

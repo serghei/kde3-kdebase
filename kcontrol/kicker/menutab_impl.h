@@ -22,38 +22,34 @@
 
 #include "menutab.h"
 
-class kSubMenuItem : public QObject, public QCheckListItem
-{
-    Q_OBJECT
-
-    public:
-        kSubMenuItem(QListView* parent, 
-                     const QString& visibleName,
-                     const QString& desktopFile,
-                     const QPixmap& icon,
-                     bool checked);
-        ~kSubMenuItem() {}
-
-        QString desktopFile();
-
-    signals:
-        void toggled(bool);
-
-    protected:
-        void stateChange(bool state);
-
-        QString m_desktopFile;
-};
-
-class MenuTab : public MenuTabBase
-{
+class kSubMenuItem : public QObject, public QCheckListItem {
     Q_OBJECT
 
 public:
-    MenuTab( QWidget *parent=0, const char* name=0 );
+    kSubMenuItem(QListView *parent, const QString &visibleName, const QString &desktopFile, const QPixmap &icon, bool checked);
+    ~kSubMenuItem()
+    {
+    }
+
+    QString desktopFile();
+
+signals:
+    void toggled(bool);
+
+protected:
+    void stateChange(bool state);
+
+    QString m_desktopFile;
+};
+
+class MenuTab : public MenuTabBase {
+    Q_OBJECT
+
+public:
+    MenuTab(QWidget *parent = 0, const char *name = 0);
 
     void load();
-    void load( bool useDefaults );
+    void load(bool useDefaults);
     void save();
     void defaults();
 
@@ -69,4 +65,3 @@ protected:
 };
 
 #endif
-

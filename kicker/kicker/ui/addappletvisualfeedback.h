@@ -38,43 +38,40 @@ class QPaintEvent;
 class QSimpleRichText;
 class QTimer;
 
-class AddAppletVisualFeedback : QWidget
-{
+class AddAppletVisualFeedback : QWidget {
     Q_OBJECT
 
-    public:
-        AddAppletVisualFeedback(AppletWidget* parent,
-                                const QWidget* destination,
-                                KPanelApplet::Direction direction);
-        ~AddAppletVisualFeedback();
+public:
+    AddAppletVisualFeedback(AppletWidget *parent, const QWidget *destination, KPanelApplet::Direction direction);
+    ~AddAppletVisualFeedback();
 
-    protected slots:
-        void internalUpdate();
-        void swoopCloser();
+protected slots:
+    void internalUpdate();
+    void swoopCloser();
 
-    protected:
-        void paintEvent(QPaintEvent * e);
-        void mousePressEvent(QMouseEvent * e);
+protected:
+    void paintEvent(QPaintEvent *e);
+    void mousePressEvent(QMouseEvent *e);
 
-        void makeMask();
-        void displayInternal();
+    void makeMask();
+    void displayInternal();
 
-    private:
-        const QWidget* m_target;
-        KPanelApplet::Direction m_direction;
-        QBitmap m_mask;
-        QPixmap m_pixmap;
-        QPixmap m_icon;
-        QSimpleRichText* m_richText;
+private:
+    const QWidget *m_target;
+    KPanelApplet::Direction m_direction;
+    QBitmap m_mask;
+    QPixmap m_pixmap;
+    QPixmap m_icon;
+    QSimpleRichText *m_richText;
 
-        int m_dissolveSize;
-        int m_dissolveDelta;
-        int m_frames;
+    int m_dissolveSize;
+    int m_dissolveDelta;
+    int m_frames;
 
-        QTimer m_moveTimer;
-        bool m_dirty;
+    QTimer m_moveTimer;
+    bool m_dirty;
 
-        QPoint m_destination;
+    QPoint m_destination;
 };
 
 #endif

@@ -26,7 +26,7 @@
 #include <kseparator.h>
 #include <dcopclient.h>
 #include <kapplication.h>
-#include <kkey_x11.h>	// Used in KKeyModule::init()
+#include <kkey_x11.h> // Used in KKeyModule::init()
 
 #include "keyconfig.h"
 #include "keyconfig.moc"
@@ -35,29 +35,28 @@
 
 //----------------------------------------------------------------------------
 
-KKeyModule::KKeyModule( QWidget *parent, bool isGlobal, bool bSeriesOnly, bool bSeriesNone, const char *name )
-  : QWidget( parent, name )
+KKeyModule::KKeyModule(QWidget *parent, bool isGlobal, bool bSeriesOnly, bool bSeriesNone, const char *name) : QWidget(parent, name)
 {
-	init( isGlobal, bSeriesOnly, bSeriesNone );
+    init(isGlobal, bSeriesOnly, bSeriesNone);
 }
 
-KKeyModule::KKeyModule( QWidget *parent, bool isGlobal, const char *name )
-  : QWidget( parent, name )
+KKeyModule::KKeyModule(QWidget *parent, bool isGlobal, const char *name) : QWidget(parent, name)
 {
-	init( isGlobal, false, false );
+    init(isGlobal, false, false);
 }
 
-void KKeyModule::init( bool isGlobal, bool _bSeriesOnly, bool bSeriesNone )
+void KKeyModule::init(bool isGlobal, bool _bSeriesOnly, bool bSeriesNone)
 {
-  QString wtstr;
+    QString wtstr;
 
-  KeyType = isGlobal ? "global" : "standard";
+    KeyType = isGlobal ? "global" : "standard";
 
-  bSeriesOnly = _bSeriesOnly;
+    bSeriesOnly = _bSeriesOnly;
 
-  kdDebug(125) << "KKeyModule::init() - Get default key bindings." << endl;
-  if ( KeyType == "global" ) {
-    KAccelActions* keys = &actions;
+    kdDebug(125) << "KKeyModule::init() - Get default key bindings." << endl;
+    if(KeyType == "global")
+    {
+        KAccelActions *keys = &actions;
 // see also KKeyModule::init() below !!!
 #define NOSLOTS
 #define KShortcuts KAccelShortcuts
@@ -68,134 +67,135 @@ void KKeyModule::init( bool isGlobal, bool _bSeriesOnly, bool bSeriesNone )
 #include "../../klipper/klipperbindings.cpp"
 #include "../../kxkb/kxkbbindings.cpp"
 #undef KShortcuts
-    KeyScheme = "Global Key Scheme";
-    KeySet    = "Global Keys";
-    // Sorting Hack: I'll re-write the module once feature-adding begins again.
-    if( bSeriesOnly || bSeriesNone ) {
-	for( uint i = 0; i < actions.size(); i++ ) {
-		QString sConfigKey = actions[i].m_sName;
-		//kdDebug(125) << "sConfigKey: " << sConfigKey << endl;
-		int iLastSpace = sConfigKey.findRev( ' ' );
-		bool bIsNum = false;
-		if( iLastSpace >= 0 )
-			sConfigKey.mid( iLastSpace+1 ).toInt( &bIsNum );
+        KeyScheme = "Global Key Scheme";
+        KeySet = "Global Keys";
+        // Sorting Hack: I'll re-write the module once feature-adding begins again.
+        if(bSeriesOnly || bSeriesNone)
+        {
+            for(uint i = 0; i < actions.size(); i++)
+            {
+                QString sConfigKey = actions[i].m_sName;
+                // kdDebug(125) << "sConfigKey: " << sConfigKey << endl;
+                int iLastSpace = sConfigKey.findRev(' ');
+                bool bIsNum = false;
+                if(iLastSpace >= 0)
+                    sConfigKey.mid(iLastSpace + 1).toInt(&bIsNum);
 
-		kdDebug(125) << "sConfigKey: " << sConfigKey
-			<< " bIsNum: " << bIsNum
-			<< " bSeriesOnly: " << bSeriesOnly << endl;
-		if( ((bSeriesOnly && !bIsNum) || (bSeriesNone && bIsNum)) && !sConfigKey.contains( ':' ) ) {
-			actions.removeAction( sConfigKey );
-			i--;
-		}
-	}
-    }
-  }
-
-  if ( KeyType == "standard" ) {
-    for(uint i=0; i<KStdAccel::NB_STD_ACCELS; i++) {
-      KStdAccel::StdAccel id = (KStdAccel::StdAccel)i;
-      actions.insertAction( KStdAccel::action(id),
-                          KStdAccel::description(id),
-                          KStdAccel::defaultKey3(id),
-                          KStdAccel::defaultKey4(id) );
+                kdDebug(125) << "sConfigKey: " << sConfigKey << " bIsNum: " << bIsNum << " bSeriesOnly: " << bSeriesOnly << endl;
+                if(((bSeriesOnly && !bIsNum) || (bSeriesNone && bIsNum)) && !sConfigKey.contains(':'))
+                {
+                    actions.removeAction(sConfigKey);
+                    i--;
+                }
+            }
+        }
     }
 
-    KeyScheme = "Standard Key Scheme";
-    KeySet    = "Keys";
-  }
+    if(KeyType == "standard")
+    {
+        for(uint i = 0; i < KStdAccel::NB_STD_ACCELS; i++)
+        {
+            KStdAccel::StdAccel id = (KStdAccel::StdAccel)i;
+            actions.insertAction(KStdAccel::action(id), KStdAccel::description(id), KStdAccel::defaultKey3(id), KStdAccel::defaultKey4(id));
+        }
 
-  //kdDebug(125) << "KKeyModule::init() - Read current key bindings from config." << endl;
-  //actions.readActions( KeySet );
+        KeyScheme = "Standard Key Scheme";
+        KeySet = "Keys";
+    }
 
-  sFileList = new QStringList();
-  sList = new QListBox( this );
+    // kdDebug(125) << "KKeyModule::init() - Read current key bindings from config." << endl;
+    // actions.readActions( KeySet );
 
-  //readSchemeNames();
-  sList->setCurrentItem( 0 );
-  connect( sList, SIGNAL( highlighted( int ) ),
-           SLOT( slotPreviewScheme( int ) ) );
+    sFileList = new QStringList();
+    sList = new QListBox(this);
 
-  QLabel *label = new QLabel( sList, i18n("&Key Scheme"), this );
+    // readSchemeNames();
+    sList->setCurrentItem(0);
+    connect(sList, SIGNAL(highlighted(int)), SLOT(slotPreviewScheme(int)));
 
-  wtstr = i18n("Here you can see a list of the existing key binding schemes with 'Current scheme'"
-    " referring to the settings you are using right now. Select a scheme to use, remove or"
-    " change it.");
-  QWhatsThis::add( label, wtstr );
-  QWhatsThis::add( sList, wtstr );
+    QLabel *label = new QLabel(sList, i18n("&Key Scheme"), this);
 
-  addBt = new QPushButton(  i18n("&Save Scheme..."), this );
-  connect( addBt, SIGNAL( clicked() ), SLOT( slotAdd() ) );
-  QWhatsThis::add(addBt, i18n("Click here to add a new key bindings scheme. You will be prompted for a name."));
+    wtstr = i18n(
+        "Here you can see a list of the existing key binding schemes with 'Current scheme'"
+        " referring to the settings you are using right now. Select a scheme to use, remove or"
+        " change it.");
+    QWhatsThis::add(label, wtstr);
+    QWhatsThis::add(sList, wtstr);
 
-  removeBt = new QPushButton(  i18n("&Remove Scheme"), this );
-  removeBt->setEnabled(FALSE);
-  connect( removeBt, SIGNAL( clicked() ), SLOT( slotRemove() ) );
-  QWhatsThis::add( removeBt, i18n("Click here to remove the selected key bindings scheme. You can not"
-    " remove the standard system wide schemes, 'Current scheme' and 'KDE default'.") );
+    addBt = new QPushButton(i18n("&Save Scheme..."), this);
+    connect(addBt, SIGNAL(clicked()), SLOT(slotAdd()));
+    QWhatsThis::add(addBt, i18n("Click here to add a new key bindings scheme. You will be prompted for a name."));
 
-  // Hack to get this setting only displayed once.  It belongs in main.cpp instead.
-  // That move will take a lot of UI redesigning, though, so i'll do it once CVS
-  //  opens up for feature commits again. -- ellis
-  /* Needed to remove because this depended upon non-BC changes in KeyEntry.*/
-  // If this is the "Global Keys" section of the KDE Control Center:
-  if( isGlobal && !bSeriesOnly ) {
-	preferMetaBt = new QCheckBox( i18n("Prefer 4-modifier defaults"), this );
-	if( !KKeySequence::keyboardHasMetaKey() )
-		preferMetaBt->setEnabled( false );
-	preferMetaBt->setChecked( KKeySequence::useFourModifierKeys() );
-	connect( preferMetaBt, SIGNAL(clicked()), SLOT(slotPreferMeta()) );
-	QWhatsThis::add( preferMetaBt, i18n("If your keyboard has a Meta key, but you would "
-		"like KDE to prefer the 3-modifier configuration defaults, then this option "
-		"should be unchecked.") );
-  } else
-	preferMetaBt = 0;
+    removeBt = new QPushButton(i18n("&Remove Scheme"), this);
+    removeBt->setEnabled(FALSE);
+    connect(removeBt, SIGNAL(clicked()), SLOT(slotRemove()));
+    QWhatsThis::add(removeBt, i18n("Click here to remove the selected key bindings scheme. You can not"
+                                   " remove the standard system wide schemes, 'Current scheme' and 'KDE default'."));
 
-  KSeparator* line = new KSeparator( KSeparator::HLine, this );
+    // Hack to get this setting only displayed once.  It belongs in main.cpp instead.
+    // That move will take a lot of UI redesigning, though, so i'll do it once CVS
+    //  opens up for feature commits again. -- ellis
+    /* Needed to remove because this depended upon non-BC changes in KeyEntry.*/
+    // If this is the "Global Keys" section of the KDE Control Center:
+    if(isGlobal && !bSeriesOnly)
+    {
+        preferMetaBt = new QCheckBox(i18n("Prefer 4-modifier defaults"), this);
+        if(!KKeySequence::keyboardHasMetaKey())
+            preferMetaBt->setEnabled(false);
+        preferMetaBt->setChecked(KKeySequence::useFourModifierKeys());
+        connect(preferMetaBt, SIGNAL(clicked()), SLOT(slotPreferMeta()));
+        QWhatsThis::add(preferMetaBt, i18n("If your keyboard has a Meta key, but you would "
+                                           "like KDE to prefer the 3-modifier configuration defaults, then this option "
+                                           "should be unchecked."));
+    }
+    else
+        preferMetaBt = 0;
 
-  kc = new KeyChooserSpec( actions, this, isGlobal );
-  connect( kc, SIGNAL(keyChange()), this, SLOT(slotKeyChange()) );
+    KSeparator *line = new KSeparator(KSeparator::HLine, this);
 
-  readScheme();
+    kc = new KeyChooserSpec(actions, this, isGlobal);
+    connect(kc, SIGNAL(keyChange()), this, SLOT(slotKeyChange()));
 
-  QGridLayout *topLayout = new QGridLayout( this, 6, 2,
-                                            KDialog::marginHint(),
-                                            KDialog::spacingHint());
-  topLayout->addWidget(label, 0, 0);
-  topLayout->addMultiCellWidget(sList, 1, 2, 0, 0);
-  topLayout->addWidget(addBt, 1, 1);
-  topLayout->addWidget(removeBt, 2, 1);
-  if( preferMetaBt )
-    topLayout->addWidget(preferMetaBt, 3, 0);
-  topLayout->addMultiCellWidget(line, 4, 4, 0, 1);
-  topLayout->addRowSpacing(3, 15);
-  topLayout->addMultiCellWidget(kc, 5, 5, 0, 1);
+    readScheme();
 
-  setMinimumSize(topLayout->sizeHint());
+    QGridLayout *topLayout = new QGridLayout(this, 6, 2, KDialog::marginHint(), KDialog::spacingHint());
+    topLayout->addWidget(label, 0, 0);
+    topLayout->addMultiCellWidget(sList, 1, 2, 0, 0);
+    topLayout->addWidget(addBt, 1, 1);
+    topLayout->addWidget(removeBt, 2, 1);
+    if(preferMetaBt)
+        topLayout->addWidget(preferMetaBt, 3, 0);
+    topLayout->addMultiCellWidget(line, 4, 4, 0, 1);
+    topLayout->addRowSpacing(3, 15);
+    topLayout->addMultiCellWidget(kc, 5, 5, 0, 1);
+
+    setMinimumSize(topLayout->sizeHint());
 }
 
-KKeyModule::~KKeyModule (){
-  //kdDebug() << "KKeyModule destructor" << endl;
+KKeyModule::~KKeyModule()
+{
+    // kdDebug() << "KKeyModule destructor" << endl;
     delete kc;
     delete sFileList;
 }
 
-bool KKeyModule::writeSettings( const QString& sGroup, KConfig* pConfig )
+bool KKeyModule::writeSettings(const QString &sGroup, KConfig *pConfig)
 {
-	kc->commitChanges();
-	actions.writeActions( sGroup, pConfig, true, false );
-	return true;
+    kc->commitChanges();
+    actions.writeActions(sGroup, pConfig, true, false);
+    return true;
 }
 
-bool KKeyModule::writeSettingsGlobal( const QString& sGroup )
+bool KKeyModule::writeSettingsGlobal(const QString &sGroup)
 {
-	kc->commitChanges();
-	actions.writeActions( sGroup, 0, true, true );
-	return true;
+    kc->commitChanges();
+    actions.writeActions(sGroup, 0, true, true);
+    return true;
 }
 
 void KKeyModule::load()
 {
-  kc->listSync();
+    kc->listSync();
 }
 
 /*void KKeyModule::save()
@@ -217,10 +217,10 @@ void KKeyModule::load()
 
 void KKeyModule::defaults()
 {
-  if( preferMetaBt )
-    preferMetaBt->setChecked( false );
-  KKeySequence::useFourModifierKeys( false );
-  kc->allDefault();
+    if(preferMetaBt)
+        preferMetaBt->setChecked(false);
+    KKeySequence::useFourModifierKeys(false);
+    kc->allDefault();
 }
 
 /*void KKeyModule::slotRemove()
@@ -252,8 +252,8 @@ void KKeyModule::defaults()
 
 void KKeyModule::slotKeyChange()
 {
-	emit keyChange();
-	//emit keysChanged( &dict );
+    emit keyChange();
+    // emit keysChanged( &dict );
 }
 
 /*void KKeyModule::slotSave( )
@@ -268,25 +268,27 @@ void KKeyModule::slotKeyChange()
 
 void KKeyModule::slotPreferMeta()
 {
-	kc->setPreferFourModifierKeys( preferMetaBt->isChecked() );
+    kc->setPreferFourModifierKeys(preferMetaBt->isChecked());
 }
 
-void KKeyModule::readScheme( int index )
+void KKeyModule::readScheme(int index)
 {
-  kdDebug(125) << "readScheme( " << index << " )\n";
-  if( index == 1 )
-    kc->allDefault( false );
-  //else if( index == 2 )
-  //  kc->allDefault( true );
-  else {
-    KConfigBase* config = 0;
-    if( index == 0 )	config = new KConfig( "kdeglobals" );
-    //else		config = new KSimpleConfig( *sFileList->at( index ), true );
+    kdDebug(125) << "readScheme( " << index << " )\n";
+    if(index == 1)
+        kc->allDefault(false);
+    // else if( index == 2 )
+    //  kc->allDefault( true );
+    else
+    {
+        KConfigBase *config = 0;
+        if(index == 0)
+            config = new KConfig("kdeglobals");
+        // else		config = new KSimpleConfig( *sFileList->at( index ), true );
 
-    actions.readActions( (index == 0) ? KeySet : KeyScheme, config );
-    kc->listSync();
-    delete config;
-  }
+        actions.readActions((index == 0) ? KeySet : KeyScheme, config);
+        kc->listSync();
+        delete config;
+    }
 }
 
 /*void KKeyModule::slotAdd()
@@ -344,7 +346,7 @@ void KKeyModule::readScheme( int index )
           int result = KMessageBox::warningContinueCancel( 0,
                i18n("A key scheme with the name '%1' already exists.\n"
                     "Do you want to overwrite it?\n").arg(sName),
-		   i18n("Save Key Scheme"),
+           i18n("Save Key Scheme"),
                    i18n("Overwrite"));
           if (result == KMessageBox::Continue)
              nameValid = true;
@@ -469,18 +471,18 @@ void KKeyModule::readScheme( int index )
 // dialogs, kdeglobals is empty as long as you don't apply any change in controlcenter/keys
 void KKeyModule::init()
 {
-  kdDebug(125) << "KKeyModule::init()\n";
+    kdDebug(125) << "KKeyModule::init()\n";
 
-  /*kdDebug(125) << "KKeyModule::init() - Initialize # Modifier Keys Settings\n";
-  KConfigGroupSaver cgs( KGlobal::config(), "Keyboard" );
-  QString fourMods = KGlobal::config()->readEntry( "Use Four Modifier Keys", KAccel::keyboardHasMetaKey() ? "true" : "false" );
-  KAccel::useFourModifierKeys( fourMods == "true" );
-  bool bUseFourModifierKeys = KAccel::useFourModifierKeys();
-  KGlobal::config()->writeEntry( "User Four Modifier Keys", bUseFourModifierKeys ? "true" : "false", true, true );
-  */
-  KAccelActions* keys = new KAccelActions();
+    /*kdDebug(125) << "KKeyModule::init() - Initialize # Modifier Keys Settings\n";
+    KConfigGroupSaver cgs( KGlobal::config(), "Keyboard" );
+    QString fourMods = KGlobal::config()->readEntry( "Use Four Modifier Keys", KAccel::keyboardHasMetaKey() ? "true" : "false" );
+    KAccel::useFourModifierKeys( fourMods == "true" );
+    bool bUseFourModifierKeys = KAccel::useFourModifierKeys();
+    KGlobal::config()->writeEntry( "User Four Modifier Keys", bUseFourModifierKeys ? "true" : "false", true, true );
+    */
+    KAccelActions *keys = new KAccelActions();
 
-  kdDebug(125) << "KKeyModule::init() - Load Included Bindings\n";
+    kdDebug(125) << "KKeyModule::init() - Load Included Bindings\n";
 // this should match the included files above
 #define NOSLOTS
 #define KShortcuts KAccelShortcuts
@@ -492,28 +494,28 @@ void KKeyModule::init()
 #include "../../kxkb/kxkbbindings.cpp"
 #undef KShortcuts
 
-  kdDebug(125) << "KKeyModule::init() - Read Config Bindings\n";
-  keys->readActions( "Global Keys" );
+    kdDebug(125) << "KKeyModule::init() - Read Config Bindings\n";
+    keys->readActions("Global Keys");
 
-  {
-    KSimpleConfig cfg( "kdeglobals" );
-    cfg.deleteGroup( "Global Keys" );
-  }
+    {
+        KSimpleConfig cfg("kdeglobals");
+        cfg.deleteGroup("Global Keys");
+    }
 
-  kdDebug(125) << "KKeyModule::init() - Write Config Bindings\n";
-  keys->writeActions( "Global Keys", 0, true, true );
+    kdDebug(125) << "KKeyModule::init() - Write Config Bindings\n";
+    keys->writeActions("Global Keys", 0, true, true);
 }
 
 //-----------------------------------------------------------------
 // KeyChooserSpec
 //-----------------------------------------------------------------
 
-KeyChooserSpec::KeyChooserSpec( KAccelActions& actions, QWidget* parent, bool bGlobal )
-    : KKeyChooser( actions, parent, bGlobal, false, true ), m_bGlobal( bGlobal )
-    {
-    //if( global )
+KeyChooserSpec::KeyChooserSpec(KAccelActions &actions, QWidget *parent, bool bGlobal)
+    : KKeyChooser(actions, parent, bGlobal, false, true), m_bGlobal(bGlobal)
+{
+    // if( global )
     //    globalDict()->clear(); // don't check against global keys twice
-    }
+}
 
 /*void KeyChooserSpec::updateKeys( const KAccelActions* map_P )
     {

@@ -16,53 +16,51 @@ License. See the file "COPYING" for the exact licensing terms.
 #include <qstring.h>
 #include <qvaluelist.h>
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
 class Client;
 
-class Notify
+class Notify {
+public:
+    enum Event
     {
-    public:
-
-        enum Event 
-            {
-            Activate,
-            Close,
-            Minimize,
-            UnMinimize,
-            Maximize,
-            UnMaximize,
-            OnAllDesktops,
-            NotOnAllDesktops,
-            New,
-            Delete,
-            TransNew,
-            TransDelete,
-            ShadeUp,
-            ShadeDown,
-            MoveStart,
-            MoveEnd,
-            ResizeStart,
-            ResizeEnd,
-            DemandAttentionCurrent,
-            DemandAttentionOther,
-            DesktopChange = 100
-            };
-
-        static bool raise( Event, const QString& message = QString::null, Client* c = NULL );
-        static bool makeDemandAttention( Event );
-        static void sendPendingEvents();
-    private:
-        static QString eventToName( Event );
-        struct EventData
-            {
-            QString event;
-            QString message;
-            long window;
-            };
-        static QValueList< EventData > pending_events;
+        Activate,
+        Close,
+        Minimize,
+        UnMinimize,
+        Maximize,
+        UnMaximize,
+        OnAllDesktops,
+        NotOnAllDesktops,
+        New,
+        Delete,
+        TransNew,
+        TransDelete,
+        ShadeUp,
+        ShadeDown,
+        MoveStart,
+        MoveEnd,
+        ResizeStart,
+        ResizeEnd,
+        DemandAttentionCurrent,
+        DemandAttentionOther,
+        DesktopChange = 100
     };
+
+    static bool raise(Event, const QString &message = QString::null, Client *c = NULL);
+    static bool makeDemandAttention(Event);
+    static void sendPendingEvents();
+
+private:
+    static QString eventToName(Event);
+    struct EventData
+    {
+        QString event;
+        QString message;
+        long window;
+    };
+    static QValueList< EventData > pending_events;
+};
 
 } // namespace
 

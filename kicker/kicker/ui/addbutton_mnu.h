@@ -28,22 +28,22 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ContainerArea;
 
-class PanelAddButtonMenu : public PanelServiceMenu
-{
+class PanelAddButtonMenu : public PanelServiceMenu {
     Q_OBJECT
 
 public:
-    PanelAddButtonMenu(ContainerArea* cArea, const QString & label, const QString & relPath,
-		       QWidget * parent  = 0, const char * name = 0,const QString& _inlineHeader= QString::null);
-    PanelAddButtonMenu(ContainerArea* cArea, QWidget * parent = 0, const char * name = 0, const QString& _inlineHeader= QString::null);
+    PanelAddButtonMenu(ContainerArea *cArea, const QString &label, const QString &relPath, QWidget *parent = 0, const char *name = 0,
+                       const QString &_inlineHeader = QString::null);
+    PanelAddButtonMenu(ContainerArea *cArea, QWidget *parent = 0, const char *name = 0, const QString &_inlineHeader = QString::null);
 
 protected slots:
     virtual void slotExec(int id);
     virtual void addNonKDEApp();
 
 protected:
-    virtual PanelServiceMenu * newSubMenu(const QString & label, const QString & relPath,
-					  QWidget * parent, const char * name, const QString & _inlineHeader=QString::null);
+    virtual PanelServiceMenu *newSubMenu(const QString &label, const QString &relPath, QWidget *parent, const char *name,
+                                         const QString &_inlineHeader = QString::null);
+
 private:
     ContainerArea *containerArea;
 };

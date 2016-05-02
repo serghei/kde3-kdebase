@@ -21,46 +21,46 @@
 #ifndef KSG_STAT_H
 #define KSG_STAT_H
 
-void initStat( struct SensorModul* );
-void exitStat( void );
+void initStat(struct SensorModul *);
+void exitStat(void);
 
-int updateStat( void );
+int updateStat(void);
 
-void printCPUUser( const char* );
-void printCPUUserInfo( const char* );
-void printCPUNice( const char* );
-void printCPUNiceInfo( const char* );
-void printCPUSys( const char* );
-void printCPUSysInfo( const char* );
-void printCPUIdle( const char* );
-void printCPUIdleInfo( const char* );
-void printCPUxUser( const char* );
-void printCPUxUserInfo( const char* );
-void printCPUxNice( const char* );
-void printCPUxNiceInfo( const char* );
-void printCPUxSys( const char* );
-void printCPUxSysInfo( const char* );
-void printCPUxIdle( const char* );
-void printCPUxIdleInfo( const char* );
-void printDiskTotal( const char* );
-void printDiskTotalInfo( const char* );
-void printDiskRIO( const char* );
-void printDiskRIOInfo( const char* );
-void printDiskWIO( const char* );
-void printDiskWIOInfo( const char* );
-void printDiskRBlk( const char* );
-void printDiskRBlkInfo( const char* );
-void printDiskWBlk( const char* );
-void printDiskWBlkInfo( const char* );
-void printPageIn( const char* );
-void printPageInInfo( const char* );
-void printPageOut( const char* );
-void printPageOutInfo( const char* );
-void printInterruptx( const char* );
-void printInterruptxInfo( const char* );
-void printCtxt( const char* );
-void printCtxtInfo( const char* );
-void printDiskIO( const char* );
-void printDiskIOInfo( const char* );
+void printCPUUser(const char *);
+void printCPUUserInfo(const char *);
+void printCPUNice(const char *);
+void printCPUNiceInfo(const char *);
+void printCPUSys(const char *);
+void printCPUSysInfo(const char *);
+void printCPUIdle(const char *);
+void printCPUIdleInfo(const char *);
+void printCPUxUser(const char *);
+void printCPUxUserInfo(const char *);
+void printCPUxNice(const char *);
+void printCPUxNiceInfo(const char *);
+void printCPUxSys(const char *);
+void printCPUxSysInfo(const char *);
+void printCPUxIdle(const char *);
+void printCPUxIdleInfo(const char *);
+void printDiskTotal(const char *);
+void printDiskTotalInfo(const char *);
+void printDiskRIO(const char *);
+void printDiskRIOInfo(const char *);
+void printDiskWIO(const char *);
+void printDiskWIOInfo(const char *);
+void printDiskRBlk(const char *);
+void printDiskRBlkInfo(const char *);
+void printDiskWBlk(const char *);
+void printDiskWBlkInfo(const char *);
+void printPageIn(const char *);
+void printPageInInfo(const char *);
+void printPageOut(const char *);
+void printPageOutInfo(const char *);
+void printInterruptx(const char *);
+void printInterruptxInfo(const char *);
+void printCtxt(const char *);
+void printCtxtInfo(const char *);
+void printDiskIO(const char *);
+void printDiskIOInfo(const char *);
 
 #endif

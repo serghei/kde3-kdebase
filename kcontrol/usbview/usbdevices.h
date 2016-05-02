@@ -23,51 +23,63 @@
 class USBDB;
 
 
-class USBDevice
-{
+class USBDevice {
 public:
-  
-  USBDevice();
+    USBDevice();
 
-  void parseLine(QString line);
-  void parseSysDir(int bus, int parent, int level, QString line);
+    void parseLine(QString line);
+    void parseSysDir(int bus, int parent, int level, QString line);
 
-  int level() { return _level; };
-  int device() { return _device; };
-  int parent() { return _parent; };
-  int bus() { return _bus; };
-  QString product();
+    int level()
+    {
+        return _level;
+    };
+    int device()
+    {
+        return _device;
+    };
+    int parent()
+    {
+        return _parent;
+    };
+    int bus()
+    {
+        return _bus;
+    };
+    QString product();
 
-  QString dump();
+    QString dump();
 
-  static QPtrList<USBDevice> &devices() { return _devices; };
-  static USBDevice *find(int bus, int device);
-  static bool parse(QString fname);
-  static bool parseSys(QString fname);
+    static QPtrList< USBDevice > &devices()
+    {
+        return _devices;
+    };
+    static USBDevice *find(int bus, int device);
+    static bool parse(QString fname);
+    static bool parseSys(QString fname);
 
 
 private:
+    static QPtrList< USBDevice > _devices;
 
-  static QPtrList<USBDevice> _devices;
+    static USBDB *_db;
 
-  static USBDB *_db;
+    int _bus, _level, _parent, _port, _count, _device, _channels, _power;
+    float _speed;
 
-  int _bus, _level, _parent, _port, _count, _device, _channels, _power;
-  float _speed;
+    QString _manufacturer, _product, _serial;
 
-  QString _manufacturer, _product, _serial;
+    int _bwTotal, _bwUsed, _bwPercent, _bwIntr, _bwIso;
+    bool _hasBW;
 
-  int _bwTotal, _bwUsed, _bwPercent, _bwIntr, _bwIso;
-  bool _hasBW;
+    unsigned int _verMajor, _verMinor, _class, _sub, _prot, _maxPacketSize, _configs;
+    QString _className;
 
-  unsigned int _verMajor, _verMinor, _class, _sub, _prot, _maxPacketSize, _configs;
-  QString _className;
-
-  unsigned int _vendorID, _prodID, _revMajor, _revMinor;
+    unsigned int _vendorID, _prodID, _revMajor, _revMinor;
 
 #ifdef Q_OS_FREEBSD
-  void collectData( int fd, int level, usb_device_info &di, int parent );
-  QStringList _devnodes;
+    void collectData(int fd, int level, usb_device_info &di, int parent);
+    QStringList _devnodes;
 #endif
 };
 

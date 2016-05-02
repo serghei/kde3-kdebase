@@ -26,7 +26,8 @@
 #include "authenticator.h"
 
 
-struct _PolkitKDE3Listener {
+struct _PolkitKDE3Listener
+{
     PolkitAgentListener parent_instance;
 
     /* we support multiple authenticators - they are simply queued up */
@@ -36,27 +37,17 @@ struct _PolkitKDE3Listener {
 };
 
 
-struct _PolkitKDE3ListenerClass {
+struct _PolkitKDE3ListenerClass
+{
     PolkitAgentListenerClass parent_class;
 };
 
 
-static void polkit_kde3_listener_initiate_authentication(
-        PolkitAgentListener  *listener,
-        const gchar          *action_id,
-        const gchar          *message,
-        const gchar          *icon_name,
-        PolkitDetails        *details,
-        const gchar          *cookie,
-        GList                *identities,
-        GCancellable         *cancellable,
-        GAsyncReadyCallback   callback,
-        gpointer              user_data);
+static void polkit_kde3_listener_initiate_authentication(PolkitAgentListener *listener, const gchar *action_id, const gchar *message,
+                                                         const gchar *icon_name, PolkitDetails *details, const gchar *cookie, GList *identities,
+                                                         GCancellable *cancellable, GAsyncReadyCallback callback, gpointer user_data);
 
-static gboolean polkit_kde3_listener_initiate_authentication_finish(
-        PolkitAgentListener  *listener,
-        GAsyncResult         *res,
-        GError              **error);
+static gboolean polkit_kde3_listener_initiate_authentication_finish(PolkitAgentListener *listener, GAsyncResult *res, GError **error);
 
 
 G_DEFINE_TYPE(PolkitKDE3Listener, polkit_kde3_listener, POLKIT_AGENT_TYPE_LISTENER);
@@ -84,7 +75,7 @@ static void polkit_kde3_listener_class_init(PolkitKDE3ListenerClass *klass)
 
     gobject_class->finalize = polkit_kde3_listener_finalize;
 
-    listener_class->initiate_authentication        = polkit_kde3_listener_initiate_authentication;
+    listener_class->initiate_authentication = polkit_kde3_listener_initiate_authentication;
     listener_class->initiate_authentication_finish = polkit_kde3_listener_initiate_authentication_finish;
 }
 
@@ -95,7 +86,8 @@ PolkitAgentListener *polkit_kde3_listener_new(void)
 }
 
 
-typedef struct {
+typedef struct
+{
     PolkitKDE3Listener *listener;
     PolkitKDE3Authenticator *authenticator;
 
@@ -106,19 +98,16 @@ typedef struct {
 } AuthData;
 
 
-static AuthData *auth_data_new(
-        PolkitKDE3Listener *listener,
-        PolkitKDE3Authenticator *authenticator,
-        GSimpleAsyncResult *simple,
-        GCancellable *cancellable)
+static AuthData *auth_data_new(PolkitKDE3Listener *listener, PolkitKDE3Authenticator *authenticator, GSimpleAsyncResult *simple,
+                               GCancellable *cancellable)
 {
     AuthData *data;
 
     data = g_new0(AuthData, 1);
-    data->listener = static_cast<PolkitKDE3Listener*>(g_object_ref(listener));
-    data->authenticator = static_cast<PolkitKDE3Authenticator*>(g_object_ref(authenticator));
-    data->simple = static_cast<GSimpleAsyncResult*>(g_object_ref(simple));
-    data->cancellable = static_cast<GCancellable*>(g_object_ref(cancellable));
+    data->listener = static_cast< PolkitKDE3Listener * >(g_object_ref(listener));
+    data->authenticator = static_cast< PolkitKDE3Authenticator * >(g_object_ref(authenticator));
+    data->simple = static_cast< GSimpleAsyncResult * >(g_object_ref(simple));
+    data->cancellable = static_cast< GCancellable * >(g_object_ref(cancellable));
     return data;
 }
 
@@ -137,20 +126,17 @@ static void auth_data_free(AuthData *data)
 
 static void maybe_initiate_next_authenticator(PolkitKDE3Listener *listener)
 {
-    if(listener->active_authenticator == NULL && listener->authenticators != NULL) {
+    if(listener->active_authenticator == NULL && listener->authenticators != NULL)
+    {
         polkit_kde3_authenticator_initiate(POLKIT_KDE3_AUTHENTICATOR(listener->authenticators->data));
-        listener->active_authenticator = static_cast<PolkitKDE3Authenticator*>(listener->authenticators->data);
+        listener->active_authenticator = static_cast< PolkitKDE3Authenticator * >(listener->authenticators->data);
     }
 }
 
 
-static void authenticator_completed(
-    PolkitKDE3Authenticator *authenticator,
-    gboolean gained_authorization,
-    gboolean dismissed,
-    gpointer user_data)
+static void authenticator_completed(PolkitKDE3Authenticator *authenticator, gboolean gained_authorization, gboolean dismissed, gpointer user_data)
 {
-    AuthData *data = static_cast<AuthData*>(user_data);
+    AuthData *data = static_cast< AuthData * >(user_data);
 
     data->listener->authenticators = g_list_remove(data->listener->authenticators, authenticator);
 
@@ -161,11 +147,8 @@ static void authenticator_completed(
 
     if(dismissed)
     {
-        g_simple_async_result_set_error(
-                    data->simple,
-                    POLKIT_ERROR,
-                    POLKIT_ERROR_CANCELLED,
-                    "%s", i18n("Authentication dialog was dismissed by the user").ascii());
+        g_simple_async_result_set_error(data->simple, POLKIT_ERROR, POLKIT_ERROR_CANCELLED, "%s",
+                                        i18n("Authentication dialog was dismissed by the user").ascii());
     }
     g_simple_async_result_complete(data->simple);
     g_object_unref(data->simple);
@@ -176,27 +159,17 @@ static void authenticator_completed(
 }
 
 
-static void cancelled_cb(
-    GCancellable *cancellable,
-    gpointer user_data)
+static void cancelled_cb(GCancellable *cancellable, gpointer user_data)
 {
-    AuthData *data = static_cast<AuthData*>(user_data);
+    AuthData *data = static_cast< AuthData * >(user_data);
 
     polkit_kde3_authenticator_cancel(data->authenticator);
 }
 
 
-static void polkit_kde3_listener_initiate_authentication(
-    PolkitAgentListener  *agent_listener,
-    const gchar          *action_id,
-    const gchar          *message,
-    const gchar          *icon_name,
-    PolkitDetails        *details,
-    const gchar          *cookie,
-    GList                *identities,
-    GCancellable         *cancellable,
-    GAsyncReadyCallback   callback,
-    gpointer              user_data)
+static void polkit_kde3_listener_initiate_authentication(PolkitAgentListener *agent_listener, const gchar *action_id, const gchar *message,
+                                                         const gchar *icon_name, PolkitDetails *details, const gchar *cookie, GList *identities,
+                                                         GCancellable *cancellable, GAsyncReadyCallback callback, gpointer user_data)
 {
     kdDebug() << "polkit_kde3_listener_initiate_authentication()" << endl;
 
@@ -206,44 +179,24 @@ static void polkit_kde3_listener_initiate_authentication(
     PolkitKDE3Authenticator *authenticator;
     AuthData *data;
 
-    simple = g_simple_async_result_new(
-                G_OBJECT(listener),
-                callback,
-                user_data,
-               (gpointer)polkit_kde3_listener_initiate_authentication);
+    simple = g_simple_async_result_new(G_OBJECT(listener), callback, user_data, (gpointer)polkit_kde3_listener_initiate_authentication);
 
-    authenticator = polkit_kde3_authenticator_new(
-                action_id,
-                message,
-                icon_name,
-                details,
-                cookie,
-                identities);
+    authenticator = polkit_kde3_authenticator_new(action_id, message, icon_name, details, cookie, identities);
 
-    if(authenticator == NULL) {
-        g_simple_async_result_set_error(
-                    simple,
-                    POLKIT_ERROR,
-                    POLKIT_ERROR_FAILED,
-                    "Error creating authentication object");
+    if(authenticator == NULL)
+    {
+        g_simple_async_result_set_error(simple, POLKIT_ERROR, POLKIT_ERROR_FAILED, "Error creating authentication object");
         g_simple_async_result_complete(simple);
         return;
     }
 
     data = auth_data_new(listener, authenticator, simple, cancellable);
 
-    g_signal_connect(
-        authenticator,
-        "completed",
-        G_CALLBACK(authenticator_completed),
-        data);
+    g_signal_connect(authenticator, "completed", G_CALLBACK(authenticator_completed), data);
 
-    if(cancellable != NULL) {
-        data->cancel_id = g_signal_connect(
-            cancellable,
-            "cancelled",
-            G_CALLBACK(cancelled_cb),
-            data);
+    if(cancellable != NULL)
+    {
+        data->cancel_id = g_signal_connect(cancellable, "cancelled", G_CALLBACK(cancelled_cb), data);
     }
 
     listener->authenticators = g_list_append(listener->authenticators, authenticator);
@@ -252,10 +205,7 @@ static void polkit_kde3_listener_initiate_authentication(
 }
 
 
-static gboolean polkit_kde3_listener_initiate_authentication_finish(
-    PolkitAgentListener *listener,
-    GAsyncResult *res,
-    GError **error)
+static gboolean polkit_kde3_listener_initiate_authentication_finish(PolkitAgentListener *listener, GAsyncResult *res, GError **error)
 {
     GSimpleAsyncResult *simple = G_SIMPLE_ASYNC_RESULT(res);
 

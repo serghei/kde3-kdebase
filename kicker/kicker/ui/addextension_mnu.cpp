@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "addextension_mnu.h"
 #include "addextension_mnu.moc"
 
-PanelAddExtensionMenu::PanelAddExtensionMenu(QWidget *parent, const char *name)
-    : QPopupMenu(parent, name)
+PanelAddExtensionMenu::PanelAddExtensionMenu(QWidget *parent, const char *name) : QPopupMenu(parent, name)
 {
     setCheckable(true);
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
@@ -42,17 +41,19 @@ void PanelAddExtensionMenu::slotAboutToShow()
     extensions = PluginManager::extensions();
 
     AppletInfo::List::const_iterator it = extensions.constBegin();
-    for( int i = 0; it != extensions.constEnd(); ++it, ++i ) {
-        const AppletInfo& ai = (*it);
-        insertItem( ai.name().replace( "&", "&&" ), i );
-        if ( ai.isUniqueApplet() && PluginManager::the()->hasInstance(ai) ) {
-            setItemEnabled( i, false );
-            setItemChecked( i, true );
+    for(int i = 0; it != extensions.constEnd(); ++it, ++i)
+    {
+        const AppletInfo &ai = (*it);
+        insertItem(ai.name().replace("&", "&&"), i);
+        if(ai.isUniqueApplet() && PluginManager::the()->hasInstance(ai))
+        {
+            setItemEnabled(i, false);
+            setItemChecked(i, true);
         }
     }
 }
 
 void PanelAddExtensionMenu::slotExec(int id)
 {
-    ExtensionManager::the()->addExtension( extensions[id].desktopFile() );
+    ExtensionManager::the()->addExtension(extensions[id].desktopFile());
 }

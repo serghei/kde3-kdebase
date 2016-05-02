@@ -21,14 +21,12 @@
 #include "prefwidgetbase.h"
 #include "swallow.h"
 
-class PreferencesWidget : public PreferencesWidgetBase
-{
-	Q_OBJECT
+class PreferencesWidget : public PreferencesWidgetBase {
+    Q_OBJECT
 
 public:
-	PreferencesWidget( SwallowCommandList* swc, QWidget* parent = 0 );
-//	~PreferencesWidget();
-
+    PreferencesWidget(SwallowCommandList *swc, QWidget *parent = 0);
+    //	~PreferencesWidget();
 };
 
 #endif

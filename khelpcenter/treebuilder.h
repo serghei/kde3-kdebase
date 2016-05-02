@@ -24,25 +24,22 @@
 
 #include <kurl.h>
 
-namespace KHC
-{
+namespace KHC {
 
 class NavigatorItem;
-class TreeBuilder : public QObject
-{
-	Q_OBJECT
-	public:
-		TreeBuilder( QObject *parent, const char *name = 0 );
+class TreeBuilder : public QObject {
+    Q_OBJECT
+public:
+    TreeBuilder(QObject *parent, const char *name = 0);
 
-		virtual void build( NavigatorItem *item ) = 0;
+    virtual void build(NavigatorItem *item) = 0;
 
-  public slots:
-    virtual void selectURL( const QString &url );
+public slots:
+    virtual void selectURL(const QString &url);
 
-  signals:
-    void urlSelected( const KURL &url );
+signals:
+    void urlSelected(const KURL &url);
 };
-
 }
 
 #endif // TREEBUILDER_H

@@ -25,8 +25,7 @@
 #include <dcopclient.h>
 #include <kdebug.h>
 
-KonqViewIface::KonqViewIface( KonqView * view, const QCString& name )
-    : DCOPObject( name ), m_pView ( view )
+KonqViewIface::KonqViewIface(KonqView *view, const QCString &name) : DCOPObject(name), m_pView(view)
 {
 }
 
@@ -34,73 +33,72 @@ KonqViewIface::~KonqViewIface()
 {
 }
 
-void KonqViewIface::openURL( QString url, const QString & locationBarURL, const QString & nameFilter )
+void KonqViewIface::openURL(QString url, const QString &locationBarURL, const QString &nameFilter)
 {
-  KURL u(url);
-  m_pView->openURL( u, locationBarURL, nameFilter );
+    KURL u(url);
+    m_pView->openURL(u, locationBarURL, nameFilter);
 }
 
-bool KonqViewIface::changeViewMode( const QString &serviceType,
-                                    const QString &serviceName )
+bool KonqViewIface::changeViewMode(const QString &serviceType, const QString &serviceName)
 {
-  return m_pView->changeViewMode( serviceType, serviceName );
+    return m_pView->changeViewMode(serviceType, serviceName);
 }
 
 void KonqViewIface::lockHistory()
 
 {
-  m_pView->lockHistory();
+    m_pView->lockHistory();
 }
 
 void KonqViewIface::stop()
 {
-  m_pView->stop();
+    m_pView->stop();
 }
 
 QString KonqViewIface::url()
 {
-  return m_pView->url().url();
+    return m_pView->url().url();
 }
 
 QString KonqViewIface::locationBarURL()
 {
-  return m_pView->locationBarURL();
+    return m_pView->locationBarURL();
 }
 
 QString KonqViewIface::serviceType()
 {
-  return m_pView->serviceType();
+    return m_pView->serviceType();
 }
 
 QStringList KonqViewIface::serviceTypes()
 {
-  return m_pView->serviceTypes();
+    return m_pView->serviceTypes();
 }
 
 DCOPRef KonqViewIface::part()
 {
-  DCOPRef res;
+    DCOPRef res;
 
-  KParts::ReadOnlyPart *part = m_pView->part();
+    KParts::ReadOnlyPart *part = m_pView->part();
 
-  if ( !part )
+    if(!part)
+        return res;
+
+    QVariant dcopProperty = part->property("dcopObjectId");
+
+    if(dcopProperty.type() != QVariant::CString)
+        return res;
+
+    res.setRef(kapp->dcopClient()->appId(), dcopProperty.toCString());
     return res;
-
-  QVariant dcopProperty = part->property( "dcopObjectId" );
-
-  if ( dcopProperty.type() != QVariant::CString )
-    return res;
-
-  res.setRef( kapp->dcopClient()->appId(), dcopProperty.toCString() );
-  return res;
 }
 
-void KonqViewIface::enablePopupMenu( bool b )
+void KonqViewIface::enablePopupMenu(bool b)
 {
-  m_pView->enablePopupMenu( b );
+    m_pView->enablePopupMenu(b);
 }
 
-uint KonqViewIface::historyLength()const
+uint KonqViewIface::historyLength() const
 {
     return m_pView->historyLength();
 }
@@ -125,17 +123,17 @@ bool KonqViewIface::isPopupMenuEnabled() const
     return m_pView->isPopupMenuEnabled();
 }
 
-bool KonqViewIface::canGoBack()const
+bool KonqViewIface::canGoBack() const
 {
     return m_pView->canGoBack();
 }
 
-bool KonqViewIface::canGoForward()const
+bool KonqViewIface::canGoForward() const
 {
     return m_pView->canGoForward();
 }
 
 void KonqViewIface::reload()
 {
-    return m_pView->mainWindow()->slotReload( m_pView );
+    return m_pView->mainWindow()->slotReload(m_pView);
 }

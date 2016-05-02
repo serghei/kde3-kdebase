@@ -28,25 +28,25 @@
 #include "klangcombo.h"
 #include "klangcombo.moc"
 
-KLanguageCombo::~KLanguageCombo ()
+KLanguageCombo::~KLanguageCombo()
 {
 }
 
-KLanguageCombo::KLanguageCombo (QWidget * parent, const char *name)
-  : KTagComboBox(parent, name)
+KLanguageCombo::KLanguageCombo(QWidget *parent, const char *name) : KTagComboBox(parent, name)
 {
 }
 
-void KLanguageCombo::insertLanguage(const QString& path, const QString& name, const QString& sub, const QString &submenu, int index)
+void KLanguageCombo::insertLanguage(const QString &path, const QString &name, const QString &sub, const QString &submenu, int index)
 {
-  QString output = name + QString::fromLatin1(" (") + path + QString::fromLatin1(")");
-  QPixmap flag(locate("locale", sub + path + QString::fromLatin1("/flag.png")));
-  insertItem(QIconSet(flag), output, path, submenu, index);
+    QString output = name + QString::fromLatin1(" (") + path + QString::fromLatin1(")");
+    QPixmap flag(locate("locale", sub + path + QString::fromLatin1("/flag.png")));
+    insertItem(QIconSet(flag), output, path, submenu, index);
 }
 
-void KLanguageCombo::changeLanguage(const QString& name, int i)
+void KLanguageCombo::changeLanguage(const QString &name, int i)
 {
-  if (i < 0 || i >= count()) return;
-  QString output = name + QString::fromLatin1(" (") + tag(i) + QString::fromLatin1(")");
-  changeItem(output, i);
+    if(i < 0 || i >= count())
+        return;
+    QString output = name + QString::fromLatin1(" (") + tag(i) + QString::fromLatin1(")");
+    changeItem(output, i);
 }

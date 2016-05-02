@@ -24,11 +24,11 @@
 #include <config.h>
 
 #ifdef WITH_LOGIND
-    #include <dbus/qdbusconnection.h>
-    #include <dbus/qdbuserror.h>
-    #include <dbus/qdbusmessage.h>
-    #include <klocale.h>
-    #include <kmessagebox.h>
+#include <dbus/qdbusconnection.h>
+#include <dbus/qdbuserror.h>
+#include <dbus/qdbusmessage.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 #endif
 
 #include "powersources.h"
@@ -36,46 +36,46 @@
 #include "upowerbackend.h"
 
 
-struct UPowerBackend::Private {
+struct UPowerBackend::Private
+{
 
 #if UP_CHECK_VERSION(0, 99, 0)
-    static void up_client_changed_cb(UpClient *client, GParamSpec*, UPowerBackend *upb) {
+    static void up_client_changed_cb(UpClient *client, GParamSpec *, UPowerBackend *upb)
+    {
 #else
-    static void up_client_changed_cb(UpClient *client, UPowerBackend *upb) {
+    static void up_client_changed_cb(UpClient *client, UPowerBackend *upb)
+    {
 #endif
         emit upb->powerSourcesChanged(upb->d->ps);
     }
 
 
 #if UP_CHECK_VERSION(0, 99, 0)
-    static void up_device_changed_cb(UpDevice *device, GParamSpec*, UPowerBackend *upb) {
+    static void up_device_changed_cb(UpDevice *device, GParamSpec *, UPowerBackend *upb)
+    {
 #else
-    static void up_device_changed_cb(UpDevice *device, UPowerBackend *upb) {
+    static void up_device_changed_cb(UpDevice *device, UPowerBackend *upb)
+    {
 #endif
         upb->d->updatePowerSource(device);
         emit upb->powerSourcesChanged(upb->d->ps);
     }
 
 
-    void updatePowerSource(UpDevice *device) {
+    void updatePowerSource(UpDevice *device)
+    {
         guint kind;
         ::g_object_get(device, "kind", &kind, NULL);
 
-        switch(kind) {
+        switch(kind)
+        {
             case UP_DEVICE_KIND_LINE_POWER:
-                    ::g_object_get(device,
-                        "online", &ps.powerLine.online,
-                        NULL);
+                ::g_object_get(device, "online", &ps.powerLine.online, NULL);
                 break;
             case UP_DEVICE_KIND_BATTERY:
-                    ::g_object_get(device,
-                        "percentage", &ps.battery.percentage,
-                        "capacity", &ps.battery.capacity,
-                        "state", &ps.battery.state,
-                        "time-to-empty", &ps.battery.timeToEmpty,
-                        "time-to-full", &ps.battery.timeToFull,
-                        "energy-rate", &ps.battery.energyRate,
-                        NULL);
+                ::g_object_get(device, "percentage", &ps.battery.percentage, "capacity", &ps.battery.capacity, "state", &ps.battery.state,
+                               "time-to-empty", &ps.battery.timeToEmpty, "time-to-full", &ps.battery.timeToFull, "energy-rate",
+                               &ps.battery.energyRate, NULL);
                 break;
         }
     }
@@ -115,7 +115,8 @@ void UPowerBackend::suspend()
     gboolean ret = true;
     if(ret)
         QTimer::singleShot(1000, this, SLOT(suspendDelayed()));
-    else {
+    else
+    {
         kdDebug() << error;
         ::g_error_free(error);
     }
@@ -130,7 +131,8 @@ void UPowerBackend::hibernate()
     gboolean ret = true;
     if(ret)
         QTimer::singleShot(1000, this, SLOT(hibernateDelayed()));
-    else {
+    else
+    {
         kdDebug() << error;
         ::g_error_free(error);
     }
@@ -151,20 +153,21 @@ void UPowerBackend::initialize()
 #ifdef HAVE_UP_CLIENT_ENUMERATE_DEVICES_SYNC
     // cache power devices (NOTE: this function is now deprecated)
     gboolean ret = ::up_client_enumerate_devices_sync(d->client, NULL, &error);
-    if(!ret) goto out;
+    if(!ret)
+        goto out;
 #endif
 
     // initial update of power sources properties
     devices = ::up_client_get_devices(d->client);
-    for(int i = 0; i < devices->len; i++) {
-        UpDevice *device = static_cast<UpDevice*>(g_ptr_array_index(devices, i));
+    for(int i = 0; i < devices->len; i++)
+    {
+        UpDevice *device = static_cast< UpDevice * >(g_ptr_array_index(devices, i));
         d->updatePowerSource(device);
 #if UP_CHECK_VERSION(0, 99, 0)
         ::g_signal_connect(device, "notify", G_CALLBACK(d->up_device_changed_cb), this);
 #else
         ::g_signal_connect(device, "changed", G_CALLBACK(d->up_device_changed_cb), this);
 #endif
-
     }
     ::g_ptr_array_unref(devices);
 
@@ -174,7 +177,8 @@ void UPowerBackend::initialize()
     // send first signal to the consumer (i.e. for icon update)
     emit powerSourcesChanged(d->ps);
 out:
-    if(error) {
+    if(error)
+    {
         kdDebug() << "failed to enumerate power devices: " << error->message;
         ::g_error_free(error);
 
@@ -194,7 +198,8 @@ void UPowerBackend::suspendDelayed()
     GError *error;
     gboolean ret = ::up_client_suspend_sync(d->client, NULL, &error);
 
-    if(!ret) {
+    if(!ret)
+    {
         kdDebug() << error;
         ::g_error_free(error);
     }
@@ -212,7 +217,8 @@ void UPowerBackend::hibernateDelayed()
     GError *error;
     gboolean ret = ::up_client_hibernate_sync(d->client, NULL, &error);
 
-    if(!ret) {
+    if(!ret)
+    {
         kdDebug() << error;
         ::g_error_free(error);
     }
@@ -230,17 +236,14 @@ bool UPowerBackend::sendCmdToLogind(const QString &cmd, QString &error)
         return false;
     }
 
-    QDBusMessage dbusMessage = QDBusMessage::methodCall(
-        "org.freedesktop.login1",
-        "/org/freedesktop/login1",
-        "org.freedesktop.login1.Manager",
-        cmd);
+    QDBusMessage dbusMessage = QDBusMessage::methodCall("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", cmd);
     dbusMessage << QDBusData::fromBool(false);
 
     // we need reply only to catch errors
     dbusConnection.sendWithReply(dbusMessage);
 
-    if(dbusConnection.lastError().type() != 0) {
+    if(dbusConnection.lastError().type() != 0)
+    {
         error = dbusConnection.lastError().message();
         return false;
     }

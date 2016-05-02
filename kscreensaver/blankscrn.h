@@ -15,42 +15,39 @@
 class KColorButton;
 
 
-class KBlankSaver : public KScreenSaver
-{
-	Q_OBJECT
+class KBlankSaver : public KScreenSaver {
+    Q_OBJECT
 public:
-	KBlankSaver( WId drawable );
-	virtual ~KBlankSaver();
+    KBlankSaver(WId drawable);
+    virtual ~KBlankSaver();
 
-	void setColor( const QColor &col );
-
-private:
-	void readSettings();
-	void blank();
+    void setColor(const QColor &col);
 
 private:
-	QColor color;
+    void readSettings();
+    void blank();
+
+private:
+    QColor color;
 };
 
-class KBlankSetup : public KDialogBase
-{
-	Q_OBJECT
+class KBlankSetup : public KDialogBase {
+    Q_OBJECT
 public:
-	KBlankSetup( QWidget *parent = NULL, const char *name = NULL );
+    KBlankSetup(QWidget *parent = NULL, const char *name = NULL);
 
 protected:
-	void readSettings();
+    void readSettings();
 
 private slots:
-	void slotColor( const QColor & );
-	void slotOk();
+    void slotColor(const QColor &);
+    void slotOk();
 
 private:
-	QWidget *preview;
-	KBlankSaver *saver;
+    QWidget *preview;
+    KBlankSaver *saver;
 
-	QColor color;
+    QColor color;
 };
 
 #endif
-

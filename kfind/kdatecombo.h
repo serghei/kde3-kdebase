@@ -18,32 +18,32 @@
 class KDatePicker;
 class KPopupFrame;
 
-class KDateCombo : public QComboBox  {
-   Q_OBJECT
+class KDateCombo : public QComboBox {
+    Q_OBJECT
 
 public:
-	KDateCombo(QWidget *parent=0, const char *name=0);
-	KDateCombo(const QDate & date, QWidget *parent=0, const char *name=0);
-	~KDateCombo();
+    KDateCombo(QWidget *parent = 0, const char *name = 0);
+    KDateCombo(const QDate &date, QWidget *parent = 0, const char *name = 0);
+    ~KDateCombo();
 
-	QDate & getDate(QDate *currentDate);
-	bool setDate(const QDate & newDate);
+    QDate &getDate(QDate *currentDate);
+    bool setDate(const QDate &newDate);
 
 private:
-   KPopupFrame * popupFrame;
-   KDatePicker * datePicker;
+    KPopupFrame *popupFrame;
+    KDatePicker *datePicker;
 
-   void initObject(const QDate & date, QWidget *parent, const char *name);
+    void initObject(const QDate &date, QWidget *parent, const char *name);
 
-   QString date2String(const QDate &);
-   QDate & string2Date(const QString &, QDate * );
+    QString date2String(const QDate &);
+    QDate &string2Date(const QString &, QDate *);
 
 protected:
-  bool eventFilter (QObject*, QEvent*);
-  virtual void mousePressEvent (QMouseEvent * e);
-   
+    bool eventFilter(QObject *, QEvent *);
+    virtual void mousePressEvent(QMouseEvent *e);
+
 protected slots:
-   void dateEnteredEvent(QDate d=QDate());
+    void dateEnteredEvent(QDate d = QDate());
 };
 
 #endif

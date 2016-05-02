@@ -32,17 +32,16 @@ class KPropertiesDialog;
 /**
  * Simple URL button (files, whatever)
  */
-class URLButton : public PanelButton
-{
+class URLButton : public PanelButton {
     Q_OBJECT
 
 public:
-    URLButton( const QString& url, QWidget* parent );
-    URLButton( const KConfigGroup& config, QWidget* parent );
+    URLButton(const QString &url, QWidget *parent);
+    URLButton(const KConfigGroup &config, QWidget *parent);
 
     virtual ~URLButton();
 
-    void saveConfig( KConfigGroup& config ) const;
+    void saveConfig(KConfigGroup &config) const;
 
     virtual void properties();
 
@@ -51,8 +50,11 @@ protected slots:
     void updateURL();
 
 protected:
-    void initialize( const QString& url );
-    virtual QString tileName() { return "URL"; }
+    void initialize(const QString &url);
+    virtual QString tileName()
+    {
+        return "URL";
+    }
     virtual void startDrag();
     virtual void dropEvent(QDropEvent *);
     virtual void dragEnterEvent(QDragEnterEvent *);

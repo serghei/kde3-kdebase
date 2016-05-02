@@ -24,7 +24,7 @@
  */
 
 //#include "includes.h"
-//RCSID("$OpenBSD: atomicio.c,v 1.9 2001/03/02 18:54:30 deraadt Exp $");
+// RCSID("$OpenBSD: atomicio.c,v 1.9 2001/03/02 18:54:30 deraadt Exp $");
 
 //#include "xmalloc.h"
 #include "atomicio.h"
@@ -36,32 +36,34 @@
  * ensure all of data on socket comes through. f==read || f==write
  */
 
-ssize_t	atomicio(int fd, char *_s, size_t n, bool read)	
+ssize_t atomicio(int fd, char *_s, size_t n, bool read)
 {
-	char *s = _s;
-	ssize_t res;
-	ssize_t pos = 0;
+    char *s = _s;
+    ssize_t res;
+    ssize_t pos = 0;
 
-	while (n > pos) {
-		if( read)
-		    res = ::read(fd, s + pos, n - pos);
-		else
-		    res = ::write(fd, s + pos, n - pos);
+    while(n > pos)
+    {
+        if(read)
+            res = ::read(fd, s + pos, n - pos);
+        else
+            res = ::write(fd, s + pos, n - pos);
 
-		switch (res) {
-		case -1:
-		    kdDebug() << "atomicio(): errno=" << errno << endl;
+        switch(res)
+        {
+            case -1:
+                kdDebug() << "atomicio(): errno=" << errno << endl;
 #ifdef EWOULDBLOCK
-			if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
+                if(errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK)
 #else
-			if (errno == EINTR || errno == EAGAIN)
+                if(errno == EINTR || errno == EAGAIN)
 #endif
-				continue;
-		case 0:
-			return (res);
-		default:
-			pos += res;
-		}
-	}
-	return (pos);
+                    continue;
+            case 0:
+                return (res);
+            default:
+                pos += res;
+        }
+    }
+    return (pos);
 }

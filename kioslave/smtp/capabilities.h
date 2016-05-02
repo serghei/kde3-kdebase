@@ -41,36 +41,48 @@ class QStrIList;
 
 namespace KioSMTP {
 
-  class Response;
+class Response;
 
-  class Capabilities {
-  public:
-    Capabilities() {}
-
-    static Capabilities fromResponse( const Response & response );
-
-    void add( const QString & cap, bool replace=false );
-    void add( const QString & name, const QStringList & args, bool replace=false );
-    void clear() { mCapabilities.clear(); }
-
-    bool have( const QString & cap ) const {
-      return mCapabilities.find( cap.upper() ) != mCapabilities.end();
+class Capabilities {
+public:
+    Capabilities()
+    {
     }
-    bool have( const QCString & cap ) const { return have( QString( cap.data() ) ); }
-    bool have( const char * cap ) const { return have( QString::fromLatin1( cap ) ); }
+
+    static Capabilities fromResponse(const Response &response);
+
+    void add(const QString &cap, bool replace = false);
+    void add(const QString &name, const QStringList &args, bool replace = false);
+    void clear()
+    {
+        mCapabilities.clear();
+    }
+
+    bool have(const QString &cap) const
+    {
+        return mCapabilities.find(cap.upper()) != mCapabilities.end();
+    }
+    bool have(const QCString &cap) const
+    {
+        return have(QString(cap.data()));
+    }
+    bool have(const char *cap) const
+    {
+        return have(QString::fromLatin1(cap));
+    }
 
     QString asMetaDataString() const;
 
     QString authMethodMetaData() const;
     QStrIList saslMethods() const;
 
-    QString createSpecialResponse( bool tls ) const;
+    QString createSpecialResponse(bool tls) const;
 
     QStringList saslMethodsQSL() const;
-  private:
 
-    QMap<QString,QStringList> mCapabilities;
-  };
+private:
+    QMap< QString, QStringList > mCapabilities;
+};
 
 } // namespace KioSMTP
 

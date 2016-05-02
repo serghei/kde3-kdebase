@@ -27,47 +27,45 @@
 
 #include "KSGAppletSettings.h"
 
-KSGAppletSettings::KSGAppletSettings( QWidget *parent, const char *name )
-    : KDialogBase( parent, name, false, QString::null, Ok|Apply|Cancel, 
-      Ok, true )
+KSGAppletSettings::KSGAppletSettings(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, QString::null, Ok | Apply | Cancel, Ok, true)
 {
-  setCaption( i18n( "System Guard Settings" ) );
+    setCaption(i18n("System Guard Settings"));
 
-  QWidget *page = new QWidget( this );
-  setMainWidget( page );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
 
-  QGridLayout *topLayout = new QGridLayout( page, 3, 2, KDialog::marginHint(),
-                                            KDialog::spacingHint() ); 
+    QGridLayout *topLayout = new QGridLayout(page, 3, 2, KDialog::marginHint(), KDialog::spacingHint());
 
-  QLabel *label = new QLabel( i18n( "Number of displays:" ), page );
-  topLayout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("Number of displays:"), page);
+    topLayout->addWidget(label, 0, 0);
 
-  mNumDisplay = new QSpinBox( 1, 32, 1, page );
-  mNumDisplay->setValue(2);
-  topLayout->addWidget( mNumDisplay, 0, 1 );
-  label->setBuddy( mNumDisplay );
+    mNumDisplay = new QSpinBox(1, 32, 1, page);
+    mNumDisplay->setValue(2);
+    topLayout->addWidget(mNumDisplay, 0, 1);
+    label->setBuddy(mNumDisplay);
 
-  label = new QLabel( i18n( "Size ratio:" ), page );
-  topLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18n("Size ratio:"), page);
+    topLayout->addWidget(label, 1, 0);
 
-  mSizeRatio = new QSpinBox( 50, 500, 50, page );
-  mSizeRatio->setSuffix( i18n( "%" ) );
-  mSizeRatio->setValue(100);
-  topLayout->addWidget( mSizeRatio, 1, 1 );
-  label->setBuddy( mSizeRatio );
+    mSizeRatio = new QSpinBox(50, 500, 50, page);
+    mSizeRatio->setSuffix(i18n("%"));
+    mSizeRatio->setValue(100);
+    topLayout->addWidget(mSizeRatio, 1, 1);
+    label->setBuddy(mSizeRatio);
 
-  label = new QLabel( i18n( "Update interval:" ), page );
-  topLayout->addWidget( label, 2, 0 );
+    label = new QLabel(i18n("Update interval:"), page);
+    topLayout->addWidget(label, 2, 0);
 
-  mInterval = new QSpinBox( 1, 300, 1, page );
-  mInterval->setValue(2);
-  mInterval->setSuffix( i18n( " sec" ) );
-  topLayout->addWidget( mInterval, 2, 1 );
-  label->setBuddy( mInterval );
+    mInterval = new QSpinBox(1, 300, 1, page);
+    mInterval->setValue(2);
+    mInterval->setSuffix(i18n(" sec"));
+    topLayout->addWidget(mInterval, 2, 1);
+    label->setBuddy(mInterval);
 
-  resize( QSize( 250, 130 ).expandedTo( minimumSizeHint() ) );
+    resize(QSize(250, 130).expandedTo(minimumSizeHint()));
 
-  KAcceleratorManager::manage( page );
+    KAcceleratorManager::manage(page);
 }
 
 KSGAppletSettings::~KSGAppletSettings()
@@ -76,31 +74,30 @@ KSGAppletSettings::~KSGAppletSettings()
 
 int KSGAppletSettings::numDisplay() const
 {
-  return mNumDisplay->value();
+    return mNumDisplay->value();
 }
 
-void KSGAppletSettings::setNumDisplay( int value )
+void KSGAppletSettings::setNumDisplay(int value)
 {
-  mNumDisplay->setValue( value );
+    mNumDisplay->setValue(value);
 }
 
 int KSGAppletSettings::sizeRatio() const
 {
-  return mSizeRatio->value();
+    return mSizeRatio->value();
 }
 
-void KSGAppletSettings::setSizeRatio( int value )
+void KSGAppletSettings::setSizeRatio(int value)
 {
-  mSizeRatio->setValue( value );
+    mSizeRatio->setValue(value);
 }
 
 int KSGAppletSettings::updateInterval() const
 {
-  return mInterval->value();
+    return mInterval->value();
 }
 
-void KSGAppletSettings::setUpdateInterval( int value )
+void KSGAppletSettings::setUpdateInterval(int value)
 {
-  mInterval->setValue( value );
+    mInterval->setValue(value);
 }
-

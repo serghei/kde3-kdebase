@@ -33,12 +33,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "konsolebookmarkhandler.h"
 
 
-class KonsoleMenu : public KPanelMenu/*, public KPReloadObject*/
+class KonsoleMenu : public KPanelMenu /*, public KPReloadObject*/
 {
     Q_OBJECT
 
 public:
-    KonsoleMenu(QWidget *parent, const char *name, const QStringList& /* args */);
+    KonsoleMenu(QWidget *parent, const char *name, const QStringList & /* args */);
     ~KonsoleMenu();
     KURL baseURL() const;
 
@@ -47,18 +47,17 @@ protected slots:
     void slotExec(int id);
     void launchProfile(int id);
     void initialize();
-    void newSession(const QString& sURL, const QString& title);
+    void newSession(const QString &sURL, const QString &title);
 
 
 private:
     QStringList sessionList;
     QStringList screenList;
-    QValueVector<QString> m_profiles;
-    KPopupMenu* m_profileMenu;
-    KPopupMenu* m_bookmarksSession;
+    QValueVector< QString > m_profiles;
+    KPopupMenu *m_profileMenu;
+    KPopupMenu *m_bookmarksSession;
 
     KonsoleBookmarkHandler *m_bookmarkHandlerSession;
 };
 
 #endif
-

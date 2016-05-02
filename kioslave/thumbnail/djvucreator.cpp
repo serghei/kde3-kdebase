@@ -44,96 +44,95 @@
 #include "djvucreator.h"
 
 
-
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        return new DjVuCreator;
-    }
+    return new DjVuCreator;
+}
 }
 
 bool DjVuCreator::create(const QString &path, int width, int height, QImage &img)
 {
-  int output[2];
-  QByteArray data(1024);
-  bool ok = false;
+    int output[2];
+    QByteArray data(1024);
+    bool ok = false;
 
-  if (pipe(output) == -1)
-    return false;
-  
-  const char* argv[8];
-  QCString sizearg, fnamearg;
-  sizearg.sprintf("%dx%d", width, height);
-  fnamearg = QFile::encodeName( path );
-  argv[0] = "ddjvu";
-  argv[1] = "-page";
-  argv[2] = "1";
-  argv[3] = "-size";
-  argv[4] = sizearg.data(); 
-  argv[5] = fnamearg.data(); 
-  argv[6] = 0;
-  
-  pid_t pid = fork(); 
-  if (pid == 0)
+    if(pipe(output) == -1)
+        return false;
+
+    const char *argv[8];
+    QCString sizearg, fnamearg;
+    sizearg.sprintf("%dx%d", width, height);
+    fnamearg = QFile::encodeName(path);
+    argv[0] = "ddjvu";
+    argv[1] = "-page";
+    argv[2] = "1";
+    argv[3] = "-size";
+    argv[4] = sizearg.data();
+    argv[5] = fnamearg.data();
+    argv[6] = 0;
+
+    pid_t pid = fork();
+    if(pid == 0)
     {
-      close(output[0]);
-      dup2(output[1], STDOUT_FILENO);	  
-      execvp(argv[0], const_cast<char *const *>(argv));
-      exit(1);
+        close(output[0]);
+        dup2(output[1], STDOUT_FILENO);
+        execvp(argv[0], const_cast< char *const * >(argv));
+        exit(1);
     }
-  else if (pid >= 0)
+    else if(pid >= 0)
     {
-      close(output[1]);
-      int offset = 0;
-      while (!ok) {
-        fd_set fds;
-        FD_ZERO(&fds);
-        FD_SET(output[0], &fds);
-        struct timeval tv;
-        tv.tv_sec = 20;
-        tv.tv_usec = 0;
-        if (select(output[0] + 1, &fds, 0, 0, &tv) <= 0) {
-          if (errno == EINTR || errno == EAGAIN)
-            continue;
-          break; // error or timeout
-        }
-        if (FD_ISSET(output[0], &fds)) {
-          int count = read(output[0], data.data() + offset, 1024);
-          if (count == -1)
-            break;
-          if (count) // prepare for next block
+        close(output[1]);
+        int offset = 0;
+        while(!ok)
+        {
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(output[0], &fds);
+            struct timeval tv;
+            tv.tv_sec = 20;
+            tv.tv_usec = 0;
+            if(select(output[0] + 1, &fds, 0, 0, &tv) <= 0)
             {
-              offset += count;
-              data.resize(offset + 1024);
+                if(errno == EINTR || errno == EAGAIN)
+                    continue;
+                break; // error or timeout
             }
-          else // got all data
+            if(FD_ISSET(output[0], &fds))
             {
-              data.resize(offset);
-              ok = true;
+                int count = read(output[0], data.data() + offset, 1024);
+                if(count == -1)
+                    break;
+                if(count) // prepare for next block
+                {
+                    offset += count;
+                    data.resize(offset + 1024);
+                }
+                else // got all data
+                {
+                    data.resize(offset);
+                    ok = true;
+                }
             }
         }
-      }
-      if (!ok)
-        kill(pid, SIGTERM);
-      int status = 0;
-      if (waitpid(pid, &status, 0) != pid || (status != 0  && status != 256) )
-        ok = false;
+        if(!ok)
+            kill(pid, SIGTERM);
+        int status = 0;
+        if(waitpid(pid, &status, 0) != pid || (status != 0 && status != 256))
+            ok = false;
     }
-  else
+    else
     {
-      close(output[1]);
+        close(output[1]);
     }
-  
-  close(output[0]);
-  int l = img.loadFromData( data );
-  return ok && l;
+
+    close(output[0]);
+    int l = img.loadFromData(data);
+    return ok && l;
 }
 
 
 ThumbCreator::Flags DjVuCreator::flags() const
 {
-  return static_cast<Flags>(DrawFrame);
+    return static_cast< Flags >(DrawFrame);
 }
-
-

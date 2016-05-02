@@ -18,7 +18,7 @@
  */
 #ifndef ksmbstatus_h_included
 #define ksmbstatus_h_included
- 
+
 #include <qtimer.h>
 #include <qlabel.h>
 #include <kprocess.h>
@@ -32,34 +32,41 @@ class QListView;
 class QListViewItem;
 class KProcess;
 
-class NetMon : public QWidget
-{
-Q_OBJECT
+class NetMon : public QWidget {
+    Q_OBJECT
 public:
-   NetMon(QWidget *parent, KConfig * config=0, const char * name=0);
-   void saveSettings() {};
-   void loadSettings() {};
-private:
-   KConfig *configFile;
-   KProcess *showmountProc;
-   QListView *list;
-   QLabel *version;
-   QTimer *timer;
-   QListViewItem *killrow;
-   int rownumber;
-   enum {header, connexions, locked_files, finished, nfs} readingpart;
-   int lo[65536];
-   int nrpid;
-   void processNFSLine(char *bufline, int linelen);
-   void processSambaLine(char *bufline, int linelen);
+    NetMon(QWidget *parent, KConfig *config = 0, const char *name = 0);
+    void saveSettings(){};
+    void loadSettings(){};
 
-   QCString strShare, strUser, strGroup, strMachine, strSince, strPid;
-   int iUser, iGroup, iMachine, iPid;
+private:
+    KConfig *configFile;
+    KProcess *showmountProc;
+    QListView *list;
+    QLabel *version;
+    QTimer *timer;
+    QListViewItem *killrow;
+    int rownumber;
+    enum
+    {
+        header,
+        connexions,
+        locked_files,
+        finished,
+        nfs
+    } readingpart;
+    int lo[65536];
+    int nrpid;
+    void processNFSLine(char *bufline, int linelen);
+    void processSambaLine(char *bufline, int linelen);
+
+    QCString strShare, strUser, strGroup, strMachine, strSince, strPid;
+    int iUser, iGroup, iMachine, iPid;
 
 private slots:
-   void killShowmount();
-   void update();
-   void slotReceivedData(KProcess *proc, char *buffer, int buflen);
+    void killShowmount();
+    void update();
+    void slotReceivedData(KProcess *proc, char *buffer, int buflen);
 };
 
 #endif // main_included

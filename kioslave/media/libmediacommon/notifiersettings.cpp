@@ -31,349 +31,344 @@
 
 NotifierSettings::NotifierSettings()
 {
-	m_supportedMimetypes.append( "media/removable_unmounted" );
-	m_supportedMimetypes.append( "media/removable_mounted" );
-	m_supportedMimetypes.append( "media/camera_unmounted" );
-	m_supportedMimetypes.append( "media/camera_mounted" );
-	m_supportedMimetypes.append( "media/gphoto2camera" );
-	m_supportedMimetypes.append( "media/cdrom_unmounted" );
-	m_supportedMimetypes.append( "media/cdrom_mounted" );
-	m_supportedMimetypes.append( "media/dvd_unmounted" );
-	m_supportedMimetypes.append( "media/dvd_mounted" );
-	m_supportedMimetypes.append( "media/cdwriter_unmounted" );
-	m_supportedMimetypes.append( "media/cdwriter_mounted" );
-	m_supportedMimetypes.append( "media/blankcd" );
-	m_supportedMimetypes.append( "media/blankdvd" );
-	m_supportedMimetypes.append( "media/audiocd" );
-	m_supportedMimetypes.append( "media/dvdvideo" );
-	m_supportedMimetypes.append( "media/vcd" );
-	m_supportedMimetypes.append( "media/svcd" );
-	
-	reload();
+    m_supportedMimetypes.append("media/removable_unmounted");
+    m_supportedMimetypes.append("media/removable_mounted");
+    m_supportedMimetypes.append("media/camera_unmounted");
+    m_supportedMimetypes.append("media/camera_mounted");
+    m_supportedMimetypes.append("media/gphoto2camera");
+    m_supportedMimetypes.append("media/cdrom_unmounted");
+    m_supportedMimetypes.append("media/cdrom_mounted");
+    m_supportedMimetypes.append("media/dvd_unmounted");
+    m_supportedMimetypes.append("media/dvd_mounted");
+    m_supportedMimetypes.append("media/cdwriter_unmounted");
+    m_supportedMimetypes.append("media/cdwriter_mounted");
+    m_supportedMimetypes.append("media/blankcd");
+    m_supportedMimetypes.append("media/blankdvd");
+    m_supportedMimetypes.append("media/audiocd");
+    m_supportedMimetypes.append("media/dvdvideo");
+    m_supportedMimetypes.append("media/vcd");
+    m_supportedMimetypes.append("media/svcd");
+
+    reload();
 }
 
 NotifierSettings::~NotifierSettings()
 {
-	while ( !m_actions.isEmpty() )
-	{
-		NotifierAction *a = m_actions.first();
-		m_actions.remove( a );
-		delete a;
-	}
+    while(!m_actions.isEmpty())
+    {
+        NotifierAction *a = m_actions.first();
+        m_actions.remove(a);
+        delete a;
+    }
 
-	while ( !m_deletedActions.isEmpty() )
-	{
-		NotifierServiceAction *a = m_deletedActions.first();
-		m_deletedActions.remove( a );
-		delete a;
-	}
+    while(!m_deletedActions.isEmpty())
+    {
+        NotifierServiceAction *a = m_deletedActions.first();
+        m_deletedActions.remove(a);
+        delete a;
+    }
 }
 
-QValueList<NotifierAction*> NotifierSettings::actions()
+QValueList< NotifierAction * > NotifierSettings::actions()
 {
-	return m_actions;
+    return m_actions;
 }
 
 const QStringList &NotifierSettings::supportedMimetypes()
 {
-	return m_supportedMimetypes;
+    return m_supportedMimetypes;
 }
 
-QValueList<NotifierAction*> NotifierSettings::actionsForMimetype( const QString &mimetype )
+QValueList< NotifierAction * > NotifierSettings::actionsForMimetype(const QString &mimetype)
 {
-	QValueList<NotifierAction*> result;
+    QValueList< NotifierAction * > result;
 
-	QValueList<NotifierAction*>::iterator it = m_actions.begin();
-	QValueList<NotifierAction*>::iterator end = m_actions.end();
+    QValueList< NotifierAction * >::iterator it = m_actions.begin();
+    QValueList< NotifierAction * >::iterator end = m_actions.end();
 
-	for ( ; it!=end; ++it )
-	{
-		if ( (*it)->supportsMimetype( mimetype ) )
-		{
-			result.append( *it );
-		}
-	}
-	
-	return result;
+    for(; it != end; ++it)
+    {
+        if((*it)->supportsMimetype(mimetype))
+        {
+            result.append(*it);
+        }
+    }
+
+    return result;
 }
 
-bool NotifierSettings::addAction( NotifierServiceAction *action )
+bool NotifierSettings::addAction(NotifierServiceAction *action)
 {
-	if ( !m_idMap.contains( action->id() ) )
-	{
-		m_actions.insert( --m_actions.end(), action );
-		m_idMap[ action->id() ] = action;
-		return true;
-	}
-	return false;
+    if(!m_idMap.contains(action->id()))
+    {
+        m_actions.insert(--m_actions.end(), action);
+        m_idMap[action->id()] = action;
+        return true;
+    }
+    return false;
 }
 
-bool NotifierSettings::deleteAction( NotifierServiceAction *action )
+bool NotifierSettings::deleteAction(NotifierServiceAction *action)
 {
-	if ( action->isWritable() )
-	{
-		m_actions.remove( action );
-		m_idMap.remove( action->id() );
-		m_deletedActions.append( action );
+    if(action->isWritable())
+    {
+        m_actions.remove(action);
+        m_idMap.remove(action->id());
+        m_deletedActions.append(action);
 
-		QStringList auto_mimetypes = action->autoMimetypes();
-		QStringList::iterator it = auto_mimetypes.begin();
-		QStringList::iterator end = auto_mimetypes.end();
+        QStringList auto_mimetypes = action->autoMimetypes();
+        QStringList::iterator it = auto_mimetypes.begin();
+        QStringList::iterator end = auto_mimetypes.end();
 
-		for ( ; it!=end; ++it )
-		{
-			action->removeAutoMimetype( *it );
-			m_autoMimetypesMap.remove( *it );
-		}
-		
-		return true;
-	}
-	return false;
+        for(; it != end; ++it)
+        {
+            action->removeAutoMimetype(*it);
+            m_autoMimetypesMap.remove(*it);
+        }
+
+        return true;
+    }
+    return false;
 }
 
-void NotifierSettings::setAutoAction( const QString &mimetype, NotifierAction *action )
+void NotifierSettings::setAutoAction(const QString &mimetype, NotifierAction *action)
 {
-	resetAutoAction( mimetype );
-	m_autoMimetypesMap[mimetype] = action;
-	action->addAutoMimetype( mimetype );
+    resetAutoAction(mimetype);
+    m_autoMimetypesMap[mimetype] = action;
+    action->addAutoMimetype(mimetype);
 }
 
 
-void NotifierSettings::resetAutoAction( const QString &mimetype )
+void NotifierSettings::resetAutoAction(const QString &mimetype)
 {
-	if ( m_autoMimetypesMap.contains( mimetype ) )
-	{
-		NotifierAction *action = m_autoMimetypesMap[mimetype];
-		action->removeAutoMimetype( mimetype );
-		m_autoMimetypesMap.remove(mimetype);
-	}
+    if(m_autoMimetypesMap.contains(mimetype))
+    {
+        NotifierAction *action = m_autoMimetypesMap[mimetype];
+        action->removeAutoMimetype(mimetype);
+        m_autoMimetypesMap.remove(mimetype);
+    }
 }
 
 void NotifierSettings::clearAutoActions()
 {
-	QMap<QString,NotifierAction*>::iterator it = m_autoMimetypesMap.begin();
-	QMap<QString,NotifierAction*>::iterator end = m_autoMimetypesMap.end();
+    QMap< QString, NotifierAction * >::iterator it = m_autoMimetypesMap.begin();
+    QMap< QString, NotifierAction * >::iterator end = m_autoMimetypesMap.end();
 
-	for ( ; it!=end; ++it )
-	{
-		NotifierAction *action = it.data();
-		QString mimetype = it.key();
+    for(; it != end; ++it)
+    {
+        NotifierAction *action = it.data();
+        QString mimetype = it.key();
 
-		if ( action )
-			action->removeAutoMimetype( mimetype );
-		m_autoMimetypesMap[mimetype] = 0L;
-	}
+        if(action)
+            action->removeAutoMimetype(mimetype);
+        m_autoMimetypesMap[mimetype] = 0L;
+    }
 }
 
-NotifierAction *NotifierSettings::autoActionForMimetype( const QString &mimetype )
+NotifierAction *NotifierSettings::autoActionForMimetype(const QString &mimetype)
 {
-	if ( m_autoMimetypesMap.contains( mimetype ) )
-	{
-		return m_autoMimetypesMap[mimetype];
-	}
-	else
-	{
-		return 0L;
-	}
+    if(m_autoMimetypesMap.contains(mimetype))
+    {
+        return m_autoMimetypesMap[mimetype];
+    }
+    else
+    {
+        return 0L;
+    }
 }
 
 void NotifierSettings::reload()
 {
-	while ( !m_actions.isEmpty() )
-	{
-		NotifierAction *a = m_actions.first();
-		m_actions.remove( a );
-		delete a;
-	}
+    while(!m_actions.isEmpty())
+    {
+        NotifierAction *a = m_actions.first();
+        m_actions.remove(a);
+        delete a;
+    }
 
-	while ( !m_deletedActions.isEmpty() )
-	{
-		NotifierServiceAction *a = m_deletedActions.first();
-		m_deletedActions.remove( a );
-		delete a;
-	}
+    while(!m_deletedActions.isEmpty())
+    {
+        NotifierServiceAction *a = m_deletedActions.first();
+        m_deletedActions.remove(a);
+        delete a;
+    }
 
-	m_idMap.clear();
-	m_autoMimetypesMap.clear();
-	
-	NotifierOpenAction *open = new NotifierOpenAction();
-	m_actions.append( open );
-	m_idMap[ open->id() ] = open;
+    m_idMap.clear();
+    m_autoMimetypesMap.clear();
 
-	QValueList<NotifierServiceAction*> services = listServices();
+    NotifierOpenAction *open = new NotifierOpenAction();
+    m_actions.append(open);
+    m_idMap[open->id()] = open;
 
-	QValueList<NotifierServiceAction*>::iterator serv_it = services.begin();
-	QValueList<NotifierServiceAction*>::iterator serv_end = services.end();
-	
-	for ( ; serv_it!=serv_end; ++serv_it )
-	{
-		m_actions.append( *serv_it );
-		m_idMap[ (*serv_it)->id() ] = *serv_it;
-	}
-	
-	NotifierNothingAction *nothing = new NotifierNothingAction();
-	m_actions.append( nothing );
-	m_idMap[ nothing->id() ] = nothing;
+    QValueList< NotifierServiceAction * > services = listServices();
 
-	KConfig config( "medianotifierrc", true );
-	QMap<QString,QString> auto_actions_map = config.entryMap( "Auto Actions" );
+    QValueList< NotifierServiceAction * >::iterator serv_it = services.begin();
+    QValueList< NotifierServiceAction * >::iterator serv_end = services.end();
 
-	QMap<QString,QString>::iterator auto_it = auto_actions_map.begin();
-	QMap<QString,QString>::iterator auto_end = auto_actions_map.end();
-	
-	for ( ; auto_it!=auto_end; ++auto_it )
-	{
-		QString mime = auto_it.key();
-		QString action_id = auto_it.data();
+    for(; serv_it != serv_end; ++serv_it)
+    {
+        m_actions.append(*serv_it);
+        m_idMap[(*serv_it)->id()] = *serv_it;
+    }
 
-		if ( m_idMap.contains( action_id ) )
-		{
-			setAutoAction( mime, m_idMap[action_id] );
-		}
-		else
-		{
-			config.deleteEntry( mime );
-		}
-	}
+    NotifierNothingAction *nothing = new NotifierNothingAction();
+    m_actions.append(nothing);
+    m_idMap[nothing->id()] = nothing;
+
+    KConfig config("medianotifierrc", true);
+    QMap< QString, QString > auto_actions_map = config.entryMap("Auto Actions");
+
+    QMap< QString, QString >::iterator auto_it = auto_actions_map.begin();
+    QMap< QString, QString >::iterator auto_end = auto_actions_map.end();
+
+    for(; auto_it != auto_end; ++auto_it)
+    {
+        QString mime = auto_it.key();
+        QString action_id = auto_it.data();
+
+        if(m_idMap.contains(action_id))
+        {
+            setAutoAction(mime, m_idMap[action_id]);
+        }
+        else
+        {
+            config.deleteEntry(mime);
+        }
+    }
 }
 void NotifierSettings::save()
 {
-	QValueList<NotifierAction*>::iterator act_it = m_actions.begin();
-	QValueList<NotifierAction*>::iterator act_end = m_actions.end();
+    QValueList< NotifierAction * >::iterator act_it = m_actions.begin();
+    QValueList< NotifierAction * >::iterator act_end = m_actions.end();
 
-	for ( ; act_it!=act_end; ++act_it )
-	{
-		NotifierServiceAction *service;
-		if ( ( service=dynamic_cast<NotifierServiceAction*>( *act_it ) )
-		  && service->isWritable() )
-		{
-			service->save();
-		}
-	}
-	
-	while ( !m_deletedActions.isEmpty() )
-	{
-		NotifierServiceAction *a = m_deletedActions.first();
-		m_deletedActions.remove( a );
-		QFile::remove( a->filePath() );
-		delete a;
-	}
-	
-	KSimpleConfig config( "medianotifierrc" );
-	config.setGroup( "Auto Actions" );
-	
-	QMap<QString,NotifierAction*>::iterator auto_it = m_autoMimetypesMap.begin();
-	QMap<QString,NotifierAction*>::iterator auto_end = m_autoMimetypesMap.end();
+    for(; act_it != act_end; ++act_it)
+    {
+        NotifierServiceAction *service;
+        if((service = dynamic_cast< NotifierServiceAction * >(*act_it)) && service->isWritable())
+        {
+            service->save();
+        }
+    }
 
-	for ( ; auto_it!=auto_end; ++auto_it )
-	{
-		if ( auto_it.data()!=0L )
-		{
-			config.writeEntry( auto_it.key(), auto_it.data()->id() );
-		}
-		else
-		{
-			config.deleteEntry( auto_it.key() );
-		}
-	}
+    while(!m_deletedActions.isEmpty())
+    {
+        NotifierServiceAction *a = m_deletedActions.first();
+        m_deletedActions.remove(a);
+        QFile::remove(a->filePath());
+        delete a;
+    }
+
+    KSimpleConfig config("medianotifierrc");
+    config.setGroup("Auto Actions");
+
+    QMap< QString, NotifierAction * >::iterator auto_it = m_autoMimetypesMap.begin();
+    QMap< QString, NotifierAction * >::iterator auto_end = m_autoMimetypesMap.end();
+
+    for(; auto_it != auto_end; ++auto_it)
+    {
+        if(auto_it.data() != 0L)
+        {
+            config.writeEntry(auto_it.key(), auto_it.data()->id());
+        }
+        else
+        {
+            config.deleteEntry(auto_it.key());
+        }
+    }
 }
 
-QValueList<NotifierServiceAction*> NotifierSettings::loadActions( KDesktopFile &desktop ) const
+QValueList< NotifierServiceAction * > NotifierSettings::loadActions(KDesktopFile &desktop) const
 {
-	desktop.setDesktopGroup();
+    desktop.setDesktopGroup();
 
-	QValueList<NotifierServiceAction*> services;
-	
-	const QString filename = desktop.fileName();
-	const QStringList mimetypes = desktop.readListEntry( "ServiceTypes" );
+    QValueList< NotifierServiceAction * > services;
 
-	QValueList<KDEDesktopMimeType::Service> type_services
-		= KDEDesktopMimeType::userDefinedServices(filename, true);
+    const QString filename = desktop.fileName();
+    const QStringList mimetypes = desktop.readListEntry("ServiceTypes");
 
-	QValueList<KDEDesktopMimeType::Service>::iterator service_it = type_services.begin();
-	QValueList<KDEDesktopMimeType::Service>::iterator service_end = type_services.end();
-	for (; service_it!=service_end; ++service_it)
-	{
-		NotifierServiceAction *service_action
-			= new NotifierServiceAction();
-		
-		service_action->setService( *service_it );
-		service_action->setFilePath( filename );
-		service_action->setMimetypes( mimetypes );
-		
-		services += service_action;
-	}
+    QValueList< KDEDesktopMimeType::Service > type_services = KDEDesktopMimeType::userDefinedServices(filename, true);
 
-	return services;
+    QValueList< KDEDesktopMimeType::Service >::iterator service_it = type_services.begin();
+    QValueList< KDEDesktopMimeType::Service >::iterator service_end = type_services.end();
+    for(; service_it != service_end; ++service_it)
+    {
+        NotifierServiceAction *service_action = new NotifierServiceAction();
+
+        service_action->setService(*service_it);
+        service_action->setFilePath(filename);
+        service_action->setMimetypes(mimetypes);
+
+        services += service_action;
+    }
+
+    return services;
 }
 
 
-bool NotifierSettings::shouldLoadActions( KDesktopFile &desktop, const QString &mimetype ) const
+bool NotifierSettings::shouldLoadActions(KDesktopFile &desktop, const QString &mimetype) const
 {
-	desktop.setDesktopGroup();
+    desktop.setDesktopGroup();
 
-	if ( desktop.hasKey( "Actions" )
-	  && desktop.hasKey( "ServiceTypes" )
-	  && !desktop.readBoolEntry( "X-KDE-MediaNotifierHide", false )  )
-	{
-		const QStringList actions = desktop.readListEntry( "Actions" );
+    if(desktop.hasKey("Actions") && desktop.hasKey("ServiceTypes") && !desktop.readBoolEntry("X-KDE-MediaNotifierHide", false))
+    {
+        const QStringList actions = desktop.readListEntry("Actions");
 
-		if ( actions.size()!=1 )
-		{
-			return false;
-		}
-		
-		const QStringList types = desktop.readListEntry( "ServiceTypes" );
+        if(actions.size() != 1)
+        {
+            return false;
+        }
 
-		if ( mimetype.isEmpty() )
-		{
-			QStringList::ConstIterator type_it = types.begin();
-			QStringList::ConstIterator type_end = types.end();
-			for (; type_it != type_end; ++type_it)
-			{
-				if ( (*type_it).startsWith( "media/" ) )
-				{
-					return true;
-				}
-			}
-		}
-		else if ( types.contains(mimetype) )
-		{
-			return true;
-		}
-	}
+        const QStringList types = desktop.readListEntry("ServiceTypes");
 
-	return false;
+        if(mimetype.isEmpty())
+        {
+            QStringList::ConstIterator type_it = types.begin();
+            QStringList::ConstIterator type_end = types.end();
+            for(; type_it != type_end; ++type_it)
+            {
+                if((*type_it).startsWith("media/"))
+                {
+                    return true;
+                }
+            }
+        }
+        else if(types.contains(mimetype))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-QValueList<NotifierServiceAction*> NotifierSettings::listServices( const QString &mimetype ) const
+QValueList< NotifierServiceAction * > NotifierSettings::listServices(const QString &mimetype) const
 {
-	QValueList<NotifierServiceAction*> services;
-	QStringList dirs = KGlobal::dirs()->findDirs("data", "konqueror/servicemenus/");
-	
-	QStringList::ConstIterator dir_it = dirs.begin();
-	QStringList::ConstIterator dir_end = dirs.end();
-	for (; dir_it != dir_end; ++dir_it)
-	{
-		QDir dir( *dir_it );
+    QValueList< NotifierServiceAction * > services;
+    QStringList dirs = KGlobal::dirs()->findDirs("data", "konqueror/servicemenus/");
 
-		QStringList entries = dir.entryList( "*.desktop", QDir::Files );
+    QStringList::ConstIterator dir_it = dirs.begin();
+    QStringList::ConstIterator dir_end = dirs.end();
+    for(; dir_it != dir_end; ++dir_it)
+    {
+        QDir dir(*dir_it);
 
-		QStringList::ConstIterator entry_it = entries.begin();
-		QStringList::ConstIterator entry_end = entries.end();
+        QStringList entries = dir.entryList("*.desktop", QDir::Files);
 
-		for (; entry_it != entry_end; ++entry_it )
-		{
-			QString filename = *dir_it + *entry_it;
-			
-			KDesktopFile desktop( filename, true );
-			
-			if ( shouldLoadActions(desktop, mimetype) )
-			{
-				services+=loadActions(desktop);
-			}
-		}
-	}
+        QStringList::ConstIterator entry_it = entries.begin();
+        QStringList::ConstIterator entry_end = entries.end();
 
-	return services;
+        for(; entry_it != entry_end; ++entry_it)
+        {
+            QString filename = *dir_it + *entry_it;
+
+            KDesktopFile desktop(filename, true);
+
+            if(shouldLoadActions(desktop, mimetype))
+            {
+                services += loadActions(desktop);
+            }
+        }
+    }
+
+    return services;
 }

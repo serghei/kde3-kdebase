@@ -25,18 +25,14 @@
 
 #include "konq_faviconmgr.moc"
 
-KonqFavIconMgr::KonqFavIconMgr(QObject *parent, const char *name)
-    : QObject(parent, name),
-      DCOPObject("KonqFavIconMgr")
+KonqFavIconMgr::KonqFavIconMgr(QObject *parent, const char *name) : QObject(parent, name), DCOPObject("KonqFavIconMgr")
 {
-    connectDCOPSignal("kded", "favicons",
-        "iconChanged(bool, QString, QString)",
-        "notifyChange(bool, QString, QString)", false);
+    connectDCOPSignal("kded", "favicons", "iconChanged(bool, QString, QString)", "notifyChange(bool, QString, QString)", false);
 }
 
 QString KonqFavIconMgr::iconForURL(const QString &url)
 {
-    return KMimeType::favIconForURL( KURL(url) );
+    return KMimeType::favIconForURL(KURL(url));
 }
 
 void KonqFavIconMgr::setIconForURL(const KURL &url, const KURL &iconURL)
@@ -54,4 +50,3 @@ void KonqFavIconMgr::downloadHostIcon(const KURL &url)
     str << url;
     kapp->dcopClient()->send("kded", "favicons", "downloadHostIcon(KURL)", data);
 }
-

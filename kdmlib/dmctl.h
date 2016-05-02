@@ -23,68 +23,87 @@
 
 #include <kapplication.h>
 
-struct SessEnt {
-	QString display, from, user, session;
-	int vt;
-	bool self:1, tty:1;
+struct SessEnt
+{
+    QString display, from, user, session;
+    int vt;
+    bool self : 1, tty : 1;
 };
 
-typedef QValueList<SessEnt> SessList;
+typedef QValueList< SessEnt > SessList;
 
 class DM {
 
 #ifdef Q_WS_X11
 
 public:
-	DM();
-	~DM();
+    DM();
+    ~DM();
 
-	bool canShutdown();
-	void shutdown( KApplication::ShutdownType shutdownType,
-	               KApplication::ShutdownMode shutdownMode,
-	               const QString &bootOption = QString::null );
+    bool canShutdown();
+    void shutdown(KApplication::ShutdownType shutdownType, KApplication::ShutdownMode shutdownMode, const QString &bootOption = QString::null);
 
-	void setLock( bool on );
+    void setLock(bool on);
 
-	bool isSwitchable();
-	int numReserve();
-	void startReserve();
-	bool localSessions( SessList &list );
-	bool switchVT( int vt );
-	void lockSwitchVT( int vt );
+    bool isSwitchable();
+    int numReserve();
+    void startReserve();
+    bool localSessions(SessList &list);
+    bool switchVT(int vt);
+    void lockSwitchVT(int vt);
 
-	bool bootOptions( QStringList &opts, int &dflt, int &curr );
+    bool bootOptions(QStringList &opts, int &dflt, int &curr);
 
-	static QString sess2Str( const SessEnt &se );
-	static void sess2Str2( const SessEnt &se, QString &user, QString &loc );
+    static QString sess2Str(const SessEnt &se);
+    static void sess2Str2(const SessEnt &se, QString &user, QString &loc);
 
 private:
-	int fd;
+    int fd;
 
-	bool exec( const char *cmd, QCString &ret );
-	bool exec( const char *cmd );
+    bool exec(const char *cmd, QCString &ret);
+    bool exec(const char *cmd);
 
-	void GDMAuthenticate();
+    void GDMAuthenticate();
 
 #else // Q_WS_X11
 
 public:
-	DM() {}
+    DM()
+    {
+    }
 
-	bool canShutdown() { return false; }
-	void shutdown( KApplication::ShutdownType shutdownType,
-	               KApplication::ShutdownMode shutdownMode,
-	               const QString &bootOption = QString::null ) {}
+    bool canShutdown()
+    {
+        return false;
+    }
+    void shutdown(KApplication::ShutdownType shutdownType, KApplication::ShutdownMode shutdownMode, const QString &bootOption = QString::null)
+    {
+    }
 
-	void setLock( bool ) {}
+    void setLock(bool)
+    {
+    }
 
-	bool isSwitchable() { return false; }
-	int numReserve() { return -1; }
-	void startReserve() {}
-	bool localSessions( SessList &list ) { return false; }
-	void switchVT( int vt ) {}
+    bool isSwitchable()
+    {
+        return false;
+    }
+    int numReserve()
+    {
+        return -1;
+    }
+    void startReserve()
+    {
+    }
+    bool localSessions(SessList &list)
+    {
+        return false;
+    }
+    void switchVT(int vt)
+    {
+    }
 
-	bool bootOptions( QStringList &opts, int &dflt, int &curr );
+    bool bootOptions(QStringList &opts, int &dflt, int &curr);
 
 #endif // Q_WS_X11
 

@@ -42,13 +42,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "applethandle.h"
 
-AppletHandle::AppletHandle(AppletContainer* parent)
-    : QWidget(parent),
-      m_applet(parent),
-      m_menuButton(0),
-      m_drawHandle(false),
-      m_popupDirection(KPanelApplet::Up),
-      m_handleHoverTimer(0)
+AppletHandle::AppletHandle(AppletContainer *parent)
+    : QWidget(parent), m_applet(parent), m_menuButton(0), m_drawHandle(false), m_popupDirection(KPanelApplet::Up), m_handleHoverTimer(0)
 {
     setBackgroundOrigin(AncestorOrigin);
     setMinimumSize(widthForHeight(0), heightForWidth(0));
@@ -58,14 +53,13 @@ AppletHandle::AppletHandle(AppletContainer* parent)
     m_dragBar->installEventFilter(this);
     m_layout->addWidget(m_dragBar);
 
-    if (kapp->authorizeKAction("kicker_rmb"))
+    if(kapp->authorizeKAction("kicker_rmb"))
     {
-        m_menuButton = new AppletHandleButton( this );
+        m_menuButton = new AppletHandleButton(this);
         m_menuButton->installEventFilter(this);
         m_layout->addWidget(m_menuButton);
 
-        connect(m_menuButton, SIGNAL(pressed()),
-                this, SLOT(menuButtonPressed()));
+        connect(m_menuButton, SIGNAL(pressed()), this, SLOT(menuButtonPressed()));
         QToolTip::add(m_menuButton, i18n("%1 menu").arg(parent->info().name()));
     }
 
@@ -73,14 +67,14 @@ AppletHandle::AppletHandle(AppletContainer* parent)
     resetLayout();
 }
 
-int AppletHandle::heightForWidth( int /* w */ ) const
+int AppletHandle::heightForWidth(int /* w */) const
 {
     int size = style().pixelMetric(QStyle::PM_DockWindowHandleExtent, this);
 
     return size;
 }
 
-int AppletHandle::widthForHeight( int /* h */ ) const
+int AppletHandle::widthForHeight(int /* h */) const
 {
     int size = style().pixelMetric(QStyle::PM_DockWindowHandleExtent, this);
 
@@ -91,14 +85,14 @@ void AppletHandle::setPopupDirection(KPanelApplet::Direction d)
 {
     Qt::ArrowType a = Qt::UpArrow;
 
-    if (d == m_popupDirection || !m_menuButton)
+    if(d == m_popupDirection || !m_menuButton)
     {
         return;
     }
 
     m_popupDirection = d;
 
-    switch (m_popupDirection)
+    switch(m_popupDirection)
     {
         case KPanelApplet::Up:
             m_layout->setDirection(QBoxLayout::BottomToTop);
@@ -124,11 +118,11 @@ void AppletHandle::setPopupDirection(KPanelApplet::Direction d)
 
 void AppletHandle::resetLayout()
 {
-    if (m_handleHoverTimer && !m_drawHandle)
+    if(m_handleHoverTimer && !m_drawHandle)
     {
         m_dragBar->hide();
 
-        if (m_menuButton)
+        if(m_menuButton)
         {
             m_menuButton->hide();
         }
@@ -137,7 +131,7 @@ void AppletHandle::resetLayout()
     {
         m_dragBar->show();
 
-        if (m_menuButton)
+        if(m_menuButton)
         {
             m_menuButton->show();
         }
@@ -146,13 +140,12 @@ void AppletHandle::resetLayout()
 
 void AppletHandle::setFadeOutHandle(bool fadeOut)
 {
-    if (fadeOut)
+    if(fadeOut)
     {
-        if (!m_handleHoverTimer)
+        if(!m_handleHoverTimer)
         {
             m_handleHoverTimer = new QTimer(this);
-            connect(m_handleHoverTimer, SIGNAL(timeout()),
-                    this, SLOT(checkHandleHover()));
+            connect(m_handleHoverTimer, SIGNAL(timeout()), this, SLOT(checkHandleHover()));
             m_applet->installEventFilter(this);
         }
     }
@@ -168,16 +161,16 @@ void AppletHandle::setFadeOutHandle(bool fadeOut)
 
 bool AppletHandle::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == parent())
+    if(o == parent())
     {
-        switch (e->type())
+        switch(e->type())
         {
             case QEvent::Enter:
             {
                 m_drawHandle = true;
                 resetLayout();
 
-                if (m_handleHoverTimer)
+                if(m_handleHoverTimer)
                 {
                     m_handleHoverTimer->start(250);
                 }
@@ -186,28 +179,28 @@ bool AppletHandle::eventFilter(QObject *o, QEvent *e)
 
             case QEvent::Leave:
             {
-                if (m_menuButton && m_menuButton->isOn())
+                if(m_menuButton && m_menuButton->isOn())
                 {
                     break;
                 }
 
-                QWidget* w = dynamic_cast<QWidget*>(o);
+                QWidget *w = dynamic_cast< QWidget * >(o);
 
                 bool nowDrawIt = false;
-                if (w)
+                if(w)
                 {
                     // a hack for applets that have out-of-process
                     // elements (e.g the systray) so that the handle
                     // doesn't flicker when moving over those elements
-                    if (w->rect().contains(w->mapFromGlobal(QCursor::pos())))
+                    if(w->rect().contains(w->mapFromGlobal(QCursor::pos())))
                     {
                         nowDrawIt = true;
                     }
                 }
 
-                if (nowDrawIt != m_drawHandle)
+                if(nowDrawIt != m_drawHandle)
                 {
-                    if (m_handleHoverTimer)
+                    if(m_handleHoverTimer)
                     {
                         m_handleHoverTimer->stop();
                     }
@@ -222,26 +215,26 @@ bool AppletHandle::eventFilter(QObject *o, QEvent *e)
                 break;
         }
 
-        return QWidget::eventFilter( o, e );
+        return QWidget::eventFilter(o, e);
     }
-    else if (o == m_dragBar)
+    else if(o == m_dragBar)
     {
-        if (e->type() == QEvent::MouseButtonPress)
+        if(e->type() == QEvent::MouseButtonPress)
         {
-            QMouseEvent* ev = static_cast<QMouseEvent*>(e);
-            if (ev->button() == LeftButton || ev->button() == MidButton)
+            QMouseEvent *ev = static_cast< QMouseEvent * >(e);
+            if(ev->button() == LeftButton || ev->button() == MidButton)
             {
                 emit moveApplet(m_applet->mapFromGlobal(ev->globalPos()));
             }
         }
     }
 
-    if (m_menuButton && e->type() == QEvent::MouseButtonPress)
+    if(m_menuButton && e->type() == QEvent::MouseButtonPress)
     {
-        QMouseEvent* ev = static_cast<QMouseEvent*>(e);
-        if (ev->button() == RightButton)
+        QMouseEvent *ev = static_cast< QMouseEvent * >(e);
+        if(ev->button() == RightButton)
         {
-            if (!m_menuButton->isDown())
+            if(!m_menuButton->isDown())
             {
                 m_menuButton->setDown(true);
                 menuButtonPressed();
@@ -251,19 +244,19 @@ bool AppletHandle::eventFilter(QObject *o, QEvent *e)
         }
     }
 
-    return QWidget::eventFilter(o, e);    // standard event processing
+    return QWidget::eventFilter(o, e); // standard event processing
 }
 
 void AppletHandle::menuButtonPressed()
 {
-    if (!kapp->authorizeKAction("kicker_rmb"))
+    if(!kapp->authorizeKAction("kicker_rmb"))
     {
         return;
     }
 
     emit showAppletMenu();
 
-    if (!onMenuButton(QCursor::pos()))
+    if(!onMenuButton(QCursor::pos()))
     {
         toggleMenuButtonOff();
     }
@@ -271,10 +264,8 @@ void AppletHandle::menuButtonPressed()
 
 void AppletHandle::checkHandleHover()
 {
-    if (!m_handleHoverTimer ||
-        (m_menuButton && m_menuButton->isOn()) ||
-        m_applet->geometry().contains(m_applet->mapToParent(
-                                      m_applet->mapFromGlobal(QCursor::pos()))))
+    if(!m_handleHoverTimer || (m_menuButton && m_menuButton->isOn())
+       || m_applet->geometry().contains(m_applet->mapToParent(m_applet->mapFromGlobal(QCursor::pos()))))
     {
         return;
     }
@@ -284,14 +275,14 @@ void AppletHandle::checkHandleHover()
     resetLayout();
 }
 
-bool AppletHandle::onMenuButton(const QPoint& point) const
+bool AppletHandle::onMenuButton(const QPoint &point) const
 {
     return m_menuButton && (childAt(mapFromGlobal(point)) == m_menuButton);
 }
 
 void AppletHandle::toggleMenuButtonOff()
 {
-    if (!m_menuButton)
+    if(!m_menuButton)
     {
         return;
     }
@@ -299,19 +290,16 @@ void AppletHandle::toggleMenuButtonOff()
     m_menuButton->setDown(false);
 }
 
-AppletHandleDrag::AppletHandleDrag(AppletHandle* parent)
-    : QWidget(parent),
-      m_parent(parent),
-      m_inside(false)
+AppletHandleDrag::AppletHandleDrag(AppletHandle *parent) : QWidget(parent), m_parent(parent), m_inside(false)
 {
-   setBackgroundOrigin( AncestorOrigin );
+    setBackgroundOrigin(AncestorOrigin);
 }
 
 QSize AppletHandleDrag::minimumSizeHint() const
 {
     int wh = style().pixelMetric(QStyle::PM_DockWindowHandleExtent, this);
 
-    if (m_parent->orientation() == Horizontal)
+    if(m_parent->orientation() == Horizontal)
     {
         return QSize(wh, 0);
     }
@@ -321,53 +309,52 @@ QSize AppletHandleDrag::minimumSizeHint() const
 
 QSizePolicy AppletHandleDrag::sizePolicy() const
 {
-    if (m_parent->orientation() == Horizontal)
+    if(m_parent->orientation() == Horizontal)
     {
-        return QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Preferred );
+        return QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
     }
 
-    return QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
+    return QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 }
 
-void AppletHandleDrag::enterEvent( QEvent *e )
+void AppletHandleDrag::enterEvent(QEvent *e)
 {
     m_inside = true;
-    QWidget::enterEvent( e );
+    QWidget::enterEvent(e);
     update();
 }
 
-void AppletHandleDrag::leaveEvent( QEvent *e )
+void AppletHandleDrag::leaveEvent(QEvent *e)
 {
     m_inside = false;
-    QWidget::enterEvent( e );
+    QWidget::enterEvent(e);
     update();
 }
 
 void AppletHandleDrag::paintEvent(QPaintEvent *)
 {
     QPainter p(this);
-    
-    if (!KickerSettings::transparent())
+
+    if(!KickerSettings::transparent())
     {
-        if (paletteBackgroundPixmap())
+        if(paletteBackgroundPixmap())
         {
             QPoint offset = backgroundOffset();
             int ox = offset.x();
             int oy = offset.y();
-            p.drawTiledPixmap( 0, 0, width(), height(),*paletteBackgroundPixmap(), ox, oy);
+            p.drawTiledPixmap(0, 0, width(), height(), *paletteBackgroundPixmap(), ox, oy);
         }
-        
+
         QStyle::SFlags flags = QStyle::Style_Default;
         flags |= QStyle::Style_Enabled;
-        if (m_parent->orientation() == Horizontal)
+        if(m_parent->orientation() == Horizontal)
         {
             flags |= QStyle::Style_Horizontal;
         }
-    
+
         QRect r = rect();
-    
-        style().drawPrimitive(QStyle::PE_DockWindowHandle, &p, r,
-                            colorGroup(), flags);
+
+        style().drawPrimitive(QStyle::PE_DockWindowHandle, &p, r, colorGroup(), flags);
     }
     else
     {
@@ -375,9 +362,7 @@ void AppletHandleDrag::paintEvent(QPaintEvent *)
     }
 }
 
-AppletHandleButton::AppletHandleButton(AppletHandle *parent)
-  : SimpleArrowButton(parent),
-    m_parent(parent)
+AppletHandleButton::AppletHandleButton(AppletHandle *parent) : SimpleArrowButton(parent), m_parent(parent)
 {
 }
 
@@ -386,7 +371,7 @@ QSize AppletHandleButton::minimumSizeHint() const
     int height = style().pixelMetric(QStyle::PM_DockWindowHandleExtent, this);
     int width = height;
 
-    if (m_parent->orientation() == Horizontal)
+    if(m_parent->orientation() == Horizontal)
     {
         return QSize(width, height);
     }
@@ -396,7 +381,7 @@ QSize AppletHandleButton::minimumSizeHint() const
 
 QSizePolicy AppletHandleButton::sizePolicy() const
 {
-    return QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+    return QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 }
 
 #include "applethandle.moc"

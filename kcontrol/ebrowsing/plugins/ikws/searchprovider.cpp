@@ -20,8 +20,7 @@
 
 #include "searchprovider.h"
 
-SearchProvider::SearchProvider(const KService::Ptr service)
-               : m_dirty(false)
+SearchProvider::SearchProvider(const KService::Ptr service) : m_dirty(false)
 {
     m_desktopEntryName = service->desktopEntryName();
     m_name = service->name();
@@ -32,7 +31,7 @@ SearchProvider::SearchProvider(const KService::Ptr service)
 
 void SearchProvider::setName(const QString &name)
 {
-    if (m_name == name)
+    if(m_name == name)
         return;
     m_name = name;
     m_dirty = true;
@@ -40,7 +39,7 @@ void SearchProvider::setName(const QString &name)
 
 void SearchProvider::setQuery(const QString &query)
 {
-    if (m_query == query)
+    if(m_query == query)
         return;
     m_query = query;
     m_dirty = true;
@@ -48,7 +47,7 @@ void SearchProvider::setQuery(const QString &query)
 
 void SearchProvider::setKeys(const QStringList &keys)
 {
-    if (m_keys == keys)
+    if(m_keys == keys)
         return;
     m_keys = keys;
     m_dirty = true;
@@ -56,7 +55,7 @@ void SearchProvider::setKeys(const QStringList &keys)
 
 void SearchProvider::setCharset(const QString &charset)
 {
-    if (m_charset == charset)
+    if(m_charset == charset)
         return;
     m_charset = charset;
     m_dirty = true;
@@ -64,15 +63,12 @@ void SearchProvider::setCharset(const QString &charset)
 
 SearchProvider *SearchProvider::findByDesktopName(const QString &name)
 {
-    KService::Ptr service =
-        KService::serviceByDesktopPath(QString("searchproviders/%1.desktop").arg(name));
+    KService::Ptr service = KService::serviceByDesktopPath(QString("searchproviders/%1.desktop").arg(name));
     return service ? new SearchProvider(service) : 0;
 }
 
 SearchProvider *SearchProvider::findByKey(const QString &key)
 {
-    KTrader::OfferList providers =
-        KTrader::self()->query("SearchProvider", QString("'%1' in Keys").arg(key));
+    KTrader::OfferList providers = KTrader::self()->query("SearchProvider", QString("'%1' in Keys").arg(key));
     return providers.count() ? new SearchProvider(providers[0]) : 0;
 }
-

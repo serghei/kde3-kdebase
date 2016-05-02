@@ -42,18 +42,17 @@ class QPushButton;
 class QDialog;
 class ConfigDialog;
 
-class GeneralWidget : public QVBox
-{
+class GeneralWidget : public QVBox {
     Q_OBJECT
 
     friend class ConfigDialog;
 
 public:
-    GeneralWidget( QWidget *parent, const char *name );
+    GeneralWidget(QWidget *parent, const char *name);
     ~GeneralWidget();
 
 private slots:
-    void historySizeChanged( int value );
+    void historySizeChanged(int value);
     void slotClipConfigChanged();
 
 private:
@@ -61,34 +60,34 @@ private:
     QCheckBox *cbIgnoreSelection, *cbStripWhitespace;
     QRadioButton *cbSynchronize, *cbImplicitSelection, *cbSeparate;
     KIntNumInput *popupTimeout, *maxItems;
-
 };
 
 
 // only for use inside ActionWidget
-class AdvancedWidget : public QVBox
-{
+class AdvancedWidget : public QVBox {
     Q_OBJECT
 
 public:
-    AdvancedWidget( QWidget *parent = 0L, const char *name = 0L );
+    AdvancedWidget(QWidget *parent = 0L, const char *name = 0L);
     ~AdvancedWidget();
 
-    void setWMClasses( const QStringList& items );
-    QStringList wmClasses() const { return editListBox->items(); }
+    void setWMClasses(const QStringList &items);
+    QStringList wmClasses() const
+    {
+        return editListBox->items();
+    }
 
 private:
     KEditListBox *editListBox;
 };
 
-class ActionWidget : public QVBox
-{
+class ActionWidget : public QVBox {
     Q_OBJECT
 
     friend class ConfigDialog;
 
 public:
-    ActionWidget( const ActionList *list, ConfigDialog* configWidget, QWidget *parent, const char *name );
+    ActionWidget(const ActionList *list, ConfigDialog *configWidget, QWidget *parent, const char *name);
     ~ActionWidget();
 
     /**
@@ -96,18 +95,24 @@ public:
      * the list.
      * Make sure to free that pointer when you don't need it anymore.
      */
-    ActionList * actionList();
+    ActionList *actionList();
 
-    void setWMClasses( const QStringList& items ) { m_wmClasses = items; }
-    QStringList wmClasses() const                 { return m_wmClasses; }
+    void setWMClasses(const QStringList &items)
+    {
+        m_wmClasses = items;
+    }
+    QStringList wmClasses() const
+    {
+        return m_wmClasses;
+    }
 
 private slots:
     void slotAddAction();
     void slotDeleteAction();
-    void slotItemChanged( QListViewItem *, const QPoint& , int );
+    void slotItemChanged(QListViewItem *, const QPoint &, int);
     void slotAdvanced();
-    void slotContextMenu( KListView *, QListViewItem *, const QPoint& );
-    void selectionChanged ( QListViewItem *);
+    void slotContextMenu(KListView *, QListViewItem *, const QPoint &);
+    void selectionChanged(QListViewItem *);
 
 private:
     KListView *listView;
@@ -132,93 +137,115 @@ private:
 };*/
 
 
-class ConfigDialog : public KDialogBase
-{
+class ConfigDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    ConfigDialog( const ActionList *list, KGlobalAccel *accel, bool isApplet );
+    ConfigDialog(const ActionList *list, KGlobalAccel *accel, bool isApplet);
     ~ConfigDialog();
 
-    ActionList * actionList() const { return actionWidget->actionList(); }
+    ActionList *actionList() const
+    {
+        return actionWidget->actionList();
+    }
 
-    bool keepContents()    const {
-	return generalWidget->cbSaveContents->isChecked();
+    bool keepContents() const
+    {
+        return generalWidget->cbSaveContents->isChecked();
     }
-    bool popupAtMousePos() const {
-	return generalWidget->cbMousePos->isChecked();
+    bool popupAtMousePos() const
+    {
+        return generalWidget->cbMousePos->isChecked();
     }
-    bool stripWhiteSpace() const {
+    bool stripWhiteSpace() const
+    {
         return generalWidget->cbStripWhitespace->isChecked();
     }
-    bool replayActionInHistory() const {
-	return generalWidget->cbReplayAIH->isChecked();
+    bool replayActionInHistory() const
+    {
+        return generalWidget->cbReplayAIH->isChecked();
     }
-    bool noNullClipboard() const {
+    bool noNullClipboard() const
+    {
         return generalWidget->cbNoNull->isChecked();
     }
 
-    int popupTimeout() const {
-	return generalWidget->popupTimeout->value();
+    int popupTimeout() const
+    {
+        return generalWidget->popupTimeout->value();
     }
-    int maxItems() const {
-	return generalWidget->maxItems->value();
+    int maxItems() const
+    {
+        return generalWidget->maxItems->value();
     }
     bool ignoreSelection() const
     {
         return generalWidget->cbIgnoreSelection->isChecked();
     }
-    QStringList noActionsFor() const {
-	return actionWidget->wmClasses();
+    QStringList noActionsFor() const
+    {
+        return actionWidget->wmClasses();
     }
     bool useGUIRegExpEditor() const
     {
-      return actionWidget->cbUseGUIRegExpEditor->isChecked();
+        return actionWidget->cbUseGUIRegExpEditor->isChecked();
     }
 
-    bool synchronize() const {
+    bool synchronize() const
+    {
         return generalWidget->cbSynchronize->isChecked();
     }
-    bool implicitSelection() const {
+    bool implicitSelection() const
+    {
         return generalWidget->cbImplicitSelection->isChecked();
     }
 
-    void setKeepContents( bool enable ) {
-	generalWidget->cbSaveContents->setChecked( enable );
-    }
-    void setPopupAtMousePos( bool enable ) {
-	generalWidget->cbMousePos->setChecked( enable );
-    }
-    void setStripWhiteSpace( bool enable ) {
-        generalWidget->cbStripWhitespace->setChecked( enable );
-    }
-    void setReplayActionInHistory( bool enable ) {
-	generalWidget->cbReplayAIH->setChecked( enable );
-    }
-    void setNoNullClipboard( bool enable ) {
-        generalWidget->cbNoNull->setChecked( enable );
-    }
-    void setPopupTimeout( int timeout ) {
-	generalWidget->popupTimeout->setValue( timeout );
-    }
-    void setMaxItems( int items ) {
-	generalWidget->maxItems->setValue( items );
-    }
-    void setIgnoreSelection( bool ignore ) {
-        generalWidget->cbIgnoreSelection->setChecked( ignore );
-    }
-    void setSynchronize( bool synchronize ) {
-        generalWidget->cbSynchronize->setChecked( synchronize );
-    }
-    void setNoActionsFor( const QStringList& items ) {
-	actionWidget->setWMClasses( items );
-    }
-    void setUseGUIRegExpEditor( bool enabled )
+    void setKeepContents(bool enable)
     {
-	// the checkbox is only hidden explicitly when there's no
-	// regexp editor component available.
-	if ( !actionWidget->cbUseGUIRegExpEditor->isHidden() )
-            actionWidget->cbUseGUIRegExpEditor->setChecked( enabled );
+        generalWidget->cbSaveContents->setChecked(enable);
+    }
+    void setPopupAtMousePos(bool enable)
+    {
+        generalWidget->cbMousePos->setChecked(enable);
+    }
+    void setStripWhiteSpace(bool enable)
+    {
+        generalWidget->cbStripWhitespace->setChecked(enable);
+    }
+    void setReplayActionInHistory(bool enable)
+    {
+        generalWidget->cbReplayAIH->setChecked(enable);
+    }
+    void setNoNullClipboard(bool enable)
+    {
+        generalWidget->cbNoNull->setChecked(enable);
+    }
+    void setPopupTimeout(int timeout)
+    {
+        generalWidget->popupTimeout->setValue(timeout);
+    }
+    void setMaxItems(int items)
+    {
+        generalWidget->maxItems->setValue(items);
+    }
+    void setIgnoreSelection(bool ignore)
+    {
+        generalWidget->cbIgnoreSelection->setChecked(ignore);
+    }
+    void setSynchronize(bool synchronize)
+    {
+        generalWidget->cbSynchronize->setChecked(synchronize);
+    }
+    void setNoActionsFor(const QStringList &items)
+    {
+        actionWidget->setWMClasses(items);
+    }
+    void setUseGUIRegExpEditor(bool enabled)
+    {
+        // the checkbox is only hidden explicitly when there's no
+        // regexp editor component available.
+        if(!actionWidget->cbUseGUIRegExpEditor->isHidden())
+            actionWidget->cbUseGUIRegExpEditor->setChecked(enabled);
     }
 
     virtual void show();
@@ -228,36 +255,37 @@ private:
     GeneralWidget *generalWidget;
     ActionWidget *actionWidget;
     KKeyChooser *keysWidget;
-
 };
 
-class ListView : public KListView
-{
+class ListView : public KListView {
 public:
-    ListView( ConfigDialog* configWidget, QWidget *parent, const char *name )
-	: KListView( parent, name ), _configWidget( configWidget ),
-          _regExpEditor(0L) {}
+    ListView(ConfigDialog *configWidget, QWidget *parent, const char *name) : KListView(parent, name), _configWidget(configWidget), _regExpEditor(0L)
+    {
+    }
     // QListView has a weird idea of a sizeHint...
-    virtual QSize sizeHint () const {
-	int w = minimumSizeHint().width();
-	int h = header()->height();
-	h += viewport()->sizeHint().height();
-	h += horizontalScrollBar()->height();
-	
-	QListViewItem *item = firstChild();
-	while ( item ) {
-	    h += item->totalHeight();
-	    item = item->nextSibling();
-	}
+    virtual QSize sizeHint() const
+    {
+        int w = minimumSizeHint().width();
+        int h = header()->height();
+        h += viewport()->sizeHint().height();
+        h += horizontalScrollBar()->height();
 
-	return QSize( w, h );
+        QListViewItem *item = firstChild();
+        while(item)
+        {
+            h += item->totalHeight();
+            item = item->nextSibling();
+        }
+
+        return QSize(w, h);
     }
 
 protected:
-    virtual void rename( QListViewItem* item, int c );
+    virtual void rename(QListViewItem *item, int c);
+
 private:
-    ConfigDialog* _configWidget;
-    QDialog* _regExpEditor;
+    ConfigDialog *_configWidget;
+    QDialog *_regExpEditor;
 };
 
 #endif // CONFIGDIALOG_H

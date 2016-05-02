@@ -22,18 +22,35 @@
 
 #include <kservice.h>
 
-class SearchProvider 
-{
+class SearchProvider {
 public:
-    SearchProvider() : m_dirty(false) {};
+    SearchProvider() : m_dirty(false){};
     SearchProvider(const KService::Ptr service);
 
-    const QString &desktopEntryName() const { return m_desktopEntryName; }
-    const QString &name() const { return m_name; }
-    const QString &query() const { return m_query; }
-    const QStringList &keys() const { return m_keys; }
-    const QString &charset() const { return m_charset; }
-    bool isDirty() const { return m_dirty; }
+    const QString &desktopEntryName() const
+    {
+        return m_desktopEntryName;
+    }
+    const QString &name() const
+    {
+        return m_name;
+    }
+    const QString &query() const
+    {
+        return m_query;
+    }
+    const QStringList &keys() const
+    {
+        return m_keys;
+    }
+    const QString &charset() const
+    {
+        return m_charset;
+    }
+    bool isDirty() const
+    {
+        return m_dirty;
+    }
 
     void setName(const QString &);
     void setQuery(const QString &);
@@ -42,6 +59,7 @@ public:
 
     static SearchProvider *findByDesktopName(const QString &);
     static SearchProvider *findByKey(const QString &);
+
 private:
     QString m_desktopEntryName;
     QString m_name;

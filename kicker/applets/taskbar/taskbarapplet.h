@@ -29,28 +29,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class TaskBarContainer;
 class QPalette;
 
-class TaskbarApplet : public KPanelApplet
-{
+class TaskbarApplet : public KPanelApplet {
     Q_OBJECT
 
 public:
-    TaskbarApplet( const QString& configFile, Type t = Normal, int actions = 0,
-		   QWidget *parent = 0, const char *name = 0 );
+    TaskbarApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     ~TaskbarApplet();
 
-    int widthForHeight( int h ) const;
-    int heightForWidth( int w ) const;
+    int widthForHeight(int h) const;
+    int heightForWidth(int w) const;
 
     void preferences();
 
 protected:
     void moveEvent(QMoveEvent *);
-    void popupDirectionChange( Direction );
-    void orientationChange( Orientation );
+    void popupDirectionChange(Direction);
+    void orientationChange(Orientation);
     void paletteChange(const QPalette &);
 
 private:
-    TaskBarContainer*     container;
+    TaskBarContainer *container;
 };
 
 #endif

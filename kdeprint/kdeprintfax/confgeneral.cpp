@@ -32,59 +32,58 @@
 
 #include <stdlib.h>
 
-ConfGeneral::ConfGeneral(QWidget *parent, const char *name)
-: QWidget(parent, name)
+ConfGeneral::ConfGeneral(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-	m_name = new QLineEdit(this);
-	m_company = new QLineEdit(this);
-	m_number = new QLineEdit(this);
-	QLabel	*m_namelabel = new QLabel(i18n("&Name:"), this);
-	m_namelabel->setBuddy(m_name);
-	QLabel	*m_companylabel = new QLabel(i18n("&Company:"), this);
-	m_companylabel->setBuddy(m_company);
-	QLabel	*m_numberlabel = new QLabel(i18n("N&umber:"), this);
-        m_numberlabel->setBuddy(m_number);
-	KSeparator *sep = new KSeparator( this );
-	m_replace_int_char = new QCheckBox( i18n( "Replace international prefix '+' with:" ), this );
-	m_replace_int_char_val = new QLineEdit( this );
-	m_replace_int_char_val->setEnabled( false );
+    m_name = new QLineEdit(this);
+    m_company = new QLineEdit(this);
+    m_number = new QLineEdit(this);
+    QLabel *m_namelabel = new QLabel(i18n("&Name:"), this);
+    m_namelabel->setBuddy(m_name);
+    QLabel *m_companylabel = new QLabel(i18n("&Company:"), this);
+    m_companylabel->setBuddy(m_company);
+    QLabel *m_numberlabel = new QLabel(i18n("N&umber:"), this);
+    m_numberlabel->setBuddy(m_number);
+    KSeparator *sep = new KSeparator(this);
+    m_replace_int_char = new QCheckBox(i18n("Replace international prefix '+' with:"), this);
+    m_replace_int_char_val = new QLineEdit(this);
+    m_replace_int_char_val->setEnabled(false);
 
-	connect( m_replace_int_char, SIGNAL( toggled( bool ) ), m_replace_int_char_val, SLOT( setEnabled( bool ) ) );
+    connect(m_replace_int_char, SIGNAL(toggled(bool)), m_replace_int_char_val, SLOT(setEnabled(bool)));
 
-	QGridLayout	*l0 = new QGridLayout(this, 6, 2, 10, 10);
-	l0->setColStretch(1, 1);
-	l0->setRowStretch(5, 1);
-	l0->addWidget(m_namelabel, 0, 0);
-	l0->addWidget(m_companylabel, 1, 0);
-	l0->addWidget(m_numberlabel, 2, 0);
-	l0->addWidget(m_name, 0, 1);
-	l0->addWidget(m_company, 1, 1);
-	l0->addWidget(m_number, 2, 1);
-	l0->addMultiCellWidget( sep, 3, 3, 0, 1 );
-	QHBoxLayout *l1 = new QHBoxLayout( this, 0, 10 );
-	l0->addMultiCellLayout( l1, 4, 4, 0, 1 );
-	l1->addWidget( m_replace_int_char );
-	l1->addWidget( m_replace_int_char_val );
+    QGridLayout *l0 = new QGridLayout(this, 6, 2, 10, 10);
+    l0->setColStretch(1, 1);
+    l0->setRowStretch(5, 1);
+    l0->addWidget(m_namelabel, 0, 0);
+    l0->addWidget(m_companylabel, 1, 0);
+    l0->addWidget(m_numberlabel, 2, 0);
+    l0->addWidget(m_name, 0, 1);
+    l0->addWidget(m_company, 1, 1);
+    l0->addWidget(m_number, 2, 1);
+    l0->addMultiCellWidget(sep, 3, 3, 0, 1);
+    QHBoxLayout *l1 = new QHBoxLayout(this, 0, 10);
+    l0->addMultiCellLayout(l1, 4, 4, 0, 1);
+    l1->addWidget(m_replace_int_char);
+    l1->addWidget(m_replace_int_char_val);
 }
 
 void ConfGeneral::load()
 {
-	KConfig	*conf = KGlobal::config();
-	conf->setGroup("Personal");
-	m_name->setText(conf->readEntry("Name", getenv("USER")));
-	m_number->setText(conf->readEntry("Number"));
-	m_company->setText(conf->readEntry("Company"));
-	m_replace_int_char->setChecked( conf->readBoolEntry( "ReplaceIntChar", false ) );
-	m_replace_int_char_val->setText( conf->readEntry( "ReplaceIntCharVal" ) );
+    KConfig *conf = KGlobal::config();
+    conf->setGroup("Personal");
+    m_name->setText(conf->readEntry("Name", getenv("USER")));
+    m_number->setText(conf->readEntry("Number"));
+    m_company->setText(conf->readEntry("Company"));
+    m_replace_int_char->setChecked(conf->readBoolEntry("ReplaceIntChar", false));
+    m_replace_int_char_val->setText(conf->readEntry("ReplaceIntCharVal"));
 }
 
 void ConfGeneral::save()
 {
-	KConfig	*conf = KGlobal::config();
-	conf->setGroup("Personal");
-	conf->writeEntry("Name", m_name->text());
-	conf->writeEntry("Number", m_number->text());
-	conf->writeEntry("Company", m_company->text());
-	conf->writeEntry( "ReplaceIntChar", m_replace_int_char->isChecked() );
-	conf->writeEntry( "ReplaceIntCharVal", m_replace_int_char_val->text() );
+    KConfig *conf = KGlobal::config();
+    conf->setGroup("Personal");
+    conf->writeEntry("Name", m_name->text());
+    conf->writeEntry("Number", m_number->text());
+    conf->writeEntry("Company", m_company->text());
+    conf->writeEntry("ReplaceIntChar", m_replace_int_char->isChecked());
+    conf->writeEntry("ReplaceIntCharVal", m_replace_int_char_val->text());
 }

@@ -31,12 +31,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ContainerArea;
 
-class PanelAddAppletMenu : public QPopupMenu
-{
+class PanelAddAppletMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    PanelAddAppletMenu(ContainerArea *cArea, QWidget *parent=0, const char *name=0);
+    PanelAddAppletMenu(ContainerArea *cArea, QWidget *parent = 0, const char *name = 0);
 
 protected slots:
     virtual void slotExec(int id);
@@ -44,7 +43,7 @@ protected slots:
 
 private:
     AppletInfo::List applets;
-    ContainerArea* containerArea;
+    ContainerArea *containerArea;
 };
 
 #endif

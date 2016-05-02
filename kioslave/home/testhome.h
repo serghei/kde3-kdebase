@@ -20,15 +20,15 @@
 #ifndef TESTHOME_H
 #define TESTHOME_H
 
-class TestHome
-{
+class TestHome {
 public:
-    TestHome() {}
+    TestHome()
+    {
+    }
     void setup();
     void runAll();
 
     // tests
-
 };
 
 #endif

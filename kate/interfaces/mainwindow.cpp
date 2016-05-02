@@ -28,55 +28,51 @@
 #include "../app/katemainwindow.h"
 #include "../app/kateviewmanager.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivateMainWindow
-  {
-  public:
-    PrivateMainWindow ()
+class PrivateMainWindow {
+public:
+    PrivateMainWindow()
     {
     }
 
-    ~PrivateMainWindow ()
+    ~PrivateMainWindow()
     {
-
     }
 
     KateMainWindow *win;
-  };
+};
 
-MainWindow::MainWindow (void *mainWindow) : QObject ((KateMainWindow*) mainWindow)
+MainWindow::MainWindow(void *mainWindow) : QObject((KateMainWindow *)mainWindow)
 {
-  d = new PrivateMainWindow;
-  d->win = (KateMainWindow*) mainWindow;
+    d = new PrivateMainWindow;
+    d->win = (KateMainWindow *)mainWindow;
 }
 
-MainWindow::~MainWindow ()
+MainWindow::~MainWindow()
 {
-  delete d;
+    delete d;
 }
 
 KXMLGUIFactory *MainWindow::guiFactory() const
 {
-  return d->win->guiFactory();
+    return d->win->guiFactory();
 }
 
-ViewManager *MainWindow::viewManager () const
+ViewManager *MainWindow::viewManager() const
 {
-  return d->win->viewManager ()->viewManager ();
+    return d->win->viewManager()->viewManager();
 }
 
 class QWidget *MainWindow::centralWidget() const
 {
-  return d->win->centralWidget();
+    return d->win->centralWidget();
 }
 
-ToolViewManager *MainWindow::toolViewManager () const
+ToolViewManager *MainWindow::toolViewManager() const
 {
-  return d->win->toolViewManager ();
+    return d->win->toolViewManager();
 }
-
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

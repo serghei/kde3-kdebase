@@ -29,7 +29,7 @@
 
 #include "misc.h"
 
-QColor hsvRelative(const QColor& baseColor, int relativeH, int relativeS, int relativeV)
+QColor hsvRelative(const QColor &baseColor, int relativeH, int relativeS, int relativeV)
 {
     int h, s, v;
     baseColor.hsv(&h, &s, &v);
@@ -38,15 +38,33 @@ QColor hsvRelative(const QColor& baseColor, int relativeH, int relativeS, int re
     s += relativeS;
     v += relativeV;
 
-    if(h < 0) { h = 0; }
-    else if(h > 359) { h = 359; }
-    if(s < 0) { s = 0; }
-    else if(s > 255) { s = 255; }
-    if(v < 0) { v = 0; }
-    else if(v > 255) { v = 255; }
+    if(h < 0)
+    {
+        h = 0;
+    }
+    else if(h > 359)
+    {
+        h = 359;
+    }
+    if(s < 0)
+    {
+        s = 0;
+    }
+    else if(s > 255)
+    {
+        s = 255;
+    }
+    if(v < 0)
+    {
+        v = 0;
+    }
+    else if(v > 255)
+    {
+        v = 255;
+    }
 
     QColor c;
-    c.setHsv( h, s, v );
+    c.setHsv(h, s, v);
     return c;
 }
 
@@ -57,26 +75,33 @@ QColor alphaBlendColors(const QColor &bgColor, const QColor &fgColor, const int 
     QRgb rgb = bgColor.rgb();
     QRgb rgb_b = fgColor.rgb();
     int alpha = a;
-    if(alpha>255) alpha = 255;
-    if(alpha<0) alpha = 0;
+    if(alpha > 255)
+        alpha = 255;
+    if(alpha < 0)
+        alpha = 0;
     int inv_alpha = 255 - alpha;
 
-    QColor result  = QColor( qRgb(qRed(rgb_b)*inv_alpha/255 + qRed(rgb)*alpha/255,
-                                  qGreen(rgb_b)*inv_alpha/255 + qGreen(rgb)*alpha/255,
-                                  qBlue(rgb_b)*inv_alpha/255 + qBlue(rgb)*alpha/255) );
+    QColor result = QColor(qRgb(qRed(rgb_b) * inv_alpha / 255 + qRed(rgb) * alpha / 255, qGreen(rgb_b) * inv_alpha / 255 + qGreen(rgb) * alpha / 255,
+                                qBlue(rgb_b) * inv_alpha / 255 + qBlue(rgb) * alpha / 255));
 
     return result;
 }
 
-QImage recolorImage(QImage *img, QColor color) {
-    QImage destImg(img->width(),img->height(),32);
+QImage recolorImage(QImage *img, QColor color)
+{
+    QImage destImg(img->width(), img->height(), 32);
     destImg.setAlphaBuffer(true);
-    for (int x = 0; x < img->width(); x++) {
-        for (int y = 0; y < img->height(); y++) {
-            if(img->pixel(x,y) == qRgb(0,0,255) ) {
-                destImg.setPixel(x,y,color.rgb() ); // set to the new color
-            } else {
-                destImg.setPixel(x,y,qRgba(0,0,0,0) ); // set transparent...
+    for(int x = 0; x < img->width(); x++)
+    {
+        for(int y = 0; y < img->height(); y++)
+        {
+            if(img->pixel(x, y) == qRgb(0, 0, 255))
+            {
+                destImg.setPixel(x, y, color.rgb()); // set to the new color
+            }
+            else
+            {
+                destImg.setPixel(x, y, qRgba(0, 0, 0, 0)); // set transparent...
             }
         }
     }

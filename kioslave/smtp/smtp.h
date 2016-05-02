@@ -38,109 +38,111 @@
 
 class KURL;
 class QCString;
-template <typename T> class QMemArray;
-typedef QMemArray<char> QByteArray;
+template < typename T > class QMemArray;
+typedef QMemArray< char > QByteArray;
 
 namespace KioSMTP {
-  class Response;
-  class TransactionState;
-  class Command;
+class Response;
+class TransactionState;
+class Command;
 }
 
 class SMTPProtocol : public KIO::TCPSlaveBase {
-  friend class KioSMTP::Command;
+    friend class KioSMTP::Command;
+
 public:
-  SMTPProtocol(const QCString & pool, const QCString & app, bool useSSL);
-  virtual ~ SMTPProtocol();
+    SMTPProtocol(const QCString &pool, const QCString &app, bool useSSL);
+    virtual ~SMTPProtocol();
 
-  virtual void setHost(const QString & host, int port,
-                       const QString & user, const QString & pass);
+    virtual void setHost(const QString &host, int port, const QString &user, const QString &pass);
 
-  virtual void special(const QByteArray & aData);
-  virtual void put(const KURL & url, int permissions, bool overwrite,
-                   bool resume);
-  virtual void stat(const KURL & url);
-  virtual void openConnection();
-  virtual void closeConnection();
+    virtual void special(const QByteArray &aData);
+    virtual void put(const KURL &url, int permissions, bool overwrite, bool resume);
+    virtual void stat(const KURL &url);
+    virtual void openConnection();
+    virtual void closeConnection();
 
 protected:
+    bool smtp_open(const QString &fakeHostname = QString::null);
 
-  bool smtp_open(const QString& fakeHostname = QString::null);
+    /** Closes the connection. If @p nice is true (default), then QUIT
+        is sent and it's reponse waited for. */
+    void smtp_close(bool nice = true);
 
-  /** Closes the connection. If @p nice is true (default), then QUIT
-      is sent and it's reponse waited for. */
-  void smtp_close( bool nice=true );
+    /** Execute command @p cmd */
+    bool execute(KioSMTP::Command *cmd, KioSMTP::TransactionState *ts = 0);
+    /** Execute a command of type @p type */
+    bool execute(int type, KioSMTP::TransactionState *ts = 0);
+    /** Execute the queued commands. If something goes horribly wrong
+        (sending command oline fails, getting response fails or some
+        command raises the failedFatally() flag in @p ts, shuts down the
+        connection with <code>smtp_close( false )</code>. If The
+        transaction fails gracefully (<code>ts->failed()</code> is
+        true), issues a RSET command.
 
-  /** Execute command @p cmd */
-  bool execute( KioSMTP::Command * cmd, KioSMTP::TransactionState * ts=0 );
-  /** Execute a command of type @p type */
-  bool execute( int type, KioSMTP::TransactionState * ts=0 );
-  /** Execute the queued commands. If something goes horribly wrong
-      (sending command oline fails, getting response fails or some
-      command raises the failedFatally() flag in @p ts, shuts down the
-      connection with <code>smtp_close( false )</code>. If The
-      transaction fails gracefully (<code>ts->failed()</code> is
-      true), issues a RSET command.
+        @return true if transaction succeeded, false otherwise.
+    **/
+    bool executeQueuedCommands(KioSMTP::TransactionState *ts);
 
-      @return true if transaction succeeded, false otherwise.
-  **/
-  bool executeQueuedCommands( KioSMTP::TransactionState * ts );
+    /** Parse a single response from the server. Single- vs. multiline
+        responses are correctly detected.
 
-  /** Parse a single response from the server. Single- vs. multiline
-      responses are correctly detected.
+        @param ok if not 0, returns whether response parsing was
+                  successful. Don't confuse this with negative responses
+                  (e.g. 5xx), which you can check for using
+                  @ref Response::isNegative()
+        @return the @ref Response object representing the server response.
+    **/
+    KioSMTP::Response getResponse(bool *ok);
 
-      @param ok if not 0, returns whether response parsing was
-                successful. Don't confuse this with negative responses
-                (e.g. 5xx), which you can check for using
-                @ref Response::isNegative()
-      @return the @ref Response object representing the server response.
-  **/
-  KioSMTP::Response getResponse( bool * ok );
+    bool authenticate();
+    void parseFeatures(const KioSMTP::Response &ehloResponse);
 
-  bool authenticate();
-  void parseFeatures( const KioSMTP::Response & ehloResponse );
+    bool sendCommandLine(const QCString &cmd);
+    QCString collectPipelineCommands(KioSMTP::TransactionState *ts);
+    bool batchProcessResponses(KioSMTP::TransactionState *ts);
 
-  bool sendCommandLine( const QCString & cmd );
-  QCString collectPipelineCommands( KioSMTP::TransactionState * ts );
-  bool batchProcessResponses( KioSMTP::TransactionState * ts );
+    /** This is a pure convenience wrapper around
+        @ref KioSMTP::Capabilities::have() */
+    bool haveCapability(const char *cap) const
+    {
+        return mCapabilities.have(cap);
+    }
 
-  /** This is a pure convenience wrapper around
-      @ref KioSMTP::Capabilities::have() */
-  bool haveCapability( const char * cap ) const {
-    return mCapabilities.have( cap );
-  }
+    /** @return true is pipelining is available and allowed by metadata */
+    bool canPipelineCommands() const
+    {
+        return haveCapability("PIPELINING") && metaData("pipelining") != "off";
+    }
 
-  /** @return true is pipelining is available and allowed by metadata */
-  bool canPipelineCommands() const {
-    return haveCapability("PIPELINING") && metaData("pipelining") != "off" ;
-  }
+    /** Wrapper around getsockopt(..., SO_SNDBUF,...) */
+    unsigned int sendBufferSize() const;
 
-  /** Wrapper around getsockopt(..., SO_SNDBUF,...) */
-  unsigned int sendBufferSize() const;
+    /** This is a pure convenience wrapper around
+        @ref KioSMTP::Capabilities::createSpecialResponse */
+    QString createSpecialResponse() const
+    {
+        return mCapabilities.createSpecialResponse(usingTLS() || haveCapability("STARTTLS"));
+    }
 
-  /** This is a pure convenience wrapper around
-      @ref KioSMTP::Capabilities::createSpecialResponse */
-  QString createSpecialResponse() const {
-    return mCapabilities.createSpecialResponse( usingTLS() || haveCapability( "STARTTLS" ) );
-  }
+    void queueCommand(KioSMTP::Command *command)
+    {
+        mPendingCommandQueue.enqueue(command);
+    }
+    void queueCommand(int type);
 
-  void queueCommand( KioSMTP::Command * command ) {
-    mPendingCommandQueue.enqueue( command );
-  }
-  void queueCommand( int type );
+    unsigned short m_iOldPort;
+    bool m_opened;
+    QString m_sServer, m_sOldServer;
+    QString m_sUser, m_sOldUser;
+    QString m_sPass, m_sOldPass;
+    QString m_hostname;
 
-  unsigned short m_iOldPort;
-  bool m_opened;
-  QString m_sServer, m_sOldServer;
-  QString m_sUser, m_sOldUser;
-  QString m_sPass, m_sOldPass;
-  QString m_hostname;
+    KioSMTP::Capabilities mCapabilities;
 
-  KioSMTP::Capabilities mCapabilities;
-
-  typedef QPtrQueue<KioSMTP::Command> CommandQueue;
-  CommandQueue mPendingCommandQueue;
-  CommandQueue mSentCommandQueue;
+    typedef QPtrQueue< KioSMTP::Command > CommandQueue;
+    CommandQueue mPendingCommandQueue;
+    CommandQueue mSentCommandQueue;
 };
 
 #endif // _SMTP_H

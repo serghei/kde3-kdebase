@@ -21,15 +21,17 @@
 
 #include "medialist.h"
 
-class BackendBase
-{
+class BackendBase {
 protected:
-	BackendBase(MediaList &list);
+    BackendBase(MediaList &list);
+
 public:
-	virtual ~BackendBase() { }
-	
+    virtual ~BackendBase()
+    {
+    }
+
 protected:
-	MediaList &m_mediaList;
+    MediaList &m_mediaList;
 };
 
 #endif

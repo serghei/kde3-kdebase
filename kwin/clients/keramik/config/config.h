@@ -5,7 +5,7 @@
  *
  * Based on the Quartz configuration module,
  *     Copyright (c) 2001 Karol Szwed <gallium@kde.org>
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the license, or
@@ -29,26 +29,25 @@
 
 #include "keramikconfig.h"
 
-class KeramikConfig: public QObject
-{
-	Q_OBJECT
+class KeramikConfig : public QObject {
+    Q_OBJECT
 
-	public:
-		KeramikConfig( KConfig* conf, QWidget* parent );
-		~KeramikConfig();
+public:
+    KeramikConfig(KConfig *conf, QWidget *parent);
+    ~KeramikConfig();
 
-	// These public signals/slots work similar to KCM modules
-	signals:
-		void changed();
+    // These public signals/slots work similar to KCM modules
+signals:
+    void changed();
 
-	public slots:
-		void load( KConfig* conf );	
-		void save( KConfig* conf );
-		void defaults();
+public slots:
+    void load(KConfig *conf);
+    void save(KConfig *conf);
+    void defaults();
 
-	private:
-		KeramikConfigUI *ui;
-		KConfig *c;
+private:
+    KeramikConfigUI *ui;
+    KConfig *c;
 };
 
 

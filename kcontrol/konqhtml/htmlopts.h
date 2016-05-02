@@ -29,15 +29,14 @@
 class QRadioButton;
 class KIntNumInput;
 
-class KMiscHTMLOptions : public KCModule
-{
+class KMiscHTMLOptions : public KCModule {
     Q_OBJECT
 
 public:
-    KMiscHTMLOptions(KConfig *config, QString group, QWidget *parent = 0L, const char *name = 0L );
-	~KMiscHTMLOptions();
+    KMiscHTMLOptions(KConfig *config, QString group, QWidget *parent = 0L, const char *name = 0L);
+    ~KMiscHTMLOptions();
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
@@ -46,23 +45,23 @@ private slots:
     void launchAdvancedTabDialog();
 
 private:
-    KConfig* m_pConfig;
-    QString  m_groupname;
+    KConfig *m_pConfig;
+    QString m_groupname;
 
-    QComboBox* m_pUnderlineCombo;
-    QComboBox* m_pAnimationsCombo;
-    QCheckBox* m_cbCursor;
-    QCheckBox* m_pAutoLoadImagesCheckBox;
-    QCheckBox* m_pUnfinishedImageFrameCheckBox;
-    QCheckBox* m_pAutoRedirectCheckBox;
-    QCheckBox* m_pOpenMiddleClick;
-    QCheckBox* m_pBackRightClick;
-    QCheckBox* m_pShowMMBInTabs;
-    QCheckBox* m_pFormCompletionCheckBox;
-    QCheckBox* m_pDynamicTabbarHide;
-    QCheckBox* m_pAdvancedAddBookmarkCheckBox;
-    QCheckBox* m_pOnlyMarkedBookmarksCheckBox;
-    KIntNumInput* m_pMaxFormCompletionItems;
+    QComboBox *m_pUnderlineCombo;
+    QComboBox *m_pAnimationsCombo;
+    QCheckBox *m_cbCursor;
+    QCheckBox *m_pAutoLoadImagesCheckBox;
+    QCheckBox *m_pUnfinishedImageFrameCheckBox;
+    QCheckBox *m_pAutoRedirectCheckBox;
+    QCheckBox *m_pOpenMiddleClick;
+    QCheckBox *m_pBackRightClick;
+    QCheckBox *m_pShowMMBInTabs;
+    QCheckBox *m_pFormCompletionCheckBox;
+    QCheckBox *m_pDynamicTabbarHide;
+    QCheckBox *m_pAdvancedAddBookmarkCheckBox;
+    QCheckBox *m_pOnlyMarkedBookmarksCheckBox;
+    KIntNumInput *m_pMaxFormCompletionItems;
 };
 
 #endif

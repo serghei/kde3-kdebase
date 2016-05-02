@@ -40,98 +40,80 @@ long cp_old[CPUSTATES];
 long cp_diff[CPUSTATES];
 int cpu_states[CPUSTATES];
 
-void
-initCpuInfo(struct SensorModul* sm)
+void initCpuInfo(struct SensorModul *sm)
 {
-	/* Total CPU load */
-	registerMonitor("cpu/user", "integer", printCPUUser,
-			printCPUUserInfo, sm);
-	registerMonitor("cpu/nice", "integer", printCPUNice,
-			printCPUNiceInfo, sm);
-	registerMonitor("cpu/sys", "integer", printCPUSys,
-			printCPUSysInfo, sm);
-	registerMonitor("cpu/idle", "integer", printCPUIdle,
-			printCPUIdleInfo, sm);
-	registerMonitor("cpu/interrupt", "integer", printCPUInterrupt,
-			printCPUInterruptInfo, sm);
+    /* Total CPU load */
+    registerMonitor("cpu/user", "integer", printCPUUser, printCPUUserInfo, sm);
+    registerMonitor("cpu/nice", "integer", printCPUNice, printCPUNiceInfo, sm);
+    registerMonitor("cpu/sys", "integer", printCPUSys, printCPUSysInfo, sm);
+    registerMonitor("cpu/idle", "integer", printCPUIdle, printCPUIdleInfo, sm);
+    registerMonitor("cpu/interrupt", "integer", printCPUInterrupt, printCPUInterruptInfo, sm);
 
-	updateCpuInfo();
+    updateCpuInfo();
 }
 
-void
-exitCpuInfo(void)
+void exitCpuInfo(void)
 {
 }
 
-int
-updateCpuInfo(void)
+int updateCpuInfo(void)
 {
-	static int cp_time_mib[] = {CTL_KERN, KERN_CPTIME};
-	size_t size;
-	size=sizeof(cp_time);
-	sysctl(cp_time_mib, 2, &cp_time, &size, NULL, 0);
-        percentages(CPUSTATES, cpu_states, cp_time, cp_old, cp_diff);
-	return (0);
+    static int cp_time_mib[] = {CTL_KERN, KERN_CPTIME};
+    size_t size;
+    size = sizeof(cp_time);
+    sysctl(cp_time_mib, 2, &cp_time, &size, NULL, 0);
+    percentages(CPUSTATES, cpu_states, cp_time, cp_old, cp_diff);
+    return (0);
 }
 
-void
-printCPUUser(const char* cmd)
+void printCPUUser(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CP_USER]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CP_USER] / 10);
 }
 
-void
-printCPUUserInfo(const char* cmd)
+void printCPUUserInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU User Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU User Load\t0\t100\t%%\n");
 }
 
-void
-printCPUNice(const char* cmd)
+void printCPUNice(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CP_NICE]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CP_NICE] / 10);
 }
 
-void
-printCPUNiceInfo(const char* cmd)
+void printCPUNiceInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU Nice Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU Nice Load\t0\t100\t%%\n");
 }
 
-void
-printCPUSys(const char* cmd)
+void printCPUSys(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CP_SYS]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CP_SYS] / 10);
 }
 
-void
-printCPUSysInfo(const char* cmd)
+void printCPUSysInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU System Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU System Load\t0\t100\t%%\n");
 }
 
-void
-printCPUIdle(const char* cmd)
+void printCPUIdle(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CP_IDLE]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CP_IDLE] / 10);
 }
 
-void
-printCPUIdleInfo(const char* cmd)
+void printCPUIdleInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU Idle Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU Idle Load\t0\t100\t%%\n");
 }
 
-void
-printCPUInterrupt(const char* cmd)
+void printCPUInterrupt(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", cpu_states[CP_INTR]/10);
+    fprintf(CurrentClient, "%d\n", cpu_states[CP_INTR] / 10);
 }
 
-void
-printCPUInterruptInfo(const char* cmd)
+void printCPUInterruptInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "CPU Interrupt Load\t0\t100\t%%\n");
+    fprintf(CurrentClient, "CPU Interrupt Load\t0\t100\t%%\n");
 }
 
 /* The part ripped from top... */
@@ -157,7 +139,7 @@ printCPUInterruptInfo(const char* cmd)
 
 long percentages(cnt, out, new, old, diffs)
 
-int cnt;
+    int cnt;
 int *out;
 register long *new;
 register long *old;
@@ -175,35 +157,35 @@ long *diffs;
     dp = diffs;
 
     /* calculate changes for each state and the overall change */
-    for (i = 0; i < cnt; i++)
+    for(i = 0; i < cnt; i++)
     {
-	if ((change = *new - *old) < 0)
-	{
-	    /* this only happens when the counter wraps */
-	    change = (int)
-		((unsigned long)*new-(unsigned long)*old);
-	}
-	total_change += (*dp++ = change);
-	*old++ = *new++;
+        if((change = *new - *old) < 0)
+        {
+            /* this only happens when the counter wraps */
+            change = (int)((unsigned long)*new - (unsigned long)*old);
+        }
+        total_change += (*dp++ = change);
+        *old++ = *new ++;
     }
 
     /* avoid divide by zero potential */
-    if (total_change == 0)
+    if(total_change == 0)
     {
-	total_change = 1;
+        total_change = 1;
     }
 
     /* calculate percentages based on overall change, rounding up */
     half_total = total_change / 2l;
 
     /* Do not divide by 0. Causes Floating point exception */
-    if(total_change) {
-        for (i = 0; i < cnt; i++)
+    if(total_change)
+    {
+        for(i = 0; i < cnt; i++)
         {
-          *out++ = (int)((*diffs++ * 1000 + half_total) / total_change);
+            *out++ = (int)((*diffs++ * 1000 + half_total) / total_change);
         }
     }
 
     /* return the total in case the caller wants to use it */
-    return(total_change);
+    return (total_change);
 }

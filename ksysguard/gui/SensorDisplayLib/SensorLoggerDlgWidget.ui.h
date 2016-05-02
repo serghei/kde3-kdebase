@@ -9,11 +9,11 @@
 
 void SensorLoggerDlgWidget::init()
 {
-  m_lowerLimit->setValidator(new KDoubleValidator(m_lowerLimit));
-  m_upperLimit->setValidator(new KDoubleValidator(m_upperLimit));
-  m_timerInterval->setRange(1, 99, 1, true);
+    m_lowerLimit->setValidator(new KDoubleValidator(m_lowerLimit));
+    m_upperLimit->setValidator(new KDoubleValidator(m_upperLimit));
+    m_timerInterval->setRange(1, 99, 1, true);
 
-  m_fileName->setFocus();
+    m_fileName->setFocus();
 }
 
 
@@ -53,37 +53,37 @@ double SensorLoggerDlgWidget::upperLimit()
 }
 
 
-void SensorLoggerDlgWidget::setFileName( const QString &url )
+void SensorLoggerDlgWidget::setFileName(const QString &url)
 {
     m_fileName->setURL(url);
 }
 
 
-void SensorLoggerDlgWidget::setTimerInterval( int i )
+void SensorLoggerDlgWidget::setTimerInterval(int i)
 {
     m_timerInterval->setValue(i);
 }
 
 
-void SensorLoggerDlgWidget::setLowerLimitActive( bool b )
+void SensorLoggerDlgWidget::setLowerLimitActive(bool b)
 {
     m_lowerLimitActive->setChecked(b);
 }
 
 
-void SensorLoggerDlgWidget::setLowerLimit( double d )
+void SensorLoggerDlgWidget::setLowerLimit(double d)
 {
     m_lowerLimit->setText(QString("%1").arg(d));
 }
 
 
-void SensorLoggerDlgWidget::setUpperLimitActive( bool b )
+void SensorLoggerDlgWidget::setUpperLimitActive(bool b)
 {
     m_upperLimitActive->setChecked(b);
 }
 
 
-void SensorLoggerDlgWidget::setUpperLimit( double d )
+void SensorLoggerDlgWidget::setUpperLimit(double d)
 {
     m_upperLimit->setText(QString("%1").arg(d));
 }

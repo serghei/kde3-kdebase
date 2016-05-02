@@ -22,8 +22,7 @@
 #include <qobject.h>
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 
 class DocumentManager;
 class PluginManager;
@@ -35,36 +34,35 @@ class MainWindow;
  * other objects like document/projectmanager, ... no way goes around this
  * central interface
  */
-class KDE_EXPORT Application : public QObject
-{
-  friend class PrivateApplication;
+class KDE_EXPORT Application : public QObject {
+    friend class PrivateApplication;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Construtor, should not interest, internal usage
      */
-    Application (void *application);
+    Application(void *application);
 
     /**
      * Desctructor
      */
-    virtual ~Application ();
+    virtual ~Application();
 
-  public:
+public:
     /** Returns a pointer to the document manager
     */
-    Kate::DocumentManager *documentManager ();
+    Kate::DocumentManager *documentManager();
 
-    Kate::PluginManager *pluginManager ();
+    Kate::PluginManager *pluginManager();
 
-    Kate::MainWindow *activeMainWindow ();
+    Kate::MainWindow *activeMainWindow();
 
-    uint mainWindows ();
-    Kate::MainWindow *mainWindow (uint n = 0);
+    uint mainWindows();
+    Kate::MainWindow *mainWindow(uint n = 0);
 
-  private:
+private:
     class PrivateApplication *d;
 };
 
@@ -72,8 +70,7 @@ class KDE_EXPORT Application : public QObject
  * Returns the application object
  * @return Application application object
  */
-KDE_EXPORT Application *application ();
-
+KDE_EXPORT Application *application();
 }
 
 #endif

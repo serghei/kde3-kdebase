@@ -28,19 +28,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kio/global.h>
 #include <kio/slavebase.h>
 
-class FilterProtocol : public QObject, public KIO::SlaveBase
-{
+class FilterProtocol : public QObject, public KIO::SlaveBase {
 public:
-  FilterProtocol( const QCString & protocol, const QCString &pool, const QCString &app );
+    FilterProtocol(const QCString &protocol, const QCString &pool, const QCString &app);
 
-  virtual void get( const KURL &url );
-  virtual void put( const KURL &url, int _mode, bool _overwrite,
-                    bool _resume );
-  virtual void setSubURL(const KURL &url);
+    virtual void get(const KURL &url);
+    virtual void put(const KURL &url, int _mode, bool _overwrite, bool _resume);
+    virtual void setSubURL(const KURL &url);
 
 private:
-  KURL subURL;
-  KFilterBase * filter;
+    KURL subURL;
+    KFilterBase *filter;
 };
 
 #endif

@@ -21,16 +21,16 @@
 #ifndef KSG_LOGFILE_H
 #define KSG_LOGFILE_H
 
-void initLogFile( struct SensorModul* );
-void exitLogFile( void );
+void initLogFile(struct SensorModul *);
+void exitLogFile(void);
 
-void printLogFile( const char* );
-void printLogFileInfo( const char* );
+void printLogFile(const char *);
+void printLogFileInfo(const char *);
 
-void registerLogFile( const char* );
-void unregisterLogFile( const char* );
+void registerLogFile(const char *);
+void unregisterLogFile(const char *);
 
 /* debug command */
-void printRegistered( const char* );
+void printRegistered(const char *);
 
 #endif

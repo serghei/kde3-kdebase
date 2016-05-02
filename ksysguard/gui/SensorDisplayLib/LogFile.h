@@ -1,7 +1,7 @@
 /*
     KSysGuard, the KDE System Guard
 
-	Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
@@ -35,51 +35,49 @@ class QListBox;
 
 #include "LogFileSettings.h"
 
-class LogFile : public KSGRD::SensorDisplay
-{
-	Q_OBJECT
+class LogFile : public KSGRD::SensorDisplay {
+    Q_OBJECT
 public:
-	LogFile(QWidget *parent = 0, const char *name = 0, const QString& title = 0);
-	~LogFile(void);
+    LogFile(QWidget *parent = 0, const char *name = 0, const QString &title = 0);
+    ~LogFile(void);
 
-	bool addSensor(const QString& hostName, const QString& sensorName,
-				   const QString& sensorType, const QString& sensorDescr);
-	void answerReceived(int id, const QString& answer);
-	void resizeEvent(QResizeEvent*);
+    bool addSensor(const QString &hostName, const QString &sensorName, const QString &sensorType, const QString &sensorDescr);
+    void answerReceived(int id, const QString &answer);
+    void resizeEvent(QResizeEvent *);
 
-	bool restoreSettings(QDomElement& element);
-	bool saveSettings(QDomDocument& doc, QDomElement& element, bool save = true);
+    bool restoreSettings(QDomElement &element);
+    bool saveSettings(QDomDocument &doc, QDomElement &element, bool save = true);
 
-	void updateMonitor(void);
+    void updateMonitor(void);
 
-	void configureSettings(void);
+    void configureSettings(void);
 
-	virtual void timerEvent(QTimerEvent*)
-	{
-		updateMonitor();
-	}
+    virtual void timerEvent(QTimerEvent *)
+    {
+        updateMonitor();
+    }
 
-	virtual bool hasSettingsDialog() const
-	{
-		return (true);
-	}
+    virtual bool hasSettingsDialog() const
+    {
+        return (true);
+    }
 
 public slots:
-	void applySettings();
-	void applyStyle();
+    void applySettings();
+    void applyStyle();
 
-	void settingsFontSelection();
-	void settingsAddRule();
-	void settingsDeleteRule();
-	void settingsChangeRule();
-	void settingsRuleListSelected(int index);
+    void settingsFontSelection();
+    void settingsAddRule();
+    void settingsDeleteRule();
+    void settingsChangeRule();
+    void settingsRuleListSelected(int index);
 
 private:
-	LogFileSettings* lfs;
-	QListBox* monitor;
-	QStringList filterRules;
+    LogFileSettings *lfs;
+    QListBox *monitor;
+    QStringList filterRules;
 
-	unsigned long logFileID;
+    unsigned long logFileID;
 };
 
 #endif // _LogFile_h

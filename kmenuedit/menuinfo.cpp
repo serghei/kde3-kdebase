@@ -38,261 +38,251 @@ static QStringList *s_deletedApps = 0;
 // Add separator
 void MenuFolderInfo::add(MenuSeparatorInfo *info, bool initial)
 {
-   if (initial)
-      initialLayout.append(info);
+    if(initial)
+        initialLayout.append(info);
 }
 
 // Add sub menu
 void MenuFolderInfo::add(MenuFolderInfo *info, bool initial)
 {
-   subFolders.append(info);
-   if (initial)
-      initialLayout.append(info);
+    subFolders.append(info);
+    if(initial)
+        initialLayout.append(info);
 }
 
 // Remove sub menu (without deleting it)
 void MenuFolderInfo::take(MenuFolderInfo *info)
 {
-   subFolders.take(subFolders.findRef(info));
+    subFolders.take(subFolders.findRef(info));
 }
 
 // Remove sub menu (without deleting it)
 bool MenuFolderInfo::takeRecursive(MenuFolderInfo *info)
 {
-   int i = subFolders.findRef(info);
-   if (i >= 0)
-   {
-      subFolders.take(i);
-      return true;
-   }
+    int i = subFolders.findRef(info);
+    if(i >= 0)
+    {
+        subFolders.take(i);
+        return true;
+    }
 
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      if (subFolderInfo->takeRecursive(info))
-         return true;
-   }
-   return false;
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        if(subFolderInfo->takeRecursive(info))
+            return true;
+    }
+    return false;
 }
 
 // Recursively update all fullIds
 void MenuFolderInfo::updateFullId(const QString &parentId)
 {
-   fullId = parentId + id;
+    fullId = parentId + id;
 
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      subFolderInfo->updateFullId(fullId);
-   }
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        subFolderInfo->updateFullId(fullId);
+    }
 }
 
 // Add entry
 void MenuFolderInfo::add(MenuEntryInfo *entry, bool initial)
 {
-   entries.append(entry);
-   if (initial)
-      initialLayout.append(entry);
+    entries.append(entry);
+    if(initial)
+        initialLayout.append(entry);
 }
 
 // Remove entry
 void MenuFolderInfo::take(MenuEntryInfo *entry)
 {
-   entries.removeRef(entry);
+    entries.removeRef(entry);
 }
 
 
 // Return a unique sub-menu caption inspired by @p caption
 QString MenuFolderInfo::uniqueMenuCaption(const QString &caption)
 {
-   QRegExp r("(.*)(?=-\\d+)");
-   QString cap = (r.search(caption) > -1) ? r.cap(1) : caption;
+    QRegExp r("(.*)(?=-\\d+)");
+    QString cap = (r.search(caption) > -1) ? r.cap(1) : caption;
 
-   QString result = caption;
+    QString result = caption;
 
-   for(int n = 1; ++n; )
-   {
-      bool ok = true;
-      for(MenuFolderInfo *subFolderInfo = subFolders.first();
-          subFolderInfo; subFolderInfo = subFolders.next())
-      {
-         if (subFolderInfo->caption == result)
-         {
-            ok = false;
-            break;
-         }
-      }
-      if (ok)
-         return result;
+    for(int n = 1; ++n;)
+    {
+        bool ok = true;
+        for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+        {
+            if(subFolderInfo->caption == result)
+            {
+                ok = false;
+                break;
+            }
+        }
+        if(ok)
+            return result;
 
-      result = cap + QString("-%1").arg(n);
-   }
-   return QString::null; // Never reached
+        result = cap + QString("-%1").arg(n);
+    }
+    return QString::null; // Never reached
 }
 
 // Return a unique item caption inspired by @p caption
 QString MenuFolderInfo::uniqueItemCaption(const QString &caption, const QString &exclude)
 {
-   QRegExp r("(.*)(?=-\\d+)");
-   QString cap = (r.search(caption) > -1) ? r.cap(1) : caption;
+    QRegExp r("(.*)(?=-\\d+)");
+    QString cap = (r.search(caption) > -1) ? r.cap(1) : caption;
 
-   QString result = caption;
+    QString result = caption;
 
-   for(int n = 1; ++n; )
-   {
-      bool ok = true;
-      if (result == exclude)
-         ok = false;
-      MenuEntryInfo *entryInfo;
-      for(QPtrListIterator<MenuEntryInfo> it(entries);
-          ok && (entryInfo = it.current()); ++it)
-      {
-         if (entryInfo->caption == result)
+    for(int n = 1; ++n;)
+    {
+        bool ok = true;
+        if(result == exclude)
             ok = false;
-      }
-      if (ok)
-         return result;
+        MenuEntryInfo *entryInfo;
+        for(QPtrListIterator< MenuEntryInfo > it(entries); ok && (entryInfo = it.current()); ++it)
+        {
+            if(entryInfo->caption == result)
+                ok = false;
+        }
+        if(ok)
+            return result;
 
-      result = cap + QString("-%1").arg(n);
-   }
-   return QString::null; // Never reached
+        result = cap + QString("-%1").arg(n);
+    }
+    return QString::null; // Never reached
 }
 
 // Return a list of existing submenu ids
 QStringList MenuFolderInfo::existingMenuIds()
 {
-   QStringList result;
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-       result.append(subFolderInfo->id);
-   }
-   return result;
+    QStringList result;
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        result.append(subFolderInfo->id);
+    }
+    return result;
 }
 
 void MenuFolderInfo::setDirty()
 {
-   dirty = true;
+    dirty = true;
 }
 
 void MenuFolderInfo::save(MenuFile *menuFile)
 {
-   if (s_deletedApps)
-   {
-      // Remove hotkeys for applications that have been deleted
-      for(QStringList::ConstIterator it = s_deletedApps->begin();
-          it != s_deletedApps->end(); ++it)
-      {
-         KHotKeys::menuEntryDeleted(*it);
-      }
-      delete s_deletedApps;
-      s_deletedApps = 0;
-   }
+    if(s_deletedApps)
+    {
+        // Remove hotkeys for applications that have been deleted
+        for(QStringList::ConstIterator it = s_deletedApps->begin(); it != s_deletedApps->end(); ++it)
+        {
+            KHotKeys::menuEntryDeleted(*it);
+        }
+        delete s_deletedApps;
+        s_deletedApps = 0;
+    }
 
-   if (dirty)
-   {
-      QString local = KDesktopFile::locateLocal(directoryFile);
+    if(dirty)
+    {
+        QString local = KDesktopFile::locateLocal(directoryFile);
 
-      KConfig *df = 0;
-      if (directoryFile != local)
-      {
-         KConfig orig(directoryFile, true, false, "apps");
-         df = orig.copyTo(local);
-      }
-      else
-      {
-         df = new KConfig(directoryFile, false, false, "apps");
-      }
+        KConfig *df = 0;
+        if(directoryFile != local)
+        {
+            KConfig orig(directoryFile, true, false, "apps");
+            df = orig.copyTo(local);
+        }
+        else
+        {
+            df = new KConfig(directoryFile, false, false, "apps");
+        }
 
-      df->setDesktopGroup();
-      df->writeEntry("Name", caption);
-      df->writeEntry("GenericName", genericname);
-      df->writeEntry("Comment", comment);
-      df->writeEntry("Icon", icon);
-      df->sync();
-      delete df;
-      dirty = false;
-   }
+        df->setDesktopGroup();
+        df->writeEntry("Name", caption);
+        df->writeEntry("GenericName", genericname);
+        df->writeEntry("Comment", comment);
+        df->writeEntry("Icon", icon);
+        df->sync();
+        delete df;
+        dirty = false;
+    }
 
-   // Save sub-menus
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      subFolderInfo->save(menuFile);
-   }
+    // Save sub-menus
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        subFolderInfo->save(menuFile);
+    }
 
-   // Save entries
-   MenuEntryInfo *entryInfo;
-   for(QPtrListIterator<MenuEntryInfo> it(entries);
-       (entryInfo = it.current()); ++it)
-   {
-      if (entryInfo->needInsertion())
-         menuFile->addEntry(fullId, entryInfo->menuId());
-      entryInfo->save();
-   }
+    // Save entries
+    MenuEntryInfo *entryInfo;
+    for(QPtrListIterator< MenuEntryInfo > it(entries); (entryInfo = it.current()); ++it)
+    {
+        if(entryInfo->needInsertion())
+            menuFile->addEntry(fullId, entryInfo->menuId());
+        entryInfo->save();
+    }
 }
 
 bool MenuFolderInfo::hasDirt()
 {
-   if (dirty) return true;
+    if(dirty)
+        return true;
 
-   // Check sub-menus
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      if (subFolderInfo->hasDirt()) return true;
-   }
+    // Check sub-menus
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        if(subFolderInfo->hasDirt())
+            return true;
+    }
 
-   // Check entries
-   MenuEntryInfo *entryInfo;
-   for(QPtrListIterator<MenuEntryInfo> it(entries);
-       (entryInfo = it.current()); ++it)
-   {
-      if (entryInfo->dirty) return true;
-      if (entryInfo->shortcutDirty) return true;
-   }
-   return false;
+    // Check entries
+    MenuEntryInfo *entryInfo;
+    for(QPtrListIterator< MenuEntryInfo > it(entries); (entryInfo = it.current()); ++it)
+    {
+        if(entryInfo->dirty)
+            return true;
+        if(entryInfo->shortcutDirty)
+            return true;
+    }
+    return false;
 }
 
-KService::Ptr MenuFolderInfo::findServiceShortcut(const KShortcut&cut)
+KService::Ptr MenuFolderInfo::findServiceShortcut(const KShortcut &cut)
 {
-   KService::Ptr result;
-   // Check sub-menus
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      result = subFolderInfo->findServiceShortcut(cut);
-      if (result)
-          return result;
-   }
+    KService::Ptr result;
+    // Check sub-menus
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        result = subFolderInfo->findServiceShortcut(cut);
+        if(result)
+            return result;
+    }
 
-   // Check entries
-   MenuEntryInfo *entryInfo;
-   for(QPtrListIterator<MenuEntryInfo> it(entries);
-       (entryInfo = it.current()); ++it)
-   {
-      if (entryInfo->shortCut == cut)
-         return entryInfo->service;
-   }
-   return 0;
+    // Check entries
+    MenuEntryInfo *entryInfo;
+    for(QPtrListIterator< MenuEntryInfo > it(entries); (entryInfo = it.current()); ++it)
+    {
+        if(entryInfo->shortCut == cut)
+            return entryInfo->service;
+    }
+    return 0;
 }
 
 void MenuFolderInfo::setInUse(bool inUse)
 {
-   // Propagate to sub-menus
-   for(MenuFolderInfo *subFolderInfo = subFolders.first();
-       subFolderInfo; subFolderInfo = subFolders.next())
-   {
-      subFolderInfo->setInUse(inUse);
-   }
+    // Propagate to sub-menus
+    for(MenuFolderInfo *subFolderInfo = subFolders.first(); subFolderInfo; subFolderInfo = subFolders.next())
+    {
+        subFolderInfo->setInUse(inUse);
+    }
 
-   // Propagate to entries
-   MenuEntryInfo *entryInfo;
-   for(QPtrListIterator<MenuEntryInfo> it(entries);
-       (entryInfo = it.current()); ++it)
-   {
-      entryInfo->setInUse(inUse);
-   }
+    // Propagate to entries
+    MenuEntryInfo *entryInfo;
+    for(QPtrListIterator< MenuEntryInfo > it(entries); (entryInfo = it.current()); ++it)
+    {
+        entryInfo->setInUse(inUse);
+    }
 }
 
 //
@@ -301,71 +291,72 @@ void MenuFolderInfo::setInUse(bool inUse)
 
 MenuEntryInfo::~MenuEntryInfo()
 {
-   df->rollback(false);
-   delete df;
+    df->rollback(false);
+    delete df;
 }
 
 KDesktopFile *MenuEntryInfo::desktopFile()
 {
-   if (!df)
-   {
-      df = new KDesktopFile(service->desktopEntryPath());
-   }
-   return df;
+    if(!df)
+    {
+        df = new KDesktopFile(service->desktopEntryPath());
+    }
+    return df;
 }
 
 void MenuEntryInfo::setDirty()
 {
-   if (dirty) return;
+    if(dirty)
+        return;
 
-   dirty = true;
+    dirty = true;
 
-   QString local = locateLocal("xdgdata-apps", service->menuId());
-   if (local != service->desktopEntryPath())
-   {
-      KDesktopFile *oldDf = desktopFile();
-      df = oldDf->copyTo(local);
-      df->setDesktopGroup();
-      delete oldDf;
-   }
+    QString local = locateLocal("xdgdata-apps", service->menuId());
+    if(local != service->desktopEntryPath())
+    {
+        KDesktopFile *oldDf = desktopFile();
+        df = oldDf->copyTo(local);
+        df->setDesktopGroup();
+        delete oldDf;
+    }
 }
 
 bool MenuEntryInfo::needInsertion()
 {
-   // If entry is dirty and previously stored under applnk, then we need to be added explicity 
-   return dirty && !service->desktopEntryPath().startsWith("/");
+    // If entry is dirty and previously stored under applnk, then we need to be added explicity
+    return dirty && !service->desktopEntryPath().startsWith("/");
 }
 
 void MenuEntryInfo::save()
 {
-   if (dirty)
-   {
-      df->sync();
-      dirty = false;
-   }
+    if(dirty)
+    {
+        df->sync();
+        dirty = false;
+    }
 
-   if (shortcutDirty)
-   {
-      if( KHotKeys::present())
-      {
-         KHotKeys::changeMenuEntryShortcut( service->storageId(), shortCut.toStringInternal() );
-      }
-      shortcutDirty = false;
-   }
+    if(shortcutDirty)
+    {
+        if(KHotKeys::present())
+        {
+            KHotKeys::changeMenuEntryShortcut(service->storageId(), shortCut.toStringInternal());
+        }
+        shortcutDirty = false;
+    }
 }
 
 void MenuEntryInfo::setCaption(const QString &_caption)
 {
-   if (caption == _caption)
-      return;
-   caption = _caption;
-   setDirty();
-   desktopFile()->writeEntry("Name", caption);
+    if(caption == _caption)
+        return;
+    caption = _caption;
+    setDirty();
+    desktopFile()->writeEntry("Name", caption);
 }
 
 void MenuEntryInfo::setDescription(const QString &_description)
 {
-    if (description == _description)
+    if(description == _description)
         return;
     description = _description;
     setDirty();
@@ -374,129 +365,129 @@ void MenuEntryInfo::setDescription(const QString &_description)
 
 void MenuEntryInfo::setIcon(const QString &_icon)
 {
-   if (icon == _icon)
-      return;
+    if(icon == _icon)
+        return;
 
-   icon = _icon;
-   setDirty();
-   desktopFile()->writeEntry("Icon", icon);
+    icon = _icon;
+    setDirty();
+    desktopFile()->writeEntry("Icon", icon);
 }
 
 KShortcut MenuEntryInfo::shortcut()
 {
-   if (!shortcutLoaded)
-   {
-      shortcutLoaded = true;
-      if( KHotKeys::present())
-      {
-         shortCut = KHotKeys::getMenuEntryShortcut( service->storageId() );
-      }
-   }
-   return shortCut;
+    if(!shortcutLoaded)
+    {
+        shortcutLoaded = true;
+        if(KHotKeys::present())
+        {
+            shortCut = KHotKeys::getMenuEntryShortcut(service->storageId());
+        }
+    }
+    return shortCut;
 }
 
 static bool isEmpty(const KShortcut &shortCut)
 {
-   for(int i = shortCut.count(); i--;)
-   {
-      if (!shortCut.seq(i).isNull())
-         return false;
-   }
-   return true;
+    for(int i = shortCut.count(); i--;)
+    {
+        if(!shortCut.seq(i).isNull())
+            return false;
+    }
+    return true;
 }
 
 static void freeShortcut(const KShortcut &shortCut)
 {
-   if (!isEmpty(shortCut))
-   {
-      QString shortcutKey = shortCut.toString();
-      if (s_newShortcuts)
-         s_newShortcuts->remove(shortcutKey);
-      
-      if (!s_freeShortcuts)
-         s_freeShortcuts = new QStringList;
-      
-      s_freeShortcuts->append(shortcutKey);
-   }
+    if(!isEmpty(shortCut))
+    {
+        QString shortcutKey = shortCut.toString();
+        if(s_newShortcuts)
+            s_newShortcuts->remove(shortcutKey);
+
+        if(!s_freeShortcuts)
+            s_freeShortcuts = new QStringList;
+
+        s_freeShortcuts->append(shortcutKey);
+    }
 }
 
 static void allocateShortcut(const KShortcut &shortCut)
 {
-   if (!isEmpty(shortCut))
-   {
-      QString shortcutKey = shortCut.toString();
-      if (s_freeShortcuts)
-          s_freeShortcuts->remove(shortcutKey);
+    if(!isEmpty(shortCut))
+    {
+        QString shortcutKey = shortCut.toString();
+        if(s_freeShortcuts)
+            s_freeShortcuts->remove(shortcutKey);
 
-      if (!s_newShortcuts)
-         s_newShortcuts = new QStringList;
+        if(!s_newShortcuts)
+            s_newShortcuts = new QStringList;
 
-      s_newShortcuts->append(shortcutKey);
-   }
+        s_newShortcuts->append(shortcutKey);
+    }
 }
 
 void MenuEntryInfo::setShortcut(const KShortcut &_shortcut)
 {
-   if (shortCut == _shortcut)
-      return;
+    if(shortCut == _shortcut)
+        return;
 
-   freeShortcut(shortCut);
-   allocateShortcut(_shortcut);
+    freeShortcut(shortCut);
+    allocateShortcut(_shortcut);
 
-   shortCut = _shortcut;
-   if (isEmpty(shortCut))
-      shortCut = KShortcut(); // Normalize
+    shortCut = _shortcut;
+    if(isEmpty(shortCut))
+        shortCut = KShortcut(); // Normalize
 
-   shortcutLoaded = true;
-   shortcutDirty = true;
+    shortcutLoaded = true;
+    shortcutDirty = true;
 }
 
 void MenuEntryInfo::setInUse(bool inUse)
 {
-   if (inUse)
-   {
-      KShortcut temp = shortcut();
-      shortCut = KShortcut();
-      if (isShortcutAvailable(temp))
-         shortCut = temp;
-      else
-         shortcutDirty = true;
-      allocateShortcut(shortCut);
+    if(inUse)
+    {
+        KShortcut temp = shortcut();
+        shortCut = KShortcut();
+        if(isShortcutAvailable(temp))
+            shortCut = temp;
+        else
+            shortcutDirty = true;
+        allocateShortcut(shortCut);
 
-      if (s_deletedApps)
-         s_deletedApps->remove(service->storageId());
-   }
-   else
-   {
-      freeShortcut(shortcut());
-      
-      // Add to list of deleted apps
-      if (!s_deletedApps)
-         s_deletedApps = new QStringList;
+        if(s_deletedApps)
+            s_deletedApps->remove(service->storageId());
+    }
+    else
+    {
+        freeShortcut(shortcut());
 
-      s_deletedApps->append(service->storageId());
-   }
+        // Add to list of deleted apps
+        if(!s_deletedApps)
+            s_deletedApps = new QStringList;
+
+        s_deletedApps->append(service->storageId());
+    }
 }
 
 bool MenuEntryInfo::isShortcutAvailable(const KShortcut &_shortcut)
 {
-   if (shortCut == _shortcut)
-      return true;
-      
-   QString shortcutKey = _shortcut.toString();
-   bool available = true;
-   if (!s_allShortcuts)
-   {
-      s_allShortcuts = new QStringList(KHotKeys::allShortCuts());
-   }
-   available = !s_allShortcuts->contains(shortcutKey);
-   if (available && s_newShortcuts)
-   {
-      available = !s_newShortcuts->contains(shortcutKey);
-   }
-   if (!available && s_freeShortcuts)
-   {
-      available = s_freeShortcuts->contains(shortcutKey);
-   }
-   return available;
+    if(shortCut == _shortcut)
+        return true;
+
+    QString shortcutKey = _shortcut.toString();
+    bool available = true;
+    if(!s_allShortcuts)
+    {
+        s_allShortcuts = new QStringList(KHotKeys::allShortCuts());
+    }
+    available = !s_allShortcuts->contains(shortcutKey);
+    if(available && s_newShortcuts)
+    {
+        available = !s_newShortcuts->contains(shortcutKey);
+    }
+    if(!available && s_freeShortcuts)
+    {
+        available = s_freeShortcuts->contains(shortcutKey);
+    }
+    return available;
 }

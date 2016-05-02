@@ -24,43 +24,42 @@
 #include <qcheckbox.h>
 #include <qlayout.h>
 
-PrintSettings::PrintSettings(QWidget *parent, const char *name)
-: KPrintDialogPage(parent, name)
+PrintSettings::PrintSettings(QWidget *parent, const char *name) : KPrintDialogPage(parent, name)
 {
-	setTitle(i18n("Options"));
+    setTitle(i18n("Options"));
 
-	m_printfriendly = new QCheckBox(i18n("Printer &friendly mode (black text, no background)"), this);
-	m_printfriendly->setChecked(true);
-	m_printexact = new QCheckBox(i18n("&Pixel for pixel"), this);
-	m_printexact->setChecked(false);
-	m_printheader = new QCheckBox(i18n("Print &header"), this);
-	m_printheader->setChecked(true);
+    m_printfriendly = new QCheckBox(i18n("Printer &friendly mode (black text, no background)"), this);
+    m_printfriendly->setChecked(true);
+    m_printexact = new QCheckBox(i18n("&Pixel for pixel"), this);
+    m_printexact->setChecked(false);
+    m_printheader = new QCheckBox(i18n("Print &header"), this);
+    m_printheader->setChecked(true);
 
-        m_printheader->hide(); // Not yet implemented.
+    m_printheader->hide(); // Not yet implemented.
 
-	QVBoxLayout	*l0 = new QVBoxLayout(this, 0, 10);
-	l0->addWidget(m_printfriendly);
-	l0->addWidget(m_printexact);
-	l0->addWidget(m_printheader);
-	l0->addStretch(1);
+    QVBoxLayout *l0 = new QVBoxLayout(this, 0, 10);
+    l0->addWidget(m_printfriendly);
+    l0->addWidget(m_printexact);
+    l0->addWidget(m_printheader);
+    l0->addStretch(1);
 }
 
 PrintSettings::~PrintSettings()
 {
 }
 
-void PrintSettings::getOptions(QMap<QString,QString>& opts, bool /*incldef*/)
+void PrintSettings::getOptions(QMap< QString, QString > &opts, bool /*incldef*/)
 {
-	opts["app-konsole-printfriendly"] = (m_printfriendly->isChecked() ? "true" : "false");
-	opts["app-konsole-printexact"] = (m_printexact->isChecked() ? "true" : "false");
-	opts["app-konsole-printheader"] = (m_printheader->isChecked() ? "true" : "false");
+    opts["app-konsole-printfriendly"] = (m_printfriendly->isChecked() ? "true" : "false");
+    opts["app-konsole-printexact"] = (m_printexact->isChecked() ? "true" : "false");
+    opts["app-konsole-printheader"] = (m_printheader->isChecked() ? "true" : "false");
 }
 
-void PrintSettings::setOptions(const QMap<QString,QString>& opts)
+void PrintSettings::setOptions(const QMap< QString, QString > &opts)
 {
-	m_printfriendly->setChecked(opts["app-konsole-printfriendly"] != "false");
-	m_printexact->setChecked(opts["app-konsole-printexact"] == "true");
-	m_printheader->setChecked(opts["app-konsole-printheader"] != "false");
+    m_printfriendly->setChecked(opts["app-konsole-printfriendly"] != "false");
+    m_printexact->setChecked(opts["app-konsole-printexact"] == "true");
+    m_printheader->setChecked(opts["app-konsole-printheader"] != "false");
 }
 
 #include "printsettings.moc"

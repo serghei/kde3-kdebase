@@ -29,44 +29,42 @@ class QCheckBox;
 class QStringList;
 
 
-class IconThemesConfig : public KCModule
-{
-  Q_OBJECT
+class IconThemesConfig : public KCModule {
+    Q_OBJECT
 
 public:
-  IconThemesConfig(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~IconThemesConfig();
+    IconThemesConfig(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~IconThemesConfig();
 
-  void loadThemes();
-  bool installThemes(const QStringList &themes, const QString &archiveName);
-  QStringList findThemeDirs(const QString &archiveName);
+    void loadThemes();
+    bool installThemes(const QStringList &themes, const QString &archiveName);
+    QStringList findThemeDirs(const QString &archiveName);
 
-  void updateRemoveButton();
+    void updateRemoveButton();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
-  int buttons();
+    int buttons();
 
 protected slots:
-  void themeSelected(QListViewItem *item);
-  void installNewTheme();
-  void removeSelectedTheme();
+    void themeSelected(QListViewItem *item);
+    void installNewTheme();
+    void removeSelectedTheme();
 
 private:
-  QListViewItem *iconThemeItem(const QString &name);
+    QListViewItem *iconThemeItem(const QString &name);
 
-  KListView *m_iconThemes;
-  QPushButton *m_removeButton;
+    KListView *m_iconThemes;
+    QPushButton *m_removeButton;
 
-  QLabel *m_previewExec;
-  QLabel *m_previewFolder;
-  QLabel *m_previewDocument;
-  QListViewItem *m_defaultTheme;
-  QMap <QString, QString>m_themeNames;
-  bool m_bChanged;
+    QLabel *m_previewExec;
+    QLabel *m_previewFolder;
+    QLabel *m_previewDocument;
+    QListViewItem *m_defaultTheme;
+    QMap< QString, QString > m_themeNames;
+    bool m_bChanged;
 };
 
 #endif // ICONTHEMES_H
-

@@ -23,34 +23,32 @@
 #include <klocale.h>
 
 ZModemDialog::ZModemDialog(QWidget *parent, bool modal, const QString &caption)
- : KDialogBase(parent, "zmodem_progress", modal, caption,
-   User1|Close, User1, true,
-   i18n("&Stop"))
+    : KDialogBase(parent, "zmodem_progress", modal, caption, User1 | Close, User1, true, i18n("&Stop"))
 {
-  setEscapeButton(User1);
-  enableButton(Close, false);
-  textEdit = new QTextEdit(this);
-  textEdit->setMinimumSize(400, 100);
-  setMainWidget(textEdit);
-  connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClose()));
+    setEscapeButton(User1);
+    enableButton(Close, false);
+    textEdit = new QTextEdit(this);
+    textEdit->setMinimumSize(400, 100);
+    setMainWidget(textEdit);
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotClose()));
 }
 
 void ZModemDialog::addProgressText(const QString &txt)
 {
-  int p = textEdit->paragraphs();
-  textEdit->insertParagraph(txt, p);
+    int p = textEdit->paragraphs();
+    textEdit->insertParagraph(txt, p);
 }
 
 void ZModemDialog::done()
 {
-  enableButton(Close, true);
-  enableButton(User1, false);
+    enableButton(Close, true);
+    enableButton(User1, false);
 }
 
 void ZModemDialog::slotClose()
 {
-  KDialogBase::slotClose();
-  delayedDestruct();
+    KDialogBase::slotClose();
+    delayedDestruct();
 }
 
 #include "zmodem_dialog.moc"

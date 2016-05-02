@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project, module kdesktop.
  * Copyright (C) 1999 Geert Jansen <g.t.jansen@stud.tue.nl>
- * 
+ *
  * You can Freely distribute this program under the GNU General Public
  * License. See the file "COPYING" for the exact licensing terms.
  */
@@ -26,8 +26,8 @@
 // Per desktop defaults
 // Before you change this get in touch with me (torsten@kde.org)
 // Thanks!!
-#define _defColorA  QColor("#003082")
-#define _defColorB  QColor("#C0C0C0")
+#define _defColorA QColor("#003082")
+#define _defColorB QColor("#C0C0C0")
 #define _defBackgroundMode KBackgroundSettings::Flat
 #define _defWallpaperMode KBackgroundSettings::NoWallpaper
 #define _defMultiMode KBackgroundSettings::NoMulti

@@ -27,8 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kpanelmenu.h>
 #include <kdeprint/kpreloadobject.h>
 
-class PrintMenu : public KPanelMenu, public KPReloadObject
-{
+class PrintMenu : public KPanelMenu, public KPReloadObject {
     Q_OBJECT
 
 public:
@@ -40,7 +39,7 @@ protected slots:
     void initialize();
 
 protected:
-	void reload();
+    void reload();
 };
 
 #endif

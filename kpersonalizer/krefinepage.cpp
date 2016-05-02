@@ -26,20 +26,24 @@
 #include "kpersonalizer.h"
 
 
-KRefinePage::KRefinePage(QWidget *parent, const char *name ) : KRefinePageDlg(parent,name) {
-   px_finishSidebar->setPixmap(UserIcon("step5.png"));
-   connect( pb_kcontrol, SIGNAL(clicked()), SLOT(startKControl()) );
-   if( KPersonalizer::beforeSession()) {
-       pb_kcontrol->hide();
-       lb_kcontrol->hide();
-   }
-   px_kcontrol->setPixmap(KGlobal::iconLoader()->loadIcon("kcontrol", KIcon::Panel, KIcon::SizeMedium));
+KRefinePage::KRefinePage(QWidget *parent, const char *name) : KRefinePageDlg(parent, name)
+{
+    px_finishSidebar->setPixmap(UserIcon("step5.png"));
+    connect(pb_kcontrol, SIGNAL(clicked()), SLOT(startKControl()));
+    if(KPersonalizer::beforeSession())
+    {
+        pb_kcontrol->hide();
+        lb_kcontrol->hide();
+    }
+    px_kcontrol->setPixmap(KGlobal::iconLoader()->loadIcon("kcontrol", KIcon::Panel, KIcon::SizeMedium));
 }
-KRefinePage::~KRefinePage(){
+KRefinePage::~KRefinePage()
+{
 }
 /** starts kcontrol via krun when the user presses the
 start control center button on page 5. */
-void KRefinePage::startKControl(){
-  KRun::runCommand("kcontrol");
+void KRefinePage::startKControl()
+{
+    KRun::runCommand("kcontrol");
 }
 #include "krefinepage.moc"

@@ -38,67 +38,55 @@ class KPanelApplet;
 class KPanelExtension;
 class QPopupMenu;
 
-class KDE_EXPORT PluginManager : public QObject
-{
+class KDE_EXPORT PluginManager : public QObject {
     Q_OBJECT
 
 public:
-    static PluginManager* the();
-    static AppletInfo::List applets(bool sort = true, AppletInfo::List* list = 0);
-    static AppletInfo::List extensions(bool sort = true, AppletInfo::List* list = 0);
-    static AppletInfo::List builtinButtons(bool sort = true, AppletInfo::List* list = 0);
-    static AppletInfo::List specialButtons(bool sort = true, AppletInfo::List* list = 0);
+    static PluginManager *the();
+    static AppletInfo::List applets(bool sort = true, AppletInfo::List *list = 0);
+    static AppletInfo::List extensions(bool sort = true, AppletInfo::List *list = 0);
+    static AppletInfo::List builtinButtons(bool sort = true, AppletInfo::List *list = 0);
+    static AppletInfo::List specialButtons(bool sort = true, AppletInfo::List *list = 0);
 
-    AppletContainer* createAppletContainer(const QString& desktopFile,
-                                           bool isStartup,
-                                           const QString& configFile,
-                                           QPopupMenu* opMenu,
-                                           QWidget* parent,
+    AppletContainer *createAppletContainer(const QString &desktopFile, bool isStartup, const QString &configFile, QPopupMenu *opMenu, QWidget *parent,
                                            bool isImmutable = false);
-    ExtensionContainer* createExtensionContainer(const QString& desktopFile,
-                                                 bool isStartup,
-                                                 const QString& configFile,
-                                                 const QString& extensionId);
+    ExtensionContainer *createExtensionContainer(const QString &desktopFile, bool isStartup, const QString &configFile, const QString &extensionId);
 
-    KPanelApplet* loadApplet(const AppletInfo& info, QWidget* parent);
-    KPanelExtension* loadExtension(const AppletInfo& info, QWidget* parent);
+    KPanelApplet *loadApplet(const AppletInfo &info, QWidget *parent);
+    KPanelExtension *loadExtension(const AppletInfo &info, QWidget *parent);
 
-    bool hasInstance(const AppletInfo&) const;
+    bool hasInstance(const AppletInfo &) const;
 
 public slots:
     void clearUntrustedLists();
 
 protected:
-    static AppletInfo::List plugins(const QStringList& desktopFiles,
-                                    AppletInfo::AppletType,
-                                    bool sort,
-                                    AppletInfo::List* list);
+    static AppletInfo::List plugins(const QStringList &desktopFiles, AppletInfo::AppletType, bool sort, AppletInfo::List *list);
 
 private slots:
-    void slotPluginDestroyed(QObject* plugin);
+    void slotPluginDestroyed(QObject *plugin);
 
 private:
-    friend class KStaticDeleter<PluginManager>;
+    friend class KStaticDeleter< PluginManager >;
     PluginManager();
     virtual ~PluginManager();
 
     AppletInfo::Dict _dict;
-    static PluginManager* m_self;
+    static PluginManager *m_self;
     QStringList m_untrustedApplets;
     QStringList m_untrustedExtensions;
 };
 
-class LibUnloader : public QObject
-{
+class LibUnloader : public QObject {
     Q_OBJECT
 public:
-    static void unload( const QString &libName );
+    static void unload(const QString &libName);
 
 private slots:
     void unload();
 
 private:
-    LibUnloader( const QString &libName, QObject *parent );
+    LibUnloader(const QString &libName, QObject *parent);
 
     QString _libName;
 };

@@ -27,14 +27,13 @@
 
 class QListBox;
 
-class FilterOptions : public KCModule
-{
+class FilterOptions : public KCModule {
     Q_OBJECT
 
 public:
     FilterOptions(QWidget *parent = 0, const char *name = 0);
 
-    void load( bool useDefaults );
+    void load(bool useDefaults);
     void save();
     void defaults();
 
@@ -42,8 +41,7 @@ protected slots:
     void moduleChanged(bool state);
 
 private:
-	QListBox* m_lbFilterList;
+    QListBox *m_lbFilterList;
 };
 
 #endif
-

@@ -37,60 +37,63 @@ class KRefinePage;
 
 /** KPersonalizer is the base class of the project */
 class KPersonalizer : public KWizard {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	/** construtor */
-	KPersonalizer(QWidget* parent=0, const char *name=0);
-	/** destructor */
-	~KPersonalizer();
+    /** construtor */
+    KPersonalizer(QWidget *parent = 0, const char *name = 0);
+    /** destructor */
+    ~KPersonalizer();
 
-	virtual void next();
-	virtual void back();
+    virtual void next();
+    virtual void back();
 
-	/** this session is restarted, so we want to start with ospage */
-	void restarted();
+    /** this session is restarted, so we want to start with ospage */
+    void restarted();
 
-	/** KPersonalizer is running before KDE is started */
-	static void setBeforeSession();
-	static bool beforeSession() { return before_session; }
+    /** KPersonalizer is running before KDE is started */
+    static void setBeforeSession();
+    static bool beforeSession()
+    {
+        return before_session;
+    }
 
 public slots: // Public slots
-	/** calls all save functions after resetting all features/ OS/ theme selections to KDE default */
-	void setDefaults();
-	/** the cancel button is connected to the reject() slot of QDialog,
-	*  so we have to reimplement this here to add a dialogbox to
-	*  ask if we really want to quit the wizard.
-	*/
-	void reject();
-	/** maybe call a dialog that the wizard has finished.
-	* Calls applySettings() to save the current selection.
-	*/
-	void accept();
-	/** We need this to use it in a QTimer */
-	void slotNext();
+    /** calls all save functions after resetting all features/ OS/ theme selections to KDE default */
+    void setDefaults();
+    /** the cancel button is connected to the reject() slot of QDialog,
+    *  so we have to reimplement this here to add a dialogbox to
+    *  ask if we really want to quit the wizard.
+    */
+    void reject();
+    /** maybe call a dialog that the wizard has finished.
+    * Calls applySettings() to save the current selection.
+    */
+    void accept();
+    /** We need this to use it in a QTimer */
+    void slotNext();
 
 private:
-	void setPosition();
-	void delayedRestart();
+    void setPosition();
+    void delayedRestart();
 
 private:
-	KCountryPage* countrypage;
-	KOSPage* ospage;
-	KEyeCandyPage* eyecandy;
-	KStylePage* stylepage;
-	KRefinePage* refinepage;
-	KLocale* locale;
-	bool os_dirty, eye_dirty, style_dirty;
-	static bool before_session;
+    KCountryPage *countrypage;
+    KOSPage *ospage;
+    KEyeCandyPage *eyecandy;
+    KStylePage *stylepage;
+    KRefinePage *refinepage;
+    KLocale *locale;
+    bool os_dirty, eye_dirty, style_dirty;
+    static bool before_session;
 
 protected slots: // Public slots
-	/** restart kpersonalizer to run it in new language */
-	void slotRestart();
+    /** restart kpersonalizer to run it in new language */
+    void slotRestart();
 
 protected: // Protected methods
-	// the close button on the titlebar sets e->accept() which we don´t want.
-	virtual void closeEvent(QCloseEvent*);
-	bool askClose();
+    // the close button on the titlebar sets e->accept() which we don´t want.
+    virtual void closeEvent(QCloseEvent *);
+    bool askClose();
 };
 
 #endif

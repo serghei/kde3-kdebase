@@ -31,29 +31,31 @@
 
 #include "Command.h"
 
-typedef struct {
-  char* command;
-  cmdExecutor ex;
-  char* type;
-  int isMonitor;
-  struct SensorModul* sm;
+typedef struct
+{
+    char *command;
+    cmdExecutor ex;
+    char *type;
+    int isMonitor;
+    struct SensorModul *sm;
 } Command;
 
 static CONTAINER CommandList;
 static sigset_t SignalSet;
 
-void command_cleanup( void* v );
+void command_cleanup(void *v);
 
-void command_cleanup( void* v )
+void command_cleanup(void *v)
 {
-  if ( v ) {
-    Command* c = v;
-    if ( c->command )
-      free ( c->command );
-    if ( c->type )
-      free ( c->type );
-    free ( v );
-  }
+    if(v)
+    {
+        Command *c = v;
+        if(c->command)
+            free(c->command);
+        if(c->type)
+            free(c->type);
+        free(v);
+    }
 }
 
 /*
@@ -63,199 +65,209 @@ void command_cleanup( void* v )
 int ReconfigureFlag = 0;
 int CheckSetupFlag = 0;
 
-void print_error( const char *fmt, ... )
+void print_error(const char *fmt, ...)
 {
-  char errmsg[ 1024 ];
-  va_list az;
+    char errmsg[1024];
+    va_list az;
 
-  va_start( az, fmt );
-  vsnprintf( errmsg, sizeof( errmsg ) - 1, fmt, az );
-  errmsg[ sizeof( errmsg ) - 1 ] = '\0';
-  va_end( az );
+    va_start(az, fmt);
+    vsnprintf(errmsg, sizeof(errmsg) - 1, fmt, az);
+    errmsg[sizeof(errmsg) - 1] = '\0';
+    va_end(az);
 
-  if ( CurrentClient )
-    fprintf( CurrentClient, "\033%s\033", errmsg );
+    if(CurrentClient)
+        fprintf(CurrentClient, "\033%s\033", errmsg);
 }
 
-void log_error( const char *fmt, ... )
+void log_error(const char *fmt, ...)
 {
-  char errmsg[ 1024 ];
-  va_list az;
+    char errmsg[1024];
+    va_list az;
 
-  va_start( az, fmt );
-  vsnprintf( errmsg, sizeof( errmsg ) - 1, fmt, az );
-  errmsg[ sizeof( errmsg ) - 1 ] = '\0';
-  va_end( az );
+    va_start(az, fmt);
+    vsnprintf(errmsg, sizeof(errmsg) - 1, fmt, az);
+    errmsg[sizeof(errmsg) - 1] = '\0';
+    va_end(az);
 
-  openlog( "ksysguardd", LOG_PID, LOG_DAEMON );
-  syslog( LOG_ERR, "%s", errmsg );
-  closelog();
+    openlog("ksysguardd", LOG_PID, LOG_DAEMON);
+    syslog(LOG_ERR, "%s", errmsg);
+    closelog();
 }
 
-void initCommand( void )
+void initCommand(void)
 {
-  CommandList = new_ctnr();
-  sigemptyset( &SignalSet );
-  sigaddset( &SignalSet, SIGALRM );
+    CommandList = new_ctnr();
+    sigemptyset(&SignalSet);
+    sigaddset(&SignalSet, SIGALRM);
 
-  registerCommand( "monitors", printMonitors );
-  registerCommand( "test", printTest );
+    registerCommand("monitors", printMonitors);
+    registerCommand("test", printTest);
 
-  if ( RunAsDaemon == 0 )
-    registerCommand( "quit", exQuit );
+    if(RunAsDaemon == 0)
+        registerCommand("quit", exQuit);
 }
 
-void exitCommand( void )
+void exitCommand(void)
 {
-  destr_ctnr( CommandList, command_cleanup );
+    destr_ctnr(CommandList, command_cleanup);
 }
 
-void registerCommand( const char* command, cmdExecutor ex )
+void registerCommand(const char *command, cmdExecutor ex)
 {
-  Command* cmd = (Command*)malloc( sizeof( Command ) );
-  cmd->command = (char*)malloc( strlen( command ) + 1 );
-  strcpy( cmd->command, command );
-  cmd->type = 0;
-  cmd->ex = ex;
-  cmd->isMonitor = 0;
-  push_ctnr( CommandList, cmd );
-  ReconfigureFlag = 1;
+    Command *cmd = (Command *)malloc(sizeof(Command));
+    cmd->command = (char *)malloc(strlen(command) + 1);
+    strcpy(cmd->command, command);
+    cmd->type = 0;
+    cmd->ex = ex;
+    cmd->isMonitor = 0;
+    push_ctnr(CommandList, cmd);
+    ReconfigureFlag = 1;
 }
 
-void removeCommand( const char* command )
+void removeCommand(const char *command)
 {
-  Command* cmd;
+    Command *cmd;
 
-  for ( cmd = first_ctnr( CommandList ); cmd; cmd = next_ctnr( CommandList ) ) {
-    if ( strcmp( cmd->command, command ) == 0 ) {
-      remove_ctnr( CommandList );
-      if ( cmd->command )
-        free( cmd->command );
-      if ( cmd->type )
-        free( cmd->type );
-      free( cmd );
-    }
-  }
-
-  ReconfigureFlag = 1;
-}
-
-void registerMonitor( const char* command, const char* type, cmdExecutor ex,
-                      cmdExecutor iq, struct SensorModul* sm )
-{
-  /* Monitors are similar to regular commands except that every monitor
-   * registers two commands. The first is the value request command and
-   * the second is the info request command. The info request command is
-   * identical to the value request but with an '?' appended. The value
-   * command prints a single value. The info request command prints
-   * a description of the monitor, the mininum value, the maximum value
-   * and the unit. */
-  Command* cmd = (Command*)malloc( sizeof( Command ) );
-  cmd->command = (char*)malloc( strlen( command ) + 1 );
-  strcpy( cmd->command, command );
-  cmd->ex = ex;
-  cmd->type = (char*)malloc( strlen( type ) + 1 );
-  strcpy( cmd->type, type );
-  cmd->isMonitor = 1;
-  cmd->sm = sm;
-  push_ctnr( CommandList, cmd );
-
-  cmd = (Command*)malloc( sizeof( Command ) );
-  cmd->command = (char*)malloc( strlen( command ) + 2 );
-  strcpy( cmd->command, command );
-  cmd->command[ strlen( command ) ] = '?';
-  cmd->command[ strlen( command ) + 1 ] = '\0';
-  cmd->ex = iq;
-  cmd->isMonitor = 0;
-  cmd->sm = sm;
-  cmd->type = 0;
-  push_ctnr( CommandList, cmd );
-}
-
-void removeMonitor( const char* command )
-{
-  char* buf;
-
-  removeCommand( command );
-  buf = (char*)malloc( strlen( command ) + 2 );
-  strcpy( buf, command );
-  strcat( buf, "?" );
-  removeCommand( buf );
-  free( buf );
-}
-
-void executeCommand( const char* command )
-{
-  Command* cmd;
-  char tokenFormat[ 64 ];
-  char token[ 64 ];
-
-  sprintf( tokenFormat, "%%%ds", (int)sizeof( token ) - 1 );
-  sscanf( command, tokenFormat, token );
-
-  for ( cmd = first_ctnr( CommandList ); cmd; cmd = next_ctnr( CommandList ) ) {
-    if ( strcmp( cmd->command, token ) == 0 ) {
-      if ( cmd->isMonitor ) {
-        if ( ( time( NULL ) - cmd->sm->time ) >= UPDATEINTERVAL ) {
-          cmd->sm->time = time( NULL );
-
-          if ( cmd->sm->updateCommand != NULL )
-            cmd->sm->updateCommand();
+    for(cmd = first_ctnr(CommandList); cmd; cmd = next_ctnr(CommandList))
+    {
+        if(strcmp(cmd->command, command) == 0)
+        {
+            remove_ctnr(CommandList);
+            if(cmd->command)
+                free(cmd->command);
+            if(cmd->type)
+                free(cmd->type);
+            free(cmd);
         }
-      }
-
-      (*(cmd->ex))( command );
-
-      if ( ReconfigureFlag ) {
-        ReconfigureFlag = 0;
-        print_error( "RECONFIGURE\n" );
-      }
-
-      fflush( CurrentClient );
-      return;
     }
-  }
 
-  if ( CurrentClient ) {
-    fprintf( CurrentClient, "UNKNOWN COMMAND\n" );
-    fflush( CurrentClient );
-  }
+    ReconfigureFlag = 1;
 }
 
-void printMonitors( const char *c )
+void registerMonitor(const char *command, const char *type, cmdExecutor ex, cmdExecutor iq, struct SensorModul *sm)
 {
-  Command* cmd;
-  ReconfigureFlag = 0;
+    /* Monitors are similar to regular commands except that every monitor
+     * registers two commands. The first is the value request command and
+     * the second is the info request command. The info request command is
+     * identical to the value request but with an '?' appended. The value
+     * command prints a single value. The info request command prints
+     * a description of the monitor, the mininum value, the maximum value
+     * and the unit. */
+    Command *cmd = (Command *)malloc(sizeof(Command));
+    cmd->command = (char *)malloc(strlen(command) + 1);
+    strcpy(cmd->command, command);
+    cmd->ex = ex;
+    cmd->type = (char *)malloc(strlen(type) + 1);
+    strcpy(cmd->type, type);
+    cmd->isMonitor = 1;
+    cmd->sm = sm;
+    push_ctnr(CommandList, cmd);
 
-  (void)c;
-
-  for ( cmd = first_ctnr( CommandList ); cmd; cmd = next_ctnr( CommandList ) ) {
-    if ( cmd->isMonitor )
-      fprintf(CurrentClient, "%s\t%s\n", cmd->command, cmd->type);
-  }
-
-  fflush( CurrentClient );
+    cmd = (Command *)malloc(sizeof(Command));
+    cmd->command = (char *)malloc(strlen(command) + 2);
+    strcpy(cmd->command, command);
+    cmd->command[strlen(command)] = '?';
+    cmd->command[strlen(command) + 1] = '\0';
+    cmd->ex = iq;
+    cmd->isMonitor = 0;
+    cmd->sm = sm;
+    cmd->type = 0;
+    push_ctnr(CommandList, cmd);
 }
 
-void printTest( const char* c )
+void removeMonitor(const char *command)
 {
-  Command* cmd;
+    char *buf;
 
-  for ( cmd = first_ctnr( CommandList ); cmd; cmd = next_ctnr( CommandList ) ) {
-    if ( strcmp( cmd->command, c + strlen( "test " ) ) == 0 ) {
-      fprintf( CurrentClient, "1\n" );
-      fflush( CurrentClient );
-      return;
+    removeCommand(command);
+    buf = (char *)malloc(strlen(command) + 2);
+    strcpy(buf, command);
+    strcat(buf, "?");
+    removeCommand(buf);
+    free(buf);
+}
+
+void executeCommand(const char *command)
+{
+    Command *cmd;
+    char tokenFormat[64];
+    char token[64];
+
+    sprintf(tokenFormat, "%%%ds", (int)sizeof(token) - 1);
+    sscanf(command, tokenFormat, token);
+
+    for(cmd = first_ctnr(CommandList); cmd; cmd = next_ctnr(CommandList))
+    {
+        if(strcmp(cmd->command, token) == 0)
+        {
+            if(cmd->isMonitor)
+            {
+                if((time(NULL) - cmd->sm->time) >= UPDATEINTERVAL)
+                {
+                    cmd->sm->time = time(NULL);
+
+                    if(cmd->sm->updateCommand != NULL)
+                        cmd->sm->updateCommand();
+                }
+            }
+
+            (*(cmd->ex))(command);
+
+            if(ReconfigureFlag)
+            {
+                ReconfigureFlag = 0;
+                print_error("RECONFIGURE\n");
+            }
+
+            fflush(CurrentClient);
+            return;
+        }
     }
-  }
 
-  fprintf( CurrentClient, "0\n" );
-  fflush( CurrentClient );
+    if(CurrentClient)
+    {
+        fprintf(CurrentClient, "UNKNOWN COMMAND\n");
+        fflush(CurrentClient);
+    }
 }
 
-void exQuit( const char* cmd )
+void printMonitors(const char *c)
 {
-  (void)cmd;
+    Command *cmd;
+    ReconfigureFlag = 0;
 
-  QuitApp = 1;
+    (void)c;
+
+    for(cmd = first_ctnr(CommandList); cmd; cmd = next_ctnr(CommandList))
+    {
+        if(cmd->isMonitor)
+            fprintf(CurrentClient, "%s\t%s\n", cmd->command, cmd->type);
+    }
+
+    fflush(CurrentClient);
+}
+
+void printTest(const char *c)
+{
+    Command *cmd;
+
+    for(cmd = first_ctnr(CommandList); cmd; cmd = next_ctnr(CommandList))
+    {
+        if(strcmp(cmd->command, c + strlen("test ")) == 0)
+        {
+            fprintf(CurrentClient, "1\n");
+            fflush(CurrentClient);
+            return;
+        }
+    }
+
+    fprintf(CurrentClient, "0\n");
+    fflush(CurrentClient);
+}
+
+void exQuit(const char *cmd)
+{
+    (void)cmd;
+
+    QuitApp = 1;
 }

@@ -28,38 +28,42 @@
 #include <qobject.h>
 #include <qstring.h>
 
-class SystemImpl : public QObject
-{
-Q_OBJECT
+class SystemImpl : public QObject {
+    Q_OBJECT
 public:
-	SystemImpl();
+    SystemImpl();
 
-	void createTopLevelEntry(KIO::UDSEntry& entry) const;
-	bool statByName(const QString &filename, KIO::UDSEntry& entry);
+    void createTopLevelEntry(KIO::UDSEntry &entry) const;
+    bool statByName(const QString &filename, KIO::UDSEntry &entry);
 
-	bool listRoot(QValueList<KIO::UDSEntry> &list);
+    bool listRoot(QValueList< KIO::UDSEntry > &list);
 
-	bool parseURL(const KURL &url, QString &name, QString &path) const;
-	bool realURL(const QString &name, const QString &path, KURL &url) const;
+    bool parseURL(const KURL &url, QString &name, QString &path) const;
+    bool realURL(const QString &name, const QString &path, KURL &url) const;
 
-	int lastErrorCode() const { return m_lastErrorCode; }
-	QString lastErrorMessage() const { return m_lastErrorMessage; }
+    int lastErrorCode() const
+    {
+        return m_lastErrorCode;
+    }
+    QString lastErrorMessage() const
+    {
+        return m_lastErrorMessage;
+    }
 
 private slots:
-	KURL findBaseURL(const QString &filename) const;
-	void slotEntries(KIO::Job *job, const KIO::UDSEntryList &list);
-	void slotResult(KIO::Job *job);
+    KURL findBaseURL(const QString &filename) const;
+    void slotEntries(KIO::Job *job, const KIO::UDSEntryList &list);
+    void slotResult(KIO::Job *job);
 
 private:
-	void createEntry(KIO::UDSEntry& entry, const QString &directory,
-	                 const QString &file);
+    void createEntry(KIO::UDSEntry &entry, const QString &directory, const QString &file);
 
-	bool m_lastListingEmpty;
+    bool m_lastListingEmpty;
 
-	/// Last error code stored in class to simplify API.
-	/// Note that this means almost no method can be const.
-	int m_lastErrorCode;
-	QString m_lastErrorMessage;
+    /// Last error code stored in class to simplify API.
+    /// Note that this means almost no method can be const.
+    int m_lastErrorCode;
+    QString m_lastErrorMessage;
 };
 
 #endif

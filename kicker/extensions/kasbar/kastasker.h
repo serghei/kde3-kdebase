@@ -82,24 +82,22 @@ class KasGrouper;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KDE_EXPORT KasTasker : public KasBar
-{
+class KDE_EXPORT KasTasker : public KasBar {
     Q_OBJECT
-    Q_PROPERTY( bool isTopLevel READ isTopLevel )
-    Q_PROPERTY( bool showClock READ showClock )
-    Q_PROPERTY( bool showLoad READ showLoad )
+    Q_PROPERTY(bool isTopLevel READ isTopLevel)
+    Q_PROPERTY(bool showClock READ showClock)
+    Q_PROPERTY(bool showLoad READ showLoad)
 
 public:
     /** Create a KasTasker widget. */
-    KasTasker( Orientation o, QWidget* parent = 0, const char* name = 0, WFlags f = 0 );
+    KasTasker(Orientation o, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
     /**
      * Create a KasTasker widget that is slaved to another KasTasker. The
      * created widget will inherit the settings of the parent, but will
      * not connect to the signals of the TaskManager.
      */
-    KasTasker( Orientation o, KasTasker *master,
-	       QWidget *parent=0, const char *name=0, WFlags f=0 );
+    KasTasker(Orientation o, KasTasker *master, QWidget *parent = 0, const char *name = 0, WFlags f = 0);
 
     /** Cleans up. */
     virtual ~KasTasker();
@@ -107,63 +105,114 @@ public:
     /** Factory method that returns the default menu for items in the bar. */
     virtual KPopupMenu *contextMenu();
 
-    virtual KasTasker *createChildBar( Orientation o, QWidget *parent, const char *name=0 );
+    virtual KasTasker *createChildBar(Orientation o, QWidget *parent, const char *name = 0);
 
     /**
      * Returns true if this is the top KasTasker. Note that it is possible for
      * the top KasTasker to be a child of another KasBar derived class, so
      * this can return a different result to KasBar::isTopLevel().
      */
-    bool isTopLevel() const { return dynamic_cast<KasTasker *>( KasBar::master() ) ? true : false; }
-    KasTasker *master() const { return dynamic_cast<KasTasker *>( KasBar::master() ); }
+    bool isTopLevel() const
+    {
+        return dynamic_cast< KasTasker * >(KasBar::master()) ? true : false;
+    }
+    KasTasker *master() const
+    {
+        return dynamic_cast< KasTasker * >(KasBar::master());
+    }
 
     /** Finds the item representing a task (if there is one). */
-    KasTaskItem *findItem( Task::Ptr  );
+    KasTaskItem *findItem(Task::Ptr);
 
     /** Finds the item representing a startup (if there is one). */
-    KasStartupItem *findItem( Startup::Ptr s );
+    KasStartupItem *findItem(Startup::Ptr s);
 
     /** Returns true iff thumbnails are enabled. */
-    bool thumbnailsEnabled() const { return enableThumbs_; }
+    bool thumbnailsEnabled() const
+    {
+        return enableThumbs_;
+    }
 
     /** Returns true iff thumbnails should be shown in the boxes instead of icons. */
-    bool embedThumbnails() const { return embedThumbs_; }
+    bool embedThumbnails() const
+    {
+        return embedThumbs_;
+    }
 
-    bool showClock() const { return showClock_; }
-    bool showLoad() const { return showLoad_; }
+    bool showClock() const
+    {
+        return showClock_;
+    }
+    bool showLoad() const
+    {
+        return showLoad_;
+    }
 
     /** Returns the proportions of the window thumbnails. */
-    double thumbnailSize() const { return thumbnailSize_; }
+    double thumbnailSize() const
+    {
+        return thumbnailSize_;
+    }
 
     /** Returns true iff the startup notifier is enabled. */
-    bool notifierEnabled() const { return enableNotifier_; }
+    bool notifierEnabled() const
+    {
+        return enableNotifier_;
+    }
 
     /** Returns true iff the modified flag should be shown. */
-    bool showModified() const { return showModified_; }
+    bool showModified() const
+    {
+        return showModified_;
+    }
 
     /** Returns true iff a progress bar should be shown for progress windows. */
-    bool showProgress() const { return showProgress_; }
+    bool showProgress() const
+    {
+        return showProgress_;
+    }
 
     /** Returns true iff we should indicate when a window demands attention. */
-    bool showAttention() const { return showAttention_; }
+    bool showAttention() const
+    {
+        return showAttention_;
+    }
 
     /** Returns true iff windows from all desktops should be displayed. */
-    bool showAllWindows() const { return showAllWindows_; }
+    bool showAllWindows() const
+    {
+        return showAllWindows_;
+    }
 
     /** Returns the delay between thumbnail updates (in seconds). */
-    int thumbnailUpdateDelay() const { return thumbUpdateDelay_; }
+    int thumbnailUpdateDelay() const
+    {
+        return thumbUpdateDelay_;
+    }
 
     /** Returns true iff windows should be grouped together. */
-    bool groupWindows() const { return groupWindows_; }
+    bool groupWindows() const
+    {
+        return groupWindows_;
+    }
 
     /** Returns true iff windows on inactive desktops should be grouped together. */
-    bool groupInactiveDesktops() const { return groupInactiveDesktops_; }
+    bool groupInactiveDesktops() const
+    {
+        return groupInactiveDesktops_;
+    }
 
     /** Returns true iff we should only show windows that are minimized. */
-    bool onlyShowMinimized() const { return onlyShowMinimized_; }
+    bool onlyShowMinimized() const
+    {
+        return onlyShowMinimized_;
+    }
 
     /** Returns true if this bar is floating. */
-    bool isStandAlone() const { return standalone_; }
+    bool isStandAlone() const
+    {
+        return standalone_;
+    }
 
     //
     // Internal stuff
@@ -173,56 +222,59 @@ public:
      * Converts the item for a task into a group item to which additional
      * tasks can be added.
      */
-    KasGroupItem *convertToGroup( Task::Ptr t );
+    KasGroupItem *convertToGroup(Task::Ptr t);
 
     /** Moves an item from a group into the main bar. */
-    void moveToMain( KasGroupItem *gi, Task::Ptr t );
+    void moveToMain(KasGroupItem *gi, Task::Ptr t);
 
     /** Moves all the items from a group into the main bar and removes the group. */
-    void moveToMain( KasGroupItem *gi );
+    void moveToMain(KasGroupItem *gi);
 
 public slots:
     /** Adds a task to the bar. */
-    void addTask( Task::Ptr  );
+    void addTask(Task::Ptr);
 
     /** Removes a task from the bar. */
-    void removeTask( Task::Ptr  );
+    void removeTask(Task::Ptr);
 
     /** Adds a startup item to the bar. */
-    void addStartup( Startup::Ptr  );
+    void addStartup(Startup::Ptr);
 
     /** Removes a startup item from the bar. */
-    void removeStartup( Startup::Ptr  );
+    void removeStartup(Startup::Ptr);
 
     void refreshAll();
     void refreshAllLater();
     void refreshIconGeometry();
 
-    void setNotifierEnabled( bool enable );
-    void setShowModified( bool enable );
-    void setShowProgress( bool enable );
-    void setShowAttention( bool enable );
+    void setNotifierEnabled(bool enable);
+    void setShowModified(bool enable);
+    void setShowProgress(bool enable);
+    void setShowAttention(bool enable);
 
-    void setShowAllWindows( bool enable );
-    void setGroupWindows( bool enable );
-    void setGroupInactiveDesktops( bool enable );
-    void setOnlyShowMinimized( bool enable );
+    void setShowAllWindows(bool enable);
+    void setGroupWindows(bool enable);
+    void setGroupInactiveDesktops(bool enable);
+    void setOnlyShowMinimized(bool enable);
 
-    void setThumbnailSize( double size );
-    void setThumbnailSize( int percent );
-    void setThumbnailsEnabled( bool enable );
-    void setThumbnailUpdateDelay( int secs );
-    void setEmbedThumbnails( bool enable );
+    void setThumbnailSize(double size);
+    void setThumbnailSize(int percent);
+    void setThumbnailsEnabled(bool enable);
+    void setThumbnailUpdateDelay(int secs);
+    void setEmbedThumbnails(bool enable);
 
-    void setShowClock( bool enable );
-    void setShowLoad( bool enable );
+    void setShowClock(bool enable);
+    void setShowLoad(bool enable);
 
     void showPreferences();
     void showAbout();
 
     /** Sets the current KConfig object. */
-    void setConfig( KConfig *config );
-    KConfig *config() const { return conf; }
+    void setConfig(KConfig *config);
+    KConfig *config() const
+    {
+        return conf;
+    }
 
     /** Reads the settings from the current KConfig. */
     void readConfig();
@@ -231,19 +283,19 @@ public slots:
     void writeLayout();
 
     /** Writes the settings of this bar to the specified KConfig. */
-    void writeConfig( KConfig *conf );
+    void writeConfig(KConfig *conf);
 
-    void setStandAlone( bool enable );
+    void setStandAlone(bool enable);
 
 signals:
-    void showAllWindowsChanged( bool );
-    void groupWindowsChanged( bool );
-    void showClockChanged( bool );
-    void showLoadChanged( bool );
+    void showAllWindowsChanged(bool);
+    void groupWindowsChanged(bool);
+    void showClockChanged(bool);
+    void showLoadChanged(bool);
 
 protected slots:
     /** Load settings from the specified configuration. */
-    void readConfig( KConfig *conf );
+    void readConfig(KConfig *conf);
 
 private:
     KPopupMenu *menu;
@@ -277,4 +329,3 @@ private:
 };
 
 #endif // KASTASKER_H
-

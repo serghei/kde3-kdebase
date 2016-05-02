@@ -19,13 +19,12 @@
 */
 #include "historystringitem.h"
 
-HistoryStringItem::HistoryStringItem( const QString& data )
-    : HistoryItem(),  m_data( data )
+HistoryStringItem::HistoryStringItem(const QString &data) : HistoryItem(), m_data(data)
 {
-
 }
 
 /* virtual */
-void HistoryStringItem::write( QDataStream& stream ) const {
-    stream << QString( "string" ) << m_data;
+void HistoryStringItem::write(QDataStream &stream) const
+{
+    stream << QString("string") << m_data;
 }

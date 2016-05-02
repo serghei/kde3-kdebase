@@ -34,72 +34,67 @@ class KProcIO;
   */
 class PluginPolicies : public Policies {
 public:
-  /**
-   * constructor
-   * @param config configuration to initialize this instance from
-   * @param group config group to use if this instance contains the global
-   *	policies (global == true)
-   * @param global true if this instance contains the global policy settings,
-   *	false if this instance contains policies specific for a domain.
-   * @param domain name of the domain this instance is used to configure the
-   *	policies for (case insensitive, ignored if global == true)
-   */
-  PluginPolicies(KConfig* config, const QString &group, bool global,
-  		const QString &domain = QString::null);
+    /**
+     * constructor
+     * @param config configuration to initialize this instance from
+     * @param group config group to use if this instance contains the global
+     *	policies (global == true)
+     * @param global true if this instance contains the global policy settings,
+     *	false if this instance contains policies specific for a domain.
+     * @param domain name of the domain this instance is used to configure the
+     *	policies for (case insensitive, ignored if global == true)
+     */
+    PluginPolicies(KConfig *config, const QString &group, bool global, const QString &domain = QString::null);
 
-  virtual ~PluginPolicies();
+    virtual ~PluginPolicies();
 };
 
 /** Plugin-specific enhancements to the domain list view
   */
 class PluginDomainListView : public DomainListView {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  PluginDomainListView(KConfig *config,const QString &group,KPluginOptions *opt,
-  		QWidget *parent,const char *name = 0);
-  virtual ~PluginDomainListView();
+    PluginDomainListView(KConfig *config, const QString &group, KPluginOptions *opt, QWidget *parent, const char *name = 0);
+    virtual ~PluginDomainListView();
 
 protected:
-  virtual PluginPolicies *createPolicies();
-  virtual PluginPolicies *copyPolicies(Policies *pol);
-  virtual void setupPolicyDlg(PushButton trigger,PolicyDialog &pDlg,
-  		Policies *copy);
+    virtual PluginPolicies *createPolicies();
+    virtual PluginPolicies *copyPolicies(Policies *pol);
+    virtual void setupPolicyDlg(PushButton trigger, PolicyDialog &pDlg, Policies *copy);
 
 private:
-  QString group;
-  KPluginOptions *options;
+    QString group;
+    KPluginOptions *options;
 };
 
 /**
  * dialog for embedding a PluginDomainListView widget
  */
 class PluginDomainDialog : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 public:
+    PluginDomainDialog(QWidget *parent);
+    virtual ~PluginDomainDialog();
 
-  PluginDomainDialog(QWidget *parent);
-  virtual ~PluginDomainDialog();
-
-  void setMainWidget(QWidget *widget);
+    void setMainWidget(QWidget *widget);
 
 private slots:
-  virtual void slotClose();
+    virtual void slotClose();
 
 private:
-  PluginDomainListView *domainSpecific;
-  QBoxLayout *thisLayout;
+    PluginDomainListView *domainSpecific;
+    QBoxLayout *thisLayout;
 };
 
-class KPluginOptions : public KCModule
-{
+class KPluginOptions : public KCModule {
     Q_OBJECT
 
 public:
-    KPluginOptions( KConfig* config, QString group, QWidget* parent = 0, const char* name = 0 );
-	~KPluginOptions();
+    KPluginOptions(KConfig *config, QString group, QWidget *parent = 0, const char *name = 0);
+    ~KPluginOptions();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
     QString quickHelp() const;
@@ -110,54 +105,60 @@ private slots:
     void slotShowDomainDlg();
 
 private:
-
-    KConfig* m_pConfig;
-    QString  m_groupname;
+    KConfig *m_pConfig;
+    QString m_groupname;
 
     QCheckBox *enablePluginsGloballyCB, *enableHTTPOnly, *enableUserDemand;
 
 
- protected slots:
-  void progress(KProcIO *);
-  void updatePLabel(int);
-  void change() { change( true ); };
-  void change( bool c ) { emit changed(c); m_changed = c; };
+protected slots:
+    void progress(KProcIO *);
+    void updatePLabel(int);
+    void change()
+    {
+        change(true);
+    };
+    void change(bool c)
+    {
+        emit changed(c);
+        m_changed = c;
+    };
 
-  void scan();
-  void scanDone();
+    void scan();
+    void scanDone();
 
- private:
-  NSConfigWidget *m_widget;
-  bool m_changed;
-  QProgressDialog *m_progress;
-  KProcIO* m_nspluginscan;
-  QSlider *priority;
-  QLabel *priorityLabel;
-  PluginPolicies global_policies;
-  PluginDomainListView *domainSpecific;
-  KDialogBase *domainSpecificDlg;
+private:
+    NSConfigWidget *m_widget;
+    bool m_changed;
+    QProgressDialog *m_progress;
+    KProcIO *m_nspluginscan;
+    QSlider *priority;
+    QLabel *priorityLabel;
+    PluginPolicies global_policies;
+    PluginDomainListView *domainSpecific;
+    KDialogBase *domainSpecificDlg;
 
-/******************************************************************************/
- protected:
-  void dirInit();
-  void dirLoad( KConfig *config, bool useDefault = false );
-  void dirSave( KConfig *config );
+    /******************************************************************************/
+protected:
+    void dirInit();
+    void dirLoad(KConfig *config, bool useDefault = false);
+    void dirSave(KConfig *config);
 
- protected slots:
-  void dirNew();
-  void dirRemove();
-  void dirUp();
-  void dirDown();
-  void dirEdited(const QString &);
-  void dirSelect( QListBoxItem * );
+protected slots:
+    void dirNew();
+    void dirRemove();
+    void dirUp();
+    void dirDown();
+    void dirEdited(const QString &);
+    void dirSelect(QListBoxItem *);
 
-/******************************************************************************/
- protected:
-  void pluginInit();
-  void pluginLoad( KConfig *config );
-  void pluginSave( KConfig *config );
+    /******************************************************************************/
+protected:
+    void pluginInit();
+    void pluginLoad(KConfig *config);
+    void pluginSave(KConfig *config);
 
-  friend class PluginDomainListView;
+    friend class PluginDomainListView;
 };
 
-#endif		// __PLUGINOPTS_H__
+#endif // __PLUGINOPTS_H__

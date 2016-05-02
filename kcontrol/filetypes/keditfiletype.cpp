@@ -34,149 +34,147 @@
 #include <X11/Xutil.h>
 #endif
 
-FileTypeDialog::FileTypeDialog( KMimeType::Ptr mime )
-  : KDialogBase( 0L, 0, false, QString::null, /* Help | */ Cancel | Apply | Ok,
-                 Ok, false )
+FileTypeDialog::FileTypeDialog(KMimeType::Ptr mime) : KDialogBase(0L, 0, false, QString::null, /* Help | */ Cancel | Apply | Ok, Ok, false)
 {
-  init( mime, false );
+    init(mime, false);
 }
 
-FileTypeDialog::FileTypeDialog( KMimeType::Ptr mime, bool newItem )
-  : KDialogBase( 0L, 0, false, QString::null, /* Help | */ Cancel | Apply | Ok,
-                 Ok, false )
+FileTypeDialog::FileTypeDialog(KMimeType::Ptr mime, bool newItem)
+    : KDialogBase(0L, 0, false, QString::null, /* Help | */ Cancel | Apply | Ok, Ok, false)
 {
-  init( mime, newItem );
+    init(mime, newItem);
 }
 
-void FileTypeDialog::init( KMimeType::Ptr mime, bool newItem )
+void FileTypeDialog::init(KMimeType::Ptr mime, bool newItem)
 {
-  m_details = new FileTypeDetails( this );
-  QListView * dummyListView = new QListView( m_details );
-  dummyListView->hide();
-  m_item = new TypesListItem( dummyListView, mime, newItem );
-  m_details->setTypeItem( m_item );
+    m_details = new FileTypeDetails(this);
+    QListView *dummyListView = new QListView(m_details);
+    dummyListView->hide();
+    m_item = new TypesListItem(dummyListView, mime, newItem);
+    m_details->setTypeItem(m_item);
 
-  // This code is very similar to kcdialog.cpp
-  setMainWidget( m_details );
-  connect(m_details, SIGNAL(changed(bool)), this, SLOT(clientChanged(bool)));
-  // TODO setHelp()
-  enableButton(Apply, false);
+    // This code is very similar to kcdialog.cpp
+    setMainWidget(m_details);
+    connect(m_details, SIGNAL(changed(bool)), this, SLOT(clientChanged(bool)));
+    // TODO setHelp()
+    enableButton(Apply, false);
 
-  connect( KSycoca::self(), SIGNAL( databaseChanged() ), SLOT( slotDatabaseChanged() ) );
+    connect(KSycoca::self(), SIGNAL(databaseChanged()), SLOT(slotDatabaseChanged()));
 }
 
 void FileTypeDialog::save()
 {
-  if (m_item->isDirty()) {
-    m_item->sync();
-    KService::rebuildKSycoca(this);
-  }
+    if(m_item->isDirty())
+    {
+        m_item->sync();
+        KService::rebuildKSycoca(this);
+    }
 }
 
 void FileTypeDialog::slotApply()
 {
-  save();
+    save();
 }
 
 void FileTypeDialog::slotOk()
 {
-  save();
-  accept();
+    save();
+    accept();
 }
 
 void FileTypeDialog::clientChanged(bool state)
 {
-  // enable/disable buttons
-  enableButton(User1, state);
-  enableButton(Apply, state);
+    // enable/disable buttons
+    enableButton(User1, state);
+    enableButton(Apply, state);
 }
 
 void FileTypeDialog::slotDatabaseChanged()
 {
-  if ( KSycoca::self()->isChanged( "mime" ) )
-  {
-      m_item->refresh();
-  }
+    if(KSycoca::self()->isChanged("mime"))
+    {
+        m_item->refresh();
+    }
 }
 
 #include "keditfiletype.moc"
 
-static KCmdLineOptions options[] =
+static KCmdLineOptions options[] = {{"parent <winid>", I18N_NOOP("Makes the dialog transient for the window specified by winid"), 0},
+                                    {"+mimetype", I18N_NOOP("File type to edit (e.g. text/html)"), 0},
+                                    KCmdLineLastOption};
+
+int main(int argc, char **argv)
 {
-  { "parent <winid>", I18N_NOOP("Makes the dialog transient for the window specified by winid"), 0 },
-  { "+mimetype",   I18N_NOOP("File type to edit (e.g. text/html)"), 0 },
-  KCmdLineLastOption
-};
+    KLocale::setMainCatalogue("filetypes");
+    KAboutData aboutData("keditfiletype", I18N_NOOP("KEditFileType"), "1.0",
+                         I18N_NOOP("KDE file type editor - simplified version for editing a single file type"), KAboutData::License_GPL,
+                         I18N_NOOP("(c) 2000, KDE developers"));
+    aboutData.addAuthor("Preston Brown", 0, "pbrown@kde.org");
+    aboutData.addAuthor("David Faure", 0, "faure@kde.org");
 
-int main(int argc, char ** argv)
-{
-  KLocale::setMainCatalogue("filetypes");
-  KAboutData aboutData( "keditfiletype", I18N_NOOP("KEditFileType"), "1.0",
-                        I18N_NOOP("KDE file type editor - simplified version for editing a single file type"),
-                        KAboutData::License_GPL,
-                        I18N_NOOP("(c) 2000, KDE developers") );
-  aboutData.addAuthor("Preston Brown",0, "pbrown@kde.org");
-  aboutData.addAuthor("David Faure",0, "faure@kde.org");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options); // Add our own options.
+    KApplication app;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
-  KApplication app;
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    if(args->count() == 0)
+        KCmdLineArgs::usage();
 
-  if (args->count() == 0)
-    KCmdLineArgs::usage();
+    QString arg = args->arg(0);
 
-  QString arg = args->arg(0);
+    bool createType = arg.startsWith("*");
 
-  bool createType = arg.startsWith( "*" );
+    KMimeType::Ptr mime;
 
-  KMimeType::Ptr mime;
-  
-  if ( createType ) {
-    QString mimeString = "application/x-kdeuser%1";
-    QString loc;
-    int inc = 0;
-    do {
-      ++inc;
-      loc = locateLocal( "mime", mimeString.arg( inc ) + ".desktop" );
+    if(createType)
+    {
+        QString mimeString = "application/x-kdeuser%1";
+        QString loc;
+        int inc = 0;
+        do
+        {
+            ++inc;
+            loc = locateLocal("mime", mimeString.arg(inc) + ".desktop");
+        } while(QFile::exists(loc));
+
+        QStringList patterns;
+        if(arg.length() > 2)
+            patterns << arg.lower() << arg.upper();
+        QString comment;
+        if(arg.startsWith("*.") && arg.length() >= 3)
+        {
+            QString type = arg.mid(3).prepend(arg[2].upper());
+            comment = i18n("%1 File").arg(type);
+        }
+        mime = new KMimeType(loc, mimeString.arg(inc), QString::null, comment, patterns);
     }
-    while ( QFile::exists( loc ) );
-
-    QStringList patterns;
-    if ( arg.length() > 2 )
-	patterns << arg.lower() << arg.upper();
-    QString comment;
-    if ( arg.startsWith( "*." ) && arg.length() >= 3 ) {
-	QString type = arg.mid( 3 ).prepend( arg[2].upper() );
-        comment = i18n( "%1 File" ).arg( type );
+    else
+    {
+        mime = KMimeType::mimeType(arg);
+        if(!mime)
+            kdFatal() << "Mimetype " << arg << " not found" << endl;
     }
-    mime = new KMimeType( loc, mimeString.arg( inc ), QString::null, comment, patterns );
-  }
-  else { 
-    mime = KMimeType::mimeType( arg );
-  if (!mime)
-      kdFatal() << "Mimetype " << arg << " not found" << endl;
-  }
 
-  FileTypeDialog dlg( mime, createType );
+    FileTypeDialog dlg(mime, createType);
 #if defined Q_WS_X11
-  if( args->isSet( "parent" )) {
-    bool ok;
-    long id = args->getOption("parent").toLong(&ok);
-    if (ok)
-      XSetTransientForHint( qt_xdisplay(), dlg.winId(), id );
-  }
+    if(args->isSet("parent"))
+    {
+        bool ok;
+        long id = args->getOption("parent").toLong(&ok);
+        if(ok)
+            XSetTransientForHint(qt_xdisplay(), dlg.winId(), id);
+    }
 #endif
-  args->clear();
-  if ( !createType )
-  dlg.setCaption( i18n("Edit File Type %1").arg(mime->name()) );
-  else {
-    dlg.setCaption( i18n("Create New File Type %1").arg(mime->name()) );
-    dlg.enableButton( KDialogBase::Apply, true );
-  }
-  app.setMainWidget( &dlg );
-  dlg.show(); // non-modal
+    args->clear();
+    if(!createType)
+        dlg.setCaption(i18n("Edit File Type %1").arg(mime->name()));
+    else
+    {
+        dlg.setCaption(i18n("Create New File Type %1").arg(mime->name()));
+        dlg.enableButton(KDialogBase::Apply, true);
+    }
+    app.setMainWidget(&dlg);
+    dlg.show(); // non-modal
 
-  return app.exec();
+    return app.exec();
 }
-

@@ -36,31 +36,30 @@ class DrKBugReport;
 
 #include <kdialogbase.h>
 
-class Toplevel : public KDialogBase
-{
-  Q_OBJECT
+class Toplevel : public KDialogBase {
+    Q_OBJECT
 
 public:
-  Toplevel(KrashConfig *krash, QWidget *parent = 0, const char * name = 0);
-  ~Toplevel();
+    Toplevel(KrashConfig *krash, QWidget *parent = 0, const char *name = 0);
+    ~Toplevel();
 
 private:
-  // helper methods
-  QString generateText() const;
+    // helper methods
+    QString generateText() const;
 
 protected slots:
-  void slotUser1();
-  void slotUser2();
-  void slotNewDebuggingApp(const QString& launchName);
-  void slotUser3();
+    void slotUser1();
+    void slotUser2();
+    void slotNewDebuggingApp(const QString &launchName);
+    void slotUser3();
 
 protected slots:
-  void slotBacktraceSomeError();
-  void slotBacktraceDone(const QString &);
+    void slotBacktraceSomeError();
+    void slotBacktraceDone(const QString &);
 
 private:
-  KrashConfig *m_krashconf;
-  DrKBugReport *m_bugreport;
+    KrashConfig *m_krashconf;
+    DrKBugReport *m_bugreport;
 };
 
 #endif

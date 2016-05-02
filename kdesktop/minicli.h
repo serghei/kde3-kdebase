@@ -42,71 +42,70 @@ class QWidget;
 class MinicliDlgUI;
 class KURIFilterData;
 
-class Minicli : public KDialog
-{
-  Q_OBJECT
+class Minicli : public KDialog {
+    Q_OBJECT
 
 public:
-  Minicli( QWidget *parent=0, const char *name=0 );
-  virtual ~Minicli();
+    Minicli(QWidget *parent = 0, const char *name = 0);
+    virtual ~Minicli();
 
-  void setCommand(const QString& command);
-  void reset();
-  void saveConfig();
-  void clearHistory();
-  
-  virtual void show();
-  virtual QSize sizeHint() const;
+    void setCommand(const QString &command);
+    void reset();
+    void saveConfig();
+    void clearHistory();
+
+    virtual void show();
+    virtual QSize sizeHint() const;
 
 protected slots:
-  virtual void accept();
-  virtual void reject();
-  void updateAuthLabel();
+    virtual void accept();
+    virtual void reject();
+    void updateAuthLabel();
 
 protected:
-  void loadConfig();
-  bool needsKDEsu();
-  virtual void keyPressEvent( QKeyEvent* );
-  virtual void fontChange( const QFont & );
+    void loadConfig();
+    bool needsKDEsu();
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual void fontChange(const QFont &);
 
 private slots:
-  void slotAdvanced();
-  void slotParseTimer();
-  void slotPriority(int);
-  void slotRealtime(bool);
-  void slotTerminal(bool);
-  void slotChangeUid(bool);
-  void slotChangeScheduler(bool);
-  void slotCmdChanged(const QString&);
+    void slotAdvanced();
+    void slotParseTimer();
+    void slotPriority(int);
+    void slotRealtime(bool);
+    void slotTerminal(bool);
+    void slotChangeUid(bool);
+    void slotChangeScheduler(bool);
+    void slotCmdChanged(const QString &);
 
 private:
-  void setIcon();
-  int runCommand();
-  void parseLine( bool final );
-  QString terminalCommand (const QString&, const QString&);
-  QString calculate(const QString &exp);
-  void notifyServiceStarted(KService::Ptr service);
+    void setIcon();
+    int runCommand();
+    void parseLine(bool final);
+    QString terminalCommand(const QString &, const QString &);
+    QString calculate(const QString &exp);
+    void notifyServiceStarted(KService::Ptr service);
 
 
-  int m_iPriority;
-  int m_iScheduler;
+    int m_iPriority;
+    int m_iScheduler;
 
-  QString m_iconName;
-  QString m_prevIconName;
-  QStringList m_terminalAppList;
-  QStringList m_middleFilters;
-  QStringList m_finalFilters;
+    QString m_iconName;
+    QString m_prevIconName;
+    QStringList m_terminalAppList;
+    QStringList m_middleFilters;
+    QStringList m_finalFilters;
 
-  QTimer* m_parseTimer;
-  QWidget* m_FocusWidget;
-  MinicliDlgUI* m_dlg;
-  KURIFilterData* m_filterData;
+    QTimer *m_parseTimer;
+    QWidget *m_FocusWidget;
+    MinicliDlgUI *m_dlg;
+    KURIFilterData *m_filterData;
 
-  // Cached values
-  QString m_prevUser;
-  QString m_prevPass;
-  bool m_prevChecked;
-  bool m_prevCached;
-  bool m_autoCheckedRunInTerm;
+    // Cached values
+    QString m_prevUser;
+    QString m_prevPass;
+    bool m_prevChecked;
+    bool m_prevCached;
+    bool m_autoCheckedRunInTerm;
 };
 #endif

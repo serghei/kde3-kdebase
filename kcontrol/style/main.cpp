@@ -5,9 +5,10 @@
 #include "kcmstyle.h"
 
 extern "C" {
-    KCModule *create_style(QWidget *parent, const char *) {
-      return new KCMStyle(parent, "kcmstyle");
-    }
+KCModule *create_style(QWidget *parent, const char *)
+{
+    return new KCMStyle(parent, "kcmstyle");
+}
 }
 
 /*

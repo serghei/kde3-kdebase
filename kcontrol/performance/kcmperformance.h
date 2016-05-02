@@ -21,40 +21,37 @@
 
 #include <kcmodule.h>
 
-namespace KCMPerformance
-{
+namespace KCMPerformance {
 
 class Konqueror;
 class SystemWidget;
 
-class Config
-    : public KCModule
-    {
+class Config : public KCModule {
     Q_OBJECT
-    public:
-        Config( QWidget* parent_P, const char* name_P );
-        virtual void load();
-        virtual void load( bool useDefaults );
-        virtual void save();
-        virtual void defaults();
-    private:
-        Konqueror* konqueror_widget;
-        SystemWidget* system_widget;
-    };
+public:
+    Config(QWidget *parent_P, const char *name_P);
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
-class KonquerorConfig
-    : public KCModule
-    {
+private:
+    Konqueror *konqueror_widget;
+    SystemWidget *system_widget;
+};
+
+class KonquerorConfig : public KCModule {
     Q_OBJECT
-    public:
-        KonquerorConfig( QWidget* parent_P, const char* name_P );
-        virtual void load();
-        virtual void load( bool useDefaults );
-        virtual void save();
-        virtual void defaults();
-    private:
-        Konqueror* widget;
-    };
+public:
+    KonquerorConfig(QWidget *parent_P, const char *name_P);
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
+
+private:
+    Konqueror *widget;
+};
 
 } // namespace
 

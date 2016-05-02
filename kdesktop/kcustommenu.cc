@@ -26,57 +26,53 @@
 
 #include "kcustommenu.h"
 
-class KCustomMenu::KCustomMenuPrivate
-{
+class KCustomMenu::KCustomMenuPrivate {
 public:
-   QMap<int,KService::Ptr> entryMap;
+    QMap< int, KService::Ptr > entryMap;
 };
 
-KCustomMenu::KCustomMenu(const QString &configfile, QWidget *parent)
-   : QPopupMenu(parent, "kcustom_menu")
+KCustomMenu::KCustomMenu(const QString &configfile, QWidget *parent) : QPopupMenu(parent, "kcustom_menu")
 {
-  d = new KCustomMenuPrivate; 
-  
-  KConfig cfg(configfile, true, false);
-  int count = cfg.readNumEntry("NrOfItems");
-  for(int i = 0; i < count; i++)
-  {
-     QString entry = cfg.readEntry(QString("Item%1").arg(i+1));
-     if (entry.isEmpty())
-        continue;
+    d = new KCustomMenuPrivate;
 
-     // Try KSycoca first.
-     KService::Ptr menuItem = KService::serviceByDesktopPath( entry );
-     if (!menuItem)
-        menuItem = KService::serviceByDesktopName( entry );
-     if (!menuItem)
-        menuItem = new KService( entry );
+    KConfig cfg(configfile, true, false);
+    int count = cfg.readNumEntry("NrOfItems");
+    for(int i = 0; i < count; i++)
+    {
+        QString entry = cfg.readEntry(QString("Item%1").arg(i + 1));
+        if(entry.isEmpty())
+            continue;
 
-     if (!menuItem->isValid())
-        continue;
- 
-     insertMenuItem( menuItem, -1 );
-  }
-  connect(this, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
+        // Try KSycoca first.
+        KService::Ptr menuItem = KService::serviceByDesktopPath(entry);
+        if(!menuItem)
+            menuItem = KService::serviceByDesktopName(entry);
+        if(!menuItem)
+            menuItem = new KService(entry);
+
+        if(!menuItem->isValid())
+            continue;
+
+        insertMenuItem(menuItem, -1);
+    }
+    connect(this, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
 }
 
 KCustomMenu::~KCustomMenu()
 {
-  delete d;
+    delete d;
 }
 
-void
-KCustomMenu::slotActivated(int id)
+void KCustomMenu::slotActivated(int id)
 {
-  KService::Ptr s = d->entryMap[id];
-  if (!s)
-     return;
-  kapp->startServiceByDesktopPath(s->desktopEntryPath());
+    KService::Ptr s = d->entryMap[id];
+    if(!s)
+        return;
+    kapp->startServiceByDesktopPath(s->desktopEntryPath());
 }
 
 // The following is copied from kicker's PanelServiceMenu
-void 
-KCustomMenu::insertMenuItem(KService::Ptr & s, int nId, int nIndex/*= -1*/)
+void KCustomMenu::insertMenuItem(KService::Ptr &s, int nId, int nIndex /*= -1*/)
 {
     QString serviceName = s->name();
 
@@ -84,17 +80,17 @@ KCustomMenu::insertMenuItem(KService::Ptr & s, int nId, int nIndex/*= -1*/)
     // to accelators, replace them with two ampersands.
     serviceName.replace("&", "&&");
 
-    QPixmap normal = KGlobal::instance()->iconLoader()->loadIcon(s->icon(), KIcon::Small,
-                                                                 0, KIcon::DefaultState, 0L, true);
-    QPixmap active = KGlobal::instance()->iconLoader()->loadIcon(s->icon(), KIcon::Small,
-                                                                 0, KIcon::ActiveState, 0L, true);
+    QPixmap normal = KGlobal::instance()->iconLoader()->loadIcon(s->icon(), KIcon::Small, 0, KIcon::DefaultState, 0L, true);
+    QPixmap active = KGlobal::instance()->iconLoader()->loadIcon(s->icon(), KIcon::Small, 0, KIcon::ActiveState, 0L, true);
     // make sure they are not larger than 16x16
-    if (normal.width() > 16 || normal.height() > 16) {
+    if(normal.width() > 16 || normal.height() > 16)
+    {
         QImage tmp = normal.convertToImage();
         tmp = tmp.smoothScale(16, 16);
         normal.convertFromImage(tmp);
     }
-    if (active.width() > 16 || active.height() > 16) {
+    if(active.width() > 16 || active.height() > 16)
+    {
         QImage tmp = active.convertToImage();
         tmp = tmp.smoothScale(16, 16);
         active.convertFromImage(tmp);

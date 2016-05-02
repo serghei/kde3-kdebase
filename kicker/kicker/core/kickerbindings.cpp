@@ -22,11 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************/
 
 #ifndef NOSLOTS
-# define DEF( name, key3, key4, target, fnSlot ) \
-   keys->insert( name, i18n(name), QString::null, key3, key4, target, SLOT(fnSlot) )
+#define DEF(name, key3, key4, target, fnSlot) keys->insert(name, i18n(name), QString::null, key3, key4, target, SLOT(fnSlot))
 #else
-# define DEF( name, key3, key4, target, fnSlot ) \
-   keys->insert( name, i18n(name), QString::null, key3, key4 )
+#define DEF(name, key3, key4, target, fnSlot) keys->insert(name, i18n(name), QString::null, key3, key4)
 #endif
 #define WIN KKey::QtWIN
 
@@ -36,14 +34,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #endif
 
 #ifdef LAUNCH_MENU
-	keys->insert("Program:kicker", i18n("Panel"));
-	DEF(I18N_NOOP("Popup Launch Menu" ), ALT+Qt::Key_F1, WIN+Qt::Key_Menu,
-                      MenuManager::the(), kmenuAccelActivated());
+keys->insert("Program:kicker", i18n("Panel"));
+DEF(I18N_NOOP("Popup Launch Menu"), ALT + Qt::Key_F1, WIN + Qt::Key_Menu, MenuManager::the(), kmenuAccelActivated());
 #endif
 
 #ifdef SHOW_DESKTOP
-	DEF(I18N_NOOP( "Toggle Showing Desktop" ), ALT+CTRL+Qt::Key_D, WIN+CTRL+Qt::Key_D,
-            this, slotToggleShowDesktop());
+DEF(I18N_NOOP("Toggle Showing Desktop"), ALT + CTRL + Qt::Key_D, WIN + CTRL + Qt::Key_D, this, slotToggleShowDesktop());
 #endif
 
 #undef DEF

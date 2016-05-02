@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2002 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -29,32 +29,31 @@
 class KLineEdit;
 class KIntNumInput;
 
-class WorkSheetSettings : public KDialogBase
-{
-  Q_OBJECT
+class WorkSheetSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    WorkSheetSettings( QWidget* parent = 0, const char* name = 0 );
+public:
+    WorkSheetSettings(QWidget *parent = 0, const char *name = 0);
     ~WorkSheetSettings();
 
-    void setRows( int rows );
+    void setRows(int rows);
     int rows() const;
 
-    void setColumns( int columns );
+    void setColumns(int columns);
     int columns() const;
 
-    void setInterval( int interval );
+    void setInterval(int interval);
     int interval() const;
 
-    void setSheetTitle( const QString &title );
+    void setSheetTitle(const QString &title);
     QString sheetTitle() const;
 
-  private:
-    KLineEdit* mSheetTitle;
+private:
+    KLineEdit *mSheetTitle;
 
-    KIntNumInput* mColumns;
-    KIntNumInput* mInterval;
-    KIntNumInput* mRows;
+    KIntNumInput *mColumns;
+    KIntNumInput *mInterval;
+    KIntNumInput *mRows;
 };
 
 #endif

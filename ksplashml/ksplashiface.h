@@ -17,22 +17,22 @@
 #include <qstring.h>
 
 /** @short DCOP interface for KSplash. */
-class KSplashIface : virtual public DCOPObject
-{
-  K_DCOP
+class KSplashIface : virtual public DCOPObject {
+    K_DCOP
 public:
-  KSplashIface( const char *name = "ksplash" ) : DCOPObject(name) {}
+    KSplashIface(const char *name = "ksplash") : DCOPObject(name)
+    {
+    }
 
-k_dcop:
-  virtual ASYNC upAndRunning( QString ) = 0;
-  virtual ASYNC setMaxProgress(int) = 0;
-  virtual ASYNC setProgress(int) = 0;
-  virtual ASYNC setStartupItemCount( int count ) = 0;
-  virtual ASYNC programStarted( QString programIcon, QString programName, QString description ) = 0;
-  virtual ASYNC startupComplete() = 0;
-  virtual ASYNC close() = 0;
-  virtual ASYNC hide() = 0;
-  virtual ASYNC show() = 0;
+    k_dcop : virtual ASYNC upAndRunning(QString) = 0;
+    virtual ASYNC setMaxProgress(int) = 0;
+    virtual ASYNC setProgress(int) = 0;
+    virtual ASYNC setStartupItemCount(int count) = 0;
+    virtual ASYNC programStarted(QString programIcon, QString programName, QString description) = 0;
+    virtual ASYNC startupComplete() = 0;
+    virtual ASYNC close() = 0;
+    virtual ASYNC hide() = 0;
+    virtual ASYNC show() = 0;
 };
 
 #endif

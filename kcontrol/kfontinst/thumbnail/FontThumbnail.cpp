@@ -36,16 +36,14 @@
 #include <klocale.h>
 #include <kurl.h>
 
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        return new KFI::CFontThumbnail;
-    }
+    return new KFI::CFontThumbnail;
+}
 }
 
-namespace KFI
-{
+namespace KFI {
 
 CFontThumbnail::CFontThumbnail()
 {
@@ -58,7 +56,7 @@ bool CFontThumbnail::create(const QString &path, int width, int height, QImage &
 
     if(itsEngine.draw(KURL(path), width, height, pix, 0, true))
     {
-        img=pix.convertToImage();
+        img = pix.convertToImage();
         return true;
     }
 
@@ -69,5 +67,4 @@ ThumbCreator::Flags CFontThumbnail::flags() const
 {
     return DrawFrame;
 }
-
 }

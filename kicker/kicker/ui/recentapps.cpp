@@ -36,7 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "recentapps.h"
 
-RecentlyLaunchedApps& RecentlyLaunchedApps::the()
+RecentlyLaunchedApps &RecentlyLaunchedApps::the()
 {
     static RecentlyLaunchedApps obj;
     return obj;
@@ -53,9 +53,9 @@ RecentlyLaunchedApps::RecentlyLaunchedApps()
 
 void RecentlyLaunchedApps::init()
 {
-    if (m_bInitialised)
+    if(m_bInitialised)
     {
-       return;
+        return;
     }
 
     m_nNumMenuItems = 0;
@@ -65,17 +65,15 @@ void RecentlyLaunchedApps::init()
 
     QStringList recentApps = KickerSettings::recentAppsStat();
 
-    for (QStringList::ConstIterator it = recentApps.begin(); 
-         it != recentApps.end(); ++it )
+    for(QStringList::ConstIterator it = recentApps.begin(); it != recentApps.end(); ++it)
     {
-        QRegExp re( "(\\d*) (\\d*) (.*)" );
-        if (re.search(*it) != -1)
+        QRegExp re("(\\d*) (\\d*) (.*)");
+        if(re.search(*it) != -1)
         {
             int nCount = re.cap(1).toInt();
             long lTime = re.cap(2).toLong();
             QString szPath = re.cap(3);
-            m_appInfos.append(RecentlyLaunchedAppInfo(
-                szPath, nCount, time_t(lTime)));
+            m_appInfos.append(RecentlyLaunchedAppInfo(szPath, nCount, time_t(lTime)));
         }
     }
 
@@ -93,32 +91,27 @@ void RecentlyLaunchedApps::save()
 {
     QStringList recentApps;
 
-    for (QValueList<RecentlyLaunchedAppInfo>::const_iterator it = 
-            m_appInfos.constBegin(); it != m_appInfos.constEnd(); ++it)
+    for(QValueList< RecentlyLaunchedAppInfo >::const_iterator it = m_appInfos.constBegin(); it != m_appInfos.constEnd(); ++it)
     {
-        recentApps.append(QString("%1 %2 %3").arg((*it).getLaunchCount())
-                                             .arg((*it).getLastLaunchTime())
-                                             .arg((*it).getDesktopPath()));
+        recentApps.append(QString("%1 %2 %3").arg((*it).getLaunchCount()).arg((*it).getLastLaunchTime()).arg((*it).getDesktopPath()));
     }
 
     KickerSettings::setRecentAppsStat(recentApps);
     KickerSettings::writeConfig();
 }
 
-void RecentlyLaunchedApps::appLaunched(const QString& strApp)
+void RecentlyLaunchedApps::appLaunched(const QString &strApp)
 {
     // Inform other applications (like the quickstarter applet)
     // that an application was started
     QByteArray params;
     QDataStream stream(params, IO_WriteOnly);
     stream << launchDCOPSignalSource() << strApp;
-    KApplication::kApplication()->dcopClient()->emitDCOPSignal("appLauncher",
-        "serviceStartedByStorageId(QString,QString)", params);
+    KApplication::kApplication()->dcopClient()->emitDCOPSignal("appLauncher", "serviceStartedByStorageId(QString,QString)", params);
 
-    for (QValueList<RecentlyLaunchedAppInfo>::iterator it = m_appInfos.begin();
-         it != m_appInfos.end(); ++it)
+    for(QValueList< RecentlyLaunchedAppInfo >::iterator it = m_appInfos.begin(); it != m_appInfos.end(); ++it)
     {
-        if ((*it).getDesktopPath() == strApp)
+        if((*it).getDesktopPath() == strApp)
         {
             (*it).increaseLaunchCount();
             (*it).setLastLaunchTime(time(0));
@@ -131,27 +124,23 @@ void RecentlyLaunchedApps::appLaunched(const QString& strApp)
     qHeapSort(m_appInfos);
 }
 
-void RecentlyLaunchedApps::getRecentApps(QStringList& recentApps)
+void RecentlyLaunchedApps::getRecentApps(QStringList &recentApps)
 {
     recentApps.clear();
 
     int maximumNum = KickerSettings::numVisibleEntries();
     int i = 0;
-    for (QValueList<RecentlyLaunchedAppInfo>::const_iterator it =
-            m_appInfos.constBegin();
-         it != m_appInfos.constEnd() && i < maximumNum;
-         ++it, ++i)
+    for(QValueList< RecentlyLaunchedAppInfo >::const_iterator it = m_appInfos.constBegin(); it != m_appInfos.constEnd() && i < maximumNum; ++it, ++i)
     {
         recentApps.append((*it).getDesktopPath());
     }
 }
 
-void RecentlyLaunchedApps::removeItem( const QString& strName )
+void RecentlyLaunchedApps::removeItem(const QString &strName)
 {
-    for (QValueList<RecentlyLaunchedAppInfo>::iterator it = m_appInfos.begin();
-         it != m_appInfos.end(); ++it)
+    for(QValueList< RecentlyLaunchedAppInfo >::iterator it = m_appInfos.begin(); it != m_appInfos.end(); ++it)
     {
-        if ((*it).getDesktopPath() == strName)
+        if((*it).getDesktopPath() == strName)
         {
             m_appInfos.erase(it);
             return;
@@ -166,7 +155,5 @@ void RecentlyLaunchedApps::clearRecentApps()
 
 QString RecentlyLaunchedApps::caption() const
 {
-    return KickerSettings::recentVsOften() ?
-           i18n("Recently Used Applications") :
-           i18n("Most Used Applications");
+    return KickerSettings::recentVsOften() ? i18n("Recently Used Applications") : i18n("Most Used Applications");
 }

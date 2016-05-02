@@ -32,29 +32,28 @@ class QDateTime;
 
 class KDateTimeDlgPrivate;
 
-class KDateTimeDlg : public KDialog
-{
-  Q_OBJECT
+class KDateTimeDlg : public KDialog {
+    Q_OBJECT
 public:
-  KDateTimeDlg(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~KDateTimeDlg();
+    KDateTimeDlg(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KDateTimeDlg();
 
-  virtual QTime     getTime();
-  virtual QDate     getDate();
-  virtual QDateTime getDateTime();
+    virtual QTime getTime();
+    virtual QDate getDate();
+    virtual QDateTime getDateTime();
 
-  virtual void      setDate(const QDate& qdate);
-  virtual void      setTime(const QTime& qtime);
-  virtual void      setDateTime(const QDateTime& qdatetime);
+    virtual void setDate(const QDate &qdate);
+    virtual void setTime(const QTime &qtime);
+    virtual void setDateTime(const QDateTime &qdatetime);
 
 protected slots:
 
 private:
-   KPushButton *_ok, *_cancel;
-   KDatePicker *_date;
-   KIntNumInput *_hours, *_mins, *_secs;
+    KPushButton *_ok, *_cancel;
+    KDatePicker *_date;
+    KIntNumInput *_hours, *_mins, *_secs;
 
-   KDateTimeDlgPrivate *d;
+    KDateTimeDlgPrivate *d;
 };
 
 #endif

@@ -32,31 +32,30 @@
 #include <X11/Xlib.h>
 
 /**** DLL Interface ****/
-typedef KGenericFactory<KBackground, QWidget> KBackGndFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_background, KBackGndFactory("kcmbackground"))
+typedef KGenericFactory< KBackground, QWidget > KBackGndFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_background, KBackGndFactory("kcmbackground"))
 
 /**** KBackground ****/
-KBackground::~KBackground( )
+KBackground::~KBackground()
 {
     delete m_pConfig;
 }
 
-KBackground::KBackground(QWidget *parent, const char *name, const QStringList &/* */)
-    : KCModule(KBackGndFactory::instance(), parent, name)
+KBackground::KBackground(QWidget *parent, const char *name, const QStringList & /* */) : KCModule(KBackGndFactory::instance(), parent, name)
 {
     int screen_number = 0;
-    if (qt_xdisplay())
-	screen_number = DefaultScreen(qt_xdisplay());
+    if(qt_xdisplay())
+        screen_number = DefaultScreen(qt_xdisplay());
     QCString configname;
-    if (screen_number == 0)
-	configname = "kdesktoprc";
+    if(screen_number == 0)
+        configname = "kdesktoprc";
     else
-	configname.sprintf("kdesktop-screen-%drc", screen_number);
+        configname.sprintf("kdesktop-screen-%drc", screen_number);
     m_pConfig = new KConfig(configname, false, false);
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     m_base = new BGDialog(this, m_pConfig);
-    setQuickHelp( m_base->quickHelp());
+    setQuickHelp(m_base->quickHelp());
     layout->add(m_base);
     layout->addStretch();
 
@@ -67,10 +66,8 @@ KBackground::KBackground(QWidget *parent, const char *name, const QStringList &/
 
     connect(m_base, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
 
-    KAboutData *about =
-    new KAboutData(I18N_NOOP("kcmbackground"), I18N_NOOP("KDE Background Control Module"),
-                  0, 0, KAboutData::License_GPL,
-                  I18N_NOOP("(c) 1997-2002 Martin R. Jones"));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmbackground"), I18N_NOOP("KDE Background Control Module"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 1997-2002 Martin R. Jones"));
 
     about->addAuthor("Waldo Bastian", 0, "bastian@kde.org");
     about->addAuthor("George Staikos", 0, "staikos@kde.org");
@@ -78,19 +75,19 @@ KBackground::KBackground(QWidget *parent, const char *name, const QStringList &/
     about->addAuthor("Matthias Hoelzer-Kluepfel", 0, "mhk@kde.org");
     about->addAuthor("Stephan Kulow", 0, "coolo@kde.org");
     about->addAuthor("Mark Donohoe", 0, 0);
-    about->addAuthor("Matej Koss", 0 , 0);
+    about->addAuthor("Matej Koss", 0, 0);
 
-    setAboutData( about );
+    setAboutData(about);
 }
 
 void KBackground::load()
 {
-    load( false );
+    load(false);
 }
 
-void KBackground::load( bool useDefaults )
+void KBackground::load(bool useDefaults)
 {
-    m_base->load( useDefaults );
+    m_base->load(useDefaults);
 }
 
 
@@ -100,17 +97,17 @@ void KBackground::save()
 
     // reconfigure kdesktop. kdesktop will notify all clients
     DCOPClient *client = kapp->dcopClient();
-    if (!client->isAttached())
-	client->attach();
+    if(!client->isAttached())
+        client->attach();
 
     int screen_number = 0;
-    if (qt_xdisplay())
-	screen_number = DefaultScreen(qt_xdisplay());
+    if(qt_xdisplay())
+        screen_number = DefaultScreen(qt_xdisplay());
     QCString appname;
-    if (screen_number == 0)
-	appname = "kdesktop";
+    if(screen_number == 0)
+        appname = "kdesktop";
     else
-	appname.sprintf("kdesktop-screen-%d", screen_number);
+        appname.sprintf("kdesktop-screen-%d", screen_number);
 
     client->send(appname, "KBackgroundIface", "configure()", "");
 }

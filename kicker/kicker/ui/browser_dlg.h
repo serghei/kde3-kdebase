@@ -29,12 +29,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KIconButton;
 class KLineEdit;
 
-class PanelBrowserDialog : public KDialogBase
-{
+class PanelBrowserDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    PanelBrowserDialog( const QString &path = QString::null, const QString &icon = QString::null, QWidget *parent = 0, const char *name = 0 );
+    PanelBrowserDialog(const QString &path = QString::null, const QString &icon = QString::null, QWidget *parent = 0, const char *name = 0);
     ~PanelBrowserDialog();
 
     const QString icon();
@@ -43,7 +42,8 @@ public:
 protected slots:
     void browse();
     virtual void slotOk();
-    void slotPathChanged( const QString &_text );
+    void slotPathChanged(const QString &_text);
+
 protected:
     KIconButton *iconBtn;
     KLineEdit *pathInput;

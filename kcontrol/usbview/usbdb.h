@@ -16,23 +16,19 @@
 #include <qdict.h>
 
 
-class USBDB
-{
+class USBDB {
 public:
+    USBDB();
 
-  USBDB();
+    QString vendor(int id);
+    QString device(int vendor, int id);
 
-  QString vendor(int id);
-  QString device(int vendor, int id);
-
-  QString cls(int cls);
-  QString subclass(int cls, int sub);
-  QString protocol(int cls, int sub, int prot);
+    QString cls(int cls);
+    QString subclass(int cls, int sub);
+    QString protocol(int cls, int sub, int prot);
 
 private:
-
-  QDict<QString> _classes, _ids;
-
+    QDict< QString > _classes, _ids;
 };
 
 

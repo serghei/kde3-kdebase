@@ -26,20 +26,11 @@
 class KEditListBox;
 class KIntNumInput;
 
-class NaughtyConfigDialog : public KDialogBase
-{
-  Q_OBJECT
+class NaughtyConfigDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
-    NaughtyConfigDialog
-      (
-       const QStringList & items,
-       uint interval,
-       uint threshold,
-       QWidget * parent = 0,
-       const char * name = 0
-      );
+public:
+    NaughtyConfigDialog(const QStringList &items, uint interval, uint threshold, QWidget *parent = 0, const char *name = 0);
 
     ~NaughtyConfigDialog();
 
@@ -47,12 +38,11 @@ class NaughtyConfigDialog : public KDialogBase
     uint updateInterval() const;
     uint threshold() const;
 
-  private:
+private:
+    KEditListBox *listBox_;
 
-    KEditListBox * listBox_;
-
-    KIntNumInput * kini_updateInterval_;
-    KIntNumInput * kini_threshold_;
+    KIntNumInput *kini_updateInterval_;
+    KIntNumInput *kini_threshold_;
 };
 
 #endif

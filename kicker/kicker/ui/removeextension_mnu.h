@@ -29,20 +29,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "container_extension.h"
 
-class PanelRemoveExtensionMenu : public QPopupMenu
-{
+class PanelRemoveExtensionMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    PanelRemoveExtensionMenu( QWidget *parent=0, const char *name=0 );
+    PanelRemoveExtensionMenu(QWidget *parent = 0, const char *name = 0);
     PanelRemoveExtensionMenu();
 
 protected slots:
-    void slotExec( int id );
+    void slotExec(int id);
     void slotAboutToShow();
 
 private:
-    ExtensionList  m_containers;
+    ExtensionList m_containers;
 };
 
 #endif

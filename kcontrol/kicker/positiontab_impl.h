@@ -27,16 +27,26 @@ class KVirtualBGRenderer;
 class KickerConfig;
 class ExtensionInfo;
 
-class PositionTab : public PositionTabBase
-{
+class PositionTab : public PositionTabBase {
     Q_OBJECT
 
 public:
-    PositionTab(QWidget *parent, const char* name = 0);
+    PositionTab(QWidget *parent, const char *name = 0);
     ~PositionTab();
 
-    enum positions { PosLeft = 0, PosRight, PosTop, PosBottom };
-    enum allignments { AlignLeft = 0, AlignCenter, AlignRight };
+    enum positions
+    {
+        PosLeft = 0,
+        PosRight,
+        PosTop,
+        PosBottom
+    };
+    enum allignments
+    {
+        AlignLeft = 0,
+        AlignCenter,
+        AlignRight
+    };
 
     void load();
     void save();
@@ -54,19 +64,19 @@ protected slots:
     void infoUpdated();
     void storeInfo();
     void showIdentify();
-    void extensionAdded(ExtensionInfo*);
-    void extensionRemoved(ExtensionInfo* info);
-    void extensionChanged(const QString&);
-    void extensionAboutToChange(const QString&);
+    void extensionAdded(ExtensionInfo *);
+    void extensionRemoved(ExtensionInfo *info);
+    void extensionChanged(const QString &);
+    void extensionAboutToChange(const QString &);
     void sizeChanged(int);
     void switchPanel(int);
     void jumpToPanel(int);
 
 private:
-    QFrame* m_pretendPanel;
-    QWidget* m_pretendDesktop;
-    KVirtualBGRenderer* m_desktopPreview;
-    ExtensionInfo* m_panelInfo;
+    QFrame *m_pretendPanel;
+    QWidget *m_pretendDesktop;
+    KVirtualBGRenderer *m_desktopPreview;
+    ExtensionInfo *m_panelInfo;
 
     unsigned int m_panelPos;
     unsigned int m_panelAlign;
@@ -74,4 +84,3 @@ private:
 };
 
 #endif
-

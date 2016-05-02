@@ -72,109 +72,103 @@
 #include "kasbarextension.h"
 #include "kasbarextension.moc"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelExtension *init(QWidget *parent, const QString &configFile)
 {
-   KDE_EXPORT KPanelExtension *init( QWidget *parent, const QString& configFile )
-   {
-      KGlobal::locale()->insertCatalogue("kasbarextension");
-      return new KasBarExtension( configFile,
-				  KPanelExtension::Normal,
-				  KPanelExtension::About | KPanelExtension::Preferences,
-				  parent, "kasbarextension");
-   }
+    KGlobal::locale()->insertCatalogue("kasbarextension");
+    return new KasBarExtension(configFile, KPanelExtension::Normal, KPanelExtension::About | KPanelExtension::Preferences, parent, "kasbarextension");
+}
 }
 
-KasBarExtension::KasBarExtension( const QString& configFile,
-                                  Type type,
-                                  int actions,
-                                  QWidget *parent, const char *name )
-    : KPanelExtension( configFile, type, actions, parent, name ),
-      detached_( false )
+KasBarExtension::KasBarExtension(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelExtension(configFile, type, actions, parent, name), detached_(false)
 {
     kdDebug(1345) << "KasBarExtension: Created '" << name << "', '" << configFile << "'" << endl;
-//    KApplication::kApplication()->dcopClient()->registerAs( "kasbar" );
+    //    KApplication::kApplication()->dcopClient()->registerAs( "kasbar" );
 
-//    setBackgroundMode( NoBackground );
-    kasbar = new KasTasker( orientation(), this, name );
+    //    setBackgroundMode( NoBackground );
+    kasbar = new KasTasker(orientation(), this, name);
 
-    connect( kasbar, SIGNAL( layoutChanged() ), this, SIGNAL( updateLayout() ) );
-    connect( kasbar, SIGNAL( detachedChanged(bool) ), this, SLOT( setDetached(bool) ) );
+    connect(kasbar, SIGNAL(layoutChanged()), this, SIGNAL(updateLayout()));
+    connect(kasbar, SIGNAL(detachedChanged(bool)), this, SLOT(setDetached(bool)));
 
-    kasbar->setConfig( config() );
+    kasbar->setConfig(config());
     kasbar->readConfig();
     kasbar->refreshAll();
 }
 
 KasBarExtension::~KasBarExtension()
 {
-    if ( detached_ && (!kasbar.isNull()) )
-	kasbar->deleteLater();
+    if(detached_ && (!kasbar.isNull()))
+        kasbar->deleteLater();
     KGlobal::locale()->removeCatalogue("kasbarextension");
 }
 
-void KasBarExtension::setDetached( bool detach )
+void KasBarExtension::setDetached(bool detach)
 {
-    if ( detach == detached_ )
-	return;
+    if(detach == detached_)
+        return;
 
     detached_ = detach;
 
-    if ( detach ) {
+    if(detach)
+    {
 
-	int wflags = Qt::WStyle_Customize | Qt::WX11BypassWM | Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop;
-	kasbar->reparent( 0, wflags, kasbar->detachedPosition(), true );
-	updateGeometry();
-	resize( detachedSize() );
+        int wflags = Qt::WStyle_Customize | Qt::WX11BypassWM | Qt::WStyle_DialogBorder | Qt::WStyle_StaysOnTop;
+        kasbar->reparent(0, wflags, kasbar->detachedPosition(), true);
+        updateGeometry();
+        resize(detachedSize());
     }
-    else {
-	kasbar->reparent( this, QPoint(0,0), true );
-	kasbar->setOrientation( orientation() );
+    else
+    {
+        kasbar->reparent(this, QPoint(0, 0), true);
+        kasbar->setOrientation(orientation());
 
-	updateGeometry();
-	resize( kasbar->size() );
+        updateGeometry();
+        resize(kasbar->size());
     }
 
     emit updateLayout();
 }
 
-void KasBarExtension::showEvent( QShowEvent */*se*/ )
+void KasBarExtension::showEvent(QShowEvent * /*se*/)
 {
     updateGeometry();
-    resize( kasbar->size() );
-    repaint( true );
+    resize(kasbar->size());
+    repaint(true);
 }
 
 QSize KasBarExtension::detachedSize()
 {
-    if ( orientation() == Vertical )
-	return QSize( kasbar->itemExtent()/2, 0 );
+    if(orientation() == Vertical)
+        return QSize(kasbar->itemExtent() / 2, 0);
     else
-	return QSize( 0, kasbar->itemExtent()/2 );
-
+        return QSize(0, kasbar->itemExtent() / 2);
 }
 
-QSize KasBarExtension::sizeHint(Position p, QSize maxSize ) const
+QSize KasBarExtension::sizeHint(Position p, QSize maxSize) const
 {
-   Orientation o = Horizontal;
+    Orientation o = Horizontal;
 
-   if ( p == Left || p == Right )
-      o = Vertical;
+    if(p == Left || p == Right)
+        o = Vertical;
 
-   if ( detached_ ) {
-       if ( o == Vertical )
-	   return QSize( kasbar->itemExtent()/2, 0 );
-       else
-	   return QSize( 0, kasbar->itemExtent()/2 );
-   }
+    if(detached_)
+    {
+        if(o == Vertical)
+            return QSize(kasbar->itemExtent() / 2, 0);
+        else
+            return QSize(0, kasbar->itemExtent() / 2);
+    }
 
-   return kasbar->sizeHint( o, maxSize );
+    return kasbar->sizeHint(o, maxSize);
 }
 
-void KasBarExtension::positionChange( Position /* position */)
+void KasBarExtension::positionChange(Position /* position */)
 {
-   kasbar->setOrientation( orientation() );
-   kasbar->updateLayout();
-   kasbar->refreshIconGeometry();
+    kasbar->setOrientation(orientation());
+    kasbar->updateLayout();
+    kasbar->refreshIconGeometry();
 }
 
 void KasBarExtension::about()
@@ -186,4 +180,3 @@ void KasBarExtension::preferences()
 {
     kasbar->showPreferences();
 }
-

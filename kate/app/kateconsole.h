@@ -28,11 +28,11 @@
 #include <qvbox.h>
 
 namespace KParts {
-  class ReadOnlyPart;
+class ReadOnlyPart;
 }
 
 namespace KateMDI {
-  class ToolView;
+class ToolView;
 }
 
 class KateMainWindow;
@@ -42,61 +42,60 @@ class KateMainWindow;
  * This class is used for the internal terminal emulator
  * It uses internally the konsole part, thx to konsole devs :)
  */
-class KateConsole : public QVBox
-{
-  Q_OBJECT
+class KateConsole : public QVBox {
+    Q_OBJECT
 
-  public:
+public:
     /**
      * construct us
      * @param mw main window
      * @param parent toolview
      */
-    KateConsole (KateMainWindow *mw, KateMDI::ToolView* parent);
+    KateConsole(KateMainWindow *mw, KateMDI::ToolView *parent);
 
     /**
      * destruct us
      */
-    ~KateConsole ();
+    ~KateConsole();
 
     /**
      * cd to dir
      * @param url given dir
      */
-    void cd (const KURL &url);
+    void cd(const KURL &url);
 
     /**
      * send given text to console
      * @param text commands for console
      */
-    void sendInput( const QString& text );
+    void sendInput(const QString &text);
 
-  public slots:
+public slots:
     /**
      * pipe current document to console
      */
-    void slotPipeToConsole ();
+    void slotPipeToConsole();
 
-  private slots:
+private slots:
     /**
      * the konsole exited ;)
      * handle that, hide the dock
      */
-    void slotDestroyed ();
+    void slotDestroyed();
 
     /**
      * construct console if needed
      */
     void loadConsoleIfNeeded();
 
-  protected:
+protected:
     /**
      * the konsole get shown
      * @param ev show event
      */
     void showEvent(QShowEvent *ev);
 
-  private:
+private:
     /**
      * console part
      */

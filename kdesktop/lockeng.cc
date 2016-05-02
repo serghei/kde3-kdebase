@@ -24,7 +24,7 @@
 #include "kdesktopsettings.h"
 
 #include "xautolock_c.h"
-extern xautolock_corner_t xautolock_corners[ 4 ];
+extern xautolock_corner_t xautolock_corners[4];
 
 
 //===========================================================================
@@ -33,21 +33,16 @@ extern xautolock_corner_t xautolock_corners[ 4 ];
 // starting screensaver hacks, or password entry. That's done by
 // a newly started process.
 //
-SaverEngine::SaverEngine()
-    : DCOPObject("KScreensaverIface"),
-      QWidget(),
-      mBlankOnly(false)
+SaverEngine::SaverEngine() : DCOPObject("KScreensaverIface"), QWidget(), mBlankOnly(false)
 {
     // Save X screensaver parameters
-    XGetScreenSaver(qt_xdisplay(), &mXTimeout, &mXInterval,
-                    &mXBlanking, &mXExposures);
+    XGetScreenSaver(qt_xdisplay(), &mXTimeout, &mXInterval, &mXBlanking, &mXExposures);
 
     mState = Waiting;
     mXAutoLock = 0;
     mEnabled = false;
 
-    connect(&mLockProcess, SIGNAL(processExited(KProcess *)),
-                        SLOT(lockProcessExited()));
+    connect(&mLockProcess, SIGNAL(processExited(KProcess *)), SLOT(lockProcessExited()));
 
     configure();
 }
@@ -62,8 +57,7 @@ SaverEngine::~SaverEngine()
     delete mXAutoLock;
 
     // Restore X screensaver parameters
-    XSetScreenSaver(qt_xdisplay(), mXTimeout, mXInterval, mXBlanking,
-                    mXExposures);
+    XSetScreenSaver(qt_xdisplay(), mXTimeout, mXInterval, mXBlanking, mXExposures);
 }
 
 //---------------------------------------------------------------------------
@@ -72,60 +66,58 @@ SaverEngine::~SaverEngine()
 void SaverEngine::lock()
 {
     bool ok = true;
-    if (mState == Waiting)
+    if(mState == Waiting)
     {
-        ok = startLockProcess( ForceLock );
-// It takes a while for kdesktop_lock to start and lock the screen.
-// Therefore delay the DCOP call until it tells kdesktop that the locking is in effect.
-// This is done only for --forcelock .
-        if( ok && mState != Saving )
+        ok = startLockProcess(ForceLock);
+        // It takes a while for kdesktop_lock to start and lock the screen.
+        // Therefore delay the DCOP call until it tells kdesktop that the locking is in effect.
+        // This is done only for --forcelock .
+        if(ok && mState != Saving)
         {
-            DCOPClientTransaction* trans = kapp->dcopClient()->beginTransaction();
-            mLockTransactions.append( trans );
+            DCOPClientTransaction *trans = kapp->dcopClient()->beginTransaction();
+            mLockTransactions.append(trans);
         }
     }
     else
     {
-        mLockProcess.kill( SIGHUP );
+        mLockProcess.kill(SIGHUP);
     }
 }
 
 void SaverEngine::processLockTransactions()
 {
-    for( QValueVector< DCOPClientTransaction* >::ConstIterator it = mLockTransactions.begin();
-         it != mLockTransactions.end();
-         ++it )
+    for(QValueVector< DCOPClientTransaction * >::ConstIterator it = mLockTransactions.begin(); it != mLockTransactions.end(); ++it)
     {
         QCString replyType = "void";
         QByteArray arr;
-        kapp->dcopClient()->endTransaction( *it, replyType, arr );
+        kapp->dcopClient()->endTransaction(*it, replyType, arr);
     }
     mLockTransactions.clear();
 }
 
 void SaverEngine::saverLockReady()
 {
-    if( mState != Preparing )
+    if(mState != Preparing)
     {
-	kdDebug( 1204 ) << "Got unexpected saverReady()" << endl;
+        kdDebug(1204) << "Got unexpected saverReady()" << endl;
     }
-    kdDebug( 1204 ) << "Saver Lock Ready" << endl;
+    kdDebug(1204) << "Saver Lock Ready" << endl;
     processLockTransactions();
 }
 
 //---------------------------------------------------------------------------
 void SaverEngine::save()
 {
-    if (mState == Waiting)
+    if(mState == Waiting)
     {
-        startLockProcess( DefaultLock );
+        startLockProcess(DefaultLock);
     }
 }
 
 //---------------------------------------------------------------------------
 void SaverEngine::quit()
 {
-    if (mState == Saving || mState == Preparing)
+    if(mState == Saving || mState == Preparing)
     {
         stopLockProcess();
     }
@@ -134,30 +126,31 @@ void SaverEngine::quit()
 //---------------------------------------------------------------------------
 bool SaverEngine::isEnabled()
 {
-  return mEnabled;
+    return mEnabled;
 }
 
 //---------------------------------------------------------------------------
-bool SaverEngine::enable( bool e )
+bool SaverEngine::enable(bool e)
 {
-    if ( e == mEnabled )
-	return true;
+    if(e == mEnabled)
+        return true;
 
     // If we aren't in a suitable state, we will not reconfigure.
-    if (mState != Waiting)
+    if(mState != Waiting)
         return false;
 
     mEnabled = e;
 
-    if (mEnabled)
+    if(mEnabled)
     {
-	if ( !mXAutoLock ) {
-	    mXAutoLock = new XAutoLock();
-	    connect(mXAutoLock, SIGNAL(timeout()), SLOT(idleTimeout()));
-	}
+        if(!mXAutoLock)
+        {
+            mXAutoLock = new XAutoLock();
+            connect(mXAutoLock, SIGNAL(timeout()), SLOT(idleTimeout()));
+        }
         mXAutoLock->setTimeout(mTimeout);
         mXAutoLock->setDPMS(true);
-	//mXAutoLock->changeCornerLockStatus( mLockCornerTopLeft, mLockCornerTopRight, mLockCornerBottomLeft, mLockCornerBottomRight);
+        // mXAutoLock->changeCornerLockStatus( mLockCornerTopLeft, mLockCornerTopRight, mLockCornerBottomLeft, mLockCornerBottomRight);
 
         // We'll handle blanking
         XSetScreenSaver(qt_xdisplay(), mTimeout + 10, mXInterval, PreferBlanking, mXExposures);
@@ -169,14 +162,14 @@ bool SaverEngine::enable( bool e )
     }
     else
     {
-	if (mXAutoLock)
-	{
-	    delete mXAutoLock;
-	    mXAutoLock = 0;
-	}
+        if(mXAutoLock)
+        {
+            delete mXAutoLock;
+            mXAutoLock = 0;
+        }
 
-        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset );
-        XSetScreenSaver(qt_xdisplay(), 0, mXInterval,  PreferBlanking, DontAllowExposures);
+        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset);
+        XSetScreenSaver(qt_xdisplay(), 0, mXInterval, PreferBlanking, DontAllowExposures);
         kdDebug(1204) << "Saver Engine disabled" << endl;
     }
 
@@ -186,7 +179,7 @@ bool SaverEngine::enable( bool e )
 //---------------------------------------------------------------------------
 bool SaverEngine::isBlanked()
 {
-  return (mState != Waiting);
+    return (mState != Waiting);
 }
 
 //---------------------------------------------------------------------------
@@ -196,16 +189,16 @@ bool SaverEngine::isBlanked()
 void SaverEngine::configure()
 {
     // If we aren't in a suitable state, we will not reconfigure.
-    if (mState != Waiting)
+    if(mState != Waiting)
         return;
 
     // create a new config obj to ensure we read the latest options
     KDesktopSettings::self()->readConfig();
 
-    bool e  = KDesktopSettings::screenSaverEnabled();
+    bool e = KDesktopSettings::screenSaverEnabled();
     mTimeout = KDesktopSettings::timeout();
 
-    mEnabled = !e;   // force the enable()
+    mEnabled = !e; // force the enable()
 
     int action;
     action = KDesktopSettings::actionTopLeft();
@@ -217,67 +210,67 @@ void SaverEngine::configure()
     action = KDesktopSettings::actionBottomRight();
     xautolock_corners[3] = applyManualSettings(action);
 
-    enable( e );
+    enable(e);
 }
 
 //---------------------------------------------------------------------------
 //
 //  Set a variable to indicate only using the blanker and not the saver.
 //
-void SaverEngine::setBlankOnly( bool blankOnly )
+void SaverEngine::setBlankOnly(bool blankOnly)
 {
-	mBlankOnly = blankOnly;
-	// FIXME: if running, stop  and restart?  What about security
-	// implications of this?
+    mBlankOnly = blankOnly;
+    // FIXME: if running, stop  and restart?  What about security
+    // implications of this?
 }
 
 //---------------------------------------------------------------------------
 //
 // Start the screen saver.
 //
-bool SaverEngine::startLockProcess( LockType lock_type )
+bool SaverEngine::startLockProcess(LockType lock_type)
 {
-    if (mState != Waiting)
+    if(mState != Waiting)
         return true;
 
     kdDebug(1204) << "SaverEngine: starting saver" << endl;
     emitDCOPSignal("KDE_start_screensaver()", QByteArray());
 
-    if (mLockProcess.isRunning())
+    if(mLockProcess.isRunning())
     {
         stopLockProcess();
     }
     mLockProcess.clearArguments();
-    QString path = KStandardDirs::findExe( "kdesktop_lock" );
-    if( path.isEmpty())
+    QString path = KStandardDirs::findExe("kdesktop_lock");
+    if(path.isEmpty())
     {
-	kdDebug( 1204 ) << "Can't find kdesktop_lock!" << endl;
-	return false;
+        kdDebug(1204) << "Can't find kdesktop_lock!" << endl;
+        return false;
     }
     mLockProcess << path;
-    switch( lock_type )
+    switch(lock_type)
     {
-	case ForceLock:
-    	    mLockProcess << QString( "--forcelock" );
-	  break;
-	case DontLock:
-	    mLockProcess << QString( "--dontlock" );
-	  break;
-	default:
-	  break;
+        case ForceLock:
+            mLockProcess << QString("--forcelock");
+            break;
+        case DontLock:
+            mLockProcess << QString("--dontlock");
+            break;
+        default:
+            break;
     }
-    if (mBlankOnly)
-	    mLockProcess << QString( "--blank" );
+    if(mBlankOnly)
+        mLockProcess << QString("--blank");
 
-    if (mLockProcess.start() == false )
+    if(mLockProcess.start() == false)
     {
-	kdDebug( 1204 ) << "Failed to start kdesktop_lock!" << endl;
-	return false;
+        kdDebug(1204) << "Failed to start kdesktop_lock!" << endl;
+        return false;
     }
-    XSetScreenSaver(qt_xdisplay(), 0, mXInterval,  PreferBlanking, mXExposures);
+    XSetScreenSaver(qt_xdisplay(), 0, mXInterval, PreferBlanking, mXExposures);
 
     mState = Preparing;
-    if (mXAutoLock)
+    if(mXAutoLock)
     {
         mXAutoLock->stop();
     }
@@ -290,7 +283,7 @@ bool SaverEngine::startLockProcess( LockType lock_type )
 //
 void SaverEngine::stopLockProcess()
 {
-    if (mState == Waiting)
+    if(mState == Waiting)
     {
         kdWarning(1204) << "SaverEngine::stopSaver() saver not active" << endl;
         return;
@@ -300,13 +293,13 @@ void SaverEngine::stopLockProcess()
 
     mLockProcess.kill();
 
-    if (mEnabled)
+    if(mEnabled)
     {
-        if (mXAutoLock)
+        if(mXAutoLock)
         {
             mXAutoLock->start();
         }
-        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset );
+        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset);
         XSetScreenSaver(qt_xdisplay(), mTimeout + 10, mXInterval, PreferBlanking, mXExposures);
     }
     processLockTransactions();
@@ -316,16 +309,16 @@ void SaverEngine::stopLockProcess()
 void SaverEngine::lockProcessExited()
 {
     kdDebug(1204) << "SaverEngine: lock exited" << endl;
-    if( mState == Waiting )
-	return;
+    if(mState == Waiting)
+        return;
     emitDCOPSignal("KDE_stop_screensaver()", QByteArray());
-    if (mEnabled)
+    if(mEnabled)
     {
-        if (mXAutoLock)
+        if(mXAutoLock)
         {
             mXAutoLock->start();
         }
-        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset );
+        XForceScreenSaver(qt_xdisplay(), ScreenSaverReset);
         XSetScreenSaver(qt_xdisplay(), mTimeout + 10, mXInterval, PreferBlanking, mXExposures);
     }
     processLockTransactions();
@@ -339,33 +332,31 @@ void SaverEngine::lockProcessExited()
 void SaverEngine::idleTimeout()
 {
     // disable X screensaver
-    XForceScreenSaver(qt_xdisplay(), ScreenSaverReset );
+    XForceScreenSaver(qt_xdisplay(), ScreenSaverReset);
     XSetScreenSaver(qt_xdisplay(), 0, mXInterval, PreferBlanking, DontAllowExposures);
-    startLockProcess( DefaultLock );
+    startLockProcess(DefaultLock);
 }
 
 xautolock_corner_t SaverEngine::applyManualSettings(int action)
 {
-	if (action == 0)
-	{
-		kdDebug() << "no lock" << endl;
-		return ca_nothing;
-	}
-	else
-	if (action == 1)
-	{
-		kdDebug() << "lock screen" << endl;
-		return ca_forceLock;
-	}
-	else
-	if (action == 2)
-	{
-		kdDebug() << "prevent lock" << endl;
-		return ca_dontLock;
-	}
-	else
-	{
-		kdDebug() << "no lock nothing" << endl;
-		return ca_nothing;
-	}
+    if(action == 0)
+    {
+        kdDebug() << "no lock" << endl;
+        return ca_nothing;
+    }
+    else if(action == 1)
+    {
+        kdDebug() << "lock screen" << endl;
+        return ca_forceLock;
+    }
+    else if(action == 2)
+    {
+        kdDebug() << "prevent lock" << endl;
+        return ca_dontLock;
+    }
+    else
+    {
+        kdDebug() << "no lock nothing" << endl;
+        return ca_nothing;
+    }
 }

@@ -22,38 +22,52 @@
 #include <kdebug.h>
 
 
-KonqSidebarPlugin::KonqSidebarPlugin(KInstance *instance,QObject *parent,
-	QWidget * /*widgetParent*/, QString &desktopName_, const char* name)
-	: QObject(parent,name), desktopName(desktopName_)
+KonqSidebarPlugin::KonqSidebarPlugin(KInstance *instance, QObject *parent, QWidget * /*widgetParent*/, QString &desktopName_, const char *name)
+    : QObject(parent, name), desktopName(desktopName_)
 {
-  m_parentInstance=instance;
+    m_parentInstance = instance;
 }
 
-KonqSidebarPlugin::~KonqSidebarPlugin() { }
-
-KInstance *KonqSidebarPlugin::parentInstance(){return m_parentInstance;}
-
-void KonqSidebarPlugin::openURL(const KURL& url){handleURL(url);}
-
-void KonqSidebarPlugin::openPreview(const KFileItemList& items)
+KonqSidebarPlugin::~KonqSidebarPlugin()
 {
-  handlePreview(items);
 }
 
-void KonqSidebarPlugin::openPreviewOnMouseOver(const KFileItem& item)
+KInstance *KonqSidebarPlugin::parentInstance()
 {
-  handlePreviewOnMouseOver(item);
+    return m_parentInstance;
 }
 
-void KonqSidebarPlugin::handlePreview(const KFileItemList & /*items*/) {}
+void KonqSidebarPlugin::openURL(const KURL &url)
+{
+    handleURL(url);
+}
 
-void KonqSidebarPlugin::handlePreviewOnMouseOver(const KFileItem& /*items*/) {}
+void KonqSidebarPlugin::openPreview(const KFileItemList &items)
+{
+    handlePreview(items);
+}
+
+void KonqSidebarPlugin::openPreviewOnMouseOver(const KFileItem &item)
+{
+    handlePreviewOnMouseOver(item);
+}
+
+void KonqSidebarPlugin::handlePreview(const KFileItemList & /*items*/)
+{
+}
+
+void KonqSidebarPlugin::handlePreviewOnMouseOver(const KFileItem & /*items*/)
+{
+}
 
 
-bool KonqSidebarPlugin::universalMode() {
-	if (!parent()) return false;
-	KonqSidebarIface *ksi=static_cast<KonqSidebarIface*>(parent()->qt_cast("KonqSidebarIface"));
-	if (!ksi) return false;
-	kdDebug()<<"calling KonqSidebarIface->universalMode()"<<endl;
-	return ksi->universalMode();
+bool KonqSidebarPlugin::universalMode()
+{
+    if(!parent())
+        return false;
+    KonqSidebarIface *ksi = static_cast< KonqSidebarIface * >(parent()->qt_cast("KonqSidebarIface"));
+    if(!ksi)
+        return false;
+    kdDebug() << "calling KonqSidebarIface->universalMode()" << endl;
+    return ksi->universalMode();
 }

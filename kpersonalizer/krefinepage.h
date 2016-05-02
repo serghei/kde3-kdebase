@@ -24,15 +24,15 @@
   *@author Ralf Nolden
   */
 
-class KRefinePage : public KRefinePageDlg  {
-   Q_OBJECT
-public: 
-	KRefinePage(QWidget *parent=0, const char *name=0);
-	~KRefinePage();
+class KRefinePage : public KRefinePageDlg {
+    Q_OBJECT
+public:
+    KRefinePage(QWidget *parent = 0, const char *name = 0);
+    ~KRefinePage();
 public slots: // Public slots
-  /** starts kcontrol via krun when the user presses the
-start control center button on page 5. */
-  void startKControl();
+              /** starts kcontrol via krun when the user presses the
+            start control center button on page 5. */
+    void startKControl();
 };
 
 #endif

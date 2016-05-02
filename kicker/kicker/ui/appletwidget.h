@@ -34,39 +34,43 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "appletinfo.h"
 #include "appletitem.h"
 
-class AppletWidget: public AppletItem
-{
+class AppletWidget : public AppletItem {
     Q_OBJECT
 
-    public:
-        typedef QValueList<AppletWidget*> List;
+public:
+    typedef QValueList< AppletWidget * > List;
 
-        AppletWidget(const AppletInfo& info, bool odd, QWidget *parent);
-        const AppletInfo& info() const { return m_appletInfo; }
-        virtual bool eventFilter(QObject* watched, QEvent* e);
+    AppletWidget(const AppletInfo &info, bool odd, QWidget *parent);
+    const AppletInfo &info() const
+    {
+        return m_appletInfo;
+    }
+    virtual bool eventFilter(QObject *watched, QEvent *e);
 
-        void setSelected(bool selected);
-        void setOdd(bool odd);
-        bool odd() { return m_odd; }
+    void setSelected(bool selected);
+    void setOdd(bool odd);
+    bool odd()
+    {
+        return m_odd;
+    }
 
-    signals:
-        void clicked(AppletWidget*);
-        void doubleClicked(AppletWidget*);
+signals:
+    void clicked(AppletWidget *);
+    void doubleClicked(AppletWidget *);
 
-    protected:
-        void keyPressEvent(QKeyEvent *e);
-        void mousePressEvent(QMouseEvent *e);
-        void mouseMoveEvent(QMouseEvent *e);
-        void mouseReleaseEvent(QMouseEvent *e);
-        void mouseDoubleClickEvent(QMouseEvent *e);
-        void focusInEvent(QFocusEvent* e);
+protected:
+    void keyPressEvent(QKeyEvent *e);
+    void mousePressEvent(QMouseEvent *e);
+    void mouseMoveEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
+    void mouseDoubleClickEvent(QMouseEvent *e);
+    void focusInEvent(QFocusEvent *e);
 
-    private:
-        AppletInfo m_appletInfo;
-        bool m_odd;
-        bool m_selected;
-        QPoint m_dragStart;
+private:
+    AppletInfo m_appletInfo;
+    bool m_odd;
+    bool m_selected;
+    QPoint m_dragStart;
 };
 
 #endif
-

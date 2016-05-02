@@ -13,16 +13,15 @@ class QComboBox;
  * a combobox for choosing the group and a line-edit
  * for entering the name of the file type
  */
-class NewTypeDialog : public KDialogBase
-{
+class NewTypeDialog : public KDialogBase {
 public:
-  NewTypeDialog(QStringList groups, QWidget *parent = 0, 
-		const char *name = 0);
-  QString group() const;
-  QString text() const;
+    NewTypeDialog(QStringList groups, QWidget *parent = 0, const char *name = 0);
+    QString group() const;
+    QString text() const;
+
 private:
-  KLineEdit *typeEd;
-  QComboBox *groupCombo;
+    KLineEdit *typeEd;
+    QComboBox *groupCombo;
 };
 
 #endif

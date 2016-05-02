@@ -37,19 +37,18 @@
 #include <usb.h>
 
 #define VENDOR_LOGITECH 0x046D
-#define HAS_RES 0x01   /* mouse supports variable resolution */
-#define HAS_SS  0x02   /* mouse supports smart scroll control */
-#define HAS_CSR  0x04  /* mouse supports cordless status reporting and control */
-#define HAS_SSR  0x08  /* mouse supports smart scroll reporting */
-#define USE_CH2  0x10  /* mouse needs to use the second channel */
+#define HAS_RES 0x01 /* mouse supports variable resolution */
+#define HAS_SS 0x02  /* mouse supports smart scroll control */
+#define HAS_CSR 0x04 /* mouse supports cordless status reporting and control */
+#define HAS_SSR 0x08 /* mouse supports smart scroll reporting */
+#define USE_CH2 0x10 /* mouse needs to use the second channel */
 
 
-class LogitechMouse : public LogitechMouseBase
-{
+class LogitechMouse : public LogitechMouseBase {
     Q_OBJECT
 
 public:
-    LogitechMouse( struct usb_device *usbDev, int mouseCapabilityFlags, QWidget* parent = 0, const char* name = 0 );
+    LogitechMouse(struct usb_device *usbDev, int mouseCapabilityFlags, QWidget *parent = 0, const char *name = 0);
     ~LogitechMouse();
     void applyChanges();
     void save(KConfig *config);
@@ -77,12 +76,12 @@ private:
     QTimer *doUpdate;
 
     struct usb_dev_handle *m_usbDeviceHandle;
-    bool m_connectStatus; // true if the CONNECT button on the mouse is pressed
-    bool m_mousePowerup; // true if we are doing "just out of the box" auto-locking
+    bool m_connectStatus;  // true if the CONNECT button on the mouse is pressed
+    bool m_mousePowerup;   // true if we are doing "just out of the box" auto-locking
     bool m_receiverUnlock; // true if mouse has been disconnected by a long press
                            // of the receiver's CONNECT button
-    bool m_waitLock; // true if receiver searching for new mouse because the
-                     // CONNECT button on the receiver was pressed
+    bool m_waitLock;       // true if receiver searching for new mouse because the
+                           // CONNECT button on the receiver was pressed
     Q_UINT8 m_batteryLevel;
     Q_UINT8 m_channel;
     Q_UINT8 m_cordlessNameIndex; // this gets convered into a QString in cordlessName()
@@ -92,11 +91,10 @@ private:
     Q_UINT8 m_numberOfButtons;
     Q_UINT8 m_resolution;
     bool m_twoChannelCapable; // true if the mouse supports dual channels
-    bool m_verticalRoller; // true if the mouse has a vertical roller (wheel)
-    bool m_horizontalRoller; // true if the mouse has a horizontal roller (wheel)
-    bool m_has800cpi; // true if the mouse does 800cpi resolution
+    bool m_verticalRoller;    // true if the mouse has a vertical roller (wheel)
+    bool m_horizontalRoller;  // true if the mouse has a horizontal roller (wheel)
+    bool m_has800cpi;         // true if the mouse does 800cpi resolution
     int m_mouseCapabilityFlags;
 };
 
 #endif
-

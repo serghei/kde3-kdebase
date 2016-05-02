@@ -44,31 +44,29 @@
 #include <konq_popupmenu.h>
 #include <konq_drag.h>
 
-MediumButton::MediumButton(QWidget *parent, const KFileItem &fileItem)
-    : PanelPopupButton(parent), mActions(this, this), mFileItem(fileItem)
+MediumButton::MediumButton(QWidget *parent, const KFileItem &fileItem) : PanelPopupButton(parent), mActions(this, this), mFileItem(fileItem)
 {
-    KAction *a = KStdAction::paste(this, SLOT(slotPaste()),
-                                    &mActions, "pasteto");
+    KAction *a = KStdAction::paste(this, SLOT(slotPaste()), &mActions, "pasteto");
     a->setShortcut(0);
     a = KStdAction::copy(this, SLOT(slotCopy()), &mActions, "copy");
     a->setShortcut(0);
-    
+
     setBackgroundOrigin(AncestorOrigin);
-    
+
     resize(20, 20);
-    
+
     setAcceptDrops(mFileItem.isWritable());
-    
+
     setTitle(mFileItem.text());
-    
+
     refreshType();
-    
+
     connect(&mOpenTimer, SIGNAL(timeout()), SLOT(slotDragOpen()));
-    
+
     // Activate this code only if we find a way to have both an
     // action and a popup menu for the same kicker button
-    //connect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
-    
+    // connect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
+
     setPopup(new QPopupMenu());
 }
 
@@ -95,28 +93,24 @@ void MediumButton::setFileItem(const KFileItem &fileItem)
 void MediumButton::initPopup()
 {
     QPopupMenu *old_popup = popup();
-    
+
     KFileItemList items;
     items.append(&mFileItem);
-    
-    KonqPopupMenu::KonqPopupFlags kpf =
-        KonqPopupMenu::ShowProperties
-        | KonqPopupMenu::ShowNewWindow;
-    
-    KParts::BrowserExtension::PopupFlags bef =
-        KParts::BrowserExtension::DefaultPopupItems;
-    
-    KonqPopupMenu *new_popup = new KonqPopupMenu(0L, items,
-                                        KURL("media:/"), mActions, 0L,
-                                        this, kpf, bef);
+
+    KonqPopupMenu::KonqPopupFlags kpf = KonqPopupMenu::ShowProperties | KonqPopupMenu::ShowNewWindow;
+
+    KParts::BrowserExtension::PopupFlags bef = KParts::BrowserExtension::DefaultPopupItems;
+
+    KonqPopupMenu *new_popup = new KonqPopupMenu(0L, items, KURL("media:/"), mActions, 0L, this, kpf, bef);
     KPopupTitle *title = new KPopupTitle(new_popup);
     title->setTitle(mFileItem.text());
-    
+
     new_popup->insertItem(title, -1, 0);
-    
+
     setPopup(new_popup);
-    
-    if (old_popup!=0L) delete old_popup;
+
+    if(old_popup != 0L)
+        delete old_popup;
 }
 
 void MediumButton::refreshType()
@@ -131,7 +125,7 @@ void MediumButton::refreshType()
 /*
 void MediumButton::slotClicked()
 {
-	mFileItem.run();
+    mFileItem.run();
 }
 */
 
@@ -142,31 +136,31 @@ void MediumButton::slotPaste()
 
 void MediumButton::slotCopy()
 {
-    KonqDrag * obj = KonqDrag::newDrag(mFileItem.url(), false);
-    
-    QApplication::clipboard()->setData( obj );
+    KonqDrag *obj = KonqDrag::newDrag(mFileItem.url(), false);
+
+    QApplication::clipboard()->setData(obj);
 }
 
-void MediumButton::dragEnterEvent(QDragEnterEvent* e)
+void MediumButton::dragEnterEvent(QDragEnterEvent *e)
 {
-    if (mFileItem.isWritable())
+    if(mFileItem.isWritable())
     {
         mOpenTimer.start(1000, true);
         e->accept(true);
     }
 }
 
-void MediumButton::dragLeaveEvent(QDragLeaveEvent* e)
+void MediumButton::dragLeaveEvent(QDragLeaveEvent *e)
 {
     mOpenTimer.stop();
-    
-    PanelPopupButton::dragLeaveEvent( e );
+
+    PanelPopupButton::dragLeaveEvent(e);
 }
 
 void MediumButton::dropEvent(QDropEvent *e)
 {
     mOpenTimer.stop();
-    
+
     KonqOperations::doDrop(&mFileItem, mFileItem.url(), e, this);
 }
 

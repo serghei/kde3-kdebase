@@ -40,52 +40,45 @@
 #include "toplevel.h"
 
 static const char version[] = "1.0";
-static const char description[] = I18N_NOOP( "KDE crash handler gives the user feedback if a program crashed" );
+static const char description[] = I18N_NOOP("KDE crash handler gives the user feedback if a program crashed");
 
-static const KCmdLineOptions options[] =
+static const KCmdLineOptions options[] = {{"signal <number>", I18N_NOOP("The signal number that was caught"), 0},
+                                          {"appname <name>", I18N_NOOP("Name of the program"), 0},
+                                          {"apppath <path>", I18N_NOOP("Path to the executable"), 0},
+                                          {"appversion <version>", I18N_NOOP("The version of the program"), 0},
+                                          {"bugaddress <address>", I18N_NOOP("The bug address to use"), 0},
+                                          {"programname <name>", I18N_NOOP("Translated name of the program"), 0},
+                                          {"pid <pid>", I18N_NOOP("The PID of the program"), 0},
+                                          {"startupid <id>", I18N_NOOP("Startup ID of the program"), 0},
+                                          {"kdeinit", I18N_NOOP("The program was started by kdeinit"), 0},
+                                          {"safer", I18N_NOOP("Disable arbitrary disk access"), 0},
+                                          KCmdLineLastOption};
+
+int main(int argc, char *argv[])
 {
-  {"signal <number>", I18N_NOOP("The signal number that was caught"), 0},
-  {"appname <name>",  I18N_NOOP("Name of the program"), 0},
-  {"apppath <path>",  I18N_NOOP("Path to the executable"), 0},
-  {"appversion <version>", I18N_NOOP("The version of the program"), 0},
-  {"bugaddress <address>", I18N_NOOP("The bug address to use"), 0},
-  {"programname <name>", I18N_NOOP("Translated name of the program"), 0},
-  {"pid <pid>", I18N_NOOP("The PID of the program"), 0},
-  {"startupid <id>", I18N_NOOP("Startup ID of the program"), 0},
-  {"kdeinit", I18N_NOOP("The program was started by kdeinit"), 0},
-  {"safer", I18N_NOOP("Disable arbitrary disk access"), 0},
-  KCmdLineLastOption
-};
+    // Drop privs.
+    setgid(getgid());
+    if(setuid(getuid()) < 0 && geteuid() != getuid())
+        exit(255);
 
-int main( int argc, char* argv[] )
-{
-  // Drop privs.
-  setgid(getgid());
-  if (setuid(getuid()) < 0 && geteuid() != getuid())
-     exit (255);
+    // Make sure that DrKonqi doesn't start DrKonqi when it crashes :-]
+    setenv("KDE_DEBUG", "true", 1);
+    unsetenv("SESSION_MANAGER");
 
-  // Make sure that DrKonqi doesn't start DrKonqi when it crashes :-]
-  setenv("KDE_DEBUG", "true", 1);
-  unsetenv("SESSION_MANAGER");
+    KAboutData aboutData("drkonqi", I18N_NOOP("The KDE Crash Handler"), version, description, KAboutData::License_BSD,
+                         "(C) 2000-2003, Hans Petter Bieker");
+    aboutData.addAuthor("Hans Petter Bieker", 0, "bieker@kde.org");
 
-  KAboutData aboutData( "drkonqi",
-                        I18N_NOOP("The KDE Crash Handler"),
-                        version,
-                        description,
-                        KAboutData::License_BSD,
-                        "(C) 2000-2003, Hans Petter Bieker");
-  aboutData.addAuthor("Hans Petter Bieker", 0, "bieker@kde.org");
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KApplication::disableAutoDcopRegistration();
 
-  KApplication::disableAutoDcopRegistration();
+    KApplication a;
 
-  KApplication a;
+    KrashConfig krashconf;
 
-  KrashConfig krashconf;
+    Toplevel w(&krashconf);
 
-  Toplevel w(&krashconf);
-
-  return w.exec();
+    return w.exec();
 }

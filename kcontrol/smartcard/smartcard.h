@@ -37,53 +37,45 @@ class KCardDB;
 class KPopupMenu;
 class KListViewItem;
 
-class KSmartcardConfig : public KCModule, public DCOPObject
-{
-  K_DCOP
+class KSmartcardConfig : public KCModule, public DCOPObject {
+    K_DCOP
     Q_OBJECT
 
 
 public:
-  KSmartcardConfig(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~KSmartcardConfig();
+    KSmartcardConfig(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KSmartcardConfig();
 
-  SmartcardBase *base;
+    SmartcardBase *base;
 
-  void load();
-  void load( bool useDefaults);
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
-  int buttons();
-  QString quickHelp() const;
+    int buttons();
+    QString quickHelp() const;
 
- k_dcop:
+    k_dcop :
 
 
- void updateReadersState (QString readerName,
-                          bool isCardPresent,
-                          QString atr);
- void loadReadersTab (QStringList lr);
+        void
+        updateReadersState(QString readerName, bool isCardPresent, QString atr);
+    void loadReadersTab(QStringList lr);
 
-  private slots:
+private slots:
 
-  void slotShowPopup(QListViewItem * item ,const QPoint & _point,int i);
-  void slotLaunchChooser();
-
+    void slotShowPopup(QListViewItem *item, const QPoint &_point, int i);
+    void slotLaunchChooser();
 
 
 private:
+    KConfig *config;
+    bool _ok;
+    KCardDB *_cardDB;
+    KPopupMenu *_popUpKardChooser;
 
-  KConfig *config;
-  bool _ok;
-  KCardDB * _cardDB;
-  KPopupMenu * _popUpKardChooser;
-  
-  void getSupportingModule( KListViewItem * ant,
-                            QString & cardATR) const ;
-
-
+    void getSupportingModule(KListViewItem *ant, QString &cardATR) const;
 };
 
 #endif
-

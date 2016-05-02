@@ -21,7 +21,7 @@
 #define TRASHAPPLET_H
 
 #ifdef HAVE_CONFIG_H
-        #include <config.h>
+#include <config.h>
 #endif
 
 #include <kpanelapplet.h>
@@ -31,32 +31,30 @@
 
 #include "trashbutton.h"
 
-class TrashApplet : public KPanelApplet
-{
-Q_OBJECT
+class TrashApplet : public KPanelApplet {
+    Q_OBJECT
 
 public:
-	TrashApplet(const QString& configFile, Type t = Normal, int actions = 0,
-	            QWidget *parent = 0, const char *name = 0);
-	~TrashApplet();
+    TrashApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
+    ~TrashApplet();
 
-	int widthForHeight(int height) const;
-	int heightForWidth(int width) const;
-	void about();
+    int widthForHeight(int height) const;
+    int heightForWidth(int width) const;
+    void about();
 
 protected:
-	void resizeEvent(QResizeEvent *e);
-	void positionChange(Position p);
+    void resizeEvent(QResizeEvent *e);
+    void positionChange(Position p);
 
 protected slots:
-	void slotClear();
-	void slotCompleted();
-	void slotDeleteItem(KFileItem *);
+    void slotClear();
+    void slotCompleted();
+    void slotDeleteItem(KFileItem *);
 
 private:
-	KDirLister *mpDirLister;
-	TrashButton *mButton;
-	int mCount;
+    KDirLister *mpDirLister;
+    TrashButton *mButton;
+    int mCount;
 };
 
 #endif

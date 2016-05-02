@@ -15,35 +15,32 @@
 *  Dialog for configuring HTTP Options like charset and language negotiation
 *  and assuming that file got from HTTP is HTML if no Content-Type is given
 */
-class KHTTPOptions : public KCModule
-{
-Q_OBJECT
-  public:
+class KHTTPOptions : public KCModule {
+    Q_OBJECT
+public:
     KHTTPOptions(KConfig *config, QString group, QWidget *parent = 0L, const char *name = 0L);
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
 
-  private:
-
+private:
     KConfig *m_pConfig;
     QString m_groupname;
 
     // Acceptable languages "LANG" - locale selected languages
-    QLabel *lb_languages;	
-    QLineEdit *le_languages;	
+    QLabel *lb_languages;
+    QLineEdit *le_languages;
 
     // Acceptable charsets "CHARSET" - locale selected charset
-    QLabel *lb_charsets;	
-    QLineEdit *le_charsets;	
+    QLabel *lb_charsets;
+    QLineEdit *le_charsets;
 
     QString defaultCharsets;
 
 private slots:
     void slotChanged();
-
 };
 
 #endif // __KHTTPOPTDLG_H

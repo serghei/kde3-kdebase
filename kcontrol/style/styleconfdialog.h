@@ -24,23 +24,22 @@
 #include <kdialogbase.h>
 
 
-class StyleConfigDialog: public KDialogBase
-{
-  Q_OBJECT
+class StyleConfigDialog : public KDialogBase {
+    Q_OBJECT
 public:
-  StyleConfigDialog(QWidget* parent, QString styleName);
+    StyleConfigDialog(QWidget *parent, QString styleName);
 
-  bool isDirty() const;
+    bool isDirty() const;
 
 public slots:
-  void setDirty(bool dirty);
+    void setDirty(bool dirty);
 
 signals:
-  void defaults();
-  void save();
+    void defaults();
+    void save();
 
 private:
-  bool m_dirty;
+    bool m_dirty;
 };
 
 #endif

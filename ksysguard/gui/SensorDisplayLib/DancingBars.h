@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2001 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -36,46 +36,43 @@ class QListViewItem;
 class BarGraph;
 class DancingBarsSettings;
 
-class DancingBars : public KSGRD::SensorDisplay
-{
-  Q_OBJECT
+class DancingBars : public KSGRD::SensorDisplay {
+    Q_OBJECT
 
-  public:
-    DancingBars( QWidget *parent = 0, const char *name = 0,
-                 const QString &title = QString::null, int min = 0,
-                 int max = 100, bool noFrame = false, bool isApplet = false );
+public:
+    DancingBars(QWidget *parent = 0, const char *name = 0, const QString &title = QString::null, int min = 0, int max = 100, bool noFrame = false,
+                bool isApplet = false);
     virtual ~DancingBars();
 
     void configureSettings();
 
-    bool addSensor( const QString &hostName, const QString &name,
-                    const QString &type, const QString &title );
-    bool removeSensor( uint pos );
+    bool addSensor(const QString &hostName, const QString &name, const QString &type, const QString &title);
+    bool removeSensor(uint pos);
 
-    void updateSamples( const QMemArray<double> &samples );
+    void updateSamples(const QMemArray< double > &samples);
 
     virtual QSize sizeHint();
 
-    virtual void answerReceived( int id, const QString &answer );
+    virtual void answerReceived(int id, const QString &answer);
 
-    bool restoreSettings( QDomElement& );
-    bool saveSettings( QDomDocument&, QDomElement&, bool save = true );
+    bool restoreSettings(QDomElement &);
+    bool saveSettings(QDomDocument &, QDomElement &, bool save = true);
 
     virtual bool hasSettingsDialog() const;
 
-  public slots:
+public slots:
     void applySettings();
     virtual void applyStyle();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent* );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 
-  private:
+private:
     uint mBars;
 
-    BarGraph* mPlotter;
+    BarGraph *mPlotter;
 
-    DancingBarsSettings* mSettingsDialog;
+    DancingBarsSettings *mSettingsDialog;
 
     /**
       The sample buffer and the flags are needed to store the incoming
@@ -83,7 +80,7 @@ class DancingBars : public KSGRD::SensorDisplay
       received. The flags variable is used to ensure that all samples have
       been received.
      */
-    QMemArray<double> mSampleBuffer;
+    QMemArray< double > mSampleBuffer;
     QBitArray mFlags;
 };
 

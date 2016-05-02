@@ -39,29 +39,27 @@
 
 extern KSimpleConfig *config;
 
-KBackground::KBackground(QWidget *parent, const char *name)
-    : QWidget(parent, name)
+KBackground::KBackground(QWidget *parent, const char *name) : QWidget(parent, name)
 {
 
     // Enabling checkbox
-    m_pCBEnable = new QCheckBox( i18n("E&nable background"), this );
-    QWhatsThis::add( m_pCBEnable,
-             i18n("If this is checked, KDM will use the settings below for the background."
-		" If it is disabled, you have to look after the background yourself."
-		" This is done by running some program (possibly xsetroot) in the script"
-		" specified in the Setup= option in kdmrc (usually Xsetup).") );
-    config->setGroup( "X-*-Greeter" );
-    m_simpleConf=new KSimpleConfig(config->readEntry( "BackgroundCfg",KDE_CONFDIR "/kdm/backgroundrc" ) );
-    m_background = new BGDialog( this, m_simpleConf, false );
+    m_pCBEnable = new QCheckBox(i18n("E&nable background"), this);
+    QWhatsThis::add(m_pCBEnable, i18n("If this is checked, KDM will use the settings below for the background."
+                                      " If it is disabled, you have to look after the background yourself."
+                                      " This is done by running some program (possibly xsetroot) in the script"
+                                      " specified in the Setup= option in kdmrc (usually Xsetup)."));
+    config->setGroup("X-*-Greeter");
+    m_simpleConf = new KSimpleConfig(config->readEntry("BackgroundCfg", KDE_CONFDIR "/kdm/backgroundrc"));
+    m_background = new BGDialog(this, m_simpleConf, false);
 
     connect(m_background, SIGNAL(changed(bool)), SIGNAL(changed(bool)));
 
     // Top layout
-    QVBoxLayout *top = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint() );
+    QVBoxLayout *top = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
     top->addWidget(m_pCBEnable);
     top->addWidget(m_background);
     top->addStretch();
-    connect( m_pCBEnable, SIGNAL(toggled( bool )), SLOT(slotEnableChanged()) );
+    connect(m_pCBEnable, SIGNAL(toggled(bool)), SLOT(slotEnableChanged()));
 }
 
 KBackground::~KBackground()
@@ -71,9 +69,9 @@ KBackground::~KBackground()
 
 void KBackground::slotEnableChanged()
 {
- bool en = m_pCBEnable->isChecked();
- m_background->setEnabled( en );
- emit changed ( true );
+    bool en = m_pCBEnable->isChecked();
+    m_background->setEnabled(en);
+    emit changed(true);
 }
 
 void KBackground::makeReadOnly()
@@ -84,7 +82,7 @@ void KBackground::makeReadOnly()
 
 void KBackground::load()
 {
-    m_pCBEnable->setChecked( config->readBoolEntry( "UseBackground", true ) );
+    m_pCBEnable->setChecked(config->readBoolEntry("UseBackground", true));
     m_background->load(false);
     slotEnableChanged();
     emit changed(false);
@@ -94,7 +92,7 @@ void KBackground::load()
 void KBackground::save()
 {
     kdDebug() << "Saving stuff..." << endl;
-    config->writeEntry( "UseBackground", m_pCBEnable->isChecked() );
+    config->writeEntry("UseBackground", m_pCBEnable->isChecked());
     m_background->save();
     emit changed(false);
 }
@@ -102,7 +100,7 @@ void KBackground::save()
 
 void KBackground::defaults()
 {
-    m_pCBEnable->setChecked( true );
+    m_pCBEnable->setChecked(true);
     slotEnableChanged();
     m_background->defaults();
     emit changed(true);

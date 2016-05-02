@@ -27,43 +27,36 @@
 #include <X11/Xlib.h>
 #include <X11/Xcursor/Xcursor.h>
 
-extern "C"
+extern "C" {
+KDE_EXPORT ThumbCreator *new_creator()
 {
-    KDE_EXPORT ThumbCreator *new_creator()
-    {
-        return new CursorCreator;
-    }
+    return new CursorCreator;
+}
 }
 
-bool CursorCreator::create( const QString &path, int width, int height, QImage &img )
+bool CursorCreator::create(const QString &path, int width, int height, QImage &img)
 {
-    XcursorImage *cursor = XcursorFilenameLoadImage(
-		    QFile::encodeName( path ).data(),
-		    width > height ? height : width );
+    XcursorImage *cursor = XcursorFilenameLoadImage(QFile::encodeName(path).data(), width > height ? height : width);
 
-    if ( cursor ) {
-    	img = QImage( reinterpret_cast<uchar *>( cursor->pixels ),
-			cursor->width, cursor->height, 32,
-			NULL, 0, QImage::BigEndian );
-	img.setAlphaBuffer( true );
+    if(cursor)
+    {
+        img = QImage(reinterpret_cast< uchar * >(cursor->pixels), cursor->width, cursor->height, 32, NULL, 0, QImage::BigEndian);
+        img.setAlphaBuffer(true);
 
-	// Convert the image to non-premultiplied alpha
-	Q_UINT32 *pixels = reinterpret_cast<Q_UINT32 *>( img.bits() );
-	for ( int i = 0; i < (img.width() * img.height()); i++ ) {
-		float alpha = qAlpha( pixels[i] ) / 255.0;
-		if ( alpha > 0.0 && alpha < 1.0 )
-			pixels[i] = qRgba( int( qRed(pixels[i]) / alpha ),
-			                   int( qGreen(pixels[i]) / alpha ),
-			                   int( qBlue(pixels[i]) / alpha ),
-			                   qAlpha(pixels[i]) );
-	}
+        // Convert the image to non-premultiplied alpha
+        Q_UINT32 *pixels = reinterpret_cast< Q_UINT32 * >(img.bits());
+        for(int i = 0; i < (img.width() * img.height()); i++)
+        {
+            float alpha = qAlpha(pixels[i]) / 255.0;
+            if(alpha > 0.0 && alpha < 1.0)
+                pixels[i] = qRgba(int(qRed(pixels[i]) / alpha), int(qGreen(pixels[i]) / alpha), int(qBlue(pixels[i]) / alpha), qAlpha(pixels[i]));
+        }
 
-	// Create a deep copy of the image so the image data is preserved
-	img = img.copy();
-	XcursorImageDestroy( cursor );
-    	return true;
+        // Create a deep copy of the image so the image data is preserved
+        img = img.copy();
+        XcursorImageDestroy(cursor);
+        return true;
     }
 
     return false;
 }
-

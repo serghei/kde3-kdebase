@@ -25,46 +25,43 @@
 /**
  * @short Displays an icon on the screen.
  */
-class WndIcon:
-      public QHBox
-{
-  Q_OBJECT
+class WndIcon : public QHBox {
+    Q_OBJECT
 public:
+    enum Position
+    {
+        HBottomLeft = 0,
+        HBottomRight = 1,
+        HTopLeft = 2,
+        HTopRight = 3,
+        VBottomLeft = 10,
+        VBottomRight = 11,
+        VTopLeft = 12,
+        VTopRight = 13
+    };
 
-  enum Position
-  {
-    HBottomLeft = 0,
-    HBottomRight = 1,
-    HTopLeft = 2,
-    HTopRight = 3,
-    VBottomLeft = 10,
-    VBottomRight = 11,
-    VTopLeft = 12,
-    VTopRight = 13
-  };
-
-  WndIcon( unsigned int, unsigned int, unsigned int, int, const KPixmap&, const QString&, Position, bool, bool );
+    WndIcon(unsigned int, unsigned int, unsigned int, int, const KPixmap &, const QString &, Position, bool, bool);
 
 signals:
-  void setStatusText( const QString& );
+    void setStatusText(const QString &);
 
 public slots:
-  void show();
-  void noshow();
-  void slotStopJumping();
-  void slotJump();
+    void show();
+    void noshow();
+    void slotStopJumping();
+    void slotJump();
 
 private:
-  QPoint determinePosition();
+    QPoint determinePosition();
 
 protected:
-  QString mStatusText;
-  Position mIconPos;
-  int mXineramaScreen;
-  int mPosX, mPosY, mGroundX, mGroundY;
-  float mVelocity, mInitialVelocity, mGravity;
-  int mIconNum, mStatusHeight, mIconSize;
-  bool mStatusAtTop, mStopJump, mIconJumping;
+    QString mStatusText;
+    Position mIconPos;
+    int mXineramaScreen;
+    int mPosX, mPosY, mGroundX, mGroundY;
+    float mVelocity, mInitialVelocity, mGravity;
+    int mIconNum, mStatusHeight, mIconSize;
+    bool mStatusAtTop, mStopJump, mIconJumping;
 };
 
 #endif

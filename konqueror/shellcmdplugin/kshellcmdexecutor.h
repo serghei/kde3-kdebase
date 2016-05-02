@@ -26,25 +26,25 @@
 class PtyProcess;
 class QSocketNotifier;
 
-class KShellCommandExecutor:public QTextView
-{
-   Q_OBJECT
-   public:
-      KShellCommandExecutor(const QString& command, QWidget* parent=0);
-      virtual ~KShellCommandExecutor();
-      int exec();
-   signals:
-      void finished();
-   public slots:
-      void slotFinished();
-   protected:
-      PtyProcess *m_shellProcess;
-      QString m_command;
-      QSocketNotifier *m_readNotifier;
-      QSocketNotifier *m_writeNotifier;
-   protected slots:
-      void readDataFromShell();
-      void writeDataToShell();
+class KShellCommandExecutor : public QTextView {
+    Q_OBJECT
+public:
+    KShellCommandExecutor(const QString &command, QWidget *parent = 0);
+    virtual ~KShellCommandExecutor();
+    int exec();
+signals:
+    void finished();
+public slots:
+    void slotFinished();
+
+protected:
+    PtyProcess *m_shellProcess;
+    QString m_command;
+    QSocketNotifier *m_readNotifier;
+    QSocketNotifier *m_writeNotifier;
+protected slots:
+    void readDataFromShell();
+    void writeDataToShell();
 };
 
 #endif

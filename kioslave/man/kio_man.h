@@ -32,26 +32,24 @@
 #include <kio/slavebase.h>
 
 
-class MANProtocol : public QObject, public KIO::SlaveBase
-{
+class MANProtocol : public QObject, public KIO::SlaveBase {
     Q_OBJECT
 
 public:
-
     MANProtocol(const QCString &pool_socket, const QCString &app_socket);
     virtual ~MANProtocol();
 
-    virtual void get(const KURL& url);
-    virtual void stat(const KURL& url);
+    virtual void get(const KURL &url);
+    virtual void stat(const KURL &url);
 
     virtual void mimetype(const KURL &url);
     virtual void listDir(const KURL &url);
 
-    void outputError(const QString& errmsg);
+    void outputError(const QString &errmsg);
     void outputMatchingPages(const QStringList &matchingPages);
 
     void showMainIndex();
-    void showIndex(const QString& section);
+    void showIndex(const QString &section);
 
     // the following two functions are the interface to man2html
     void output(const char *insert);
@@ -60,39 +58,38 @@ public:
     static MANProtocol *self();
 
 private slots:
-  void slotGetStdOutput(KProcess*, char*, int);
-    
+    void slotGetStdOutput(KProcess *, char *, int);
+
 private:
     void checkManPaths();
     QStringList manDirectories();
-    QMap<QString, QString> buildIndexMap(const QString& section);
-    bool addWhatIs(QMap<QString, QString>& i, const QString& f, const QString& mark);
-    void parseWhatIs( QMap<QString, QString> &i, QTextStream &t, const QString &mark );
-    QStringList findPages(const QString& section, 
-                          const QString &title, 
-                          bool full_path = true);
+    QMap< QString, QString > buildIndexMap(const QString &section);
+    bool addWhatIs(QMap< QString, QString > &i, const QString &f, const QString &mark);
+    void parseWhatIs(QMap< QString, QString > &i, QTextStream &t, const QString &mark);
+    QStringList findPages(const QString &section, const QString &title, bool full_path = true);
 
     void addToBuffer(const char *buffer, int buflen);
-    QString pageName(const QString& page) const;
-    QStringList buildSectionList(const QStringList& dirs) const;
-    void constructPath(QStringList& constr_path, QStringList constr_catmanpath);
+    QString pageName(const QString &page) const;
+    QStringList buildSectionList(const QStringList &dirs) const;
+    void constructPath(QStringList &constr_path, QStringList constr_catmanpath);
+
 private:
     static MANProtocol *_self;
     QCString lastdir;
 
     void findManPagesInSection(const QString &dir, const QString &title, bool full_path, QStringList &list);
-    QStringList m_manpath; ///< Path of man directories
+    QStringList m_manpath;   ///< Path of man directories
     QStringList m_mandbpath; ///< Path of catman directories
     QStringList section_names;
 
-    QString myStdStream;  
+    QString myStdStream;
     QString mySgml2RoffPath;
     void getProgramPath();
 
-    QCString m_htmlPath; ///< Path to KDE resources, encoded for HTML
-    QCString m_cssPath; ///< Path to KDE resources, encoded for CSS
+    QCString m_htmlPath;    ///< Path to KDE resources, encoded for HTML
+    QCString m_cssPath;     ///< Path to KDE resources, encoded for CSS
     QBuffer m_outputBuffer; ///< Buffer for the output
-    QString m_manCSSFile; ///< Path to kio_man.css
+    QString m_manCSSFile;   ///< Path to kio_man.css
 };
 
 

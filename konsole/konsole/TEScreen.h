@@ -24,24 +24,23 @@
 #include "TECommon.h"
 #include "TEHistory.h"
 
-#define MODE_Origin    0
-#define MODE_Wrap      1
-#define MODE_Insert    2
-#define MODE_Screen    3
-#define MODE_Cursor    4
-#define MODE_NewLine   5
-#define MODES_SCREEN   6
+#define MODE_Origin 0
+#define MODE_Wrap 1
+#define MODE_Insert 2
+#define MODE_Screen 3
+#define MODE_Cursor 4
+#define MODE_NewLine 5
+#define MODES_SCREEN 6
 
 /*!
 */
 struct ScreenParm
 {
-  int mode[MODES_SCREEN];
+    int mode[MODES_SCREEN];
 };
 
 
-class TEScreen
-{
+class TEScreen {
 public:
     TEScreen(int lines, int columns);
     ~TEScreen();
@@ -52,20 +51,20 @@ public: // these are all `Screen' operations
     //
     // Cursor Movement
     //
-    void cursorUp    (int n);
-    void cursorDown  (int n);
-    void cursorLeft  (int n);
-    void cursorRight (int n);
-    void setCursorY  (int y);
-    void setCursorX  (int x);
-    void setCursorYX (int y, int x);
-    void setMargins  (int t, int b);
+    void cursorUp(int n);
+    void cursorDown(int n);
+    void cursorLeft(int n);
+    void cursorRight(int n);
+    void setCursorY(int y);
+    void setCursorX(int x);
+    void setCursorYX(int y, int x);
+    void setMargins(int t, int b);
     //
     // Cursor Movement with Scrolling
     //
-    void NewLine     ();
-    void NextLine    ();
-    void index       ();
+    void NewLine();
+    void NextLine();
+    void index();
     void reverseIndex();
     //
     // Scrolling
@@ -73,30 +72,30 @@ public: // these are all `Screen' operations
     void scrollUp(int n);
     void scrollDown(int n);
     //
-    void Return      ();
-    void BackSpace   ();
-    void Tabulate    (int n = 1);
+    void Return();
+    void BackSpace();
+    void Tabulate(int n = 1);
     void backTabulate(int n);
     //
     // Editing
     //
-    void eraseChars  (int n);
-    void deleteChars (int n);
-    void insertChars (int n);
-    void deleteLines (int n);
-    void insertLines (int n);
+    void eraseChars(int n);
+    void deleteChars(int n);
+    void insertChars(int n);
+    void deleteLines(int n);
+    void insertLines(int n);
     //
     // -------------------------------------
     //
     void clearTabStops();
     void changeTabStop(bool set);
     //
-    void resetMode   (int n);
-    void setMode     (int n);
-    void saveMode    (int n);
-    void restoreMode (int n);
+    void resetMode(int n);
+    void setMode(int n);
+    void saveMode(int n);
+    void restoreMode(int n);
     //
-    void saveCursor  ();
+    void saveCursor();
     void restoreCursor();
     //
     // -------------------------------------
@@ -109,26 +108,26 @@ public: // these are all `Screen' operations
     void clearToEndOfLine();
     void clearToBeginOfLine();
     //
-    void helpAlign   ();
+    void helpAlign();
     //
     // -------------------------------------
     //
-    void setRendition  (int rendition);
+    void setRendition(int rendition);
     void resetRendition(int rendition);
     //
-    void setForeColor  (int space, int color);
-    void setBackColor  (int space, int color);
+    void setForeColor(int space, int color);
+    void setBackColor(int space, int color);
     //
     void setDefaultRendition();
     //
     // -------------------------------------
     //
-    bool getMode     (int n);
+    bool getMode(int n);
     //
     // only for report cursor position
     //
-    int  getCursorX();
-    int  getCursorY();
+    int getCursorX();
+    int getCursorY();
     //
     // -------------------------------------
     //
@@ -137,29 +136,35 @@ public: // these are all `Screen' operations
     void reset();
     // Show character
     void ShowCharacter(unsigned short c);
-    
+
     // Do composition with last shown character
     void compose(QString compose);
-    
+
     //
     void resizeImage(int new_lines, int new_columns);
     //
-    ca*  getCookedImage();
+    ca *getCookedImage();
     QBitArray getCookedLineWrapped();
 
     /*! return the number of lines. */
-    int  getLines()   { return lines; }
+    int getLines()
+    {
+        return lines;
+    }
     /*! return the number of columns. */
-    int  getColumns() { return columns; }
+    int getColumns()
+    {
+        return columns;
+    }
 
     /*! set the position of the history cursor. */
     void setHistCursor(int cursor);
     /*! return the position of the history cursor. */
 
-    int  getHistCursor();
-    int  getHistLines ();
-    void setScroll(const HistoryType&);
-    const HistoryType& getScroll();
+    int getHistCursor();
+    int getHistLines();
+    void setScroll(const HistoryType &);
+    const HistoryType &getScroll();
     bool hasScroll();
 
     //
@@ -168,21 +173,23 @@ public: // these are all `Screen' operations
     void setSelBeginXY(const int x, const int y, const bool columnmode);
     void setSelExtentXY(const int x, const int y);
     void clearSelection();
-    void setBusySelecting(bool busy) { sel_busy = busy; }
-    bool testIsSelected(const int x,const int y);
+    void setBusySelecting(bool busy)
+    {
+        sel_busy = busy;
+    }
+    bool testIsSelected(const int x, const int y);
 
     QString getSelText(bool preserve_line_breaks);
-    void getSelText(bool preserve_line_breaks, QTextStream* stream);
-    void streamHistory(QTextStream* stream);
+    void getSelText(bool preserve_line_breaks, QTextStream *stream);
+    void streamHistory(QTextStream *stream);
     QString getHistoryLine(int no);
 
     void checkSelection(int from, int to);
 
 private: // helper
-
     void clearImage(int loca, int loce, char c);
     void moveImage(int dst, int loca, int loce);
-    
+
     void scrollUp(int from, int i);
     void scrollDown(int from, int i);
 
@@ -191,7 +198,7 @@ private: // helper
     void initTabStops();
 
     void effectiveRendition();
-    void reverseRendition(ca* p);
+    void reverseRendition(ca *p);
 
     /*
        The state of the screen is more complex as one would
@@ -207,14 +214,14 @@ private: // helper
 
     int lines;
     int columns;
-    ca *image; // [lines][columns]
+    ca *image;              // [lines][columns]
     QBitArray line_wrapped; // [lines]
 
     // history buffer ---------------
 
-    int histCursor;   // display position relative to start of the history buffer
+    int histCursor; // display position relative to start of the history buffer
     HistoryScroll *hist;
-    
+
     // cursor location
 
     int cuX;
@@ -222,14 +229,14 @@ private: // helper
 
     // cursor color and rendition info
 
-    cacol cu_fg;      // foreground
-    cacol cu_bg;      // background
-    UINT8 cu_re;      // rendition
+    cacol cu_fg; // foreground
+    cacol cu_bg; // background
+    UINT8 cu_re; // rendition
 
     // margins ----------------
 
-    int tmargin;      // top margin
-    int bmargin;      // bottom margin
+    int tmargin; // top margin
+    int bmargin; // bottom margin
 
     // states ----------------
 
@@ -237,25 +244,25 @@ private: // helper
 
     // ----------------------------
 
-    bool* tabstops;
+    bool *tabstops;
 
     // selection -------------------
 
-    int sel_begin; // The first location selected.
-    int sel_TL;    // TopLeft Location.
-    int sel_BR;    // Bottom Right Location.
-    bool sel_busy; // Busy making a selection.
-    bool columnmode;  // Column selection mode
+    int sel_begin;   // The first location selected.
+    int sel_TL;      // TopLeft Location.
+    int sel_BR;      // Bottom Right Location.
+    bool sel_busy;   // Busy making a selection.
+    bool columnmode; // Column selection mode
 
     // effective colors and rendition ------------
 
-    cacol ef_fg;      // These are derived from
-    cacol ef_bg;      // the cu_* variables above
-    UINT8 ef_re;      // to speed up operation
+    cacol ef_fg; // These are derived from
+    cacol ef_bg; // the cu_* variables above
+    UINT8 ef_re; // to speed up operation
 
     //
     // save cursor, rendition & states ------------
-    // 
+    //
 
     // cursor location
 
@@ -267,7 +274,7 @@ private: // helper
     UINT8 sa_cu_re;
     cacol sa_cu_fg;
     cacol sa_cu_bg;
-    
+
     // last position where we added a character
     int lastPos;
 

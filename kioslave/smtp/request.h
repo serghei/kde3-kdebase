@@ -39,61 +39,133 @@ class KURL;
 
 namespace KioSMTP {
 
-  class Request {
-  public:
-    Request()
-      : mSubject( "missing subject" ), mEmitHeaders( true ),
-	m8Bit( false ), mSize( 0 ) {}
+class Request {
+public:
+    Request() : mSubject("missing subject"), mEmitHeaders(true), m8Bit(false), mSize(0)
+    {
+    }
 
-    static Request fromURL( const KURL & url );
+    static Request fromURL(const KURL &url);
 
-    QString profileName() const { return mProfileName; }
-    void setProfileName( const QString & profileName ) { mProfileName = profileName; }
-    bool hasProfile() const { return !profileName().isNull(); }
+    QString profileName() const
+    {
+        return mProfileName;
+    }
+    void setProfileName(const QString &profileName)
+    {
+        mProfileName = profileName;
+    }
+    bool hasProfile() const
+    {
+        return !profileName().isNull();
+    }
 
-    QString subject() const { return mSubject; }
-    void setSubject( const QString & subject ) { mSubject = subject; }
+    QString subject() const
+    {
+        return mSubject;
+    }
+    void setSubject(const QString &subject)
+    {
+        mSubject = subject;
+    }
 
-    QString fromAddress() const { return mFromAddress; }
-    void setFromAddress( const QString & fromAddress ) { mFromAddress = fromAddress; }
-    bool hasFromAddress() const { return !mFromAddress.isEmpty(); }
+    QString fromAddress() const
+    {
+        return mFromAddress;
+    }
+    void setFromAddress(const QString &fromAddress)
+    {
+        mFromAddress = fromAddress;
+    }
+    bool hasFromAddress() const
+    {
+        return !mFromAddress.isEmpty();
+    }
 
-    QStringList recipients() const { return to() + cc() + bcc() ; }
-    bool hasRecipients() const { return !to().empty() || !cc().empty() || !bcc().empty() ; }
+    QStringList recipients() const
+    {
+        return to() + cc() + bcc();
+    }
+    bool hasRecipients() const
+    {
+        return !to().empty() || !cc().empty() || !bcc().empty();
+    }
 
-    QStringList to() const { return mTo; }
-    QStringList cc() const { return mCc; }
-    QStringList bcc() const { return mBcc; }
-    void addTo( const QString & to ) { mTo.push_back( to ); }
-    void addCc( const QString & cc ) { mCc.push_back( cc ); }
-    void addBcc( const QString & bcc ) { mBcc.push_back( bcc ); }
+    QStringList to() const
+    {
+        return mTo;
+    }
+    QStringList cc() const
+    {
+        return mCc;
+    }
+    QStringList bcc() const
+    {
+        return mBcc;
+    }
+    void addTo(const QString &to)
+    {
+        mTo.push_back(to);
+    }
+    void addCc(const QString &cc)
+    {
+        mCc.push_back(cc);
+    }
+    void addBcc(const QString &bcc)
+    {
+        mBcc.push_back(bcc);
+    }
 
-    QString heloHostname() const { return mHeloHostname; }
+    QString heloHostname() const
+    {
+        return mHeloHostname;
+    }
     QCString heloHostnameCString() const;
-    void setHeloHostname( const QString & hostname ) { mHeloHostname = hostname; }
+    void setHeloHostname(const QString &hostname)
+    {
+        mHeloHostname = hostname;
+    }
 
-    bool emitHeaders() const { return mEmitHeaders; }
-    void setEmitHeaders( bool emitHeaders ) { mEmitHeaders = emitHeaders; }
+    bool emitHeaders() const
+    {
+        return mEmitHeaders;
+    }
+    void setEmitHeaders(bool emitHeaders)
+    {
+        mEmitHeaders = emitHeaders;
+    }
 
-    bool is8BitBody() const { return m8Bit; }
-    void set8BitBody( bool a8Bit ) { m8Bit = a8Bit; }
+    bool is8BitBody() const
+    {
+        return m8Bit;
+    }
+    void set8BitBody(bool a8Bit)
+    {
+        m8Bit = a8Bit;
+    }
 
-    unsigned int size() const { return mSize; }
-    void setSize( unsigned int size ) { mSize = size; }
+    unsigned int size() const
+    {
+        return mSize;
+    }
+    void setSize(unsigned int size)
+    {
+        mSize = size;
+    }
 
     /** If @ref #emitHeaders() is true, returns the rfc2822
-	serialization of the header fields "To", "Cc", "Subject" and
-	"From", as determined by the respective settings. If @ref
-	#emitHeaders() is false, returns a null string. */
-    QCString headerFields( const QString & fromRealName=QString::null ) const;
+    serialization of the header fields "To", "Cc", "Subject" and
+    "From", as determined by the respective settings. If @ref
+    #emitHeaders() is false, returns a null string. */
+    QCString headerFields(const QString &fromRealName = QString::null) const;
 
-  private:
+private:
     QStringList mTo, mCc, mBcc;
     QString mProfileName, mSubject, mFromAddress, mHeloHostname;
     bool mEmitHeaders;
     bool m8Bit;
     unsigned int mSize;
-  };
+};
 
 } // namespace KioSMTP
 

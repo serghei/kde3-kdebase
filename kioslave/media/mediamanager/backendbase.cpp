@@ -18,9 +18,6 @@
 
 #include "backendbase.h"
 
-BackendBase::BackendBase(MediaList &list)
-	: m_mediaList(list)
+BackendBase::BackendBase(MediaList &list) : m_mediaList(list)
 {
-
 }
-

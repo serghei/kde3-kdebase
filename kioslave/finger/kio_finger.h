@@ -28,36 +28,34 @@
 #include <kio/global.h>
 #include <kio/slavebase.h>
 
-class FingerProtocol : public QObject, public KIO::SlaveBase
-{
-  Q_OBJECT
+class FingerProtocol : public QObject, public KIO::SlaveBase {
+    Q_OBJECT
 
 public:
+    FingerProtocol(const QCString &pool_socket, const QCString &app_socket);
+    virtual ~FingerProtocol();
 
-  FingerProtocol(const QCString &pool_socket, const QCString &app_socket);
-  virtual ~FingerProtocol();
-
-  virtual void mimetype(const KURL& url);
-  virtual void get(const KURL& url);
+    virtual void mimetype(const KURL &url);
+    virtual void get(const KURL &url);
 
 private slots:
-  void       slotGetStdOutput(KProcess*, char*, int);
+    void slotGetStdOutput(KProcess *, char *, int);
 
 private:
-  KURL                  *myURL;
+    KURL *myURL;
 
-  QString	        *myPerlPath;
-  QString               *myFingerPath;
-  QString               *myFingerPerlScript;
-  QString               *myFingerCSSFile;
+    QString *myPerlPath;
+    QString *myFingerPath;
+    QString *myFingerPerlScript;
+    QString *myFingerCSSFile;
 
-  QString		*myStdStream;
+    QString *myStdStream;
 
 
-  KProcess	        *myKProcess;
+    KProcess *myKProcess;
 
-  void       getProgramPath();
-  void       parseCommandLine(const KURL& url);
+    void getProgramPath();
+    void parseCommandLine(const KURL &url);
 };
 
 

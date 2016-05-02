@@ -35,177 +35,171 @@ void SMBSlave::readStdErr(KProcess *, char *buffer, int buflen)
     mystderr += QString::fromLocal8Bit(buffer, buflen);
 }
 
-void SMBSlave::special( const QByteArray & data)
+void SMBSlave::special(const QByteArray &data)
 {
-   kdDebug(KIO_SMB)<<"Smb::special()"<<endl;
-   int tmp;
-   QDataStream stream(data, IO_ReadOnly);
-   stream >> tmp;
-   //mounting and umounting are both blocking, "guarded" by a SIGALARM in the future
-   switch (tmp)
-   {
-   case 1:
-   case 3:
-      {
-         QString remotePath, mountPoint, user;
-         stream >> remotePath >> mountPoint;
+    kdDebug(KIO_SMB) << "Smb::special()" << endl;
+    int tmp;
+    QDataStream stream(data, IO_ReadOnly);
+    stream >> tmp;
+    // mounting and umounting are both blocking, "guarded" by a SIGALARM in the future
+    switch(tmp)
+    {
+        case 1:
+        case 3:
+        {
+            QString remotePath, mountPoint, user;
+            stream >> remotePath >> mountPoint;
 
-         QStringList sl=QStringList::split("/",remotePath);
-         QString share,host;
-         if (sl.count()>=2)
-         {
-            host=(*sl.at(0)).mid(2);
-            share=(*sl.at(1));
-            kdDebug(KIO_SMB)<<"special() host -"<< host <<"- share -" << share <<"-"<<endl;
-         }
+            QStringList sl = QStringList::split("/", remotePath);
+            QString share, host;
+            if(sl.count() >= 2)
+            {
+                host = (*sl.at(0)).mid(2);
+                share = (*sl.at(1));
+                kdDebug(KIO_SMB) << "special() host -" << host << "- share -" << share << "-" << endl;
+            }
 
-         remotePath.replace('\\', '/');  // smbmounterplugin sends \\host/share
+            remotePath.replace('\\', '/'); // smbmounterplugin sends \\host/share
 
-         kdDebug(KIO_SMB) << "mounting: " << remotePath.local8Bit() << " to " << mountPoint.local8Bit() << endl;
+            kdDebug(KIO_SMB) << "mounting: " << remotePath.local8Bit() << " to " << mountPoint.local8Bit() << endl;
 
-         if (tmp==3) {
-             if (!KStandardDirs::makeDir(mountPoint)) {
-                 error(KIO::ERR_COULD_NOT_MKDIR, mountPoint);
-                 return;
-             }
-         }
-         mybuf.truncate(0);
-         mystderr.truncate(0);
+            if(tmp == 3)
+            {
+                if(!KStandardDirs::makeDir(mountPoint))
+                {
+                    error(KIO::ERR_COULD_NOT_MKDIR, mountPoint);
+                    return;
+                }
+            }
+            mybuf.truncate(0);
+            mystderr.truncate(0);
 
-         SMBUrl smburl("smb:///");
-         smburl.setHost(host);
-         smburl.setPath("/" + share);
+            SMBUrl smburl("smb:///");
+            smburl.setHost(host);
+            smburl.setPath("/" + share);
 
-         if ( !checkPassword(smburl) )
-         {
-           finished();
-           return;
-         }
+            if(!checkPassword(smburl))
+            {
+                finished();
+                return;
+            }
 
-         // using smbmount instead of "mount -t smbfs", because mount does not allow a non-root
-         // user to do a mount, but a suid smbmnt does allow this
+            // using smbmount instead of "mount -t smbfs", because mount does not allow a non-root
+            // user to do a mount, but a suid smbmnt does allow this
 
-         KProcess proc;
-         proc.setUseShell(true);  // to have the path to smbmnt (which is used by smbmount); see man smbmount
-         proc << "smbmount";
+            KProcess proc;
+            proc.setUseShell(true); // to have the path to smbmnt (which is used by smbmount); see man smbmount
+            proc << "smbmount";
 
-         QString options;
+            QString options;
 
-         if ( smburl.user().isEmpty() )
-         {
-           user = "guest";
-           options = "-o guest";
-         }
-         else
-         {
-           options = "-o username=" + KProcess::quote(smburl.user());
-           user = smburl.user();
+            if(smburl.user().isEmpty())
+            {
+                user = "guest";
+                options = "-o guest";
+            }
+            else
+            {
+                options = "-o username=" + KProcess::quote(smburl.user());
+                user = smburl.user();
 
-           if ( ! smburl.pass().isEmpty() )
-             options += ",password=" + KProcess::quote(smburl.pass());
-         }
+                if(!smburl.pass().isEmpty())
+                    options += ",password=" + KProcess::quote(smburl.pass());
+            }
 
-         // TODO: check why the control center uses encodings with a blank char, e.g. "cp 1250"
-         //if ( ! m_default_encoding.isEmpty() )
-           //options += ",codepage=" + KProcess::quote(m_default_encoding);
+            // TODO: check why the control center uses encodings with a blank char, e.g. "cp 1250"
+            // if ( ! m_default_encoding.isEmpty() )
+            // options += ",codepage=" + KProcess::quote(m_default_encoding);
 
-         proc << KProcess::quote(remotePath.local8Bit());
-         proc << KProcess::quote(mountPoint.local8Bit());
-         proc << options;
+            proc << KProcess::quote(remotePath.local8Bit());
+            proc << KProcess::quote(mountPoint.local8Bit());
+            proc << options;
 
-         connect(&proc, SIGNAL( receivedStdout(KProcess *, char *, int )),
-                 SLOT(readOutput(KProcess *, char *, int)));
+            connect(&proc, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(readOutput(KProcess *, char *, int)));
 
-         connect(&proc, SIGNAL( receivedStderr(KProcess *, char *, int )),
-                 SLOT(readStdErr(KProcess *, char *, int)));
+            connect(&proc, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(readStdErr(KProcess *, char *, int)));
 
-         if (!proc.start( KProcess::Block, KProcess::AllOutput ))
-         {
-            error(KIO::ERR_CANNOT_LAUNCH_PROCESS,
-                  "smbmount"+i18n("\nMake sure that the samba package is installed properly on your system."));
-            return;
-         }
+            if(!proc.start(KProcess::Block, KProcess::AllOutput))
+            {
+                error(KIO::ERR_CANNOT_LAUNCH_PROCESS, "smbmount" + i18n("\nMake sure that the samba package is installed properly on your system."));
+                return;
+            }
 
-         kdDebug(KIO_SMB) << "mount exit " << proc.exitStatus() << endl
-                          << "stdout:" << mybuf << endl << "stderr:" << mystderr << endl;
+            kdDebug(KIO_SMB) << "mount exit " << proc.exitStatus() << endl << "stdout:" << mybuf << endl << "stderr:" << mystderr << endl;
 
-         if (proc.exitStatus() != 0)
-         {
-           error( KIO::ERR_COULD_NOT_MOUNT,
-               i18n("Mounting of share \"%1\" from host \"%2\" by user \"%3\" failed.\n%4")
-               .arg(share).arg(host).arg(user).arg(mybuf + "\n" + mystderr));
-           return;
-         }
+            if(proc.exitStatus() != 0)
+            {
+                error(KIO::ERR_COULD_NOT_MOUNT, i18n("Mounting of share \"%1\" from host \"%2\" by user \"%3\" failed.\n%4")
+                                                    .arg(share)
+                                                    .arg(host)
+                                                    .arg(user)
+                                                    .arg(mybuf + "\n" + mystderr));
+                return;
+            }
 
-         finished();
-      }
-      break;
-   case 2:
-   case 4:
-      {
-         QString mountPoint;
-         stream >> mountPoint;
+            finished();
+        }
+        break;
+        case 2:
+        case 4:
+        {
+            QString mountPoint;
+            stream >> mountPoint;
 
-         KProcess proc;
-         proc.setUseShell(true);
-         proc << "smbumount";
-         proc << KProcess::quote(mountPoint);
+            KProcess proc;
+            proc.setUseShell(true);
+            proc << "smbumount";
+            proc << KProcess::quote(mountPoint);
 
-         mybuf.truncate(0);
-         mystderr.truncate(0);
+            mybuf.truncate(0);
+            mystderr.truncate(0);
 
-         connect(&proc, SIGNAL( receivedStdout(KProcess *, char *, int )),
-                 SLOT(readOutput(KProcess *, char *, int)));
+            connect(&proc, SIGNAL(receivedStdout(KProcess *, char *, int)), SLOT(readOutput(KProcess *, char *, int)));
 
-         connect(&proc, SIGNAL( receivedStderr(KProcess *, char *, int )),
-                 SLOT(readStdErr(KProcess *, char *, int)));
+            connect(&proc, SIGNAL(receivedStderr(KProcess *, char *, int)), SLOT(readStdErr(KProcess *, char *, int)));
 
-         if ( !proc.start( KProcess::Block, KProcess::AllOutput ) )
-         {
-           error(KIO::ERR_CANNOT_LAUNCH_PROCESS,
-                 "smbumount"+i18n("\nMake sure that the samba package is installed properly on your system."));
-           return;
-         }
+            if(!proc.start(KProcess::Block, KProcess::AllOutput))
+            {
+                error(KIO::ERR_CANNOT_LAUNCH_PROCESS, "smbumount" + i18n("\nMake sure that the samba package is installed properly on your system."));
+                return;
+            }
 
-         kdDebug(KIO_SMB) << "smbumount exit " << proc.exitStatus() << endl
-                          << "stdout:" << mybuf << endl << "stderr:" << mystderr << endl;
+            kdDebug(KIO_SMB) << "smbumount exit " << proc.exitStatus() << endl << "stdout:" << mybuf << endl << "stderr:" << mystderr << endl;
 
-         if (proc.exitStatus() != 0)
-         {
-           error(KIO::ERR_COULD_NOT_UNMOUNT,
-               i18n("Unmounting of mountpoint \"%1\" failed.\n%2")
-               .arg(mountPoint).arg(mybuf + "\n" + mystderr));
-           return;
-         }
+            if(proc.exitStatus() != 0)
+            {
+                error(KIO::ERR_COULD_NOT_UNMOUNT, i18n("Unmounting of mountpoint \"%1\" failed.\n%2").arg(mountPoint).arg(mybuf + "\n" + mystderr));
+                return;
+            }
 
-         if ( tmp == 4 )
-         {
-           bool ok;
+            if(tmp == 4)
+            {
+                bool ok;
 
-           QDir dir(mountPoint);
-           dir.cdUp();
-           ok = dir.rmdir(mountPoint);
-           if ( ok )
-           {
-             QString p=dir.path();
-             dir.cdUp();
-             ok = dir.rmdir(p);
-           }
+                QDir dir(mountPoint);
+                dir.cdUp();
+                ok = dir.rmdir(mountPoint);
+                if(ok)
+                {
+                    QString p = dir.path();
+                    dir.cdUp();
+                    ok = dir.rmdir(p);
+                }
 
-           if ( !ok )
-           {
-             error(KIO::ERR_COULD_NOT_RMDIR, mountPoint);
-             return;
-           }
-         }
+                if(!ok)
+                {
+                    error(KIO::ERR_COULD_NOT_RMDIR, mountPoint);
+                    return;
+                }
+            }
 
-         finished();
-      }
-      break;
-   default:
-      break;
-   }
-   finished();
+            finished();
+        }
+        break;
+        default:
+            break;
+    }
+    finished();
 }
 
 #include "kio_smb.moc"

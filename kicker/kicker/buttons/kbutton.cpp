@@ -37,8 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "kbutton.h"
 #include "kbutton.moc"
 
-KButton::KButton( QWidget* parent )
-    : PanelPopupButton( parent, "KButton" )
+KButton::KButton(QWidget *parent) : PanelPopupButton(parent, "KButton")
 {
     QToolTip::add(this, i18n("Applications, tasks and desktop sessions"));
     setTitle(i18n("K Menu"));
@@ -47,7 +46,7 @@ KButton::KButton( QWidget* parent )
     MenuManager::the()->registerKButton(this);
     setIcon("kmenu");
 
-    if (KickerSettings::showKMenuText())
+    if(KickerSettings::showKMenuText())
     {
         setButtonText(KickerSettings::kMenuText());
         setFont(KickerSettings::buttonFont());
@@ -62,17 +61,15 @@ KButton::~KButton()
 
 void KButton::properties()
 {
-    KApplication::startServiceByDesktopName("kmenuedit", QStringList(),
-                                            0, 0, 0, "", true);
+    KApplication::startServiceByDesktopName("kmenuedit", QStringList(), 0, 0, 0, "", true);
 }
 
 void KButton::initPopup()
 {
-//    kdDebug(1210) << "KButton::initPopup()" << endl;
+    //    kdDebug(1210) << "KButton::initPopup()" << endl;
 
     // this hack is required to ensure the correct popup position
     // when the size of the recent application part of the menu changes
     // please don't remove this _again_
     MenuManager::the()->kmenu()->initialize();
 }
-

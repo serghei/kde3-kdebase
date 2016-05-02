@@ -24,83 +24,80 @@
 
 #include <klocale.h>
 
-SensorLoggerDlg::SensorLoggerDlg( QWidget *parent, const char *name )
-    : KDialogBase( parent, name, true, i18n( "Sensor Logger" ),
-      Ok|Cancel, Ok, true )
+SensorLoggerDlg::SensorLoggerDlg(QWidget *parent, const char *name) : KDialogBase(parent, name, true, i18n("Sensor Logger"), Ok | Cancel, Ok, true)
 {
-  QWidget *main = new QWidget( this );
+    QWidget *main = new QWidget(this);
 
-  QVBoxLayout *topLayout = new QVBoxLayout( main, 0, KDialog::spacingHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(main, 0, KDialog::spacingHint());
 
-  m_loggerWidget = new SensorLoggerDlgWidget( main, "m_loggerWidget" );
-  topLayout->addWidget( m_loggerWidget );
-  topLayout->addStretch();
+    m_loggerWidget = new SensorLoggerDlgWidget(main, "m_loggerWidget");
+    topLayout->addWidget(m_loggerWidget);
+    topLayout->addStretch();
 
-  setMainWidget( main );
+    setMainWidget(main);
 }
 
 QString SensorLoggerDlg::fileName() const
 {
-  return m_loggerWidget->fileName();
+    return m_loggerWidget->fileName();
 }
 
 int SensorLoggerDlg::timerInterval() const
 {
-  return m_loggerWidget->timerInterval();
+    return m_loggerWidget->timerInterval();
 }
 
 bool SensorLoggerDlg::lowerLimitActive() const
 {
-  return m_loggerWidget->lowerLimitActive();
+    return m_loggerWidget->lowerLimitActive();
 }
 
 bool SensorLoggerDlg::upperLimitActive() const
 {
-  return m_loggerWidget->upperLimitActive();
+    return m_loggerWidget->upperLimitActive();
 }
 
 double SensorLoggerDlg::lowerLimit() const
 {
-  return m_loggerWidget->lowerLimit();
+    return m_loggerWidget->lowerLimit();
 }
 
 double SensorLoggerDlg::upperLimit() const
 {
-  return m_loggerWidget->upperLimit();
+    return m_loggerWidget->upperLimit();
 }
 
-void SensorLoggerDlg::setFileName( const QString &url )
+void SensorLoggerDlg::setFileName(const QString &url)
 {
-  m_loggerWidget->setFileName( url );
+    m_loggerWidget->setFileName(url);
 }
 
-void SensorLoggerDlg::setTimerInterval( int i )
+void SensorLoggerDlg::setTimerInterval(int i)
 {
-  m_loggerWidget->setTimerInterval( i );
+    m_loggerWidget->setTimerInterval(i);
 }
 
-void SensorLoggerDlg::setLowerLimitActive( bool b )
+void SensorLoggerDlg::setLowerLimitActive(bool b)
 {
-  m_loggerWidget->setLowerLimitActive( b );
+    m_loggerWidget->setLowerLimitActive(b);
 }
 
-void SensorLoggerDlg::setUpperLimitActive( bool b )
+void SensorLoggerDlg::setUpperLimitActive(bool b)
 {
-  m_loggerWidget->setUpperLimitActive( b );
+    m_loggerWidget->setUpperLimitActive(b);
 }
 
-void SensorLoggerDlg::setLowerLimit( double limit )
+void SensorLoggerDlg::setLowerLimit(double limit)
 {
-  m_loggerWidget->setLowerLimit( limit );
+    m_loggerWidget->setLowerLimit(limit);
 }
 
-void SensorLoggerDlg::setUpperLimit( double limit )
+void SensorLoggerDlg::setUpperLimit(double limit)
 {
-  m_loggerWidget->setUpperLimit( limit );
+    m_loggerWidget->setUpperLimit(limit);
 }
 
 #include "SensorLoggerDlg.moc"
 
 /* vim: et sw=2 ts=2
 */
-

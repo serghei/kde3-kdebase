@@ -3,12 +3,10 @@
 
 #include "kswidget.h"
 
-class TestWin : public KSWidget
-{
+class TestWin : public KSWidget {
     Q_OBJECT
 public:
     TestWin();
 };
 
 #endif
-

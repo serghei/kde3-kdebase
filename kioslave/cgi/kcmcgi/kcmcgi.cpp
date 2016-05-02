@@ -31,121 +31,120 @@
 #include "kcmcgi.h"
 #include "kcmcgi.moc"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_cgi(QWidget *parent, const char *)
 {
-  KDE_EXPORT KCModule *create_cgi( QWidget *parent, const char * )
-  {
     KGlobal::locale()->insertCatalogue("kcmcgi");
-    return new KCMCgi( parent, "kcmcgi" );
-  }
+    return new KCMCgi(parent, "kcmcgi");
+}
 }
 
 
-KCMCgi::KCMCgi(QWidget *parent, const char *name)
-  : KCModule(parent, name)
+KCMCgi::KCMCgi(QWidget *parent, const char *name) : KCModule(parent, name)
 {
-  setButtons(Default|Apply);
+    setButtons(Default | Apply);
 
-  QVBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
+    QVBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
 
-  QGroupBox *topBox = new QGroupBox( 1, Horizontal, i18n("Paths to Local CGI Programs"), this );
-  topLayout->addWidget( topBox );
+    QGroupBox *topBox = new QGroupBox(1, Horizontal, i18n("Paths to Local CGI Programs"), this);
+    topLayout->addWidget(topBox);
 
-  mListBox = new QListBox( topBox );
+    mListBox = new QListBox(topBox);
 
-  QHBox *buttonBox = new QHBox( topBox );
-  buttonBox->setSpacing( KDialog::spacingHint() );
+    QHBox *buttonBox = new QHBox(topBox);
+    buttonBox->setSpacing(KDialog::spacingHint());
 
-  mAddButton = new QPushButton( i18n("Add..."), buttonBox );
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( addPath() ) );
+    mAddButton = new QPushButton(i18n("Add..."), buttonBox);
+    connect(mAddButton, SIGNAL(clicked()), SLOT(addPath()));
 
-  mRemoveButton = new QPushButton( i18n("Remove"), buttonBox );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( removePath() ) );
-  connect( mListBox, SIGNAL( clicked ( QListBoxItem * )),this, SLOT( slotItemSelected( QListBoxItem *)));
+    mRemoveButton = new QPushButton(i18n("Remove"), buttonBox);
+    connect(mRemoveButton, SIGNAL(clicked()), SLOT(removePath()));
+    connect(mListBox, SIGNAL(clicked(QListBoxItem *)), this, SLOT(slotItemSelected(QListBoxItem *)));
 
-  mConfig = new KConfig("kcmcgirc");
+    mConfig = new KConfig("kcmcgirc");
 
-  load();
-  updateButton();
-  KAboutData *about =
-    new KAboutData( I18N_NOOP("kcmcgi"),
-                    I18N_NOOP("CGI KIO Slave Control Module"),
-                    0, 0, KAboutData::License_GPL,
-                    I18N_NOOP("(c) 2002 Cornelius Schumacher") );
+    load();
+    updateButton();
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmcgi"), I18N_NOOP("CGI KIO Slave Control Module"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2002 Cornelius Schumacher"));
 
-  about->addAuthor( "Cornelius Schumacher", 0, "schumacher@kde.org" );
-  setAboutData(about);
+    about->addAuthor("Cornelius Schumacher", 0, "schumacher@kde.org");
+    setAboutData(about);
 }
 
 KCMCgi::~KCMCgi()
 {
-  delete mConfig;
+    delete mConfig;
 }
 
-void KCMCgi::slotItemSelected( QListBoxItem * )
+void KCMCgi::slotItemSelected(QListBoxItem *)
 {
     updateButton();
 }
 
 void KCMCgi::updateButton()
 {
-    mRemoveButton->setEnabled( mListBox->selectedItem ());
+    mRemoveButton->setEnabled(mListBox->selectedItem());
 }
 
 void KCMCgi::defaults()
 {
-  mListBox->clear();
-  updateButton();
+    mListBox->clear();
+    updateButton();
 }
 
 void KCMCgi::save()
 {
-  QStringList paths;
+    QStringList paths;
 
-  uint i;
-  for( i = 0; i < mListBox->count(); ++i ) {
-    paths.append( mListBox->text( i ) );
-  }
+    uint i;
+    for(i = 0; i < mListBox->count(); ++i)
+    {
+        paths.append(mListBox->text(i));
+    }
 
-  mConfig->setGroup( "General" );
-  mConfig->writeEntry( "Paths", paths );
+    mConfig->setGroup("General");
+    mConfig->writeEntry("Paths", paths);
 
-  mConfig->sync();
+    mConfig->sync();
 }
 
 void KCMCgi::load()
 {
-  mConfig->setGroup( "General" );
-  QStringList paths = mConfig->readListEntry( "Paths" );
+    mConfig->setGroup("General");
+    QStringList paths = mConfig->readListEntry("Paths");
 
-  mListBox->insertStringList( paths );
+    mListBox->insertStringList(paths);
 }
 
 void KCMCgi::addPath()
 {
-  QString path = KFileDialog::getExistingDirectory( QString::null, this );
+    QString path = KFileDialog::getExistingDirectory(QString::null, this);
 
-  if ( !path.isEmpty() ) {
-    mListBox->insertItem( path );
-    emit changed( true );
-  }
-  updateButton();
+    if(!path.isEmpty())
+    {
+        mListBox->insertItem(path);
+        emit changed(true);
+    }
+    updateButton();
 }
 
 void KCMCgi::removePath()
 {
-  int index = mListBox->currentItem();
-  if ( index >= 0 ) {
-    mListBox->removeItem( index );
-    emit changed( true );
-  }
-  updateButton();
+    int index = mListBox->currentItem();
+    if(index >= 0)
+    {
+        mListBox->removeItem(index);
+        emit changed(true);
+    }
+    updateButton();
 }
 
 QString KCMCgi::quickHelp() const
 {
-  return i18n("<h1>CGI Scripts</h1> The CGI KIO slave lets you execute "
-              "local CGI programs without the need to run a web server. "
-              "In this control module you can configure the paths that "
-              "are searched for CGI scripts.");
+    return i18n(
+        "<h1>CGI Scripts</h1> The CGI KIO slave lets you execute "
+        "local CGI programs without the need to run a web server. "
+        "In this control module you can configure the paths that "
+        "are searched for CGI scripts.");
 }

@@ -22,24 +22,23 @@
 
 #include <kcmodule.h>
 
-class MediaModule : public KCModule
-{
-	Q_OBJECT
+class MediaModule : public KCModule {
+    Q_OBJECT
 
 public:
-	MediaModule( QWidget *parent, const char *name, const QStringList& );
+    MediaModule(QWidget *parent, const char *name, const QStringList &);
 
-	virtual void load();
-	virtual void save();
-	virtual void defaults();
-	virtual QString quickHelp() const;
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    virtual QString quickHelp() const;
 
 protected slots:
-	void moduleChanged( bool state );
-	
+    void moduleChanged(bool state);
+
 private:
-	KCModule *m_notifierModule;
-	KCModule *m_managerModule;
+    KCModule *m_notifierModule;
+    KCModule *m_managerModule;
 };
 
 #endif

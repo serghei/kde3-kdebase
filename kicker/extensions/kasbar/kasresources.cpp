@@ -59,78 +59,36 @@
 //
 // Bitmap data used for the window state indicators
 //
-static unsigned char min_bits[] = {
-    0x00, 0xff, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
-static unsigned char max_bits[] = {
-    0xff, 0xff, 0xc3, 0xc3, 0xc3, 0xc3, 0xff, 0xff};
-static unsigned char shade_bits[] = {
-    0x06, 0x1e, 0x7e, 0xfe, 0xfe, 0x7e, 0x1e, 0x06};
+static unsigned char min_bits[] = {0x00, 0xff, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
+static unsigned char max_bits[] = {0xff, 0xff, 0xc3, 0xc3, 0xc3, 0xc3, 0xff, 0xff};
+static unsigned char shade_bits[] = {0x06, 0x1e, 0x7e, 0xfe, 0xfe, 0x7e, 0x1e, 0x06};
 
-static unsigned char attention_bits[] = {
-    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+static unsigned char attention_bits[] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
 /* XPM */
-static const char *tiny_floppy[]={
-"10 10 4 1",
-". c None",
-"# c #000000",
-"b c #a0a0a0",
-"a c #ffffff",
-".########.",
-".#aaaaaa#.",
-".#aaaaaa#.",
-".#aaaaaa#.",
-".########.",
-".########.",
-".##bbbb##.",
-".##bbbb##.",
-".##bbbb##.",
-".........."};
+static const char *tiny_floppy[] = {"10 10 4 1",  ". c None",   "# c #000000", "b c #a0a0a0", "a c #ffffff", ".########.", ".#aaaaaa#.", ".#aaaaaa#.",
+                                    ".#aaaaaa#.", ".########.", ".########.",  ".##bbbb##.",  ".##bbbb##.",  ".##bbbb##.", ".........."};
 
-static const char *micro_max[]={
-"6 6 2 1",
-". c None",
-"# c #000000",
-"######",
-"######",
-"##..##",
-"##..##",
-"######",
-"######",
+static const char *micro_max[] = {
+    "6 6 2 1", ". c None", "# c #000000", "######", "######", "##..##", "##..##", "######", "######",
 };
 
-static const char *micro_min[]={
-"6 6 2 1",
-". c None",
-"# c #000000",
-"......",
-"######",
-"######",
-".####.",
-"..##..",
-"......"
-};
+static const char *micro_min[] = {"6 6 2 1", ". c None", "# c #000000", "......", "######", "######", ".####.", "..##..", "......"};
 
-static const char *micro_shade[]={
-"6 6 2 1",
-". c None",
-"# c #000000",
-".##...",
-".###..",
-".####.",
-".####.",
-".###..",
-".##..."
-};
+static const char *micro_shade[] = {"6 6 2 1", ". c None", "# c #000000", ".##...", ".###..", ".####.", ".####.", ".###..", ".##..."};
 
-KasResources::KasResources( KasBar *parent, const char *name )
-    : QObject( parent, name ? name : "kasbar_resources" ),
-      kasbar( parent ),
-      labelPenColor_( Qt::white ), labelBgColor_( Qt::black ),
-      activePenColor_( Qt::black ), activeBgColor_( Qt::white ),
-      inactivePenColor_( Qt::black ), inactiveBgColor_( Qt::white ),
-      progressColor_( Qt::green ), attentionColor_( Qt::red ),
-      startupFrames_()
+KasResources::KasResources(KasBar *parent, const char *name)
+    : QObject(parent, name ? name : "kasbar_resources")
+    , kasbar(parent)
+    , labelPenColor_(Qt::white)
+    , labelBgColor_(Qt::black)
+    , activePenColor_(Qt::black)
+    , activeBgColor_(Qt::white)
+    , inactivePenColor_(Qt::black)
+    , inactiveBgColor_(Qt::white)
+    , progressColor_(Qt::green)
+    , attentionColor_(Qt::red)
+    , startupFrames_()
 {
 }
 
@@ -140,158 +98,164 @@ KasResources::~KasResources()
 
 QBitmap KasResources::minIcon()
 {
-   if ( minPix.isNull() ) {
-      minPix = QBitmap(8, 8, min_bits, true);
-      minPix.setMask(minPix);
-   }
+    if(minPix.isNull())
+    {
+        minPix = QBitmap(8, 8, min_bits, true);
+        minPix.setMask(minPix);
+    }
 
-   return minPix;
+    return minPix;
 }
 
 QBitmap KasResources::maxIcon()
 {
-   if ( maxPix.isNull() ) {
-      maxPix = QBitmap(8, 8, max_bits, true);
-      maxPix.setMask(maxPix);
-   }
+    if(maxPix.isNull())
+    {
+        maxPix = QBitmap(8, 8, max_bits, true);
+        maxPix.setMask(maxPix);
+    }
 
-   return maxPix;
+    return maxPix;
 }
 
 QBitmap KasResources::shadeIcon()
 {
-   if ( shadePix.isNull() ) {
-      shadePix = QBitmap(8, 8, shade_bits, true);
-      shadePix.setMask(shadePix);
-   }
+    if(shadePix.isNull())
+    {
+        shadePix = QBitmap(8, 8, shade_bits, true);
+        shadePix.setMask(shadePix);
+    }
 
-   return shadePix;
+    return shadePix;
 }
 
 QBitmap KasResources::attentionIcon()
 {
-   if ( attentionPix.isNull() ) {
-      attentionPix = QBitmap( 8, 8, attention_bits, true );
-      attentionPix.setMask( attentionPix );
-   }
+    if(attentionPix.isNull())
+    {
+        attentionPix = QBitmap(8, 8, attention_bits, true);
+        attentionPix.setMask(attentionPix);
+    }
 
-   return attentionPix;
+    return attentionPix;
 }
 
 QPixmap KasResources::modifiedIcon()
 {
-   if ( modifiedPix.isNull() )
-      modifiedPix = QPixmap( tiny_floppy );
+    if(modifiedPix.isNull())
+        modifiedPix = QPixmap(tiny_floppy);
 
-   return modifiedPix;
+    return modifiedPix;
 }
 
 QPixmap KasResources::microShadeIcon()
 {
-  if ( microShadePix.isNull() )
-    microShadePix = QPixmap( micro_shade );
+    if(microShadePix.isNull())
+        microShadePix = QPixmap(micro_shade);
 
-  return microShadePix;
+    return microShadePix;
 }
 
 QPixmap KasResources::microMaxIcon()
 {
-  if ( microMaxPix.isNull() )
-    microMaxPix = QPixmap( micro_max );
+    if(microMaxPix.isNull())
+        microMaxPix = QPixmap(micro_max);
 
-  return microMaxPix;
+    return microMaxPix;
 }
 
 QPixmap KasResources::microMinIcon()
 {
-  if ( microMinPix.isNull() )
-    microMinPix = QPixmap( micro_min );
+    if(microMinPix.isNull())
+        microMinPix = QPixmap(micro_min);
 
-  return microMinPix;
+    return microMinPix;
 }
 
-static const int MAX_ANIMATION_FRAME=10;
+static const int MAX_ANIMATION_FRAME = 10;
 
-QValueVector<QPixmap> KasResources::startupAnimation()
+QValueVector< QPixmap > KasResources::startupAnimation()
 {
-    if ( startupFrames_.isEmpty() ) {
-	for ( int i = 1; i <= MAX_ANIMATION_FRAME; i++ ) {
-	    QPixmap p( locate("data", "kicker/pics/disk" + QString::number(i) + ".png") );
-	    if ( !p.isNull() )
-		startupFrames_.append( p );
-	}
+    if(startupFrames_.isEmpty())
+    {
+        for(int i = 1; i <= MAX_ANIMATION_FRAME; i++)
+        {
+            QPixmap p(locate("data", "kicker/pics/disk" + QString::number(i) + ".png"));
+            if(!p.isNull())
+                startupFrames_.append(p);
+        }
     }
 
     return startupFrames_;
 }
 
-void KasResources::setLabelPenColor( const QColor &color )
+void KasResources::setLabelPenColor(const QColor &color)
 {
-    if ( labelPenColor_ == color )
-	return;
+    if(labelPenColor_ == color)
+        return;
 
     labelPenColor_ = color;
     emit changed();
 }
 
-void KasResources::setLabelBgColor( const QColor &color )
+void KasResources::setLabelBgColor(const QColor &color)
 {
-    if ( labelBgColor_ == color )
-	return;
+    if(labelBgColor_ == color)
+        return;
 
     labelBgColor_ = color;
     emit changed();
 }
 
-void KasResources::setInactivePenColor( const QColor &color )
+void KasResources::setInactivePenColor(const QColor &color)
 {
-    if ( inactivePenColor_ == color )
-	return;
+    if(inactivePenColor_ == color)
+        return;
 
     inactivePenColor_ = color;
     emit changed();
 }
 
-void KasResources::setInactiveBgColor( const QColor &color )
+void KasResources::setInactiveBgColor(const QColor &color)
 {
-    if ( inactiveBgColor_ == color )
-	return;
+    if(inactiveBgColor_ == color)
+        return;
 
     inactiveBgColor_ = color;
     emit changed();
 }
 
-void KasResources::setActivePenColor( const QColor &color )
+void KasResources::setActivePenColor(const QColor &color)
 {
-    if ( activePenColor_ == color )
-	return;
+    if(activePenColor_ == color)
+        return;
 
     activePenColor_ = color;
     emit changed();
 }
 
-void KasResources::setActiveBgColor( const QColor &color )
+void KasResources::setActiveBgColor(const QColor &color)
 {
-    if ( activeBgColor_ == color )
-	return;
+    if(activeBgColor_ == color)
+        return;
 
     activeBgColor_ = color;
     emit changed();
 }
 
-void KasResources::setProgressColor( const QColor &color )
+void KasResources::setProgressColor(const QColor &color)
 {
-    if ( progressColor_ == color )
-	return;
+    if(progressColor_ == color)
+        return;
 
     progressColor_ = color;
     emit changed();
 }
 
-void KasResources::setAttentionColor( const QColor &color )
+void KasResources::setAttentionColor(const QColor &color)
 {
-    if ( attentionColor_ == color )
-	return;
+    if(attentionColor_ == color)
+        return;
 
     attentionColor_ = color;
     emit changed();
@@ -305,25 +269,22 @@ void KasResources::itemSizeChanged()
 
 KPixmap KasResources::activeBg()
 {
-   if ( actBg.isNull() ) {
-      actBg.resize( kasbar->itemExtent(), kasbar->itemExtent() );
-      KPixmapEffect::gradient( actBg,
-			       kasbar->colorGroup().light(), kasbar->colorGroup().mid(),
-			       KPixmapEffect::DiagonalGradient );
-   }
+    if(actBg.isNull())
+    {
+        actBg.resize(kasbar->itemExtent(), kasbar->itemExtent());
+        KPixmapEffect::gradient(actBg, kasbar->colorGroup().light(), kasbar->colorGroup().mid(), KPixmapEffect::DiagonalGradient);
+    }
 
-   return actBg;
+    return actBg;
 }
 
 KPixmap KasResources::inactiveBg()
 {
-   if ( inactBg.isNull() ) {
-      inactBg.resize( kasbar->itemExtent(), kasbar->itemExtent() );
-      KPixmapEffect::gradient( inactBg,
-			       kasbar->colorGroup().mid(), kasbar->colorGroup().dark(),
-			       KPixmapEffect::DiagonalGradient );
-   }
+    if(inactBg.isNull())
+    {
+        inactBg.resize(kasbar->itemExtent(), kasbar->itemExtent());
+        KPixmapEffect::gradient(inactBg, kasbar->colorGroup().mid(), kasbar->colorGroup().dark(), KPixmapEffect::DiagonalGradient);
+    }
 
-   return inactBg;
+    return inactBg;
 }
-

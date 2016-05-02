@@ -36,22 +36,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "removebutton_mnu.h"
 #include "removebutton_mnu.moc"
 
-PanelRemoveButtonMenu::PanelRemoveButtonMenu( ContainerArea* cArea,
-                                              QWidget *parent, const char *name )
-    : QPopupMenu( parent, name ), containerArea( cArea )
+PanelRemoveButtonMenu::PanelRemoveButtonMenu(ContainerArea *cArea, QWidget *parent, const char *name) : QPopupMenu(parent, name), containerArea(cArea)
 {
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
     connect(this, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
 }
 
-void PanelRemoveButtonMenu::addToContainers(const QString& type)
+void PanelRemoveButtonMenu::addToContainers(const QString &type)
 {
     BaseContainer::List list = containerArea->containers(type);
-    for (BaseContainer::Iterator it = list.begin();
-         it != list.end();
-         ++it)
+    for(BaseContainer::Iterator it = list.begin(); it != list.end(); ++it)
     {
-        if ((*it)->isImmutable())
+        if((*it)->isImmutable())
         {
             continue;
         }
@@ -70,8 +66,8 @@ void PanelRemoveButtonMenu::slotAboutToShow()
     addToContainers("ExecButton");
 
     int id = 0;
-    QValueList<PanelMenuItemInfo> items;
-    for (BaseContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
+    QValueList< PanelMenuItemInfo > items;
+    for(BaseContainer::Iterator it = containers.begin(); it != containers.end(); ++it)
     {
         items.append(PanelMenuItemInfo((*it)->icon(), (*it)->visibleName(), id));
         id++;
@@ -79,23 +75,21 @@ void PanelRemoveButtonMenu::slotAboutToShow()
 
     qHeapSort(items);
 
-    for (QValueList<PanelMenuItemInfo>::iterator it = items.begin();
-         it != items.end();
-         ++it)
+    for(QValueList< PanelMenuItemInfo >::iterator it = items.begin(); it != items.end(); ++it)
     {
         (*it).plug(this);
     }
 
-    if (containers.count() > 1)
+    if(containers.count() > 1)
     {
         insertSeparator();
         insertItem(i18n("All"), this, SLOT(slotRemoveAll()), 0, id);
     }
 }
 
-void PanelRemoveButtonMenu::slotExec( int id )
+void PanelRemoveButtonMenu::slotExec(int id)
 {
-    if (containers.at(id) != containers.end())
+    if(containers.at(id) != containers.end())
     {
         containerArea->removeContainer(*containers.at(id));
     }

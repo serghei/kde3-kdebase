@@ -45,63 +45,47 @@
 #include "kcmhistory.h"
 #include "history_settings.h"
 
-typedef KGenericFactory<HistorySidebarConfig, QWidget > KCMHistoryFactory;
-K_EXPORT_COMPONENT_FACTORY (kcm_history, KCMHistoryFactory("kcmhistory") )
+typedef KGenericFactory< HistorySidebarConfig, QWidget > KCMHistoryFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_history, KCMHistoryFactory("kcmhistory"))
 
-HistorySidebarConfig::HistorySidebarConfig( QWidget *parent, const char* name, const QStringList & )
-    : KCModule (KCMHistoryFactory::instance(), parent, name)
+HistorySidebarConfig::HistorySidebarConfig(QWidget *parent, const char *name, const QStringList &)
+    : KCModule(KCMHistoryFactory::instance(), parent, name)
 {
     KGlobal::locale()->insertCatalogue("konqueror");
 
-    m_settings = new KonqSidebarHistorySettings( 0, "history settings" );
-    m_settings->readSettings( false );
+    m_settings = new KonqSidebarHistorySettings(0, "history settings");
+    m_settings->readSettings(false);
 
     QVBoxLayout *topLayout = new QVBoxLayout(this, 0, KDialog::spacingHint());
     dialog = new KonqSidebarHistoryDlg(this);
 
-    dialog->spinEntries->setRange( 0, INT_MAX, 1, false );
-    dialog->spinExpire->setRange(  0, INT_MAX, 1, false );
+    dialog->spinEntries->setRange(0, INT_MAX, 1, false);
+    dialog->spinExpire->setRange(0, INT_MAX, 1, false);
 
-    dialog->spinNewer->setRange( 0, INT_MAX, 1, false );
-    dialog->spinOlder->setRange( 0, INT_MAX, 1, false );
+    dialog->spinNewer->setRange(0, INT_MAX, 1, false);
+    dialog->spinOlder->setRange(0, INT_MAX, 1, false);
 
-    dialog->comboNewer->insertItem( i18n("Minutes"),
-                                    KonqSidebarHistorySettings::MINUTES );
-    dialog->comboNewer->insertItem( i18n("Days"),
-                                    KonqSidebarHistorySettings::DAYS );
+    dialog->comboNewer->insertItem(i18n("Minutes"), KonqSidebarHistorySettings::MINUTES);
+    dialog->comboNewer->insertItem(i18n("Days"), KonqSidebarHistorySettings::DAYS);
 
-    dialog->comboOlder->insertItem( i18n("Minutes"),
-                                    KonqSidebarHistorySettings::MINUTES );
-    dialog->comboOlder->insertItem( i18n("Days"),
-                                    KonqSidebarHistorySettings::DAYS );
+    dialog->comboOlder->insertItem(i18n("Minutes"), KonqSidebarHistorySettings::MINUTES);
+    dialog->comboOlder->insertItem(i18n("Days"), KonqSidebarHistorySettings::DAYS);
 
-    connect( dialog->cbExpire, SIGNAL( toggled( bool )),
-	     dialog->spinExpire, SLOT( setEnabled( bool )));
-    connect( dialog->spinExpire, SIGNAL( valueChanged( int )),
-	     this, SLOT( slotExpireChanged( int )));
+    connect(dialog->cbExpire, SIGNAL(toggled(bool)), dialog->spinExpire, SLOT(setEnabled(bool)));
+    connect(dialog->spinExpire, SIGNAL(valueChanged(int)), this, SLOT(slotExpireChanged(int)));
 
-    connect( dialog->spinNewer, SIGNAL( valueChanged( int )),
-	     SLOT( slotNewerChanged( int )));
-    connect( dialog->spinOlder, SIGNAL( valueChanged( int )),
-	     SLOT( slotOlderChanged( int )));
+    connect(dialog->spinNewer, SIGNAL(valueChanged(int)), SLOT(slotNewerChanged(int)));
+    connect(dialog->spinOlder, SIGNAL(valueChanged(int)), SLOT(slotOlderChanged(int)));
 
-    connect( dialog->btnFontNewer, SIGNAL( clicked() ),
-             SLOT( slotGetFontNewer() ));
-    connect( dialog->btnFontOlder, SIGNAL( clicked() ),
-             SLOT( slotGetFontOlder() ));
-    connect( dialog->btnClearHistory, SIGNAL( clicked() ),
-             SLOT( slotClearHistory() ));
+    connect(dialog->btnFontNewer, SIGNAL(clicked()), SLOT(slotGetFontNewer()));
+    connect(dialog->btnFontOlder, SIGNAL(clicked()), SLOT(slotGetFontOlder()));
+    connect(dialog->btnClearHistory, SIGNAL(clicked()), SLOT(slotClearHistory()));
 
-    connect( dialog->cbDetailedTips, SIGNAL( toggled( bool )),
-             SLOT( configChanged() ));
-    connect( dialog->cbExpire, SIGNAL( toggled( bool )),
-             SLOT( configChanged() ));
-    connect( dialog->spinEntries, SIGNAL( valueChanged( int )),
-             SLOT( configChanged() ));
-    connect( dialog->comboNewer, SIGNAL( activated( int )),
-             SLOT( configChanged() ));
-    connect( dialog->comboOlder, SIGNAL( activated( int )),
-             SLOT( configChanged() ));
+    connect(dialog->cbDetailedTips, SIGNAL(toggled(bool)), SLOT(configChanged()));
+    connect(dialog->cbExpire, SIGNAL(toggled(bool)), SLOT(configChanged()));
+    connect(dialog->spinEntries, SIGNAL(valueChanged(int)), SLOT(configChanged()));
+    connect(dialog->comboNewer, SIGNAL(activated(int)), SLOT(configChanged()));
+    connect(dialog->comboOlder, SIGNAL(activated(int)), SLOT(configChanged()));
 
     dialog->show();
     topLayout->add(dialog);
@@ -117,63 +101,61 @@ void HistorySidebarConfig::load()
 {
     KConfig config("konquerorrc");
     config.setGroup("HistorySettings");
-    dialog->spinExpire->setValue( config.readNumEntry( "Maximum age of History entries", 90) );
-    dialog->spinEntries->setValue( config.readNumEntry( "Maximum of History entries", 500 ) );
-    dialog->cbExpire->setChecked( dialog->spinExpire->value() > 0 );
+    dialog->spinExpire->setValue(config.readNumEntry("Maximum age of History entries", 90));
+    dialog->spinEntries->setValue(config.readNumEntry("Maximum of History entries", 500));
+    dialog->cbExpire->setChecked(dialog->spinExpire->value() > 0);
 
-    dialog->spinNewer->setValue( m_settings->m_valueYoungerThan );
-    dialog->spinOlder->setValue( m_settings->m_valueOlderThan );
+    dialog->spinNewer->setValue(m_settings->m_valueYoungerThan);
+    dialog->spinOlder->setValue(m_settings->m_valueOlderThan);
 
-    dialog->comboNewer->setCurrentItem( m_settings->m_metricYoungerThan );
-    dialog->comboOlder->setCurrentItem( m_settings->m_metricOlderThan );
+    dialog->comboNewer->setCurrentItem(m_settings->m_metricYoungerThan);
+    dialog->comboOlder->setCurrentItem(m_settings->m_metricOlderThan);
 
-    dialog->cbDetailedTips->setChecked( m_settings->m_detailedTips );
+    dialog->cbDetailedTips->setChecked(m_settings->m_detailedTips);
 
     m_fontNewer = m_settings->m_fontYoungerThan;
     m_fontOlder = m_settings->m_fontOlderThan;
 
     // enable/disable widgets
-    dialog->spinExpire->setEnabled( dialog->cbExpire->isChecked() );
+    dialog->spinExpire->setEnabled(dialog->cbExpire->isChecked());
 
-    slotExpireChanged( dialog->spinExpire->value() );
-    slotNewerChanged( dialog->spinNewer->value() );
-    slotOlderChanged( dialog->spinOlder->value() );
+    slotExpireChanged(dialog->spinExpire->value());
+    slotNewerChanged(dialog->spinNewer->value());
+    slotOlderChanged(dialog->spinOlder->value());
 
     emit changed(false);
 }
 
 void HistorySidebarConfig::save()
 {
-    Q_UINT32 age   = dialog->cbExpire->isChecked() ? dialog->spinExpire->value() : 0;
+    Q_UINT32 age = dialog->cbExpire->isChecked() ? dialog->spinExpire->value() : 0;
     Q_UINT32 count = dialog->spinEntries->value();
 
     KConfig config("konquerorrc");
     config.setGroup("HistorySettings");
-    config.writeEntry( "Maximum of History entries", count );
-    config.writeEntry( "Maximum age of History entries", age );
+    config.writeEntry("Maximum of History entries", count);
+    config.writeEntry("Maximum age of History entries", age);
 
     QByteArray dataAge;
-    QDataStream streamAge( dataAge, IO_WriteOnly );
+    QDataStream streamAge(dataAge, IO_WriteOnly);
     streamAge << age << "foo";
-    kapp->dcopClient()->send( "konqueror*", "KonqHistoryManager",
-			      "notifyMaxAge(Q_UINT32, QCString)", dataAge );
+    kapp->dcopClient()->send("konqueror*", "KonqHistoryManager", "notifyMaxAge(Q_UINT32, QCString)", dataAge);
 
     QByteArray dataCount;
-    QDataStream streamCount( dataCount, IO_WriteOnly );
+    QDataStream streamCount(dataCount, IO_WriteOnly);
     streamCount << count << "foo";
-    kapp->dcopClient()->send( "konqueror*", "KonqHistoryManager",
-			      "notifyMaxCount(Q_UINT32, QCString)", dataCount );
+    kapp->dcopClient()->send("konqueror*", "KonqHistoryManager", "notifyMaxCount(Q_UINT32, QCString)", dataCount);
 
     m_settings->m_valueYoungerThan = dialog->spinNewer->value();
-    m_settings->m_valueOlderThan   = dialog->spinOlder->value();
+    m_settings->m_valueOlderThan = dialog->spinOlder->value();
 
     m_settings->m_metricYoungerThan = dialog->comboNewer->currentItem();
-    m_settings->m_metricOlderThan   = dialog->comboOlder->currentItem();
+    m_settings->m_metricOlderThan = dialog->comboOlder->currentItem();
 
     m_settings->m_detailedTips = dialog->cbDetailedTips->isChecked();
 
     m_settings->m_fontYoungerThan = m_fontNewer;
-    m_settings->m_fontOlderThan   = m_fontOlder;
+    m_settings->m_fontOlderThan = m_fontOlder;
 
     m_settings->applySettings();
 
@@ -182,20 +164,20 @@ void HistorySidebarConfig::save()
 
 void HistorySidebarConfig::defaults()
 {
-    dialog->spinEntries->setValue( 500 );
-    dialog->cbExpire->setChecked( true );
-    dialog->spinExpire->setValue( 90 );
+    dialog->spinEntries->setValue(500);
+    dialog->cbExpire->setChecked(true);
+    dialog->spinExpire->setValue(90);
 
-    dialog->spinNewer->setValue( 1 );
-    dialog->spinOlder->setValue( 2 );
+    dialog->spinNewer->setValue(1);
+    dialog->spinOlder->setValue(2);
 
-    dialog->comboNewer->setCurrentItem( KonqSidebarHistorySettings::DAYS );
-    dialog->comboOlder->setCurrentItem( KonqSidebarHistorySettings::DAYS );
+    dialog->comboNewer->setCurrentItem(KonqSidebarHistorySettings::DAYS);
+    dialog->comboOlder->setCurrentItem(KonqSidebarHistorySettings::DAYS);
 
-    dialog->cbDetailedTips->setChecked( true );
+    dialog->cbDetailedTips->setChecked(true);
 
     m_fontNewer = QFont();
-    m_fontNewer.setItalic( true );
+    m_fontNewer.setItalic(true);
     m_fontOlder = QFont();
 
     emit changed(true);
@@ -203,69 +185,66 @@ void HistorySidebarConfig::defaults()
 
 QString HistorySidebarConfig::quickHelp() const
 {
-    return i18n("<h1>History Sidebar</h1>"
-                " You can configure the history sidebar here.");
+    return i18n(
+        "<h1>History Sidebar</h1>"
+        " You can configure the history sidebar here.");
 }
 
-void HistorySidebarConfig::slotExpireChanged( int value )
+void HistorySidebarConfig::slotExpireChanged(int value)
 {
-    dialog->spinExpire->setSuffix( i18n(" day", " days", value) );
+    dialog->spinExpire->setSuffix(i18n(" day", " days", value));
     configChanged();
 }
 
 // change hour to days, minute to minutes and the other way round,
 // depending on the value of the spinbox, and synchronize the two spinBoxes
 // to enfore newer <= older.
-void HistorySidebarConfig::slotNewerChanged( int value )
+void HistorySidebarConfig::slotNewerChanged(int value)
 {
-    dialog->comboNewer->changeItem( i18n ( "Day", "Days", value),
-                                    KonqSidebarHistorySettings::DAYS);
-    dialog->comboNewer->changeItem( i18n ( "Minute", "Minutes", value),
-                                    KonqSidebarHistorySettings::MINUTES);
+    dialog->comboNewer->changeItem(i18n("Day", "Days", value), KonqSidebarHistorySettings::DAYS);
+    dialog->comboNewer->changeItem(i18n("Minute", "Minutes", value), KonqSidebarHistorySettings::MINUTES);
 
-    if ( dialog->spinNewer->value() > dialog->spinOlder->value() )
-	dialog->spinOlder->setValue( dialog->spinNewer->value() );
+    if(dialog->spinNewer->value() > dialog->spinOlder->value())
+        dialog->spinOlder->setValue(dialog->spinNewer->value());
     configChanged();
 }
 
-void HistorySidebarConfig::slotOlderChanged( int value )
+void HistorySidebarConfig::slotOlderChanged(int value)
 {
-    dialog->comboOlder->changeItem( i18n ( "Day", "Days", value),
-                                    KonqSidebarHistorySettings::DAYS);
-    dialog->comboOlder->changeItem( i18n ( "Minute", "Minutes", value),
-                                    KonqSidebarHistorySettings::MINUTES);
+    dialog->comboOlder->changeItem(i18n("Day", "Days", value), KonqSidebarHistorySettings::DAYS);
+    dialog->comboOlder->changeItem(i18n("Minute", "Minutes", value), KonqSidebarHistorySettings::MINUTES);
 
-    if ( dialog->spinNewer->value() > dialog->spinOlder->value() )
-	dialog->spinNewer->setValue( dialog->spinOlder->value() );
+    if(dialog->spinNewer->value() > dialog->spinOlder->value())
+        dialog->spinNewer->setValue(dialog->spinOlder->value());
 
     configChanged();
 }
 
 void HistorySidebarConfig::slotGetFontNewer()
 {
-    int result = KFontDialog::getFont( m_fontNewer, false, this );
-    if ( result == KFontDialog::Accepted )
+    int result = KFontDialog::getFont(m_fontNewer, false, this);
+    if(result == KFontDialog::Accepted)
         configChanged();
 }
 
 void HistorySidebarConfig::slotGetFontOlder()
 {
-    int result = KFontDialog::getFont( m_fontOlder, false, this );
-    if ( result == KFontDialog::Accepted )
+    int result = KFontDialog::getFont(m_fontOlder, false, this);
+    if(result == KFontDialog::Accepted)
         configChanged();
 }
 
 void HistorySidebarConfig::slotClearHistory()
 {
     KGuiItem guiitem = KStdGuiItem::clear();
-    guiitem.setIconSet( SmallIconSet("history_clear"));
-    if ( KMessageBox::warningContinueCancel( this,
-				     i18n("Do you really want to clear "
-					  "the entire history?"),
-				     i18n("Clear History?"), guiitem )
-	 == KMessageBox::Continue ) {
-        DCOPRef dcopHistManager( "konqueror*", "KonqHistoryManager" );
-        dcopHistManager.send( "notifyClear", "KonqHistoryManager" );
+    guiitem.setIconSet(SmallIconSet("history_clear"));
+    if(KMessageBox::warningContinueCancel(this, i18n("Do you really want to clear "
+                                                     "the entire history?"),
+                                          i18n("Clear History?"), guiitem)
+       == KMessageBox::Continue)
+    {
+        DCOPRef dcopHistManager("konqueror*", "KonqHistoryManager");
+        dcopHistManager.send("notifyClear", "KonqHistoryManager");
     }
 }
 

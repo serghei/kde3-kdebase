@@ -31,10 +31,9 @@ namespace KWinPlastik {
 
 class PlastikButton;
 
-class PlastikClient : public KCommonDecoration
-{
+class PlastikClient : public KCommonDecoration {
 public:
-    PlastikClient(KDecorationBridge* bridge, KDecorationFactory* factory);
+    PlastikClient(KDecorationBridge *bridge, KDecorationFactory *factory);
     ~PlastikClient();
 
     virtual QString visibleName() const;
@@ -46,7 +45,7 @@ public:
     virtual KCommonDecorationButton *createButton(ButtonType type);
 
     virtual void init();
-    virtual void reset( unsigned long changed );
+    virtual void reset(unsigned long changed);
 
     virtual void paintEvent(QPaintEvent *e);
     virtual void updateCaption();

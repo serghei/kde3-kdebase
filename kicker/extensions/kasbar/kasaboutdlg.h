@@ -63,24 +63,22 @@ class KasBar;
 /**
  * About dialog for KasBar
  */
-class KasAboutDialog : public KDialogBase
-{
-   Q_OBJECT
+class KasAboutDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-   KasAboutDialog( QWidget *parent=0 );
-   ~KasAboutDialog();
+    KasAboutDialog(QWidget *parent = 0);
+    ~KasAboutDialog();
 
-   void addAuthorsPage();
-   void addAdvancedPage();
-   void addInfoPage();
-   void addBSDPage();
-   void addGPLPage();
-   void addDemoBar();
+    void addAuthorsPage();
+    void addAdvancedPage();
+    void addInfoPage();
+    void addBSDPage();
+    void addGPLPage();
+    void addDemoBar();
 
 private:
-   KasBar *bar;
+    KasBar *bar;
 };
 
 #endif // KASABOUTDLG_H
-

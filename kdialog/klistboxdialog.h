@@ -23,26 +23,25 @@
 
 #include <kdialogbase.h>
 
-class KListBoxDialog : public KDialogBase
-{
-  Q_OBJECT
+class KListBoxDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
+    KListBoxDialog(QString text, QWidget *parent = 0);
+    ~KListBoxDialog(){};
 
-  KListBoxDialog(QString text, QWidget *parent=0);
-  ~KListBoxDialog() {};
+    QListBox &getTable()
+    {
+        return *table;
+    };
 
-  QListBox &getTable() { return *table; };
-
-  void insertItem( const QString& text );
-  void setCurrentItem ( const QString& text );
-  int currentItem();
+    void insertItem(const QString &text);
+    void setCurrentItem(const QString &text);
+    int currentItem();
 
 protected:
-
-  QListBox *table;
-  QLabel *label;
-
+    QListBox *table;
+    QLabel *label;
 };
 
 

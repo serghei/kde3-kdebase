@@ -27,32 +27,32 @@
 /**
 @author Olivier Goffart
 */
-class KDE_EXPORT Sound{
+class KDE_EXPORT Sound {
 public:
     Sound();
     ~Sound();
 
-	void load(const QString &filename);
-	void save(const QString &filename) const;
+    void load(const QString &filename);
+    void save(const QString &filename) const;
 
-	unsigned int size() const
-	{
-		return data.size();
-	}
+    unsigned int size() const
+    {
+        return data.size();
+    }
 
-	inline float at(int pos) const
-	{
-		return (float)(data.at(pos))/max;
-	}
+    inline float at(int pos) const
+    {
+        return (float)(data.at(pos)) / max;
+    }
 
-	inline uint fs() const
-	{
-		return _fs;
-	}
+    inline uint fs() const
+    {
+        return _fs;
+    }
 
-	QMemArray<Q_INT32> data;
-	Q_UINT32 max;
-	uint _fs;
+    QMemArray< Q_INT32 > data;
+    Q_UINT32 max;
+    uint _fs;
 };
 
 #endif

@@ -28,26 +28,23 @@
 
 class SensorLoggerSettingsWidget;
 
-class SensorLoggerSettings : public KDialogBase
-{
-  Q_OBJECT
+class SensorLoggerSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
-    SensorLoggerSettings( QWidget *parent=0, const char *name=0 );
+public:
+    SensorLoggerSettings(QWidget *parent = 0, const char *name = 0);
 
     QString title();
     QColor foregroundColor();
     QColor backgroundColor();
     QColor alarmColor();
 
-    void setTitle( const QString & );
-    void setForegroundColor( const QColor & );
-    void setBackgroundColor( const QColor & );
-    void setAlarmColor( const QColor & );
+    void setTitle(const QString &);
+    void setForegroundColor(const QColor &);
+    void setBackgroundColor(const QColor &);
+    void setAlarmColor(const QColor &);
 
-  private:
-
+private:
     SensorLoggerSettingsWidget *m_settingsWidget;
 };
 

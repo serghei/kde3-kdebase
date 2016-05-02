@@ -7,16 +7,12 @@
 ** place of a destructor.
 *****************************************************************************/
 
-void AccessibilityConfigWidget::updateFlashScreenColor(){
-   flashScreenColor->setEnabled(flashScreen->isChecked());
+void AccessibilityConfigWidget::updateFlashScreenColor()
+{
+    flashScreenColor->setEnabled(flashScreen->isChecked());
 }
 
 
 void AccessibilityConfigWidget::configChanged()
 {
-
 }
-
-
-
-

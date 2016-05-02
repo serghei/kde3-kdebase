@@ -27,45 +27,43 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-typedef KGenericFactory<KCMPrintMgr, QWidget> KPrintMgrFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_printmgr, KPrintMgrFactory("kcmprintmgr") )
+typedef KGenericFactory< KCMPrintMgr, QWidget > KPrintMgrFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_printmgr, KPrintMgrFactory("kcmprintmgr"))
 
-KCMPrintMgr::KCMPrintMgr(QWidget *parent, const char *name, const QStringList &)
-: KCModule(KPrintMgrFactory::instance(),parent,name)
+KCMPrintMgr::KCMPrintMgr(QWidget *parent, const char *name, const QStringList &) : KCModule(KPrintMgrFactory::instance(), parent, name)
 {
-	setButtons(KCModule::Ok);
-	setRootOnlyMsg( i18n(
-		"Print management as normal user\n"
-		"Some print management operations may need administrator privileges. Use the\n"
-		"\"Administrator Mode\" button below to start this print management tool with\n"
-		"administrator privileges.") );
-	setUseRootOnlyMsg(false);
+    setButtons(KCModule::Ok);
+    setRootOnlyMsg(
+        i18n("Print management as normal user\n"
+             "Some print management operations may need administrator privileges. Use the\n"
+             "\"Administrator Mode\" button below to start this print management tool with\n"
+             "administrator privileges."));
+    setUseRootOnlyMsg(false);
 
-	m_mainview = new KMMainView(this,"MainView");
+    m_mainview = new KMMainView(this, "MainView");
 
-	QVBoxLayout	*main_ = new QVBoxLayout(this, 0, 0);
-	main_->addWidget(m_mainview);
-	main_->activate();
-	
-	KAboutData *about =
-	  new KAboutData(I18N_NOOP("kcmprintmgr"), I18N_NOOP("KDE Printing Management"),
-                  0, 0, KAboutData::License_GPL,
-                  I18N_NOOP("(c) 2000 - 2002 Michael Goffioul"));
-	about->addAuthor("Michael Goffioul", 0, "kdeprint@swing.be");
-	setAboutData(about);
+    QVBoxLayout *main_ = new QVBoxLayout(this, 0, 0);
+    main_->addWidget(m_mainview);
+    main_->activate();
+
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmprintmgr"), I18N_NOOP("KDE Printing Management"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 2000 - 2002 Michael Goffioul"));
+    about->addAuthor("Michael Goffioul", 0, "kdeprint@swing.be");
+    setAboutData(about);
 }
 
 QString KCMPrintMgr::quickHelp() const
 {
-	return i18n("<h1>Printers</h1>The KDE printing manager is part of KDEPrint which "
-               "is the interface to the real print subsystem of your Operating System (OS). "
-               "Although it does add some additional functionality of its own to those subsystems, "
-               "KDEPrint depends on them for its functionality. Spooling and filtering tasks, especially, "
-               "are still done by your print subsystem, or the administrative tasks (adding or "
-               "modifying printers, setting access rights, etc.)<br/> "
-               "What print features KDEPrint supports is therefore heavily dependent on your chosen print "
-               "subsystem. For the best support in modern printing, the KDE Printing Team recommends "
-               "a CUPS based printing system.");
+    return i18n(
+        "<h1>Printers</h1>The KDE printing manager is part of KDEPrint which "
+        "is the interface to the real print subsystem of your Operating System (OS). "
+        "Although it does add some additional functionality of its own to those subsystems, "
+        "KDEPrint depends on them for its functionality. Spooling and filtering tasks, especially, "
+        "are still done by your print subsystem, or the administrative tasks (adding or "
+        "modifying printers, setting access rights, etc.)<br/> "
+        "What print features KDEPrint supports is therefore heavily dependent on your chosen print "
+        "subsystem. For the best support in modern printing, the KDE Printing Team recommends "
+        "a CUPS based printing system.");
 }
 
 KCMPrintMgr::~KCMPrintMgr()

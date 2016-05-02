@@ -27,38 +27,39 @@ class KConfig;
 class KListView;
 class KURLRequester;
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 //-----------------------------------------------------------------------------
 // The "Path" Tab contains :
 // The paths for Desktop, Autostart and Documents
 
-class DesktopPathConfig : public KCModule
-{
-        Q_OBJECT
+class DesktopPathConfig : public KCModule {
+    Q_OBJECT
 public:
-        DesktopPathConfig(QWidget *parent = 0L, const char *name = 0L );
-        virtual void load();
-        virtual void load( bool useDefaults );
-        virtual void save();
-        virtual void defaults();
+    DesktopPathConfig(QWidget *parent = 0L, const char *name = 0L);
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
 private slots:
-    void slotEntries( KIO::Job * job, const KIO::UDSEntryList& list);
+    void slotEntries(KIO::Job *job, const KIO::UDSEntryList &list);
 
 private:
-        // Desktop Paths
-        KURLRequester *urDesktop;
-        KURLRequester *urAutostart;
-        KURLRequester *urDocument;
+    // Desktop Paths
+    KURLRequester *urDesktop;
+    KURLRequester *urAutostart;
+    KURLRequester *urDocument;
 
-        bool moveDir( const KURL & src, const KURL & dest, const QString & type );
-        bool m_ok;
-        KURL m_copyToDest; // used when the destination directory already exists
-        KURL m_copyFromSrc;
+    bool moveDir(const KURL &src, const KURL &dest, const QString &type);
+    bool m_ok;
+    KURL m_copyToDest; // used when the destination directory already exists
+    KURL m_copyFromSrc;
 
 private slots:
-        void slotResult( KIO::Job * job );
+    void slotResult(KIO::Job *job);
 };
 
 #endif // __ROOT_OPTIONS_H

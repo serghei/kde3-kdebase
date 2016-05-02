@@ -17,9 +17,9 @@ struct AppletInfo
     QString configFile;
     QString desktopFile;
 };
-typedef QMap<QString, AppletInfo> AppletInfoMap;
+typedef QMap< QString, AppletInfo > AppletInfoMap;
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     // We must disguise as Kicker in order to obtain the correct reverseLayout setting.
     KCmdLineArgs::init(argc, argv, "kicker", "", "", "", false);
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
     QStringList stretchableApplets;
     stretchableApplets << "taskbarapplet.desktop";
 
-    QTextStream in (stdin,  IO_ReadOnly);
+    QTextStream in(stdin, IO_ReadOnly);
     QTextStream out(stdout, IO_WriteOnly);
 
     QStringList appletIds;
@@ -39,60 +39,60 @@ int main(int argc, char** argv)
     QString currentGroup;
 
     QString line;
-    while (!(line = in.readLine()).isNull())
+    while(!(line = in.readLine()).isNull())
     {
-        if (rxGroup.search(line) != -1)
+        if(rxGroup.search(line) != -1)
         {
             currentGroup = rxGroup.cap(1);
             continue;
         }
 
-        if (rxKeyValue.search(line) != -1)
+        if(rxKeyValue.search(line) != -1)
         {
-            QString key   = rxKeyValue.cap(1);
+            QString key = rxKeyValue.cap(1);
             QString value = rxKeyValue.cap(2);
 
-            if (key == "Applets")
+            if(key == "Applets")
             {
                 appletIds = QStringList::split(",", value);
             }
-            else if (key == "FreeSpace")
+            else if(key == "FreeSpace")
             {
                 applets[currentGroup].freeSpace = value.toDouble();
             }
-            else if (key == "ConfigFile")
+            else if(key == "ConfigFile")
             {
                 applets[currentGroup].configFile = value;
             }
-            else if (key == "DesktopFile")
+            else if(key == "DesktopFile")
             {
                 applets[currentGroup].desktopFile = value;
             }
         }
     }
 
-    if (QApplication::reverseLayout())
+    if(QApplication::reverseLayout())
     {
         // Reverse appletIds
         QStringList appletIdsRev;
         QStringList::ConstIterator it;
-        for (it = appletIds.begin(); it != appletIds.end(); ++it)
+        for(it = appletIds.begin(); it != appletIds.end(); ++it)
         {
             appletIdsRev.prepend(*it);
         }
         appletIds = appletIdsRev;
 
         // Adjust the FreeSpace values
-        for (it = appletIds.begin(); it != appletIds.end(); ++it)
+        for(it = appletIds.begin(); it != appletIds.end(); ++it)
         {
             applets[*it].freeSpace = 1 - applets[*it].freeSpace;
 
             // Take care of stretchable applets.
-            if (stretchableApplets.contains(applets[*it].desktopFile))
+            if(stretchableApplets.contains(applets[*it].desktopFile))
             {
-                if (it != appletIds.begin())
+                if(it != appletIds.begin())
                 {
-                    applets[*it].freeSpace = applets[*(--it)].freeSpace; 
+                    applets[*it].freeSpace = applets[*(--it)].freeSpace;
                     ++it;
                 }
                 else
@@ -104,12 +104,12 @@ int main(int argc, char** argv)
     }
 
     // Write the changed entries to stdout.
-    if (!appletIds.empty())
+    if(!appletIds.empty())
     {
         out << "[General]" << endl;
         out << "Applets2=" << appletIds.join(",") << endl;
         QStringList::ConstIterator it;
-        for (it = appletIds.begin(); it != appletIds.end(); ++it)
+        for(it = appletIds.begin(); it != appletIds.end(); ++it)
         {
             out << "[" << *it << "]" << endl;
             out << "FreeSpace2=" << applets[*it].freeSpace << endl;
@@ -120,20 +120,20 @@ int main(int argc, char** argv)
     QStringList childPanelConfigFiles;
     AppletInfoMap::ConstIterator it2;
     QStringList::ConstIterator it;
-    for (it2 = applets.begin(); it2 != applets.end(); ++it2)
+    for(it2 = applets.begin(); it2 != applets.end(); ++it2)
     {
-        if (it2.data().desktopFile == "childpanelextension.desktop")
+        if(it2.data().desktopFile == "childpanelextension.desktop")
         {
             childPanelConfigFiles << it2.data().configFile;
         }
     }
 
-    if (!childPanelConfigFiles.isEmpty())
+    if(!childPanelConfigFiles.isEmpty())
     {
         // Create a temporary kconf_update .upd file for updating the childpanels
         KTempFile tempFile(QString::null, ".upd");
-        QTextStream* upd = tempFile.textStream();
-        for (it = childPanelConfigFiles.begin(); it != childPanelConfigFiles.end(); ++it)
+        QTextStream *upd = tempFile.textStream();
+        for(it = childPanelConfigFiles.begin(); it != childPanelConfigFiles.end(); ++it)
         {
             *upd << "Id=kde_3.4_reverseLayout" << endl;
             *upd << "File=" << *it << endl;

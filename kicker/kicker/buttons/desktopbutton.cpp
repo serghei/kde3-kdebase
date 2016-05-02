@@ -36,8 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "desktopbutton.h"
 #include "desktopbutton.moc"
 
-DesktopButton::DesktopButton( QWidget* parent )
-  : PanelButton( parent, "DesktopButton" )
+DesktopButton::DesktopButton(QWidget *parent) : PanelButton(parent, "DesktopButton")
 {
     setToggleButton(true);
 
@@ -45,10 +44,10 @@ DesktopButton::DesktopButton( QWidget* parent )
     setTitle(i18n("Desktop Access"));
     setIcon("desktop");
 
-    connect( this, SIGNAL(toggled(bool)), this, SLOT(showDesktop(bool)) );
-    connect( ShowDesktop::the(), SIGNAL(desktopShown(bool)), this, SLOT(toggle(bool)) );
+    connect(this, SIGNAL(toggled(bool)), this, SLOT(showDesktop(bool)));
+    connect(ShowDesktop::the(), SIGNAL(desktopShown(bool)), this, SLOT(toggle(bool)));
 
-    setOn( ShowDesktop::the()->desktopShowing() );
+    setOn(ShowDesktop::the()->desktopShowing());
 }
 
 void DesktopButton::toggle(bool showDesktop)
@@ -65,20 +64,19 @@ void DesktopButton::showDesktop(bool showDesktop)
     KickerTip::enableTipping(true);
 }
 
-void DesktopButton::dragEnterEvent( QDragEnterEvent *ev )
+void DesktopButton::dragEnterEvent(QDragEnterEvent *ev)
 {
-    if ((ev->source() != this) && KURLDrag::canDecode(ev))
+    if((ev->source() != this) && KURLDrag::canDecode(ev))
         ev->accept(rect());
     else
         ev->ignore(rect());
     PanelButton::dragEnterEvent(ev);
 }
 
-void DesktopButton::dropEvent( QDropEvent *ev )
+void DesktopButton::dropEvent(QDropEvent *ev)
 {
-    KURL dPath (  KGlobalSettings::desktopPath() );
-    KFileItem item( dPath, QString::fromLatin1( "inode/directory" ), KFileItem::Unknown );
-    KonqOperations::doDrop( &item, dPath, ev, this );
+    KURL dPath(KGlobalSettings::desktopPath());
+    KFileItem item(dPath, QString::fromLatin1("inode/directory"), KFileItem::Unknown);
+    KonqOperations::doDrop(&item, dPath, ev, this);
     PanelButton::dropEvent(ev);
 }
-

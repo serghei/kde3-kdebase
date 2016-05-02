@@ -41,13 +41,10 @@
 #include "Misc.h"
 #include "KfiConstants.h"
 
-namespace KFI
-{
+namespace KFI {
 
-class CKioFonts : public KIO::SlaveBase
-{
-    private:
-
+class CKioFonts : public KIO::SlaveBase {
+private:
     enum EConstants
     {
         KFI_PARAMS = 8
@@ -75,29 +72,37 @@ class CKioFonts : public KIO::SlaveBase
         OP_DELETE
     };
 
-    class CDirList : public QStringList
-    {
-        public:
+    class CDirList : public QStringList {
+    public:
+        CDirList()
+        {
+        }
+        CDirList(const QString &str) : QStringList(str)
+        {
+        }
 
-        CDirList()                                      { }
-        CDirList(const QString &str) : QStringList(str) { }
-
-        void add(const QString &d)                      { if (!contains(d)) append(d); }
+        void add(const QString &d)
+        {
+            if(!contains(d))
+                append(d);
+        }
     };
 
     struct TFolder
     {
-        QString                                 location;
-        CDirList                                modified;
-        QMap<QString, QValueList<FcPattern *> > fontMap;   // Maps from "Times New Roman" -> $HOME/.fonts/times.ttf
+        QString location;
+        CDirList modified;
+        QMap< QString, QValueList< FcPattern * > > fontMap; // Maps from "Times New Roman" -> $HOME/.fonts/times.ttf
     };
 
-    public:
-
+public:
     CKioFonts(const QCString &pool, const QCString &app);
     virtual ~CKioFonts();
 
-    static QString getSect(const QString &f) { return f.section('/', 1, 1); }
+    static QString getSect(const QString &f)
+    {
+        return f.section('/', 1, 1);
+    }
 
     void listDir(const KURL &url);
     void stat(const KURL &url);
@@ -108,54 +113,46 @@ class CKioFonts : public KIO::SlaveBase
     void rename(const KURL &src, const KURL &dest, bool overwrite);
     void del(const KURL &url, bool isFile);
 
-    private:
+private:
+    bool putReal(const QString &destOrig, const QCString &destOrigC, bool origExists, int mode, bool resume);
+    void modified(EFolder folder, bool clearList = true, const CDirList &dirs = CDirList());
+    void special(const QByteArray &a);
+    void createRootRefreshCmd(QCString &cmd, const CDirList &dirs = CDirList(), bool reparseCfg = true);
+    void doModified();
+    QString getRootPasswd(bool askPasswd = true);
+    bool doRootCmd(const char *cmd, const QString &passwd);
+    bool doRootCmd(const char *cmd, bool askPasswd = true)
+    {
+        return doRootCmd(cmd, getRootPasswd(askPasswd));
+    }
+    bool confirmUrl(KURL &url);
+    void clearFontList();
+    bool updateFontList();
+    EFolder getFolder(const KURL &url);
+    QMap< QString, QValueList< FcPattern * > >::Iterator getMap(const KURL &url);
+    QValueList< FcPattern * > *getEntries(const KURL &url);
+    FcPattern *getEntry(EFolder folder, const QString &file, bool full = false);
+    bool checkFile(const QString &file);
+    bool getSourceFiles(const KURL &src, QStringList &files);
+    bool checkDestFile(const KURL &src, const KURL &dest, EFolder destFolder, bool overwrite);
+    bool checkDestFiles(const KURL &src, QMap< QString, QString > &map, const KURL &dest, EFolder destFolder, bool overwrite);
+    bool confirmMultiple(const KURL &url, const QStringList &files, EFolder folder, EOp op);
+    bool confirmMultiple(const KURL &url, QValueList< FcPattern * > *patterns, EFolder folder, EOp op);
+    bool checkUrl(const KURL &u, bool rootOk = false);
+    bool checkAllowed(const KURL &u);
+    void createAfm(const QString &file, bool nrs = false, const QString &passwd = QString::null);
+    void reparseConfig();
 
-    bool     putReal(const QString &destOrig, const QCString &destOrigC, bool origExists, int mode, bool resume);
-    void     modified(EFolder folder, bool clearList=true, const CDirList &dirs=CDirList());
-    void     special(const QByteArray &a);
-    void     createRootRefreshCmd(QCString &cmd, const CDirList &dirs=CDirList(), bool reparseCfg=true);
-    void     doModified();
-    QString  getRootPasswd(bool askPasswd=true);
-    bool     doRootCmd(const char *cmd, const QString &passwd);
-    bool     doRootCmd(const char *cmd, bool askPasswd=true) { return doRootCmd(cmd, getRootPasswd(askPasswd)); }
-    bool     confirmUrl(KURL &url);
-    void     clearFontList();
-    bool     updateFontList();
-    EFolder  getFolder(const KURL &url);
-    QMap<QString, QValueList<FcPattern *> >::Iterator getMap(const KURL &url);
-    QValueList<FcPattern *> * getEntries(const KURL &url);
-    FcPattern * getEntry(EFolder folder, const QString &file, bool full=false);
-    bool     checkFile(const QString &file);
-    bool     getSourceFiles(const KURL &src, QStringList &files);
-    bool     checkDestFile(const KURL &src, const KURL &dest, EFolder destFolder, bool overwrite);
-    bool     checkDestFiles(const KURL &src, QMap<QString, QString> &map, const KURL &dest, EFolder destFolder, bool overwrite);
-    bool     confirmMultiple(const KURL &url, const QStringList &files, EFolder folder, EOp op);
-    bool     confirmMultiple(const KURL &url, QValueList<FcPattern *> *patterns, EFolder folder, EOp op);
-    bool     checkUrl(const KURL &u, bool rootOk=false);
-    bool     checkAllowed(const KURL &u);
-    void     createAfm(const QString &file, bool nrs=false, const QString &passwd=QString::null);
-    void     reparseConfig();
-
-    private:
-
-    bool         itsRoot,
-                 itsCanStorePasswd,
-                 itsUsingFcFpe,
-                 itsUsingXfsFpe,
-                 itsHasSys,
-                 itsAddToSysFc;
-    QString      itsPasswd;
+private:
+    bool itsRoot, itsCanStorePasswd, itsUsingFcFpe, itsUsingXfsFpe, itsHasSys, itsAddToSysFc;
+    QString itsPasswd;
     unsigned int itsFontChanges;
-    EDest        itsLastDest;
-    time_t       itsLastDestTime,
-                 itsLastFcCheckTime;
-    FcFontSet    *itsFontList;
-    TFolder      itsFolders[FOLDER_COUNT];
-    char         itsNrsKfiParams[KFI_PARAMS],
-                 itsNrsNonMainKfiParams[KFI_PARAMS],
-                 itsKfiParams[KFI_PARAMS];
+    EDest itsLastDest;
+    time_t itsLastDestTime, itsLastFcCheckTime;
+    FcFontSet *itsFontList;
+    TFolder itsFolders[FOLDER_COUNT];
+    char itsNrsKfiParams[KFI_PARAMS], itsNrsNonMainKfiParams[KFI_PARAMS], itsKfiParams[KFI_PARAMS];
 };
-
 }
 
 #endif

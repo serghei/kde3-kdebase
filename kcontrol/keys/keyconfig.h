@@ -20,71 +20,66 @@ class QCheckBox;
 
 class KeyChooserSpec;
 
-class KKeyModule : public QWidget
-{
-	Q_OBJECT
+class KKeyModule : public QWidget {
+    Q_OBJECT
 public:
-	KAccelActions actions;
-        //KAccelActions dict;
-        KeyChooserSpec *kc;
+    KAccelActions actions;
+    // KAccelActions dict;
+    KeyChooserSpec *kc;
 
-	KKeyModule( QWidget *parent, bool isGlobal, bool bSeriesOnly, bool bSeriesNone, const char *name = 0 );
-	KKeyModule( QWidget *parent, bool isGlobal, const char *name = 0 );
-	~KKeyModule ();
+    KKeyModule(QWidget *parent, bool isGlobal, bool bSeriesOnly, bool bSeriesNone, const char *name = 0);
+    KKeyModule(QWidget *parent, bool isGlobal, const char *name = 0);
+    ~KKeyModule();
 
 protected:
-	void init( bool isGlobal, bool bSeriesOnly, bool bSeriesNone );
+    void init(bool isGlobal, bool bSeriesOnly, bool bSeriesNone);
 
 public:
-        virtual void load();
-        //virtual void save();
-        virtual void defaults();
-        static void init();
+    virtual void load();
+    // virtual void save();
+    virtual void defaults();
+    static void init();
 
-	bool writeSettings( const QString& sGroup, KConfig* pConfig );
-	bool writeSettingsGlobal( const QString& sGroup );
+    bool writeSettings(const QString &sGroup, KConfig *pConfig);
+    bool writeSettingsGlobal(const QString &sGroup);
 
 public slots:
-	//void slotPreviewScheme( int );
-	//void slotAdd();
-	//void slotSave();
-	//void slotRemove();
-	void slotKeyChange();
-	void slotPreferMeta();
-        //void updateKeys( const KAccelActions* map_P );
-	//void readSchemeNames();
+    // void slotPreviewScheme( int );
+    // void slotAdd();
+    // void slotSave();
+    // void slotRemove();
+    void slotKeyChange();
+    void slotPreferMeta();
+    // void updateKeys( const KAccelActions* map_P );
+    // void readSchemeNames();
 
 signals:
-	void keyChange();
-        //void keysChanged( const KAccelActions* map_P );
+    void keyChange();
+    // void keysChanged( const KAccelActions* map_P );
 
 protected:
-	QListBox *sList;
-	QStringList *sFileList;
-	QPushButton *addBt;
-	QPushButton *removeBt;
-	QCheckBox *preferMetaBt;
-	int nSysSchemes;
-	bool bSeriesOnly;
+    QListBox *sList;
+    QStringList *sFileList;
+    QPushButton *addBt;
+    QPushButton *removeBt;
+    QCheckBox *preferMetaBt;
+    int nSysSchemes;
+    bool bSeriesOnly;
 
-	void readScheme( int index=0 );
+    void readScheme(int index = 0);
 
-	QString KeyType;
-	QString KeyScheme;
-	QString KeySet;
-
+    QString KeyType;
+    QString KeyScheme;
+    QString KeySet;
 };
 
-class KeyChooserSpec : public KKeyChooser
-{
-        Q_OBJECT
+class KeyChooserSpec : public KKeyChooser {
+    Q_OBJECT
 public:
-        KeyChooserSpec( KAccelActions& actions, QWidget* parent,
-                 bool bGlobal );
-        //void updateKeys( const KAccelActions* map_P );
+    KeyChooserSpec(KAccelActions &actions, QWidget *parent, bool bGlobal);
+    // void updateKeys( const KAccelActions* map_P );
 protected:
-        bool m_bGlobal;
+    bool m_bGlobal;
 };
 
 #endif
-

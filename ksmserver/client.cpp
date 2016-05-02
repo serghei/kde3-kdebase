@@ -47,7 +47,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "server.h"
 
-KSMClient::KSMClient( SmsConn conn)
+KSMClient::KSMClient(SmsConn conn)
 {
     smsConn = conn;
     id = 0;
@@ -56,15 +56,17 @@ KSMClient::KSMClient( SmsConn conn)
 
 KSMClient::~KSMClient()
 {
-    for ( SmProp* prop = properties.first(); prop; prop = properties.next() )
-        SmFreeProperty( prop );
-    if (id) free((void*)id);
+    for(SmProp *prop = properties.first(); prop; prop = properties.next())
+        SmFreeProperty(prop);
+    if(id)
+        free((void *)id);
 }
 
-SmProp* KSMClient::property( const char* name ) const
+SmProp *KSMClient::property(const char *name) const
 {
-    for ( QPtrListIterator<SmProp> it( properties ); it.current(); ++it ) {
-        if ( !qstrcmp( it.current()->name, name ) )
+    for(QPtrListIterator< SmProp > it(properties); it.current(); ++it)
+    {
+        if(!qstrcmp(it.current()->name, name))
             return it.current();
     }
     return 0;
@@ -83,108 +85,104 @@ void KSMClient::resetState()
  * In this case SmsGenerateClientID() returns NULL, but we really want a
  * client ID, so we fake one.
  */
-static KStaticDeleter<QString> smy_addr;
-static char * safeSmsGenerateClientID( SmsConn /*c*/ )
+static KStaticDeleter< QString > smy_addr;
+static char *safeSmsGenerateClientID(SmsConn /*c*/)
 {
-//  Causes delays with misconfigured network :-/.
-//    char *ret = SmsGenerateClientID(c);
-    char* ret = NULL;
-    if (!ret) {
+    //  Causes delays with misconfigured network :-/.
+    //    char *ret = SmsGenerateClientID(c);
+    char *ret = NULL;
+    if(!ret)
+    {
         static QString *my_addr = 0;
-       if (!my_addr) {
-//           qWarning("Can't get own host name. Your system is severely misconfigured\n");
-           smy_addr.setObject(my_addr,new QString);
+        if(!my_addr)
+        {
+            //           qWarning("Can't get own host name. Your system is severely misconfigured\n");
+            smy_addr.setObject(my_addr, new QString);
 
-           /* Faking our IP address, the 0 below is "unknown" address format
-              (1 would be IP, 2 would be DEC-NET format) */
-           char hostname[ 256 ];
-           if( gethostname( hostname, 255 ) != 0 )
-               my_addr->sprintf("0%.8x", KApplication::random());
-           else {
-               // create some kind of hash for the hostname
-               int addr[ 4 ] = { 0, 0, 0, 0 };
-               int pos = 0;
-               for( unsigned int i = 0;
-                    i < strlen( hostname );
-                    ++i, ++pos )
-                  addr[ pos % 4 ] += hostname[ i ];
-               *my_addr = "0";
-               for( int i = 0;
-                    i < 4;
-                    ++i )
-                  *my_addr += QString::number( addr[ i ], 16 );
-           }
-       }
-       /* Needs to be malloc(), to look the same as libSM */
-       ret = (char *)malloc(1+my_addr->length()+13+10+4+1 + /*safeness*/ 10);
-       static int sequence = 0;
+            /* Faking our IP address, the 0 below is "unknown" address format
+               (1 would be IP, 2 would be DEC-NET format) */
+            char hostname[256];
+            if(gethostname(hostname, 255) != 0)
+                my_addr->sprintf("0%.8x", KApplication::random());
+            else
+            {
+                // create some kind of hash for the hostname
+                int addr[4] = {0, 0, 0, 0};
+                int pos = 0;
+                for(unsigned int i = 0; i < strlen(hostname); ++i, ++pos)
+                    addr[pos % 4] += hostname[i];
+                *my_addr = "0";
+                for(int i = 0; i < 4; ++i)
+                    *my_addr += QString::number(addr[i], 16);
+            }
+        }
+        /* Needs to be malloc(), to look the same as libSM */
+        ret = (char *)malloc(1 + my_addr->length() + 13 + 10 + 4 + 1 + /*safeness*/ 10);
+        static int sequence = 0;
 
-       if (ret == NULL)
-           return NULL;
+        if(ret == NULL)
+            return NULL;
 
-       sprintf(ret, "1%s%.13ld%.10d%.4d", my_addr->latin1(), (long)time(NULL),
-           getpid(), sequence);
-       sequence = (sequence + 1) % 10000;
+        sprintf(ret, "1%s%.13ld%.10d%.4d", my_addr->latin1(), (long)time(NULL), getpid(), sequence);
+        sequence = (sequence + 1) % 10000;
     }
     return ret;
 }
 
-void KSMClient::registerClient( const char* previousId )
+void KSMClient::registerClient(const char *previousId)
 {
     id = previousId;
-    if ( !id )
-        id = safeSmsGenerateClientID( smsConn );
-    SmsRegisterClientReply( smsConn, (char*) id );
-    SmsSaveYourself( smsConn, SmSaveLocal, false, SmInteractStyleNone, false );
-    SmsSaveComplete( smsConn );
-    KSMServer::self()->clientRegistered( previousId  );
+    if(!id)
+        id = safeSmsGenerateClientID(smsConn);
+    SmsRegisterClientReply(smsConn, (char *)id);
+    SmsSaveYourself(smsConn, SmSaveLocal, false, SmInteractStyleNone, false);
+    SmsSaveComplete(smsConn);
+    KSMServer::self()->clientRegistered(previousId);
 }
 
 
 QString KSMClient::program() const
 {
-    SmProp* p = property( SmProgram );
-    if ( !p || qstrcmp( p->type, SmARRAY8) || p->num_vals < 1)
+    SmProp *p = property(SmProgram);
+    if(!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1)
         return QString::null;
-    return QString::fromLatin1( (const char*) p->vals[0].value );
+    return QString::fromLatin1((const char *)p->vals[0].value);
 }
 
 QStringList KSMClient::restartCommand() const
 {
     QStringList result;
-    SmProp* p = property( SmRestartCommand );
-    if ( !p || qstrcmp( p->type, SmLISTofARRAY8) || p->num_vals < 1)
+    SmProp *p = property(SmRestartCommand);
+    if(!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1)
         return result;
-    for ( int i = 0; i < p->num_vals; i++ )
-        result +=QString::fromLatin1( (const char*) p->vals[i].value );
+    for(int i = 0; i < p->num_vals; i++)
+        result += QString::fromLatin1((const char *)p->vals[i].value);
     return result;
 }
 
 QStringList KSMClient::discardCommand() const
 {
     QStringList result;
-    SmProp* p = property( SmDiscardCommand );
-    if ( !p || qstrcmp( p->type, SmLISTofARRAY8) || p->num_vals < 1)
+    SmProp *p = property(SmDiscardCommand);
+    if(!p || qstrcmp(p->type, SmLISTofARRAY8) || p->num_vals < 1)
         return result;
-    for ( int i = 0; i < p->num_vals; i++ )
-        result +=QString::fromLatin1( (const char*) p->vals[i].value );
+    for(int i = 0; i < p->num_vals; i++)
+        result += QString::fromLatin1((const char *)p->vals[i].value);
     return result;
 }
 
 int KSMClient::restartStyleHint() const
 {
-    SmProp* p = property( SmRestartStyleHint );
-    if ( !p || qstrcmp( p->type, SmCARD8) || p->num_vals < 1)
+    SmProp *p = property(SmRestartStyleHint);
+    if(!p || qstrcmp(p->type, SmCARD8) || p->num_vals < 1)
         return SmRestartIfRunning;
-    return *((int*)p->vals[0].value);
+    return *((int *)p->vals[0].value);
 }
 
 QString KSMClient::userId() const
 {
-    SmProp* p = property( SmUserID );
-    if ( !p || qstrcmp( p->type, SmARRAY8) || p->num_vals < 1)
+    SmProp *p = property(SmUserID);
+    if(!p || qstrcmp(p->type, SmARRAY8) || p->num_vals < 1)
         return QString::null;
-    return QString::fromLatin1( (const char*) p->vals[0].value );
+    return QString::fromLatin1((const char *)p->vals[0].value);
 }
-
-

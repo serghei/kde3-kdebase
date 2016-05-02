@@ -35,31 +35,32 @@ class KLineEdit;
  *
  * @author David Faure <faure@kde.org>
  */
-class KListDebugDialog : public KAbstractDebugDialog
-{
-  Q_OBJECT
+class KListDebugDialog : public KAbstractDebugDialog {
+    Q_OBJECT
 
 public:
-  KListDebugDialog( QStringList areaList, QWidget *parent=0, const char *name=0, bool modal=true );
-  virtual ~KListDebugDialog() {}
+    KListDebugDialog(QStringList areaList, QWidget *parent = 0, const char *name = 0, bool modal = true);
+    virtual ~KListDebugDialog()
+    {
+    }
 
-  void activateArea( QCString area, bool activate );
+    void activateArea(QCString area, bool activate);
 
-  virtual void save();
+    virtual void save();
 
 protected slots:
-  void selectAll();
-  void deSelectAll();
+    void selectAll();
+    void deSelectAll();
 
-  void generateCheckBoxes( const QString& filter );
+    void generateCheckBoxes(const QString &filter);
 
 private:
-  void load();
-  QPtrList<QCheckBox> boxes;
-  QStringList m_areaList;
-  QVBox *m_box;
-  KLineEdit *m_incrSearch;
-  QMap<QCString, int> m_changes;
+    void load();
+    QPtrList< QCheckBox > boxes;
+    QStringList m_areaList;
+    QVBox *m_box;
+    KLineEdit *m_incrSearch;
+    QMap< QCString, int > m_changes;
 };
 
 #endif

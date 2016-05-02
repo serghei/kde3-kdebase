@@ -33,33 +33,37 @@
  * QLabel
  */
 class KDEUI_EXPORT KRichTextLabel : public QLabel {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  /**
-   * Default constructor.
-   */
-  KRichTextLabel( QWidget *parent, const char *name = 0 );
-  KRichTextLabel( const QString &text, QWidget *parent, const char *name = 0 );
+    /**
+     * Default constructor.
+     */
+    KRichTextLabel(QWidget *parent, const char *name = 0);
+    KRichTextLabel(const QString &text, QWidget *parent, const char *name = 0);
 
-  int defaultWidth() const { return m_defaultWidth; }
-  void setDefaultWidth(int defaultWidth);
+    int defaultWidth() const
+    {
+        return m_defaultWidth;
+    }
+    void setDefaultWidth(int defaultWidth);
 
-  virtual QSize minimumSizeHint() const;
-  virtual QSize sizeHint() const;
-  QSizePolicy sizePolicy() const;
+    virtual QSize minimumSizeHint() const;
+    virtual QSize sizeHint() const;
+    QSizePolicy sizePolicy() const;
 
 public slots:
-  void setText( const QString & );
+    void setText(const QString &);
 
 protected:
-  int m_defaultWidth;
+    int m_defaultWidth;
 
 protected:
-  virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
+
 private:
-  class KRichTextLabelPrivate;
-  KRichTextLabelPrivate *d;
+    class KRichTextLabelPrivate;
+    KRichTextLabelPrivate *d;
 };
 
 #endif // KRICHTEXTLABEL_H

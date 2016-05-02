@@ -30,15 +30,14 @@ class FilterOptionsUI;
 class SearchProvider;
 class SearchProviderItem;
 
-class FilterOptions : public KCModule
-{
+class FilterOptions : public KCModule {
     Q_OBJECT
 
 public:
     FilterOptions(KInstance *instance, QWidget *parent = 0, const char *name = 0);
 
     void load();
-    void load( bool useDefaults );
+    void load(bool useDefaults);
     void save();
     void defaults();
     QString quickHelp() const;
@@ -57,17 +56,17 @@ protected slots:
 private:
     SearchProviderItem *displaySearchProvider(SearchProvider *p, bool fallback = false);
 
-    void setDelimiter (char);
-    char delimiter ();
+    void setDelimiter(char);
+    char delimiter();
 
     // The names of the providers that the user deleted,
     // these are marked as deleted in the user's homedirectory
     // on save if a global service file exists for it.
     QStringList m_deletedProviders;
-    QMap <QString, QString> m_defaultEngineMap;
+    QMap< QString, QString > m_defaultEngineMap;
     QStringList m_favoriteEngines;
 
-    FilterOptionsUI* m_dlg;
+    FilterOptionsUI *m_dlg;
 };
 
 #endif

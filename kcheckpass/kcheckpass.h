@@ -68,25 +68,25 @@
 
 /* Make sure there is only one! */
 #if defined(HAVE_PAM)
-# undef HAVE_OSF_C2_PASSWD
-# undef HAVE_SHADOW
+#undef HAVE_OSF_C2_PASSWD
+#undef HAVE_SHADOW
 #elif defined(HAVE_OSF_C2_PASSWD)
-# undef HAVE_SHADOW
+#undef HAVE_SHADOW
 #elif defined(_AIX)
-# define HAVE_AIX_AUTH
-# undef HAVE_SHADOW
+#define HAVE_AIX_AUTH
+#undef HAVE_SHADOW
 #elif !defined(HAVE_SHADOW)
-# define HAVE_ETCPASSWD
+#define HAVE_ETCPASSWD
 #endif
 
 #if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 4)
-# define ATTR_UNUSED __attribute__((unused))
-# define ATTR_NORETURN __attribute__((noreturn))
-# define ATTR_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
+#define ATTR_UNUSED __attribute__((unused))
+#define ATTR_NORETURN __attribute__((noreturn))
+#define ATTR_PRINTFLIKE(fmt, var) __attribute__((format(printf, fmt, var)))
 #else
-# define ATTR_UNUSED
-# define ATTR_NORETURN
-# define ATTR_PRINTFLIKE(fmt,var)
+#define ATTR_UNUSED
+#define ATTR_NORETURN
+#define ATTR_PRINTFLIKE(fmt, var)
 #endif
 
 #ifdef __cplusplus
@@ -94,20 +94,9 @@ extern "C" {
 #endif
 
 /* these must match kcheckpass' exit codes */
-typedef enum {
-    AuthOk = 0,
-    AuthBad = 1,
-    AuthError = 2,
-    AuthAbort = 3
-} AuthReturn;
+typedef enum { AuthOk = 0, AuthBad = 1, AuthError = 2, AuthAbort = 3 } AuthReturn;
 
-typedef enum {
-    ConvGetBinary,
-    ConvGetNormal,
-    ConvGetHidden,
-    ConvPutInfo,
-    ConvPutError
-} ConvRequest;
+typedef enum { ConvGetBinary, ConvGetNormal, ConvGetHidden, ConvPutInfo, ConvPutError } ConvRequest;
 
 /* these must match the defs in kgreeterplugin.h */
 typedef enum {
@@ -120,11 +109,9 @@ typedef enum {
  *****************************************************************/
 AuthReturn Authenticate(
 #ifdef HAVE_PAM
-        const char *caller, 
+    const char *caller,
 #endif
-        const char *method,
-        const char *user,
-        char *(*conv) (ConvRequest, const char *));
+    const char *method, const char *user, char *(*conv)(ConvRequest, const char *));
 
 /*****************************************************************
  * Output a message to stderr

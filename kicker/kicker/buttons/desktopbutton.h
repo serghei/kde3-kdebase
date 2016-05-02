@@ -29,15 +29,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /**
  * Button that shows the deskop
  */
-class DesktopButton : public PanelButton
-{
+class DesktopButton : public PanelButton {
     Q_OBJECT
 
 public:
-    DesktopButton( QWidget* parent );
+    DesktopButton(QWidget *parent);
 
 protected:
-    virtual QString tileName() { return "DesktopButton"; }
+    virtual QString tileName()
+    {
+        return "DesktopButton";
+    }
     virtual void dragEnterEvent(QDragEnterEvent *ev);
     virtual void dropEvent(QDropEvent *ev);
 

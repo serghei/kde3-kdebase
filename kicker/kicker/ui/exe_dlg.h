@@ -27,14 +27,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kdialogbase.h>
 class NonKDEButtonSettings;
 
-class PanelExeDialog : public KDialogBase
-{
+class PanelExeDialog : public KDialogBase {
     Q_OBJECT
 public:
-    PanelExeDialog(const QString& title, const QString& description,
-                   const QString &path, const QString &pixmap=QString::null,
-                   const QString &cmd=QString::null, bool inTerm=false,
-                   QWidget *parent=0, const char *name=0);
+    PanelExeDialog(const QString &title, const QString &description, const QString &path, const QString &pixmap = QString::null,
+                   const QString &cmd = QString::null, bool inTerm = false, QWidget *parent = 0, const char *name = 0);
     QString iconPath() const;
     QString command() const;
     QString commandLine() const;
@@ -43,10 +40,10 @@ public:
     bool useTerminal() const;
 
 signals:
-    void updateSettings(PanelExeDialog*);
+    void updateSettings(PanelExeDialog *);
 
 protected slots:
-    void slotSelect(const QString& exec);
+    void slotSelect(const QString &exec);
     void slotTextChanged(const QString &);
     void slotReturnPressed();
     void slotIconChanged(QString);
@@ -56,9 +53,9 @@ protected:
     void fillCompletion();
     void updateIcon();
 
-    NonKDEButtonSettings* ui;
+    NonKDEButtonSettings *ui;
     QString m_icon;
-    QMap<QString, QString> m_partialPath2full;
+    QMap< QString, QString > m_partialPath2full;
     bool m_iconChanged;
 };
 

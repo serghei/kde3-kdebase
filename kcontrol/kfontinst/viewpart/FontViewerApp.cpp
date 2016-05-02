@@ -36,26 +36,24 @@
 #include <kfiledialog.h>
 #include <kconfig.h>
 
-#define CFG_GROUP    "FontViewer Settings"
+#define CFG_GROUP "FontViewer Settings"
 #define CFG_SIZE_KEY "Window Size"
 
-namespace KFI
-{
+namespace KFI {
 
-CFontViewerAppMainWindow::CFontViewerAppMainWindow()
-                        : KParts::MainWindow((QWidget *)0L)
+CFontViewerAppMainWindow::CFontViewerAppMainWindow() : KParts::MainWindow((QWidget *)0L)
 {
-    KLibFactory *factory=KLibLoader::self()->factory("libkfontviewpart");
+    KLibFactory *factory = KLibLoader::self()->factory("libkfontviewpart");
 
     if(factory)
     {
         KStdAction::open(this, SLOT(fileOpen()), actionCollection());
         KStdAction::quit(kapp, SLOT(quit()), actionCollection());
 
-        itsPreview=(KParts::ReadOnlyPart *)factory->create(this, "fontvier", "KParts::ReadOnlyPart");
+        itsPreview = (KParts::ReadOnlyPart *)factory->create(this, "fontvier", "KParts::ReadOnlyPart");
 
         KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-        KURL         openURL;
+        KURL openURL;
 
         if(args->count() > 0)
         {
@@ -71,7 +69,7 @@ CFontViewerAppMainWindow::CFontViewerAppMainWindow()
         if(!openURL.isEmpty())
             itsPreview->openURL(openURL);
 
-        QSize             defSize(450, 380);
+        QSize defSize(450, 380);
         KConfigGroupSaver saver(kapp->config(), CFG_GROUP);
 
         resize(kapp->config()->readSizeEntry(CFG_SIZE_KEY, &defSize));
@@ -90,9 +88,10 @@ CFontViewerAppMainWindow::~CFontViewerAppMainWindow()
 
 void CFontViewerAppMainWindow::fileOpen()
 {
-    KURL url(KFileDialog::getOpenURL(QString::null, "application/x-font-ttf application/x-font-otf "
-                                                    "application/x-font-ttc application/x-font-type1 "
-                                                    "application/x-font-bdf application/x-font-pcf ",
+    KURL url(KFileDialog::getOpenURL(QString::null,
+                                     "application/x-font-ttf application/x-font-otf "
+                                     "application/x-font-ttc application/x-font-type1 "
+                                     "application/x-font-bdf application/x-font-pcf ",
                                      this, i18n("Select Font to View")));
     if(url.isValid())
         itsPreview->openURL(url);
@@ -103,17 +102,11 @@ CFontViewerApp::CFontViewerApp()
     KGlobal::locale()->insertCatalogue(KFI_CATALOGUE);
     setMainWidget(new CFontViewerAppMainWindow());
 }
-
 }
 
-static KCmdLineOptions options[] =
-{
-    { "+[URL]", I18N_NOOP("URL to open"), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"+[URL]", I18N_NOOP("URL to open"), 0}, KCmdLineLastOption};
 
-static KAboutData aboutData("kfontview", I18N_NOOP("Font Viewer"), 0, I18N_NOOP("Simple font viewer"),
-                            KAboutData::License_GPL,
+static KAboutData aboutData("kfontview", I18N_NOOP("Font Viewer"), 0, I18N_NOOP("Simple font viewer"), KAboutData::License_GPL,
                             I18N_NOOP("(c) Craig Drummond, 2004"));
 
 int main(int argc, char **argv)

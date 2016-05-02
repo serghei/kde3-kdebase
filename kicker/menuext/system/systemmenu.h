@@ -25,26 +25,24 @@
 #include <kdirlister.h>
 #include <kfileitem.h>
 
-class SystemMenu : public KPanelMenu
-{
+class SystemMenu : public KPanelMenu {
     Q_OBJECT
 
-    public:
-        SystemMenu(QWidget *parent, const char *name,
-                   const QStringList & /*args*/);
-        ~SystemMenu();
+public:
+    SystemMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
+    ~SystemMenu();
 
-    protected slots:
-        void initialize();
-        void slotExec(int id);
+protected slots:
+    void initialize();
+    void slotExec(int id);
 
-        void slotCompleted();
+    void slotCompleted();
 
-    private:
-        void append(const QString &icon, const KURL &url, const QString &label);
-        KDirLister m_dirLister;
-        KFileItemList m_entries;
-        QMap<int, KURL> m_urlMap;
+private:
+    void append(const QString &icon, const KURL &url, const QString &label);
+    KDirLister m_dirLister;
+    KFileItemList m_entries;
+    QMap< int, KURL > m_urlMap;
 };
 
 #endif

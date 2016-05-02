@@ -32,48 +32,44 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-namespace KFI
-{
+namespace KFI {
 
 class CFontEngine;
 
-namespace Fontmap
-{
-    class CFile
-    {
-        private:
-
+namespace Fontmap {
+    class CFile {
+    private:
         struct TEntry
         {
-            TEntry(const QString &fname) : filename(fname) {}
+            TEntry(const QString &fname) : filename(fname)
+            {
+            }
 
-            QString     filename,
-                        psName;
+            QString filename, psName;
             QStringList entries;
         };
 
-        public:
-
+    public:
         CFile(const QString &dir);
 
-        const QStringList * getEntries(const QString &fname);
-        unsigned int        getLineCount() { return itsLineCount; }
+        const QStringList *getEntries(const QString &fname);
+        unsigned int getLineCount()
+        {
+            return itsLineCount;
+        }
 
-        private:
+    private:
+        TEntry *findEntry(const QString &fname, bool isAlias = false);
+        TEntry *getEntry(TEntry **current, const QString &fname, bool isAlias = false);
 
-        TEntry * findEntry(const QString &fname, bool isAlias=false);
-        TEntry * getEntry(TEntry **current, const QString &fname, bool isAlias=false);
-
-        private:
-
-        QString          itsDir;
-        QPtrList<TEntry> itsEntries;
-        unsigned int     itsLineCount;
+    private:
+        QString itsDir;
+        QPtrList< TEntry > itsEntries;
+        unsigned int itsLineCount;
     };
 
     extern bool create(const QString &dir, CFontEngine &fe);
 }
-
 }
 
 #endif

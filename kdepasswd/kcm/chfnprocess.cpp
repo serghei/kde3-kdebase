@@ -26,21 +26,21 @@
 
 int ChfnProcess::exec(const char *pass, const char *name)
 {
-  // Try to set the default locale to make the parsing of the output
-  // of `chfn' easier.
-  putenv((char*)"LC_ALL=C");
+    // Try to set the default locale to make the parsing of the output
+    // of `chfn' easier.
+    putenv((char *)"LC_ALL=C");
 
-  QCStringList args;
-      args += "-f";
-      args += name;
-  int ret = PtyProcess::exec("chfn", args);
-  if (ret < 0)
-      return ChfnNotFound;
+    QCStringList args;
+    args += "-f";
+    args += name;
+    int ret = PtyProcess::exec("chfn", args);
+    if(ret < 0)
+        return ChfnNotFound;
 
-  ret = ConverseChfn(pass);
+    ret = ConverseChfn(pass);
 
-  waitForChild();
-  return ret;
+    waitForChild();
+    return ret;
 }
 
 
@@ -50,51 +50,50 @@ int ChfnProcess::exec(const char *pass, const char *name)
  */
 int ChfnProcess::ConverseChfn(const char *pass)
 {
-  int status=-1;
+    int status = -1;
 
-  QCString line;
-  while(1)
-  {
-    line = readLine();
+    QCString line;
+    while(1)
+    {
+        line = readLine();
 
-    if ( line.isEmpty() )
-      continue;// discard line
+        if(line.isEmpty())
+            continue; // discard line
 
-    if ( line.contains( "Password: " )/*isPrompt( line, "password" )*/ )
-    {
-      WaitSlave();
-      write(m_Fd, pass, strlen(pass));
-      write(m_Fd, "\n", 1);
-    }
+        if(line.contains("Password: ") /*isPrompt( line, "password" )*/)
+        {
+            WaitSlave();
+            write(m_Fd, pass, strlen(pass));
+            write(m_Fd, "\n", 1);
+        }
 
-    line = readLine(); // Let's see what the outcome was
+        line = readLine(); // Let's see what the outcome was
 
-    if ( line.contains( "Changing finger info" ) )
-    {
-      // do nothing
+        if(line.contains("Changing finger info"))
+        {
+            // do nothing
+        }
+        else if(line.contains("information changed"))
+        {
+            status = 0;
+            break;
+        }
+        else if(line.isEmpty())
+        {
+            status = 0;
+            break;
+        }
+        else if(line.contains("Password error") || line.contains("Incorrect password"))
+        {
+            status = PasswordError;
+            break;
+        }
+        else
+        {
+            status = MiscError;
+            m_Error = line;
+            break;
+        }
     }
-    else if ( line.contains( "information changed" ) )
-    {
-      status=0;
-      break;
-    }
-    else if ( line.isEmpty() )
-    {
-	    status=0;
-	    break;
-    }
-    else if ( line.contains( "Password error" ) || line.contains("Incorrect password") )
-    {
-      status=PasswordError;
-      break;
-    }
-    else
-    {
-      status=MiscError;
-      m_Error=line;
-      break;
-    }
-  }
-  return status;
+    return status;
 }
-

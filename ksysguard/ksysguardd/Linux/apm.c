@@ -33,94 +33,98 @@ static int ApmOK = 0;
 static int BatFill, BatTime;
 
 #define APMBUFSIZE 128
-static char ApmBuf[ APMBUFSIZE ];
+static char ApmBuf[APMBUFSIZE];
 static int Dirty = 0;
 
-static void processApm( void )
+static void processApm(void)
 {
-  sscanf( ApmBuf, "%*f %*f %*x %*x %*x %*x %d%% %d min",
-          &BatFill, &BatTime );
-  Dirty = 0;
+    sscanf(ApmBuf, "%*f %*f %*x %*x %*x %*x %d%% %d min", &BatFill, &BatTime);
+    Dirty = 0;
 }
 
 /*
 ================================ public part =================================
 */
 
-void initApm( struct SensorModul* sm )
+void initApm(struct SensorModul *sm)
 {
-  if ( updateApm() < 0 ) {
+    if(updateApm() < 0)
+    {
+        ApmOK = -1;
+        return;
+    }
+    else
+        ApmOK = 1;
+
+    registerMonitor("apm/batterycharge", "integer", printApmBatFill, printApmBatFillInfo, sm);
+    registerMonitor("apm/remainingtime", "integer", printApmBatTime, printApmBatTimeInfo, sm);
+}
+
+void exitApm(void)
+{
     ApmOK = -1;
-    return;
-  } else
-    ApmOK = 1;
-
-  registerMonitor( "apm/batterycharge", "integer", printApmBatFill, printApmBatFillInfo, sm );
-  registerMonitor( "apm/remainingtime", "integer", printApmBatTime, printApmBatTimeInfo, sm );
 }
 
-void exitApm( void )
+int updateApm(void)
 {
-  ApmOK = -1;
+    size_t n;
+    int fd;
+
+    if(ApmOK < 0)
+        return -1;
+
+    if((fd = open("/proc/apm", O_RDONLY)) < 0)
+    {
+        if(ApmOK != 0)
+            print_error(
+                "Cannot open file \'/proc/apm\'!\n"
+                "The kernel needs to be compiled with support\n"
+                "for /proc filesystem enabled!\n");
+        return -1;
+    }
+
+    if((n = read(fd, ApmBuf, APMBUFSIZE - 1)) == APMBUFSIZE - 1)
+    {
+        log_error("Internal buffer too small to read \'/proc/apm\'");
+        close(fd);
+        return -1;
+    }
+
+    close(fd);
+    ApmBuf[n] = '\0';
+    Dirty = 1;
+
+    return 0;
 }
 
-int updateApm( void )
+void printApmBatFill(const char *cmd)
 {
-  size_t n;
-  int fd;
+    (void)cmd;
 
-  if ( ApmOK < 0 )
-    return -1;
+    if(Dirty)
+        processApm();
 
-  if ( ( fd = open( "/proc/apm", O_RDONLY ) ) < 0 ) {
-    if ( ApmOK != 0 )
-      print_error( "Cannot open file \'/proc/apm\'!\n"
-                   "The kernel needs to be compiled with support\n"
-                   "for /proc filesystem enabled!\n" );
-    return -1;
-  }
-
-  if ( ( n = read( fd, ApmBuf, APMBUFSIZE - 1 ) ) == APMBUFSIZE - 1 ) {
-    log_error( "Internal buffer too small to read \'/proc/apm\'" );
-    close( fd );
-    return -1;
-  }
-
-  close( fd );
-  ApmBuf[ n ] = '\0';
-  Dirty = 1;
-
-  return 0;
+    fprintf(CurrentClient, "%d\n", BatFill);
 }
 
-void printApmBatFill( const char* cmd )
+void printApmBatFillInfo(const char *cmd)
 {
-  (void)cmd;
-
-  if ( Dirty )
-    processApm();
-
-  fprintf( CurrentClient, "%d\n", BatFill );
+    (void)cmd;
+    fprintf(CurrentClient, "Battery charge\t0\t100\t%%\n");
 }
 
-void printApmBatFillInfo( const char* cmd )
+void printApmBatTime(const char *cmd)
 {
-  (void)cmd;
-  fprintf( CurrentClient, "Battery charge\t0\t100\t%%\n" );
+    (void)cmd;
+
+    if(Dirty)
+        processApm();
+
+    fprintf(CurrentClient, "%d\n", BatTime);
 }
 
-void printApmBatTime( const char* cmd )
+void printApmBatTimeInfo(const char *cmd)
 {
-  (void)cmd;
-
-  if ( Dirty )
-    processApm();
-
-  fprintf( CurrentClient, "%d\n", BatTime );
-}
-
-void printApmBatTimeInfo( const char* cmd )
-{
-  (void)cmd;
-  fprintf( CurrentClient, "Remaining battery time\t0\t0\tmin\n" );
+    (void)cmd;
+    fprintf(CurrentClient, "Remaining battery time\t0\t0\tmin\n");
 }

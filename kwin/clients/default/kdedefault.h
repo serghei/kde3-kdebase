@@ -28,74 +28,75 @@ namespace Default {
 
 class KDEDefaultClient;
 
-class KDEDefaultHandler: public KDecorationFactory
-{
-	public:
-		KDEDefaultHandler();
-		~KDEDefaultHandler();
-                KDecoration* createDecoration( KDecorationBridge* b );
-		bool reset( unsigned long changed );
-		virtual QValueList< BorderSize > borderSizes() const;
-		virtual bool supports( Ability ability );
+class KDEDefaultHandler : public KDecorationFactory {
+public:
+    KDEDefaultHandler();
+    ~KDEDefaultHandler();
+    KDecoration *createDecoration(KDecorationBridge *b);
+    bool reset(unsigned long changed);
+    virtual QValueList< BorderSize > borderSizes() const;
+    virtual bool supports(Ability ability);
 
-	private:
-		unsigned long readConfig( bool update );
-		void createPixmaps();
-		void freePixmaps();
-		void drawButtonBackground(KPixmap *pix,
-				const QColorGroup &g, bool sunken);
+private:
+    unsigned long readConfig(bool update);
+    void createPixmaps();
+    void freePixmaps();
+    void drawButtonBackground(KPixmap *pix, const QColorGroup &g, bool sunken);
 };
 
 
 // class KDEDefaultButton : public QButton, public KDecorationDefines
-class KDEDefaultButton : public KCommonDecorationButton
-{
-	public:
-		KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name);
-		~KDEDefaultButton();
+class KDEDefaultButton : public KCommonDecorationButton {
+public:
+    KDEDefaultButton(ButtonType type, KDEDefaultClient *parent, const char *name);
+    ~KDEDefaultButton();
 
-		void reset(unsigned long changed);
+    void reset(unsigned long changed);
 
-		void setBitmap(const unsigned char *bitmap);
+    void setBitmap(const unsigned char *bitmap);
 
-	protected:
-		void enterEvent(QEvent *);
-		void leaveEvent(QEvent *);
-		void drawButton(QPainter *p);
-		void drawButtonLabel(QPainter*) {;}
+protected:
+    void enterEvent(QEvent *);
+    void leaveEvent(QEvent *);
+    void drawButton(QPainter *p);
+    void drawButtonLabel(QPainter *)
+    {
+        ;
+    }
 
-		QBitmap* deco;
-		bool    large;
-		bool	isMouseOver;
+    QBitmap *deco;
+    bool large;
+    bool isMouseOver;
 };
 
 
-class KDEDefaultClient : public KCommonDecoration
-{
-	public:
-		KDEDefaultClient( KDecorationBridge* b, KDecorationFactory* f );
-		~KDEDefaultClient() {;}
+class KDEDefaultClient : public KCommonDecoration {
+public:
+    KDEDefaultClient(KDecorationBridge *b, KDecorationFactory *f);
+    ~KDEDefaultClient()
+    {
+        ;
+    }
 
-		virtual QString visibleName() const;
-		virtual QString defaultButtonsLeft() const;
-		virtual QString defaultButtonsRight() const;
-		virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
-		virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-		virtual KCommonDecorationButton *createButton(ButtonType type);
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual KCommonDecorationButton *createButton(ButtonType type);
 
-		virtual QRegion cornerShape(WindowCorner corner);
+    virtual QRegion cornerShape(WindowCorner corner);
 
-		void init();
-		void reset( unsigned long changed );
+    void init();
+    void reset(unsigned long changed);
 
-	protected:
-		void paintEvent( QPaintEvent* );
+protected:
+    void paintEvent(QPaintEvent *);
 
-	private:
-		bool mustDrawHandle() const;
-		int           titleHeight;
+private:
+    bool mustDrawHandle() const;
+    int titleHeight;
 };
-
 }
 
 #endif

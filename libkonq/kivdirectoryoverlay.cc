@@ -35,16 +35,14 @@
 
 #include "kivdirectoryoverlay.h"
 
-KIVDirectoryOverlay::KIVDirectoryOverlay(KFileIVI* directory)
-: m_lister(0), m_foundItems(false),
-  m_containsFolder(false), m_popularIcons(0)
+KIVDirectoryOverlay::KIVDirectoryOverlay(KFileIVI *directory) : m_lister(0), m_foundItems(false), m_containsFolder(false), m_popularIcons(0)
 {
-    if (!m_lister)
+    if(!m_lister)
     {
         m_lister = new KDirLister;
         m_lister->setAutoErrorHandlingEnabled(false, 0);
         connect(m_lister, SIGNAL(completed()), SLOT(slotCompleted()));
-        connect(m_lister, SIGNAL(newItems( const KFileItemList& )), SLOT(slotNewItems( const KFileItemList& )));
+        connect(m_lister, SIGNAL(newItems(const KFileItemList &)), SLOT(slotNewItems(const KFileItemList &)));
         m_lister->setShowingDotFiles(false);
     }
     m_directory = directory;
@@ -52,18 +50,22 @@ KIVDirectoryOverlay::KIVDirectoryOverlay(KFileIVI* directory)
 
 KIVDirectoryOverlay::~KIVDirectoryOverlay()
 {
-    if (m_lister) m_lister->stop();
+    if(m_lister)
+        m_lister->stop();
     delete m_lister;
     delete m_popularIcons;
 }
 
 void KIVDirectoryOverlay::start()
 {
-    if ( m_directory->item()->isReadable() ) {
-        m_popularIcons = new QDict<int>;
+    if(m_directory->item()->isReadable())
+    {
+        m_popularIcons = new QDict< int >;
         m_popularIcons->setAutoDelete(true);
         m_lister->openURL(m_directory->item()->url());
-    } else {
+    }
+    else
+    {
         emit finished();
     }
 }
@@ -75,16 +77,19 @@ void KIVDirectoryOverlay::timerEvent(QTimerEvent *)
 
 void KIVDirectoryOverlay::slotCompleted()
 {
-    if (!m_popularIcons) return;
+    if(!m_popularIcons)
+        return;
 
     // Look through the histogram for the most popular mimetype
-    QDictIterator<int> currentIcon( (*m_popularIcons) );
+    QDictIterator< int > currentIcon((*m_popularIcons));
     unsigned int best = 0;
     unsigned int total = 0;
-    for ( ; currentIcon.current(); ++currentIcon ) {
+    for(; currentIcon.current(); ++currentIcon)
+    {
         unsigned int currentCount = (*currentIcon.current());
         total += currentCount;
-        if ( best < currentCount ) {
+        if(best < currentCount)
+        {
             best = currentCount;
             m_bestIcon = currentIcon.currentKey();
         }
@@ -92,15 +97,18 @@ void KIVDirectoryOverlay::slotCompleted()
 
     // Only show folder if there's no other candidate. Most folders contain
     // folders. We know this.
-    if ( m_bestIcon.isNull() && m_containsFolder ) {
+    if(m_bestIcon.isNull() && m_containsFolder)
+    {
         m_bestIcon = "folder";
     }
-    
-    if ( best * 2 < total ) {
+
+    if(best * 2 < total)
+    {
         m_bestIcon = "kmultiple";
     }
 
-    if (!m_bestIcon.isNull()) {
+    if(!m_bestIcon.isNull())
+    {
         m_directory->setOverlay(m_bestIcon);
     }
 
@@ -110,27 +118,34 @@ void KIVDirectoryOverlay::slotCompleted()
     emit finished();
 }
 
-void KIVDirectoryOverlay::slotNewItems( const KFileItemList& items )
+void KIVDirectoryOverlay::slotNewItems(const KFileItemList &items)
 {
-    if ( !m_popularIcons) return;
+    if(!m_popularIcons)
+        return;
 
-    KFileItemListIterator files( items );
+    KFileItemListIterator files(items);
 
-    KFileItem* file;
-    for ( ; (file = files.current()) != 0; ++files ) {
-        if ( file -> isFile() ) {
+    KFileItem *file;
+    for(; (file = files.current()) != 0; ++files)
+    {
+        if(file->isFile())
+        {
 
-        QString iconName = file -> iconName();
-        if (!iconName) continue;
+            QString iconName = file->iconName();
+            if(!iconName)
+                continue;
 
-        int* iconCount = m_popularIcons -> find( file -> iconName() );
-        if (!iconCount) {
-            iconCount = new int(0);
-            Q_ASSERT(file);
-            m_popularIcons -> insert(file -> iconName(), iconCount);
+            int *iconCount = m_popularIcons->find(file->iconName());
+            if(!iconCount)
+            {
+                iconCount = new int(0);
+                Q_ASSERT(file);
+                m_popularIcons->insert(file->iconName(), iconCount);
+            }
+            (*iconCount)++;
         }
-        (*iconCount)++;
-        } else if ( file -> isDir() ) {
+        else if(file->isDir())
+        {
             m_containsFolder = true;
         }
     }

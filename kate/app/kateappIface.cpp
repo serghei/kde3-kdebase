@@ -23,82 +23,81 @@
 #include "katedocmanager.h"
 #include "katemainwindow.h"
 
-KateAppDCOPIface::KateAppDCOPIface (KateApp *app) : DCOPObject ("KateApplication")
-     , m_app (app)
+KateAppDCOPIface::KateAppDCOPIface(KateApp *app) : DCOPObject("KateApplication"), m_app(app)
 {
 }
 
-DCOPRef KateAppDCOPIface::documentManager ()
+DCOPRef KateAppDCOPIface::documentManager()
 {
-  return DCOPRef (m_app->documentManager()->dcopObject ());
+    return DCOPRef(m_app->documentManager()->dcopObject());
 }
 
-DCOPRef KateAppDCOPIface::activeMainWindow ()
+DCOPRef KateAppDCOPIface::activeMainWindow()
 {
-  KateMainWindow *win = m_app->activeMainWindow();
+    KateMainWindow *win = m_app->activeMainWindow();
 
-  if (win)
-    return DCOPRef (win->dcopObject ());
+    if(win)
+        return DCOPRef(win->dcopObject());
 
-  return DCOPRef ();
+    return DCOPRef();
 }
 
-uint KateAppDCOPIface::activeMainWindowNumber ()
+uint KateAppDCOPIface::activeMainWindowNumber()
 {
-  KateMainWindow *win = m_app->activeMainWindow();
+    KateMainWindow *win = m_app->activeMainWindow();
 
-  if (win)
-    return win->mainWindowNumber ();
+    if(win)
+        return win->mainWindowNumber();
 
-  return 0;
+    return 0;
 }
 
 
-uint KateAppDCOPIface::mainWindows ()
+uint KateAppDCOPIface::mainWindows()
 {
-  return m_app->mainWindows ();
+    return m_app->mainWindows();
 }
 
-DCOPRef KateAppDCOPIface::mainWindow (uint n)
+DCOPRef KateAppDCOPIface::mainWindow(uint n)
 {
-  KateMainWindow *win = m_app->mainWindow(n);
+    KateMainWindow *win = m_app->mainWindow(n);
 
-  if (win)
-    return DCOPRef (win->dcopObject ());
+    if(win)
+        return DCOPRef(win->dcopObject());
 
-  return DCOPRef ();
+    return DCOPRef();
 }
 
-bool KateAppDCOPIface::openURL (KURL url, QString encoding)
+bool KateAppDCOPIface::openURL(KURL url, QString encoding)
 {
-  return m_app->openURL (url, encoding, false);
+    return m_app->openURL(url, encoding, false);
 }
 
-bool KateAppDCOPIface::openURL (KURL url, QString encoding, bool isTempFile)
+bool KateAppDCOPIface::openURL(KURL url, QString encoding, bool isTempFile)
 {
-  return m_app->openURL (url, encoding, isTempFile);
+    return m_app->openURL(url, encoding, isTempFile);
 }
 
-bool KateAppDCOPIface::setCursor (int line, int column)
+bool KateAppDCOPIface::setCursor(int line, int column)
 {
-  return m_app->setCursor (line, column);
+    return m_app->setCursor(line, column);
 }
 
-bool KateAppDCOPIface::openInput (QString text)
+bool KateAppDCOPIface::openInput(QString text)
 {
-  return m_app->openInput (text);
+    return m_app->openInput(text);
 }
 
-bool KateAppDCOPIface::activateSession (QString session)
+bool KateAppDCOPIface::activateSession(QString session)
 {
-  m_app->sessionManager()->activateSession (m_app->sessionManager()->giveSession (session));
+    m_app->sessionManager()->activateSession(m_app->sessionManager()->giveSession(session));
 
-  return true;
+    return true;
 }
 
-const QString & KateAppDCOPIface::session() const
+const QString &KateAppDCOPIface::session() const
 {
-  return m_app->sessionManager()->activeSession()->sessionName();
+    return m_app->sessionManager()->activeSession()->sessionName();
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

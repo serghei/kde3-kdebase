@@ -28,19 +28,18 @@ class QCheckBox;
 
 class KConfig;
 
-class KCMFilter : public KCModule
-{
+class KCMFilter : public KCModule {
     Q_OBJECT
 public:
-    KCMFilter( KConfig* config, QString group, QWidget* parent = 0, const char* name = 0 );
+    KCMFilter(KConfig *config, QString group, QWidget *parent = 0, const char *name = 0);
     ~KCMFilter();
-    
+
     void load();
-    void load( bool useDefaults );
+    void load(bool useDefaults);
     void save();
     void defaults();
     QString quickHelp() const;
-    
+
 public slots:
 
 protected slots:

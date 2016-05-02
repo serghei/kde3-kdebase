@@ -33,21 +33,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "bookmarksbutton.h"
 #include "bookmarksbutton.moc"
 
-BookmarksButton::BookmarksButton(QWidget* parent)
-    : PanelPopupButton(parent, "BookmarksButton"),
-      bookmarkParent(0),
-      bookmarkMenu(0),
-      actionCollection(0),
-      bookmarkOwner(0)
+BookmarksButton::BookmarksButton(QWidget *parent)
+    : PanelPopupButton(parent, "BookmarksButton"), bookmarkParent(0), bookmarkMenu(0), actionCollection(0), bookmarkOwner(0)
 {
-    actionCollection = new KActionCollection( this );
+    actionCollection = new KActionCollection(this);
     bookmarkParent = new KPopupMenu(this, "bookmarks");
     bookmarkOwner = new KBookmarkOwner;
-    bookmarkMenu = new KBookmarkMenu(KonqBookmarkManager::self(),
-                                     bookmarkOwner,
-                                     bookmarkParent,
-                                     actionCollection,
-                                     true, false);
+    bookmarkMenu = new KBookmarkMenu(KonqBookmarkManager::self(), bookmarkOwner, bookmarkParent, actionCollection, true, false);
     setPopup(bookmarkParent);
     QToolTip::add(this, i18n("Bookmarks"));
     setTitle(i18n("Bookmarks"));
@@ -69,4 +61,3 @@ void BookmarksButton::properties()
 {
     KonqBookmarkManager::self()->slotEditBookmarks();
 }
-

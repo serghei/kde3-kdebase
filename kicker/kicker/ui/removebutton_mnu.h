@@ -32,24 +32,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class ContainerArea;
 
-class PanelRemoveButtonMenu : public QPopupMenu
-{
+class PanelRemoveButtonMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    PanelRemoveButtonMenu( ContainerArea *cArea, QWidget *parent=0, const char *name=0 );
+    PanelRemoveButtonMenu(ContainerArea *cArea, QWidget *parent = 0, const char *name = 0);
     ~PanelRemoveButtonMenu();
 
 protected slots:
-    void slotExec( int id );
+    void slotExec(int id);
     void slotAboutToShow();
     void slotRemoveAll();
 
 private:
-    void addToContainers(const QString& type);
+    void addToContainers(const QString &type);
 
     BaseContainer::List containers;
-    ContainerArea* containerArea;
+    ContainerArea *containerArea;
 };
 
 #endif

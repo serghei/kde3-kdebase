@@ -26,20 +26,20 @@ namespace KHC {
 
 class MainWindow;
 
-class Application : public KUniqueApplication
-{
-  public:
+class Application : public KUniqueApplication {
+public:
     Application();
 
     virtual int newInstance();
-    
-  private:
+
+private:
     MainWindow *mMainWindow;
 };
-
 }
 
-extern "C" { int kdemain(int argc, char **argv); }
+extern "C" {
+int kdemain(int argc, char **argv);
+}
 
 #endif // APPLICATION_H
 // vim:ts=2:sw=2:et

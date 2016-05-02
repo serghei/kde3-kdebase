@@ -28,8 +28,7 @@
 class QCheckBox;
 class QButtonGroup;
 
-class KPagerConfigDialog : public KDialogBase
-{
+class KPagerConfigDialog : public KDialogBase {
     Q_OBJECT
 
 public:
@@ -45,9 +44,10 @@ public slots:
     void setLayout(int layout);
 
     void enableWindowDragging(bool);
-    
+
     void loadConfiguration();
     void slotOk();
+
 public:
     static void initConfiguration(void);
     static bool m_showName;
@@ -65,7 +65,7 @@ protected:
     QCheckBox *m_chkShowWindows;
     QButtonGroup *m_grpWindowDrawMode;
     QButtonGroup *m_grpLayoutType;
-    QCheckBox* m_chkWindowDragging;
+    QCheckBox *m_chkWindowDragging;
     bool m_tmpShowName;
     bool m_tmpShowNumber;
     bool m_tmpShowBackground;

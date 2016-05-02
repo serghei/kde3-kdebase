@@ -24,7 +24,7 @@
 #ifndef KSG_COMMAND_H
 #define KSG_COMMAND_H
 
-typedef void (*cmdExecutor)(const char*);
+typedef void (*cmdExecutor)(const char *);
 
 /**
   Set this flag to '1' to request a rescan of the available sensors
@@ -40,34 +40,33 @@ extern int CheckSetupFlag;
 /**
   Delivers the error message to the front end.
  */
-void print_error( const char*, ... )
+void print_error(const char *, ...)
 #ifdef __GNUC__
-    __attribute__ (  (  format (  printf, 1, 2 ) ) )
+    __attribute__((format(printf, 1, 2)))
 #endif
     ;
 
 /**
   Writes the error message to the syslog daemon.
  */
-void log_error( const char*, ... )
- #ifdef __GNUC__
-    __attribute__ (  (  format (  printf, 1, 2 ) ) )
+void log_error(const char *, ...)
+#ifdef __GNUC__
+    __attribute__((format(printf, 1, 2)))
 #endif
     ;
 
-   
 
 /**
   Use this function to register a command with the name
   @ref command and the function pointer @ref ex.
  */
-void registerCommand( const char* command, cmdExecutor ex );
+void registerCommand(const char *command, cmdExecutor ex);
 
 /**
   Use this function to remove a command with the name
   @ref command.
  */
-void removeCommand( const char* command );
+void removeCommand(const char *command);
 
 /**
   Use this function to add a new montior with the name @ref monitor
@@ -78,26 +77,25 @@ void removeCommand( const char* command );
   @ref sm is a parameter to the sensor modul object that is passed by
   the initXXX method.
  */
-void registerMonitor( const char* monitor, const char* type, cmdExecutor ex,
-                      cmdExecutor iq, struct SensorModul* sm );
+void registerMonitor(const char *monitor, const char *type, cmdExecutor ex, cmdExecutor iq, struct SensorModul *sm);
 
 /**
   Use this function to add the montior with the name @ref monitor.
  */
-void removeMonitor( const char* monitor );
+void removeMonitor(const char *monitor);
 
 
 /**
   Internal usage.
  */
-void executeCommand( const char* command );
+void executeCommand(const char *command);
 
-void initCommand( void );
-void exitCommand( void );
+void initCommand(void);
+void exitCommand(void);
 
-void printMonitors( const char* cmd );
-void printTest( const char* cmd );
+void printMonitors(const char *cmd);
+void printTest(const char *cmd);
 
-void exQuit( const char* cmd );
+void exQuit(const char *cmd);
 
 #endif

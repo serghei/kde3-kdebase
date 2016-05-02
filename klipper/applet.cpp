@@ -30,24 +30,22 @@
 #include "history.h"
 #include "klipperpopup.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-    KDE_EXPORT KPanelApplet* init(QWidget *parent, const QString& configFile)
-    {
-        KGlobal::locale()->insertCatalogue("klipper");
-        int actions = KPanelApplet::Preferences | KPanelApplet::About | KPanelApplet::Help;
-        return new KlipperApplet(configFile, KPanelApplet::Normal, actions, parent, "klipper");
-    }
+    KGlobal::locale()->insertCatalogue("klipper");
+    int actions = KPanelApplet::Preferences | KPanelApplet::About | KPanelApplet::Help;
+    return new KlipperApplet(configFile, KPanelApplet::Normal, actions, parent, "klipper");
+}
 }
 
-KlipperApplet::KlipperApplet(const QString& configFile, Type t, int actions,
-                         QWidget *parent, const char *name)
+KlipperApplet::KlipperApplet(const QString &configFile, Type t, int actions, QWidget *parent, const char *name)
     : KPanelApplet(configFile, t, actions, parent, name)
 {
     KlipperWidget::createAboutData();
-    move( 0, 0 );
+    move(0, 0);
     setBackgroundMode(QWidget::X11ParentRelative);
-    widget = new KlipperAppletWidget( this );
+    widget = new KlipperAppletWidget(this);
     setCustomMenu(widget->history()->popup());
     centerWidget();
     widget->show();
@@ -70,18 +68,18 @@ int KlipperApplet::heightForWidth(int) const
     return widget->height();
 }
 
-void KlipperApplet::resizeEvent( QResizeEvent* ev )
+void KlipperApplet::resizeEvent(QResizeEvent *ev)
 {
     widget->adjustSize();
-    KPanelApplet::resizeEvent( ev );
+    KPanelApplet::resizeEvent(ev);
     centerWidget();
 }
 
 void KlipperApplet::centerWidget()
 {
-    int x = (width() - widget->width())/2;
-    int y = (height() - widget->height())/2;
-    widget->move( x, y );
+    int x = (width() - widget->width()) / 2;
+    int y = (height() - widget->height()) / 2;
+    widget->move(x, y);
 }
 
 void KlipperApplet::preferences()
@@ -100,9 +98,9 @@ void KlipperApplet::about()
     about.exec();
 }
 
-KlipperAppletWidget::KlipperAppletWidget( QWidget* parent )
-// init() is called first, before KlipperWidget is called with ( parent, kconfig )
-    : KlipperWidget( ( init(), parent ), new KConfig( "klipperrc" ))
+KlipperAppletWidget::KlipperAppletWidget(QWidget *parent)
+    // init() is called first, before KlipperWidget is called with ( parent, kconfig )
+    : KlipperWidget((init(), parent), new KConfig("klipperrc"))
 {
 }
 
@@ -115,11 +113,11 @@ void KlipperAppletWidget::init()
     QByteArray arg1, arg2;
     QCString str;
     // call() - wait for finishing
-    kapp->dcopClient()->call("klipper", "klipper", "quitProcess()", arg1, str, arg2 );
+    kapp->dcopClient()->call("klipper", "klipper", "quitProcess()", arg1, str, arg2);
     // register ourselves, so if klipper process is started,
     // it will quit immediately (KUniqueApplication)
     s_dcop = new DCOPClient;
-    s_dcop->registerAs( "klipper", false );
+    s_dcop->registerAs("klipper", false);
 }
 
 KlipperAppletWidget::~KlipperAppletWidget()
@@ -128,7 +126,7 @@ KlipperAppletWidget::~KlipperAppletWidget()
     s_dcop = 0;
 }
 
-DCOPClient* KlipperAppletWidget::s_dcop = 0;
+DCOPClient *KlipperAppletWidget::s_dcop = 0;
 
 // this is just to make klipper process think we're KUniqueApplication
 // (AKA ugly hack)

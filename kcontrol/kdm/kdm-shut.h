@@ -15,7 +15,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-*/  
+*/
 
 #ifndef __KDMSESS_H__
 #define __KDMSESS_H__
@@ -28,37 +28,39 @@ class QCheckBox;
 class KURLRequester;
 class KBackedComboBox;
 
-class KDMSessionsWidget : public QWidget
-{
-	Q_OBJECT
+class KDMSessionsWidget : public QWidget {
+    Q_OBJECT
 
 public:
-	KDMSessionsWidget(QWidget *parent=0, const char *name=0);
+    KDMSessionsWidget(QWidget *parent = 0, const char *name = 0);
 
-	void load();
-	void save();
-	void defaults();
-	void makeReadOnly();
+    void load();
+    void save();
+    void defaults();
+    void makeReadOnly();
 
-	enum SdModes { SdAll, SdRoot, SdNone };
+    enum SdModes
+    {
+        SdAll,
+        SdRoot,
+        SdNone
+    };
 
 signals:
-	void changed( bool state );
-	
+    void changed(bool state);
+
 protected slots:
-	void changed();
+    void changed();
 
 private:
-	void readSD (QComboBox *, QString);
-	void writeSD (QComboBox *);
+    void readSD(QComboBox *, QString);
+    void writeSD(QComboBox *);
 
-	QComboBox	*sdlcombo, *sdrcombo;
-	QLabel		*sdllabel, *sdrlabel;
-	KURLRequester	*restart_lined, *shutdown_lined;
-	KBackedComboBox	*bm_combo;
+    QComboBox *sdlcombo, *sdrcombo;
+    QLabel *sdllabel, *sdrlabel;
+    KURLRequester *restart_lined, *shutdown_lined;
+    KBackedComboBox *bm_combo;
 };
 
 
 #endif
-
-

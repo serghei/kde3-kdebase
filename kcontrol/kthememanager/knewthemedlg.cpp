@@ -24,13 +24,12 @@
 
 #include <klocale.h>
 
-KNewThemeDlg::KNewThemeDlg( QWidget * parent, const char * name )
-    : KDialogBase(parent, name, true, i18n("New Theme"), Ok|Cancel, Ok)
+KNewThemeDlg::KNewThemeDlg(QWidget *parent, const char *name) : KDialogBase(parent, name, true, i18n("New Theme"), Ok | Cancel, Ok)
 {
-    m_base = new NewThemeWidget( this, "new_theme_base" );
-    setMainWidget( m_base );
-    connect( m_base->leName, SIGNAL( textChanged ( const QString & ) ), this, SLOT( slotThemeNameChanged( const QString & ) ) );
-    slotThemeNameChanged( m_base->leName->text() );
+    m_base = new NewThemeWidget(this, "new_theme_base");
+    setMainWidget(m_base);
+    connect(m_base->leName, SIGNAL(textChanged(const QString &)), this, SLOT(slotThemeNameChanged(const QString &)));
+    slotThemeNameChanged(m_base->leName->text());
 }
 
 KNewThemeDlg::~KNewThemeDlg()
@@ -38,9 +37,9 @@ KNewThemeDlg::~KNewThemeDlg()
     delete m_base;
 }
 
-void KNewThemeDlg::slotThemeNameChanged( const QString &_text )
+void KNewThemeDlg::slotThemeNameChanged(const QString &_text)
 {
-     enableButtonOK( !_text.isEmpty() );
+    enableButtonOK(!_text.isEmpty());
 }
 
 QString KNewThemeDlg::getName() const
@@ -73,24 +72,24 @@ QString KNewThemeDlg::getVersion() const
     return m_base->leVersion->text();
 }
 
-void KNewThemeDlg::setAuthor( const QString & author )
+void KNewThemeDlg::setAuthor(const QString &author)
 {
-    m_base->leAuthor->setText( author );
+    m_base->leAuthor->setText(author);
 }
 
-void KNewThemeDlg::setEmail( const QString & email )
+void KNewThemeDlg::setEmail(const QString &email)
 {
-    m_base->leEmail->setText( email );
+    m_base->leEmail->setText(email);
 }
 
-void KNewThemeDlg::setVersion( const QString & version )
+void KNewThemeDlg::setVersion(const QString &version)
 {
-    m_base->leVersion->setText( version );
+    m_base->leVersion->setText(version);
 }
 
-void KNewThemeDlg::setName( const QString & name )
+void KNewThemeDlg::setName(const QString &name)
 {
-    m_base->leName->setText( name );
+    m_base->leName->setText(name);
 }
 
 #include "knewthemedlg.moc"

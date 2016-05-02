@@ -33,33 +33,31 @@ class QPushButton;
 class KHistoryCombo;
 class KURIFilterData;
 
-class RunApplet : public KPanelApplet
-{
+class RunApplet : public KPanelApplet {
     Q_OBJECT
 
 public:
-    RunApplet(const QString& configFile, Type t = Stretch, int actions = 0,
-	      QWidget *parent = 0, const char *name = 0);
+    RunApplet(const QString &configFile, Type t = Stretch, int actions = 0, QWidget *parent = 0, const char *name = 0);
     virtual ~RunApplet();
 
     int widthForHeight(int height) const;
     int heightForWidth(int width) const;
 
 protected:
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent *);
     void positionChange(KPanelApplet::Position);
 
 protected slots:
-    void run_command(const QString&);
+    void run_command(const QString &);
     void popup_combo();
     void setButtonText();
 
 private:
-    KHistoryCombo  *_input;
+    KHistoryCombo *_input;
     KURIFilterData *_filterData;
-    QLabel         *_label;
-    QPushButton    *_btn;
-    QHBox          *_hbox;
+    QLabel *_label;
+    QPushButton *_btn;
+    QHBox *_hbox;
 };
 
 #endif

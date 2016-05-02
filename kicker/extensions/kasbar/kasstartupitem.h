@@ -68,21 +68,23 @@ class QTimer;
 /**
  * A KasItem that represents a single Startup.
  */
-class KasStartupItem : public KasItem
-{
+class KasStartupItem : public KasItem {
     Q_OBJECT
 
 public:
-    KasStartupItem( KasBar *parent, Startup::Ptr startup );
+    KasStartupItem(KasBar *parent, Startup::Ptr startup);
     virtual ~KasStartupItem();
 
     QPixmap icon() const;
-    Startup::Ptr startup() const { return startup_; }
+    Startup::Ptr startup() const
+    {
+        return startup_;
+    }
 
     /**
      * Reimplemented to paint the item.
      */
-    virtual void paint( QPainter *p );
+    virtual void paint(QPainter *p);
 
 protected slots:
     void aniTimerFired();
@@ -94,4 +96,3 @@ private:
 };
 
 #endif // KASSTARTUPITEM_H
-

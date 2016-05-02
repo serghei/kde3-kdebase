@@ -28,8 +28,7 @@
 #include "hidingconfig.h"
 #include "hidingconfig.moc"
 
-HidingConfig::HidingConfig(QWidget *parent, const char *name)
-  : KCModule(parent, name)
+HidingConfig::HidingConfig(QWidget *parent, const char *name) : KCModule(parent, name)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
     m_widget = new HidingTab(this);
@@ -39,12 +38,10 @@ HidingConfig::HidingConfig(QWidget *parent, const char *name)
     setQuickHelp(KickerConfig::the()->quickHelp());
     setAboutData(KickerConfig::the()->aboutData());
 
-    //addConfig(KickerSettings::self(), m_widget);
+    // addConfig(KickerSettings::self(), m_widget);
 
-    connect(m_widget, SIGNAL(changed()),
-            this, SLOT(changed()));
-    connect(KickerConfig::the(), SIGNAL(aboutToNotifyKicker()),
-            this, SLOT(aboutToNotifyKicker()));
+    connect(m_widget, SIGNAL(changed()), this, SLOT(changed()));
+    connect(KickerConfig::the(), SIGNAL(aboutToNotifyKicker()), this, SLOT(aboutToNotifyKicker()));
 
     load();
     QTimer::singleShot(0, this, SLOT(notChanged()));

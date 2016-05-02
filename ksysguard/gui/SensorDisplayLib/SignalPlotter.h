@@ -29,89 +29,91 @@
 #include <qvaluelist.h>
 #include <qwidget.h>
 
-#define GRAPH_POLYGON     0
-#define	GRAPH_ORIGINAL    1
+#define GRAPH_POLYGON 0
+#define GRAPH_ORIGINAL 1
 
 class QColor;
 
-class SignalPlotter : public QWidget
-{
-  Q_OBJECT
+class SignalPlotter : public QWidget {
+    Q_OBJECT
 
-  public:
-    SignalPlotter( QWidget *parent = 0, const char *name = 0 );
+public:
+    SignalPlotter(QWidget *parent = 0, const char *name = 0);
     ~SignalPlotter();
 
-    bool addBeam( const QColor &color );
-    void addSample( const QValueList<double> &samples );
+    bool addBeam(const QColor &color);
+    void addSample(const QValueList< double > &samples);
 
-    void removeBeam( uint pos );
+    void removeBeam(uint pos);
 
-    void changeRange( int beam, double min, double max );
+    void changeRange(int beam, double min, double max);
 
-    QValueList<QColor> &beamColors();
+    QValueList< QColor > &beamColors();
 
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
     QString title() const;
 
-    void setUseAutoRange( bool value );
+    void setUseAutoRange(bool value);
     bool useAutoRange() const;
 
-    void setMinValue( double min );
+    void setMinValue(double min);
     double minValue() const;
 
-    void setMaxValue( double max );
+    void setMaxValue(double max);
     double maxValue() const;
 
-    void setGraphStyle( uint style );
+    void setGraphStyle(uint style);
     uint graphStyle() const;
 
-    void setHorizontalScale( uint scale );
+    void setHorizontalScale(uint scale);
     int horizontalScale() const;
 
-    void setShowVerticalLines( bool value );
+    void setShowVerticalLines(bool value);
     bool showVerticalLines() const;
 
-    void setVerticalLinesColor( const QColor &color );
+    void setVerticalLinesColor(const QColor &color);
     QColor verticalLinesColor() const;
 
-    void setVerticalLinesDistance( int distance );
+    void setVerticalLinesDistance(int distance);
     int verticalLinesDistance() const;
 
-    void setVerticalLinesScroll( bool value );
+    void setVerticalLinesScroll(bool value);
     bool verticalLinesScroll() const;
 
-    void setShowHorizontalLines( bool value );
+    void setShowHorizontalLines(bool value);
     bool showHorizontalLines() const;
 
-    void setHorizontalLinesColor( const QColor &color );
+    void setHorizontalLinesColor(const QColor &color);
     QColor horizontalLinesColor() const;
 
-    void setHorizontalLinesCount( int count );
+    void setHorizontalLinesCount(int count);
     int horizontalLinesCount() const;
 
-    void setShowLabels( bool value );
+    void setShowLabels(bool value);
     bool showLabels() const;
 
-    void setShowTopBar( bool value );
+    void setShowTopBar(bool value);
     bool showTopBar() const;
 
-    void setFontSize( int size );
+    void setFontSize(int size);
     int fontSize() const;
 
-    void setBackgroundColor( const QColor &color );
+    void setBackgroundColor(const QColor &color);
     QColor backgroundColor() const;
-    void reorderBeams( const QValueList<int>& newOrder );
+    void reorderBeams(const QValueList< int > &newOrder);
 
-    void setThinFrame(bool set) { mShowThinFrame = set; }
+    void setThinFrame(bool set)
+    {
+        mShowThinFrame = set;
+    }
 
-  protected:
+protected:
     void updateDataBuffers();
 
-    virtual void resizeEvent( QResizeEvent* );
-    virtual void paintEvent( QPaintEvent* );
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void paintEvent(QPaintEvent *);
 
-  private:
+private:
     double mMinValue;
     double mMaxValue;
     bool mUseAutoRange;
@@ -136,8 +138,8 @@ class SignalPlotter : public QWidget
 
     QColor mBackgroundColor;
 
-    QPtrList<double> mBeamData;
-    QValueList<QColor> mBeamColor;
+    QPtrList< double > mBeamData;
+    QValueList< QColor > mBeamColor;
 
     unsigned int mSamples;
 

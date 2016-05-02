@@ -30,42 +30,50 @@ class KProcess;
 
 namespace KHC {
 
-class TOC : public QObject
-{
-	Q_OBJECT
-	public:
-		TOC( NavigatorItem *parentItem );
+class TOC : public QObject {
+    Q_OBJECT
+public:
+    TOC(NavigatorItem *parentItem);
 
-		QString application() const { return m_application; }
-		void setApplication( const QString &application ) { m_application = application; }
-	
-	public slots:
-		void build( const QString &file );
-		
-	signals:
-		void itemSelected( const QString &url );
+    QString application() const
+    {
+        return m_application;
+    }
+    void setApplication(const QString &application)
+    {
+        m_application = application;
+    }
 
-	private slots:
-		void slotItemSelected( QListViewItem *item );
-		void meinprocExited( KProcess *meinproc );
+public slots:
+    void build(const QString &file);
 
-	private:
-		enum CacheStatus { NeedRebuild, CacheOk };
+signals:
+    void itemSelected(const QString &url);
 
-		CacheStatus cacheStatus() const;
-		int sourceFileCTime() const;
-		int cachedCTime() const;
-		QDomElement childElement( const QDomElement &e, const QString &name );
-		void buildCache();
-		void fillTree();
+private slots:
+    void slotItemSelected(QListViewItem *item);
+    void meinprocExited(KProcess *meinproc);
 
-		QString m_application;
-		QString m_cacheFile;
-		QString m_sourceFile;
+private:
+    enum CacheStatus
+    {
+        NeedRebuild,
+        CacheOk
+    };
 
-		NavigatorItem *m_parentItem;
+    CacheStatus cacheStatus() const;
+    int sourceFileCTime() const;
+    int cachedCTime() const;
+    QDomElement childElement(const QDomElement &e, const QString &name);
+    void buildCache();
+    void fillTree();
+
+    QString m_application;
+    QString m_cacheFile;
+    QString m_sourceFile;
+
+    NavigatorItem *m_parentItem;
 };
-
 }
 
 #endif // KHC_TOC_H

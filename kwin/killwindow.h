@@ -14,21 +14,18 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include "workspace.h"
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
-class KillWindow 
-    {
-    public:
+class KillWindow {
+public:
+    KillWindow(Workspace *ws);
+    ~KillWindow();
 
-        KillWindow( Workspace* ws );
-        ~KillWindow();
+    void start();
 
-        void start();
-
-    private:
-        Workspace* workspace;
-    };
+private:
+    Workspace *workspace;
+};
 
 } // namespace
 

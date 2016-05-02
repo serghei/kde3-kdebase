@@ -21,15 +21,12 @@ class KBookmarkMenu;
 class KPopupMenu;
 class KonsoleBookmarkMenu;
 
-class KonsoleBookmarkMenu : public KBookmarkMenu
-{
+class KonsoleBookmarkMenu : public KBookmarkMenu {
     Q_OBJECT
 
 public:
-    KonsoleBookmarkMenu( KBookmarkManager* mgr,
-                         KonsoleBookmarkHandler * _owner, KPopupMenu * _parentMenu,
-                         KActionCollection *collec, bool _isRoot,
-                         bool _add = true, const QString & parentAddress = "");
+    KonsoleBookmarkMenu(KBookmarkManager *mgr, KonsoleBookmarkHandler *_owner, KPopupMenu *_parentMenu, KActionCollection *collec, bool _isRoot,
+                        bool _add = true, const QString &parentAddress = "");
 
     void fillBookmarkMenu();
 
@@ -40,7 +37,7 @@ signals:
 private slots:
 
 private:
-    KonsoleBookmarkHandler * m_kOwner;
+    KonsoleBookmarkHandler *m_kOwner;
 
 protected slots:
     void slotAboutToShow2();

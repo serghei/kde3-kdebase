@@ -34,48 +34,50 @@ class QTimer;
  */
 
 class KdmLabel : public KdmItem {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	KdmLabel( KdmItem *parent, const QDomNode &node, const char *name = 0 );
-	void setText( const QString &txt );
+    KdmLabel(KdmItem *parent, const QDomNode &node, const char *name = 0);
+    void setText(const QString &txt);
 
 protected:
-	// reimplemented; returns the minimum size of rendered text
-	virtual QSize sizeHint();
+    // reimplemented; returns the minimum size of rendered text
+    virtual QSize sizeHint();
 
-	// draw the label
-	virtual void drawContents( QPainter *p, const QRect &r );
+    // draw the label
+    virtual void drawContents(QPainter *p, const QRect &r);
 
-	// handle switching between normal / active / prelight configurations
-	virtual void statusChanged();
+    // handle switching between normal / active / prelight configurations
+    virtual void statusChanged();
 
-	struct LabelStruct {
-		QString text;
-		bool isTimer;
-		bool hasId;
-		QString id;
-		struct LabelClass {
-			QColor color;
-			QFont font;
-			bool present;
-		} normal, active, prelight;
-		int maximumWidth;
-	} label;
+    struct LabelStruct
+    {
+        QString text;
+        bool isTimer;
+        bool hasId;
+        QString id;
+        struct LabelClass
+        {
+            QColor color;
+            QFont font;
+            bool present;
+        } normal, active, prelight;
+        int maximumWidth;
+    } label;
 
-	QTimer *timer;
+    QTimer *timer;
 
 public slots:
-	void update();
+    void update();
 
 private:
-	/* Method to lookup the caption associated with an item */
-	QString lookupStock( const QString &stock );
+    /* Method to lookup the caption associated with an item */
+    QString lookupStock(const QString &stock);
 
-	/* Lookup variables in the text */
-	QString lookupText( const QString &t );
+    /* Lookup variables in the text */
+    QString lookupText(const QString &t);
 
-	QString cText;
+    QString cText;
 };
 
 #endif

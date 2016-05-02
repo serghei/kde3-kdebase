@@ -19,7 +19,6 @@
 */
 
 
-
 #ifndef __PROXYWIDGET_H__
 #define __PROXYWIDGET_H__
 
@@ -36,46 +35,42 @@ class KAboutData;
 
 class ProxyView;
 
-class ProxyWidget : public QWidget
-{
-  Q_OBJECT
+class ProxyWidget : public QWidget {
+    Q_OBJECT
 
 public:
+    ProxyWidget(KCModule *client, QString title, const char *name = 0, bool run_as_root = false);
+    ~ProxyWidget();
 
-  ProxyWidget(KCModule *client, QString title, const char *name=0, bool run_as_root = false);
-  ~ProxyWidget();
-
-  QString quickHelp() const;
-  const KAboutData *aboutData() const;
+    QString quickHelp() const;
+    const KAboutData *aboutData() const;
 
 public slots:
 
-  void handbookClicked();
-  void helpClicked();
-  void defaultClicked();
-  void applyClicked();
-  void resetClicked();
-  void rootClicked();
+    void handbookClicked();
+    void helpClicked();
+    void defaultClicked();
+    void applyClicked();
+    void resetClicked();
+    void rootClicked();
 
-  void clientChanged(bool state);
+    void clientChanged(bool state);
 
 
 signals:
 
-  void closed();
-  void handbookRequest();
-  void helpRequest();
-  void changed(bool state);
-  void runAsRoot();
-  void quickHelpChanged();
+    void closed();
+    void handbookRequest();
+    void helpRequest();
+    void changed(bool state);
+    void runAsRoot();
+    void quickHelpChanged();
 
 private:
-
-  QPushButton *_handbook, *_default, *_apply, *_reset, *_root;
-  QFrame      *_sep;
-  KCModule    *_client;
+    QPushButton *_handbook, *_default, *_apply, *_reset, *_root;
+    QFrame *_sep;
+    KCModule *_client;
     ProxyView *view;
-
 };
 
 

@@ -25,8 +25,7 @@
 
 class KPixmapSplitter;
 
-class TextCreator : public ThumbCreator
-{
+class TextCreator : public ThumbCreator {
 public:
     TextCreator();
     virtual ~TextCreator();

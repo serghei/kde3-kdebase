@@ -25,42 +25,42 @@
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
-class ClipboardPoll
-    : public QWidget
-    {
+class ClipboardPoll : public QWidget {
     Q_OBJECT
-    public:
-        ClipboardPoll( QWidget* parent );
-    signals:
-        void clipboardChanged( bool selectionMode );
-    protected:
-        virtual bool x11Event( XEvent* );
-    private slots:
-        void timeout();
-        void qtSelectionChanged();
-        void qtClipboardChanged();
-    private:
-        struct SelectionData
-        {
-            Atom atom;
-            Atom sentinel_atom;
-            Atom timestamp_atom;
-            Window last_owner;
-            bool owner_is_qt;
-            Time last_change;
-            bool waiting_for_timestamp;
-            Time waiting_x_time;
-        };
-        void updateQtOwnership( SelectionData& data );
-        bool checkTimestamp( SelectionData& data );
-        bool changedTimestamp( SelectionData& data, const XEvent& e );
-        void initPolling();
-        QTimer timer;
-        SelectionData selection;
-        SelectionData clipboard;
-        Atom xa_clipboard;
-        Atom xa_timestamp;
-        int xfixes_event_base;
+public:
+    ClipboardPoll(QWidget *parent);
+signals:
+    void clipboardChanged(bool selectionMode);
+
+protected:
+    virtual bool x11Event(XEvent *);
+private slots:
+    void timeout();
+    void qtSelectionChanged();
+    void qtClipboardChanged();
+
+private:
+    struct SelectionData
+    {
+        Atom atom;
+        Atom sentinel_atom;
+        Atom timestamp_atom;
+        Window last_owner;
+        bool owner_is_qt;
+        Time last_change;
+        bool waiting_for_timestamp;
+        Time waiting_x_time;
     };
-    
+    void updateQtOwnership(SelectionData &data);
+    bool checkTimestamp(SelectionData &data);
+    bool changedTimestamp(SelectionData &data, const XEvent &e);
+    void initPolling();
+    QTimer timer;
+    SelectionData selection;
+    SelectionData clipboard;
+    Atom xa_clipboard;
+    Atom xa_timestamp;
+    int xfixes_event_base;
+};
+
 #endif

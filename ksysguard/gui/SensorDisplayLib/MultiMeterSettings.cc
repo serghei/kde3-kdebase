@@ -22,106 +22,104 @@
 
 #include <klocale.h>
 
-MultiMeterSettings::MultiMeterSettings( QWidget *parent, const char *name )
-    : KDialogBase( parent, name, true, i18n( "Multimeter Settings" ),
-      Ok|Apply|Cancel, Ok, true )
+MultiMeterSettings::MultiMeterSettings(QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Multimeter Settings"), Ok | Apply | Cancel, Ok, true)
 {
-  m_settingsWidget = new MultiMeterSettingsWidget( this, "m_settingsWidget" );
-  setMainWidget( m_settingsWidget );
+    m_settingsWidget = new MultiMeterSettingsWidget(this, "m_settingsWidget");
+    setMainWidget(m_settingsWidget);
 }
 
 QString MultiMeterSettings::title()
 {
-  return m_settingsWidget->title();
+    return m_settingsWidget->title();
 }
 
 bool MultiMeterSettings::showUnit()
 {
-  return m_settingsWidget->showUnit();
+    return m_settingsWidget->showUnit();
 }
 
 bool MultiMeterSettings::lowerLimitActive()
 {
-  return m_settingsWidget->lowerLimitActive();
+    return m_settingsWidget->lowerLimitActive();
 }
 
 bool MultiMeterSettings::upperLimitActive()
 {
-  return m_settingsWidget->upperLimitActive();
+    return m_settingsWidget->upperLimitActive();
 }
 
 double MultiMeterSettings::lowerLimit()
 {
-  return m_settingsWidget->lowerLimit();
+    return m_settingsWidget->lowerLimit();
 }
 
 double MultiMeterSettings::upperLimit()
 {
-  return m_settingsWidget->upperLimit();
+    return m_settingsWidget->upperLimit();
 }
 
 QColor MultiMeterSettings::normalDigitColor()
 {
-  return m_settingsWidget->normalDigitColor();
+    return m_settingsWidget->normalDigitColor();
 }
 
 QColor MultiMeterSettings::alarmDigitColor()
 {
-  return m_settingsWidget->alarmDigitColor();
+    return m_settingsWidget->alarmDigitColor();
 }
 
 QColor MultiMeterSettings::meterBackgroundColor()
 {
-  return m_settingsWidget->meterBackgroundColor();
+    return m_settingsWidget->meterBackgroundColor();
 }
 
-void MultiMeterSettings::setTitle( const QString &title )
+void MultiMeterSettings::setTitle(const QString &title)
 {
-  m_settingsWidget->setTitle( title );
+    m_settingsWidget->setTitle(title);
 }
 
-void MultiMeterSettings::setShowUnit( bool b )
+void MultiMeterSettings::setShowUnit(bool b)
 {
-  m_settingsWidget->setShowUnit( b );
+    m_settingsWidget->setShowUnit(b);
 }
 
-void MultiMeterSettings::setLowerLimitActive( bool b )
+void MultiMeterSettings::setLowerLimitActive(bool b)
 {
-  m_settingsWidget->setLowerLimitActive( b );
+    m_settingsWidget->setLowerLimitActive(b);
 }
 
-void MultiMeterSettings::setUpperLimitActive( bool b )
+void MultiMeterSettings::setUpperLimitActive(bool b)
 {
-  m_settingsWidget->setUpperLimitActive( b );
+    m_settingsWidget->setUpperLimitActive(b);
 }
 
-void MultiMeterSettings::setLowerLimit( double limit )
+void MultiMeterSettings::setLowerLimit(double limit)
 {
-  m_settingsWidget->setLowerLimit( limit );
+    m_settingsWidget->setLowerLimit(limit);
 }
 
-void MultiMeterSettings::setUpperLimit( double limit )
+void MultiMeterSettings::setUpperLimit(double limit)
 {
-  m_settingsWidget->setUpperLimit( limit );
+    m_settingsWidget->setUpperLimit(limit);
 }
 
-void MultiMeterSettings::setNormalDigitColor( const QColor &c )
+void MultiMeterSettings::setNormalDigitColor(const QColor &c)
 {
-  m_settingsWidget->setNormalDigitColor( c );
+    m_settingsWidget->setNormalDigitColor(c);
 }
 
-void MultiMeterSettings::setAlarmDigitColor( const QColor &c )
+void MultiMeterSettings::setAlarmDigitColor(const QColor &c)
 {
-  m_settingsWidget->setAlarmDigitColor( c );
+    m_settingsWidget->setAlarmDigitColor(c);
 }
 
-void MultiMeterSettings::setMeterBackgroundColor( const QColor &c )
+void MultiMeterSettings::setMeterBackgroundColor(const QColor &c)
 {
-  m_settingsWidget->setMeterBackgroundColor( c );
+    m_settingsWidget->setMeterBackgroundColor(c);
 }
 
 #include "MultiMeterSettings.moc"
 
 /* vim: et sw=2 ts=2
 */
-

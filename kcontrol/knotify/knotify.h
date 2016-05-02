@@ -38,14 +38,12 @@ class KURLRequester;
 class PlayerSettingsDialog;
 class PlayerSettingsUI;
 
-namespace KNotify
-{
-    class Application;
-    class KNotifyWidget;
+namespace KNotify {
+class Application;
+class KNotifyWidget;
 }
 
-class KCMKNotify : public KCModule
-{
+class KCMKNotify : public KCModule {
     Q_OBJECT
 
 public:
@@ -54,41 +52,39 @@ public:
 
     virtual void defaults();
     virtual void save();
-    virtual void load(bool useDefaults );
+    virtual void load(bool useDefaults);
 
 public slots:
     virtual void load();
 
 private slots:
-    void slotAppActivated( const QString& app );
+    void slotAppActivated(const QString &app);
     void slotPlayerSettings();
 
 private:
-    KNotify::Application *applicationByDescription( const QString& text );
+    KNotify::Application *applicationByDescription(const QString &text);
 
     KComboBox *m_appCombo;
     KNotify::KNotifyWidget *m_notifyWidget;
     PlayerSettingsDialog *m_playerSettings;
-
 };
 
-class PlayerSettingsDialog : public KDialogBase
-{
+class PlayerSettingsDialog : public KDialogBase {
     Q_OBJECT
 
 public:
-    PlayerSettingsDialog( QWidget *parent, bool modal );
-    void load( bool useDefaults );
+    PlayerSettingsDialog(QWidget *parent, bool modal);
+    void load(bool useDefaults);
     void save();
 
 protected slots:
     virtual void slotApply();
     virtual void slotOk();
-    void externalToggled( bool on );
+    void externalToggled(bool on);
     void slotChanged();
 
 private:
-    PlayerSettingsUI* m_ui;
+    PlayerSettingsUI *m_ui;
     bool dataChanged;
 };
 

@@ -1,10 +1,10 @@
 /*
     Lightweight C Container Library
-   
-	Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
 
-	Original code was written by Chris Schlaeger <cs@kde.org>
-    
+    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+
+    Original code was written by Chris Schlaeger <cs@kde.org>
+
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
     License as published by the Free Software Foundation; either
@@ -27,338 +27,362 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct container_info {
-	INDEX count;
-	CONTAINER currentNode;
+struct container_info
+{
+    INDEX count;
+    CONTAINER currentNode;
 };
 
 typedef struct container_info T_CONTAINER_INFO;
-typedef struct container_info* CONTAINER_INFO;
+typedef struct container_info *CONTAINER_INFO;
 
 #define rpterr(x) fprintf(stderr, "%s\n", x)
 
 CONTAINER new_ctnr(void)
 {
-	CONTAINER_INFO info;
-	CONTAINER rootNode;
+    CONTAINER_INFO info;
+    CONTAINER rootNode;
 
-	rootNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
+    rootNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
 
-	info = (CONTAINER_INFO)malloc(sizeof(T_CONTAINER_INFO));
-	info->count = 0;
-	info->currentNode = rootNode;
+    info = (CONTAINER_INFO)malloc(sizeof(T_CONTAINER_INFO));
+    info->count = 0;
+    info->currentNode = rootNode;
 
-	rootNode->next = rootNode;
-	rootNode->prev = rootNode;
-	rootNode->data = info;
+    rootNode->next = rootNode;
+    rootNode->prev = rootNode;
+    rootNode->data = info;
 
-	return rootNode;
+    return rootNode;
 }
 
 void zero_destr_ctnr(CONTAINER rootNode, DESTR_FUNC destr_func)
 {
-	INDEX counter;
+    INDEX counter;
 
-	if (rootNode == NIL || destr_func == NIL) {
-		rpterr("destr_ctnr: NIL argument");
-		return;
-	}
+    if(rootNode == NIL || destr_func == NIL)
+    {
+        rpterr("destr_ctnr: NIL argument");
+        return;
+    }
 
-	for (counter = level_ctnr(rootNode); counter > -1; --counter)
-		destr_func(pop_ctnr(rootNode));
+    for(counter = level_ctnr(rootNode); counter > -1; --counter)
+        destr_func(pop_ctnr(rootNode));
 
-	if (rootNode->data)
-		free(rootNode->data);
+    if(rootNode->data)
+        free(rootNode->data);
 
-	free(rootNode);
-	rootNode = 0;
+    free(rootNode);
+    rootNode = 0;
 
-	return;
+    return;
 }
 
 INDEX level_ctnr(CONTAINER rootNode)
 {
-	if (rootNode == NIL) {
-		rpterr("level_ctnr: NIL argument");
-		return -1;
-	}
+    if(rootNode == NIL)
+    {
+        rpterr("level_ctnr: NIL argument");
+        return -1;
+    }
 
-	return ((CONTAINER_INFO)rootNode->data)->count;
+    return ((CONTAINER_INFO)rootNode->data)->count;
 }
 
-void insert_ctnr(CONTAINER rootNode, void* object, INDEX pos)
+void insert_ctnr(CONTAINER rootNode, void *object, INDEX pos)
 {
-	CONTAINER it;
-	INDEX counter = 0;
-	
-	if (rootNode == NIL || object == NIL) {
-		rpterr("insert_ctnr: NIL argument");
-		return;
-	}
+    CONTAINER it;
+    INDEX counter = 0;
 
-	for (it = rootNode->next; it != rootNode; it = it->next) {
-		if (counter == pos) {
-			CONTAINER newNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
+    if(rootNode == NIL || object == NIL)
+    {
+        rpterr("insert_ctnr: NIL argument");
+        return;
+    }
 
-			newNode->prev = it;
-			newNode->next = it->next;
-			it->next->prev = newNode;
-			it->next = newNode;
+    for(it = rootNode->next; it != rootNode; it = it->next)
+    {
+        if(counter == pos)
+        {
+            CONTAINER newNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
 
-			newNode->data = object;
-			((CONTAINER_INFO)rootNode->data)->count++;
-			return;
-		}
+            newNode->prev = it;
+            newNode->next = it->next;
+            it->next->prev = newNode;
+            it->next = newNode;
 
-		counter++;
-	}
+            newNode->data = object;
+            ((CONTAINER_INFO)rootNode->data)->count++;
+            return;
+        }
+
+        counter++;
+    }
 }
 
-void push_ctnr(CONTAINER rootNode, void* object)
+void push_ctnr(CONTAINER rootNode, void *object)
 {
-	CONTAINER newNode;
+    CONTAINER newNode;
 
-	if (rootNode == NIL || object == NIL) {
-		rpterr("push_ctnr: NIL argument");
-		return;
-	}
+    if(rootNode == NIL || object == NIL)
+    {
+        rpterr("push_ctnr: NIL argument");
+        return;
+    }
 
-	newNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
-	newNode->next = rootNode;
-	newNode->prev = rootNode->prev;
-	rootNode->prev->next = newNode;
-	rootNode->prev = newNode;
+    newNode = (CONTAINER)malloc(sizeof(T_CONTAINER));
+    newNode->next = rootNode;
+    newNode->prev = rootNode->prev;
+    rootNode->prev->next = newNode;
+    rootNode->prev = newNode;
 
-	newNode->data = object;
-	((CONTAINER_INFO)rootNode->data)->count++;
+    newNode->data = object;
+    ((CONTAINER_INFO)rootNode->data)->count++;
 }
 
-void* remove_at_ctnr(CONTAINER rootNode, INDEX pos)
+void *remove_at_ctnr(CONTAINER rootNode, INDEX pos)
 {
-	CONTAINER it;
-	INDEX counter = 0;
-	void* retval;
-	
-	if (rootNode == NIL) {
-		rpterr("remove_ctnr: NIL argument");
-		return NIL;
-	}
+    CONTAINER it;
+    INDEX counter = 0;
+    void *retval;
 
-	for (it = rootNode->next; it != rootNode; it = it->next) {
-		if (counter == pos) {
-			retval = it->data;
+    if(rootNode == NIL)
+    {
+        rpterr("remove_ctnr: NIL argument");
+        return NIL;
+    }
 
-			it->prev->next = it->next;
-			it->next->prev = it->prev;
+    for(it = rootNode->next; it != rootNode; it = it->next)
+    {
+        if(counter == pos)
+        {
+            retval = it->data;
 
-			free(it);
+            it->prev->next = it->next;
+            it->next->prev = it->prev;
 
-			((CONTAINER_INFO)rootNode->data)->count--;
-			return retval;
-		}
+            free(it);
 
-		counter++;
-	}
+            ((CONTAINER_INFO)rootNode->data)->count--;
+            return retval;
+        }
 
-	return NIL;
+        counter++;
+    }
+
+    return NIL;
 }
 
-void* pop_ctnr(CONTAINER rootNode)
+void *pop_ctnr(CONTAINER rootNode)
 {
-	CONTAINER ptr;
-	void* retval;
+    CONTAINER ptr;
+    void *retval;
 
-	if (rootNode == NIL) {
-		rpterr("pop_ctnr: NIL argument");
-		return NIL;
-	}
+    if(rootNode == NIL)
+    {
+        rpterr("pop_ctnr: NIL argument");
+        return NIL;
+    }
 
-	if (rootNode->next == rootNode)
-		return NIL;
+    if(rootNode->next == rootNode)
+        return NIL;
 
-	ptr = rootNode->next;	
-	retval = ptr->data;
+    ptr = rootNode->next;
+    retval = ptr->data;
 
-	rootNode->next = ptr->next;
-	ptr->next->prev = rootNode;
+    rootNode->next = ptr->next;
+    ptr->next->prev = rootNode;
 
-	((CONTAINER_INFO)rootNode->data)->count--;
+    ((CONTAINER_INFO)rootNode->data)->count--;
 
-	free(ptr);
+    free(ptr);
 
-	return retval;
+    return retval;
 }
 
-void* get_ctnr(CONTAINER rootNode, INDEX pos)
+void *get_ctnr(CONTAINER rootNode, INDEX pos)
 {
-	CONTAINER it;
-	INDEX counter = 0;
+    CONTAINER it;
+    INDEX counter = 0;
 
-	if (rootNode == NIL) {
-		rpterr("get_ctnr: NIL argument");
-		return NIL;
-	}
+    if(rootNode == NIL)
+    {
+        rpterr("get_ctnr: NIL argument");
+        return NIL;
+    }
 
-	for (it = rootNode->next; it != rootNode; it = it->next) {
-		if (counter == pos)
-			return it->data;
+    for(it = rootNode->next; it != rootNode; it = it->next)
+    {
+        if(counter == pos)
+            return it->data;
 
-		counter++;
-	}
+        counter++;
+    }
 
-	return NIL;
+    return NIL;
 }
 
-INDEX search_ctnr(CONTAINER rootNode, COMPARE_FUNC compare_func, void* pattern)
+INDEX search_ctnr(CONTAINER rootNode, COMPARE_FUNC compare_func, void *pattern)
 {
-	CONTAINER it;
-	INDEX counter = 0;
+    CONTAINER it;
+    INDEX counter = 0;
 
-	if (rootNode == NIL || compare_func == NIL || pattern == NIL) {
-		rpterr("search_ctnr: NIL argument");
-		return -1;
-	}
-	
-	for (it = rootNode->next; it != rootNode; it = it->next) {
-		if (compare_func(pattern, it->data) == 0)
-			return counter;
+    if(rootNode == NIL || compare_func == NIL || pattern == NIL)
+    {
+        rpterr("search_ctnr: NIL argument");
+        return -1;
+    }
 
-		counter++;
-	}
+    for(it = rootNode->next; it != rootNode; it = it->next)
+    {
+        if(compare_func(pattern, it->data) == 0)
+            return counter;
 
-	return -1;
+        counter++;
+    }
+
+    return -1;
 }
 
 void swop_ctnr(CONTAINER rootNode, INDEX pos1, INDEX pos2)
 {
-	CONTAINER it, node1, node2;
-	INDEX counter = 0;
-	int found = 0;
-	void* tmpData;
+    CONTAINER it, node1, node2;
+    INDEX counter = 0;
+    int found = 0;
+    void *tmpData;
 
-	if (rootNode == NIL) {
-		rpterr("swop_ctnr: NIL argument");
-		return;
-	}
+    if(rootNode == NIL)
+    {
+        rpterr("swop_ctnr: NIL argument");
+        return;
+    }
 
-	if (pos1 == pos2)
-		return;
+    if(pos1 == pos2)
+        return;
 
-	/**
-	 * it is a bit hackish because of the 'goto' but it's fast
-	 * since we have to run through the list only once
-	 */
-	for (it = rootNode->next; it != rootNode; it = it->next) {
-		if (counter == pos1) {
-			node1 = it;
-			if (found)
-				goto swapIt;
-			else
-				found = 1;
-		}
-		if (counter == pos2) {
-			node2 = it;
-			if (found)
-				goto swapIt;
-			else
-				found = 1;
-		}
+    /**
+     * it is a bit hackish because of the 'goto' but it's fast
+     * since we have to run through the list only once
+     */
+    for(it = rootNode->next; it != rootNode; it = it->next)
+    {
+        if(counter == pos1)
+        {
+            node1 = it;
+            if(found)
+                goto swapIt;
+            else
+                found = 1;
+        }
+        if(counter == pos2)
+        {
+            node2 = it;
+            if(found)
+                goto swapIt;
+            else
+                found = 1;
+        }
 
-		counter++;
-	}	
+        counter++;
+    }
 
-	return;
+    return;
 
 swapIt:
-	tmpData = node1->data;
-	node1->data = node2->data;
-	node2->data = tmpData;
-	return;
+    tmpData = node1->data;
+    node1->data = node2->data;
+    node2->data = tmpData;
+    return;
 }
 
 void bsort_ctnr(CONTAINER rootNode, COMPARE_FUNC compare_func)
 {
-	INDEX right, i, level, last;
+    INDEX right, i, level, last;
 
-	if (rootNode == NIL || compare_func == NIL) {
-		rpterr("destr_ctnr: NIL argument");
-		return;
-	}
+    if(rootNode == NIL || compare_func == NIL)
+    {
+        rpterr("destr_ctnr: NIL argument");
+        return;
+    }
 
-	last = level = level_ctnr(rootNode);
-	do
-	{
-		right = last;
-		last = 0;
-		for (i = 1; i < right; i++)
-			if (compare_func(get_ctnr(rootNode, i - 1), get_ctnr(rootNode, i)) > 0)
-				swop_ctnr(rootNode, i - 1, last = i);
-	} while (last > 0);
+    last = level = level_ctnr(rootNode);
+    do
+    {
+        right = last;
+        last = 0;
+        for(i = 1; i < right; i++)
+            if(compare_func(get_ctnr(rootNode, i - 1), get_ctnr(rootNode, i)) > 0)
+                swop_ctnr(rootNode, i - 1, last = i);
+    } while(last > 0);
 }
 
-void* first_ctnr(CONTAINER rootNode)
+void *first_ctnr(CONTAINER rootNode)
 {
-	if (rootNode == NIL) {
-		rpterr("first_ctnr: NIL argument");
-		return NIL;
-	}
-	
-	if (rootNode->next == rootNode)
-		return NIL;
+    if(rootNode == NIL)
+    {
+        rpterr("first_ctnr: NIL argument");
+        return NIL;
+    }
 
-	((CONTAINER_INFO)rootNode->data)->currentNode = rootNode->next;
+    if(rootNode->next == rootNode)
+        return NIL;
 
-	return rootNode->next->data;
+    ((CONTAINER_INFO)rootNode->data)->currentNode = rootNode->next;
+
+    return rootNode->next->data;
 }
 
-void* next_ctnr(CONTAINER rootNode)
+void *next_ctnr(CONTAINER rootNode)
 {
-	CONTAINER_INFO info;
+    CONTAINER_INFO info;
 
-	if (rootNode == NIL) {
-		rpterr("next_ctnr: NIL argument");
-		return NIL;
-	}
+    if(rootNode == NIL)
+    {
+        rpterr("next_ctnr: NIL argument");
+        return NIL;
+    }
 
-	info = (CONTAINER_INFO)rootNode->data;
+    info = (CONTAINER_INFO)rootNode->data;
 
-	if (info->currentNode->next == rootNode)
-		return NIL;
+    if(info->currentNode->next == rootNode)
+        return NIL;
 
-	info->currentNode = info->currentNode->next;
+    info->currentNode = info->currentNode->next;
 
-	return info->currentNode->data;
+    return info->currentNode->data;
 }
 
-void* remove_ctnr(CONTAINER rootNode)
+void *remove_ctnr(CONTAINER rootNode)
 {
-	CONTAINER currentNode, tmp;
-	CONTAINER_INFO info;
-	void* retval;
-	
-	if (rootNode == NIL) {
-		rpterr("remove_curr_ctnr: NIL argument");
-		return NIL;
-	}
+    CONTAINER currentNode, tmp;
+    CONTAINER_INFO info;
+    void *retval;
 
-	info = (CONTAINER_INFO)rootNode->data;
-	currentNode = info->currentNode;
+    if(rootNode == NIL)
+    {
+        rpterr("remove_curr_ctnr: NIL argument");
+        return NIL;
+    }
 
-	if (currentNode == rootNode) { /* should never happen */
-		rpterr("remove_curr_ctnr: delete root node");
-		return NIL;
-	}
+    info = (CONTAINER_INFO)rootNode->data;
+    currentNode = info->currentNode;
 
-	retval = currentNode->data;
-	tmp = currentNode->prev;
+    if(currentNode == rootNode)
+    { /* should never happen */
+        rpterr("remove_curr_ctnr: delete root node");
+        return NIL;
+    }
 
-	currentNode->prev->next = currentNode->next;
-	currentNode->next->prev = currentNode->prev;
+    retval = currentNode->data;
+    tmp = currentNode->prev;
 
-	free(currentNode);
+    currentNode->prev->next = currentNode->next;
+    currentNode->next->prev = currentNode->prev;
 
-	info->count--;
-	info->currentNode = tmp;
+    free(currentNode);
 
-	return retval;
+    info->count--;
+    info->currentNode = tmp;
+
+    return retval;
 }

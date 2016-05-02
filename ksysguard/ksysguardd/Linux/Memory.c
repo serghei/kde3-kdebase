@@ -33,7 +33,7 @@
 
 #define MEMINFOBUFSIZE (2 * 1024)
 
-static char MemInfoBuf[ MEMINFOBUFSIZE ];
+static char MemInfoBuf[MEMINFOBUFSIZE];
 static int Dirty = 1;
 
 static unsigned long Total = 0;
@@ -46,248 +46,251 @@ static unsigned long STotal = 0;
 static unsigned long SFree = 0;
 static unsigned long SUsed = 0;
 
-static void scan_one( const char* buff, const char *key, unsigned long int* val )
-{   
-  int o;
-  char *b = strstr( buff, key );
-  if ( b )  
-    o = sscanf( b + strlen( key ), ": %lu", val );
+static void scan_one(const char *buff, const char *key, unsigned long int *val)
+{
+    int o;
+    char *b = strstr(buff, key);
+    if(b)
+        o = sscanf(b + strlen(key), ": %lu", val);
 }
 
 static void processMemInfo()
 {
-  scan_one( MemInfoBuf, "MemTotal", &Total );
-  scan_one( MemInfoBuf, "MemFree", &MFree );
-  scan_one( MemInfoBuf, "Buffers", &Buffers );
-  scan_one( MemInfoBuf, "Cached", &Cached );
-  scan_one( MemInfoBuf, "SwapTotal", &STotal );
-  scan_one( MemInfoBuf, "SwapFree", &SFree );
-  Used = Total - MFree;
-  Appl = ( Used - ( Buffers + Cached ) );
+    scan_one(MemInfoBuf, "MemTotal", &Total);
+    scan_one(MemInfoBuf, "MemFree", &MFree);
+    scan_one(MemInfoBuf, "Buffers", &Buffers);
+    scan_one(MemInfoBuf, "Cached", &Cached);
+    scan_one(MemInfoBuf, "SwapTotal", &STotal);
+    scan_one(MemInfoBuf, "SwapFree", &SFree);
+    Used = Total - MFree;
+    Appl = (Used - (Buffers + Cached));
 
-  if ( STotal == 0 ) /* no swap activated */
-    SUsed = 0;
-  else
-    SUsed = STotal - SFree;
+    if(STotal == 0) /* no swap activated */
+        SUsed = 0;
+    else
+        SUsed = STotal - SFree;
 
-  Dirty = 0;
+    Dirty = 0;
 }
 
 /*
 ================================ public part =================================
 */
 
-void initMemory( struct SensorModul* sm )
+void initMemory(struct SensorModul *sm)
 {
-  /**
-    Make sure that /proc/meminfo exists and is readable. If not we do
-    not register any monitors for memory.
-   */
-  if ( updateMemory() < 0 )
-    return;
+    /**
+      Make sure that /proc/meminfo exists and is readable. If not we do
+      not register any monitors for memory.
+     */
+    if(updateMemory() < 0)
+        return;
 
-  registerMonitor( "mem/physical/free", "integer", printMFree, printMFreeInfo, sm );
-  registerMonitor( "mem/physical/used", "integer", printUsed, printUsedInfo, sm );
-  registerMonitor( "mem/physical/application", "integer", printAppl, printApplInfo, sm );
-  registerMonitor( "mem/physical/buf", "integer", printBuffers, printBuffersInfo, sm );
-  registerMonitor( "mem/physical/cached", "integer", printCached, printCachedInfo, sm );
-  registerMonitor( "mem/swap/used", "integer", printSwapUsed, printSwapUsedInfo, sm );
-  registerMonitor( "mem/swap/free", "integer", printSwapFree, printSwapFreeInfo, sm );
+    registerMonitor("mem/physical/free", "integer", printMFree, printMFreeInfo, sm);
+    registerMonitor("mem/physical/used", "integer", printUsed, printUsedInfo, sm);
+    registerMonitor("mem/physical/application", "integer", printAppl, printApplInfo, sm);
+    registerMonitor("mem/physical/buf", "integer", printBuffers, printBuffersInfo, sm);
+    registerMonitor("mem/physical/cached", "integer", printCached, printCachedInfo, sm);
+    registerMonitor("mem/swap/used", "integer", printSwapUsed, printSwapUsedInfo, sm);
+    registerMonitor("mem/swap/free", "integer", printSwapFree, printSwapFreeInfo, sm);
 }
 
-void exitMemory( void )
+void exitMemory(void)
 {
 }
 
-int updateMemory( void )
+int updateMemory(void)
 {
-  /**
-    The amount of total and used memory is read from the /proc/meminfo.
-    It also contains the information about the swap space.
-    The 'file' looks like this:
+    /**
+      The amount of total and used memory is read from the /proc/meminfo.
+      It also contains the information about the swap space.
+      The 'file' looks like this:
 
-    MemTotal:       516560 kB
-    MemFree:          7812 kB
-    MemShared:           0 kB
-    Buffers:         80312 kB
-    Cached:         236432 kB
-    SwapCached:        468 kB
-    Active:         291992 kB
-    Inactive:       133556 kB
-    HighTotal:           0 kB
-    HighFree:            0 kB
-    LowTotal:       516560 kB
-    LowFree:          7812 kB
-    SwapTotal:      899632 kB
-    SwapFree:       898932 kB
-    Dirty:            2736 kB
-    Writeback:           0 kB
-    Mapped:         155996 kB
-    Slab:            73920 kB
-    Committed_AS:   315588 kB
-    PageTables:       1764 kB
-    ReverseMaps:    103458
-   */
+      MemTotal:       516560 kB
+      MemFree:          7812 kB
+      MemShared:           0 kB
+      Buffers:         80312 kB
+      Cached:         236432 kB
+      SwapCached:        468 kB
+      Active:         291992 kB
+      Inactive:       133556 kB
+      HighTotal:           0 kB
+      HighFree:            0 kB
+      LowTotal:       516560 kB
+      LowFree:          7812 kB
+      SwapTotal:      899632 kB
+      SwapFree:       898932 kB
+      Dirty:            2736 kB
+      Writeback:           0 kB
+      Mapped:         155996 kB
+      Slab:            73920 kB
+      Committed_AS:   315588 kB
+      PageTables:       1764 kB
+      ReverseMaps:    103458
+     */
 
-  int fd;
-  size_t n;
+    int fd;
+    size_t n;
 
-  if ( ( fd = open( "/proc/meminfo", O_RDONLY ) ) < 0 ) {
-    print_error( "Cannot open \'/proc/meminfo\'!\n"
-                 "The kernel needs to be compiled with support\n"
-                 "for /proc filesystem enabled!\n" );
-    return -1;
-  }
+    if((fd = open("/proc/meminfo", O_RDONLY)) < 0)
+    {
+        print_error(
+            "Cannot open \'/proc/meminfo\'!\n"
+            "The kernel needs to be compiled with support\n"
+            "for /proc filesystem enabled!\n");
+        return -1;
+    }
 
-  if ( ( n = read( fd, MemInfoBuf, MEMINFOBUFSIZE - 1 ) ) == MEMINFOBUFSIZE - 1 ) {
-    log_error( "Internal buffer too small to read \'/proc/mem\'" );
-    close( fd );
-    return -1;
-  }
+    if((n = read(fd, MemInfoBuf, MEMINFOBUFSIZE - 1)) == MEMINFOBUFSIZE - 1)
+    {
+        log_error("Internal buffer too small to read \'/proc/mem\'");
+        close(fd);
+        return -1;
+    }
 
-  close( fd );
-  MemInfoBuf[ n ] = '\0';
-  Dirty = 1;
+    close(fd);
+    MemInfoBuf[n] = '\0';
+    Dirty = 1;
 
-  return 0;
+    return 0;
 }
 
-void printMFree( const char* cmd )
+void printMFree(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", MFree );
+    fprintf(CurrentClient, "%ld\n", MFree);
 }
 
-void printMFreeInfo( const char* cmd )
+void printMFreeInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Free Memory\t0\t%ld\tKB\n", Total );
+    fprintf(CurrentClient, "Free Memory\t0\t%ld\tKB\n", Total);
 }
 
-void printUsed( const char* cmd )
+void printUsed(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", Used );
+    fprintf(CurrentClient, "%ld\n", Used);
 }
 
-void printUsedInfo( const char* cmd )
+void printUsedInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Used Memory\t0\t%ld\tKB\n", Total );
+    fprintf(CurrentClient, "Used Memory\t0\t%ld\tKB\n", Total);
 }
 
-void printAppl( const char* cmd )
+void printAppl(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", Appl );
+    fprintf(CurrentClient, "%ld\n", Appl);
 }
 
-void printApplInfo( const char* cmd )
+void printApplInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Application Memory\t0\t%ld\tKB\n", Total );
+    fprintf(CurrentClient, "Application Memory\t0\t%ld\tKB\n", Total);
 }
 
-void printBuffers( const char* cmd )
+void printBuffers(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", Buffers );
+    fprintf(CurrentClient, "%ld\n", Buffers);
 }
 
-void printBuffersInfo( const char* cmd )
+void printBuffersInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Buffer Memory\t0\t%ld\tKB\n", Total );
+    fprintf(CurrentClient, "Buffer Memory\t0\t%ld\tKB\n", Total);
 }
 
-void printCached( const char* cmd )
+void printCached(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", Cached );
+    fprintf(CurrentClient, "%ld\n", Cached);
 }
 
-void printCachedInfo( const char* cmd )
+void printCachedInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Cached Memory\t0\t%ld\tKB\n", Total );
+    fprintf(CurrentClient, "Cached Memory\t0\t%ld\tKB\n", Total);
 }
 
-void printSwapUsed( const char* cmd )
+void printSwapUsed(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", SUsed );
+    fprintf(CurrentClient, "%ld\n", SUsed);
 }
 
-void printSwapUsedInfo( const char* cmd )
+void printSwapUsedInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Used Swap Memory\t0\t%ld\tKB\n", STotal );
+    fprintf(CurrentClient, "Used Swap Memory\t0\t%ld\tKB\n", STotal);
 }
 
-void printSwapFree( const char* cmd )
+void printSwapFree(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "%ld\n", SFree );
+    fprintf(CurrentClient, "%ld\n", SFree);
 }
 
-void printSwapFreeInfo( const char* cmd )
+void printSwapFreeInfo(const char *cmd)
 {
-  (void)cmd;
+    (void)cmd;
 
-  if ( Dirty )
-    processMemInfo();
+    if(Dirty)
+        processMemInfo();
 
-  fprintf( CurrentClient, "Free Swap Memory\t0\t%ld\tKB\n", STotal );
+    fprintf(CurrentClient, "Free Swap Memory\t0\t%ld\tKB\n", STotal);
 }

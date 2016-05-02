@@ -32,46 +32,45 @@
 #include <kcombobox.h>
 #include <kkeydialog.h>
 
-class ShortcutsModule : public QWidget
-{
-	Q_OBJECT
- public:
-	ShortcutsModule( QWidget *parent = 0, const char *name = 0 );
-	~ShortcutsModule();
+class ShortcutsModule : public QWidget {
+    Q_OBJECT
+public:
+    ShortcutsModule(QWidget *parent = 0, const char *name = 0);
+    ~ShortcutsModule();
 
-	void load();
-	void save();
-	void defaults();
-	QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
- protected:
-	void initGUI();
-	void createActionsGeneral();
-	void createActionsSequence();
-	void readSchemeNames();
-	void saveScheme();
-	void resizeEvent(QResizeEvent *e);
+protected:
+    void initGUI();
+    void createActionsGeneral();
+    void createActionsSequence();
+    void readSchemeNames();
+    void saveScheme();
+    void resizeEvent(QResizeEvent *e);
 
- signals:
-	void changed( bool );
+signals:
+    void changed(bool);
 
- protected slots:
-	void slotSchemeCur();
-	void slotKeyChange();
-	void slotSelectScheme( int = 0 );
-	void slotSaveSchemeAs();
-	void slotRemoveScheme();
+protected slots:
+    void slotSchemeCur();
+    void slotKeyChange();
+    void slotSelectScheme(int = 0);
+    void slotSaveSchemeAs();
+    void slotRemoveScheme();
 
- private:
-	QTabWidget* m_pTab;
-	QRadioButton *m_prbPre, *m_prbNew;
-	KComboBox* m_pcbSchemes;
-	QPushButton* m_pbtnSave, * m_pbtnRemove;
-	int m_nSysSchemes;
-	QStringList m_rgsSchemeFiles;
-	KAccelActions m_actionsGeneral, m_actionsSequence;//, m_actionsApplication;
-	KShortcutList* m_pListGeneral, * m_pListSequence, * m_pListApplication;
-	KKeyChooser* m_pkcGeneral, * m_pkcSequence, * m_pkcApplication;
+private:
+    QTabWidget *m_pTab;
+    QRadioButton *m_prbPre, *m_prbNew;
+    KComboBox *m_pcbSchemes;
+    QPushButton *m_pbtnSave, *m_pbtnRemove;
+    int m_nSysSchemes;
+    QStringList m_rgsSchemeFiles;
+    KAccelActions m_actionsGeneral, m_actionsSequence; //, m_actionsApplication;
+    KShortcutList *m_pListGeneral, *m_pListSequence, *m_pListApplication;
+    KKeyChooser *m_pkcGeneral, *m_pkcSequence, *m_pkcApplication;
 };
 
 #endif // __SHORTCUTS_MODULE_H

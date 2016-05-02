@@ -30,68 +30,67 @@
 
 class KonqSidebarPluginPrivate;
 
-class KDE_EXPORT KonqSidebarPlugin : public QObject
-{
-	Q_OBJECT
-	public:
-		KonqSidebarPlugin(KInstance *instance,QObject *parent,QWidget *widgetParent,QString &desktopName_, const char* name=0);
-		~KonqSidebarPlugin();
-		virtual QWidget *getWidget()=0;
-		virtual void *provides(const QString &)=0;
-		KInstance *parentInstance();
-	protected:
-		virtual void handleURL(const KURL &url)=0;
-		virtual void handlePreview(const KFileItemList & items);
-		virtual void handlePreviewOnMouseOver(const KFileItem &items); //not used yet, perhaps in KDE 3.1
-		QString desktopName;
-		KInstance* m_parentInstance;
+class KDE_EXPORT KonqSidebarPlugin : public QObject {
+    Q_OBJECT
+public:
+    KonqSidebarPlugin(KInstance *instance, QObject *parent, QWidget *widgetParent, QString &desktopName_, const char *name = 0);
+    ~KonqSidebarPlugin();
+    virtual QWidget *getWidget() = 0;
+    virtual void *provides(const QString &) = 0;
+    KInstance *parentInstance();
 
-	private:
-		KonqSidebarPluginPrivate *d;
+protected:
+    virtual void handleURL(const KURL &url) = 0;
+    virtual void handlePreview(const KFileItemList &items);
+    virtual void handlePreviewOnMouseOver(const KFileItem &items); // not used yet, perhaps in KDE 3.1
+    QString desktopName;
+    KInstance *m_parentInstance;
 
-	signals:
-		void requestURL(KURL&);
-		void started(KIO::Job *);
-		void completed();
-		void setIcon(const QString& icon);
-		void setCaption(const QString& caption);
+private:
+    KonqSidebarPluginPrivate *d;
 
-
-	protected:
-		bool universalMode();
-	public slots:
-	  void openURL(const KURL& url);
-
-	  void openPreview(const KFileItemList& items);
-
-	  void openPreviewOnMouseOver(const KFileItem& item); // not used yet, perhaps KDE 3.1
-	/*
-		if your plugin supports a setup dialog, instead (replaces the url menu entry in the popup) (not supported yet)
-			void setup(QWidget *parent);
-
-	 */
+signals:
+    void requestURL(KURL &);
+    void started(KIO::Job *);
+    void completed();
+    void setIcon(const QString &icon);
+    void setCaption(const QString &caption);
 
 
-	/* signals, which could be, but need not to be added
+protected:
+    bool universalMode();
+public slots:
+    void openURL(const KURL &url);
 
-		void openURLRequest( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
-  		void createNewWindow( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
+    void openPreview(const KFileItemList &items);
 
-		void enableAction( const char * name, bool enabled );
+    void openPreviewOnMouseOver(const KFileItem &item); // not used yet, perhaps KDE 3.1
+                                                        /*
+                                                            if your plugin supports a setup dialog, instead (replaces the url menu entry in the popup) (not supported yet)
+                                                                void setup(QWidget *parent);
+                                                    
+                                                         */
 
-		void popupMenu( const QPoint &global, const KFileItemList &items );
-  		void popupMenu( KXMLGUIClient *client, const QPoint &global, const KFileItemList &items );
-		void popupMenu( const QPoint &global, const KURL &url,
-			const QString &mimeType, mode_t mode = (mode_t)-1 );
-		void popupMenu( KXMLGUIClient *client,
-			const QPoint &global, const KURL &url,
-			const QString &mimeType, mode_t mode = (mode_t)-1 );
 
-		void showError(QString &);	//for later extension
-		void showMessage(QString &);	//for later extension
+    /* signals, which could be, but need not to be added
 
-	*/
+        void openURLRequest( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
+        void createNewWindow( const KURL &url, const KParts::URLArgs &args = KParts::URLArgs() );
 
+        void enableAction( const char * name, bool enabled );
+
+        void popupMenu( const QPoint &global, const KFileItemList &items );
+        void popupMenu( KXMLGUIClient *client, const QPoint &global, const KFileItemList &items );
+        void popupMenu( const QPoint &global, const KURL &url,
+            const QString &mimeType, mode_t mode = (mode_t)-1 );
+        void popupMenu( KXMLGUIClient *client,
+            const QPoint &global, const KURL &url,
+            const QString &mimeType, mode_t mode = (mode_t)-1 );
+
+        void showError(QString &);	//for later extension
+        void showMessage(QString &);	//for later extension
+
+    */
 };
 
 #endif

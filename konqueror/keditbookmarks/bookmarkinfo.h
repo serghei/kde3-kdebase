@@ -32,9 +32,9 @@ class QTimer;
 class BookmarkLineEdit : public KLineEdit {
     Q_OBJECT
 public:
-    BookmarkLineEdit( QWidget * );
+    BookmarkLineEdit(QWidget *);
 public slots:
-    virtual void cut ();
+    virtual void cut();
 };
 
 
@@ -44,9 +44,18 @@ public:
     BookmarkInfoWidget(QWidget * = 0, const char * = 0);
     void showBookmark(const KBookmark &bk);
     void saveBookmark(const KBookmark &bk);
-    KBookmark bookmark() { return m_bk; }
-    bool connected() { return m_connected; };
-    void setConnected(bool b) { m_connected = b; };
+    KBookmark bookmark()
+    {
+        return m_bk;
+    }
+    bool connected()
+    {
+        return m_connected;
+    };
+    void setConnected(bool b)
+    {
+        m_connected = b;
+    };
     void updateStatus();
 
 public slots:
@@ -55,7 +64,7 @@ public slots:
     void slotTextChangedComment(const QString &);
 
     // _The deal with all those commitChanges() calls_
-    // First a short example how all the components 
+    // First a short example how all the components
     // normally fit together:
     // Note: not all details are included
     // For example: The user clicks on "New Bookmark"
@@ -68,7 +77,7 @@ public slots:
     //  CurrentMgr::self()->notifyManagers( .. );
 
     // The bookmarkinfo widget is special, because
-    // we don't want to send a notification 
+    // we don't want to send a notification
     // for every change, but want to enable the undo
     // button and need to send the notification
     // if the user has stopped typing
@@ -95,15 +104,14 @@ public slots:
 
 signals:
     void updateListViewItem();
+
 private:
     NodeEditCommand *titlecmd;
     EditCommand *urlcmd;
     NodeEditCommand *commentcmd;
-    QTimer * timer;
-    BookmarkLineEdit *m_title_le, *m_url_le,
-        *m_comment_le;
-    KLineEdit  *m_visitdate_le, *m_credate_le,
-              *m_visitcount_le;
+    QTimer *timer;
+    BookmarkLineEdit *m_title_le, *m_url_le, *m_comment_le;
+    KLineEdit *m_visitdate_le, *m_credate_le, *m_visitcount_le;
     KBookmark m_bk;
     bool m_connected;
 };

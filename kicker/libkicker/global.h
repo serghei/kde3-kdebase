@@ -31,8 +31,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kpanelextension.h>
 #include <kurl.h>
 
-namespace KickerLib
-{
+namespace KickerLib {
 
 /*
  * Functions to convert between various enums
@@ -52,7 +51,7 @@ KDE_EXPORT int maxButtonDim();
  * Tint the image to reflect the current color scheme
  * Used, for instance, by KMenu side bar
  */
-KDE_EXPORT void colorize(QImage& image);
+KDE_EXPORT void colorize(QImage &image);
 
 /**
  * Blend a color rectangle on a painter
@@ -62,13 +61,13 @@ KDE_EXPORT void drawBlendedRect(QPainter *p, const QRect &r, const QColor &color
 /**
  * Blend two colours together to get a colour halfway in between
  */
-KDE_EXPORT QColor blendColors(const QColor& c1, const QColor& c2);
+KDE_EXPORT QColor blendColors(const QColor &c1, const QColor &c2);
 
 /**
  * Create or copy .desktop files for use in kicker safely and easily
  */
-KDE_EXPORT QString copyDesktopFile(const KURL&url);
-KDE_EXPORT QString newDesktopFile(const KURL&url);
+KDE_EXPORT QString copyDesktopFile(const KURL &url);
+KDE_EXPORT QString newDesktopFile(const KURL &url);
 
 
 /**
@@ -88,16 +87,13 @@ KDE_EXPORT QPopupMenu *reduceMenu(QPopupMenu *);
  * direction, the size of the menu, the widget geometry, and a optional
  * point in the local coordinates of the widget.
  */
-KDE_EXPORT QPoint popupPosition(KPanelApplet::Direction d,
-                                const QWidget* popup,
-                                const QWidget* source,
-                                const QPoint& offset = QPoint(0, 0));
+KDE_EXPORT QPoint popupPosition(KPanelApplet::Direction d, const QWidget *popup, const QWidget *source, const QPoint &offset = QPoint(0, 0));
 
 /**
  * Calculate an acceptable inverse of the given color wich will be used
  * as the shadow color.
  */
-KDE_EXPORT QColor shadowColor(const QColor& c);
+KDE_EXPORT QColor shadowColor(const QColor &c);
 
 /**
  * Get an appropriate for a menu in Plasma. As the user may set this size
@@ -105,8 +101,7 @@ KDE_EXPORT QColor shadowColor(const QColor& c);
  * @param icon the name of icon requested
  * @return the icon set for the requested icon
  */
-KDE_EXPORT QIconSet menuIconSet(const QString& icon);
-
+KDE_EXPORT QIconSet menuIconSet(const QString &icon);
 }
 
 #endif // __pglobal_h__

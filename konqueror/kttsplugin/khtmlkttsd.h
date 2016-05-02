@@ -25,15 +25,13 @@ class KInstance;
 /**
  * KHTML KParts Plugin
  */
-class KHTMLPluginKTTSD : public KParts::Plugin
-{
+class KHTMLPluginKTTSD : public KParts::Plugin {
     Q_OBJECT
 public:
-
     /**
      * Construct a new KParts plugin.
      */
-    KHTMLPluginKTTSD( QObject* parent, const char* name, const QStringList& );
+    KHTMLPluginKTTSD(QObject *parent, const char *name, const QStringList &);
 
     /**
      * Destructor.
@@ -42,5 +40,5 @@ public:
 public slots:
     void slotReadOut();
 };
- 
+
 #endif

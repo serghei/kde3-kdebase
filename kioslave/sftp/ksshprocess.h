@@ -72,7 +72,7 @@
  *   QString errMsg;
  *   while( !ssh.connect() ) {
  *       err = ssh.error(errMsg);
- *       
+ *
  *       switch( err ) {
  *       case KSshProcess::ERR_NEW_HOST_KEY:
  *       case KSshProcess::ERR_DIFF_HOST_KEY:
@@ -86,7 +86,7 @@
  *           // ask user for password
  *           ssh.password(userPassword);
  *           break;
- *       
+ *
  *       case KSshProcess::ERR_NEED_KEY_PASSPHRASE:
  *           // ask user for their key passphrase
  *           ssh.keyPassphrase(keyPassphrase);
@@ -117,29 +117,30 @@ public:
     class SshOpt {
     public:
         Q_UINT32 opt;
-        QString  str;
-        Q_INT32  num;
-        bool     boolean;
+        QString str;
+        Q_INT32 num;
+        bool boolean;
     };
 
     /**
      * List of SshOptions and associated iterators
      */
-    typedef QValueList<SshOpt> SshOptList;
-    typedef QValueListIterator<SshOpt> SshOptListIterator;
-    typedef QValueListConstIterator<SshOpt> SshOptListConstIterator;
+    typedef QValueList< SshOpt > SshOptList;
+    typedef QValueListIterator< SshOpt > SshOptListIterator;
+    typedef QValueListConstIterator< SshOpt > SshOptListConstIterator;
 
     /**
      * Ssh versions supported by KSshProcess. Subject to change
      * at any time.
      */
-    enum SshVersion {
-	OPENSSH_3_6,
+    enum SshVersion
+    {
+        OPENSSH_3_6,
         OPENSSH,
         SSH,
         SSH_VER_MAX,
         UNKNOWN_VER
-    };	
+    };
 
     /**
      * SSH options supported by KSshProcess.  Set SshOpt::opt to one of these
@@ -147,7 +148,8 @@ public:
      */
     // we cannot do this like UDSAtomType (ORing the type with the name) because
     // we have too many options for ssh and not enough bits.
-    enum SshOptType {
+    enum SshOptType
+    {
         /**
          * Request server to invoke subsystem. (str)
          */
@@ -164,7 +166,7 @@ public:
          * connect using this username. (str)
          */
         SSH_USERNAME,
-        /** 
+        /**
          * connect using this password. (str)
          */
         SSH_PASSWD,
@@ -205,13 +207,14 @@ public:
          */
         SSH_OTHER,
         SSH_OPT_MAX // always last
-    }; // that's all for now
+    };              // that's all for now
 
     /**
      * Errors that KSshProcess can encounter.  When a member function returns
      * false, call error() to retrieve one of these error codes.
      */
-    enum SshError {
+    enum SshError
+    {
         /**
          * Don't recognize the ssh version
          */
@@ -259,7 +262,7 @@ public:
          */
         ERR_NO_OPTIONS,
         /**
-         * A host key was received from an unknown host. 
+         * A host key was received from an unknown host.
          * Call connect() with the acceptHostKey argument to accept the key.
          */
         ERR_NEW_HOST_KEY,
@@ -286,12 +289,12 @@ public:
          */
         ERR_AUTH_FAILED,
         /**
-         * Authentication failed because a new host key was detected and 
+         * Authentication failed because a new host key was detected and
          * SSH is configured with strict host key checking enabled.
          */
         ERR_AUTH_FAILED_NEW_KEY,
         /**
-         * Authentication failed because a changed host key was detected and 
+         * Authentication failed because a changed host key was detected and
          * SSH is configured with strict host key checking enabled.
          */
         ERR_AUTH_FAILED_DIFF_KEY,
@@ -333,7 +336,7 @@ public:
      *         recognizes the version.
      *
      */
-     bool setSshPath(QString pathToSsh);
+    bool setSshPath(QString pathToSsh);
 
     /**
      * Get the ssh version.
@@ -349,7 +352,7 @@ public:
      *
      * @return A string describing the ssh version recognized by KSshProcess
      */
-    //QString versionStr();
+    // QString versionStr();
 
     /**
      * Get the last error encountered by KSshProcess.
@@ -358,15 +361,21 @@ public:
      *
      * @return The error number. See SshError for descriptions.
      */
-    int error(QString& msg);
+    int error(QString &msg);
 
     /**
      * Get the last error encountered by KSshProcess.
      * @return The error number. See SshError for descriptions.
      */
-    int error() { return mError; }
+    int error()
+    {
+        return mError;
+    }
 
-    QString errorMsg() { return mErrorMsg; }
+    QString errorMsg()
+    {
+        return mErrorMsg;
+    }
 
     /**
      * Send a signal to the ssh process. Do not use this to end the
@@ -384,11 +393,14 @@ public:
     /**
      * The pid of the ssh process started by this instance of KSshProcess.
      * Only valid if KSshProcess::running() returns true;
-     * 
+     *
      * @return The pid of the running ssh process.
      */
-    int pid() { return ssh.pid(); }
-    
+    int pid()
+    {
+        return ssh.pid();
+    }
+
     /**
      * Whether a ssh connection has been  established with a
      * remote host.  A establish connection means ssh has successfully
@@ -399,7 +411,10 @@ public:
      * @return True if a ssh connection has been established with a remote
      *         host. False otherwise.
      */
-    bool connected() { return mConnected; }
+    bool connected()
+    {
+        return mConnected;
+    }
 
     /**
      * Whether a ssh process is currently running.  This  only indicates
@@ -410,8 +425,11 @@ public:
      * @return True if a ssh process started by this instance of KSshProcess
      *         is running. False otherwise.
      */
-    bool running() { return mRunning; }
-    
+    bool running()
+    {
+        return mRunning;
+    }
+
     /**
      * Print the command line arguments ssh is run with using kdDebug.
      */
@@ -420,7 +438,7 @@ public:
     /**
      * Set the SSH options.
      * This must be called before connect().  See SshOptType for a list of
-     * supported ssh options.  The required options are SSH_USERNAME 
+     * supported ssh options.  The required options are SSH_USERNAME
      * and SSH_HOST.
      *
      * To reset the saved options, just recall setOptions() again with
@@ -433,7 +451,7 @@ public:
      *         for details.
      *
      */
-    bool setOptions(const SshOptList& opts);
+    bool setOptions(const SshOptList &opts);
 
     /**
      * Create a ssh connection based on the options provided by setOptions().
@@ -462,18 +480,18 @@ public:
 
     /**
      * Disconnect ssh from the host.  This kills the ssh process and
-     * resets the internal state of this KSshProcess object. After a 
+     * resets the internal state of this KSshProcess object. After a
      * disconnect, the same KSshProcess can be used to connect to a
      * host.
      */
     void disconnect();
-    
+
     /**
      * Call to respond to a ERR_NEW_HOST_KEY or ERR_DIFF_HOST_KEY error.
-     * 
+     *
      * @param accept True to accept the host key, false to not accept the
      *               host key and kill ssh.
-     * 
+     *
      */
     void acceptHostKey(bool accept);
 
@@ -483,35 +501,45 @@ public:
      * @param password The user password to give ssh.
      */
     void setPassword(QString password);
-     
+
     /**
      * Access to standard in and out of the ssh process.
      *
      * @return The file description for stdin and stdout of the ssh process.
      */
-    int stdioFd() { return ssh.stdioFd(); }
+    int stdioFd()
+    {
+        return ssh.stdioFd();
+    }
 
     /**
      * Access to standard error of the ssh process.
      *
      * @return The file descriptior for stderr of the ssh process.
      */
-    int stderrFd() { return ssh.stderrFd(); }
+    int stderrFd()
+    {
+        return ssh.stderrFd();
+    }
 
     /**
      * Access the pty to which the ssh process is attached.
      *
      * @return The file descriptor of pty to which ssh is attached.
      */
-    int pty() { return ssh.fd(); }
+    int pty()
+    {
+        return ssh.fd();
+    }
+
 private:
     /**
      * Path the the ssh binary.
      */
     QString mSshPath;
-    
+
     /**
-     * SSH version.  This is an index into the supported SSH 
+     * SSH version.  This is an index into the supported SSH
      * versions array, and the various messages arrays.
      */
     SshVersion mVersion;
@@ -520,12 +548,12 @@ private:
      * User's password.  Zero this out when it is no longer needed.
      */
     QString mPassword;
-    
+
     /**
      * User's username.
      */
     QString mUsername;
-    
+
     /**
      * Name of host we are connecting to.
      */
@@ -535,13 +563,13 @@ private:
      * Accept new or changed host keys if true.
      */
     bool mAcceptHostKey;
-    
+
     /**
      * Flag to tell use if we have an open, authenticated ssh
      * session going.
      */
     bool mConnected;
-    
+
     /**
      * Flag to tell us if we have started a ssh process, we use this
      * to make sure we kill ssh before going away.
@@ -564,7 +592,7 @@ private:
      * The state of our connect state machine.
      */
     int mConnectState;
-    
+
     /**
      * Port on on which the target ssh server is listening.
      */
@@ -581,7 +609,7 @@ private:
      * mError.  Optional.
      */
     QString mErrorMsg;
-    
+
     /**
      * Interface to the SSH process we ceate.  Handles communication
      * to and from the SSH process using stdin, stdout, stderr, and
@@ -603,20 +631,20 @@ private:
     void removeSignalHandlers();
 
     QString getLine();
-    
+
     static QRegExp versionStrs[];
-    static const char * const passwordPrompt[];
-    static const char * const passphrasePrompt[];
-    static const char * const authSuccessMsg[];
-    static const char * const authFailedMsg[];
+    static const char *const passwordPrompt[];
+    static const char *const passphrasePrompt[];
+    static const char *const authSuccessMsg[];
+    static const char *const authFailedMsg[];
     static QRegExp hostKeyMissingMsg[];
-    static const char * const hostKeyChangedMsg[];
-    static const char * const continuePrompt[];
-    static const char * const hostKeyAcceptedMsg[];
-    static const char * const tryAgainMsg[];
+    static const char *const hostKeyChangedMsg[];
+    static const char *const continuePrompt[];
+    static const char *const hostKeyAcceptedMsg[];
+    static const char *const tryAgainMsg[];
     static QRegExp hostKeyVerifyFailedMsg[];
-    static const char * const connectionClosedMsg[];
-    static const char * const changeHostKeyOnDiskPrompt[];
+    static const char *const connectionClosedMsg[];
+    static const char *const changeHostKeyOnDiskPrompt[];
     static QRegExp keyFingerprintMsg[];
     static QRegExp knownHostsFileMsg[];
 };

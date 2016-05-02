@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "kgapp.h"
 #include "kgreeter.h"
 #ifdef XDMCP
-# include "kchooser.h"
+#include "kchooser.h"
 #endif
 
 #include <kprocess.h>
@@ -51,201 +51,209 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 extern "C" {
 
-static void
-sigAlarm( int )
+static void sigAlarm(int)
 {
-	exit( EX_RESERVER_DPY );
+    exit(EX_RESERVER_DPY);
 }
-
 }
 
 GreeterApp::GreeterApp()
 {
-	pingInterval = _isLocal ? 0 : _pingInterval;
-	if (pingInterval) {
-		struct sigaction sa;
-		sigemptyset( &sa.sa_mask );
-		sa.sa_flags = 0;
-		sa.sa_handler = sigAlarm;
-		sigaction( SIGALRM, &sa, 0 );
-		alarm( pingInterval * 70 ); // sic! give the "proper" pinger enough time
-		startTimer( pingInterval * 60000 );
-	}
+    pingInterval = _isLocal ? 0 : _pingInterval;
+    if(pingInterval)
+    {
+        struct sigaction sa;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sa.sa_handler = sigAlarm;
+        sigaction(SIGALRM, &sa, 0);
+        alarm(pingInterval * 70); // sic! give the "proper" pinger enough time
+        startTimer(pingInterval * 60000);
+    }
 }
 
-void
-GreeterApp::timerEvent( QTimerEvent * )
+void GreeterApp::timerEvent(QTimerEvent *)
 {
-	alarm( 0 );
-	if (!PingServer( qt_xdisplay() ))
-		::exit( EX_RESERVER_DPY );
-	alarm( pingInterval * 70 ); // sic! give the "proper" pinger enough time
+    alarm(0);
+    if(!PingServer(qt_xdisplay()))
+        ::exit(EX_RESERVER_DPY);
+    alarm(pingInterval * 70); // sic! give the "proper" pinger enough time
 }
 
-bool
-GreeterApp::x11EventFilter( XEvent * ev )
+bool GreeterApp::x11EventFilter(XEvent *ev)
 {
-	KeySym sym;
+    KeySym sym;
 
-	switch (ev->type) {
-	case FocusIn:
-	case FocusOut:
-		// Hack to tell dialogs to take focus when the keyboard is grabbed
-		ev->xfocus.mode = NotifyNormal;
-		break;
-	case KeyPress:
-		sym = XLookupKeysym( &ev->xkey, 0 );
-		if (sym != XK_Return && !IsModifierKey( sym ))
-			emit activity();
-		break;
-	case ButtonPress:
-		emit activity();
-		/* fall through */
-	case ButtonRelease:
-		// Hack to let the RMB work as LMB
-		if (ev->xbutton.button == 3)
-			ev->xbutton.button = 1;
-		/* fall through */
-	case MotionNotify:
-		if (ev->xbutton.state & Button3Mask)
-			ev->xbutton.state = (ev->xbutton.state & ~Button3Mask) | Button1Mask;
-		break;
-	}
-	return false;
+    switch(ev->type)
+    {
+        case FocusIn:
+        case FocusOut:
+            // Hack to tell dialogs to take focus when the keyboard is grabbed
+            ev->xfocus.mode = NotifyNormal;
+            break;
+        case KeyPress:
+            sym = XLookupKeysym(&ev->xkey, 0);
+            if(sym != XK_Return && !IsModifierKey(sym))
+                emit activity();
+            break;
+        case ButtonPress:
+            emit activity();
+        /* fall through */
+        case ButtonRelease:
+            // Hack to let the RMB work as LMB
+            if(ev->xbutton.button == 3)
+                ev->xbutton.button = 1;
+        /* fall through */
+        case MotionNotify:
+            if(ev->xbutton.state & Button3Mask)
+                ev->xbutton.state = (ev->xbutton.state & ~Button3Mask) | Button1Mask;
+            break;
+    }
+    return false;
 }
 
 extern bool kde_have_kipc;
 
 extern "C" {
 
-static int
-xIOErr( Display * )
+static int xIOErr(Display *)
 {
-	exit( EX_RESERVER_DPY );
+    exit(EX_RESERVER_DPY);
 }
 
-void
-kg_main( const char *argv0 )
+void kg_main(const char *argv0)
 {
-	static char *argv[] = { (char *)"kdmgreet", 0 };
-	KCmdLineArgs::init( 1, argv, *argv, 0, 0, 0, true );
+    static char *argv[] = {(char *)"kdmgreet", 0};
+    KCmdLineArgs::init(1, argv, *argv, 0, 0, 0, true);
 
-	kde_have_kipc = false;
-	KApplication::disableAutoDcopRegistration();
-	KCrash::setSafer( true );
-	GreeterApp app;
-	XSetIOErrorHandler( xIOErr );
+    kde_have_kipc = false;
+    KApplication::disableAutoDcopRegistration();
+    KCrash::setSafer(true);
+    GreeterApp app;
+    XSetIOErrorHandler(xIOErr);
 
-	Display *dpy = qt_xdisplay();
+    Display *dpy = qt_xdisplay();
 
-	if (!_GUIStyle.isEmpty())
-		app.setStyle( _GUIStyle );
+    if(!_GUIStyle.isEmpty())
+        app.setStyle(_GUIStyle);
 
-	_colorScheme = locate( "data", "kdisplay/color-schemes/" + _colorScheme + ".kcsrc" );
-	if (!_colorScheme.isEmpty()) {
-		KSimpleConfig config( _colorScheme, true );
-		config.setGroup( "Color Scheme" );
-		app.setPalette( app.createApplicationPalette( &config, 7 ) );
-	}
+    _colorScheme = locate("data", "kdisplay/color-schemes/" + _colorScheme + ".kcsrc");
+    if(!_colorScheme.isEmpty())
+    {
+        KSimpleConfig config(_colorScheme, true);
+        config.setGroup("Color Scheme");
+        app.setPalette(app.createApplicationPalette(&config, 7));
+    }
 
-	app.setFont( _normalFont );
+    app.setFont(_normalFont);
 
-	setup_modifiers( dpy, _numLockStatus );
-	SecureDisplay( dpy );
-	KProcess *proc = 0;
-	if (!_grabServer) {
-		if (_useBackground) {
-			proc = new KProcess;
-			*proc << QCString( argv0, strrchr( argv0, '/' ) - argv0 + 2 ) + "krootimage";
-			*proc << _backgroundCfg;
-			proc->start();
-		}
-		GSendInt( G_SetupDpy );
-		GRecvInt();
-	}
+    setup_modifiers(dpy, _numLockStatus);
+    SecureDisplay(dpy);
+    KProcess *proc = 0;
+    if(!_grabServer)
+    {
+        if(_useBackground)
+        {
+            proc = new KProcess;
+            *proc << QCString(argv0, strrchr(argv0, '/') - argv0 + 2) + "krootimage";
+            *proc << _backgroundCfg;
+            proc->start();
+        }
+        GSendInt(G_SetupDpy);
+        GRecvInt();
+    }
 
-	GSendInt( G_Ready );
+    GSendInt(G_Ready);
 
-	setCursor( dpy, app.desktop()->winId(), XC_left_ptr );
+    setCursor(dpy, app.desktop()->winId(), XC_left_ptr);
 
-	for (;;) {
-		int rslt, cmd = GRecvInt();
+    for(;;)
+    {
+        int rslt, cmd = GRecvInt();
 
-		if (cmd == G_ConfShutdown) {
-			int how = GRecvInt(), uid = GRecvInt();
-			char *os = GRecvStr();
-			KDMSlimShutdown::externShutdown( how, os, uid );
-			if (os)
-				free( os );
-			GSendInt( G_Ready );
-			_autoLoginDelay = 0;
-			continue;
-		}
+        if(cmd == G_ConfShutdown)
+        {
+            int how = GRecvInt(), uid = GRecvInt();
+            char *os = GRecvStr();
+            KDMSlimShutdown::externShutdown(how, os, uid);
+            if(os)
+                free(os);
+            GSendInt(G_Ready);
+            _autoLoginDelay = 0;
+            continue;
+        }
 
-		if (cmd == G_ErrorGreet) {
-			if (KGVerify::handleFailVerify( qApp->desktop()->screen( _greeterScreen ) ))
-				break;
-			_autoLoginDelay = 0;
-			cmd = G_Greet;
-		}
+        if(cmd == G_ErrorGreet)
+        {
+            if(KGVerify::handleFailVerify(qApp->desktop()->screen(_greeterScreen)))
+                break;
+            _autoLoginDelay = 0;
+            cmd = G_Greet;
+        }
 
-		KProcess *proc2 = 0;
-		app.setOverrideCursor( Qt::WaitCursor );
-		FDialog *dialog;
+        KProcess *proc2 = 0;
+        app.setOverrideCursor(Qt::WaitCursor);
+        FDialog *dialog;
 #ifdef XDMCP
-		if (cmd == G_Choose) {
-			dialog = new ChooserDlg;
-			GSendInt( G_Ready ); /* tell chooser to go into async mode */
-			GRecvInt(); /* ack */
-		} else
+        if(cmd == G_Choose)
+        {
+            dialog = new ChooserDlg;
+            GSendInt(G_Ready); /* tell chooser to go into async mode */
+            GRecvInt();        /* ack */
+        }
+        else
 #endif
-		{
-			if ((cmd != G_GreetTimed && !_autoLoginAgain) ||
-			    _autoLoginUser.isEmpty())
-				_autoLoginDelay = 0;
-			if (_useTheme && !_theme.isEmpty()) {
-				KThemedGreeter *tgrt;
-				dialog = tgrt = new KThemedGreeter;
-				if (!tgrt->isOK()) {
-					delete tgrt;
-					dialog = new KStdGreeter;
-				}
-			} else
-				dialog = new KStdGreeter;
-			if (*_preloader) {
-				proc2 = new KProcess;
-				*proc2 << _preloader;
-				proc2->start();
-			}
-		}
-		app.restoreOverrideCursor();
-		Debug( "entering event loop\n" );
-		rslt = dialog->exec();
-		Debug( "left event loop\n" );
-		delete dialog;
-		delete proc2;
+        {
+            if((cmd != G_GreetTimed && !_autoLoginAgain) || _autoLoginUser.isEmpty())
+                _autoLoginDelay = 0;
+            if(_useTheme && !_theme.isEmpty())
+            {
+                KThemedGreeter *tgrt;
+                dialog = tgrt = new KThemedGreeter;
+                if(!tgrt->isOK())
+                {
+                    delete tgrt;
+                    dialog = new KStdGreeter;
+                }
+            }
+            else
+                dialog = new KStdGreeter;
+            if(*_preloader)
+            {
+                proc2 = new KProcess;
+                *proc2 << _preloader;
+                proc2->start();
+            }
+        }
+        app.restoreOverrideCursor();
+        Debug("entering event loop\n");
+        rslt = dialog->exec();
+        Debug("left event loop\n");
+        delete dialog;
+        delete proc2;
 #ifdef XDMCP
-		switch (rslt) {
-		case ex_greet:
-			GSendInt( G_DGreet );
-			continue;
-		case ex_choose:
-			GSendInt( G_DChoose );
-			continue;
-		default:
-			break;
-		}
+        switch(rslt)
+        {
+            case ex_greet:
+                GSendInt(G_DGreet);
+                continue;
+            case ex_choose:
+                GSendInt(G_DChoose);
+                continue;
+            default:
+                break;
+        }
 #endif
-		break;
-	}
+        break;
+    }
 
-	KGVerify::done();
+    KGVerify::done();
 
-	delete proc;
-	UnsecureDisplay( dpy );
-	restore_modifiers();
+    delete proc;
+    UnsecureDisplay(dpy);
+    restore_modifiers();
 
-	XSetInputFocus( qt_xdisplay(), PointerRoot, PointerRoot, CurrentTime );
+    XSetInputFocus(qt_xdisplay(), PointerRoot, PointerRoot, CurrentTime);
 }
 
 } // extern "C"

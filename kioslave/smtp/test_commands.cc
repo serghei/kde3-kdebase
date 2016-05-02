@@ -6,68 +6,94 @@
 #include <qstringlist.h>
 
 //#include <iostream>
-//using std::cout;
-//using std::endl;
+// using std::cout;
+// using std::endl;
 
 namespace KioSMTP {
-  class Response;
+class Response;
 };
 
 // fake
 class SMTPProtocol {
 public:
-  SMTPProtocol() { clear(); }
+    SMTPProtocol()
+    {
+        clear();
+    }
 
-  //
-  // public members to control the API emulation below:
-  //
-  int startTLSReturnCode;
-  bool usesSSL;
-  bool usesTLS;
-  int lastErrorCode;
-  QString lastErrorMessage;
-  int lastMessageBoxCode;
-  QString lastMessageBoxText;
-  QByteArray nextData;
-  int nextDataReturnCode;
-  QStringList caps;
-  KIO::MetaData metadata;
+    //
+    // public members to control the API emulation below:
+    //
+    int startTLSReturnCode;
+    bool usesSSL;
+    bool usesTLS;
+    int lastErrorCode;
+    QString lastErrorMessage;
+    int lastMessageBoxCode;
+    QString lastMessageBoxText;
+    QByteArray nextData;
+    int nextDataReturnCode;
+    QStringList caps;
+    KIO::MetaData metadata;
 
-  void clear() {
-    startTLSReturnCode = 1;
-    usesSSL = usesTLS = false;
-    lastErrorCode = lastMessageBoxCode = 0;
-    lastErrorMessage = lastMessageBoxText = QString::null;
-    nextData.resize( 0 );
-    nextDataReturnCode = -1;
-    caps.clear();
-    metadata.clear();
-  }
+    void clear()
+    {
+        startTLSReturnCode = 1;
+        usesSSL = usesTLS = false;
+        lastErrorCode = lastMessageBoxCode = 0;
+        lastErrorMessage = lastMessageBoxText = QString::null;
+        nextData.resize(0);
+        nextDataReturnCode = -1;
+        caps.clear();
+        metadata.clear();
+    }
 
-  //
-  // emulated API:
-  //
-  void parseFeatures( const KioSMTP::Response & ) { /* noop */ }
-  int startTLS() {
-    if ( startTLSReturnCode == 1 )
-      usesTLS = true;
-    return startTLSReturnCode;
-  }
-  bool usingSSL() const { return usesSSL; }
-  bool usingTLS() const { return usesTLS; }
-  bool haveCapability( const char * cap ) const { return caps.contains( cap ); }
-  void error( int id, const QString & msg ) {
-    lastErrorCode = id;
-    lastErrorMessage = msg;
-  }
-  void messageBox( int id, const QString & msg, const QString & ) {
-    lastMessageBoxCode = id;
-    lastMessageBoxText = msg;
-  }
-  void dataReq() { /* noop */ }
-  int readData( QByteArray & ba ) { ba = nextData; return nextDataReturnCode; }
-  QString metaData( const QString & key ) const { return metadata[key]; }
-
+    //
+    // emulated API:
+    //
+    void parseFeatures(const KioSMTP::Response &)
+    { /* noop */
+    }
+    int startTLS()
+    {
+        if(startTLSReturnCode == 1)
+            usesTLS = true;
+        return startTLSReturnCode;
+    }
+    bool usingSSL() const
+    {
+        return usesSSL;
+    }
+    bool usingTLS() const
+    {
+        return usesTLS;
+    }
+    bool haveCapability(const char *cap) const
+    {
+        return caps.contains(cap);
+    }
+    void error(int id, const QString &msg)
+    {
+        lastErrorCode = id;
+        lastErrorMessage = msg;
+    }
+    void messageBox(int id, const QString &msg, const QString &)
+    {
+        lastMessageBoxCode = id;
+        lastMessageBoxText = msg;
+    }
+    void dataReq()
+    { /* noop */
+    }
+    int readData(QByteArray &ba)
+    {
+        ba = nextData;
+        return nextDataReturnCode;
+    }
+    QString metaData(const QString &key) const
+    {
+        return metadata[key];
+    }
 };
 
 #define _SMTP_H
@@ -81,23 +107,24 @@ public:
 
 using namespace KioSMTP;
 
-static const char * foobarbaz = ".Foo bar baz";
-static const unsigned int foobarbaz_len = qstrlen( foobarbaz );
+static const char *foobarbaz = ".Foo bar baz";
+static const unsigned int foobarbaz_len = qstrlen(foobarbaz);
 
-static const char * foobarbaz_dotstuffed = "..Foo bar baz";
-static const unsigned int foobarbaz_dotstuffed_len = qstrlen( foobarbaz_dotstuffed );
+static const char *foobarbaz_dotstuffed = "..Foo bar baz";
+static const unsigned int foobarbaz_dotstuffed_len = qstrlen(foobarbaz_dotstuffed);
 
-static const char * foobarbaz_lf = ".Foo bar baz\n";
-static const unsigned int foobarbaz_lf_len = qstrlen( foobarbaz_lf );
+static const char *foobarbaz_lf = ".Foo bar baz\n";
+static const unsigned int foobarbaz_lf_len = qstrlen(foobarbaz_lf);
 
-static const char * foobarbaz_crlf = "..Foo bar baz\r\n";
-static const unsigned int foobarbaz_crlf_len = qstrlen( foobarbaz_crlf );
+static const char *foobarbaz_crlf = "..Foo bar baz\r\n";
+static const unsigned int foobarbaz_crlf_len = qstrlen(foobarbaz_crlf);
 
-static void checkSuccessfulTransferCommand( bool, bool, bool, bool, bool );
+static void checkSuccessfulTransferCommand(bool, bool, bool, bool, bool);
 
-int main( int, char** ) {
+int main(int, char **)
+{
 
-  // FIXME: Port this to new API.
+// FIXME: Port this to new API.
 #if 0
   SMTPProtocol smtp;
   Response r;
@@ -635,90 +662,88 @@ int main( int, char** ) {
   assert( smtp.lastErrorMessage.isNull() );
 #endif
 
-  return 0;
+    return 0;
 }
 
-void checkSuccessfulTransferCommand( bool error, bool preload, bool ungetLast,
-				     bool slaveDotStuff, bool mailEndsInNewline ) {
-  kdDebug() << "   ===== checkTransferCommand( "
-	    << error << ", "
-	    << preload << ", "
-	    << ungetLast << ", "
-	    << slaveDotStuff << ", "
-	    << mailEndsInNewline << " ) =====" << endl;
+void checkSuccessfulTransferCommand(bool error, bool preload, bool ungetLast, bool slaveDotStuff, bool mailEndsInNewline)
+{
+    kdDebug() << "   ===== checkTransferCommand( " << error << ", " << preload << ", " << ungetLast << ", " << slaveDotStuff << ", "
+              << mailEndsInNewline << " ) =====" << endl;
 
-  SMTPProtocol smtp;
-  if ( slaveDotStuff )
-    smtp.metadata["lf2crlf+dotstuff"] = "slave";
+    SMTPProtocol smtp;
+    if(slaveDotStuff)
+        smtp.metadata["lf2crlf+dotstuff"] = "slave";
 
-  Response r;
+    Response r;
 
-  const char * s_pre = slaveDotStuff ?
-                         mailEndsInNewline ? foobarbaz_lf : foobarbaz
-                       :
-                         mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed ;
-  const unsigned int s_pre_len = qstrlen( s_pre );
+    const char *s_pre = slaveDotStuff ? mailEndsInNewline ? foobarbaz_lf : foobarbaz : mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed;
+    const unsigned int s_pre_len = qstrlen(s_pre);
 
-  const char * s_post = mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed ;
-  //const unsigned int s_post_len = qstrlen( s_post );
+    const char *s_post = mailEndsInNewline ? foobarbaz_crlf : foobarbaz_dotstuffed;
+    // const unsigned int s_post_len = qstrlen( s_post );
 
-  TransferCommand xfer( &smtp, preload ? s_post : 0 );
+    TransferCommand xfer(&smtp, preload ? s_post : 0);
 
-  TransactionState ts;
-  ts.setRecipientAccepted();
-  ts.setDataCommandIssued( true );
-  r.clear();
-  r.parseLine( "354 ok" );
-  ts.setDataCommandSucceeded( true, r );
-  assert( !xfer.doNotExecute( &ts ) );
-  if ( preload ) {
-    assert( xfer.nextCommandLine( &ts ) == s_post );
-    assert( !xfer.isComplete() );
-    assert( !xfer.needsResponse() );
-    assert( !ts.failed() );
-    assert( smtp.lastErrorCode == 0 );
-  }
-  smtp.nextData.duplicate( s_pre, s_pre_len );
-  smtp.nextDataReturnCode = s_pre_len;
-  assert( xfer.nextCommandLine( &ts ) == s_post );
-  assert( !xfer.isComplete() );
-  assert( !xfer.needsResponse() );
-  assert( !ts.failed() );
-  assert( smtp.lastErrorCode == 0 );
-  smtp.nextData.resize( 0 );
-  smtp.nextDataReturnCode = 0;
-  if ( ungetLast ) {
-    xfer.ungetCommandLine( xfer.nextCommandLine( &ts ), &ts );
-    assert( !xfer.isComplete() );
-    assert( !xfer.needsResponse() );
-    assert( !ts.complete() );
-    smtp.nextDataReturnCode = -1; // double read -> error
-  }
-  if ( mailEndsInNewline )
-    assert( xfer.nextCommandLine( &ts ) == ".\r\n" );
-  else
-    assert( xfer.nextCommandLine( &ts ) == "\r\n.\r\n" );
-  assert( xfer.isComplete() );
-  assert( xfer.needsResponse() );
-  assert( !ts.complete() );
-  assert( !ts.failed() );
-  assert( smtp.lastErrorCode == 0 );
-  r.clear();
-  if ( error ) {
-    r.parseLine( "552 Exceeded storage allocation" );
-    assert( xfer.processResponse( r, &ts ) == false );
-    assert( !xfer.needsResponse() );
-    assert( ts.complete() );
-    assert( ts.failed() );
-    assert( smtp.lastErrorCode == KIO::ERR_DISK_FULL );
-  } else {
-    r.parseLine( "250 Message accepted" );
-    assert( xfer.processResponse( r, &ts ) == true );
-    assert( !xfer.needsResponse() );
-    assert( ts.complete() );
-    assert( !ts.failed() );
-    assert( smtp.lastErrorCode == 0 );
-  }
+    TransactionState ts;
+    ts.setRecipientAccepted();
+    ts.setDataCommandIssued(true);
+    r.clear();
+    r.parseLine("354 ok");
+    ts.setDataCommandSucceeded(true, r);
+    assert(!xfer.doNotExecute(&ts));
+    if(preload)
+    {
+        assert(xfer.nextCommandLine(&ts) == s_post);
+        assert(!xfer.isComplete());
+        assert(!xfer.needsResponse());
+        assert(!ts.failed());
+        assert(smtp.lastErrorCode == 0);
+    }
+    smtp.nextData.duplicate(s_pre, s_pre_len);
+    smtp.nextDataReturnCode = s_pre_len;
+    assert(xfer.nextCommandLine(&ts) == s_post);
+    assert(!xfer.isComplete());
+    assert(!xfer.needsResponse());
+    assert(!ts.failed());
+    assert(smtp.lastErrorCode == 0);
+    smtp.nextData.resize(0);
+    smtp.nextDataReturnCode = 0;
+    if(ungetLast)
+    {
+        xfer.ungetCommandLine(xfer.nextCommandLine(&ts), &ts);
+        assert(!xfer.isComplete());
+        assert(!xfer.needsResponse());
+        assert(!ts.complete());
+        smtp.nextDataReturnCode = -1; // double read -> error
+    }
+    if(mailEndsInNewline)
+        assert(xfer.nextCommandLine(&ts) == ".\r\n");
+    else
+        assert(xfer.nextCommandLine(&ts) == "\r\n.\r\n");
+    assert(xfer.isComplete());
+    assert(xfer.needsResponse());
+    assert(!ts.complete());
+    assert(!ts.failed());
+    assert(smtp.lastErrorCode == 0);
+    r.clear();
+    if(error)
+    {
+        r.parseLine("552 Exceeded storage allocation");
+        assert(xfer.processResponse(r, &ts) == false);
+        assert(!xfer.needsResponse());
+        assert(ts.complete());
+        assert(ts.failed());
+        assert(smtp.lastErrorCode == KIO::ERR_DISK_FULL);
+    }
+    else
+    {
+        r.parseLine("250 Message accepted");
+        assert(xfer.processResponse(r, &ts) == true);
+        assert(!xfer.needsResponse());
+        assert(ts.complete());
+        assert(!ts.failed());
+        assert(smtp.lastErrorCode == 0);
+    }
 };
 
 #define NDEBUG

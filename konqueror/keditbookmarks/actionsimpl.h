@@ -23,61 +23,69 @@
 
 #include <qobject.h>
 
-class ActionsImpl : public QObject
-{
-   Q_OBJECT
+class ActionsImpl : public QObject {
+    Q_OBJECT
 
 public:
-   bool save();
+    bool save();
 
 public slots:
-   void slotLoad();
-   void slotSaveAs();
-   void slotCut();
-   void slotCopy();
-   void slotPaste();
-   void slotRename();
-   void slotPrint();
-   void slotChangeURL();
-   void slotChangeComment();
-   void slotChangeIcon();
-   void slotDelete();
-   void slotNewFolder();
-   void slotNewBookmark();
-   void slotInsertSeparator();
-   void slotSort();
-   void slotSetAsToolbar();
-   void slotShowInToolbar();
-   void slotHideInToolbar();
-   void slotOpenLink();
-   void slotShowNS();
-   void slotTestSelection();
-   void slotTestAll();
-   void slotCancelAllTests();
-   void slotUpdateFavIcon();
-   void slotRecursiveSort();
-   void slotUpdateAllFavIcons();
-   void slotCancelFavIconUpdates();
-   void slotExpandAll();
-   void slotCollapseAll();
-   void slotImport();
-   void slotExportOpera();
-   void slotExportHTML();
-   void slotExportIE();
-   void slotExportNS();
-   void slotExportMoz();
+    void slotLoad();
+    void slotSaveAs();
+    void slotCut();
+    void slotCopy();
+    void slotPaste();
+    void slotRename();
+    void slotPrint();
+    void slotChangeURL();
+    void slotChangeComment();
+    void slotChangeIcon();
+    void slotDelete();
+    void slotNewFolder();
+    void slotNewBookmark();
+    void slotInsertSeparator();
+    void slotSort();
+    void slotSetAsToolbar();
+    void slotShowInToolbar();
+    void slotHideInToolbar();
+    void slotOpenLink();
+    void slotShowNS();
+    void slotTestSelection();
+    void slotTestAll();
+    void slotCancelAllTests();
+    void slotUpdateFavIcon();
+    void slotRecursiveSort();
+    void slotUpdateAllFavIcons();
+    void slotCancelFavIconUpdates();
+    void slotExpandAll();
+    void slotCollapseAll();
+    void slotImport();
+    void slotExportOpera();
+    void slotExportHTML();
+    void slotExportIE();
+    void slotExportNS();
+    void slotExportMoz();
 
-   // ugly hack really...
-   void slotDelayedPrint();
+    // ugly hack really...
+    void slotDelayedPrint();
 
-   static ActionsImpl* self() { if (!s_self) { s_self = new ActionsImpl(); }; return s_self; }
+    static ActionsImpl *self()
+    {
+        if(!s_self)
+        {
+            s_self = new ActionsImpl();
+        };
+        return s_self;
+    }
 
 public:
-   ~ActionsImpl();
+    ~ActionsImpl();
 
 private:
-   ActionsImpl() { }
-   static ActionsImpl *s_self;
+    ActionsImpl()
+    {
+    }
+    static ActionsImpl *s_self;
 };
 
 #endif

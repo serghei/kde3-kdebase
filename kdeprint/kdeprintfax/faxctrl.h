@@ -30,44 +30,43 @@
 class KProcess;
 class QTextEdit;
 
-class FaxCtrl : public QObject
-{
-	Q_OBJECT
+class FaxCtrl : public QObject {
+    Q_OBJECT
 public:
-	FaxCtrl(QWidget *parent = 0, const char *name = 0);
-	~FaxCtrl();
+    FaxCtrl(QWidget *parent = 0, const char *name = 0);
+    ~FaxCtrl();
 
-	bool send(KdeprintFax *f);
-	bool abort();
-	void viewLog(QWidget *parent = 0);
-	QString faxSystem();
-	QString faxCommand();
+    bool send(KdeprintFax *f);
+    bool abort();
+    void viewLog(QWidget *parent = 0);
+    QString faxSystem();
+    QString faxCommand();
 
 signals:
-	void message(const QString&);
-	void faxSent(bool);
+    void message(const QString &);
+    void faxSent(bool);
 
 protected slots:
-	void slotReceivedStdout(KProcess*, char*, int);
-	void slotProcessExited(KProcess*);
-	void cleanTempFiles();
-	void slotClearLog();
-	void slotCloseLog();
-	void slotPrintLog();
-	void slotSaveLog();
+    void slotReceivedStdout(KProcess *, char *, int);
+    void slotProcessExited(KProcess *);
+    void cleanTempFiles();
+    void slotClearLog();
+    void slotCloseLog();
+    void slotPrintLog();
+    void slotSaveLog();
 
 protected:
-	void filter();
-	void sendFax();
-	void addLog(const QString&, bool = false);
-	void addLogTitle( const QString& );
+    void filter();
+    void sendFax();
+    void addLog(const QString &, bool = false);
+    void addLogTitle(const QString &);
 
 private:
-	KProcess	*m_process;
-	QString		m_log, m_command;
-	QStringList	m_files, m_filteredfiles, m_tempfiles;
-	QTextEdit	*m_logview;
-	KdeprintFax::FaxItemList m_faxlist;
+    KProcess *m_process;
+    QString m_log, m_command;
+    QStringList m_files, m_filteredfiles, m_tempfiles;
+    QTextEdit *m_logview;
+    KdeprintFax::FaxItemList m_faxlist;
 };
 
 #endif

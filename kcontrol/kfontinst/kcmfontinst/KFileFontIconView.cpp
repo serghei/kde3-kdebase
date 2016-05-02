@@ -31,8 +31,7 @@
 #include <kurldrag.h>
 #include "KFileFontIconView.h"
 
-namespace KFI
-{
+namespace KFI {
 
 // CPD: KDE4 should make acceptDrag() virtual there fore can get rid of all these ::contentsX functions...
 void CKFileFontIconView::contentsDragEnterEvent(QDragEnterEvent *e)
@@ -81,8 +80,7 @@ bool CKFileFontIconView::acceptDrag(QDropEvent *e) const
 
     return ok;
 #endif
-    return KURLDrag::canDecode(e) && (e->source()!= const_cast<CKFileFontIconView*>(this)) &&
-           (QDropEvent::Copy==e->action() || QDropEvent::Move==e->action());
+    return KURLDrag::canDecode(e) && (e->source() != const_cast< CKFileFontIconView * >(this))
+           && (QDropEvent::Copy == e->action() || QDropEvent::Move == e->action());
 }
-
 }

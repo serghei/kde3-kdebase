@@ -28,21 +28,20 @@ class ConfFax;
 class ConfSystem;
 class ConfFilters;
 
-class ConfigDlg : public KDialogBase
-{
+class ConfigDlg : public KDialogBase {
 public:
-	static bool configure(QWidget *parent = 0);
+    static bool configure(QWidget *parent = 0);
 
 protected:
-	ConfigDlg(QWidget *parent = 0, const char *name = 0);
-	void load();
-	void save();
+    ConfigDlg(QWidget *parent = 0, const char *name = 0);
+    void load();
+    void save();
 
 private:
-	ConfGeneral	*m_general;
-	ConfFax		*m_fax;
-	ConfSystem	*m_system;
-	ConfFilters	*m_filters;
+    ConfGeneral *m_general;
+    ConfFax *m_fax;
+    ConfSystem *m_system;
+    ConfFilters *m_filters;
 };
 
 #endif

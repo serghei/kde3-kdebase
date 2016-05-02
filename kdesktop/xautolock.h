@@ -17,8 +17,7 @@
 // Detect user inactivity.
 // Named XAutoLock after the program that it is based on.
 //
-class XAutoLock : public QWidget
-{
+class XAutoLock : public QWidget {
     Q_OBJECT
 public:
     XAutoLock();
@@ -29,9 +28,9 @@ public:
     // The time in seconds of continuous inactivity.
     //
     void setTimeout(int t);
-    
+
     void setDPMS(bool s);
-    
+
     //-----------------------------------------------------------------------
     //
     // Start watching Activity
@@ -54,24 +53,24 @@ public:
     // internal
     void resetTrigger();
     // internal
-    void setTrigger( time_t );
+    void setTrigger(time_t);
     // internal
-    bool ignoreWindow( WId );
-    
+    bool ignoreWindow(WId);
+
 signals:
     void timeout();
 
 protected:
     virtual void timerEvent(QTimerEvent *ev);
-    virtual bool x11Event( XEvent* );
+    virtual bool x11Event(XEvent *);
 
 protected:
-    int     mTimerId;
-    int     mTimeout;
-    time_t  mTrigger;
-    bool    mActive;
-    time_t  mLastTimeout;
-    bool    mDPMS;
+    int mTimerId;
+    int mTimeout;
+    time_t mTrigger;
+    bool mActive;
+    time_t mLastTimeout;
+    bool mDPMS;
 };
 
 #endif

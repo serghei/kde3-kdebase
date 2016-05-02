@@ -49,33 +49,46 @@ class PopupWidgetFilter;
 class PanelExtensionOpMenu;
 class QColor;
 
-class ExtensionContainer : public QFrame
-{
+class ExtensionContainer : public QFrame {
     Q_OBJECT
 
 public:
-    enum UserHidden { Unhidden, LeftTop, RightBottom };
-    enum HideMode { ManualHide, AutomaticHide, BackgroundHide };
+    enum UserHidden
+    {
+        Unhidden,
+        LeftTop,
+        RightBottom
+    };
+    enum HideMode
+    {
+        ManualHide,
+        AutomaticHide,
+        BackgroundHide
+    };
 
-    ExtensionContainer(const AppletInfo& info,
-                       const QString& extensionId,
-                       QWidget *parent = 0);
-    ExtensionContainer(KPanelExtension* extension,
-                       const AppletInfo& info,
-                       const QString& extensionId,
-                       QWidget *parent = 0);
+    ExtensionContainer(const AppletInfo &info, const QString &extensionId, QWidget *parent = 0);
+    ExtensionContainer(KPanelExtension *extension, const AppletInfo &info, const QString &extensionId, QWidget *parent = 0);
     virtual ~ExtensionContainer();
 
     virtual QSize sizeHint(KPanelExtension::Position, const QSize &maxSize) const;
 
-    const AppletInfo& info() const { return _info; }
+    const AppletInfo &info() const
+    {
+        return _info;
+    }
 
-    QString extensionId() const { return _id; }
+    QString extensionId() const
+    {
+        return _id;
+    }
 
     void readConfig();
     void writeConfig();
 
-    virtual QString panelId() const { return extensionId(); }
+    virtual QString panelId() const
+    {
+        return extensionId();
+    }
 
     virtual void about();
     virtual void help();
@@ -86,38 +99,52 @@ public:
 
     KPanelExtension::Orientation orientation() const;
     KPanelExtension::Position position() const;
-    void setPosition(KPanelExtension::Position p) { arrange( p, alignment(), xineramaScreen() ); }
+    void setPosition(KPanelExtension::Position p)
+    {
+        arrange(p, alignment(), xineramaScreen());
+    }
 
     int xineramaScreen() const;
     void setXineramaScreen(int screen);
 
-    void setResizeableHandle( bool resizeablehandle=true );
+    void setResizeableHandle(bool resizeablehandle = true);
     void setHideButtons(bool showLeft, bool showRight);
     void setSize(KPanelExtension::Size size, int custom);
     KPanelExtension::Size size() const;
-    int customSize() const { return m_settings.customSize(); }
+    int customSize() const
+    {
+        return m_settings.customSize();
+    }
     HideMode hideMode() const;
     void unhideIfHidden(int showForHowManyMS = 0);
     bool reserveStrut() const;
 
     KPanelExtension::Alignment alignment() const;
-    void setAlignment(KPanelExtension::Alignment a) { arrange( position(), a, xineramaScreen() ); }
+    void setAlignment(KPanelExtension::Alignment a)
+    {
+        arrange(position(), a, xineramaScreen());
+    }
 
     QRect currentGeometry() const;
-    QRect initialGeometry(KPanelExtension::Position p, KPanelExtension::Alignment a,
-                          int XineramaScreen, bool autoHidden = false,
+    QRect initialGeometry(KPanelExtension::Position p, KPanelExtension::Alignment a, int XineramaScreen, bool autoHidden = false,
                           UserHidden userHidden = Unhidden) const;
 
-    bool eventFilter( QObject *, QEvent * );
+    bool eventFilter(QObject *, QEvent *);
 
-    int panelOrder() const { return m_panelOrder; }
-    void setPanelOrder(int order) { m_panelOrder = order; }
+    int panelOrder() const
+    {
+        return m_panelOrder;
+    }
+    void setPanelOrder(int order)
+    {
+        m_panelOrder = order;
+    }
 
 signals:
-    void removeme(ExtensionContainer*);
+    void removeme(ExtensionContainer *);
 
 protected slots:
-    virtual void showPanelMenu( const QPoint& pos );
+    virtual void showPanelMenu(const QPoint &pos);
     void moveMe();
     void updateLayout();
     void actuallyUpdateLayout();
@@ -125,19 +152,25 @@ protected slots:
     void updateHighlightColor();
 
 protected:
-    bool event(QEvent*);
-    void closeEvent( QCloseEvent* e );
-    void paintEvent(QPaintEvent*);
-    void leaveEvent(QEvent*);
+    bool event(QEvent *);
+    void closeEvent(QCloseEvent *e);
+    void paintEvent(QPaintEvent *);
+    void leaveEvent(QEvent *);
 
     void arrange(KPanelExtension::Position p, KPanelExtension::Alignment a, int XineramaScreen);
-    bool autoHidden() const { return _autoHidden; };
-    UserHidden userHidden() const { return _userHidden; };
+    bool autoHidden() const
+    {
+        return _autoHidden;
+    };
+    UserHidden userHidden() const
+    {
+        return _userHidden;
+    };
     void resetLayout();
     bool needsBorder() const;
 
 private slots:
-    void unhideTriggered( UnhideTrigger::Trigger t, int XineramaScreen );
+    void unhideTriggered(UnhideTrigger::Trigger t, int XineramaScreen);
     void autoHideTimeout();
     void hideLeft();
     void hideRight();
@@ -146,7 +179,7 @@ private slots:
     void updateWindowManager();
     void currentDesktopChanged(int);
     void strutChanged();
-    void blockUserInput( bool block );
+    void blockUserInput(bool block);
     void maybeStartAutoHideTimer();
     void stopAutoHideTimer();
     void maintainFocus(bool);
@@ -155,12 +188,13 @@ private:
     bool shouldUnhideForTrigger(UnhideTrigger::Trigger t) const;
     void init();
     QSize initialSize(KPanelExtension::Position p, QRect workArea) const;
-    QPoint initialLocation(KPanelExtension::Position p, KPanelExtension::Alignment a,
-                           int XineramaScreen, const QSize &s, QRect workArea,
+    QPoint initialLocation(KPanelExtension::Position p, KPanelExtension::Alignment a, int XineramaScreen, const QSize &s, QRect workArea,
                            bool autohidden = false, UserHidden userHidden = Unhidden) const;
     void positionChange(KPanelExtension::Position p);
     void alignmentChange(KPanelExtension::Alignment a);
-    void xineramaScreenChange(int /*XineramaScreen*/) {}
+    void xineramaScreenChange(int /*XineramaScreen*/)
+    {
+    }
     int arrangeHideButtons();
     int setupBorderSpace();
 
@@ -169,28 +203,28 @@ private:
     UnhideTrigger::Trigger m_unhideTriggeredAt;
 
     // State variables
-    bool             _autoHidden;
-    UserHidden       _userHidden;
-    bool             _block_user_input;
-    QPoint           _last_lmb_press;
-    bool             _is_lmb_down;
-    bool             _in_autohide;
+    bool _autoHidden;
+    UserHidden _userHidden;
+    bool _block_user_input;
+    QPoint _last_lmb_press;
+    bool _is_lmb_down;
+    bool _in_autohide;
 
     // Misc objects
-    QTimer               *_autohideTimer;
-    QTimer               *_updateLayoutTimer;
-    NETExtendedStrut      _strut;
-    PopupWidgetFilter    *_popupWidgetFilter;
+    QTimer *_autohideTimer;
+    QTimer *_updateLayoutTimer;
+    NETExtendedStrut _strut;
+    PopupWidgetFilter *_popupWidgetFilter;
 
-    QString               _id;
+    QString _id;
     PanelExtensionOpMenu *_opMnu;
-    AppletInfo            _info;
+    AppletInfo _info;
     KPanelExtension::Type _type;
 
     // Widgets
-    HideButton     *_ltHB; // Left Hide Button
-    HideButton     *_rbHB; // Right Hide Button
-    QGridLayout    *_layout;
+    HideButton *_ltHB; // Left Hide Button
+    HideButton *_rbHB; // Right Hide Button
+    QGridLayout *_layout;
 
     KPanelExtension *m_extension;
     int m_maintainFocus;
@@ -198,18 +232,19 @@ private:
     QColor m_highlightColor;
 };
 
-class PopupWidgetFilter : public QObject
-{
-  Q_OBJECT
+class PopupWidgetFilter : public QObject {
+    Q_OBJECT
 
-  public:
-    PopupWidgetFilter( QObject *parent );
-    ~PopupWidgetFilter() {}
-    bool eventFilter( QObject *obj, QEvent* e );
-  signals:
+public:
+    PopupWidgetFilter(QObject *parent);
+    ~PopupWidgetFilter()
+    {
+    }
+    bool eventFilter(QObject *obj, QEvent *e);
+signals:
     void popupWidgetHiding();
 };
 
-typedef QValueList<ExtensionContainer*> ExtensionList;
+typedef QValueList< ExtensionContainer * > ExtensionList;
 
 #endif

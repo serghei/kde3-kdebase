@@ -30,25 +30,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "configdlg.h"
 #include "configdlgbase.h"
 
-ConfigDlg::ConfigDlg(QWidget *parent, const char *name, Prefs *config,
-                     int autoSize, KConfigDialog::DialogType dialogType,
-                     int dialogButtons) :
-    KConfigDialog(parent, name, config, dialogType, dialogButtons),
-    m_settings(config),
-    m_autoSize(autoSize)
+ConfigDlg::ConfigDlg(QWidget *parent, const char *name, Prefs *config, int autoSize, KConfigDialog::DialogType dialogType, int dialogButtons)
+    : KConfigDialog(parent, name, config, dialogType, dialogButtons), m_settings(config), m_autoSize(autoSize)
 {
     m_ui = new ConfigDlgBase(this->plainPage());
     addPage(m_ui, i18n("Configure"), "config");
 
     m_ui->iconDim->clear();
     m_ui->iconDim->insertItem(i18n("Automatic"));
-    for (int n=0; n<int(m_settings->iconDimChoices().size()); ++n)
+    for(int n = 0; n < int(m_settings->iconDimChoices().size()); ++n)
     {
-        m_ui->iconDim->insertItem(QString::number(
-            m_settings->iconDimChoices()[n]));
+        m_ui->iconDim->insertItem(QString::number(m_settings->iconDimChoices()[n]));
     }
-    connect(m_ui->iconDim, SIGNAL(textChanged(const QString&)),
-            this, SLOT(updateButtons()));
+    connect(m_ui->iconDim, SIGNAL(textChanged(const QString &)), this, SLOT(updateButtons()));
     updateWidgets();
     m_oldIconDimText = m_ui->iconDim->currentText();
     updateButtons();
@@ -58,16 +52,16 @@ void ConfigDlg::updateSettings()
 {
     kdDebug() << "updateSettings" << endl;
     KConfigDialog::updateSettings();
-    if (!hasChanged())
+    if(!hasChanged())
     {
         return;
     }
     m_oldIconDimText = m_ui->iconDim->currentText();
-    if (m_ui->iconDim->currentText() == i18n("Automatic"))
+    if(m_ui->iconDim->currentText() == i18n("Automatic"))
     {
         m_settings->setIconDim(m_autoSize);
     }
-    else 
+    else
     {
         m_settings->setIconDim(m_ui->iconDim->currentText().toInt());
     }
@@ -77,7 +71,7 @@ void ConfigDlg::updateSettings()
 void ConfigDlg::updateWidgets()
 {
     KConfigDialog::updateWidgets();
-    if (m_settings->iconDim() == m_autoSize)
+    if(m_settings->iconDim() == m_autoSize)
     {
         m_ui->iconDim->setEditText(i18n("Automatic"));
     }
@@ -94,8 +88,7 @@ void ConfigDlg::updateWidgetsDefault()
 
 bool ConfigDlg::hasChanged()
 {
-    return m_oldIconDimText != m_ui->iconDim->currentText() ||
-        KConfigDialog::hasChanged();
+    return m_oldIconDimText != m_ui->iconDim->currentText() || KConfigDialog::hasChanged();
 }
 
 #include "configdlg.moc"

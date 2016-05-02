@@ -9,26 +9,22 @@ class QLabel;
 class KProgress;
 
 
-class ProgressDialog : public KDialogBase
-{
+class ProgressDialog : public KDialogBase {
 
-  Q_OBJECT
+    Q_OBJECT
 
 public:
+    ProgressDialog(QWidget *parent = 0, const char *name = 0);
 
-  ProgressDialog(QWidget *parent=0, const char *name=0);
+    void setFilesScanned(int s);
+    void setFilesToDig(int d);
+    void setFilesDigged(int d);
 
-  void setFilesScanned(int s);
-  void setFilesToDig(int d);
-  void setFilesDigged(int d);
-
-  void setState(int n);
+    void setState(int n);
 
 private:
-
-  QLabel    *filesScanned, *check1, *check2, *check3;
-  KProgress *bar;
-
+    QLabel *filesScanned, *check1, *check2, *check3;
+    KProgress *bar;
 };
 
 

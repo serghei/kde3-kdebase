@@ -31,17 +31,22 @@ class KWinModule;
 /**
  * Singleton class that handles desktop access (minimizing all windows)
  */
-class ShowDesktop : public QObject
-{
+class ShowDesktop : public QObject {
     Q_OBJECT
 
 public:
-    static ShowDesktop* the();
-    bool desktopShowing() { return m_showingDesktop; }
+    static ShowDesktop *the();
+    bool desktopShowing()
+    {
+        return m_showingDesktop;
+    }
 
 public slots:
     void showDesktop(bool show);
-    void toggle() { showDesktop( !desktopShowing() ); }
+    void toggle()
+    {
+        showDesktop(!desktopShowing());
+    }
 
 signals:
     void desktopShown(bool shown);
@@ -50,15 +55,15 @@ private slots:
     void slotCurrentDesktopChanged(int);
     void slotWindowAdded(WId w);
     void slotWindowChanged(WId w, unsigned int dirty);
-    void showingDesktopChanged( bool );
+    void showingDesktopChanged(bool);
 
 private:
     ShowDesktop();
 
-    bool              m_showingDesktop;
-    QValueVector<WId> m_iconifiedList;
-    WId               m_activeWindow;
-    bool              m_wmSupport;
+    bool m_showingDesktop;
+    QValueVector< WId > m_iconifiedList;
+    WId m_activeWindow;
+    bool m_wmSupport;
 };
 
 #endif

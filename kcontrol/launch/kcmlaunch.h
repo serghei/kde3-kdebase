@@ -26,13 +26,11 @@ class QGroupBox;
 
 class KIntNumInput;
 
-class LaunchConfig : public KCModule
-{
-  Q_OBJECT
+class LaunchConfig : public KCModule {
+    Q_OBJECT
 
-  public:
-
-    LaunchConfig(QWidget * parent = 0, const char * name = 0, const QStringList &list = QStringList() );
+public:
+    LaunchConfig(QWidget *parent = 0, const char *name = 0, const QStringList &list = QStringList());
 
     virtual ~LaunchConfig();
 
@@ -41,32 +39,29 @@ class LaunchConfig : public KCModule
     void save();
     void defaults();
 
-  protected slots:
+protected slots:
 
     void checkChanged();
     void slotBusyCursor(int);
     void slotTaskbarButton(bool);
 
-  protected:
-
+protected:
     enum FeedbackStyle
     {
-      BusyCursor            = 1 << 0,
-      TaskbarButton         = 1 << 1,
+        BusyCursor = 1 << 0,
+        TaskbarButton = 1 << 1,
 
-      Default = BusyCursor | TaskbarButton
+        Default = BusyCursor | TaskbarButton
     };
 
 
-  private:
-
-    QLabel    * lbl_cursorTimeout;
-    QLabel    * lbl_taskbarTimeout;
-    QComboBox * cb_busyCursor;
-    QCheckBox * cb_taskbarButton;
-    KIntNumInput * sb_cursorTimeout;
-    KIntNumInput * sb_taskbarTimeout;
-
+private:
+    QLabel *lbl_cursorTimeout;
+    QLabel *lbl_taskbarTimeout;
+    QComboBox *cb_busyCursor;
+    QCheckBox *cb_taskbarButton;
+    KIntNumInput *sb_cursorTimeout;
+    KIntNumInput *sb_taskbarTimeout;
 };
 
 #endif

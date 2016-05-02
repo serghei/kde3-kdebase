@@ -41,21 +41,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static const int DEFAULT_FRAMES_PER_SECOND = 30;
 
-KickerTip* KickerTip::m_self = 0;
+KickerTip *KickerTip::m_self = 0;
 int KickerTip::m_tippingEnabled = 1;
 
 void KickerTip::Client::updateKickerTip() const
 {
-    if (KickerTip::the()->isTippingFor(dynamic_cast<const QWidget*>(this)) &&
-        KickerTip::the()->isVisible())
+    if(KickerTip::the()->isTippingFor(dynamic_cast< const QWidget * >(this)) && KickerTip::the()->isVisible())
     {
         KickerTip::the()->display();
     }
 }
 
-KickerTip* KickerTip::the()
+KickerTip *KickerTip::the()
 {
-    if (!m_self)
+    if(!m_self)
     {
         m_self = new KickerTip(0);
     }
@@ -63,16 +62,16 @@ KickerTip* KickerTip::the()
     return m_self;
 }
 
-KickerTip::KickerTip(QWidget * parent)
-    : QWidget(parent, "animtt",WX11BypassWM),
-      m_richText(0),
-      m_mimeFactory(0),
-      m_dissolveSize(0),
-      m_dissolveDelta(-1),
-      m_direction(KPanelApplet::Up),
-      m_dirty(false),
-      m_toolTipsEnabled(KickerSettings::showToolTips()),
-      m_tippingFor(0)
+KickerTip::KickerTip(QWidget *parent)
+    : QWidget(parent, "animtt", WX11BypassWM)
+    , m_richText(0)
+    , m_mimeFactory(0)
+    , m_dissolveSize(0)
+    , m_dissolveDelta(-1)
+    , m_direction(KPanelApplet::Up)
+    , m_dirty(false)
+    , m_toolTipsEnabled(KickerSettings::showToolTips())
+    , m_tippingFor(0)
 {
     setFocusPolicy(NoFocus);
     setBackgroundMode(NoBackground);
@@ -89,7 +88,7 @@ KickerTip::~KickerTip()
 
 void KickerTip::display()
 {
-    if (!tippingEnabled())
+    if(!tippingEnabled())
     {
         return;
     }
@@ -98,22 +97,22 @@ void KickerTip::display()
         // prevent tips from showing when the active window is fullscreened
         NETRootInfo ri(qt_xdisplay(), NET::ActiveWindow);
         NETWinInfo wi(qt_xdisplay(), ri.activeWindow(), ri.rootWindow(), NET::WMState);
-        if (wi.state() & NET::FullScreen)
+        if(wi.state() & NET::FullScreen)
         {
             return;
         }
     }
 
-    QWidget *widget = const_cast<QWidget*>(m_tippingFor);
-    KickerTip::Client *client = dynamic_cast<KickerTip::Client*>(widget);
+    QWidget *widget = const_cast< QWidget * >(m_tippingFor);
+    KickerTip::Client *client = dynamic_cast< KickerTip::Client * >(widget);
 
-    if (!client)
+    if(!client)
     {
         return;
     }
 
     // delete the mimefactory and create a new one so any old pixmaps used in the
-    // richtext area are freed but the mimefactory is ready to be added to in 
+    // richtext area are freed but the mimefactory is ready to be added to in
     // the call to updateKickerTip
     delete m_mimeFactory;
     m_mimeFactory = new QMimeSourceFactory();
@@ -128,23 +127,21 @@ void KickerTip::display()
     // Tickle the information out of the bastard.
     client->updateKickerTip(data);
 
-    if (data.message.isEmpty() && data.subtext.isEmpty() && data.icon.isNull())
+    if(data.message.isEmpty() && data.subtext.isEmpty() && data.icon.isNull())
     {
         return;
     }
 
     delete m_richText;
-    m_richText = new QSimpleRichText("<qt><h3>" + data.message + "</h3><p>" +
-                                     data.subtext + "</p></qt>", font(), QString::null, 0,
-                                     m_mimeFactory);
+    m_richText = new QSimpleRichText("<qt><h3>" + data.message + "</h3><p>" + data.subtext + "</p></qt>", font(), QString::null, 0, m_mimeFactory);
     m_richText->setWidth(400);
     m_direction = data.direction;
 
-    if (KickerSettings::mouseOversShowIcon())
+    if(KickerSettings::mouseOversShowIcon())
     {
         m_icon = data.icon;
     }
-    else if (KickerSettings::mouseOversShowText())
+    else if(KickerSettings::mouseOversShowText())
     {
         m_icon = QPixmap();
     }
@@ -163,7 +160,7 @@ void KickerTip::display()
     m_frameTimer.start(1000 / DEFAULT_FRAMES_PER_SECOND);
 
     // close the message window after given mS
-    if (data.duration > 0)
+    if(data.duration > 0)
     {
         disconnect(&m_timer, SIGNAL(timeout()), 0, 0);
         connect(&m_timer, SIGNAL(timeout()), SLOT(hide()));
@@ -178,9 +175,9 @@ void KickerTip::display()
     show();
 }
 
-void KickerTip::paintEvent(QPaintEvent * e)
+void KickerTip::paintEvent(QPaintEvent *e)
 {
-    if (m_dirty)
+    if(m_dirty)
     {
         displayInternal();
         m_dirty = false;
@@ -206,8 +203,7 @@ void KickerTip::plainMask()
 
     maskPainter.setBrush(Qt::white);
     maskPainter.setPen(Qt::white);
-    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(),
-                              1600 / m_mask.rect().height());
+    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(), 1600 / m_mask.rect().height());
     setMask(m_mask);
     m_frameTimer.stop();
 }
@@ -220,25 +216,24 @@ void KickerTip::dissolveMask()
 
     maskPainter.setBrush(Qt::white);
     maskPainter.setPen(Qt::white);
-    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(),
-                              1600 / m_mask.rect().height());
+    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(), 1600 / m_mask.rect().height());
 
     m_dissolveSize += m_dissolveDelta;
 
-    if (m_dissolveSize > 0)
+    if(m_dissolveSize > 0)
     {
         maskPainter.setRasterOp(Qt::EraseROP);
 
         int x, y, s;
         const int size = 16;
 
-        for (y = 0; y < height() + size; y += size)
+        for(y = 0; y < height() + size; y += size)
         {
             x = width();
             s = m_dissolveSize * x / 128;
-            for (; x > -size; x -= size, s -= 2)
+            for(; x > -size; x -= size, s -= 2)
             {
-                if (s < 0)
+                if(s < 0)
                 {
                     break;
                 }
@@ -246,7 +241,7 @@ void KickerTip::dissolveMask()
             }
         }
     }
-    else if (m_dissolveSize < 0)
+    else if(m_dissolveSize < 0)
     {
         m_frameTimer.stop();
         m_dissolveDelta = 1;
@@ -261,14 +256,14 @@ void KickerTip::displayInternal()
     // since if one is really persistant and moves the mouse around very fast
     // you can trigger a situation where m_tippingFor gets reset to 0 but
     // before display() is called!
-    if (!m_tippingFor || !m_richText)
+    if(!m_tippingFor || !m_richText)
     {
         return;
     }
 
     // determine text rectangle
     QRect textRect(0, 0, 0, 0);
-    if (KickerSettings::mouseOversShowText())
+    if(KickerSettings::mouseOversShowText())
     {
         textRect.setWidth(m_richText->widthUsed());
         textRect.setHeight(m_richText->height());
@@ -282,12 +277,12 @@ void KickerTip::displayInternal()
 
     // resize pixmap, mask and widget
     bool firstTime = m_dissolveSize == 24;
-    if (firstTime)
+    if(firstTime)
     {
         m_mask.resize(width, height);
         m_pixmap.resize(width, height);
         resize(width, height);
-        if (isVisible())
+        if(isVisible())
         {
             // we've already been shown before, but we may grow larger.
             // in the case of Up or Right displaying tips, this growth can
@@ -313,19 +308,15 @@ void KickerTip::displayInternal()
     QPainter bufferPainter(&m_pixmap);
     bufferPainter.setPen(Qt::black);
     bufferPainter.setBrush(colorGroup().background());
-    bufferPainter.drawRoundRect(0, 0, width, height,
-                                1600 / width, 1600 / height);
+    bufferPainter.drawRoundRect(0, 0, width, height, 1600 / width, 1600 / height);
 
     // draw icon if present
-    if (!m_icon.isNull())
+    if(!m_icon.isNull())
     {
-        bufferPainter.drawPixmap(margin,
-                                 margin,
-                                 m_icon, 0, 0,
-                                 m_icon.width(), m_icon.height());
+        bufferPainter.drawPixmap(margin, margin, m_icon, 0, 0, m_icon.width(), m_icon.height());
     }
 
-    if (KickerSettings::mouseOversShowText())
+    if(KickerSettings::mouseOversShowText())
     {
         // draw text shadow
         QColorGroup cg = colorGroup();
@@ -339,26 +330,24 @@ void KickerTip::displayInternal()
     }
 }
 
-void KickerTip::tipFor(const QWidget* w)
+void KickerTip::tipFor(const QWidget *w)
 {
-    if (m_tippingFor)
+    if(m_tippingFor)
     {
-        disconnect(m_tippingFor, SIGNAL(destroyed(QObject*)),
-                   this, SLOT(tipperDestroyed(QObject*)));
+        disconnect(m_tippingFor, SIGNAL(destroyed(QObject *)), this, SLOT(tipperDestroyed(QObject *)));
     }
 
     m_tippingFor = w;
 
-    if (m_tippingFor)
+    if(m_tippingFor)
     {
-        connect(m_tippingFor, SIGNAL(destroyed(QObject*)),
-                this, SLOT(tipperDestroyed(QObject*)));
+        connect(m_tippingFor, SIGNAL(destroyed(QObject *)), this, SLOT(tipperDestroyed(QObject *)));
     }
 }
 
-void KickerTip::untipFor(const QWidget* w)
+void KickerTip::untipFor(const QWidget *w)
 {
-    if (isTippingFor(w))
+    if(isTippingFor(w))
     {
         tipFor(0);
         m_timer.stop();
@@ -366,16 +355,16 @@ void KickerTip::untipFor(const QWidget* w)
     }
 }
 
-bool KickerTip::isTippingFor(const QWidget* w) const
+bool KickerTip::isTippingFor(const QWidget *w) const
 {
     return m_tippingFor == w;
 }
 
-void KickerTip::tipperDestroyed(QObject* o)
+void KickerTip::tipperDestroyed(QObject *o)
 {
     // we can't do a dynamic cast because we are in the process of dieing
     // so static it is.
-    untipFor(static_cast<QWidget*>(o));
+    untipFor(static_cast< QWidget * >(o));
 }
 
 void KickerTip::internalUpdate()
@@ -386,7 +375,7 @@ void KickerTip::internalUpdate()
 
 void KickerTip::enableTipping(bool tip)
 {
-    if (tip)
+    if(tip)
     {
         m_tippingEnabled++;
     }
@@ -395,7 +384,7 @@ void KickerTip::enableTipping(bool tip)
         m_tippingEnabled--;
     }
 
-    if (m_tippingEnabled < 1 && m_self)
+    if(m_tippingEnabled < 1 && m_self)
     {
         m_self->hide();
     }
@@ -415,29 +404,27 @@ void KickerTip::hide()
 
 bool KickerTip::eventFilter(QObject *object, QEvent *event)
 {
-    if (!tippingEnabled())
+    if(!tippingEnabled())
     {
         return false;
     }
 
-    if (!object->isWidgetType())
+    if(!object->isWidgetType())
     {
         return false;
     }
 
-    QWidget *widget = static_cast<QWidget*>(object);
+    QWidget *widget = static_cast< QWidget * >(object);
 
-    switch (event->type())
+    switch(event->type())
     {
         case QEvent::Enter:
-            if (!KickerSettings::showMouseOverEffects())
+            if(!KickerSettings::showMouseOverEffects())
             {
                 return false;
             }
 
-            if (!mouseGrabber() &&
-                !qApp->activePopupWidget() &&
-                !isTippingFor(widget))
+            if(!mouseGrabber() && !qApp->activePopupWidget() && !isTippingFor(widget))
             {
                 m_toolTipsEnabled = QToolTip::isGloballyEnabled();
                 QToolTip::setGloballyEnabled(false);
@@ -450,7 +437,7 @@ bool KickerTip::eventFilter(QObject *object, QEvent *event)
                 // delay to avoid false starts
                 // e.g. when the user quickly zooms their mouse over
                 // a button then out of kicker
-                if (isVisible())
+                if(isVisible())
                 {
                     m_timer.start(150, true);
                 }
@@ -465,7 +452,7 @@ bool KickerTip::eventFilter(QObject *object, QEvent *event)
 
             m_timer.stop();
 
-            if (isTippingFor(widget) && isVisible())
+            if(isTippingFor(widget) && isVisible())
             {
                 disconnect(&m_timer, SIGNAL(timeout()), 0, 0);
                 connect(&m_timer, SIGNAL(timeout()), SLOT(hide()));
@@ -487,4 +474,3 @@ bool KickerTip::eventFilter(QObject *object, QEvent *event)
 }
 
 #include <kickertip.moc>
-

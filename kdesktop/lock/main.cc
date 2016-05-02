@@ -34,37 +34,36 @@
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
-bool MyApp::x11EventFilter( XEvent *ev )
+bool MyApp::x11EventFilter(XEvent *ev)
 {
-    if (ev->type == XKeyPress || ev->type == ButtonPress)
+    if(ev->type == XKeyPress || ev->type == ButtonPress)
         emit activity();
-    else if (ev->type == MotionNotify) {
-        time_t tick = time( 0 );
-        if (tick != lastTick) {
+    else if(ev->type == MotionNotify)
+    {
+        time_t tick = time(0);
+        if(tick != lastTick)
+        {
             lastTick = tick;
             emit activity();
         }
     }
-    return KApplication::x11EventFilter( ev );
+    return KApplication::x11EventFilter(ev);
 }
 
 
-static KCmdLineOptions options[] =
-{
-   { "forcelock", I18N_NOOP("Force session locking"), 0 },
-   { "dontlock", I18N_NOOP("Only start screensaver"), 0 },
-   { "blank", I18N_NOOP("Only use the blank screensaver"), 0 },
-   KCmdLineLastOption
-};
+static KCmdLineOptions options[] = {{"forcelock", I18N_NOOP("Force session locking"), 0},
+                                    {"dontlock", I18N_NOOP("Only start screensaver"), 0},
+                                    {"blank", I18N_NOOP("Only use the blank screensaver"), 0},
+                                    KCmdLineLastOption};
 
 // -----------------------------------------------------------------------------
 
-int main( int argc, char **argv )
+int main(int argc, char **argv)
 {
     KLocale::setMainCatalogue("kdesktop");
 
-    KCmdLineArgs::init( argc, argv, "kdesktop_lock", I18N_NOOP("KDesktop Locker"), I18N_NOOP("Session Locker for KDesktop"), "2.0" );
-    KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, "kdesktop_lock", I18N_NOOP("KDesktop Locker"), I18N_NOOP("Session Locker for KDesktop"), "2.0");
+    KCmdLineArgs::addCmdLineOptions(options);
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     putenv(strdup("SESSION_MANAGER="));
@@ -76,15 +75,14 @@ int main( int argc, char **argv )
 
     bool child = false;
     int parent_connection = 0; // socket to the parent saver
-    QValueList<int> child_sockets;
+    QValueList< int > child_sockets;
 
-    if (KGlobalSettings::isMultiHead())
+    if(KGlobalSettings::isMultiHead())
     {
         Display *dpy = XOpenDisplay(NULL);
-        if (! dpy) {
-            fprintf(stderr,
-                    "%s: FATAL ERROR: couldn't open display '%s'\n",
-                    argv[0], XDisplayName(NULL));
+        if(!dpy)
+        {
+            fprintf(stderr, "%s: FATAL ERROR: couldn't open display '%s'\n", argv[0], XDisplayName(NULL));
             exit(1);
         }
 
@@ -96,76 +94,82 @@ int main( int argc, char **argv )
         kdDebug() << "screen " << number_of_screens << " " << kdesktop_screen_number << " " << display_name << " " << starting_screen << endl;
         dpy = 0;
 
-        if ((pos = display_name.findRev('.')) != -1)
+        if((pos = display_name.findRev('.')) != -1)
             display_name.remove(pos, 10);
 
         QCString env;
-        if (number_of_screens != 1) {
-            for (int i = 0; i < number_of_screens; i++) {
-                if (i != starting_screen) {
+        if(number_of_screens != 1)
+        {
+            for(int i = 0; i < number_of_screens; i++)
+            {
+                if(i != starting_screen)
+                {
                     int fd[2];
-                    if (pipe(fd)) {
+                    if(pipe(fd))
+                    {
                         perror("pipe");
                         break;
                     }
-                    if (fork() == 0) {
+                    if(fork() == 0)
+                    {
                         child = true;
                         kdesktop_screen_number = i;
                         parent_connection = fd[0];
                         // break here because we are the child process, we don't
                         // want to fork() anymore
                         break;
-                    } else {
+                    }
+                    else
+                    {
                         child_sockets.append(fd[1]);
                     }
                 }
             }
 
-            env.sprintf("DISPLAY=%s.%d", display_name.data(),
-                        kdesktop_screen_number);
+            env.sprintf("DISPLAY=%s.%d", display_name.data(), kdesktop_screen_number);
             kdDebug() << "env " << env << endl;
 
-            if (putenv(strdup(env.data()))) {
-                fprintf(stderr,
-                        "%s: WARNING: unable to set DISPLAY environment variable\n",
-                        argv[0]);
+            if(putenv(strdup(env.data())))
+            {
+                fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
                 perror("putenv()");
             }
         }
     }
 
     MyApp app;
-    kdDebug() << "app " << kdesktop_screen_number << " " << starting_screen << " " << child << " " << child_sockets.count() << " " << parent_connection << endl;
+    kdDebug() << "app " << kdesktop_screen_number << " " << starting_screen << " " << child << " " << child_sockets.count() << " "
+              << parent_connection << endl;
     app.disableSessionManagement();
     KGlobal::locale()->insertCatalogue("libdmctl");
 
     // we need to read from the right rc file - possibly taking screen number in account
     KDesktopSettings::instance("kdesktoprc");
 
-    LockProcess process(child, args->isSet( "blank" ));
-    if (!child)
+    LockProcess process(child, args->isSet("blank"));
+    if(!child)
         process.setChildren(child_sockets);
     else
         process.setParent(parent_connection);
 
     bool rt;
     bool sig = false;
-    if( !child && args->isSet( "forcelock" ))
+    if(!child && args->isSet("forcelock"))
     {
         rt = process.lock();
         sig = true;
     }
-    else if( child || args->isSet( "dontlock" ))
+    else if(child || args->isSet("dontlock"))
         rt = process.dontLock();
     else
         rt = process.defaultSave();
-    if (!rt)
+    if(!rt)
         return 1;
 
-    if( sig )
+    if(sig)
     {
-        DCOPRef ref( "kdesktop", "KScreensaverIface");
-        ref.send( "saverLockReady" );
+        DCOPRef ref("kdesktop", "KScreensaverIface");
+        ref.send("saverLockReady");
     }
 
     return app.exec();

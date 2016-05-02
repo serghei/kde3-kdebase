@@ -28,7 +28,9 @@
 #include <kurl.h>
 #include <libkonq_export.h>
 
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 class KDirWatch;
 class KLineEdit;
@@ -49,28 +51,28 @@ class QPopupMenu;
  * Ideas and code for the new template handling mechanism ('link' desktop files)
  * from Christoph Pickart <pickart@iam.uni-bonn.de>
  */
-class LIBKONQ_EXPORT KNewMenu : public KActionMenu
-{
-  Q_OBJECT
+class LIBKONQ_EXPORT KNewMenu : public KActionMenu {
+    Q_OBJECT
 public:
-
     /**
      * Constructor
      */
-    KNewMenu( KActionCollection * _collec, const char *name=0L );
-    KNewMenu( KActionCollection * _collec, QWidget *parentWidget, const char *name=0L );
+    KNewMenu(KActionCollection *_collec, const char *name = 0L);
+    KNewMenu(KActionCollection *_collec, QWidget *parentWidget, const char *name = 0L);
     virtual ~KNewMenu();
 
     /**
      * Set the files the popup is shown for
      * Call this before showing up the menu
      */
-    void setPopupFiles(KURL::List & _files) {
+    void setPopupFiles(KURL::List &_files)
+    {
         popupFiles = _files;
     }
-    void setPopupFiles(const KURL & _file) {
+    void setPopupFiles(const KURL &_file)
+    {
         popupFiles.clear();
-        popupFiles.append( _file );
+        popupFiles.append(_file);
     }
 
 public slots:
@@ -78,7 +80,7 @@ public slots:
      * Checks if updating the list is necessary
      * IMPORTANT : Call this in the slot for aboutToShow.
      */
-    void slotCheckUpToDate( );
+    void slotCheckUpToDate();
 
 protected slots:
     /**
@@ -96,12 +98,11 @@ protected slots:
      */
     void slotFillTemplates();
 
-    void slotResult( KIO::Job * );
+    void slotResult(KIO::Job *);
     // Special case (filename conflict when creating a link=url file)
-    void slotRenamed( KIO::Job *, const KURL&, const KURL& );
+    void slotRenamed(KIO::Job *, const KURL &, const KURL &);
 
 private:
-
     /**
      * Fills the menu from the templates list.
      */
@@ -125,11 +126,17 @@ private:
      * SEPARATOR: to put a separator in the menu
      * 0 means: not parsed, i.e. we don't know
      */
-    enum { LINKTOTEMPLATE = 1, TEMPLATE, SEPARATOR };
+    enum
+    {
+        LINKTOTEMPLATE = 1,
+        TEMPLATE,
+        SEPARATOR
+    };
 
-    struct Entry {
+    struct Entry
+    {
         QString text;
-        QString filePath; // empty for SEPARATOR
+        QString filePath;     // empty for SEPARATOR
         QString templatePath; // same as filePath for TEMPLATE
         QString icon;
         int entryType;
@@ -141,10 +148,10 @@ private:
      * List of all template files. It is important that they are in
      * the same order as the 'New' menu.
      */
-    static QValueList<Entry> * s_templatesList;
+    static QValueList< Entry > *s_templatesList;
 
     class KNewMenuPrivate;
-    KNewMenuPrivate* d;
+    KNewMenuPrivate *d;
 
     /**
      * Is increased when templatesList has been updated and
@@ -173,7 +180,7 @@ private:
     bool m_isURLDesktopFile;
     QString m_linkURL; // the url to put in the file
 
-    static KDirWatch * s_pDirWatch;
+    static KDirWatch *s_pDirWatch;
 };
 
 /**
@@ -182,13 +189,14 @@ private:
  * Basically a merge of KLineEditDlg and KURLRequesterDlg ;)
  * @author David Faure <faure@kde.org>
  */
-class KURLDesktopFileDlg : public KDialogBase
-{
+class KURLDesktopFileDlg : public KDialogBase {
     Q_OBJECT
 public:
-    KURLDesktopFileDlg( const QString& textFileName, const QString& textUrl );
-    KURLDesktopFileDlg( const QString& textFileName, const QString& textUrl, QWidget *parent );
-    virtual ~KURLDesktopFileDlg() {}
+    KURLDesktopFileDlg(const QString &textFileName, const QString &textUrl);
+    KURLDesktopFileDlg(const QString &textFileName, const QString &textUrl, QWidget *parent);
+    virtual ~KURLDesktopFileDlg()
+    {
+    }
 
     /**
      * @return the filename the user entered (no path)
@@ -201,10 +209,11 @@ public:
 
 protected slots:
     void slotClear();
-    void slotNameTextChanged( const QString& );
-    void slotURLTextChanged( const QString& );
+    void slotNameTextChanged(const QString &);
+    void slotURLTextChanged(const QString &);
+
 private:
-    void initDialog( const QString& textFileName, const QString& defaultName, const QString& textUrl, const QString& defaultUrl );
+    void initDialog(const QString &textFileName, const QString &defaultName, const QString &textUrl, const QString &defaultUrl);
 
     /**
      * The line edit widget for the fileName

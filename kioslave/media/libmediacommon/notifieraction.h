@@ -26,35 +26,34 @@
 
 class NotifierSettings;
 
-class NotifierAction
-{
+class NotifierAction {
 public:
-	NotifierAction();
-	virtual ~NotifierAction();
+    NotifierAction();
+    virtual ~NotifierAction();
 
-	virtual QString label() const;
-	virtual QString iconName() const;
-	virtual void setLabel( const QString &label );
-	virtual void setIconName( const QString &icon );
+    virtual QString label() const;
+    virtual QString iconName() const;
+    virtual void setLabel(const QString &label);
+    virtual void setIconName(const QString &icon);
 
-	QPixmap pixmap() const;
-	
-	QStringList autoMimetypes();
+    QPixmap pixmap() const;
 
-	virtual QString id() const = 0;
-	virtual bool isWritable() const;
-	virtual bool supportsMimetype( const QString &mimetype ) const;
-	virtual void execute( KFileItem &medium ) = 0;
+    QStringList autoMimetypes();
+
+    virtual QString id() const = 0;
+    virtual bool isWritable() const;
+    virtual bool supportsMimetype(const QString &mimetype) const;
+    virtual void execute(KFileItem &medium) = 0;
 
 private:
-	void addAutoMimetype( const QString &mimetype );
-	void removeAutoMimetype( const QString &mimetype );
+    void addAutoMimetype(const QString &mimetype);
+    void removeAutoMimetype(const QString &mimetype);
 
-	QString m_label;
-	QString m_iconName;
-	QStringList m_autoMimetypes;
+    QString m_label;
+    QString m_iconName;
+    QStringList m_autoMimetypes;
 
-	friend class NotifierSettings;
+    friend class NotifierSettings;
 };
 
 #endif

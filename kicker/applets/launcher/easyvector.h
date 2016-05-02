@@ -10,43 +10,41 @@
 #include <algorithm>
 #include <assert.h>
 
-template < class VALUE >
-class __Valtype {
+template < class VALUE > class __Valtype {
 public:
-    typedef const VALUE& CVALUE;
+    typedef const VALUE &CVALUE;
 };
 
 
-template < class VALUE >
-class __Valtype< VALUE* > {
+template < class VALUE > class __Valtype< VALUE * > {
 public:
-    typedef const VALUE* CVALUE;
+    typedef const VALUE *CVALUE;
 };
 
 
-template <class VALUE, bool CHECKINDEX=true>
-class EasyVector: public std::vector< VALUE > {
+template < class VALUE, bool CHECKINDEX = true > class EasyVector : public std::vector< VALUE > {
 public:
     typedef int Index;
     typedef std::vector< Index > Indices;
     typedef typename __Valtype< VALUE >::CVALUE CVALUE;
 
-    static const Index NotFound=-2;
-    static const Index Append=-1;
+    static const Index NotFound = -2;
+    static const Index Append = -1;
 
-    template < class PTYPE, class PROP_FUNC >
-    Index findProperty(const PTYPE &property,
-                       PROP_FUNC prop_func) const;
+    template < class PTYPE, class PROP_FUNC > Index findProperty(const PTYPE &property, PROP_FUNC prop_func) const;
     Index findValue(CVALUE value) const;
 
-    Index lastIndex() const {return this->size()-1;}
+    Index lastIndex() const
+    {
+        return this->size() - 1;
+    }
 
     void eraseAt(Index index);
 
     VALUE takeFrom(Index index);
 
-    void insertAt(Index index,const VALUE &value);
-    void insertAt(Index index,const EasyVector &values);
+    void insertAt(Index index, const VALUE &value);
+    void insertAt(Index index, const EasyVector &values);
 
     bool isValidIndex(Index index) const;
     bool isValidInsertIndex(Index index) const;
@@ -62,86 +60,97 @@ protected:
 
 template < class VALUE, bool CHECKINDEX >
 template < class PTYPE, class PROP_FUNC >
-typename EasyVector< VALUE, CHECKINDEX >::Index
-    EasyVector< VALUE, CHECKINDEX >::findProperty(const PTYPE &property,
-                                                  PROP_FUNC prop_func) const
-{   typename EasyVector< VALUE, CHECKINDEX >::const_iterator i;
-    for (i=this->begin();i!=this->end();++i) {
-        if (prop_func(*i)==property)
-            return i-this->begin();
+typename EasyVector< VALUE, CHECKINDEX >::Index EasyVector< VALUE, CHECKINDEX >::findProperty(const PTYPE &property, PROP_FUNC prop_func) const
+{
+    typename EasyVector< VALUE, CHECKINDEX >::const_iterator i;
+    for(i = this->begin(); i != this->end(); ++i)
+    {
+        if(prop_func(*i) == property)
+            return i - this->begin();
     }
     return NotFound;
 }
 
 
 template < class VALUE, bool CHECKINDEX >
-typename EasyVector< VALUE, CHECKINDEX >::Index
-    EasyVector< VALUE, CHECKINDEX >::findValue(CVALUE value) const
-{   typename EasyVector< VALUE, CHECKINDEX >::const_iterator i;
-    i=std::find(this->begin(),this->end(),value);
-    if (i==this->end()) return NotFound;
-    return i-this->begin();
+typename EasyVector< VALUE, CHECKINDEX >::Index EasyVector< VALUE, CHECKINDEX >::findValue(CVALUE value) const
+{
+    typename EasyVector< VALUE, CHECKINDEX >::const_iterator i;
+    i = std::find(this->begin(), this->end(), value);
+    if(i == this->end())
+        return NotFound;
+    return i - this->begin();
 }
 
 
-template < class VALUE, bool CHECKINDEX >
-void EasyVector< VALUE, CHECKINDEX >::eraseAt(Index index)
-{   _checkIndex(index);
-    this->erase(this->begin()+index);
+template < class VALUE, bool CHECKINDEX > void EasyVector< VALUE, CHECKINDEX >::eraseAt(Index index)
+{
+    _checkIndex(index);
+    this->erase(this->begin() + index);
 }
 
 
-template < class VALUE, bool CHECKINDEX >
-VALUE EasyVector< VALUE, CHECKINDEX >::takeFrom(Index index)
-{   _checkIndex(index);
-    VALUE result=(*this)[index];
+template < class VALUE, bool CHECKINDEX > VALUE EasyVector< VALUE, CHECKINDEX >::takeFrom(Index index)
+{
+    _checkIndex(index);
+    VALUE result = (*this)[index];
     eraseAt(index);
     return result;
 }
 
 
 template < class VALUE, bool CHECKINDEX >
-void EasyVector< VALUE, CHECKINDEX >::insertAt(EasyVector< VALUE, CHECKINDEX >::Index index,const VALUE &value)
-{   index=_convertInsertIndex(index);
+void EasyVector< VALUE, CHECKINDEX >::insertAt(EasyVector< VALUE, CHECKINDEX >::Index index, const VALUE &value)
+{
+    index = _convertInsertIndex(index);
     _checkInsertIndex(index);
-    if (index==int(this->size())) {
+    if(index == int(this->size()))
+    {
         this->push_back(value);
         return;
     }
-    this->insert(this->begin()+index,value);
+    this->insert(this->begin() + index, value);
 }
 
 
 template < class VALUE, bool CHECKINDEX >
-void EasyVector< VALUE, CHECKINDEX >::insertAt(EasyVector< VALUE, CHECKINDEX >::Index index,const EasyVector< VALUE, CHECKINDEX > &v)
-{   index=_convertInsertIndex(index);
+void EasyVector< VALUE, CHECKINDEX >::insertAt(EasyVector< VALUE, CHECKINDEX >::Index index, const EasyVector< VALUE, CHECKINDEX > &v)
+{
+    index = _convertInsertIndex(index);
     _checkInsertIndex(index);
-    this->insert(this->begin()+index,v.begin(),v.end());
+    this->insert(this->begin() + index, v.begin(), v.end());
 }
 
 
-template < class VALUE, bool CHECKINDEX >
-bool EasyVector< VALUE, CHECKINDEX >::isValidIndex(EasyVector< VALUE, CHECKINDEX >::Index index) const
-{   return(0<=index && index<int(this->size()));}
+template < class VALUE, bool CHECKINDEX > bool EasyVector< VALUE, CHECKINDEX >::isValidIndex(EasyVector< VALUE, CHECKINDEX >::Index index) const
+{
+    return (0 <= index && index < int(this->size()));
+}
 
-template < class VALUE, bool CHECKINDEX >
-bool EasyVector< VALUE, CHECKINDEX >::isValidInsertIndex(EasyVector< VALUE, CHECKINDEX >::Index index) const
-{   return(index==Append)||(0<=index && index<=int(this->size()));}
+template < class VALUE, bool CHECKINDEX > bool EasyVector< VALUE, CHECKINDEX >::isValidInsertIndex(EasyVector< VALUE, CHECKINDEX >::Index index) const
+{
+    return (index == Append) || (0 <= index && index <= int(this->size()));
+}
 
 template < class VALUE, bool CHECKINDEX >
 inline typename EasyVector< VALUE, CHECKINDEX >::Index EasyVector< VALUE, CHECKINDEX >::_convertInsertIndex(Index index) const
-{   if (index==Append) return this->size();
+{
+    if(index == Append)
+        return this->size();
     return index;
 }
 
-template < class VALUE, bool CHECKINDEX >
-void EasyVector< VALUE, CHECKINDEX >::_checkInsertIndex(Index index) const
-{   if (CHECKINDEX) assert (isValidInsertIndex(index));}
+template < class VALUE, bool CHECKINDEX > void EasyVector< VALUE, CHECKINDEX >::_checkInsertIndex(Index index) const
+{
+    if(CHECKINDEX)
+        assert(isValidInsertIndex(index));
+}
 
-template < class VALUE, bool CHECKINDEX >
-void EasyVector< VALUE, CHECKINDEX >::_checkIndex(Index index) const
-{   if (CHECKINDEX) assert (isValidIndex(index));}
+template < class VALUE, bool CHECKINDEX > void EasyVector< VALUE, CHECKINDEX >::_checkIndex(Index index) const
+{
+    if(CHECKINDEX)
+        assert(isValidIndex(index));
+}
 
 
 #endif
-

@@ -31,8 +31,7 @@ class KIntNumInput;
 class KProcess;
 
 //===========================================================================
-class KScreenSaver : public KCModule
-{
+class KScreenSaver : public KCModule {
     Q_OBJECT
 public:
     KScreenSaver(QWidget *parent, const char *name, const QStringList &);
@@ -47,16 +46,16 @@ public:
     void readSettings(bool useDefaults);
 
 protected slots:
-    void slotEnable( bool );
-    void slotScreenSaver( QListViewItem* );
+    void slotEnable(bool);
+    void slotScreenSaver(QListViewItem *);
     void slotSetup();
     void slotAdvanced();
     void slotTest();
     void slotStopTest();
-    void slotTimeoutChanged( int );
-    void slotLockTimeoutChanged( int );
-    void slotLock( bool );
-    void slotSetupDone(KProcess*);
+    void slotTimeoutChanged(int);
+    void slotLockTimeoutChanged(int);
+    void slotLock(bool);
+    void slotSetupDone(KProcess *);
     // when selecting a new screensaver, the old preview will
     // be killed. -- This callback is responsible for restarting the
     // new preview
@@ -68,46 +67,46 @@ protected:
     void getSaverNames();
     void setMonitor();
     void setDefaults();
-    void resizeEvent( QResizeEvent * );
+    void resizeEvent(QResizeEvent *);
     void mousePressEvent(QMouseEvent *);
     void keyPressEvent(QKeyEvent *);
 
 protected:
-    TestWin     *mTestWin;
-    KProcess    *mTestProc;
-    KProcess    *mSetupProc;
-    KProcess    *mPreviewProc;
-    KSSMonitor  *mMonitor;
+    TestWin *mTestWin;
+    KProcess *mTestProc;
+    KProcess *mSetupProc;
+    KProcess *mPreviewProc;
+    KSSMonitor *mMonitor;
     QPushButton *mSetupBt;
     QPushButton *mTestBt;
-    QListView   *mSaverListView;
-    QSpinBox	*mWaitEdit;
-    QSpinBox    *mWaitLockEdit;
-    QCheckBox   *mLockCheckBox;
-    QCheckBox   *mStarsCheckBox;
-    QCheckBox   *mEnabledCheckBox;
-    QLabel      *mMonitorLabel;
-    QLabel      *mActivateLbl;
-    QLabel      *mLockLbl;
+    QListView *mSaverListView;
+    QSpinBox *mWaitEdit;
+    QSpinBox *mWaitLockEdit;
+    QCheckBox *mLockCheckBox;
+    QCheckBox *mStarsCheckBox;
+    QCheckBox *mEnabledCheckBox;
+    QLabel *mMonitorLabel;
+    QLabel *mActivateLbl;
+    QLabel *mLockLbl;
     QStringList mSaverFileList;
-    SaverList   mSaverList;
-    QTimer      *mLoadTimer;
-    QGroupBox   *mSaverGroup;
-    QGroupBox   *mSettingsGroup;
+    SaverList mSaverList;
+    QTimer *mLoadTimer;
+    QGroupBox *mSaverGroup;
+    QGroupBox *mSettingsGroup;
 
-    int         mSelected;
-    int         mPrevSelected;
-    int		mNumLoaded;
-    bool        mChanged;
-    bool	mTesting;
+    int mSelected;
+    int mPrevSelected;
+    int mNumLoaded;
+    bool mChanged;
+    bool mTesting;
 
     // Settings
-    int         mTimeout;
-    int         mLockTimeout;
-    bool        mLock;
-    bool        mEnabled;
-    QString     mSaver;
-    bool        mImmutable;
+    int mTimeout;
+    int mLockTimeout;
+    bool mLock;
+    bool mEnabled;
+    QString mSaver;
+    bool mImmutable;
 };
 
 #endif

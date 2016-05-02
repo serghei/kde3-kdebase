@@ -24,23 +24,21 @@
 
 #include "historyimageitem.h"
 
-HistoryImageItem::HistoryImageItem( const QPixmap& data )
-    : HistoryItem(),  m_data( data )
+HistoryImageItem::HistoryImageItem(const QPixmap &data) : HistoryItem(), m_data(data)
 {
 }
 
-QString HistoryImageItem::text() const {
-    if ( m_text.isNull() ) {
-        m_text = QString( "%1x%2x%3 %4" )
-                 .arg( m_data.width() )
-                 .arg( m_data.height() )
-               .arg( m_data.depth() );
+QString HistoryImageItem::text() const
+{
+    if(m_text.isNull())
+    {
+        m_text = QString("%1x%2x%3 %4").arg(m_data.width()).arg(m_data.height()).arg(m_data.depth());
     }
     return m_text;
-
 }
 
 /* virtual */
-void HistoryImageItem::write( QDataStream& stream ) const {
-    stream << QString( "image" ) << m_data;
+void HistoryImageItem::write(QDataStream &stream) const
+{
+    stream << QString("image") << m_data;
 }

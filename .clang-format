@@ -1,0 +1,30 @@
+AccessModifierOffset: -4
+AlignConsecutiveAssignments: false
+AlignOperands: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: None
+AlwaysBreakBeforeMultilineStrings: true
+BraceWrapping:
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  BeforeCatch: true
+  BeforeElse: true
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
+BreakConstructorInitializersBeforeComma: true
+#BreakStringLiterals: true
+ColumnLimit: 150
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+ContinuationIndentWidth: 4
+IndentCaseLabels: true
+IndentWidth: 4
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: Inner
+SortIncludes: false
+SpaceBeforeParens: Never
+SpacesInAngles: true
+TabWidth: 4
+UseTab: Never

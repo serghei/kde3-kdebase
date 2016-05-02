@@ -34,25 +34,27 @@ class KBookmarkOwner;
 /**
  * Button that contains a bookmark menu
  */
-class BookmarksButton : public PanelPopupButton
-{
+class BookmarksButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    BookmarksButton(QWidget* parent);
+    BookmarksButton(QWidget *parent);
     ~BookmarksButton();
 
-    void loadConfig(const KConfigGroup& config);
+    void loadConfig(const KConfigGroup &config);
     virtual void properties();
 
 protected:
-    virtual QString tileName() { return "WindowList"; }
+    virtual QString tileName()
+    {
+        return "WindowList";
+    }
     virtual void initPopup();
 
-    KPopupMenu*          bookmarkParent;
-    KBookmarkMenu*       bookmarkMenu;
-    KActionCollection*   actionCollection;
-    KBookmarkOwner*      bookmarkOwner;
+    KPopupMenu *bookmarkParent;
+    KBookmarkMenu *bookmarkMenu;
+    KActionCollection *actionCollection;
+    KBookmarkOwner *bookmarkOwner;
 };
 
 #endif

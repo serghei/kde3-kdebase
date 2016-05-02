@@ -42,53 +42,64 @@ namespace KHC {
 class ScopeItem;
 class SearchEngine;
 
-class SearchWidget : public QWidget, public DCOPObject
-{
+class SearchWidget : public QWidget, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-  k_dcop:
-    ASYNC searchIndexUpdated(); // called from kcmhelpcenter
+    k_dcop : ASYNC searchIndexUpdated(); // called from kcmhelpcenter
 
-  public:
-    SearchWidget ( SearchEngine *, QWidget *parent = 0 );
+public:
+    SearchWidget(SearchEngine *, QWidget *parent = 0);
     ~SearchWidget();
 
     QString method();
     int pages();
     QString scope();
 
-    QListView *listView() { return mScopeListView; }
+    QListView *listView()
+    {
+        return mScopeListView;
+    }
 
-    enum { ScopeDefault, ScopeAll, ScopeNone, ScopeCustom, ScopeNum };
+    enum
+    {
+        ScopeDefault,
+        ScopeAll,
+        ScopeNone,
+        ScopeCustom,
+        ScopeNum
+    };
 
-    QString scopeSelectionLabel( int ) const;
+    QString scopeSelectionLabel(int) const;
 
-    void readConfig( KConfig * );
-    void writeConfig( KConfig * );
+    void readConfig(KConfig *);
+    void writeConfig(KConfig *);
 
     int scopeCount() const;
 
-    SearchEngine *engine() const { return mEngine; }
+    SearchEngine *engine() const
+    {
+        return mEngine;
+    }
 
-  signals:
-    void searchResult( const QString &url );
-    void scopeCountChanged( int );
+signals:
+    void searchResult(const QString &url);
+    void scopeCountChanged(int);
     void showIndexDialog();
 
-  public slots:
+public slots:
     void slotSwitchBoxes();
-    void scopeSelectionChanged( int );
+    void scopeSelectionChanged(int);
     void updateScopeList();
 
-  protected:
+protected:
     void checkScope();
 
-  protected slots:
-    void scopeDoubleClicked( QListViewItem * );
-    void scopeClicked( QListViewItem * );
+protected slots:
+    void scopeDoubleClicked(QListViewItem *);
+    void scopeClicked(QListViewItem *);
 
-  private:
+private:
     void loadLanguages();
 
     SearchEngine *mEngine;
@@ -100,7 +111,6 @@ class SearchWidget : public QWidget, public DCOPObject
 
     int mScopeCount;
 };
-
 }
 
 #endif

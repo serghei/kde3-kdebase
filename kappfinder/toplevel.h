@@ -33,23 +33,21 @@ class QLabel;
 class QListView;
 class QPushButton;
 
-class TopLevel : public KDialog
-{
-  Q_OBJECT
+class TopLevel : public KDialog {
+    Q_OBJECT
 
-  public:
-    TopLevel( const QString &destDir, QWidget *parent = 0, const char *name = 0 );
+public:
+    TopLevel(const QString &destDir, QWidget *parent = 0, const char *name = 0);
     ~TopLevel();
 
-  public slots:
+public slots:
     void slotScan();
     void slotCreate();
     void slotSelectAll();
     void slotUnselectAll();
 
-  private:
-    QListViewItem *addGroupItem( QListViewItem *parent, const QString &relPath,
-                                 const QString &name );
+private:
+    QListViewItem *addGroupItem(QListViewItem *parent, const QString &relPath, const QString &name);
 
     KProgress *mProgress;
     QLabel *mSummary;
@@ -62,7 +60,7 @@ class TopLevel : public KDialog
     QString mDestDir;
     QStringList mTemplates;
 
-    QPtrList<AppLnkCache> mAppCache;
+    QPtrList< AppLnkCache > mAppCache;
 
     int mFound, mAdded;
 };

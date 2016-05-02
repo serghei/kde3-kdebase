@@ -22,110 +22,107 @@
 
 #include <kdebug.h>
 
-KateDocManagerDCOPIface::KateDocManagerDCOPIface (KateDocManager *dm) : DCOPObject ("KateDocumentManager"), m_dm (dm)
+KateDocManagerDCOPIface::KateDocManagerDCOPIface(KateDocManager *dm) : DCOPObject("KateDocumentManager"), m_dm(dm)
 {
-
 }
 
 // bit more error save than the forcing c cast ;()
-DCOPRef KateDocManagerDCOPIface::document (uint n)
+DCOPRef KateDocManagerDCOPIface::document(uint n)
 {
-  Kate::Document *doc = m_dm->document(n);
+    Kate::Document *doc = m_dm->document(n);
 
-  if (!doc)
-    return DCOPRef ();
+    if(!doc)
+        return DCOPRef();
 
-  DCOPObject *obj = static_cast<DCOPObject*>(doc->qt_cast("DCOPObject"));
+    DCOPObject *obj = static_cast< DCOPObject * >(doc->qt_cast("DCOPObject"));
 
-  if (!obj)
-    return DCOPRef ();
+    if(!obj)
+        return DCOPRef();
 
-  return DCOPRef (obj);
+    return DCOPRef(obj);
 }
 
-DCOPRef KateDocManagerDCOPIface::activeDocument ()
+DCOPRef KateDocManagerDCOPIface::activeDocument()
 {
-  Kate::Document *doc = m_dm->activeDocument();
+    Kate::Document *doc = m_dm->activeDocument();
 
-  if (!doc)
-    return DCOPRef ();
+    if(!doc)
+        return DCOPRef();
 
-  DCOPObject *obj = static_cast<DCOPObject*>(doc->qt_cast("DCOPObject"));
+    DCOPObject *obj = static_cast< DCOPObject * >(doc->qt_cast("DCOPObject"));
 
-  if (!obj)
-    return DCOPRef ();
+    if(!obj)
+        return DCOPRef();
 
-  return DCOPRef (obj);
+    return DCOPRef(obj);
 }
 
-uint KateDocManagerDCOPIface::activeDocumentNumber ()
+uint KateDocManagerDCOPIface::activeDocumentNumber()
 {
-  Kate::Document *doc = m_dm->activeDocument();
+    Kate::Document *doc = m_dm->activeDocument();
 
-  if (doc)
-    return doc->documentNumber ();
-  
-  return 0;
+    if(doc)
+        return doc->documentNumber();
+
+    return 0;
 }
 
-DCOPRef KateDocManagerDCOPIface::documentWithID (uint id)
+DCOPRef KateDocManagerDCOPIface::documentWithID(uint id)
 {
-  Kate::Document *doc = m_dm->documentWithID (id);
+    Kate::Document *doc = m_dm->documentWithID(id);
 
-  if (!doc)
-    return DCOPRef ();
+    if(!doc)
+        return DCOPRef();
 
-  DCOPObject *obj = static_cast<DCOPObject*>(doc->qt_cast("DCOPObject"));
+    DCOPObject *obj = static_cast< DCOPObject * >(doc->qt_cast("DCOPObject"));
 
-  if (!obj)
-    return DCOPRef ();
+    if(!obj)
+        return DCOPRef();
 
-  return DCOPRef (obj);
+    return DCOPRef(obj);
 }
 
-DCOPRef KateDocManagerDCOPIface::openURL (KURL url, QString encoding)
+DCOPRef KateDocManagerDCOPIface::openURL(KURL url, QString encoding)
 {
-  Kate::Document *doc = m_dm->openURL (url, encoding);
+    Kate::Document *doc = m_dm->openURL(url, encoding);
 
-  if (!doc)
-    return DCOPRef ();
+    if(!doc)
+        return DCOPRef();
 
-  DCOPObject *obj = static_cast<DCOPObject*>(doc->qt_cast("DCOPObject"));
+    DCOPObject *obj = static_cast< DCOPObject * >(doc->qt_cast("DCOPObject"));
 
-  if (!obj)
-    return DCOPRef ();
+    if(!obj)
+        return DCOPRef();
 
-  return DCOPRef (obj);
+    return DCOPRef(obj);
 }
 
 bool KateDocManagerDCOPIface::closeDocument(uint n)
 {
-  return m_dm->closeDocument(n);
+    return m_dm->closeDocument(n);
 }
 
 bool KateDocManagerDCOPIface::closeDocumentWithID(uint id)
 {
-  return m_dm->closeDocumentWithID (id);
+    return m_dm->closeDocumentWithID(id);
 }
 
 bool KateDocManagerDCOPIface::closeAllDocuments()
 {
-  return m_dm->closeAllDocuments();
+    return m_dm->closeAllDocuments();
 }
 
 bool KateDocManagerDCOPIface::isOpen(KURL url)
 {
-  return m_dm->isOpen (url);
+    return m_dm->isOpen(url);
 }
 
-uint KateDocManagerDCOPIface::documents ()
+uint KateDocManagerDCOPIface::documents()
 {
-  return m_dm->documents();
+    return m_dm->documents();
 }
 
-int KateDocManagerDCOPIface::findDocument (KURL url)
+int KateDocManagerDCOPIface::findDocument(KURL url)
 {
-  return m_dm->findDocument (url);
+    return m_dm->findDocument(url);
 }
-
-

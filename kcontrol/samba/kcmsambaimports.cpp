@@ -31,30 +31,26 @@
 
 #include <stdio.h>
 
-ImportsView::ImportsView(QWidget * parent, KConfig *config, const char * name )
-   : QWidget (parent, name)
-   ,configFile(config)
-   ,list(this)
+ImportsView::ImportsView(QWidget *parent, KConfig *config, const char *name) : QWidget(parent, name), configFile(config), list(this)
 {
-    QBoxLayout *topLayout = new QVBoxLayout(this, KDialog::marginHint(),
-        KDialog::spacingHint());
+    QBoxLayout *topLayout = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
     topLayout->setAutoAdd(true);
 
     list.setAllColumnsShowFocus(true);
     list.setShowSortIndicator(true);
-    list.setMinimumSize(425,200);
+    list.setMinimumSize(425, 200);
     list.addColumn(i18n("Type"), 50);
     list.addColumn(i18n("Resource"), 200);
     list.addColumn(i18n("Mounted Under"), 190);
 
-    QWhatsThis::add( this, i18n("This list shows the Samba and NFS shared"
-      " resources mounted on your system from other hosts. The \"Type\""
-      " column tells you whether the mounted resource is a Samba or an NFS"
-      " type of resource. The \"Resource\" column shows the descriptive name"
-      " of the shared resource. Finally, the third column, which is labeled"
-      " \"Mounted under\" shows the location on your system where the shared"
-      " resource is mounted.") );
- 
+    QWhatsThis::add(this, i18n("This list shows the Samba and NFS shared"
+                               " resources mounted on your system from other hosts. The \"Type\""
+                               " column tells you whether the mounted resource is a Samba or an NFS"
+                               " type of resource. The \"Resource\" column shows the descriptive name"
+                               " of the shared resource. Finally, the third column, which is labeled"
+                               " \"Mounted under\" shows the location on your system where the shared"
+                               " resource is mounted."));
+
     timer.start(10000);
     QObject::connect(&timer, SIGNAL(timeout()), this, SLOT(updateList()));
     updateList();
@@ -62,34 +58,34 @@ ImportsView::ImportsView(QWidget * parent, KConfig *config, const char * name )
 
 void ImportsView::updateList()
 {
-   list.clear();
-   char *e;
-   char buf[250];
-   QCString s(""),strSource, strMount, strType;
-   FILE *f=popen("mount","r");
-   if (f==0) return;
-   do
-   {
-      e=fgets(buf,250,f);
-      if (e!=0)
-      {
-         s=buf;
-         if ((s.contains(" nfs ")) || (s.contains(" smbfs ")))
-         {
-            strSource=s.left(s.find(" on /"));
-            strMount=s.mid(s.find(" on /")+4,s.length());
-            if ((s.contains(" nfs ")) || (s.contains("/remote on ")))
-               strType="NFS";
-            else if (s.contains(" smbfs "))
-               strType="SMB";
-            int pos(strMount.find(" type "));
-            if (pos==-1) pos=strMount.find(" read/");
-            strMount=strMount.left(pos);
-            new QListViewItem(&list,strType,strSource,strMount);
-         };
-      };
-   }
-   while (!feof(f));
-   pclose(f);
+    list.clear();
+    char *e;
+    char buf[250];
+    QCString s(""), strSource, strMount, strType;
+    FILE *f = popen("mount", "r");
+    if(f == 0)
+        return;
+    do
+    {
+        e = fgets(buf, 250, f);
+        if(e != 0)
+        {
+            s = buf;
+            if((s.contains(" nfs ")) || (s.contains(" smbfs ")))
+            {
+                strSource = s.left(s.find(" on /"));
+                strMount = s.mid(s.find(" on /") + 4, s.length());
+                if((s.contains(" nfs ")) || (s.contains("/remote on ")))
+                    strType = "NFS";
+                else if(s.contains(" smbfs "))
+                    strType = "SMB";
+                int pos(strMount.find(" type "));
+                if(pos == -1)
+                    pos = strMount.find(" read/");
+                strMount = strMount.left(pos);
+                new QListViewItem(&list, strType, strSource, strMount);
+            };
+        };
+    } while(!feof(f));
+    pclose(f);
 }
-

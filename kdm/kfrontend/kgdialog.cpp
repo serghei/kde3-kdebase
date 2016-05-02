@@ -38,14 +38,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include <stdlib.h>
 
-KGDialog::KGDialog( bool themed ) : inherited( 0, !themed )
+KGDialog::KGDialog(bool themed) : inherited(0, !themed)
 {
 #ifdef WITH_KDM_XCONSOLE
-	consoleView = _showLog ? new KConsole( this ) : 0;
+    consoleView = _showLog ? new KConsole(this) : 0;
 #endif
 
-	optMenu = 0;
-	verify = 0;
+    optMenu = 0;
+    verify = 0;
 }
 
 void
@@ -56,182 +56,176 @@ KGDialog::completeMenu()
 #endif
 {
 #ifdef HAVE_VTS
-	if (_isLocal) {
-		dpyMenu = new QPopupMenu( this );
-		int id = inserten( i18n("Sw&itch User"), ALT+Key_I, dpyMenu );
-		connect( dpyMenu, SIGNAL(activated( int )),
-		         SLOT(slotDisplaySelected( int )) );
-		connect( dpyMenu, SIGNAL(aboutToShow()),
-		         SLOT(slotPopulateDisplays()) );
-		QAccel *accel = new QAccel( this );
-		accel->insertItem( ALT+CTRL+Key_Insert, id );
-		connect( accel, SIGNAL(activated( int )), SLOT(slotActivateMenu( int )) );
-	}
+    if(_isLocal)
+    {
+        dpyMenu = new QPopupMenu(this);
+        int id = inserten(i18n("Sw&itch User"), ALT + Key_I, dpyMenu);
+        connect(dpyMenu, SIGNAL(activated(int)), SLOT(slotDisplaySelected(int)));
+        connect(dpyMenu, SIGNAL(aboutToShow()), SLOT(slotPopulateDisplays()));
+        QAccel *accel = new QAccel(this);
+        accel->insertItem(ALT + CTRL + Key_Insert, id);
+        connect(accel, SIGNAL(activated(int)), SLOT(slotActivateMenu(int)));
+    }
 #endif
 
-	if (_allowClose)
-		inserten( _isLocal ? i18n("R&estart X Server") : i18n("Clos&e Connection"),
-		          ALT+Key_E, SLOT(slotExit()) );
+    if(_allowClose)
+        inserten(_isLocal ? i18n("R&estart X Server") : i18n("Clos&e Connection"), ALT + Key_E, SLOT(slotExit()));
 
 #ifdef XDMCP
-	if (_isLocal && _loginMode != _switchIf) {
-		switchCode = _switchCode;
-		inserten( _switchMsg, _switchAccel, SLOT(slotSwitch()) );
-	}
+    if(_isLocal && _loginMode != _switchIf)
+    {
+        switchCode = _switchCode;
+        inserten(_switchMsg, _switchAccel, SLOT(slotSwitch()));
+    }
 #endif
 
-	if (_hasConsole)
-		inserten( i18n("Co&nsole Login"), ALT+Key_N, SLOT(slotConsole()) );
+    if(_hasConsole)
+        inserten(i18n("Co&nsole Login"), ALT + Key_N, SLOT(slotConsole()));
 
-	if (_allowShutdown != SHUT_NONE) {
-		inserten( i18n("&Shutdown..."), ALT+Key_S, SLOT(slotShutdown( int )) );
-		QAccel *accel = new QAccel( this );
-		accel->insertItem( ALT+CTRL+Key_Delete );
-		connect( accel, SIGNAL(activated( int )), SLOT(slotShutdown( int )) );
-		accel = new QAccel( this );
-		accel->insertItem( SHIFT+ALT+CTRL+Key_PageUp, SHUT_REBOOT );
-		connect( accel, SIGNAL(activated( int )), SLOT(slotShutdown( int )) );
-		accel = new QAccel( this );
-		accel->insertItem( SHIFT+ALT+CTRL+Key_PageDown, SHUT_HALT );
-		connect( accel, SIGNAL(activated( int )), SLOT(slotShutdown( int )) );
-	}
+    if(_allowShutdown != SHUT_NONE)
+    {
+        inserten(i18n("&Shutdown..."), ALT + Key_S, SLOT(slotShutdown(int)));
+        QAccel *accel = new QAccel(this);
+        accel->insertItem(ALT + CTRL + Key_Delete);
+        connect(accel, SIGNAL(activated(int)), SLOT(slotShutdown(int)));
+        accel = new QAccel(this);
+        accel->insertItem(SHIFT + ALT + CTRL + Key_PageUp, SHUT_REBOOT);
+        connect(accel, SIGNAL(activated(int)), SLOT(slotShutdown(int)));
+        accel = new QAccel(this);
+        accel->insertItem(SHIFT + ALT + CTRL + Key_PageDown, SHUT_HALT);
+        connect(accel, SIGNAL(activated(int)), SLOT(slotShutdown(int)));
+    }
 }
 
-void
-KGDialog::ensureMenu()
+void KGDialog::ensureMenu()
 {
-	if (!optMenu) {
-		optMenu = new QPopupMenu( this );
-		optMenu->setCheckable( false );
-		needSep = false;
-	} else if (needSep) {
-		optMenu->insertSeparator();
-		needSep = false;
-	}
+    if(!optMenu)
+    {
+        optMenu = new QPopupMenu(this);
+        optMenu->setCheckable(false);
+        needSep = false;
+    }
+    else if(needSep)
+    {
+        optMenu->insertSeparator();
+        needSep = false;
+    }
 }
 
-void
-KGDialog::inserten( const QString& txt, int accel, const char *member )
+void KGDialog::inserten(const QString &txt, int accel, const char *member)
 {
-	ensureMenu();
-	optMenu->insertItem( txt, this, member, accel );
+    ensureMenu();
+    optMenu->insertItem(txt, this, member, accel);
 }
 
-int
-KGDialog::inserten( const QString& txt, int accel, QPopupMenu *cmnu )
+int KGDialog::inserten(const QString &txt, int accel, QPopupMenu *cmnu)
 {
-	ensureMenu();
-	int id = optMenu->insertItem( txt, cmnu );
-	optMenu->setAccel( accel, id );
-	optMenu->connectItem( id, this, SLOT(slotActivateMenu( int )) );
-	optMenu->setItemParameter( id, id );
-	return id;
+    ensureMenu();
+    int id = optMenu->insertItem(txt, cmnu);
+    optMenu->setAccel(accel, id);
+    optMenu->connectItem(id, this, SLOT(slotActivateMenu(int)));
+    optMenu->setItemParameter(id, id);
+    return id;
 }
 
-void
-KGDialog::slotActivateMenu( int id )
+void KGDialog::slotActivateMenu(int id)
 {
-	QPopupMenu *cmnu = optMenu->findItem( id )->popup();
-	QSize sh( cmnu->sizeHint() / 2 );
-	cmnu->exec( geometry().center() - QPoint( sh.width(), sh.height() ) );
+    QPopupMenu *cmnu = optMenu->findItem(id)->popup();
+    QSize sh(cmnu->sizeHint() / 2);
+    cmnu->exec(geometry().center() - QPoint(sh.width(), sh.height()));
 }
 
-void
-KGDialog::slotExit()
+void KGDialog::slotExit()
 {
-	if (verify)
-		verify->abort();
-	::exit( EX_RESERVER_DPY );
+    if(verify)
+        verify->abort();
+    ::exit(EX_RESERVER_DPY);
 }
 
-void
-KGDialog::slotSwitch()
+void KGDialog::slotSwitch()
 {
 #ifdef XDMCP
-	// workaround for Qt bug
-	QTimer::singleShot( 0, this, SLOT(slotReallySwitch()) );
+    // workaround for Qt bug
+    QTimer::singleShot(0, this, SLOT(slotReallySwitch()));
 #endif
 }
 
-void
-KGDialog::slotReallySwitch()
+void KGDialog::slotReallySwitch()
 {
 #ifdef XDMCP
-	done( switchCode );
+    done(switchCode);
 #endif
 }
 
-void
-KGDialog::slotConsole()
+void KGDialog::slotConsole()
 {
 #ifdef HAVE_VTS
-	dpySpec *sess = fetchSessions( 0 );
-	if (sess) {
-		if (verify)
-			verify->suspend();
-		int ret = KDMConfShutdown( -1, sess, SHUT_CONSOLE, 0 ).exec();
-		if (verify)
-			verify->resume();
-		disposeSessions( sess );
-		if (!ret)
-			return;
-	}
+    dpySpec *sess = fetchSessions(0);
+    if(sess)
+    {
+        if(verify)
+            verify->suspend();
+        int ret = KDMConfShutdown(-1, sess, SHUT_CONSOLE, 0).exec();
+        if(verify)
+            verify->resume();
+        disposeSessions(sess);
+        if(!ret)
+            return;
+    }
 #else
-	if (verify)
-		verify->abort();
+    if(verify)
+        verify->abort();
 #endif
-	GSet( 1 );
-	GSendInt( G_Console );
-	GSet( 0 );
+    GSet(1);
+    GSendInt(G_Console);
+    GSet(0);
 }
 
-void
-KGDialog::slotShutdown( int id )
+void KGDialog::slotShutdown(int id)
 {
-	if (verify)
-		verify->suspend();
-	if (id < 0) {
-		if (_scheduledSd == SHUT_ALWAYS)
-			KDMShutdown::scheduleShutdown( this );
-		else
-			KDMSlimShutdown( this ).exec();
-	} else
-		KDMSlimShutdown::externShutdown( id, 0, -1 );
-	if (verify)
-		verify->resume();
+    if(verify)
+        verify->suspend();
+    if(id < 0)
+    {
+        if(_scheduledSd == SHUT_ALWAYS)
+            KDMShutdown::scheduleShutdown(this);
+        else
+            KDMSlimShutdown(this).exec();
+    }
+    else
+        KDMSlimShutdown::externShutdown(id, 0, -1);
+    if(verify)
+        verify->resume();
 }
 
-void
-KGDialog::slotDisplaySelected( int vt )
+void KGDialog::slotDisplaySelected(int vt)
 {
 #ifdef HAVE_VTS
-	GSet( 1 );
-	GSendInt( G_Activate );
-	GSendInt( vt );
-	GSet( 0 );
+    GSet(1);
+    GSendInt(G_Activate);
+    GSendInt(vt);
+    GSet(0);
 #else
-	(void)vt;
+    (void)vt;
 #endif
 }
 
-void
-KGDialog::slotPopulateDisplays()
+void KGDialog::slotPopulateDisplays()
 {
 #ifdef HAVE_VTS
-	dpyMenu->clear();
-	dpySpec *sessions = fetchSessions( lstPassive | lstTTY );
-	QString user, loc;
-	for (dpySpec *sess = sessions; sess; sess = sess->next) {
-		decodeSess( sess, user, loc );
-		int id = dpyMenu->insertItem(
-			i18n("session (location)", "%1 (%2)").arg( user ).arg( loc ),
-			sess->vt ? sess->vt : -1 );
-		if (!sess->vt)
-			dpyMenu->setItemEnabled( id, false );
-		if (sess->flags & isSelf)
-			dpyMenu->setItemChecked( id, true );
-	}
-	disposeSessions( sessions );
+    dpyMenu->clear();
+    dpySpec *sessions = fetchSessions(lstPassive | lstTTY);
+    QString user, loc;
+    for(dpySpec *sess = sessions; sess; sess = sess->next)
+    {
+        decodeSess(sess, user, loc);
+        int id = dpyMenu->insertItem(i18n("session (location)", "%1 (%2)").arg(user).arg(loc), sess->vt ? sess->vt : -1);
+        if(!sess->vt)
+            dpyMenu->setItemEnabled(id, false);
+        if(sess->flags & isSelf)
+            dpyMenu->setItemChecked(id, true);
+    }
+    disposeSessions(sessions);
 #endif
 }
 

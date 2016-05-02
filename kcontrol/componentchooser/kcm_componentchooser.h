@@ -22,18 +22,17 @@
 
 class KAboutData;
 
-class KCMComponentChooser : public KCModule
-{
+class KCMComponentChooser : public KCModule {
     Q_OBJECT
 public:
-    KCMComponentChooser( QWidget *parent = 0, const char *name = 0 );
- 
+    KCMComponentChooser(QWidget *parent = 0, const char *name = 0);
+
     void load();
     void save();
     void defaults();
 
 private:
-    ComponentChooser  *m_chooser;
+    ComponentChooser *m_chooser;
 };
 
 #endif

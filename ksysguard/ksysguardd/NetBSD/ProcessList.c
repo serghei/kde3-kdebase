@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
 
-	Copyright (c) 1999-2000 Hans Petter Bieker<bieker@kde.org>
-	Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
+    Copyright (c) 1999-2000 Hans Petter Bieker<bieker@kde.org>
+    Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,410 +48,391 @@ CONTAINER ProcessList = 0;
 
 typedef struct
 {
-	/* This flag is set for all found processes at the beginning of the
-	 * process list update. Processes that do not have this flag set will
-	 * be assumed dead and removed from the list. The flag is cleared after
-	 * each list update. */
-	int alive;
+    /* This flag is set for all found processes at the beginning of the
+     * process list update. Processes that do not have this flag set will
+     * be assumed dead and removed from the list. The flag is cleared after
+     * each list update. */
+    int alive;
 
-	/* the process ID */
-	pid_t pid;
+    /* the process ID */
+    pid_t pid;
 
-	/* the parent process ID */
-	pid_t ppid;
+    /* the parent process ID */
+    pid_t ppid;
 
-	/* the real user ID */
-	uid_t uid;
+    /* the real user ID */
+    uid_t uid;
 
-	/* the real group ID */
-	gid_t gid;
+    /* the real group ID */
+    gid_t gid;
 
-	/* a character description of the process status */
-	char status[16];
+    /* a character description of the process status */
+    char status[16];
 
-	/* the number of the tty the process owns */
-	int ttyNo;
+    /* the number of the tty the process owns */
+    int ttyNo;
 
-	/*
-	 * The nice level. The range should be -20 to 20. I'm not sure
-	 * whether this is true for all platforms.
-	 */
-	int niceLevel;
+    /*
+     * The nice level. The range should be -20 to 20. I'm not sure
+     * whether this is true for all platforms.
+     */
+    int niceLevel;
 
-	/*
-	 * The scheduling priority.
-	 */
-	int priority;
+    /*
+     * The scheduling priority.
+     */
+    int priority;
 
-	/*
-	 * The total amount of memory the process uses. This includes shared and
-	 * swapped memory.
-	 */
-	unsigned int vmSize;
+    /*
+     * The total amount of memory the process uses. This includes shared and
+     * swapped memory.
+     */
+    unsigned int vmSize;
 
-	/*
-	 * The amount of physical memory the process currently uses.
-	 */
-	unsigned int vmRss;
+    /*
+     * The amount of physical memory the process currently uses.
+     */
+    unsigned int vmRss;
 
-	/*
-	 * The amount of memory (shared/swapped/etc) the process shares with
-	 * other processes.
-	 */
-	unsigned int vmLib;
+    /*
+     * The amount of memory (shared/swapped/etc) the process shares with
+     * other processes.
+     */
+    unsigned int vmLib;
 
-	/*
-	 * The number of 1/100 of a second the process has spend in user space.
-	 * If a machine has an uptime of 1 1/2 years or longer this is not a
-	 * good idea. I never thought that the stability of UNIX could get me
-	 * into trouble! ;)
-	 */
-	unsigned int userTime;
+    /*
+     * The number of 1/100 of a second the process has spend in user space.
+     * If a machine has an uptime of 1 1/2 years or longer this is not a
+     * good idea. I never thought that the stability of UNIX could get me
+     * into trouble! ;)
+     */
+    unsigned int userTime;
 
-	/*
-	 * The number of 1/100 of a second the process has spend in system space.
-	 * If a machine has an uptime of 1 1/2 years or longer this is not a
-	 * good idea. I never thought that the stability of UNIX could get me
-	 * into trouble! ;)
-	 */
-	unsigned int sysTime;
+    /*
+     * The number of 1/100 of a second the process has spend in system space.
+     * If a machine has an uptime of 1 1/2 years or longer this is not a
+     * good idea. I never thought that the stability of UNIX could get me
+     * into trouble! ;)
+     */
+    unsigned int sysTime;
 
-	/* system time as multime of 100ms */
-	int centStamp;
+    /* system time as multime of 100ms */
+    int centStamp;
 
-	/* the current CPU load (in %) from user space */
-	double userLoad;
+    /* the current CPU load (in %) from user space */
+    double userLoad;
 
-	/* the current CPU load (in %) from system space */
-	double sysLoad;
+    /* the current CPU load (in %) from system space */
+    double sysLoad;
 
-	/* the name of the process */
-	char name[64];
+    /* the name of the process */
+    char name[64];
 
-	/* the command used to start the process */
-	char cmdline[256];
+    /* the command used to start the process */
+    char cmdline[256];
 
-	/* the login name of the user that owns this process */
- 	char userName[32];
+    /* the login name of the user that owns this process */
+    char userName[32];
 } ProcessInfo;
 
 static unsigned ProcessCount;
 
-static int
-processCmp(void* p1, void* p2)
+static int processCmp(void *p1, void *p2)
 {
-	return (((ProcessInfo*) p1)->pid - ((ProcessInfo*) p2)->pid);
+    return (((ProcessInfo *)p1)->pid - ((ProcessInfo *)p2)->pid);
 }
 
-static ProcessInfo*
-findProcessInList(int pid)
+static ProcessInfo *findProcessInList(int pid)
 {
-	ProcessInfo key;
-	long index;
+    ProcessInfo key;
+    long index;
 
-	key.pid = pid;
-	if ((index = search_ctnr(ProcessList, processCmp, &key)) < 0)
-		return (0);
+    key.pid = pid;
+    if((index = search_ctnr(ProcessList, processCmp, &key)) < 0)
+        return (0);
 
-	return (get_ctnr(ProcessList, index));
+    return (get_ctnr(ProcessList, index));
 }
 
-static int
-updateProcess(int pid)
+static int updateProcess(int pid)
 {
-	static char *statuses[] = { "idle","run","sleep","stop","zombie" };
-	
-	ProcessInfo* ps;
-	struct passwd* pwent;
-	int mib[4];
-	struct kinfo_proc p;
-	size_t len;
+    static char *statuses[] = {"idle", "run", "sleep", "stop", "zombie"};
 
-	if ((ps = findProcessInList(pid)) == 0)
-	{
-		ps = (ProcessInfo*) malloc(sizeof(ProcessInfo));
-		ps->pid = pid;
-		ps->centStamp = 0;
-		push_ctnr(ProcessList, ps);
-		bsort_ctnr(ProcessList, processCmp);
-	}
+    ProcessInfo *ps;
+    struct passwd *pwent;
+    int mib[4];
+    struct kinfo_proc p;
+    size_t len;
 
-	ps->alive = 1;
+    if((ps = findProcessInList(pid)) == 0)
+    {
+        ps = (ProcessInfo *)malloc(sizeof(ProcessInfo));
+        ps->pid = pid;
+        ps->centStamp = 0;
+        push_ctnr(ProcessList, ps);
+        bsort_ctnr(ProcessList, processCmp);
+    }
 
-	mib[0] = CTL_KERN;
-	mib[1] = KERN_PROC;
-	mib[2] = KERN_PROC_PID;
-	mib[3] = pid;
+    ps->alive = 1;
 
-	len = sizeof (p);
-	if (sysctl(mib, 4, &p, &len, NULL, 0) == -1 || !len)
-		return -1;
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC;
+    mib[2] = KERN_PROC_PID;
+    mib[3] = pid;
 
-        ps->pid       = p.kp_proc.p_pid;
-        ps->ppid      = p.kp_eproc.e_ppid;
-        ps->uid       = p.kp_eproc.e_ucred.cr_uid;
-        ps->gid       = p.kp_eproc.e_pgid;
-        ps->priority  = p.kp_proc.p_priority;
-        ps->niceLevel = p.kp_proc.p_nice;
+    len = sizeof(p);
+    if(sysctl(mib, 4, &p, &len, NULL, 0) == -1 || !len)
+        return -1;
 
-        /* this isn't usertime -- it's total time (??) */
-	ps->userTime = p.kp_proc.p_rtime.tv_sec*100+p.kp_proc.p_rtime.tv_usec/100;
-        ps->sysTime  = 0;
-        ps->sysLoad  = 0;
+    ps->pid = p.kp_proc.p_pid;
+    ps->ppid = p.kp_eproc.e_ppid;
+    ps->uid = p.kp_eproc.e_ucred.cr_uid;
+    ps->gid = p.kp_eproc.e_pgid;
+    ps->priority = p.kp_proc.p_priority;
+    ps->niceLevel = p.kp_proc.p_nice;
 
-        /* memory, process name, process uid */
-	/* find out user name with process uid */
-	pwent = getpwuid(ps->uid);
-	strlcpy(ps->userName,pwent&&pwent->pw_name? pwent->pw_name:"????",sizeof(ps->userName));
-	ps->userName[sizeof(ps->userName)-1]='\0';
+    /* this isn't usertime -- it's total time (??) */
+    ps->userTime = p.kp_proc.p_rtime.tv_sec * 100 + p.kp_proc.p_rtime.tv_usec / 100;
+    ps->sysTime = 0;
+    ps->sysLoad = 0;
 
-        ps->userLoad = p.kp_proc.p_pctcpu / 100;
-	ps->vmSize   = (p.kp_eproc.e_vm.vm_tsize +
-			p.kp_eproc.e_vm.vm_dsize +
-			p.kp_eproc.e_vm.vm_ssize) * getpagesize();
-	ps->vmRss    = p.kp_eproc.e_vm.vm_rssize * getpagesize();
-	strlcpy(ps->name,p.kp_proc.p_comm ? p.kp_proc.p_comm : "????", sizeof(ps->name));
-	strlcpy(ps->status,(p.kp_proc.p_stat>=1)&&(p.kp_proc.p_stat<=5)? statuses[p.kp_proc.p_stat-1]:"????", sizeof(ps->status));
+    /* memory, process name, process uid */
+    /* find out user name with process uid */
+    pwent = getpwuid(ps->uid);
+    strlcpy(ps->userName, pwent && pwent->pw_name ? pwent->pw_name : "????", sizeof(ps->userName));
+    ps->userName[sizeof(ps->userName) - 1] = '\0';
 
-        /* process command line */
-	/* the following line causes segfaults on some FreeBSD systems... why?
-		strncpy(ps->cmdline, p.kp_proc.p_args->ar_args, sizeof(ps->cmdline) - 1);
-	*/
-	strcpy(ps->cmdline, "????");
+    ps->userLoad = p.kp_proc.p_pctcpu / 100;
+    ps->vmSize = (p.kp_eproc.e_vm.vm_tsize + p.kp_eproc.e_vm.vm_dsize + p.kp_eproc.e_vm.vm_ssize) * getpagesize();
+    ps->vmRss = p.kp_eproc.e_vm.vm_rssize * getpagesize();
+    strlcpy(ps->name, p.kp_proc.p_comm ? p.kp_proc.p_comm : "????", sizeof(ps->name));
+    strlcpy(ps->status, (p.kp_proc.p_stat >= 1) && (p.kp_proc.p_stat <= 5) ? statuses[p.kp_proc.p_stat - 1] : "????", sizeof(ps->status));
 
-	return (0);
+    /* process command line */
+    /* the following line causes segfaults on some FreeBSD systems... why?
+        strncpy(ps->cmdline, p.kp_proc.p_args->ar_args, sizeof(ps->cmdline) - 1);
+    */
+    strcpy(ps->cmdline, "????");
+
+    return (0);
 }
 
-static void
-cleanupProcessList(void)
+static void cleanupProcessList(void)
 {
-	ProcessInfo* ps;
+    ProcessInfo *ps;
 
-	ProcessCount = 0;
-	/* All processes that do not have the active flag set are assumed dead
-	 * and will be removed from the list. The alive flag is cleared. */
-	for (ps = first_ctnr(ProcessList); ps; ps = next_ctnr(ProcessList))
-	{
-		if (ps->alive)
-		{
-			/* Process is still alive. Just clear flag. */
-			ps->alive = 0;
-			ProcessCount++;
-		}
-		else
-		{
-			/* Process has probably died. We remove it from the list and
-			 * destruct the data structure. i needs to be decremented so
-			 * that after i++ the next list element will be inspected. */
-			free(remove_ctnr(ProcessList));
-		}
-	}
+    ProcessCount = 0;
+    /* All processes that do not have the active flag set are assumed dead
+     * and will be removed from the list. The alive flag is cleared. */
+    for(ps = first_ctnr(ProcessList); ps; ps = next_ctnr(ProcessList))
+    {
+        if(ps->alive)
+        {
+            /* Process is still alive. Just clear flag. */
+            ps->alive = 0;
+            ProcessCount++;
+        }
+        else
+        {
+            /* Process has probably died. We remove it from the list and
+             * destruct the data structure. i needs to be decremented so
+             * that after i++ the next list element will be inspected. */
+            free(remove_ctnr(ProcessList));
+        }
+    }
 }
 
 /*
 ================================ public part ==================================
 */
 
-void
-initProcessList(struct SensorModul* sm)
+void initProcessList(struct SensorModul *sm)
 {
-	ProcessList = new_ctnr();
+    ProcessList = new_ctnr();
 
-	registerMonitor("ps", "table", printProcessList, printProcessListInfo, sm);
-	registerMonitor("pscount", "integer", printProcessCount, printProcessCountInfo, sm);
+    registerMonitor("ps", "table", printProcessList, printProcessListInfo, sm);
+    registerMonitor("pscount", "integer", printProcessCount, printProcessCountInfo, sm);
 
-	if (!RunAsDaemon)
-	{
-		registerCommand("kill", killProcess);
-		registerCommand("setpriority", setPriority);
-	}
+    if(!RunAsDaemon)
+    {
+        registerCommand("kill", killProcess);
+        registerCommand("setpriority", setPriority);
+    }
 
-	updateProcessList();
+    updateProcessList();
 }
 
-void
-exitProcessList(void)
+void exitProcessList(void)
 {
-	removeMonitor("ps");
-	removeMonitor("pscount");
+    removeMonitor("ps");
+    removeMonitor("pscount");
 
-	if (ProcessList)
-		free (ProcessList);
+    if(ProcessList)
+        free(ProcessList);
 }
 
-int
-updateProcessList(void)
+int updateProcessList(void)
 {
-        int mib[3];
-        size_t len;
-        size_t num;
-        struct kinfo_proc *p;
+    int mib[3];
+    size_t len;
+    size_t num;
+    struct kinfo_proc *p;
 
 
-        mib[0] = CTL_KERN;
-        mib[1] = KERN_PROC;
-        mib[2] = KERN_PROC_ALL;
-        sysctl(mib, 3, NULL, &len, NULL, 0);
-	p = malloc(len);
-        sysctl(mib, 3, p, &len, NULL, 0);
+    mib[0] = CTL_KERN;
+    mib[1] = KERN_PROC;
+    mib[2] = KERN_PROC_ALL;
+    sysctl(mib, 3, NULL, &len, NULL, 0);
+    p = malloc(len);
+    sysctl(mib, 3, p, &len, NULL, 0);
 
-	for (num = 0; num < len / sizeof(struct kinfo_proc); num++)
-		updateProcess(p[num].kp_proc.p_pid);
-	free(p);
-	cleanupProcessList();
+    for(num = 0; num < len / sizeof(struct kinfo_proc); num++)
+        updateProcess(p[num].kp_proc.p_pid);
+    free(p);
+    cleanupProcessList();
 
-	return (0);
+    return (0);
 }
 
-void
-printProcessListInfo(const char* cmd)
+void printProcessListInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "Name\tPID\tPPID\tUID\tGID\tStatus\tUser%%\tSystem%%\tNice\tVmSize\tVmRss\tLogin\tCommand\n");
-	fprintf(CurrentClient, "s\td\td\td\td\tS\tf\tf\td\tD\tD\ts\ts\n");
+    fprintf(CurrentClient, "Name\tPID\tPPID\tUID\tGID\tStatus\tUser%%\tSystem%%\tNice\tVmSize\tVmRss\tLogin\tCommand\n");
+    fprintf(CurrentClient, "s\td\td\td\td\tS\tf\tf\td\tD\tD\ts\ts\n");
 }
 
-void
-printProcessList(const char* cmd)
+void printProcessList(const char *cmd)
 {
-	ProcessInfo* ps;
+    ProcessInfo *ps;
 
-	ps = first_ctnr(ProcessList); /* skip 'kernel' entry */
-	for (ps = next_ctnr(ProcessList); ps; ps = next_ctnr(ProcessList))
-	{
-		fprintf(CurrentClient, "%s\t%ld\t%ld\t%ld\t%ld\t%s\t%.2f\t%.2f\t%d\t%d\t%d\t%s\t%s\n",
-			   ps->name, (long)ps->pid, (long)ps->ppid,
-			   (long)ps->uid, (long)ps->gid, ps->status,
-			   ps->userLoad, ps->sysLoad, ps->niceLevel,
-			   ps->vmSize / 1024, ps->vmRss / 1024, ps->userName, ps->cmdline);
-	}
+    ps = first_ctnr(ProcessList); /* skip 'kernel' entry */
+    for(ps = next_ctnr(ProcessList); ps; ps = next_ctnr(ProcessList))
+    {
+        fprintf(CurrentClient, "%s\t%ld\t%ld\t%ld\t%ld\t%s\t%.2f\t%.2f\t%d\t%d\t%d\t%s\t%s\n", ps->name, (long)ps->pid, (long)ps->ppid, (long)ps->uid,
+                (long)ps->gid, ps->status, ps->userLoad, ps->sysLoad, ps->niceLevel, ps->vmSize / 1024, ps->vmRss / 1024, ps->userName, ps->cmdline);
+    }
 }
 
-void
-printProcessCount(const char* cmd)
+void printProcessCount(const char *cmd)
 {
-	fprintf(CurrentClient, "%d\n", ProcessCount);
+    fprintf(CurrentClient, "%d\n", ProcessCount);
 }
 
-void
-printProcessCountInfo(const char* cmd)
+void printProcessCountInfo(const char *cmd)
 {
-	fprintf(CurrentClient, "Number of Processes\t1\t65535\t\n");
+    fprintf(CurrentClient, "Number of Processes\t1\t65535\t\n");
 }
 
-void
-killProcess(const char* cmd)
+void killProcess(const char *cmd)
 {
-	int sig, pid;
+    int sig, pid;
 
-	sscanf(cmd, "%*s %d %d", &pid, &sig);
-	switch(sig)
-	{
-	case MENU_ID_SIGABRT:
-		sig = SIGABRT;
-		break;
-	case MENU_ID_SIGALRM:
-		sig = SIGALRM;
-		break;
-	case MENU_ID_SIGCHLD:
-		sig = SIGCHLD;
-		break;
-	case MENU_ID_SIGCONT:
-		sig = SIGCONT;
-		break;
-	case MENU_ID_SIGFPE:
-		sig = SIGFPE;
-		break;
-	case MENU_ID_SIGHUP:
-		sig = SIGHUP;
-		break;
-	case MENU_ID_SIGILL:
-		sig = SIGILL;
-		break;
-	case MENU_ID_SIGINT:
-		sig = SIGINT;
-		break;
-	case MENU_ID_SIGKILL:
-		sig = SIGKILL;
-		break;
-	case MENU_ID_SIGPIPE:
-		sig = SIGPIPE;
-		break;
-	case MENU_ID_SIGQUIT:
-		sig = SIGQUIT;
-		break;
-	case MENU_ID_SIGSEGV:
-		sig = SIGSEGV;
-		break;
-	case MENU_ID_SIGSTOP:
-		sig = SIGSTOP;
-		break;
-	case MENU_ID_SIGTERM:
-		sig = SIGTERM;
-		break;
-	case MENU_ID_SIGTSTP:
-		sig = SIGTSTP;
-		break;
-	case MENU_ID_SIGTTIN:
-		sig = SIGTTIN;
-		break;
-	case MENU_ID_SIGTTOU:
-		sig = SIGTTOU;
-		break;
-	case MENU_ID_SIGUSR1:
-		sig = SIGUSR1;
-		break;
-	case MENU_ID_SIGUSR2:
-		sig = SIGUSR2;
-		break;
-	}
-	if (kill((pid_t) pid, sig))
-	{
-		switch(errno)
-		{
-		case EINVAL:
-			fprintf(CurrentClient, "4\t%d\n", pid);
-			break;
-		case ESRCH:
-			fprintf(CurrentClient, "3\t%d\n", pid);
-			break;
-		case EPERM:
-			fprintf(CurrentClient, "2\t%d\n", pid);
-			break;
-		default:
-			fprintf(CurrentClient, "1\t%d\n", pid);	/* unknown error */
-			break;
-		}
-
-	}
-	else
-		fprintf(CurrentClient, "0\t%d\n", pid);
+    sscanf(cmd, "%*s %d %d", &pid, &sig);
+    switch(sig)
+    {
+        case MENU_ID_SIGABRT:
+            sig = SIGABRT;
+            break;
+        case MENU_ID_SIGALRM:
+            sig = SIGALRM;
+            break;
+        case MENU_ID_SIGCHLD:
+            sig = SIGCHLD;
+            break;
+        case MENU_ID_SIGCONT:
+            sig = SIGCONT;
+            break;
+        case MENU_ID_SIGFPE:
+            sig = SIGFPE;
+            break;
+        case MENU_ID_SIGHUP:
+            sig = SIGHUP;
+            break;
+        case MENU_ID_SIGILL:
+            sig = SIGILL;
+            break;
+        case MENU_ID_SIGINT:
+            sig = SIGINT;
+            break;
+        case MENU_ID_SIGKILL:
+            sig = SIGKILL;
+            break;
+        case MENU_ID_SIGPIPE:
+            sig = SIGPIPE;
+            break;
+        case MENU_ID_SIGQUIT:
+            sig = SIGQUIT;
+            break;
+        case MENU_ID_SIGSEGV:
+            sig = SIGSEGV;
+            break;
+        case MENU_ID_SIGSTOP:
+            sig = SIGSTOP;
+            break;
+        case MENU_ID_SIGTERM:
+            sig = SIGTERM;
+            break;
+        case MENU_ID_SIGTSTP:
+            sig = SIGTSTP;
+            break;
+        case MENU_ID_SIGTTIN:
+            sig = SIGTTIN;
+            break;
+        case MENU_ID_SIGTTOU:
+            sig = SIGTTOU;
+            break;
+        case MENU_ID_SIGUSR1:
+            sig = SIGUSR1;
+            break;
+        case MENU_ID_SIGUSR2:
+            sig = SIGUSR2;
+            break;
+    }
+    if(kill((pid_t)pid, sig))
+    {
+        switch(errno)
+        {
+            case EINVAL:
+                fprintf(CurrentClient, "4\t%d\n", pid);
+                break;
+            case ESRCH:
+                fprintf(CurrentClient, "3\t%d\n", pid);
+                break;
+            case EPERM:
+                fprintf(CurrentClient, "2\t%d\n", pid);
+                break;
+            default:
+                fprintf(CurrentClient, "1\t%d\n", pid); /* unknown error */
+                break;
+        }
+    }
+    else
+        fprintf(CurrentClient, "0\t%d\n", pid);
 }
 
-void
-setPriority(const char* cmd)
+void setPriority(const char *cmd)
 {
-	int pid, prio;
+    int pid, prio;
 
-	sscanf(cmd, "%*s %d %d", &pid, &prio);
-	if (setpriority(PRIO_PROCESS, pid, prio))
-	{
-		switch(errno)
-		{
-		case EINVAL:
-			fprintf(CurrentClient, "4\n");
-			break;
-		case ESRCH:
-			fprintf(CurrentClient, "3\n");
-			break;
-		case EPERM:
-		case EACCES:
-			fprintf(CurrentClient, "2\n");
-			break;
-		default:
-			fprintf(CurrentClient, "1\n");	/* unknown error */
-			break;
-		}
-	}
-	else
-		fprintf(CurrentClient, "0\n");
+    sscanf(cmd, "%*s %d %d", &pid, &prio);
+    if(setpriority(PRIO_PROCESS, pid, prio))
+    {
+        switch(errno)
+        {
+            case EINVAL:
+                fprintf(CurrentClient, "4\n");
+                break;
+            case ESRCH:
+                fprintf(CurrentClient, "3\n");
+                break;
+            case EPERM:
+            case EACCES:
+                fprintf(CurrentClient, "2\n");
+                break;
+            default:
+                fprintf(CurrentClient, "1\n"); /* unknown error */
+                break;
+        }
+    }
+    else
+        fprintf(CurrentClient, "0\n");
 }

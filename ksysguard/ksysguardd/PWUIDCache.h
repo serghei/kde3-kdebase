@@ -28,9 +28,9 @@
   use chaching. This module implements a cache for uid to user name
   mappings.
  */
-void initPWUIDCache( void );
-void exitPWUIDCache( void );
+void initPWUIDCache(void);
+void exitPWUIDCache(void);
 
-const char* getCachedPWUID( uid_t uid );
+const char *getCachedPWUID(uid_t uid);
 
 #endif

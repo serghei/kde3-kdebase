@@ -35,25 +35,25 @@
  * KonqInfoListViewItem
  *
  **************************************************************/
-KonqInfoListViewItem::KonqInfoListViewItem( KonqInfoListViewWidget *_widget, KonqInfoListViewItem * _parent, KFileItem* _fileitem )
-:KonqBaseListViewItem( _widget,_parent,_fileitem ), m_ILVWidget(_widget)
+KonqInfoListViewItem::KonqInfoListViewItem(KonqInfoListViewWidget *_widget, KonqInfoListViewItem *_parent, KFileItem *_fileitem)
+    : KonqBaseListViewItem(_widget, _parent, _fileitem), m_ILVWidget(_widget)
 {
     updateContents();
 }
 
-KonqInfoListViewItem::KonqInfoListViewItem( KonqInfoListViewWidget *_listViewWidget, KFileItem* _fileitem )
-:KonqBaseListViewItem(_listViewWidget,_fileitem), m_ILVWidget(_listViewWidget)
+KonqInfoListViewItem::KonqInfoListViewItem(KonqInfoListViewWidget *_listViewWidget, KFileItem *_fileitem)
+    : KonqBaseListViewItem(_listViewWidget, _fileitem), m_ILVWidget(_listViewWidget)
 {
-   updateContents();
+    updateContents();
 }
 
 void KonqInfoListViewItem::updateContents()
 {
     // Set the pixmap
-    setDisabled( m_bDisabled );
+    setDisabled(m_bDisabled);
 
     // Set the text of each column
-    setText(0,m_fileitem->text());
+    setText(0, m_fileitem->text());
 
 #if 0
    if (S_ISDIR(m_fileitem->mode()))
@@ -119,17 +119,18 @@ void KonqInfoListViewItem::gotMetaInfo()
 {
     KFileMetaInfo info = item()->metaInfo(false);
 
-    if (!info.isValid()) return;
+    if(!info.isValid())
+        return;
 
     QStringList::ConstIterator it = m_ILVWidget->columnKeys().begin();
-    for (int i = 1; it != m_ILVWidget->columnKeys().end(); ++it, ++i)
+    for(int i = 1; it != m_ILVWidget->columnKeys().end(); ++it, ++i)
     {
         KFileMetaInfoItem kfmii = info.item(*it);
 
         m_columnTypes.append(kfmii.type());
         m_columnValues.append(kfmii.value());
 
-        if (!kfmii.isValid())
+        if(!kfmii.isValid())
             continue;
 
         QString s = kfmii.string().simplifyWhiteSpace();
@@ -137,122 +138,122 @@ void KonqInfoListViewItem::gotMetaInfo()
     }
 }
 
-int KonqInfoListViewItem::compare( QListViewItem *item, int col, bool ascending ) const
+int KonqInfoListViewItem::compare(QListViewItem *item, int col, bool ascending) const
 {
-    if ( col == 0 )
-        return KonqBaseListViewItem::compare( item, 0, ascending );
+    if(col == 0)
+        return KonqBaseListViewItem::compare(item, 0, ascending);
 
-    KonqInfoListViewItem *i = static_cast<KonqInfoListViewItem *>(item);
+    KonqInfoListViewItem *i = static_cast< KonqInfoListViewItem * >(item);
 
     int size1 = m_columnValues.size();
     int size2 = i->m_columnValues.size();
 
-    if ( size1 < col || size2 < col )
-        return ascending ? ( size2 - size1 ) : ( size1 - size2 );
+    if(size1 < col || size2 < col)
+        return ascending ? (size2 - size1) : (size1 - size2);
 
-    QVariant value1 = m_columnValues[ col-1 ];
-    QVariant value2 = i->m_columnValues[ col-1 ];
-    QVariant::Type type1 = m_columnTypes[ col-1 ];
-    QVariant::Type type2 = i->m_columnTypes[ col-1 ];
+    QVariant value1 = m_columnValues[col - 1];
+    QVariant value2 = i->m_columnValues[col - 1];
+    QVariant::Type type1 = m_columnTypes[col - 1];
+    QVariant::Type type2 = i->m_columnTypes[col - 1];
 
-    if ( type1 != type2 )
-        return ascending ? ( type1 - type2 ) : ( type2 - type1 );
+    if(type1 != type2)
+        return ascending ? (type1 - type2) : (type2 - type1);
 
-#define KONQ_CASE( x ) \
-    case QVariant::x:\
-        return ( value1.to##x() > value2.to##x() ) ? 1 : (  value1.to##x() == value2.to##x() ) ? 0 : -1;
+#define KONQ_CASE(x)                                                                                                                                 \
+    case QVariant::x:                                                                                                                                \
+        return (value1.to##x() > value2.to##x()) ? 1 : (value1.to##x() == value2.to##x()) ? 0 : -1;
 
-    switch( type1 ) {
-    KONQ_CASE( Bool )
-    KONQ_CASE( Int )
-    KONQ_CASE( LongLong )
-    KONQ_CASE( UInt )
-    KONQ_CASE( ULongLong )
-    KONQ_CASE( Double )
-    KONQ_CASE( Date )
-    KONQ_CASE( Time )
-    KONQ_CASE( DateTime )
-    case QVariant::Size:
+    switch(type1)
     {
-        int w1 = value1.toSize().width();
-        int w2 = value2.toSize().width();
-        if ( w1 != w2 )
-            return ( w1 > w2 ) ? 1 : -1;
-        int h1 = value1.toSize().height();
-        int h2 = value2.toSize().height();
-        return ( h1 > h2 ) ? 1 : ( h1 == h2 ) ? 0 : -1;
-    }
-    default:
-        break;
+        KONQ_CASE(Bool)
+        KONQ_CASE(Int)
+        KONQ_CASE(LongLong)
+        KONQ_CASE(UInt)
+        KONQ_CASE(ULongLong)
+        KONQ_CASE(Double)
+        KONQ_CASE(Date)
+        KONQ_CASE(Time)
+        KONQ_CASE(DateTime)
+        case QVariant::Size:
+        {
+            int w1 = value1.toSize().width();
+            int w2 = value2.toSize().width();
+            if(w1 != w2)
+                return (w1 > w2) ? 1 : -1;
+            int h1 = value1.toSize().height();
+            int h2 = value2.toSize().height();
+            return (h1 > h2) ? 1 : (h1 == h2) ? 0 : -1;
+        }
+        default:
+            break;
     }
 #undef KONQ_CASE
 
     QString text1 = text(col);
     QString text2 = i->text(col);
 
-    if ( text1.isEmpty() )
+    if(text1.isEmpty())
         return ascending ? 1 : -1;
-    if ( text2.isEmpty() )
+    if(text2.isEmpty())
         return ascending ? -1 : 1;
 
     return text1.lower().localeAwareCompare(text2.lower());
 }
 
-void KonqInfoListViewItem::setDisabled( bool disabled )
+void KonqInfoListViewItem::setDisabled(bool disabled)
 {
-    KonqBaseListViewItem::setDisabled( disabled );
-    int iconSize = static_cast<KonqBaseListViewWidget *>(listView())->iconSize();
-    iconSize = iconSize ? iconSize : KGlobal::iconLoader()->currentSize( KIcon::Small ); // Default = small
-    setPixmap( 0, m_fileitem->pixmap( iconSize, state() ) );
+    KonqBaseListViewItem::setDisabled(disabled);
+    int iconSize = static_cast< KonqBaseListViewWidget * >(listView())->iconSize();
+    iconSize = iconSize ? iconSize : KGlobal::iconLoader()->currentSize(KIcon::Small); // Default = small
+    setPixmap(0, m_fileitem->pixmap(iconSize, state()));
 }
 
-void KonqInfoListViewItem::paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment )
+void KonqInfoListViewItem::paintCell(QPainter *_painter, const QColorGroup &_cg, int _column, int _width, int _alignment)
 {
-    QColorGroup cg( _cg );
+    QColorGroup cg(_cg);
 
-    if ( _column == 0 )
+    if(_column == 0)
     {
-        _painter->setFont( m_pListViewWidget->itemFont() );
+        _painter->setFont(m_pListViewWidget->itemFont());
     }
 
-    cg.setColor( QColorGroup::Text, m_pListViewWidget->itemColor() );
+    cg.setColor(QColorGroup::Text, m_pListViewWidget->itemColor());
 
-    KListView *lv = static_cast< KListView* >( listView() );
+    KListView *lv = static_cast< KListView * >(listView());
     const QPixmap *pm = lv->viewport()->paletteBackgroundPixmap();
-    if ( _column == 0 && isSelected() && !lv->allColumnsShowFocus() )
+    if(_column == 0 && isSelected() && !lv->allColumnsShowFocus())
     {
-        int newWidth = width( lv->fontMetrics(), lv, _column );
-        if ( newWidth > _width )
+        int newWidth = width(lv->fontMetrics(), lv, _column);
+        if(newWidth > _width)
             newWidth = _width;
-        if ( pm && !pm->isNull() )
+        if(pm && !pm->isNull())
         {
-            cg.setBrush( QColorGroup::Base, QBrush( backgroundColor(_column), *pm ) );
+            cg.setBrush(QColorGroup::Base, QBrush(backgroundColor(_column), *pm));
             QPoint o = _painter->brushOrigin();
-            _painter->setBrushOrigin( o.x() - lv->contentsX(), o.y() - lv->contentsY() );
-            const QColorGroup::ColorRole crole =
-                QPalette::backgroundRoleFromMode( lv->viewport()->backgroundMode() );
-            _painter->fillRect( newWidth, 0, _width - newWidth, height(), cg.brush( crole ) );
-            _painter->setBrushOrigin( o );
+            _painter->setBrushOrigin(o.x() - lv->contentsX(), o.y() - lv->contentsY());
+            const QColorGroup::ColorRole crole = QPalette::backgroundRoleFromMode(lv->viewport()->backgroundMode());
+            _painter->fillRect(newWidth, 0, _width - newWidth, height(), cg.brush(crole));
+            _painter->setBrushOrigin(o);
         }
         else
         {
-            _painter->fillRect( newWidth, 0, _width - newWidth, height(), backgroundColor(_column) );
+            _painter->fillRect(newWidth, 0, _width - newWidth, height(), backgroundColor(_column));
         }
 
         _width = newWidth;
     }
 
-    KListViewItem::paintCell( _painter, cg, _column, _width, _alignment );
+    KListViewItem::paintCell(_painter, cg, _column, _width, _alignment);
 }
 
-void KonqInfoListViewItem::paintFocus( QPainter * _painter, const QColorGroup & cg, const QRect & _r )
+void KonqInfoListViewItem::paintFocus(QPainter *_painter, const QColorGroup &cg, const QRect &_r)
 {
-    QRect r( _r );
-    QListView *lv = static_cast< QListView * >( listView() );
-    r.setWidth( width( lv->fontMetrics(), lv, 0 ) );
-    if ( r.right() > lv->header()->sectionRect( 0 ).right() )
-        r.setRight( lv->header()->sectionRect( 0 ).right() );
-    QListViewItem::paintFocus( _painter, cg, r );
+    QRect r(_r);
+    QListView *lv = static_cast< QListView * >(listView());
+    r.setWidth(width(lv->fontMetrics(), lv, 0));
+    if(r.right() > lv->header()->sectionRect(0).right())
+        r.setRight(lv->header()->sectionRect(0).right());
+    QListViewItem::paintFocus(_painter, cg, r);
 }
 
 #if 0

@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999 - 2001 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -48,16 +48,14 @@ class SensorProperties;
   more sensors in any form. It must be inherited by all displays that
   should be inserted into the work sheet.
  */
-class SensorDisplay : public QWidget, public SensorClient
-{
-  Q_OBJECT
+class SensorDisplay : public QWidget, public SensorClient {
+    Q_OBJECT
 
-  public:
+public:
     /**
       Constructor.
      */
-    SensorDisplay( QWidget *parent = 0, const char *name = 0, 
-                   const QString& title = 0, bool nf = false, bool isApplet = false );
+    SensorDisplay(QWidget *parent = 0, const char *name = 0, const QString &title = 0, bool nf = false, bool isApplet = false);
 
     /**
       Destructor.
@@ -67,7 +65,7 @@ class SensorDisplay : public QWidget, public SensorClient
     /**
       Sets the title of the display.
      */
-    void setTitle( const QString &title );
+    void setTitle(const QString &title);
 
     /**
       Returns the title of the display.
@@ -77,7 +75,7 @@ class SensorDisplay : public QWidget, public SensorClient
     /**
       Sets the unit of the display.
      */
-    void setUnit( const QString &unit );
+    void setUnit(const QString &unit);
 
     /**
       Returns the unit of the display.
@@ -88,7 +86,7 @@ class SensorDisplay : public QWidget, public SensorClient
       Sets whether the unit string should be displayed at the top
       of the display frame.
      */
-    void setShowUnit( bool value );
+    void setShowUnit(bool value);
 
     /**
       Returns whether the unit string should be displayed at the top
@@ -100,7 +98,7 @@ class SensorDisplay : public QWidget, public SensorClient
       Sets whether the update interval of the work sheet should be
       used instead of the one, set by @ref setUpdateInterval().
      */
-    void setUseGlobalUpdateInterval( bool value );
+    void setUseGlobalUpdateInterval(bool value);
 
     /**
       Returns whether the update interval of the work sheet should be
@@ -113,7 +111,7 @@ class SensorDisplay : public QWidget, public SensorClient
       Sets the update interval of the timer, which triggers the timer
       events. The state of the timer can be set with @ref setTimerOn().
      */
-    void setUpdateInterval( uint interval );
+    void setUpdateInterval(uint interval);
 
     /**
       Returns the update interval.
@@ -123,12 +121,12 @@ class SensorDisplay : public QWidget, public SensorClient
     /**
       This method appends all hosts of the display to @ref list.
      */
-    void hosts( QStringList& list );
+    void hosts(QStringList &list);
 
     /**
       Sets the widget on which the error icon can be drawn.
      */
-    void setPlotterWidget( QWidget *plotter );
+    void setPlotterWidget(QWidget *plotter);
 
     /**
       Returns the widget on which the error icon can be drawn.
@@ -137,20 +135,19 @@ class SensorDisplay : public QWidget, public SensorClient
 
     /**
       Add a sensor to the display.
-      
+
       @param hostName The name of the host, the sensor belongs to.
       @param name The sensor name.
       @param type The type of the sensor.
       @param description A short description of the sensor.
      */
-    virtual bool addSensor( const QString &hostName, const QString &name,
-                            const QString &type, const QString &description );
+    virtual bool addSensor(const QString &hostName, const QString &name, const QString &type, const QString &description);
 
     /**
       Removes the sensor from the display, that is at the position
       @ref pos of the intern sensor list.
      */
-    virtual bool removeSensor( uint pos );
+    virtual bool removeSensor(uint pos);
 
     /**
       This function is a wrapper function to SensorManager::sendRequest.
@@ -158,7 +155,7 @@ class SensorDisplay : public QWidget, public SensorClient
       a request to a sensor since it performs an appropriate error
       handling by removing the display of necessary.
      */
-    void sendRequest( const QString &hostName, const QString &cmd, int id );
+    void sendRequest(const QString &hostName, const QString &cmd, int id);
 
     /**
       Raises the configure dialog to setup the update interval.
@@ -180,32 +177,32 @@ class SensorDisplay : public QWidget, public SensorClient
     /**
       Reimplement this method to setup the display from config data.
      */
-    virtual bool restoreSettings( QDomElement& );
+    virtual bool restoreSettings(QDomElement &);
 
     /**
       Reimplement this method to save the displays config data.
      */
-    virtual bool saveSettings( QDomDocument&, QDomElement&, bool = true );
+    virtual bool saveSettings(QDomDocument &, QDomElement &, bool = true);
 
     /**
       Reimplement this method to catch error messages from the SensorManager.
-      
+
       @param sensorId The unique id of the sensor.
       @param mode The mode: true = error, false = everthing ok
      */
-    virtual void sensorError( int sensorId, bool mode );
+    virtual void sensorError(int sensorId, bool mode);
 
     /**
       Normaly you shouldn't reimplement this methode
      */
-    virtual void sensorLost( int reqId );
+    virtual void sensorLost(int reqId);
 
-  public slots:
+public slots:
     /**
       If @ref value is true, this method starts the timer that triggers
       timer events. If @ref value is false, the timer is stopped.
      */
-    void setTimerOn( bool value );
+    void setTimerOn(bool value);
 
     /**
       Calling this method emits the @ref showPopupMenu() with this
@@ -216,8 +213,8 @@ class SensorDisplay : public QWidget, public SensorClient
     /**
       Sets whether the display is modified of not.
      */
-    void setModified( bool modified );
-    
+    void setModified(bool modified);
+
     /**
       This method can be used to apply the new settings. Just connect
       the applyClicked() signal of your configuration dialog with this
@@ -231,40 +228,38 @@ class SensorDisplay : public QWidget, public SensorClient
      */
     virtual void applyStyle();
 
-		
-  signals:
-    void showPopupMenu( KSGRD::SensorDisplay *display );
-    void modified( bool modified );
 
-  protected:
-    virtual bool eventFilter( QObject*, QEvent* );
-    virtual void resizeEvent( QResizeEvent* );
-    virtual void timerEvent( QTimerEvent* );
+signals:
+    void showPopupMenu(KSGRD::SensorDisplay *display);
+    void modified(bool modified);
 
-    void registerSensor( SensorProperties *sp );
-    void unregisterSensor( uint pos );
+protected:
+    virtual bool eventFilter(QObject *, QEvent *);
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void timerEvent(QTimerEvent *);
 
-    QColor restoreColor( QDomElement &element, const QString &attr,
-                         const QColor& fallback );
-    void saveColor( QDomElement &element, const QString &attr,
-                    const QColor &color );
+    void registerSensor(SensorProperties *sp);
+    void unregisterSensor(uint pos);
+
+    QColor restoreColor(QDomElement &element, const QString &attr, const QColor &fallback);
+    void saveColor(QDomElement &element, const QString &attr, const QColor &color);
 
     virtual QString additionalWhatsThis();
 
-    void setSensorOk( bool ok );
+    void setSensorOk(bool ok);
 
     bool modified() const;
     bool timerOn() const;
 
     QWidget *frame();
 
-//    void setNoFrame( bool value );
+    //    void setNoFrame( bool value );
     bool noFrame() const;
 
-    void reorderSensors(const QValueList<int> &orderOfSensors);
-    QPtrList<SensorProperties> &sensors();
+    void reorderSensors(const QValueList< int > &orderOfSensors);
+    QPtrList< SensorProperties > &sensors();
 
-  private:
+private:
     void updateWhatsThis();
 
     bool mShowUnit;
@@ -277,44 +272,42 @@ class SensorDisplay : public QWidget, public SensorClient
     int mUpdateInterval;
 
     // The frame around the other widgets.
-    QGroupBox* mFrame;
+    QGroupBox *mFrame;
 
-    QPtrList<SensorProperties> mSensors;
+    QPtrList< SensorProperties > mSensors;
 
     QString mTitle;
     QString mUnit;
 
-    QWidget* mErrorIndicator;
-    QWidget* mPlotterWdg;
+    QWidget *mErrorIndicator;
+    QWidget *mPlotterWdg;
 };
 
-class SensorProperties
-{
-  public:
+class SensorProperties {
+public:
     SensorProperties();
-    SensorProperties( const QString &hostName, const QString &name,
-                      const QString &type, const QString &description );
+    SensorProperties(const QString &hostName, const QString &name, const QString &type, const QString &description);
     ~SensorProperties();
 
-    void setHostName( const QString &hostName );
+    void setHostName(const QString &hostName);
     QString hostName() const;
 
-    void setName( const QString &name );
+    void setName(const QString &name);
     QString name() const;
 
-    void setType( const QString &type );
+    void setType(const QString &type);
     QString type() const;
 
-    void setDescription( const QString &description );
+    void setDescription(const QString &description);
     QString description() const;
 
-    void setUnit( const QString &unit );
+    void setUnit(const QString &unit);
     QString unit() const;
 
-    void setIsOk( bool value );
+    void setIsOk(bool value);
     bool isOk() const;
 
-  private:
+private:
     QString mHostName;
     QString mName;
     QString mType;
@@ -325,7 +318,6 @@ class SensorProperties
      * ok or not. */
     bool mOk;
 };
-
 }
 
 #endif

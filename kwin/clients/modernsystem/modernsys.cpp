@@ -20,63 +20,47 @@
 
 namespace ModernSystem {
 
-static unsigned char iconify_bits[] = {
-    0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
+static unsigned char iconify_bits[] = {0x00, 0x00, 0xff, 0xff, 0x7e, 0x3c, 0x18, 0x00};
 
-static unsigned char close_bits[] = {
-    0x00, 0x66, 0x7e, 0x3c, 0x3c, 0x7e, 0x66, 0x00};
+static unsigned char close_bits[] = {0x00, 0x66, 0x7e, 0x3c, 0x3c, 0x7e, 0x66, 0x00};
 
-static unsigned char maximize_bits[] = {
-    0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
+static unsigned char maximize_bits[] = {0x00, 0x18, 0x3c, 0x7e, 0xff, 0xff, 0x00, 0x00};
 
-static unsigned char r_minmax_bits[] = {
-    0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
+static unsigned char r_minmax_bits[] = {0x0c, 0x18, 0x33, 0x67, 0xcf, 0x9f, 0x3f, 0x3f};
 
-static unsigned char l_minmax_bits[] = {
-    0x30, 0x18, 0xcc, 0xe6, 0xf3, 0xf9, 0xfc, 0xfc};
+static unsigned char l_minmax_bits[] = {0x30, 0x18, 0xcc, 0xe6, 0xf3, 0xf9, 0xfc, 0xfc};
 
-static unsigned char unsticky_bits[] = {
-    0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
+static unsigned char unsticky_bits[] = {0x3c, 0x42, 0x99, 0xbd, 0xbd, 0x99, 0x42, 0x3c};
 
-static unsigned char sticky_bits[] = {
-    0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
+static unsigned char sticky_bits[] = {0x3c, 0x42, 0x81, 0x81, 0x81, 0x81, 0x42, 0x3c};
 
-static unsigned char question_bits[] = {
-    0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
+static unsigned char question_bits[] = {0x3c, 0x66, 0x60, 0x30, 0x18, 0x00, 0x18, 0x18};
 
-static unsigned char above_on_bits[] = {
-    0x7e, 0x00, 0x7e, 0x3c, 0x18, 0x00, 0x00, 0x00};
+static unsigned char above_on_bits[] = {0x7e, 0x00, 0x7e, 0x3c, 0x18, 0x00, 0x00, 0x00};
 
-static unsigned char above_off_bits[] = {
-    0x18, 0x3c, 0x7e, 0x00, 0x7e, 0x00, 0x00, 0x00};
+static unsigned char above_off_bits[] = {0x18, 0x3c, 0x7e, 0x00, 0x7e, 0x00, 0x00, 0x00};
 
-static unsigned char below_off_bits[] = {
-    0x00, 0x00, 0x00, 0x7e, 0x00, 0x7e, 0x3c, 0x18};
+static unsigned char below_off_bits[] = {0x00, 0x00, 0x00, 0x7e, 0x00, 0x7e, 0x3c, 0x18};
 
-static unsigned char below_on_bits[] = {
-    0x00, 0x00, 0x00, 0x18, 0x3c, 0x7e, 0x00, 0x7e};
+static unsigned char below_on_bits[] = {0x00, 0x00, 0x00, 0x18, 0x3c, 0x7e, 0x00, 0x7e};
 
-static unsigned char shade_off_bits[] = {
-    0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00, 0x00, 0x00};
+static unsigned char shade_off_bits[] = {0x00, 0x7e, 0x7e, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-static unsigned char shade_on_bits[] = {
-    0x00, 0x7e, 0x7e, 0x42, 0x42, 0x42, 0x7e, 0x00};
+static unsigned char shade_on_bits[] = {0x00, 0x7e, 0x7e, 0x42, 0x42, 0x42, 0x7e, 0x00};
 
-static unsigned char menu_bits[] = {
-        0xff, 0x81, 0x81, 0xff, 0x81, 0xff, 0x81, 0xff};
+static unsigned char menu_bits[] = {0xff, 0x81, 0x81, 0xff, 0x81, 0xff, 0x81, 0xff};
 
-static unsigned char btnhighcolor_mask_bits[] = {
-    0xe0,0x41,0xf8,0x07,0xfc,0x0f,0xfe,0xdf,0xfe,0x1f,0xff,0x3f,0xff,0xff,0xff,
-    0x3f,0xff,0x3f,0xff,0xff,0xff,0xff,0xfe,0x9f,0xfe,0x1f,0xfc,0x0f,0xf0,0x03,
-    0x00,0x40,0x80,0x00,0x00,0x00,0x39,0x00,0x00,0x00,0x20,0x99,0x0f,0x08,0xc4,
-    0x00,0x00,0x00,0x67,0x00,0x00,0x00,0x58,0x5f,0x43,0x68,0x61,0x6e,0x67,0x65 };
+static unsigned char btnhighcolor_mask_bits[] = {0xe0, 0x41, 0xf8, 0x07, 0xfc, 0x0f, 0xfe, 0xdf, 0xfe, 0x1f, 0xff, 0x3f, 0xff, 0xff, 0xff,
+                                                 0x3f, 0xff, 0x3f, 0xff, 0xff, 0xff, 0xff, 0xfe, 0x9f, 0xfe, 0x1f, 0xfc, 0x0f, 0xf0, 0x03,
+                                                 0x00, 0x40, 0x80, 0x00, 0x00, 0x00, 0x39, 0x00, 0x00, 0x00, 0x20, 0x99, 0x0f, 0x08, 0xc4,
+                                                 0x00, 0x00, 0x00, 0x67, 0x00, 0x00, 0x00, 0x58, 0x5f, 0x43, 0x68, 0x61, 0x6e, 0x67, 0x65};
 
-static KPixmap *aUpperGradient=0;
-static KPixmap *iUpperGradient=0;
-static QPixmap *buttonPix=0;
-static QPixmap *buttonPixDown=0;
-static QPixmap *iButtonPix=0;
-static QPixmap *iButtonPixDown=0;
+static KPixmap *aUpperGradient = 0;
+static KPixmap *iUpperGradient = 0;
+static QPixmap *buttonPix = 0;
+static QPixmap *buttonPixDown = 0;
+static QPixmap *iButtonPix = 0;
+static QPixmap *iButtonPixDown = 0;
 
 static QColor *buttonFg;
 static bool pixmaps_created = false;
@@ -93,17 +77,18 @@ static int handle_width;
 static int border_width;
 static int title_height;
 
-static inline const KDecorationOptions* options()
+static inline const KDecorationOptions *options()
 {
     return KDecoration::options();
 }
 
-static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
+static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light = false)
 {
     pix->fill(g.background());
     QPainter p(pix);
 
-    if(QPixmap::defaultDepth() > 8){
+    if(QPixmap::defaultDepth() > 8)
+    {
         int i, destH, destS, destV, srcH, srcS, srcV;
         QColor btnColor = g.background();
 
@@ -117,17 +102,19 @@ static void make_button_fx(const QColorGroup &g, QPixmap *pix, bool light=false)
         unsigned int *srcData = (unsigned int *)btnSource->bits();
         unsigned int *destData = (unsigned int *)btnDest.bits();
         QColor srcColor;
-        for(i=0; i < btnSource->width()*btnSource->height(); ++i){
+        for(i = 0; i < btnSource->width() * btnSource->height(); ++i)
+        {
             srcColor.setRgb(srcData[i]);
             srcColor.hsv(&srcH, &srcS, &srcV);
             srcColor.setHsv(destH, destS, srcV);
             destData[i] = srcColor.rgb();
         }
         pix->convertFromImage(btnDest);
-
     }
-    else{
-        if(!lcDark1->mask()){
+    else
+    {
+        if(!lcDark1->mask())
+        {
             lcDark1->setMask(*lcDark1);
             lcDark2->setMask(*lcDark2);
             lcDark3->setMask(*lcDark3);
@@ -156,19 +143,16 @@ static void create_pixmaps()
     lcLight1 = new QBitmap(14, 15, lowcolor_e6e6e6_bits, true);
     btnSource = new QImage(btnhighcolor_xpm);
 
-    if(QPixmap::defaultDepth() > 8){
+    if(QPixmap::defaultDepth() > 8)
+    {
         aUpperGradient = new KPixmap;
-        aUpperGradient->resize(32, title_height+2);
+        aUpperGradient->resize(32, title_height + 2);
         iUpperGradient = new KPixmap;
-        iUpperGradient->resize(32, title_height+2);
-        KPixmapEffect::gradient(*aUpperGradient,
-                                options()->color(KDecoration::ColorTitleBar, true).light(130),
-                                options()->color(KDecoration::ColorTitleBlend, true),
-                                KPixmapEffect::VerticalGradient);
-        KPixmapEffect::gradient(*iUpperGradient,
-                                options()->color(KDecoration::ColorTitleBar, false).light(130),
-                                options()->color(KDecoration::ColorTitleBlend, false),
-                                KPixmapEffect::VerticalGradient);
+        iUpperGradient->resize(32, title_height + 2);
+        KPixmapEffect::gradient(*aUpperGradient, options()->color(KDecoration::ColorTitleBar, true).light(130),
+                                options()->color(KDecoration::ColorTitleBlend, true), KPixmapEffect::VerticalGradient);
+        KPixmapEffect::gradient(*iUpperGradient, options()->color(KDecoration::ColorTitleBar, false).light(130),
+                                options()->color(KDecoration::ColorTitleBlend, false), KPixmapEffect::VerticalGradient);
     }
     // buttons
     QColorGroup btnColor(options()->colorGroup(KDecoration::ColorButtonBg, true));
@@ -198,7 +182,8 @@ static void create_pixmaps()
 
 static void delete_pixmaps()
 {
-    if(aUpperGradient){
+    if(aUpperGradient)
+    {
         delete aUpperGradient;
         delete iUpperGradient;
     }
@@ -223,50 +208,52 @@ void ModernSysFactory::read_config()
 
     hwidth = c.readUnsignedNumEntry("HandleWidth", 6);
     hsize = c.readUnsignedNumEntry("HandleSize", 30);
-    if (!(showh && hsize && hwidth)) {
+    if(!(showh && hsize && hwidth))
+    {
         showh = false;
         hwidth = hsize = 0;
     }
 
-    switch(options()->preferredBorderSize( this )) {
-      case BorderLarge:
-          bwidth = 8;
-          hwidth = hwidth * 7/5;
-          hsize  = hsize  * 7/5;
-          break;
-      case BorderVeryLarge:
-          bwidth = 12;
-          hwidth = hwidth * 17/10 + 2;
-          hsize  = hsize  * 17/10;
-          break;
-      case BorderHuge:
-          bwidth = 18;
-          hwidth = hwidth * 2 + 6;
-          hsize  = hsize  * 2;
-          break;
-      /*
-      // If we allow these large sizes we need to change the
-      // correlation between the border width and the handle size.
-      case BorderVeryHuge:
-          bwidth = 27;
-          hwidth = hwidth * 5/2 + 15;
-          hsize  = hsize  * 5/2;
-          break;
-      case BorderOversized:
-          bwidth = 40;
-          hwidth = hwidth * 3 + 22;
-          hsize  = hsize  * 3;
-          break;
-      */
-      case BorderNormal:
-      default:
-          bwidth = 4;
+    switch(options()->preferredBorderSize(this))
+    {
+        case BorderLarge:
+            bwidth = 8;
+            hwidth = hwidth * 7 / 5;
+            hsize = hsize * 7 / 5;
+            break;
+        case BorderVeryLarge:
+            bwidth = 12;
+            hwidth = hwidth * 17 / 10 + 2;
+            hsize = hsize * 17 / 10;
+            break;
+        case BorderHuge:
+            bwidth = 18;
+            hwidth = hwidth * 2 + 6;
+            hsize = hsize * 2;
+            break;
+        /*
+        // If we allow these large sizes we need to change the
+        // correlation between the border width and the handle size.
+        case BorderVeryHuge:
+            bwidth = 27;
+            hwidth = hwidth * 5/2 + 15;
+            hsize  = hsize  * 5/2;
+            break;
+        case BorderOversized:
+            bwidth = 40;
+            hwidth = hwidth * 3 + 22;
+            hsize  = hsize  * 3;
+            break;
+        */
+        case BorderNormal:
+        default:
+            bwidth = 4;
     }
 
     theight = QFontMetrics(options()->font(true)).height() + 2;
-    if (theight < 16)
+    if(theight < 16)
         theight = 16;
-    if (theight < bwidth)
+    if(theight < bwidth)
         theight = bwidth;
 
     show_handle = showh;
@@ -278,19 +265,16 @@ void ModernSysFactory::read_config()
 
 QValueList< ModernSysFactory::BorderSize > ModernSysFactory::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
-      BorderVeryLarge <<  BorderHuge;
-   // as long as the buttons don't scale don't offer the largest two sizes.
-   //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+    return QValueList< BorderSize >() << BorderNormal << BorderLarge << BorderVeryLarge << BorderHuge;
+    // as long as the buttons don't scale don't offer the largest two sizes.
+    //   BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
 }
 
-ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
-    : KCommonDecorationButton(type, parent, name)
+ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name) : KCommonDecorationButton(type, parent, name)
 {
-    setBackgroundMode( NoBackground );
+    setBackgroundMode(NoBackground);
 
-    QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ?
-                 btnhighcolor_mask_bits : lowcolor_mask_bits, true);
+    QBitmap mask(14, 15, QPixmap::defaultDepth() > 8 ? btnhighcolor_mask_bits : lowcolor_mask_bits, true);
     resize(14, 15);
 
     setMask(mask);
@@ -298,8 +282,10 @@ ModernButton::ModernButton(ButtonType type, ModernSys *parent, const char *name)
 
 void ModernButton::reset(unsigned long changed)
 {
-    if (changed&DecorationReset || changed&ManualReset || changed&SizeChange || changed&StateChange) {
-        switch (type() ) {
+    if(changed & DecorationReset || changed & ManualReset || changed & SizeChange || changed & StateChange)
+    {
+        switch(type())
+        {
             case CloseButton:
                 setBitmap(close_bits);
                 break;
@@ -310,19 +296,19 @@ void ModernButton::reset(unsigned long changed)
                 setBitmap(iconify_bits);
                 break;
             case MaxButton:
-                setBitmap( isOn() ? (isLeft()?l_minmax_bits:r_minmax_bits) : maximize_bits );
+                setBitmap(isOn() ? (isLeft() ? l_minmax_bits : r_minmax_bits) : maximize_bits);
                 break;
             case OnAllDesktopsButton:
-                setBitmap( isOn() ? unsticky_bits : sticky_bits );
+                setBitmap(isOn() ? unsticky_bits : sticky_bits);
                 break;
             case ShadeButton:
-                setBitmap( isOn() ? shade_on_bits : shade_off_bits );
+                setBitmap(isOn() ? shade_on_bits : shade_off_bits);
                 break;
             case AboveButton:
-                setBitmap( isOn() ? above_on_bits : above_off_bits );
+                setBitmap(isOn() ? above_on_bits : above_off_bits);
                 break;
             case BelowButton:
-                setBitmap( isOn() ? below_on_bits : below_off_bits );
+                setBitmap(isOn() ? below_on_bits : below_off_bits);
                 break;
             case MenuButton:
                 setBitmap(menu_bits);
@@ -338,10 +324,11 @@ void ModernButton::reset(unsigned long changed)
 
 void ModernButton::setBitmap(const unsigned char *bitmap)
 {
-    if (bitmap)
+    if(bitmap)
         deco = QBitmap(8, 8, bitmap, true);
-    else {
-        deco = QBitmap(8,8);
+    else
+    {
+        deco = QBitmap(8, 8);
         deco.fill(Qt::color0);
     }
     deco.setMask(deco);
@@ -349,21 +336,24 @@ void ModernButton::setBitmap(const unsigned char *bitmap)
 
 void ModernButton::drawButton(QPainter *p)
 {
-    if(decoration()->isActive()){
+    if(decoration()->isActive())
+    {
         if(buttonPix)
             p->drawPixmap(0, 0, isDown() ? *buttonPixDown : *buttonPix);
     }
-    else{
+    else
+    {
         if(iButtonPix)
             p->drawPixmap(0, 0, isDown() ? *iButtonPixDown : *iButtonPix);
     }
-    if(!deco.isNull()){
+    if(!deco.isNull())
+    {
         p->setPen(*buttonFg);
         p->drawPixmap(isDown() ? 4 : 3, isDown() ? 5 : 4, deco);
     }
 }
 
-void ModernSys::reset( unsigned long changed)
+void ModernSys::reset(unsigned long changed)
 {
     KCommonDecoration::reset(changed);
 
@@ -373,8 +363,7 @@ void ModernSys::reset( unsigned long changed)
     widget()->update();
 }
 
-ModernSys::ModernSys( KDecorationBridge* b, KDecorationFactory* f )
-    : KCommonDecoration( b, f )
+ModernSys::ModernSys(KDecorationBridge *b, KDecorationFactory *f) : KCommonDecoration(b, f)
 {
 }
 
@@ -395,7 +384,8 @@ QString ModernSys::defaultButtonsRight() const
 
 bool ModernSys::decorationBehaviour(DecorationBehaviour behaviour) const
 {
-    switch (behaviour) {
+    switch(behaviour)
+    {
         case DB_MenuClose:
             return false;
 
@@ -414,7 +404,8 @@ int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCom
 {
     // bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
-    switch (lm) {
+    switch(lm)
+    {
         case LM_BorderLeft:
             return border_width + (reverse ? handle_width : 0);
 
@@ -425,9 +416,9 @@ int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCom
             return border_width + handle_width;
 
         case LM_TitleEdgeLeft:
-            return layoutMetric(LM_BorderLeft,respectWindowState)+3;
+            return layoutMetric(LM_BorderLeft, respectWindowState) + 3;
         case LM_TitleEdgeRight:
-            return layoutMetric(LM_BorderRight,respectWindowState)+3;
+            return layoutMetric(LM_BorderRight, respectWindowState) + 3;
 
         case LM_TitleEdgeTop:
             return 2;
@@ -460,7 +451,8 @@ int ModernSys::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCom
 
 KCommonDecorationButton *ModernSys::createButton(ButtonType type)
 {
-    switch (type) {
+    switch(type)
+    {
         case MenuButton:
             return new ModernButton(MenuButton, this, "menu");
 
@@ -508,39 +500,36 @@ void ModernSys::recalcTitleBuffer()
         return;
 
     QFontMetrics fm(options()->font(true));
-    titleBuffer.resize(width(), title_height+2);
+    titleBuffer.resize(width(), title_height + 2);
     QPainter p;
     p.begin(&titleBuffer);
     if(aUpperGradient)
-        p.drawTiledPixmap(0, 0, width(), title_height+2, *aUpperGradient);
+        p.drawTiledPixmap(0, 0, width(), title_height + 2, *aUpperGradient);
     else
-        p.fillRect(0, 0, width(), title_height+2,
-                   options()->colorGroup(ColorTitleBar, true).
-                   brush(QColorGroup::Button));
+        p.fillRect(0, 0, width(), title_height + 2, options()->colorGroup(ColorTitleBar, true).brush(QColorGroup::Button));
 
     QRect t = titleRect(); // titlebar->geometry();
-    t.setTop( 2 );
-    t.setLeft( t.left() );
-    t.setRight( t.right() - 2 );
+    t.setTop(2);
+    t.setLeft(t.left());
+    t.setRight(t.right() - 2);
 
-    QRegion r(t.x(), 0, t.width(), title_height+2);
-    r -= QRect(t.x()+((t.width()-fm.width(caption()))/2)-4,
-               0, fm.width(caption())+8, title_height+2);
+    QRegion r(t.x(), 0, t.width(), title_height + 2);
+    r -= QRect(t.x() + ((t.width() - fm.width(caption())) / 2) - 4, 0, fm.width(caption()) + 8, title_height + 2);
     p.setClipRegion(r);
     int i, ly;
     ly = (title_height % 3 == 0) ? 3 : 4;
-    for(i=0; i < (title_height-2)/3; ++i, ly+=3){
+    for(i = 0; i < (title_height - 2) / 3; ++i, ly += 3)
+    {
         p.setPen(options()->color(ColorTitleBar, true).light(150));
-        p.drawLine(0, ly, width()-1, ly);
+        p.drawLine(0, ly, width() - 1, ly);
         p.setPen(options()->color(ColorTitleBar, true).dark(120));
-        p.drawLine(0, ly+1, width()-1, ly+1);
+        p.drawLine(0, ly + 1, width() - 1, ly + 1);
     }
     p.setClipRect(t);
     p.setPen(options()->color(ColorFont, true));
     p.setFont(options()->font(true));
 
-    p.drawText(t.x()+((t.width()-fm.width(caption()))/2)-4,
-               0, fm.width(caption())+8, title_height+2, AlignCenter, caption());
+    p.drawText(t.x() + ((t.width() - fm.width(caption())) / 2) - 4, 0, fm.width(caption()) + 8, title_height + 2, AlignCenter, caption());
     p.setClipping(false);
     p.end();
     oldTitle = caption();
@@ -548,98 +537,100 @@ void ModernSys::recalcTitleBuffer()
 
 void ModernSys::updateCaption()
 {
-    widget()->update(titleRect() );
+    widget()->update(titleRect());
 }
 
 void ModernSys::drawRoundFrame(QPainter &p, int x, int y, int w, int h)
 {
-    kDrawRoundButton(&p, x, y, w, h,
-                     options()->colorGroup(ColorFrame, isActive()), false);
-
+    kDrawRoundButton(&p, x, y, w, h, options()->colorGroup(ColorFrame, isActive()), false);
 }
 
-void ModernSys::paintEvent( QPaintEvent* )
+void ModernSys::paintEvent(QPaintEvent *)
 {
     // update title buffer...
-    if (oldTitle != caption() || width() != titleBuffer.width() )
+    if(oldTitle != caption() || width() != titleBuffer.width())
         recalcTitleBuffer();
 
     int hs = handle_size;
     int hw = handle_width;
 
-    QPainter p( widget() );
+    QPainter p(widget());
     QRect t = titleRect(); // titlebar->geometry();
 
-    QBrush fillBrush(widget()->colorGroup().brush(QColorGroup::Background).pixmap() ?
-                     widget()->colorGroup().brush(QColorGroup::Background) :
-                     options()->colorGroup(ColorFrame, isActive()).
-                     brush(QColorGroup::Button));
+    QBrush fillBrush(widget()->colorGroup().brush(QColorGroup::Background).pixmap()
+                         ? widget()->colorGroup().brush(QColorGroup::Background)
+                         : options()->colorGroup(ColorFrame, isActive()).brush(QColorGroup::Button));
 
-    p.fillRect(1, title_height+3, width()-2, height()-(title_height+3), fillBrush);
-    p.fillRect(width()-6, 0, width()-1, height(), fillBrush);
+    p.fillRect(1, title_height + 3, width() - 2, height() - (title_height + 3), fillBrush);
+    p.fillRect(width() - 6, 0, width() - 1, height(), fillBrush);
 
-    t.setTop( 2 );
-    t.setLeft( t.left() );
-    t.setRight( t.right() - 2 );
+    t.setTop(2);
+    t.setLeft(t.left());
+    t.setRight(t.right() - 2);
 
     int w = width() - hw; // exclude handle
     int h = height() - hw;
 
     // titlebar
     QColorGroup g = options()->colorGroup(ColorTitleBar, isActive());
-    if(isActive()){
-        p.drawPixmap(1, 1, titleBuffer, 0, 0, w-2, title_height+2);
+    if(isActive())
+    {
+        p.drawPixmap(1, 1, titleBuffer, 0, 0, w - 2, title_height + 2);
     }
-    else{
+    else
+    {
         if(iUpperGradient)
-            p.drawTiledPixmap(1, 1, w-2, title_height+2, *iUpperGradient);
+            p.drawTiledPixmap(1, 1, w - 2, title_height + 2, *iUpperGradient);
         else
-            p.fillRect(1, 1, w-2, title_height+2, fillBrush);
+            p.fillRect(1, 1, w - 2, title_height + 2, fillBrush);
         p.setPen(options()->color(ColorFont, isActive()));
         p.setFont(options()->font(isActive()));
-        p.drawText(t, AlignCenter, caption() );
+        p.drawText(t, AlignCenter, caption());
     }
 
     // titlebar highlight
     p.setPen(g.light());
-    p.drawLine(1, 1, 1, title_height+3);
-    p.drawLine(1, 1, w-3, 1);
+    p.drawLine(1, 1, 1, title_height + 3);
+    p.drawLine(1, 1, w - 3, 1);
     p.setPen(g.dark());
-    p.drawLine(w-2, 1, w-2, title_height+3);
-    p.drawLine(0, title_height+2, w-2, title_height+2);
+    p.drawLine(w - 2, 1, w - 2, title_height + 3);
+    p.drawLine(0, title_height + 2, w - 2, title_height + 2);
 
     // frame
     g = options()->colorGroup(ColorFrame, isActive());
     p.setPen(g.light());
-    p.drawLine(1, title_height+3, 1, h-2);
+    p.drawLine(1, title_height + 3, 1, h - 2);
     p.setPen(g.dark());
-    p.drawLine(2, h-2, w-2, h-2);
-    p.drawLine(w-2, title_height+3, w-2, h-2);
-    //p.drawPoint(w-3, title_height+3);
-    //p.drawPoint(2, title_height+3);
+    p.drawLine(2, h - 2, w - 2, h - 2);
+    p.drawLine(w - 2, title_height + 3, w - 2, h - 2);
+    // p.drawPoint(w-3, title_height+3);
+    // p.drawPoint(2, title_height+3);
 
-    qDrawShadePanel(&p, border_width-1, title_height+3, w-2*border_width+2, h-title_height-border_width-2, g, true);
+    qDrawShadePanel(&p, border_width - 1, title_height + 3, w - 2 * border_width + 2, h - title_height - border_width - 2, g, true);
 
-    if (show_handle) {
+    if(show_handle)
+    {
         p.setPen(g.dark());
-        p.drawLine(width()-3, height()-hs-1, width()-3, height()-3);
-        p.drawLine(width()-hs-1, height()-3, width()-3, height()-3);
+        p.drawLine(width() - 3, height() - hs - 1, width() - 3, height() - 3);
+        p.drawLine(width() - hs - 1, height() - 3, width() - 3, height() - 3);
 
         p.setPen(g.light());
-        p.drawLine(width()-hw, height()-hs-1, width()-hw, height()-hw);
-        p.drawLine(width()-hs-1, height()-hw, width()-hw, height()-hw);
-        p.drawLine(width()-hw, height()-hs-1, width()-4, height()-hs-1);
-        p.drawLine(width()-hs-1, height()-hw, width()-hs-1, height()-4);
+        p.drawLine(width() - hw, height() - hs - 1, width() - hw, height() - hw);
+        p.drawLine(width() - hs - 1, height() - hw, width() - hw, height() - hw);
+        p.drawLine(width() - hw, height() - hs - 1, width() - 4, height() - hs - 1);
+        p.drawLine(width() - hs - 1, height() - hw, width() - hs - 1, height() - 4);
 
         p.setPen(Qt::black);
         p.drawRect(0, 0, w, h);
 
         // handle outline
-        p.drawLine(width()-hw, height()-hs, width(), height()-hs);
-        p.drawLine(width()-2, height()-hs, width()-2, height()-2);
-        p.drawLine(width()-hs, height()-2, width()-2, height()-2);
-        p.drawLine(width()-hs, height()-hw, width()-hs, height()-2);
-    } else {
+        p.drawLine(width() - hw, height() - hs, width(), height() - hs);
+        p.drawLine(width() - 2, height() - hs, width() - 2, height() - 2);
+        p.drawLine(width() - hs, height() - 2, width() - 2, height() - 2);
+        p.drawLine(width() - hs, height() - hw, width() - hs, height() - 2);
+    }
+    else
+    {
         p.setPen(Qt::black);
         p.drawRect(0, 0, w, h);
     }
@@ -650,19 +641,21 @@ void ModernSys::updateWindowShape()
     int hs = handle_size;
     int hw = handle_width;
     QRegion mask;
-    mask += QRect(0, 0, width()-hw, height()-hw);
-    //single points
+    mask += QRect(0, 0, width() - hw, height() - hw);
+    // single points
     mask -= QRect(0, 0, 1, 1);
-    mask -= QRect(width()-hw-1, 0, 1, 1);
-    mask -= QRect(0, height()-hw-1, 1, 1);
+    mask -= QRect(width() - hw - 1, 0, 1, 1);
+    mask -= QRect(0, height() - hw - 1, 1, 1);
 
-    if (show_handle) {
-        mask += QRect(width()-hs, height()-hs, hs-1, hs-1);
-        mask -= QRect(width()-2, height()-2, 1, 1);
-        mask -= QRect(width()-2, height()-hs, 1, 1);
-        mask -= QRect(width()-hs, height()-2, 1, 1);
-    } else
-        mask -= QRect(width()-1, height()-1, 1, 1);
+    if(show_handle)
+    {
+        mask += QRect(width() - hs, height() - hs, hs - 1, hs - 1);
+        mask -= QRect(width() - 2, height() - 2, 1, 1);
+        mask -= QRect(width() - 2, height() - hs, 1, 1);
+        mask -= QRect(width() - hs, height() - 2, 1, 1);
+    }
+    else
+        mask -= QRect(width() - 1, height() - 1, 1, 1);
 
     setMask(mask);
 }
@@ -678,38 +671,40 @@ ModernSysFactory::~ModernSysFactory()
     ModernSystem::delete_pixmaps();
 }
 
-KDecoration* ModernSysFactory::createDecoration( KDecorationBridge* b )
+KDecoration *ModernSysFactory::createDecoration(KDecorationBridge *b)
 {
-    return(new ModernSys(b, this));
+    return (new ModernSys(b, this));
 }
 
-bool ModernSysFactory::reset( unsigned long changed )
+bool ModernSysFactory::reset(unsigned long changed)
 {
     read_config();
 
     bool needHardReset = true;
-    if( changed & (SettingColors | SettingBorder | SettingFont) )
+    if(changed & (SettingColors | SettingBorder | SettingFont))
     {
         delete_pixmaps();
         create_pixmaps();
         needHardReset = false;
-    } else if (changed & SettingButtons) {
+    }
+    else if(changed & SettingButtons)
+    {
         // handled by KCommonDecoration
         needHardReset = false;
     }
 
-    if( needHardReset )
+    if(needHardReset)
         return true;
     else
     {
-        resetDecorations( changed );
+        resetDecorations(changed);
         return false; // no recreating of decorations
     }
 }
 
-bool ModernSysFactory::supports( Ability ability )
+bool ModernSysFactory::supports(Ability ability)
 {
-    switch( ability )
+    switch(ability)
     {
         case AbilityAnnounceButtons:
         case AbilityButtonOnAllDesktops:
@@ -727,11 +722,10 @@ bool ModernSysFactory::supports( Ability ability )
             return false;
     };
 }
-
 }
 
 // KWin extended plugin interface
-extern "C" KDE_EXPORT KDecorationFactory* create_factory()
+extern "C" KDE_EXPORT KDecorationFactory *create_factory()
 {
     return new ModernSystem::ModernSysFactory();
 }

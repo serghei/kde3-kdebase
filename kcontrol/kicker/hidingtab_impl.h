@@ -24,12 +24,11 @@
 class KickerConfig;
 class ExtensionInfo;
 
-class HidingTab : public HidingTabBase
-{
+class HidingTab : public HidingTabBase {
     Q_OBJECT
 
 public:
-    HidingTab(QWidget *parent = 0, const char* name = 0);
+    HidingTab(QWidget *parent = 0, const char *name = 0);
 
     void load();
     void save();
@@ -45,20 +44,31 @@ protected slots:
     void backgroundModeClicked();
     void infoUpdated();
     void storeInfo();
-    void extensionAdded(ExtensionInfo*);
-    void extensionRemoved(ExtensionInfo*);
+    void extensionAdded(ExtensionInfo *);
+    void extensionRemoved(ExtensionInfo *);
     void switchPanel(int);
 
 private:
-    enum Trigger { None = 0, Top, TopRight, Right, BottomRight, Bottom, BottomLeft, Left, TopLeft };
+    enum Trigger
+    {
+        None = 0,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
+        TopLeft
+    };
 
     // these convert between the combobox and the config file for trigger
     // this is why storing enums vs strings can be a BAD thing
     int triggerComboToConfig(int trigger);
     int triggerConfigToCombo(int trigger);
 
-    KickerConfig* m_kcm;
-    ExtensionInfo* m_panelInfo;
+    KickerConfig *m_kcm;
+    ExtensionInfo *m_panelInfo;
 };
 
 #endif

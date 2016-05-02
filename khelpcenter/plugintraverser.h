@@ -26,26 +26,25 @@ class QListView;
 class QListViewItem;
 
 namespace KHC {
-  class Navigator;
-  class NavigatorItem;
+class Navigator;
+class NavigatorItem;
 
-  class PluginTraverser : public DocEntryTraverser
-  {
-    public:
-      PluginTraverser( Navigator *navigator, QListView *parent );
-      PluginTraverser( Navigator *navigator, NavigatorItem *parent );
+class PluginTraverser : public DocEntryTraverser {
+public:
+    PluginTraverser(Navigator *navigator, QListView *parent);
+    PluginTraverser(Navigator *navigator, NavigatorItem *parent);
 
-      virtual void process( DocEntry *entry );
+    virtual void process(DocEntry *entry);
 
-      virtual DocEntryTraverser *createChild( DocEntry *entry );
+    virtual DocEntryTraverser *createChild(DocEntry *entry);
 
-  private:
+private:
     QListView *mListView;
     NavigatorItem *mParentItem;
     NavigatorItem *mCurrentItem;
 
     Navigator *mNavigator;
-  };
+};
 }
 
 #endif // KHC_PLUGINTRAVERSER_H

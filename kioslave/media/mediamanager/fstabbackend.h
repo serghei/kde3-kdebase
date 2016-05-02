@@ -29,39 +29,34 @@
 #include <qtimer.h>
 #endif
 
-class FstabBackend : public QObject, public BackendBase
-{
-Q_OBJECT
+class FstabBackend : public QObject, public BackendBase {
+    Q_OBJECT
 
 public:
-	FstabBackend(MediaList &list, bool networkSharesOnly = false);
-	virtual ~FstabBackend();
+    FstabBackend(MediaList &list, bool networkSharesOnly = false);
+    virtual ~FstabBackend();
 
-	static void guess(const QString &devNode, const QString &mountPoint,
-                          const QString &fsType, bool mounted,
-                          QString &mimeType, QString &iconName,
-	                  QString &label);
+    static void guess(const QString &devNode, const QString &mountPoint, const QString &fsType, bool mounted, QString &mimeType, QString &iconName,
+                      QString &label);
 
-	QString mount(const QString &id);
-	QString unmount(const QString &id);
+    QString mount(const QString &id);
+    QString unmount(const QString &id);
 
 private slots:
-	void slotDirty(const QString &path);
-	void handleFstabChange(bool allowNotification = true);
-	void handleMtabChange(bool allowNotification = true);
+    void slotDirty(const QString &path);
+    void handleFstabChange(bool allowNotification = true);
+    void handleMtabChange(bool allowNotification = true);
 
 private:
-	static QString generateId(const QString &devNode,
-	                          const QString &mountPoint);
-	static QString generateName(const QString &devNode,
-	                            const QString &fsType);
+    static QString generateId(const QString &devNode, const QString &mountPoint);
+    static QString generateName(const QString &devNode, const QString &fsType);
 
-	bool m_networkSharesOnly;
-	QStringList m_mtabIds;
-        QMap<QString, QString> m_mtabEntries;
-	QStringList m_fstabIds;
+    bool m_networkSharesOnly;
+    QStringList m_mtabIds;
+    QMap< QString, QString > m_mtabEntries;
+    QStringList m_fstabIds;
 #ifdef Q_OS_FREEBSD
-	QTimer m_mtabTimer;
+    QTimer m_mtabTimer;
 #endif
 };
 

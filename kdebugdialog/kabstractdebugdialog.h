@@ -26,29 +26,31 @@ class KConfig;
 class QVBoxLayout;
 class KPushButton;
 
-class KAbstractDebugDialog : public KDialog
-{
-  Q_OBJECT
+class KAbstractDebugDialog : public KDialog {
+    Q_OBJECT
 public:
-  KAbstractDebugDialog( QWidget *parent=0, const char *name=0, bool modal=true );
+    KAbstractDebugDialog(QWidget *parent = 0, const char *name = 0, bool modal = true);
 
-  virtual ~KAbstractDebugDialog();
+    virtual ~KAbstractDebugDialog();
 
-  virtual void buildButtons(QVBoxLayout * topLayout);
+    virtual void buildButtons(QVBoxLayout *topLayout);
 
-  virtual void save() = 0;
-  KConfig * config() { return pConfig; }
+    virtual void save() = 0;
+    KConfig *config()
+    {
+        return pConfig;
+    }
 
 protected slots:
-  void slotShowHelp();
-  void slotApply();
+    void slotShowHelp();
+    void slotApply();
 
 protected:
-  KConfig* pConfig;
-  KPushButton* pOKButton;
-  KPushButton* pCancelButton;
-  KPushButton* pHelpButton;
-  KPushButton* pApplyButton;
+    KConfig *pConfig;
+    KPushButton *pOKButton;
+    KPushButton *pCancelButton;
+    KPushButton *pHelpButton;
+    KPushButton *pApplyButton;
 };
 
 #endif

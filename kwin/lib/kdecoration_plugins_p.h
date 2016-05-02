@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 //
 // This header file is internal. I mean it.
-// 
+//
 
 #include <qcstring.h>
 #include <qstring.h>
@@ -42,30 +42,31 @@ class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;
 
-class KWIN_EXPORT KDecorationPlugins
-    : public KDecorationProvides
+class KWIN_EXPORT KDecorationPlugins : public KDecorationProvides {
+public:
+    KDecorationPlugins(KConfig *cfg);
+    virtual ~KDecorationPlugins();
+    bool loadPlugin(QString name);
+    void destroyPreviousPlugin();
+    KDecorationFactory *factory();
+    KDecoration *createDecoration(KDecorationBridge *);
+    QString currentPlugin()
     {
-    public:
-        KDecorationPlugins( KConfig* cfg );
-        virtual ~KDecorationPlugins();
-        bool loadPlugin( QString name );
-        void destroyPreviousPlugin();
-        KDecorationFactory* factory();
-        KDecoration* createDecoration( KDecorationBridge* );
-        QString currentPlugin() { return pluginStr; }
-        bool reset( unsigned long changed ); // returns true if decorations need to be recreated
-    protected:
-        virtual void error( const QString& error_msg );
-        QCString defaultPlugin; // FRAME normalne protected?
-    private:
-        KDecorationFactory* (*create_ptr)();
-        KLibrary *library;
-        KDecorationFactory* fact;
-        KLibrary *old_library;
-        KDecorationFactory* old_fact;
-        QString pluginStr;
-        KConfig* config;
-    };
+        return pluginStr;
+    }
+    bool reset(unsigned long changed); // returns true if decorations need to be recreated
+protected:
+    virtual void error(const QString &error_msg);
+    QCString defaultPlugin; // FRAME normalne protected?
+private:
+    KDecorationFactory *(*create_ptr)();
+    KLibrary *library;
+    KDecorationFactory *fact;
+    KLibrary *old_library;
+    KDecorationFactory *old_fact;
+    QString pluginStr;
+    KConfig *config;
+};
 
 /*
 

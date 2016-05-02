@@ -26,37 +26,35 @@
 
 class KateDocManager;
 
-class KateDocManagerDCOPIface : public DCOPObject
-{
-  K_DCOP
+class KateDocManagerDCOPIface : public DCOPObject {
+    K_DCOP
 
-  public:
-    KateDocManagerDCOPIface (KateDocManager *dm);
+public:
+    KateDocManagerDCOPIface(KateDocManager *dm);
 
-  k_dcop:
-    DCOPRef document (uint n);
+    k_dcop : DCOPRef document(uint n);
 
-    DCOPRef activeDocument ();
-    
-    uint activeDocumentNumber ();
+    DCOPRef activeDocument();
 
-    DCOPRef documentWithID (uint id);
+    uint activeDocumentNumber();
 
-    int findDocument (KURL url);
+    DCOPRef documentWithID(uint id);
 
-    bool isOpen (KURL url);
+    int findDocument(KURL url);
 
-    uint documents ();
+    bool isOpen(KURL url);
 
-    DCOPRef openURL (KURL url, QString encoding);
+    uint documents();
 
-    bool closeDocument (uint n);
+    DCOPRef openURL(KURL url, QString encoding);
 
-    bool closeDocumentWithID (uint id);
+    bool closeDocument(uint n);
 
-    bool closeAllDocuments ();
+    bool closeDocumentWithID(uint id);
 
-  private:
+    bool closeAllDocuments();
+
+private:
     KateDocManager *m_dm;
 };
 #endif

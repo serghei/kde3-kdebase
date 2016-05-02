@@ -9,9 +9,10 @@ static int QHash(QString key)
 {
     int g, h = 0;
     const QChar *p = key.unicode();
-    for (unsigned i=0; i < key.length(); i++) {
+    for(unsigned i = 0; i < key.length(); i++)
+    {
         h = (h << 4) + p[i].cell();
-        if ((g = (h & 0xf0000000)))
+        if((g = (h & 0xf0000000)))
             h ^= (g >> 24);
         h &= ~g;
     }
@@ -19,4 +20,3 @@ static int QHash(QString key)
 }
 
 #endif
-

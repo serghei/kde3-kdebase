@@ -28,26 +28,23 @@
 
 class ListViewSettingsWidget;
 
-class ListViewSettings : public KDialogBase
-{
-  Q_OBJECT
+class ListViewSettings : public KDialogBase {
+    Q_OBJECT
 
-  public:
-
-    ListViewSettings( QWidget *parent=0, const char *name=0 );
+public:
+    ListViewSettings(QWidget *parent = 0, const char *name = 0);
 
     QString title() const;
     QColor textColor() const;
     QColor backgroundColor() const;
     QColor gridColor() const;
 
-    void setTitle( const QString & );
-    void setTextColor( const QColor & );
-    void setBackgroundColor( const QColor & );
-    void setGridColor( const QColor & );
+    void setTitle(const QString &);
+    void setTextColor(const QColor &);
+    void setBackgroundColor(const QColor &);
+    void setGridColor(const QColor &);
 
-  private:
-
+private:
     ListViewSettingsWidget *m_settingsWidget;
 };
 

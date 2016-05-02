@@ -54,8 +54,7 @@
 
 #include "kasgrouper.h"
 
-KasGrouper::KasGrouper( KasTasker *bar )
-    : kasbar( bar )
+KasGrouper::KasGrouper(KasTasker *bar) : kasbar(bar)
 {
 }
 
@@ -63,94 +62,106 @@ KasGrouper::~KasGrouper()
 {
 }
 
-KasItem *KasGrouper::maybeGroup( Task::Ptr t )
+KasItem *KasGrouper::maybeGroup(Task::Ptr t)
 {
     KasItem *item = 0;
 
-    if ( kasbar->groupInactiveDesktops() )
-	item = maybeAddToDesktopGroup( t );
-    if ( item )
-	return item;
+    if(kasbar->groupInactiveDesktops())
+        item = maybeAddToDesktopGroup(t);
+    if(item)
+        return item;
 
-    if ( kasbar->groupWindows() )
-	item = maybeAddToGroup( t );
-    if ( item )
-	return item;
+    if(kasbar->groupWindows())
+        item = maybeAddToGroup(t);
+    if(item)
+        return item;
 
     return item;
 }
 
-KasItem *KasGrouper::maybeAddToDesktopGroup( Task::Ptr t )
+KasItem *KasGrouper::maybeAddToDesktopGroup(Task::Ptr t)
 {
-   if ( t->isOnCurrentDesktop() )
-       return 0;
+    if(t->isOnCurrentDesktop())
+        return 0;
 
-   KasItem *item = 0;
-   for ( uint i = 0; i < kasbar->itemCount(); i++ ) {
-      KasItem *ei = kasbar->itemAt( i );
+    KasItem *item = 0;
+    for(uint i = 0; i < kasbar->itemCount(); i++)
+    {
+        KasItem *ei = kasbar->itemAt(i);
 
-      if ( ei->inherits( "KasTaskItem" ) ) {
-	 KasTaskItem *eti = static_cast<KasTaskItem *> (ei);
-	 if ( eti->task()->desktop() == t->desktop() ) {
-	    KasGroupItem *egi = kasbar->convertToGroup( eti->task() );
-	    egi->setGroupType( KasGroupItem::GroupDesktop );
-	    egi->addTask( t );
-	    item = egi;
-	 }
-      }
-      else if ( ei->inherits( "KasGroupItem" ) ) {
-	  KasGroupItem *egi = static_cast<KasGroupItem *> (ei);
-	  if ( egi->groupType() == KasGroupItem::GroupDesktop ) {
-	      if ( egi->task(0)->desktop() == t->desktop() ) {
-		  egi->addTask( t );
-		  item = egi;
-	      }
-	  }
-      }
-   }
+        if(ei->inherits("KasTaskItem"))
+        {
+            KasTaskItem *eti = static_cast< KasTaskItem * >(ei);
+            if(eti->task()->desktop() == t->desktop())
+            {
+                KasGroupItem *egi = kasbar->convertToGroup(eti->task());
+                egi->setGroupType(KasGroupItem::GroupDesktop);
+                egi->addTask(t);
+                item = egi;
+            }
+        }
+        else if(ei->inherits("KasGroupItem"))
+        {
+            KasGroupItem *egi = static_cast< KasGroupItem * >(ei);
+            if(egi->groupType() == KasGroupItem::GroupDesktop)
+            {
+                if(egi->task(0)->desktop() == t->desktop())
+                {
+                    egi->addTask(t);
+                    item = egi;
+                }
+            }
+        }
+    }
 
-   return item;
+    return item;
 }
 
-KasItem *KasGrouper::maybeAddToGroup( Task::Ptr t )
+KasItem *KasGrouper::maybeAddToGroup(Task::Ptr t)
 {
-   KasItem *item = 0;
+    KasItem *item = 0;
 
-   QString taskClass = t->className().lower();
+    QString taskClass = t->className().lower();
 
-   for ( uint i = 0; (!item) && (i < kasbar->itemCount()); i++ ) {
-      KasItem *ei = kasbar->itemAt( i );
+    for(uint i = 0; (!item) && (i < kasbar->itemCount()); i++)
+    {
+        KasItem *ei = kasbar->itemAt(i);
 
-      if ( ei->inherits( "KasTaskItem" ) ) {
+        if(ei->inherits("KasTaskItem"))
+        {
 
-	 KasTaskItem *eti = static_cast<KasTaskItem *> (ei);
+            KasTaskItem *eti = static_cast< KasTaskItem * >(ei);
 
-	 // NB This calls Task::className() not QObject::className()
-	 QString currClass = eti->task()->className().lower();
+            // NB This calls Task::className() not QObject::className()
+            QString currClass = eti->task()->className().lower();
 
-	 if ( Task::idMatch( currClass, taskClass ) ) {
-	    KasGroupItem *egi = kasbar->convertToGroup( eti->task() );
-	    egi->addTask( t );
-	    item = egi;
-	    break;
-	 }
-      }
-      else if ( ei->inherits( "KasGroupItem" ) ) {
-	  KasGroupItem *egi = static_cast<KasGroupItem *> (ei);
+            if(Task::idMatch(currClass, taskClass))
+            {
+                KasGroupItem *egi = kasbar->convertToGroup(eti->task());
+                egi->addTask(t);
+                item = egi;
+                break;
+            }
+        }
+        else if(ei->inherits("KasGroupItem"))
+        {
+            KasGroupItem *egi = static_cast< KasGroupItem * >(ei);
 
-	  for ( int i = 0; i < egi->taskCount(); i++ ) {
+            for(int i = 0; i < egi->taskCount(); i++)
+            {
 
-	      // NB This calls Task::className() not QObject::className()
-	      QString currClass = egi->task( i )->className().lower();
-	     
-	      if ( Task::idMatch( currClass, taskClass ) ) {
-		  egi->addTask( t );
-		  item = egi;
-		  break;
-	      }
-	  }
-      }
-   }
+                // NB This calls Task::className() not QObject::className()
+                QString currClass = egi->task(i)->className().lower();
 
-   return item;
+                if(Task::idMatch(currClass, taskClass))
+                {
+                    egi->addTask(t);
+                    item = egi;
+                    break;
+                }
+            }
+        }
+    }
+
+    return item;
 }

@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2012 Serghei Amelian <serghei.amelian@gmail.com>
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -41,7 +41,8 @@ static const char *appName = "kpowermanager";
 
 static QString qBatteryStatusToText(int state)
 {
-    switch(state) {
+    switch(state)
+    {
         case PowerSources::Battery::Charging:
             return i18n("charging");
         case PowerSources::Battery::Discharging:
@@ -65,7 +66,7 @@ PanelApplet::PanelApplet(QWidget *parent, const QString &configFile)
 {
     updateIcon(PowerSources());
 
-    connect(&backend, SIGNAL(powerSourcesChanged(const PowerSources&)), SLOT(updateIcon(const PowerSources&)));
+    connect(&backend, SIGNAL(powerSourcesChanged(const PowerSources &)), SLOT(updateIcon(const PowerSources &)));
 
     installEventFilter(KickerTip::the());
 }
@@ -82,7 +83,6 @@ int PanelApplet::widthForHeight(int height) const
 }
 
 
-
 int PanelApplet::heightForWidth(int width) const
 {
     return 22;
@@ -91,18 +91,12 @@ int PanelApplet::heightForWidth(int width) const
 
 void PanelApplet::about()
 {
-    KAboutData data(appName,
-        I18N_NOOP("KPowerManager"),
-        "1.0",
-        I18N_NOOP("The KDE3 Power Manager"),
-        KAboutData::License_GPL_V2,
-        "(c) 2012, KDE3 Desktop Environment");
+    KAboutData data(appName, I18N_NOOP("KPowerManager"), "1.0", I18N_NOOP("The KDE3 Power Manager"), KAboutData::License_GPL_V2,
+                    "(c) 2012, KDE3 Desktop Environment");
 
     data.setHomepage("http://github.com/serghei");
 
-    data.addAuthor("Serghei Amelian",
-        I18N_NOOP("Developer & maintainer"),
-        "serghei.amelian@gmail.com");
+    data.addAuthor("Serghei Amelian", I18N_NOOP("Developer & maintainer"), "serghei.amelian@gmail.com");
 
     KAboutApplication dialog(&data);
     dialog.exec();
@@ -116,9 +110,11 @@ void PanelApplet::updateIcon(const PowerSources &ps)
     const char *iconName = "ac";
     KIcon::States iconState = KIcon::DisabledState;
 
-    if(ps.daemon.connected) {
+    if(ps.daemon.connected)
+    {
         iconState = KIcon::ActiveState;
-        switch(ps.battery.state) {
+        switch(ps.battery.state)
+        {
             case PowerSources::Battery::Charging:
                 iconName = "battery_charging";
                 break;
@@ -131,10 +127,11 @@ void PanelApplet::updateIcon(const PowerSources &ps)
     QPixmap pixmap = KIconLoader(appName).loadIcon(iconName, KIcon::Toolbar, 0, iconState);
 
     // draw battery percentage
-    if(PowerSources::Battery::Charging == ps.battery.state || PowerSources::Battery::Discharging == ps.battery.state) {
+    if(PowerSources::Battery::Charging == ps.battery.state || PowerSources::Battery::Discharging == ps.battery.state)
+    {
         QPainter p(&pixmap);
-        int level = static_cast<int>(round(16. * ps.battery.percentage / 100.));
-        p.fillRect(15,  4 + (16 - level), 5, level, QColor(0x00, 0xff, 0x00));
+        int level = static_cast< int >(round(16. * ps.battery.percentage / 100.));
+        p.fillRect(15, 4 + (16 - level), 5, level, QColor(0x00, 0xff, 0x00));
     }
 
     // update the tooltip
@@ -150,7 +147,8 @@ void PanelApplet::updateKickerTip(KickerTip::Data &data)
 {
     Tooltip tip("KPowerManager", appName, data);
 
-    if(!ps.daemon.connected) {
+    if(!ps.daemon.connected)
+    {
         data.subtext = i18n("KPowerManger is not connected to UPower daemon.");
         return;
     }
@@ -171,9 +169,10 @@ void PanelApplet::updateKickerTip(KickerTip::Data &data)
     if(!ps.powerLine.online)
         tip.addItem(i18n("Energy rate"), QString::number(ps.battery.energyRate, 'f', 1), " W");
 
-    // Backlight
+// Backlight
 #ifdef HAVE_XRANDR
-    if(backlight.maxBrightness() > 0) {
+    if(backlight.maxBrightness() > 0)
+    {
         tip.addGroup("Backlight");
         tip.addItem(i18n("Brightness level"), QString::number(backlight.brightness() + 1), i18n(" (of %2)").arg(backlight.maxBrightness() + 1));
     }
@@ -183,7 +182,8 @@ void PanelApplet::updateKickerTip(KickerTip::Data &data)
 
 void PanelApplet::mousePressEvent(QMouseEvent *e)
 {
-    if(e->button() == Qt::RightButton) {
+    if(e->button() == Qt::RightButton)
+    {
         KPopupMenu menu(this);
 
         menu.insertTitle(SmallIcon(appName), i18n("KPowerManager"));
@@ -206,7 +206,8 @@ void PanelApplet::wheelEvent(QWheelEvent *e)
 #ifdef HAVE_XRANDR
     int level = backlight.brightness() + e->delta() / 120;
 
-    if(backlight.minBrightness() <= level && backlight.maxBrightness() >= level) {
+    if(backlight.minBrightness() <= level && backlight.maxBrightness() >= level)
+    {
         backlight.setBrightness(level);
 
         // update the tooltip
@@ -229,13 +230,12 @@ void PanelApplet::paintEvent(QPaintEvent *e)
 }
 
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-    KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
-        {
-            KGlobal::locale()->insertCatalogue(appName);
-            return new PanelApplet(parent, configFile);
-        }
+    KGlobal::locale()->insertCatalogue(appName);
+    return new PanelApplet(parent, configFile);
+}
 }
 
 

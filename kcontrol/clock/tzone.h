@@ -29,27 +29,29 @@
 class QComboBox;
 class QLabel;
 
-class Tzone : public QVGroupBox
-{
-  Q_OBJECT
+class Tzone : public QVGroupBox {
+    Q_OBJECT
 
 public:
-  Tzone( QWidget *parent=0, const char* name=0 );
+    Tzone(QWidget *parent = 0, const char *name = 0);
 
-  void	save();
-  void  load();
+    void save();
+    void load();
 
 signals:
-	void zoneChanged(bool);
+    void zoneChanged(bool);
 
 protected slots:
-  void handleZoneChange() {emit zoneChanged( TRUE );}
+    void handleZoneChange()
+    {
+        emit zoneChanged(TRUE);
+    }
 
 private:
-  void currentZone();
-  KTimezones m_zoneDb;
-  QLabel *m_local;
-  KTimezoneWidget *tzonelist;
+    void currentZone();
+    KTimezones m_zoneDb;
+    QLabel *m_local;
+    KTimezoneWidget *tzonelist;
 };
 
 #endif // tzone_included

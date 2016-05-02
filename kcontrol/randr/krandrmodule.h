@@ -25,44 +25,43 @@ class QButtonGroup;
 class KComboBox;
 class QCheckBox;
 
-class KRandRModule : public KCModule, public RandRDisplay
-{
-	Q_OBJECT
+class KRandRModule : public KCModule, public RandRDisplay {
+    Q_OBJECT
 
 public:
-	KRandRModule(QWidget *parent, const char *name, const QStringList& _args);
+    KRandRModule(QWidget *parent, const char *name, const QStringList &_args);
 
-	virtual void load();
-	virtual void load(bool useDefaults);
-	virtual void save();
-	virtual void defaults();
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
-	static void performApplyOnStartup();
+    static void performApplyOnStartup();
 
 protected slots:
-	void slotScreenChanged(int screen);
-	void slotRotationChanged();
-	void slotSizeChanged(int index);
-	void slotRefreshChanged(int index);
-	void setChanged();
+    void slotScreenChanged(int screen);
+    void slotRotationChanged();
+    void slotSizeChanged(int index);
+    void slotRefreshChanged(int index);
+    void setChanged();
 
 protected:
-	void apply();
-	void update();
+    void apply();
+    void update();
 
-	void addRotationButton(int thisRotation, bool checkbox);
-	void populateRefreshRates();
+    void addRotationButton(int thisRotation, bool checkbox);
+    void populateRefreshRates();
 
-	KComboBox*		m_screenSelector;
-	KComboBox*		m_sizeCombo;
-	QButtonGroup*	m_rotationGroup;
-	KComboBox*		m_refreshRates;
-	QCheckBox*		m_applyOnStartup;
-	QCheckBox*		m_syncTrayApp;
-	bool			m_oldApply;
-	bool			m_oldSyncTrayApp;
+    KComboBox *m_screenSelector;
+    KComboBox *m_sizeCombo;
+    QButtonGroup *m_rotationGroup;
+    KComboBox *m_refreshRates;
+    QCheckBox *m_applyOnStartup;
+    QCheckBox *m_syncTrayApp;
+    bool m_oldApply;
+    bool m_oldSyncTrayApp;
 
-	bool			m_changed;
+    bool m_changed;
 };
 
 #endif

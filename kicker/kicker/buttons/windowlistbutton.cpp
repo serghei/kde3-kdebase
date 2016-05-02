@@ -29,11 +29,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "windowlistbutton.h"
 #include "windowlistbutton.moc"
 
-WindowListButton::WindowListButton( QWidget* parent )
-  : PanelPopupButton( parent, "WindowListButton" )
-  , topMenu( 0 )
+WindowListButton::WindowListButton(QWidget *parent) : PanelPopupButton(parent, "WindowListButton"), topMenu(0)
 {
-    topMenu = new KWindowListMenu( this );
+    topMenu = new KWindowListMenu(this);
     setPopup(topMenu);
 
     setTitle(i18n("Window List"));

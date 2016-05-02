@@ -29,20 +29,19 @@ Boston, MA 02110-1301, USA.
 #include <bgrender.h>
 
 
-class MyApplication : public KApplication
-{
-	Q_OBJECT
+class MyApplication : public KApplication {
+    Q_OBJECT
 
-  public:
-	MyApplication( const char * );
+public:
+    MyApplication(const char *);
 
-  private slots:
-	void renderDone();
-	void slotTimeout();
+private slots:
+    void renderDone();
+    void slotTimeout();
 
-  private:
-	KVirtualBGRenderer renderer;
-	QTimer timer;
+private:
+    KVirtualBGRenderer renderer;
+    QTimer timer;
 };
 
 #endif

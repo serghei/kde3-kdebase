@@ -39,37 +39,31 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "servicebutton.h"
 #include "servicebutton.moc"
 
-ServiceButton::ServiceButton(const QString& desktopFile, QWidget* parent)
-  : PanelButton(parent, "ServiceButton"),
-    _service(0)
+ServiceButton::ServiceButton(const QString &desktopFile, QWidget *parent) : PanelButton(parent, "ServiceButton"), _service(0)
 {
     loadServiceFromId(desktopFile);
     initialize();
 }
 
-ServiceButton::ServiceButton(const KService::Ptr &service, QWidget* parent)
-  : PanelButton(parent, "ServiceButton"),
-    _service(service),
-    _id(service->storageId())
+ServiceButton::ServiceButton(const KService::Ptr &service, QWidget *parent)
+    : PanelButton(parent, "ServiceButton"), _service(service), _id(service->storageId())
 {
-    if (_id.startsWith("/"))
+    if(_id.startsWith("/"))
     {
-       QString tmp = KGlobal::dirs()->relativeLocation("appdata", _id);
-       if (!tmp.startsWith("/"))
-          _id = ":"+tmp;
+        QString tmp = KGlobal::dirs()->relativeLocation("appdata", _id);
+        if(!tmp.startsWith("/"))
+            _id = ":" + tmp;
     }
     initialize();
 }
 
-ServiceButton::ServiceButton( const KConfigGroup& config, QWidget* parent )
-  : PanelButton(parent, "ServiceButton"),
-    _service(0)
+ServiceButton::ServiceButton(const KConfigGroup &config, QWidget *parent) : PanelButton(parent, "ServiceButton"), _service(0)
 {
     QString id;
-    if (config.hasKey("StorageId"))
-       id = config.readPathEntry("StorageId");
+    if(config.hasKey("StorageId"))
+        id = config.readPathEntry("StorageId");
     else
-       id = config.readPathEntry("DesktopFile");
+        id = config.readPathEntry("DesktopFile");
     loadServiceFromId(id);
     initialize();
 }
@@ -87,34 +81,34 @@ void ServiceButton::loadServiceFromId(const QString &id)
     */
     _service = 0;
 
-    if (_id.startsWith(":"))
+    if(_id.startsWith(":"))
     {
-       _id = locate("appdata", id.mid(1));
-       if (!_id.isEmpty())
-       {
-          KDesktopFile df(_id, true);
-          _service = new KService(&df);
-       }
+        _id = locate("appdata", id.mid(1));
+        if(!_id.isEmpty())
+        {
+            KDesktopFile df(_id, true);
+            _service = new KService(&df);
+        }
     }
     else
     {
-       _service = KService::serviceByStorageId(_id);
-       if (_service)
-       {
-          _id = _service->storageId();
-       }
+        _service = KService::serviceByStorageId(_id);
+        if(_service)
+        {
+            _id = _service->storageId();
+        }
     }
 
-    if (_service)
+    if(_service)
     {
         backedByFile(_service->desktopEntryPath());
     }
 
-    if (_id.startsWith("/"))
+    if(_id.startsWith("/"))
     {
-       QString tmp = KGlobal::dirs()->relativeLocation("appdata", _id);
-       if (!tmp.startsWith("/"))
-          _id = ":"+tmp;
+        QString tmp = KGlobal::dirs()->relativeLocation("appdata", _id);
+        if(!tmp.startsWith("/"))
+            _id = ":" + tmp;
     }
 }
 
@@ -126,17 +120,17 @@ void ServiceButton::initialize()
 
 void ServiceButton::readDesktopFile()
 {
-    if ( !_service || !_service->isValid() )
+    if(!_service || !_service->isValid())
     {
         m_valid = false;
         return;
     }
 
-    if (!_service->genericName().isEmpty())
+    if(!_service->genericName().isEmpty())
     {
         QToolTip::add(this, _service->genericName());
     }
-    else if (_service->comment().isEmpty())
+    else if(_service->comment().isEmpty())
     {
         QToolTip::add(this, _service->name());
     }
@@ -145,32 +139,33 @@ void ServiceButton::readDesktopFile()
         QToolTip::add(this, _service->name() + " - " + _service->comment());
     }
 
-    setTitle( _service->name() );
-    setIcon( _service->icon() );
+    setTitle(_service->name());
+    setIcon(_service->icon());
 }
 
-void ServiceButton::saveConfig( KConfigGroup& config ) const
+void ServiceButton::saveConfig(KConfigGroup &config) const
 {
-    config.writePathEntry("StorageId", _id );
-    if (!config.hasKey("DesktopFile") && _service)
-       config.writePathEntry("DesktopFile", _service->desktopEntryPath());
+    config.writePathEntry("StorageId", _id);
+    if(!config.hasKey("DesktopFile") && _service)
+        config.writePathEntry("DesktopFile", _service->desktopEntryPath());
 }
 
 void ServiceButton::dragEnterEvent(QDragEnterEvent *ev)
 {
-    if ((ev->source() != this) && KURLDrag::canDecode(ev))
+    if((ev->source() != this) && KURLDrag::canDecode(ev))
         ev->accept(rect());
     else
         ev->ignore(rect());
     PanelButton::dragEnterEvent(ev);
 }
 
-void ServiceButton::dropEvent( QDropEvent* ev )
+void ServiceButton::dropEvent(QDropEvent *ev)
 {
     KURL::List uriList;
-    if( KURLDrag::decode( ev, uriList ) && _service ) {
+    if(KURLDrag::decode(ev, uriList) && _service)
+    {
         kapp->propagateSessionManager();
-        KRun::run( *_service, uriList );
+        KRun::run(*_service, uriList);
     }
     PanelButton::dropEvent(ev);
 }
@@ -197,16 +192,17 @@ void ServiceButton::slotExec()
 
 void ServiceButton::performExec()
 {
-    if (!_service) return;
+    if(!_service)
+        return;
 
     KURL::List uriList;
     kapp->propagateSessionManager();
-    KRun::run( *_service, uriList );
+    KRun::run(*_service, uriList);
 }
 
 void ServiceButton::properties()
 {
-    if (!_service)
+    if(!_service)
     {
         return;
     }
@@ -220,13 +216,10 @@ void ServiceButton::properties()
     serviceURL.setPath(path);
 
     // the KPropertiesDialog deletes itself, so this isn't a memory leak
-    KPropertiesDialog* dialog = new KPropertiesDialog(serviceURL, 0, 0,
-                                                      false, false);
+    KPropertiesDialog *dialog = new KPropertiesDialog(serviceURL, 0, 0, false, false);
     dialog->setFileNameReadOnly(true);
-    connect(dialog, SIGNAL(saveAs(const KURL &, KURL &)),
-            this, SLOT(slotSaveAs(const KURL &, KURL &)));
-    connect(dialog, SIGNAL(propertiesClosed()),
-            this, SLOT(slotUpdate()));
+    connect(dialog, SIGNAL(saveAs(const KURL &, KURL &)), this, SLOT(slotSaveAs(const KURL &, KURL &)));
+    connect(dialog, SIGNAL(propertiesClosed()), this, SLOT(slotUpdate()));
     dialog->show();
 }
 
@@ -240,11 +233,11 @@ void ServiceButton::slotUpdate()
 void ServiceButton::slotSaveAs(const KURL &oldUrl, KURL &newUrl)
 {
     QString oldPath = oldUrl.path();
-    if (locateLocal("appdata", oldUrl.fileName()) != oldPath)
+    if(locateLocal("appdata", oldUrl.fileName()) != oldPath)
     {
-       QString path = KickerLib::newDesktopFile(oldUrl);
-       newUrl.setPath(path);
-       _id = path;
+        QString path = KickerLib::newDesktopFile(oldUrl);
+        newUrl.setPath(path);
+        _id = path;
     }
 }
 

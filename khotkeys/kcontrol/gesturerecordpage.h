@@ -1,12 +1,12 @@
 /****************************************************************************
 
  KHotKeys
- 
+
  Copyright (C) 2003 Mike Pilone <mpilone@slac.com>
  Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
 
  Distributed under the terms of the GNU General Public License version 2.
- 
+
 ****************************************************************************/
 
 #ifndef GESTURE_RECORD_PAGE_H
@@ -20,41 +20,41 @@ class QWidget;
 class QPushButton;
 class QLabel;
 
-namespace KHotKeys
-{
+namespace KHotKeys {
 
 class Gesture;
 class GestureRecorder;
 
-class GestureRecordPage : public QVBox
-    {
+class GestureRecordPage : public QVBox {
     Q_OBJECT
 
-    public:
-        GestureRecordPage(const QString &gesture,
-                          QWidget *parent, const char *name);
-        ~GestureRecordPage();
+public:
+    GestureRecordPage(const QString &gesture, QWidget *parent, const char *name);
+    ~GestureRecordPage();
 
-        const QString &getGesture() const { return _gest; }
+    const QString &getGesture() const
+    {
+        return _gest;
+    }
 
-    protected slots:
-        void slotRecorded(const QString &data);
-         void slotResetClicked();
+protected slots:
+    void slotRecorded(const QString &data);
+    void slotResetClicked();
 
-    signals:
-        void gestureRecorded(bool);
+signals:
+    void gestureRecorded(bool);
 
-    private:
-        GestureRecorder *_recorder;
-        QPushButton *_resetButton;
-        GestureDrawer *_tryOne;
-        GestureDrawer *_tryTwo;
-        GestureDrawer *_tryThree;
+private:
+    GestureRecorder *_recorder;
+    QPushButton *_resetButton;
+    GestureDrawer *_tryOne;
+    GestureDrawer *_tryTwo;
+    GestureDrawer *_tryThree;
 
-        QString _gest;
+    QString _gest;
 
-        Q_UINT32 _tryCount;
-    };
+    Q_UINT32 _tryCount;
+};
 
 } // namespace KHotKeys
 

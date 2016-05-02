@@ -25,22 +25,20 @@
 
 class KateApp;
 
-class KateAppDCOPIface : public DCOPObject
-{
-  K_DCOP
+class KateAppDCOPIface : public DCOPObject {
+    K_DCOP
 
-  public:
-    KateAppDCOPIface (KateApp *app);
+public:
+    KateAppDCOPIface(KateApp *app);
 
-  k_dcop:
-    DCOPRef documentManager ();
+    k_dcop : DCOPRef documentManager();
 
-    DCOPRef activeMainWindow ();
+    DCOPRef activeMainWindow();
 
-    uint activeMainWindowNumber ();
+    uint activeMainWindowNumber();
 
-    uint mainWindows ();
-    DCOPRef mainWindow (uint n = 0);
+    uint mainWindows();
+    DCOPRef mainWindow(uint n = 0);
 
     /**
      * open a file with given url and encoding
@@ -49,7 +47,7 @@ class KateAppDCOPIface : public DCOPObject
      * @param encoding encoding name
      * @return success
      */
-    bool openURL (KURL url, QString encoding);
+    bool openURL(KURL url, QString encoding);
 
     /**
      * Like the above, but adds an option to let the documentManager know
@@ -65,7 +63,7 @@ class KateAppDCOPIface : public DCOPObject
      * @param column column for cursor
      * @return success
      */
-    bool setCursor (int line, int column);
+    bool setCursor(int line, int column);
 
     /**
      * helper to handle stdin input
@@ -73,21 +71,21 @@ class KateAppDCOPIface : public DCOPObject
      * @param text text to fill in the new doc/view
      * @return success
      */
-    bool openInput (QString text);
+    bool openInput(QString text);
 
     /**
      * activate a given session
      * @param session session name
      * @return success
      */
-    bool activateSession (QString session);
+    bool activateSession(QString session);
 
     /**
      * @return the name of the active session
      */
-    const QString & session() const;
+    const QString &session() const;
 
-  private:
+private:
     KateApp *m_app;
 };
 

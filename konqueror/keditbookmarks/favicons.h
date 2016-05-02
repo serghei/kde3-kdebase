@@ -31,39 +31,47 @@
 
 class FavIconsItrHolder : public BookmarkIteratorHolder {
 public:
-   static FavIconsItrHolder* self() { 
-      if (!s_self) { s_self = new FavIconsItrHolder(); }; return s_self; 
-   }
-   void addAffectedBookmark( const QString & address );
+    static FavIconsItrHolder *self()
+    {
+        if(!s_self)
+        {
+            s_self = new FavIconsItrHolder();
+        };
+        return s_self;
+    }
+    void addAffectedBookmark(const QString &address);
+
 protected:
-   virtual void doItrListChanged();
+    virtual void doItrListChanged();
+
 private:
-   FavIconsItrHolder();
-   static FavIconsItrHolder *s_self;
-   QString m_affectedBookmark;
+    FavIconsItrHolder();
+    static FavIconsItrHolder *s_self;
+    QString m_affectedBookmark;
 };
 
 class FavIconUpdater;
 
-class FavIconsItr : public BookmarkIterator
-{
-   Q_OBJECT
+class FavIconsItr : public BookmarkIterator {
+    Q_OBJECT
 
 public:
-   FavIconsItr(QValueList<KBookmark> bks);
-   ~FavIconsItr();
-   virtual FavIconsItrHolder* holder() const { return FavIconsItrHolder::self(); }
+    FavIconsItr(QValueList< KBookmark > bks);
+    ~FavIconsItr();
+    virtual FavIconsItrHolder *holder() const
+    {
+        return FavIconsItrHolder::self();
+    }
 
 public slots:
-   void slotDone(bool succeeded);
+    void slotDone(bool succeeded);
 
 protected:
-   virtual void doAction();
-   virtual bool isApplicable(const KBookmark &bk) const;
+    virtual void doAction();
+    virtual bool isApplicable(const KBookmark &bk) const;
 
 private:
-   FavIconUpdater *m_updater;
+    FavIconUpdater *m_updater;
 };
 
 #endif
-

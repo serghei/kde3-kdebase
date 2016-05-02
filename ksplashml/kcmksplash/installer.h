@@ -22,66 +22,63 @@ class QTextEdit;
 class QPushButton;
 class ThemeListBox;
 
-class SplashInstaller : public QWidget
-{
-  Q_OBJECT
+class SplashInstaller : public QWidget {
+    Q_OBJECT
 public:
-  SplashInstaller(QWidget *parent=0, const char *aName=0, bool aInit=FALSE);
-  ~SplashInstaller();
+    SplashInstaller(QWidget *parent = 0, const char *aName = 0, bool aInit = FALSE);
+    ~SplashInstaller();
 
-  virtual void load();
-  virtual void load( bool useDefaults );
-  virtual void save();
-  virtual void defaults();
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
 signals:
-  void changed( bool state );
+    void changed(bool state);
 
 protected slots:
-  virtual void slotAdd();
-  virtual void slotRemove();
-  virtual void slotTest();
-  virtual void slotSetTheme(int);
-  void slotFilesDropped(const KURL::List &urls);
+    virtual void slotAdd();
+    virtual void slotRemove();
+    virtual void slotTest();
+    virtual void slotSetTheme(int);
+    void slotFilesDropped(const KURL::List &urls);
 
 protected:
-  /** Scan Themes directory for available theme packages */
-  virtual void readThemesList();
-  /** add a theme to the list, returns the list index */
-  int addTheme(const QString &path, const QString &name);
-  void addNewTheme(const KURL &srcURL);
-  int findTheme( const QString &theme );
+    /** Scan Themes directory for available theme packages */
+    virtual void readThemesList();
+    /** add a theme to the list, returns the list index */
+    int addTheme(const QString &path, const QString &name);
+    void addNewTheme(const KURL &srcURL);
+    int findTheme(const QString &theme);
 
 private:
-  bool mGui;
-  ThemeListBox *mThemesList;
-  QPushButton *mBtnAdd, *mBtnRemove, *mBtnTest;
-  QTextEdit *mText;
-  QLabel *mPreview;
+    bool mGui;
+    ThemeListBox *mThemesList;
+    QPushButton *mBtnAdd, *mBtnRemove, *mBtnTest;
+    QTextEdit *mText;
+    QLabel *mPreview;
 };
 
-class ThemeListBox: public KListBox
-{
-  Q_OBJECT
+class ThemeListBox : public KListBox {
+    Q_OBJECT
 public:
-  ThemeListBox(QWidget *parent);
-  QMap<QString, QString> text2path;
+    ThemeListBox(QWidget *parent);
+    QMap< QString, QString > text2path;
 
 signals:
-  void filesDropped(const KURL::List &urls);
+    void filesDropped(const KURL::List &urls);
 
 protected:
-  void dragEnterEvent(QDragEnterEvent* event);
-  void dropEvent(QDropEvent* event);
-  void mouseMoveEvent(QMouseEvent *e);
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+    void mouseMoveEvent(QMouseEvent *e);
 
 protected slots:
-  void slotMouseButtonPressed(int button, QListBoxItem *item, const QPoint &p);
+    void slotMouseButtonPressed(int button, QListBoxItem *item, const QPoint &p);
 
 private:
-  QString mDragFile;
-  QPoint mOldPos;
-
+    QString mDragFile;
+    QPoint mOldPos;
 };
 
 #endif

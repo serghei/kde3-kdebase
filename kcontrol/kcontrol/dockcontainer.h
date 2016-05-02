@@ -28,59 +28,64 @@ class ModuleTitle;
 class ProxyWidget;
 class QLabel;
 
-class ModuleWidget : public QVBox
-{
-  Q_OBJECT
+class ModuleWidget : public QVBox {
+    Q_OBJECT
 
-  public:
-    ModuleWidget( QWidget *parent, const char *name );
-    ~ModuleWidget() {}
+public:
+    ModuleWidget(QWidget *parent, const char *name);
+    ~ModuleWidget()
+    {
+    }
 
-    ProxyWidget* load( ConfigModule *module );
+    ProxyWidget *load(ConfigModule *module);
 
-  signals:
+signals:
     void helpRequest();
 
-  protected:
+protected:
     ModuleTitle *m_title;
     QVBox *m_body;
 };
 
-class DockContainer : public QWidgetStack
-{
-  Q_OBJECT
+class DockContainer : public QWidgetStack {
+    Q_OBJECT
 
 public:
-  DockContainer(QWidget *parent=0);
-  virtual ~DockContainer();
+    DockContainer(QWidget *parent = 0);
+    virtual ~DockContainer();
 
-  void setBaseWidget(QWidget *widget);
-  QWidget *baseWidget() { return _basew; }
+    void setBaseWidget(QWidget *widget);
+    QWidget *baseWidget()
+    {
+        return _basew;
+    }
 
-  bool dockModule(ConfigModule *module);
-  ConfigModule *module() { return _module; }
+    bool dockModule(ConfigModule *module);
+    ConfigModule *module()
+    {
+        return _module;
+    }
 
 public slots:
-  void removeModule();
+    void removeModule();
 
 protected slots:
-  void quickHelpChanged();
-  void slotHelpRequest();
+    void quickHelpChanged();
+    void slotHelpRequest();
 
 protected:
-  void deleteModule();
-  ProxyWidget* loadModule( ConfigModule *module );
+    void deleteModule();
+    ProxyWidget *loadModule(ConfigModule *module);
 
 signals:
-  void newModule(const QString &name, const QString& docPath, const QString &quickhelp);
-  void changedModule(ConfigModule *module);
+    void newModule(const QString &name, const QString &docPath, const QString &quickhelp);
+    void changedModule(ConfigModule *module);
 
 private:
-  QWidget      *_basew;
-  QLabel       *_busyw;
-  ModuleWidget *_modulew;
-  ConfigModule *_module;
-
+    QWidget *_basew;
+    QLabel *_busyw;
+    ModuleWidget *_modulew;
+    ConfigModule *_module;
 };
 
 #endif

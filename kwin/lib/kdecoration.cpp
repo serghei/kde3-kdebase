@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <qapplication.h>
 #include <kglobal.h>
 #include <assert.h>
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
+#if defined Q_WS_X11 && !defined K_WS_QTONLY
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 #endif
@@ -36,327 +36,322 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_p.h"
 #include "kdecorationfactory.h"
 
-KDecorationOptions* KDecoration::options_;
+KDecorationOptions *KDecoration::options_;
 
-KDecoration::KDecoration( KDecorationBridge* bridge, KDecorationFactory* factory )
-    :   bridge_( bridge ),
-	w_( NULL ),
-        factory_( factory )
-    {
-    factory->addDecoration( this );
-    }
+KDecoration::KDecoration(KDecorationBridge *bridge, KDecorationFactory *factory) : bridge_(bridge), w_(NULL), factory_(factory)
+{
+    factory->addDecoration(this);
+}
 
 KDecoration::~KDecoration()
-    {
-    factory()->removeDecoration( this );
+{
+    factory()->removeDecoration(this);
     delete w_;
-    }
+}
 
-const KDecorationOptions* KDecoration::options()
-    {
+const KDecorationOptions *KDecoration::options()
+{
     return options_;
-    }
+}
 
-void KDecoration::createMainWidget( WFlags flags )
-    {
+void KDecoration::createMainWidget(WFlags flags)
+{
     // FRAME check flags?
-    setMainWidget( new QWidget( initialParentWidget(), "decoration widget", initialWFlags() | flags ));
-    }
+    setMainWidget(new QWidget(initialParentWidget(), "decoration widget", initialWFlags() | flags));
+}
 
-void KDecoration::setMainWidget( QWidget* w )
-    {
-    assert( w_ == NULL );
+void KDecoration::setMainWidget(QWidget *w)
+{
+    assert(w_ == NULL);
     w_ = w;
-    w->setMouseTracking( true );
-    widget()->resize( geometry().size());
-    }
+    w->setMouseTracking(true);
+    widget()->resize(geometry().size());
+}
 
-QWidget* KDecoration::initialParentWidget() const
-    {
+QWidget *KDecoration::initialParentWidget() const
+{
     return bridge_->initialParentWidget();
-    }
-    
+}
+
 Qt::WFlags KDecoration::initialWFlags() const
-    {
+{
     return bridge_->initialWFlags();
-    }
+}
 
 bool KDecoration::isActive() const
-    {
+{
     return bridge_->isActive();
-    }
-    
+}
+
 bool KDecoration::isCloseable() const
-    {
+{
     return bridge_->isCloseable();
-    }
+}
 
 bool KDecoration::isMaximizable() const
-    {
+{
     return bridge_->isMaximizable();
-    }
-    
+}
+
 KDecoration::MaximizeMode KDecoration::maximizeMode() const
-    {
+{
     return bridge_->maximizeMode();
-    }
-    
+}
+
 bool KDecoration::isMinimizable() const
-    {
+{
     return bridge_->isMinimizable();
-    }
+}
 
 bool KDecoration::providesContextHelp() const
-    {
+{
     return bridge_->providesContextHelp();
-    }
-    
+}
+
 int KDecoration::desktop() const
-    {
+{
     return bridge_->desktop();
-    }
-    
+}
+
 bool KDecoration::isModal() const
-    {
+{
     return bridge_->isModal();
-    }
-    
+}
+
 bool KDecoration::isShadeable() const
-    {
+{
     return bridge_->isShadeable();
-    }
-    
+}
+
 bool KDecoration::isShade() const
-    {
+{
     return bridge_->isShade();
-    }
-    
+}
+
 bool KDecoration::isSetShade() const
-    {
+{
     return bridge_->isSetShade();
-    }
-    
+}
+
 bool KDecoration::keepAbove() const
-    {
+{
     return bridge_->keepAbove();
-    }
+}
 
 bool KDecoration::keepBelow() const
-    {
+{
     return bridge_->keepBelow();
-    }
+}
 
 bool KDecoration::isMovable() const
-    {
+{
     return bridge_->isMovable();
-    }
+}
 
 bool KDecoration::isResizable() const
-    {
+{
     return bridge_->isResizable();
-    }
+}
 
-NET::WindowType KDecoration::windowType( unsigned long supported_types ) const
-    { // this one is also duplicated in KDecorationFactory
-    return bridge_->windowType( supported_types );
-    }
+NET::WindowType KDecoration::windowType(unsigned long supported_types) const
+{ // this one is also duplicated in KDecorationFactory
+    return bridge_->windowType(supported_types);
+}
 
 QIconSet KDecoration::icon() const
-    {
+{
     return bridge_->icon();
-    }
-    
+}
+
 QString KDecoration::caption() const
-    {
+{
     return bridge_->caption();
-    }
+}
 
-void KDecoration::processMousePressEvent( QMouseEvent* e )
-    {
-    return bridge_->processMousePressEvent( e );
-    }
+void KDecoration::processMousePressEvent(QMouseEvent *e)
+{
+    return bridge_->processMousePressEvent(e);
+}
 
-void KDecoration::showWindowMenu( const QRect &pos )
-    {
-    bridge_->showWindowMenu( pos );
-    }
-    
-void KDecoration::showWindowMenu( QPoint pos )
-    {
-    bridge_->showWindowMenu( pos );
-    }
+void KDecoration::showWindowMenu(const QRect &pos)
+{
+    bridge_->showWindowMenu(pos);
+}
 
-void KDecoration::performWindowOperation( WindowOperation op )
-    {
-    bridge_->performWindowOperation( op );
-    }
+void KDecoration::showWindowMenu(QPoint pos)
+{
+    bridge_->showWindowMenu(pos);
+}
 
-void KDecoration::setMask( const QRegion& reg, int mode )
-    {
-    bridge_->setMask( reg, mode );
-    }
-    
+void KDecoration::performWindowOperation(WindowOperation op)
+{
+    bridge_->performWindowOperation(op);
+}
+
+void KDecoration::setMask(const QRegion &reg, int mode)
+{
+    bridge_->setMask(reg, mode);
+}
+
 void KDecoration::clearMask()
-    {
-    bridge_->setMask( QRegion(), 0 );
-    }
-    
+{
+    bridge_->setMask(QRegion(), 0);
+}
+
 bool KDecoration::isPreview() const
-    {
+{
     return bridge_->isPreview();
-    }
-    
+}
+
 QRect KDecoration::geometry() const
-    {
+{
     return bridge_->geometry();
-    }
-    
+}
+
 QRect KDecoration::iconGeometry() const
-    {
+{
     return bridge_->iconGeometry();
-    }
+}
 
-QRegion KDecoration::unobscuredRegion( const QRegion& r ) const
-    {
-    return bridge_->unobscuredRegion( r );
-    }
+QRegion KDecoration::unobscuredRegion(const QRegion &r) const
+{
+    return bridge_->unobscuredRegion(r);
+}
 
-QWidget* KDecoration::workspaceWidget() const
-    {
+QWidget *KDecoration::workspaceWidget() const
+{
     return bridge_->workspaceWidget();
-    }
-        
+}
+
 WId KDecoration::windowId() const
-    {
+{
     return bridge_->windowId();
-    }
-        
+}
+
 void KDecoration::closeWindow()
-    {
+{
     bridge_->closeWindow();
-    }
+}
 
-void KDecoration::maximize( ButtonState button )
-    {
-    performWindowOperation( options()->operationMaxButtonClick( button ));
-    }
+void KDecoration::maximize(ButtonState button)
+{
+    performWindowOperation(options()->operationMaxButtonClick(button));
+}
 
-void KDecoration::maximize( MaximizeMode mode )
-    {
-    bridge_->maximize( mode );
-    }
-    
+void KDecoration::maximize(MaximizeMode mode)
+{
+    bridge_->maximize(mode);
+}
+
 void KDecoration::minimize()
-    {
+{
     bridge_->minimize();
-    }
+}
 
 void KDecoration::showContextHelp()
-    {
+{
     bridge_->showContextHelp();
-    }
-    
-void KDecoration::setDesktop( int desktop )
-    {
-    bridge_->setDesktop( desktop );
-    }
+}
+
+void KDecoration::setDesktop(int desktop)
+{
+    bridge_->setDesktop(desktop);
+}
 
 void KDecoration::toggleOnAllDesktops()
-    {
-    if( isOnAllDesktops())
-        setDesktop( bridge_->currentDesktop());
+{
+    if(isOnAllDesktops())
+        setDesktop(bridge_->currentDesktop());
     else
-        setDesktop( NET::OnAllDesktops );
-    }
+        setDesktop(NET::OnAllDesktops);
+}
 
 void KDecoration::titlebarDblClickOperation()
-    {
+{
     bridge_->titlebarDblClickOperation();
-    }
+}
 
-void KDecoration::titlebarMouseWheelOperation( int delta )
-    {
-    bridge_->titlebarMouseWheelOperation( delta );
-    }
+void KDecoration::titlebarMouseWheelOperation(int delta)
+{
+    bridge_->titlebarMouseWheelOperation(delta);
+}
 
-void KDecoration::setShade( bool set )
-    {
-    bridge_->setShade( set );
-    }
-        
-void KDecoration::setKeepAbove( bool set )
-    {
-    bridge_->setKeepAbove( set );
-    }
-    
-void KDecoration::setKeepBelow( bool set )
-    {
-    bridge_->setKeepBelow( set );
-    }
+void KDecoration::setShade(bool set)
+{
+    bridge_->setShade(set);
+}
 
-bool KDecoration::drawbound( const QRect&, bool )
-    {
+void KDecoration::setKeepAbove(bool set)
+{
+    bridge_->setKeepAbove(set);
+}
+
+void KDecoration::setKeepBelow(bool set)
+{
+    bridge_->setKeepBelow(set);
+}
+
+bool KDecoration::drawbound(const QRect &, bool)
+{
     return false;
-    }
+}
 
-bool KDecoration::animateMinimize( bool )
-    {
+bool KDecoration::animateMinimize(bool)
+{
     return false;
-    }
+}
 
-bool KDecoration::windowDocked( Position )
-    {
+bool KDecoration::windowDocked(Position)
+{
     return false;
-    }
+}
 
-void KDecoration::helperShowHide( bool show )
-    {
-    bridge_->helperShowHide( show );
-    }
+void KDecoration::helperShowHide(bool show)
+{
+    bridge_->helperShowHide(show);
+}
 
-void KDecoration::reset( unsigned long )
-    {
-    }
+void KDecoration::reset(unsigned long)
+{
+}
 
 void KDecoration::grabXServer()
-    {
-    bridge_->grabXServer( true );
-    }
-    
+{
+    bridge_->grabXServer(true);
+}
+
 void KDecoration::ungrabXServer()
-    {
-    bridge_->grabXServer( false );
-    }
-    
-KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
+{
+    bridge_->grabXServer(false);
+}
+
+KDecoration::Position KDecoration::mousePosition(const QPoint &p) const
 {
     const int range = 16;
     int bleft, bright, btop, bbottom;
-    borders( bleft, bright, btop, bbottom );
-    btop = KMIN( btop, 4 ); // otherwise whole titlebar would have resize cursor
+    borders(bleft, bright, btop, bbottom);
+    btop = KMIN(btop, 4); // otherwise whole titlebar would have resize cursor
 
     Position m = PositionCenter;
 
-    if ( ( p.x() > bleft && p.x() < widget()->width() - bright )
-         && ( p.y() > btop && p.y() < widget()->height() - bbottom ) )
+    if((p.x() > bleft && p.x() < widget()->width() - bright) && (p.y() > btop && p.y() < widget()->height() - bbottom))
         return PositionCenter;
 
-    if ( p.y() <= KMAX( range, btop ) && p.x() <= KMAX( range, bleft ))
+    if(p.y() <= KMAX(range, btop) && p.x() <= KMAX(range, bleft))
         m = PositionTopLeft;
-    else if ( p.y() >= widget()->height()- KMAX( range, bbottom )
-        && p.x() >= widget()->width()- KMAX( range, bright ))
+    else if(p.y() >= widget()->height() - KMAX(range, bbottom) && p.x() >= widget()->width() - KMAX(range, bright))
         m = PositionBottomRight;
-    else if ( p.y() >= widget()->height()- KMAX( range, bbottom ) && p.x() <= KMAX( range, bleft ))
+    else if(p.y() >= widget()->height() - KMAX(range, bbottom) && p.x() <= KMAX(range, bleft))
         m = PositionBottomLeft;
-    else if ( p.y() <= KMAX( range, btop ) && p.x() >= widget()->width()- KMAX( range, bright ))
+    else if(p.y() <= KMAX(range, btop) && p.x() >= widget()->width() - KMAX(range, bright))
         m = PositionTopRight;
-    else if ( p.y() <= btop )
+    else if(p.y() <= btop)
         m = PositionTop;
-    else if ( p.y() >= widget()->height()-bbottom )
+    else if(p.y() >= widget()->height() - bbottom)
         m = PositionBottom;
-    else if ( p.x() <= bleft )
+    else if(p.x() <= bleft)
         m = PositionLeft;
-    else if ( p.x() >= widget()->width()-bright )
+    else if(p.x() >= widget()->width() - bright)
         m = PositionRight;
     else
         m = PositionCenter;
@@ -364,40 +359,38 @@ KDecoration::Position KDecoration::mousePosition( const QPoint& p ) const
 }
 
 KDecorationOptions::KDecorationOptions()
-    {
-    assert( KDecoration::options_ == NULL );
+{
+    assert(KDecoration::options_ == NULL);
     KDecoration::options_ = this;
-    }
+}
 
 KDecorationOptions::~KDecorationOptions()
-    {
-    assert( KDecoration::options_ == this );
+{
+    assert(KDecoration::options_ == this);
     KDecoration::options_ = NULL;
-    }
-
-const QColor& KDecorationOptions::color(ColorType type, bool active) const
-{
-    return(d->colors[type + (active ? 0 : NUM_COLORS)]);
 }
 
-const QFont& KDecorationOptions::font(bool active, bool small) const
+const QColor &KDecorationOptions::color(ColorType type, bool active) const
 {
-    if ( small )
-        return(active ? d->activeFontSmall : d->inactiveFontSmall);
+    return (d->colors[type + (active ? 0 : NUM_COLORS)]);
+}
+
+const QFont &KDecorationOptions::font(bool active, bool small) const
+{
+    if(small)
+        return (active ? d->activeFontSmall : d->inactiveFontSmall);
     else
-        return(active ? d->activeFont : d->inactiveFont);
+        return (active ? d->activeFont : d->inactiveFont);
 }
 
-const QColorGroup& KDecorationOptions::colorGroup(ColorType type, bool active) const
+const QColorGroup &KDecorationOptions::colorGroup(ColorType type, bool active) const
 {
     int idx = type + (active ? 0 : NUM_COLORS);
     if(d->cg[idx])
-        return(*d->cg[idx]);
-    d->cg[idx] = new QColorGroup(Qt::black, d->colors[idx], d->colors[idx].light(150),
-                              d->colors[idx].dark(), d->colors[idx].dark(120),
-                              Qt::black, QApplication::palette().active().
-                              base());
-    return(*d->cg[idx]);
+        return (*d->cg[idx]);
+    d->cg[idx] = new QColorGroup(Qt::black, d->colors[idx], d->colors[idx].light(150), d->colors[idx].dark(), d->colors[idx].dark(120), Qt::black,
+                                 QApplication::palette().active().base());
+    return (*d->cg[idx]);
 }
 
 bool KDecorationOptions::customButtonPositions() const
@@ -420,12 +413,11 @@ bool KDecorationOptions::showTooltips() const
     return d->show_tooltips;
 }
 
-KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize( KDecorationFactory* factory ) const
+KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize(KDecorationFactory *factory) const
 {
-    assert( factory != NULL );
-    if( d->cached_border_size == BordersCount ) // invalid
-        d->cached_border_size = d->findPreferredBorderSize( d->border_size,
-            factory->borderSizes());
+    assert(factory != NULL);
+    if(d->cached_border_size == BordersCount) // invalid
+        d->cached_border_size = d->findPreferredBorderSize(d->border_size, factory->borderSizes());
     return d->cached_border_size;
 }
 
@@ -434,11 +426,9 @@ bool KDecorationOptions::moveResizeMaximizedWindows() const
     return d->move_resize_maximized_windows;
 }
 
-KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick( Qt::ButtonState button ) const
-    {
-    return button == Qt::RightButton? d->OpMaxButtonRightClick : 
-           button == Qt::MidButton?   d->OpMaxButtonMiddleClick :
-                                      d->OpMaxButtonLeftClick;
-    }
+KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(Qt::ButtonState button) const
+{
+    return button == Qt::RightButton ? d->OpMaxButtonRightClick : button == Qt::MidButton ? d->OpMaxButtonMiddleClick : d->OpMaxButtonLeftClick;
+}
 
 #include "kdecoration.moc"

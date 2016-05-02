@@ -34,101 +34,163 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KConfigGroup;
 class QPopupMenu;
 
-class BaseContainer : public QWidget
-{
+class BaseContainer : public QWidget {
     Q_OBJECT
 
 public:
-    typedef QValueList<BaseContainer*> List;
-    typedef QValueListIterator<BaseContainer*> Iterator;
-    typedef QValueListConstIterator<BaseContainer*> ConstIterator;
+    typedef QValueList< BaseContainer * > List;
+    typedef QValueListIterator< BaseContainer * > Iterator;
+    typedef QValueListConstIterator< BaseContainer * > ConstIterator;
 
-    BaseContainer( QPopupMenu* appletOpMenu, QWidget* parent = 0, const char * name = 0 );
+    BaseContainer(QPopupMenu *appletOpMenu, QWidget *parent = 0, const char *name = 0);
     ~BaseContainer();
 
-    virtual void reparent(QWidget * parent, WFlags f, const QPoint & p, bool showIt = false);
+    virtual void reparent(QWidget *parent, WFlags f, const QPoint &p, bool showIt = false);
 
     virtual int widthForHeight(int height) const = 0;
-    virtual int heightForWidth(int width)  const = 0;
+    virtual int heightForWidth(int width) const = 0;
 
-    virtual bool isStretch() const { return false; }
+    virtual bool isStretch() const
+    {
+        return false;
+    }
 
-    virtual void completeMoveOperation() {}
-    virtual void about() {}
-    virtual void help() {}
-    virtual void preferences() {}
-    virtual void reportBug() {}
+    virtual void completeMoveOperation()
+    {
+    }
+    virtual void about()
+    {
+    }
+    virtual void help()
+    {
+    }
+    virtual void preferences()
+    {
+    }
+    virtual void reportBug()
+    {
+    }
 
-    virtual bool isValid() const { return true; }
+    virtual bool isValid() const
+    {
+        return true;
+    }
     bool isImmutable() const;
     virtual void setImmutable(bool immutable);
 
-    double freeSpace() const { return _fspace; }
-    void setFreeSpace(double f) { _fspace = f; }
+    double freeSpace() const
+    {
+        return _fspace;
+    }
+    void setFreeSpace(double f)
+    {
+        _fspace = f;
+    }
 
-    QString appletId() const { return _aid; }
-    void setAppletId(const QString& s) { _aid = s; }
+    QString appletId() const
+    {
+        return _aid;
+    }
+    void setAppletId(const QString &s)
+    {
+        _aid = s;
+    }
 
-    virtual int actions() const { return _actions; }
+    virtual int actions() const
+    {
+        return _actions;
+    }
 
-    KPanelApplet::Direction popupDirection() const { return _dir; }
-    KPanelExtension::Orientation orientation() const { return _orient; }
-    KPanelExtension::Alignment alignment() const { return _alignment; }
+    KPanelApplet::Direction popupDirection() const
+    {
+        return _dir;
+    }
+    KPanelExtension::Orientation orientation() const
+    {
+        return _orient;
+    }
+    KPanelExtension::Alignment alignment() const
+    {
+        return _alignment;
+    }
 
-    virtual void setBackground() {}
+    virtual void setBackground()
+    {
+    }
 
-    QPopupMenu* opMenu();
+    QPopupMenu *opMenu();
     void clearOpMenu();
 
-    void loadConfiguration( KConfigGroup& );
-    void saveConfiguration( KConfigGroup&, bool layoutOnly = false ) const;
+    void loadConfiguration(KConfigGroup &);
+    void saveConfiguration(KConfigGroup &, bool layoutOnly = false) const;
 
     void configure(KPanelExtension::Orientation, KPanelApplet::Direction);
-    virtual void configure() {}
+    virtual void configure()
+    {
+    }
 
-    QPoint moveOffset() const { return _moveOffset; }
+    QPoint moveOffset() const
+    {
+        return _moveOffset;
+    }
 
     virtual QString appletType() const = 0;
-    virtual QString icon() const { return "unknown"; }
+    virtual QString icon() const
+    {
+        return "unknown";
+    }
     virtual QString visibleName() const = 0;
 
 public slots:
-    virtual void slotRemoved(KConfig* config);
-    virtual void setPopupDirection(KPanelApplet::Direction d) { _dir = d; }
-    virtual void setOrientation(KPanelExtension::Orientation o) { _orient = o; }
+    virtual void slotRemoved(KConfig *config);
+    virtual void setPopupDirection(KPanelApplet::Direction d)
+    {
+        _dir = d;
+    }
+    virtual void setOrientation(KPanelExtension::Orientation o)
+    {
+        _orient = o;
+    }
 
     void setAlignment(KPanelExtension::Alignment a);
 
 signals:
-    void removeme(BaseContainer*);
-    void takeme(BaseContainer*);
-    void moveme(BaseContainer*);
+    void removeme(BaseContainer *);
+    void takeme(BaseContainer *);
+    void moveme(BaseContainer *);
     void maintainFocus(bool);
     void requestSave();
     void focusReqested(bool);
 
 protected:
-    virtual void doLoadConfiguration( KConfigGroup& ) {}
-    virtual void doSaveConfiguration( KConfigGroup&,
-                                      bool /* layoutOnly */ ) const {}
-    virtual void alignmentChange(KPanelExtension::Alignment) {}
+    virtual void doLoadConfiguration(KConfigGroup &)
+    {
+    }
+    virtual void doSaveConfiguration(KConfigGroup &, bool /* layoutOnly */) const
+    {
+    }
+    virtual void alignmentChange(KPanelExtension::Alignment)
+    {
+    }
 
-    virtual QPopupMenu* createOpMenu() = 0;
-    QPopupMenu *appletOpMenu() const { return _appletOpMnu; }
+    virtual QPopupMenu *createOpMenu() = 0;
+    QPopupMenu *appletOpMenu() const
+    {
+        return _appletOpMnu;
+    }
 
     KPanelApplet::Direction _dir;
     KPanelExtension::Orientation _orient;
     KPanelExtension::Alignment _alignment;
-    double             _fspace;
-    QPoint             _moveOffset;
-    QString            _aid;
-    int                _actions;
-    bool               m_immutable;
+    double _fspace;
+    QPoint _moveOffset;
+    QString _aid;
+    int _actions;
+    bool m_immutable;
 
 private:
-    QPopupMenu        *_opMnu;
-    QPopupMenu        *_appletOpMnu;
+    QPopupMenu *_opMnu;
+    QPopupMenu *_appletOpMnu;
 };
 
 #endif
-

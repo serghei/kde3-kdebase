@@ -29,24 +29,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class MenuInfo;
 class KPanelMenu;
 
-class ExtensionButton : public PanelPopupButton
-{
+class ExtensionButton : public PanelPopupButton {
     Q_OBJECT
 
 public:
-    ExtensionButton( const QString& desktopFile, QWidget* parent );
-    ExtensionButton( const KConfigGroup& config, QWidget* parent );
+    ExtensionButton(const QString &desktopFile, QWidget *parent);
+    ExtensionButton(const KConfigGroup &config, QWidget *parent);
     ~ExtensionButton();
 
-    void saveConfig( KConfigGroup& config ) const;
+    void saveConfig(KConfigGroup &config) const;
 
 protected:
-    void initialize( const QString& desktopFile );
-    virtual QString tileName() { return "URL"; }
+    void initialize(const QString &desktopFile);
+    virtual QString tileName()
+    {
+        return "URL";
+    }
     virtual void initPopup();
 
-    MenuInfo*      info;
-    KPanelMenu*    menu;
+    MenuInfo *info;
+    KPanelMenu *menu;
 };
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1998 Christian Esken <esken@kde.org> 
+ * Copyright (c) 1998 Christian Esken <esken@kde.org>
  * Copyright (c) 2003 Oswald Buddenhagen <ossi@kde.org>
  *
  * This program is free software; you can redistribute it and/or
@@ -30,31 +30,31 @@
 #include <string.h>
 #include <stdlib.h>
 
-AuthReturn Authenticate(const char *method,
-        const char *login, char *(*conv) (ConvRequest, const char *))
+AuthReturn Authenticate(const char *method, const char *login, char *(*conv)(ConvRequest, const char *))
 {
-  struct passwd *pw;
-  char *passwd;
+    struct passwd *pw;
+    char *passwd;
 
-  if (strcmp(method, "classic"))
-    return AuthError;
+    if(strcmp(method, "classic"))
+        return AuthError;
 
-  /* Get the password entry for the user we want */
-  if (!(pw = getpwnam(login)))
-    return AuthBad;
+    /* Get the password entry for the user we want */
+    if(!(pw = getpwnam(login)))
+        return AuthBad;
 
-  if (!*pw->pw_passwd)
-    return AuthOk;
+    if(!*pw->pw_passwd)
+        return AuthOk;
 
-  if (!(passwd = conv(ConvGetHidden, 0)))
-    return AuthAbort;
+    if(!(passwd = conv(ConvGetHidden, 0)))
+        return AuthAbort;
 
-  if (!strcmp(pw->pw_passwd, crypt(passwd, pw->pw_passwd))) {
+    if(!strcmp(pw->pw_passwd, crypt(passwd, pw->pw_passwd)))
+    {
+        dispose(passwd);
+        return AuthOk; /* Success */
+    }
     dispose(passwd);
-    return AuthOk; /* Success */
-  }
-  dispose(passwd);
-  return AuthBad; /* Password wrong or account locked */
+    return AuthBad; /* Password wrong or account locked */
 }
 
 #endif

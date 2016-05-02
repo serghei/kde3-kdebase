@@ -41,32 +41,22 @@
 #include "kcmtaskbar.h"
 #include "kcmtaskbar.moc"
 
-typedef KGenericFactory<TaskbarConfig, QWidget > TaskBarFactory;
-K_EXPORT_COMPONENT_FACTORY (kcm_taskbar, TaskBarFactory("kcmtaskbar") )
+typedef KGenericFactory< TaskbarConfig, QWidget > TaskBarFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_taskbar, TaskBarFactory("kcmtaskbar"))
 
-TaskbarAppearance::TaskbarAppearance(QString name,
-                                     bool drawButtons,
-                                     bool haloText,
-                                     bool showButtonOnHover)
-    : m_name(name),
-      m_drawButtons(drawButtons),
-      m_haloText(haloText),
-      m_showButtonOnHover(showButtonOnHover)
+TaskbarAppearance::TaskbarAppearance(QString name, bool drawButtons, bool haloText, bool showButtonOnHover)
+    : m_name(name), m_drawButtons(drawButtons), m_haloText(haloText), m_showButtonOnHover(showButtonOnHover)
 {
 }
 
-TaskbarAppearance::TaskbarAppearance()
-    : m_drawButtons(false),
-      m_haloText(false),
-      m_showButtonOnHover(true)
+TaskbarAppearance::TaskbarAppearance() : m_drawButtons(false), m_haloText(false), m_showButtonOnHover(true)
 {
 }
 
 bool TaskbarAppearance::matchesSettings() const
 {
-    return TaskBarSettings::drawButtons() == m_drawButtons &&
-           TaskBarSettings::haloText() == m_haloText &&
-           TaskBarSettings::showButtonOnHover() == m_showButtonOnHover;
+    return TaskBarSettings::drawButtons() == m_drawButtons && TaskBarSettings::haloText() == m_haloText
+           && TaskBarSettings::showButtonOnHover() == m_showButtonOnHover;
 }
 
 void TaskbarAppearance::alterSettings() const
@@ -77,49 +67,45 @@ void TaskbarAppearance::alterSettings() const
 }
 
 // These are the strings that are actually stored in the config file.
-const QStringList& TaskbarConfig::actionList()
+const QStringList &TaskbarConfig::actionList()
 {
-    static QStringList list(
-            QStringList() << I18N_NOOP("Show Task List") << I18N_NOOP("Show Operations Menu")
-            << I18N_NOOP("Activate, Raise or Minimize Task")
-            << I18N_NOOP("Activate Task") << I18N_NOOP("Raise Task")
-            << I18N_NOOP("Lower Task") << I18N_NOOP("Minimize Task")
-            << I18N_NOOP("To Current Desktop")
-            << I18N_NOOP("Close Task") );
+    static QStringList list(QStringList() << I18N_NOOP("Show Task List") << I18N_NOOP("Show Operations Menu")
+                                          << I18N_NOOP("Activate, Raise or Minimize Task") << I18N_NOOP("Activate Task") << I18N_NOOP("Raise Task")
+                                          << I18N_NOOP("Lower Task") << I18N_NOOP("Minimize Task") << I18N_NOOP("To Current Desktop")
+                                          << I18N_NOOP("Close Task"));
     return list;
 }
 
 // Get a translated version of the above string list.
 QStringList TaskbarConfig::i18nActionList()
 {
-   QStringList i18nList;
-   for( QStringList::ConstIterator it = actionList().begin(); it != actionList().end(); ++it ) {
-      i18nList << i18n((*it).latin1());
-   }
-   return i18nList;
+    QStringList i18nList;
+    for(QStringList::ConstIterator it = actionList().begin(); it != actionList().end(); ++it)
+    {
+        i18nList << i18n((*it).latin1());
+    }
+    return i18nList;
 }
 
 // These are the strings that are actually stored in the config file.
-const QStringList& TaskbarConfig::groupModeList()
+const QStringList &TaskbarConfig::groupModeList()
 {
-    static QStringList list(
-            QStringList() << I18N_NOOP("Never") << I18N_NOOP("When Taskbar Full")
-            << I18N_NOOP("Always"));
+    static QStringList list(QStringList() << I18N_NOOP("Never") << I18N_NOOP("When Taskbar Full") << I18N_NOOP("Always"));
     return list;
 }
 
 // Get a translated version of the above string list.
 QStringList TaskbarConfig::i18nGroupModeList()
 {
-   QStringList i18nList;
-   for( QStringList::ConstIterator it = groupModeList().begin(); it != groupModeList().end(); ++it ) {
-      i18nList << i18n((*it).latin1());
-   }
-   return i18nList;
+    QStringList i18nList;
+    for(QStringList::ConstIterator it = groupModeList().begin(); it != groupModeList().end(); ++it)
+    {
+        i18nList << i18n((*it).latin1());
+    }
+    return i18nList;
 }
 
-TaskbarConfig::TaskbarConfig(QWidget *parent, const char* name, const QStringList&)
-  : KCModule(TaskBarFactory::instance(), parent, name)
+TaskbarConfig::TaskbarConfig(QWidget *parent, const char *name, const QStringList &) : KCModule(TaskBarFactory::instance(), parent, name)
 {
     QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
     m_widget = new TaskbarConfigUI(this);
@@ -130,21 +116,19 @@ TaskbarConfig::TaskbarConfig(QWidget *parent, const char* name, const QStringLis
     m_appearances.append(TaskbarAppearance(i18n("Classic"), true, false, true));
     m_appearances.append(TaskbarAppearance(i18n("For Transparency"), false, true, true));
 
-    for (TaskbarAppearance::List::const_iterator it = m_appearances.constBegin();
-         it != m_appearances.constEnd();
-         ++it)
+    for(TaskbarAppearance::List::const_iterator it = m_appearances.constBegin(); it != m_appearances.constEnd(); ++it)
     {
         m_widget->appearance->insertItem((*it).name());
     }
 
-    connect(m_widget->appearance, SIGNAL(activated(int)),
-            this, SLOT(appearanceChanged(int)));
+    connect(m_widget->appearance, SIGNAL(activated(int)), this, SLOT(appearanceChanged(int)));
     addConfig(TaskBarSettings::self(), m_widget);
 
-    setQuickHelp(i18n("<h1>Taskbar</h1> You can configure the taskbar here."
-                " This includes options such as whether or not the taskbar should show all"
-                " windows at once or only those on the current desktop."
-                " You can also configure whether or not the Window List button will be displayed."));
+    setQuickHelp(
+        i18n("<h1>Taskbar</h1> You can configure the taskbar here."
+             " This includes options such as whether or not the taskbar should show all"
+             " windows at once or only those on the current desktop."
+             " You can also configure whether or not the Window List button will be displayed."));
 
     QStringList list = i18nActionList();
     m_widget->kcfg_LeftButtonAction->insertStringList(list);
@@ -152,35 +136,30 @@ TaskbarConfig::TaskbarConfig(QWidget *parent, const char* name, const QStringLis
     m_widget->kcfg_RightButtonAction->insertStringList(list);
     m_widget->kcfg_GroupTasks->insertStringList(i18nGroupModeList());
 
-    connect(m_widget->kcfg_GroupTasks, SIGNAL(activated(int)),
-            this, SLOT(slotUpdateComboBox()));
+    connect(m_widget->kcfg_GroupTasks, SIGNAL(activated(int)), this, SLOT(slotUpdateComboBox()));
     connect(m_widget->kcfg_UseCustomColors, SIGNAL(stateChanged(int)), this, SLOT(slotUpdateCustomColors()));
 
     slotUpdateCustomColors();
     updateAppearanceCombo();
 
-    if (KWin::numberOfDesktops() < 2)
+    if(KWin::numberOfDesktops() < 2)
     {
         m_widget->kcfg_ShowAllWindows->hide();
         m_widget->kcfg_SortByDesktop->hide();
         m_widget->spacer2->changeSize(0, 0);
     }
 
-    if (!QApplication::desktop()->isVirtualDesktop() ||
-        QApplication::desktop()->numScreens() == 1) // No Ximerama
+    if(!QApplication::desktop()->isVirtualDesktop() || QApplication::desktop()->numScreens() == 1) // No Ximerama
     {
         m_widget->showAllScreens->hide();
     }
-    connect( m_widget->showAllScreens, SIGNAL( stateChanged( int )), SLOT( changed()));
+    connect(m_widget->showAllScreens, SIGNAL(stateChanged(int)), SLOT(changed()));
 
-    KAboutData *about = new KAboutData(I18N_NOOP("kcmtaskbar"),
-                                       I18N_NOOP("KDE Taskbar Control Module"),
-                                       0, 0, KAboutData::License_GPL,
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmtaskbar"), I18N_NOOP("KDE Taskbar Control Module"), 0, 0, KAboutData::License_GPL,
                                        I18N_NOOP("(c) 2000 - 2001 Matthias Elter"));
 
     about->addAuthor("Matthias Elter", 0, "elter@kde.org");
-    about->addCredit("Stefan Nikolaus", I18N_NOOP("KConfigXT conversion"),
-                     "stefan.nikolaus@kdemail.net");
+    about->addCredit("Stefan Nikolaus", I18N_NOOP("KConfigXT conversion"), "stefan.nikolaus@kdemail.net");
     setAboutData(about);
 
     load();
@@ -191,10 +170,10 @@ void TaskbarConfig::slotUpdateCustomColors()
 {
     m_widget->kcfg_ActiveTaskTextColor->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
     m_widget->activeTaskTextColorLabel->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
-    
+
     m_widget->kcfg_InactiveTaskTextColor->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
     m_widget->inactiveTaskTextColorLabel->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
-    
+
     m_widget->kcfg_TaskBackgroundColor->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
     m_widget->taskBackgroundColorLabel->setEnabled(m_widget->kcfg_UseCustomColors->isChecked());
 }
@@ -213,32 +192,30 @@ void TaskbarConfig::slotUpdateComboBox()
     else
     {
         QString action = i18nActionList()[pos];
-        m_widget->kcfg_LeftButtonAction->changeItem(action,pos);
-        m_widget->kcfg_MiddleButtonAction->changeItem(action,pos);
-        m_widget->kcfg_RightButtonAction->changeItem(action,pos);
+        m_widget->kcfg_LeftButtonAction->changeItem(action, pos);
+        m_widget->kcfg_MiddleButtonAction->changeItem(action, pos);
+        m_widget->kcfg_RightButtonAction->changeItem(action, pos);
     }
 }
 
 void TaskbarConfig::updateAppearanceCombo()
 {
     unsigned int i = 0;
-    for (TaskbarAppearance::List::const_iterator it = m_appearances.constBegin();
-         it != m_appearances.constEnd();
-         ++it, ++i)
+    for(TaskbarAppearance::List::const_iterator it = m_appearances.constBegin(); it != m_appearances.constEnd(); ++it, ++i)
     {
-        if ((*it).matchesSettings())
+        if((*it).matchesSettings())
         {
             break;
         }
     }
 
-    if (i < m_appearances.count())
+    if(i < m_appearances.count())
     {
         m_widget->appearance->setCurrentItem(i);
         return;
     }
 
-    if (m_widget->appearance->count() == m_appearances.count())
+    if(m_widget->appearance->count() == m_appearances.count())
     {
         m_widget->appearance->insertItem(i18n("Custom"));
     }
@@ -248,7 +225,7 @@ void TaskbarConfig::updateAppearanceCombo()
 
 void TaskbarConfig::appearanceChanged(int selected)
 {
-    if (selected < m_appearances.count())
+    if(selected < m_appearances.count())
     {
         unmanagedWidgetChangeState(!m_appearances[selected].matchesSettings());
     }
@@ -266,7 +243,7 @@ void TaskbarConfig::save()
 {
     TaskBarSettings::self()->setShowCurrentScreenOnly(!m_widget->showAllScreens->isChecked());
     int selectedAppearance = m_widget->appearance->currentItem();
-    if (selectedAppearance < m_appearances.count())
+    if(selectedAppearance < m_appearances.count())
     {
         m_appearances[selectedAppearance].alterSettings();
         TaskBarSettings::self()->writeConfig();

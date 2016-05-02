@@ -35,15 +35,12 @@
 #include <qstringlist.h>
 #include <time.h>
 
-namespace KFI
-{
+namespace KFI {
 
 class CFontEngine;
 
-class CXConfig
-{
-    public:
-
+class CXConfig {
+public:
     struct TPath
     {
         enum EType
@@ -53,15 +50,15 @@ class CXConfig
             FONT_CONFIG
         };
 
-        TPath(const QString &d, bool u=false, EType t=DIR, bool o=true)
-           : dir(DIR==t ? Misc::dirSyntax(d) : d), unscaled(u), orig(o), type(t) {}
+        TPath(const QString &d, bool u = false, EType t = DIR, bool o = true) : dir(DIR == t ? Misc::dirSyntax(d) : d), unscaled(u), orig(o), type(t)
+        {
+        }
 
         static EType getType(const QString &d);
 
         QString dir;
-        bool    unscaled,
-                orig;          // Was dir in file when read?
-        EType   type;
+        bool unscaled, orig; // Was dir in file when read?
+        EType type;
     };
 
     enum EType
@@ -70,45 +67,57 @@ class CXConfig
         X11
     };
 
-    public:
-
+public:
     CXConfig(EType type, const QString &file);
 
     static bool configureDir(const QString &dir);
 
-    bool  ok()                       { return itsOk; }
-    bool  writable()                 { return itsWritable; }
-    bool  readConfig();
-    bool  writeConfig();
-    bool  madeChanges();
-    void  addPath(const QString &dir, bool unscaled=false);
-    bool  inPath(TPath::EType type);
-    bool  xfsInPath()                { return inPath(TPath::FONT_SERVER); }
-    bool  fcInPath()                 { return inPath(TPath::FONT_CONFIG); }
-    void  refreshPaths()             { refreshPaths(XFS==itsType); }
-    void  restart();
-    EType getType()                  { return itsType; }
+    bool ok()
+    {
+        return itsOk;
+    }
+    bool writable()
+    {
+        return itsWritable;
+    }
+    bool readConfig();
+    bool writeConfig();
+    bool madeChanges();
+    void addPath(const QString &dir, bool unscaled = false);
+    bool inPath(TPath::EType type);
+    bool xfsInPath()
+    {
+        return inPath(TPath::FONT_SERVER);
+    }
+    bool fcInPath()
+    {
+        return inPath(TPath::FONT_CONFIG);
+    }
+    void refreshPaths()
+    {
+        refreshPaths(XFS == itsType);
+    }
+    void restart();
+    EType getType()
+    {
+        return itsType;
+    }
 
     static void refreshPaths(bool xfs);
 
-    private:
-
+private:
     bool processX11(bool read);
     bool processXfs(bool read);
 
-    TPath * findPath(const QString &dir);
+    TPath *findPath(const QString &dir);
 
-    private:
-
-    EType           itsType;
-    QPtrList<TPath> itsPaths;
-    QString         itsFileName,
-                    itsInsertPos;
-    bool            itsOk,
-                    itsWritable;
-    time_t          itsTime;
+private:
+    EType itsType;
+    QPtrList< TPath > itsPaths;
+    QString itsFileName, itsInsertPos;
+    bool itsOk, itsWritable;
+    time_t itsTime;
 };
-
 }
 
 #endif

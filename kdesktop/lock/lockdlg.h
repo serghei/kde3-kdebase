@@ -27,8 +27,7 @@ class QListView;
 // Simple dialog for entering a password.
 // It does not handle password validation.
 //
-class PasswordDlg : public QDialog, public KGreeterPluginHandler
-{
+class PasswordDlg : public QDialog, public KGreeterPluginHandler {
     Q_OBJECT
 
 public:
@@ -37,12 +36,12 @@ public:
     virtual void show();
 
     // from KGreetPluginHandler
-    virtual void gplugReturnText( const char *text, int tag );
-    virtual void gplugReturnBinary( const char *data );
-    virtual void gplugSetUser( const QString & );
+    virtual void gplugReturnText(const char *text, int tag);
+    virtual void gplugReturnBinary(const char *data);
+    virtual void gplugSetUser(const QString &);
     virtual void gplugStart();
     virtual void gplugActivity();
-    virtual void gplugMsgBox( QMessageBox::Icon type, const QString &text );
+    virtual void gplugMsgBox(QMessageBox::Icon type, const QString &text);
 
 protected:
     virtual void timerEvent(QTimerEvent *);
@@ -57,36 +56,35 @@ private slots:
     void slotActivity();
 
 private:
-    void setLayoutText( const QString &txt );
+    void setLayoutText(const QString &txt);
     void capsLocked();
     void updateLabel();
-    int Reader (void *buf, int count);
-    bool GRead (void *buf, int count);
-    bool GWrite (const void *buf, int count);
-    bool GSendInt (int val);
-    bool GSendStr (const char *buf);
-    bool GSendArr (int len, const char *buf);
-    bool GRecvInt (int *val);
-    bool GRecvArr (char **buf);
+    int Reader(void *buf, int count);
+    bool GRead(void *buf, int count);
+    bool GWrite(const void *buf, int count);
+    bool GSendInt(int val);
+    bool GSendStr(const char *buf);
+    bool GSendArr(int len, const char *buf);
+    bool GRecvInt(int *val);
+    bool GRecvArr(char **buf);
     void handleVerify();
     void reapVerify();
     void cantCheck();
     GreeterPluginHandle *mPlugin;
     KGreeterPlugin *greet;
-    QFrame      *frame;
+    QFrame *frame;
     QGridLayout *frameLayout;
-    QLabel      *mStatusLabel;
+    QLabel *mStatusLabel;
     KPushButton *mNewSessButton, *ok, *cancel;
     QPushButton *mLayoutButton;
-    int         mFailedTimerId;
-    int         mTimeoutTimerId;
-    int         mCapsLocked;
-    bool        mUnlockingFailed;
+    int mFailedTimerId;
+    int mTimeoutTimerId;
+    int mCapsLocked;
+    bool mUnlockingFailed;
     QStringList layoutsList;
     QStringList::iterator currLayout;
-    int         sPid, sFd;
-    QListView   *lv;
+    int sPid, sFd;
+    QListView *lv;
 };
 
 #endif
-

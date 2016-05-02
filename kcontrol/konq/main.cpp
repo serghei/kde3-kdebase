@@ -35,64 +35,61 @@
 
 static QCString configname()
 {
-	int desktop = KApplication::desktop()->primaryScreen();
-	QCString name;
-	if (desktop == 0)
-		name = "kdesktoprc";
+    int desktop = KApplication::desktop()->primaryScreen();
+    QCString name;
+    if(desktop == 0)
+        name = "kdesktoprc";
     else
-		name.sprintf("kdesktop-screen-%drc", desktop);
+        name.sprintf("kdesktop-screen-%drc", desktop);
 
-	return name;
+    return name;
 }
 
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_browser(QWidget *parent, const char *name)
 {
-  KDE_EXPORT KCModule *create_browser(QWidget *parent, const char *name)
-  {
     KConfig *config = new KConfig("konquerorrc", false, true);
     return new KBrowserOptions(config, "FMSettings", parent, name);
-  }
-
-  KDE_EXPORT KCModule *create_behavior(QWidget *parent, const char *name)
-  {
-    KConfig *config = new KConfig("konquerorrc", false, true);
-    return new KBehaviourOptions(config, "FMSettings", parent, name);
-  }
-
-  KDE_EXPORT KCModule *create_appearance(QWidget *parent, const char *name)
-  {
-    KConfig *config = new KConfig("konquerorrc", false, true);
-    return new KonqFontOptions(config, "FMSettings", false, parent, name);
-  }
-
-  KDE_EXPORT KCModule *create_previews(QWidget *parent, const char *name)
-  {
-    return new KPreviewOptions(parent, name);
-  }
-
-  KDE_EXPORT KCModule *create_dbehavior(QWidget *parent, const char* /*name*/)
-  {
-    KConfig *config = new KConfig(configname(), false, false);
-    return new DesktopBehaviorModule(config, parent);
-  }
-
-  KDE_EXPORT KCModule *create_dappearance(QWidget *parent, const char* /*name*/)
-  {
-    KConfig *config = new KConfig(configname(), false, false);
-    return new KonqFontOptions(config, "FMSettings", true, parent);
-  }
-
-  KDE_EXPORT KCModule *create_dpath(QWidget *parent, const char* /*name*/)
-  {
-    //KConfig *config = new KConfig(configname(), false, false);
-    return new DesktopPathConfig(parent);
-  }
-
-  KDE_EXPORT KCModule *create_ddesktop(QWidget *parent, const char* /*name*/)
-  {
-    return new KDesktopConfig(parent, "VirtualDesktops");
-  }
 }
 
+KDE_EXPORT KCModule *create_behavior(QWidget *parent, const char *name)
+{
+    KConfig *config = new KConfig("konquerorrc", false, true);
+    return new KBehaviourOptions(config, "FMSettings", parent, name);
+}
 
+KDE_EXPORT KCModule *create_appearance(QWidget *parent, const char *name)
+{
+    KConfig *config = new KConfig("konquerorrc", false, true);
+    return new KonqFontOptions(config, "FMSettings", false, parent, name);
+}
+
+KDE_EXPORT KCModule *create_previews(QWidget *parent, const char *name)
+{
+    return new KPreviewOptions(parent, name);
+}
+
+KDE_EXPORT KCModule *create_dbehavior(QWidget *parent, const char * /*name*/)
+{
+    KConfig *config = new KConfig(configname(), false, false);
+    return new DesktopBehaviorModule(config, parent);
+}
+
+KDE_EXPORT KCModule *create_dappearance(QWidget *parent, const char * /*name*/)
+{
+    KConfig *config = new KConfig(configname(), false, false);
+    return new KonqFontOptions(config, "FMSettings", true, parent);
+}
+
+KDE_EXPORT KCModule *create_dpath(QWidget *parent, const char * /*name*/)
+{
+    // KConfig *config = new KConfig(configname(), false, false);
+    return new DesktopPathConfig(parent);
+}
+
+KDE_EXPORT KCModule *create_ddesktop(QWidget *parent, const char * /*name*/)
+{
+    return new KDesktopConfig(parent, "VirtualDesktops");
+}
+}

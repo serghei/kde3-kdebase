@@ -28,40 +28,39 @@
 
 #include "../../lib/kcommondecoration.h"
 
-namespace Web
-{
-  class WebClient;
+namespace Web {
+class WebClient;
 
-  class WebButton : public KCommonDecorationButton
-  {
-    public:
+class WebButton : public KCommonDecorationButton {
+public:
+    enum Position
+    {
+        Left,
+        Mid,
+        Right
+    };
 
-      enum Position
-      {
-        Left, Mid, Right
-      };
+    WebButton(ButtonType type, WebClient *parent, const char *name, bool shape);
 
-      WebButton(ButtonType type, WebClient *parent, const char *name, bool shape);
+    virtual ~WebButton();
 
-      virtual ~WebButton();
+    virtual void reset(unsigned long changed);
 
-      virtual void reset(unsigned long changed);
+protected:
+    void setBitmap(const unsigned char *bitmap);
 
-    protected:
-      void setBitmap(const unsigned char *bitmap);
+    void enterEvent(QEvent *);
+    void leaveEvent(QEvent *);
+    void drawButton(QPainter *p);
 
-      void enterEvent(QEvent *);
-      void leaveEvent(QEvent *);
-      void drawButton(QPainter *p);
+private:
+    QBitmap bitmap_;
 
-    private:
-      QBitmap bitmap_;
+    bool mouseOver_;
 
-      bool mouseOver_;
-
-      bool shape_;
-      WebClient* deco_;
-  };
+    bool shape_;
+    WebClient *deco_;
+};
 }
 
 #endif

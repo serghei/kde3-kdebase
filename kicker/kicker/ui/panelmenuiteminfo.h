@@ -32,72 +32,75 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // a little class meant to be used to store menu items for sorting then later
 // plugging into a popup menu
 
-class PanelMenuItemInfo
-{
-    public:
-        PanelMenuItemInfo()
-            : m_recvr(0), m_id(-1) {}
+class PanelMenuItemInfo {
+public:
+    PanelMenuItemInfo() : m_recvr(0), m_id(-1)
+    {
+    }
 
-        PanelMenuItemInfo(const QString& iconName, const QString& visibleName, const QObject* recvr, const QCString& slot, int id = -1)
-            : m_icon(iconName), m_name(visibleName), m_slot_(slot), m_recvr(recvr), m_id(id) {}
+    PanelMenuItemInfo(const QString &iconName, const QString &visibleName, const QObject *recvr, const QCString &slot, int id = -1)
+        : m_icon(iconName), m_name(visibleName), m_slot_(slot), m_recvr(recvr), m_id(id)
+    {
+    }
 
-        PanelMenuItemInfo(const QString& iconName, const QString& visibleName, int id = -1)
-            : m_icon(iconName), m_name(visibleName), m_recvr(0), m_id(id) {}
+    PanelMenuItemInfo(const QString &iconName, const QString &visibleName, int id = -1) : m_icon(iconName), m_name(visibleName), m_recvr(0), m_id(id)
+    {
+    }
 
-        PanelMenuItemInfo(const PanelMenuItemInfo& c)
-            : m_icon(c.m_icon), m_name(c.m_name), m_slot_(c.m_slot_), m_recvr(c.m_recvr), m_id(c.m_id) {}
+    PanelMenuItemInfo(const PanelMenuItemInfo &c) : m_icon(c.m_icon), m_name(c.m_name), m_slot_(c.m_slot_), m_recvr(c.m_recvr), m_id(c.m_id)
+    {
+    }
 
-        PanelMenuItemInfo& operator=(const PanelMenuItemInfo& c)
+    PanelMenuItemInfo &operator=(const PanelMenuItemInfo &c)
+    {
+        m_icon = c.m_icon;
+        m_name = c.m_name;
+        m_slot_ = c.m_slot_;
+        m_recvr = c.m_recvr;
+        m_id = c.m_id;
+        return *this;
+    }
+
+    bool operator<(const PanelMenuItemInfo &rh)
+    {
+        return m_name.lower() < rh.m_name.lower();
+    }
+
+    bool operator<=(const PanelMenuItemInfo &rh)
+    {
+        return m_name.lower() <= rh.m_name.lower();
+    }
+
+    bool operator>(const PanelMenuItemInfo &rh)
+    {
+        return m_name.lower() > rh.m_name.lower();
+    }
+
+    int plug(QPopupMenu *menu)
+    {
+        if(!m_icon.isEmpty() && m_icon != "unknown")
         {
-            m_icon = c.m_icon;
-            m_name = c.m_name;
-            m_slot_ = c.m_slot_;
-            m_recvr = c.m_recvr;
-            m_id = c.m_id;
-            return *this;
-        }
-
-        bool operator<(const PanelMenuItemInfo& rh)
-        {
-            return m_name.lower() < rh.m_name.lower();
-        }
-
-        bool operator<=(const PanelMenuItemInfo& rh)
-        {
-            return m_name.lower() <= rh.m_name.lower();
-        }
-
-        bool operator>(const PanelMenuItemInfo& rh)
-        {
-            return m_name.lower() > rh.m_name.lower();
-        }
-
-        int plug(QPopupMenu* menu)
-        {
-            if (!m_icon.isEmpty() && m_icon != "unknown")
+            if(m_recvr && !m_slot_.isEmpty())
             {
-                if (m_recvr && !m_slot_.isEmpty())
-                {
-                    return menu->insertItem(SmallIconSet(m_icon), m_name, m_recvr, m_slot_, 0, m_id);
-                }
-
-                return menu->insertItem(SmallIconSet(m_icon), m_name, m_id);
-            }
-            else if (m_recvr && !m_slot_.isEmpty())
-            {
-                return menu->insertItem(m_name, m_recvr, m_slot_, 0, m_id);
+                return menu->insertItem(SmallIconSet(m_icon), m_name, m_recvr, m_slot_, 0, m_id);
             }
 
-            return menu->insertItem(m_name, m_id);
+            return menu->insertItem(SmallIconSet(m_icon), m_name, m_id);
+        }
+        else if(m_recvr && !m_slot_.isEmpty())
+        {
+            return menu->insertItem(m_name, m_recvr, m_slot_, 0, m_id);
         }
 
-    private:
-        QString m_icon;
-        QString m_name;
-        QCString m_slot_; // HPUX namespace is polluted with m_slot
-        const QObject* m_recvr;
-        int m_id;
+        return menu->insertItem(m_name, m_id);
+    }
+
+private:
+    QString m_icon;
+    QString m_name;
+    QCString m_slot_; // HPUX namespace is polluted with m_slot
+    const QObject *m_recvr;
+    int m_id;
 };
 
 #endif
-

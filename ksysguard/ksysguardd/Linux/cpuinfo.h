@@ -21,12 +21,12 @@
 #ifndef KSG_CPUINFO_H
 #define KSG_CPUINFO_H
 
-void initCpuInfo( struct SensorModul* );
-void exitCpuInfo( void );
+void initCpuInfo(struct SensorModul *);
+void exitCpuInfo(void);
 
-int updateCpuInfo( void );
+int updateCpuInfo(void);
 
-void printCPUxClock( const char* );
-void printCPUxClockInfo( const char* );
+void printCPUxClock(const char *);
+void printCPUxClockInfo(const char *);
 
 #endif

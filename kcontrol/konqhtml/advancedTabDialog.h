@@ -24,22 +24,21 @@
 
 class advancedTabOptions;
 
-class advancedTabDialog : public KDialogBase
-{
+class advancedTabDialog : public KDialogBase {
     Q_OBJECT
 
-    public:
-        advancedTabDialog(QWidget* parent, KConfig *config, const char* name);
-        ~advancedTabDialog();
+public:
+    advancedTabDialog(QWidget *parent, KConfig *config, const char *name);
+    ~advancedTabDialog();
 
-    protected slots:
-        void load();
-        void save();
-        void changed();
+protected slots:
+    void load();
+    void save();
+    void changed();
 
-    private:
-        KConfig* m_pConfig;
-        advancedTabOptions* m_advancedWidget;
+private:
+    KConfig *m_pConfig;
+    advancedTabOptions *m_advancedWidget;
 };
 
 #endif

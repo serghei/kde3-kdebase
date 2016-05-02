@@ -61,19 +61,18 @@ class Task;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KasGrouper
-{
+class KasGrouper {
 public:
-    KasGrouper( KasTasker *bar );
+    KasGrouper(KasTasker *bar);
     virtual ~KasGrouper();
 
-    KasItem *maybeGroup( Task::Ptr t );
+    KasItem *maybeGroup(Task::Ptr t);
 
     /** If the task should be part of an inactive desktop group then make it so. */
-    KasItem *maybeAddToDesktopGroup( Task::Ptr t );
+    KasItem *maybeAddToDesktopGroup(Task::Ptr t);
 
     /** If the task should be part of a group then make it so. */
-    KasItem *maybeAddToGroup( Task::Ptr t );
+    KasItem *maybeAddToGroup(Task::Ptr t);
 
 private:
     KasTasker *kasbar;
@@ -81,5 +80,3 @@ private:
 
 
 #endif // KASGROUPER_H
-
-

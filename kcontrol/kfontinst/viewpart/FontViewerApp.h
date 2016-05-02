@@ -33,36 +33,30 @@
 #include <kparts/part.h>
 #include <kparts/mainwindow.h>
 
-namespace KFI
-{
+namespace KFI {
 
-class CFontViewerAppMainWindow : public KParts::MainWindow
-{
+class CFontViewerAppMainWindow : public KParts::MainWindow {
     Q_OBJECT
 
-    public:
-
+public:
     CFontViewerAppMainWindow();
     virtual ~CFontViewerAppMainWindow();
 
-    public slots:
+public slots:
 
     void fileOpen();
 
-    private:
-
+private:
     KParts::ReadOnlyPart *itsPreview;
-
 };
 
-class CFontViewerApp : public KApplication
-{
-    public:
-
+class CFontViewerApp : public KApplication {
+public:
     CFontViewerApp();
-    virtual ~CFontViewerApp() {}
+    virtual ~CFontViewerApp()
+    {
+    }
 };
-
 }
 
 #endif

@@ -38,76 +38,75 @@ class KShadowSettings;
  * @author laur.ivan@corvil.com
  * @since 3.2
  */
-class KShadowEngine
-{
-	public:
-		/// Creates a new shadow engine.
-		KShadowEngine();
+class KShadowEngine {
+public:
+    /// Creates a new shadow engine.
+    KShadowEngine();
 
-		~KShadowEngine();
+    ~KShadowEngine();
 
-		/**
-		 * Creates a new shadow engine.
-		 * @param fx the shadow settings object with the configuration. The Shadow
-		 *        Engine will own this object and also delete it. Must
-		 *        be heap-allocated
-		 */
-		KShadowEngine(KShadowSettings *fx);
+    /**
+     * Creates a new shadow engine.
+     * @param fx the shadow settings object with the configuration. The Shadow
+     *        Engine will own this object and also delete it. Must
+     *        be heap-allocated
+     */
+    KShadowEngine(KShadowSettings *fx);
 
-		/**
-		 * Set the KShadowSettings object.
-		 * @param fx the shadow settings object with the configuration. The Shadow
-		 *        Engine will own this object and also delete it. Must
-		 *        be heap-allocated.
-		 */
-		void setShadowSettings(KShadowSettings *fx);
+    /**
+     * Set the KShadowSettings object.
+     * @param fx the shadow settings object with the configuration. The Shadow
+     *        Engine will own this object and also delete it. Must
+     *        be heap-allocated.
+     */
+    void setShadowSettings(KShadowSettings *fx);
 
-		/**
-		 * Get the current KShadowSettings.
-		 * @param the current shadow settings
-		 */
-		KShadowSettings *shadowSettings();
+    /**
+     * Get the current KShadowSettings.
+     * @param the current shadow settings
+     */
+    KShadowSettings *shadowSettings();
 
-		/**
-		 * Make shadow!
-		 *
-		 * textPixmap is the original pixmap where a (white) text is drawn.
-		 * bgColor is the color used for the shadow.
-		 * @param textPixmap the pixmap of the text
-		 * @param bgColor the background color
-		 * @return the resulting image
-		 */
-		QImage makeShadow(const QPixmap& textPixmap, const QColor &bgColor);
+    /**
+     * Make shadow!
+     *
+     * textPixmap is the original pixmap where a (white) text is drawn.
+     * bgColor is the color used for the shadow.
+     * @param textPixmap the pixmap of the text
+     * @param bgColor the background color
+     * @return the resulting image
+     */
+    QImage makeShadow(const QPixmap &textPixmap, const QColor &bgColor);
 
-	private:
-		// No static objects in libs, and no static deleters in kdefx...
-		//static KShadowSettings s_defaultShadowSettings;
+private:
+    // No static objects in libs, and no static deleters in kdefx...
+    // static KShadowSettings s_defaultShadowSettings;
 
-		KShadowSettings *m_shadowSettings;
+    KShadowSettings *m_shadowSettings;
 
-		/*
-		 * a simple algorithm with 3 pixels thickness
-		 */
-		double defaultDecay(QImage& source, int x, int y);
+    /*
+     * a simple algorithm with 3 pixels thickness
+     */
+    double defaultDecay(QImage &source, int x, int y);
 
-		/*
-		 * a slower algorithm where the influence of a pixel
-		 * is  qGray(px)/(abs(dx) + abs(dy) +1).
-		 */
-		double doubleLinearDecay(QImage& source, int x, int y);
+    /*
+     * a slower algorithm where the influence of a pixel
+     * is  qGray(px)/(abs(dx) + abs(dy) +1).
+     */
+    double doubleLinearDecay(QImage &source, int x, int y);
 
-		/*
-		 * a very slow algorithm where the influence of a pixel
-		 * is  qGray(px)/(sqrt(sqr(dx) + sqr(dy)) +1).
-		 */
-		double radialDecay(QImage& source, int x, int y);
+    /*
+     * a very slow algorithm where the influence of a pixel
+     * is  qGray(px)/(sqrt(sqr(dx) + sqr(dy)) +1).
+     */
+    double radialDecay(QImage &source, int x, int y);
 
-		/*
-		 * a nice/fast algorithm proposed by Bernardo Hung
-		 */
-		double noDecay(QImage& source, int x, int y);
+    /*
+     * a nice/fast algorithm proposed by Bernardo Hung
+     */
+    double noDecay(QImage &source, int x, int y);
 
-		void *d;
+    void *d;
 };
 
 #endif

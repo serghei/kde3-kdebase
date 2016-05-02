@@ -30,66 +30,57 @@
 class QListViewItem;
 class FancyPlotterSettings;
 
-class FPSensorProperties : public KSGRD::SensorProperties
-{
-  public:
+class FPSensorProperties : public KSGRD::SensorProperties {
+public:
     FPSensorProperties();
-    FPSensorProperties( const QString &hostName, const QString &name,
-                        const QString &type, const QString &description,
-                        const QColor &color );
+    FPSensorProperties(const QString &hostName, const QString &name, const QString &type, const QString &description, const QColor &color);
     ~FPSensorProperties();
 
-    void setColor( const QColor &color );
+    void setColor(const QColor &color);
     QColor color() const;
 
-  private:
+private:
     QColor mColor;
 };
 
-class FancyPlotter : public KSGRD::SensorDisplay
-{
-  Q_OBJECT
+class FancyPlotter : public KSGRD::SensorDisplay {
+    Q_OBJECT
 
-  public:
-    FancyPlotter( QWidget* parent = 0, const char* name = 0,
-                  const QString& title = QString::null, double min = 0,
-                  double max = 100, bool noFrame = false, bool isApplet = false );
+public:
+    FancyPlotter(QWidget *parent = 0, const char *name = 0, const QString &title = QString::null, double min = 0, double max = 100,
+                 bool noFrame = false, bool isApplet = false);
     virtual ~FancyPlotter();
 
     void configureSettings();
 
-    bool addSensor( const QString &hostName, const QString &name,
-                    const QString &type, const QString &title );
-    bool addSensor( const QString &hostName, const QString &name,
-                    const QString &type, const QString &title,
-                    const QColor &color );
+    bool addSensor(const QString &hostName, const QString &name, const QString &type, const QString &title);
+    bool addSensor(const QString &hostName, const QString &name, const QString &type, const QString &title, const QColor &color);
 
-    bool removeSensor( uint pos );
+    bool removeSensor(uint pos);
 
     virtual QSize sizeHint(void);
 
-    virtual void answerReceived( int id, const QString &answer );
+    virtual void answerReceived(int id, const QString &answer);
 
-    virtual bool restoreSettings( QDomElement &element );
-    virtual bool saveSettings( QDomDocument &doc, QDomElement &element,
-                               bool save = true );
+    virtual bool restoreSettings(QDomElement &element);
+    virtual bool saveSettings(QDomDocument &doc, QDomElement &element, bool save = true);
 
     virtual bool hasSettingsDialog() const;
 
-  public slots:
+public slots:
     void applySettings();
     virtual void applyStyle();
     void killDialog();
 
-  protected:
-    virtual void resizeEvent( QResizeEvent* );
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 
-  private:
+private:
     uint mBeams;
 
-    SignalPlotter* mPlotter;
+    SignalPlotter *mPlotter;
 
-    FancyPlotterSettings* mSettingsDialog;
+    FancyPlotterSettings *mSettingsDialog;
 
     /**
       The sample buffer and the flags are needed to store the incoming
@@ -97,7 +88,7 @@ class FancyPlotter : public KSGRD::SensorDisplay
       received. The flags variable is used to ensure that all samples have
       been received.
      */
-    QValueList<double> mSampleBuf;
+    QValueList< double > mSampleBuf;
 };
 
 #endif

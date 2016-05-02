@@ -25,20 +25,19 @@
 #include <kgenericfactory.h>
 #include <kio/global.h>
 
-typedef KGenericFactory<KRarPlugin> KRarFactory;
+typedef KGenericFactory< KRarPlugin > KRarFactory;
 
-K_EXPORT_COMPONENT_FACTORY(kfile_rar, KRarFactory( "kfile_rar" ))
+K_EXPORT_COMPONENT_FACTORY(kfile_rar, KRarFactory("kfile_rar"))
 
-KRarPlugin::KRarPlugin(QObject *parent, const char *name, const QStringList &args)
-           : KFilePlugin(parent, name, args)
+KRarPlugin::KRarPlugin(QObject *parent, const char *name, const QStringList &args) : KFilePlugin(parent, name, args)
 {
-    KFileMimeTypeInfo* info = addMimeTypeInfo( "application/x-rar-compressed" );
+    KFileMimeTypeInfo *info = addMimeTypeInfo("application/x-rar-compressed");
 
-    KFileMimeTypeInfo::GroupInfo* group = 0L;
+    KFileMimeTypeInfo::GroupInfo *group = 0L;
 
     group = addGroupInfo(info, "RarInfo", i18n("Rar Information"));
 
-    KFileMimeTypeInfo::ItemInfo* item;
+    KFileMimeTypeInfo::ItemInfo *item;
 
     item = addItemInfo(group, "Directories", i18n("Directories"), QVariant::UInt);
     item = addItemInfo(group, "Files", i18n("Files"), QVariant::UInt);
@@ -53,29 +52,32 @@ KRarPlugin::KRarPlugin(QObject *parent, const char *name, const QStringList &arg
     item = addItemInfo(group, "Auth Info", i18n("Auth Info"), QVariant::String);
 }
 
-bool KRarPlugin::readInfo( KFileMetaInfo& info, uint /*what*/)
+bool KRarPlugin::readInfo(KFileMetaInfo &info, uint /*what*/)
 {
     KFileMetaInfoGroup group = appendGroup(info, "RarInfo");
 
-    if( info.url().protocol() != "file" ) return false;
+    if(info.url().protocol() != "file")
+        return false;
 
-    KRar rar( info.path() );
-    if( !rar.open( IO_ReadOnly ) )
+    KRar rar(info.path());
+    if(!rar.open(IO_ReadOnly))
     {
-      rar.close();
-      return false;
+        rar.close();
+        return false;
     }
 
-    appendItem( group, "Directories", rar.dirs() );
-    appendItem( group, "Files", rar.files() );
-    appendItem( group, "Unpacked", rar.uncompressed() );
-    appendItem( group, "Packed", rar.compressed() );
-    appendItem( group, "Ratio", QString( "%1 %" ).arg( rar.ratio() ) );
-    if( rar.isArchiveVolume() ) appendItem( group, "ArchiveVolume", rar.volNum() );
-    else appendItem( group, "ArchiveVolume", i18n( "None" ) );
-    appendItem( group, "Lock", ( rar.isLocked() ? i18n( "Yes" ) : i18n( "No" ) ) );
-    appendItem( group, "Solid", ( rar.isSolid() ? i18n( "Yes" ) : i18n( "No" ) ) );
-    appendItem( group, "Auth Info", ( rar.hasAuthInfo() ? i18n( "Yes" ) : i18n( "No" ) ) );
+    appendItem(group, "Directories", rar.dirs());
+    appendItem(group, "Files", rar.files());
+    appendItem(group, "Unpacked", rar.uncompressed());
+    appendItem(group, "Packed", rar.compressed());
+    appendItem(group, "Ratio", QString("%1 %").arg(rar.ratio()));
+    if(rar.isArchiveVolume())
+        appendItem(group, "ArchiveVolume", rar.volNum());
+    else
+        appendItem(group, "ArchiveVolume", i18n("None"));
+    appendItem(group, "Lock", (rar.isLocked() ? i18n("Yes") : i18n("No")));
+    appendItem(group, "Solid", (rar.isSolid() ? i18n("Yes") : i18n("No")));
+    appendItem(group, "Auth Info", (rar.hasAuthInfo() ? i18n("Yes") : i18n("No")));
 
     rar.close();
 

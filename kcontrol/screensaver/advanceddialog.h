@@ -14,48 +14,44 @@
 
 #include "advanceddialogimpl.h"
 
-class AdvancedDialog : public AdvancedDialogImpl
-{
+class AdvancedDialog : public AdvancedDialogImpl {
 public:
-	AdvancedDialog(QWidget *parent = 0, const char *name = 0);
-	~AdvancedDialog();
-	void setMode(QComboBox *box, int i);
-	int mode(QComboBox *box);
+    AdvancedDialog(QWidget *parent = 0, const char *name = 0);
+    ~AdvancedDialog();
+    void setMode(QComboBox *box, int i);
+    int mode(QComboBox *box);
 };
 
 /* =================================================================================================== */
 
-class KScreenSaverAdvancedDialog : public KDialogBase
-{
+class KScreenSaverAdvancedDialog : public KDialogBase {
     Q_OBJECT
 public:
-    KScreenSaverAdvancedDialog(QWidget *parent, const char* name = 0);
-      
+    KScreenSaverAdvancedDialog(QWidget *parent, const char *name = 0);
+
 public slots:
     void slotOk();
-         
+
 protected slots:
     void slotPriorityChanged(int val);
     void slotChangeBottomRightCorner(int);
     void slotChangeBottomLeftCorner(int);
     void slotChangeTopRightCorner(int);
     void slotChangeTopLeftCorner(int);
-                        
+
 private:
     void readSettings();
-                     
+
     QCheckBox *m_topLeftCorner;
     QCheckBox *m_bottomLeftCorner;
     QCheckBox *m_topRightCorner;
     QCheckBox *m_bottomRightCorner;
-    QSlider   *mPrioritySlider;
-                                          
-    bool mChanged;
-    int  mPriority;
-    AdvancedDialog *dialog;
+    QSlider *mPrioritySlider;
 
+    bool mChanged;
+    int mPriority;
+    AdvancedDialog *dialog;
 };
 
 
 #endif
-

@@ -26,100 +26,98 @@
 #include "konqueror.h"
 #include "system.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_performance(QWidget *parent_P, const char *name_P)
 {
-    KDE_EXPORT KCModule* create_performance( QWidget* parent_P, const char* name_P )
-    {
-    return new KCMPerformance::Config( parent_P, name_P );
-    }
-
-    KDE_EXPORT KCModule* create_konqueror( QWidget* parent_P, const char* name_P )
-    {
-    return new KCMPerformance::KonquerorConfig( parent_P, name_P );
-    }
+    return new KCMPerformance::Config(parent_P, name_P);
 }
 
-namespace KCMPerformance
+KDE_EXPORT KCModule *create_konqueror(QWidget *parent_P, const char *name_P)
 {
+    return new KCMPerformance::KonquerorConfig(parent_P, name_P);
+}
+}
 
-Config::Config( QWidget* parent_P, const char* )
-    : KCModule( parent_P, "kcmperformance" )
-    {
-    setQuickHelp( i18n( "<h1>KDE Performance</h1>"
-        " You can configure settings that improve KDE performance here." ));
-    
-    QVBoxLayout *topLayout = new QVBoxLayout( this );
-    QTabWidget* tabs = new QTabWidget( this );
-    konqueror_widget = new Konqueror( tabs );
-    konqueror_widget->layout()->setMargin( KDialog::marginHint() );
-    connect( konqueror_widget, SIGNAL( changed()), SLOT( changed()));
-    tabs->addTab( konqueror_widget, i18n( "Konqueror" ));
-    system_widget = new SystemWidget( tabs );
-    system_widget->layout()->setMargin( KDialog::marginHint() );
-    connect( system_widget, SIGNAL( changed()), SLOT( changed()));
-    tabs->addTab( system_widget, i18n( "System" ));
-    topLayout->add( tabs );
+namespace KCMPerformance {
+
+Config::Config(QWidget *parent_P, const char *) : KCModule(parent_P, "kcmperformance")
+{
+    setQuickHelp(
+        i18n("<h1>KDE Performance</h1>"
+             " You can configure settings that improve KDE performance here."));
+
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    QTabWidget *tabs = new QTabWidget(this);
+    konqueror_widget = new Konqueror(tabs);
+    konqueror_widget->layout()->setMargin(KDialog::marginHint());
+    connect(konqueror_widget, SIGNAL(changed()), SLOT(changed()));
+    tabs->addTab(konqueror_widget, i18n("Konqueror"));
+    system_widget = new SystemWidget(tabs);
+    system_widget->layout()->setMargin(KDialog::marginHint());
+    connect(system_widget, SIGNAL(changed()), SLOT(changed()));
+    tabs->addTab(system_widget, i18n("System"));
+    topLayout->add(tabs);
     load();
-    }
+}
 
 void Config::load()
-    {
-    load( false );
-	 }
+{
+    load(false);
+}
 
-void Config::load( bool useDefaults)
-    {
-    konqueror_widget->load( useDefaults );
-    system_widget->load( useDefaults );
-	 emit changed( useDefaults );
-    }
+void Config::load(bool useDefaults)
+{
+    konqueror_widget->load(useDefaults);
+    system_widget->load(useDefaults);
+    emit changed(useDefaults);
+}
 
 void Config::save()
-    {
+{
     konqueror_widget->save();
     system_widget->save();
-    }
+}
 
 void Config::defaults()
-    {
-		 load( true );
-    }
+{
+    load(true);
+}
 
-KonquerorConfig::KonquerorConfig( QWidget* parent_P, const char* )
-    : KCModule( parent_P, "kcmperformance" )
-    {
-    setQuickHelp( i18n( "<h1>Konqueror Performance</h1>"
-        " You can configure several settings that improve Konqueror performance here."
-        " These include options for reusing already running instances"
-        " and for keeping instances preloaded." ));
+KonquerorConfig::KonquerorConfig(QWidget *parent_P, const char *) : KCModule(parent_P, "kcmperformance")
+{
+    setQuickHelp(
+        i18n("<h1>Konqueror Performance</h1>"
+             " You can configure several settings that improve Konqueror performance here."
+             " These include options for reusing already running instances"
+             " and for keeping instances preloaded."));
 
-    QVBoxLayout *topLayout = new QVBoxLayout( this );
-    widget = new Konqueror( this );
-    connect( widget, SIGNAL( changed()), SLOT( changed()));
-    topLayout->add( widget );
+    QVBoxLayout *topLayout = new QVBoxLayout(this);
+    widget = new Konqueror(this);
+    connect(widget, SIGNAL(changed()), SLOT(changed()));
+    topLayout->add(widget);
     load();
-    }
+}
 
 void KonquerorConfig::load()
-    {
-		 load( false );
-	 }
+{
+    load(false);
+}
 
 void KonquerorConfig::load(bool useDefaults)
-    {
-    widget->load( useDefaults );
-	 emit changed( useDefaults );
-    }
+{
+    widget->load(useDefaults);
+    emit changed(useDefaults);
+}
 
 void KonquerorConfig::save()
-    {
+{
     widget->save();
-    }
+}
 
 void KonquerorConfig::defaults()
-    {
-		 load( true );
-    }
+{
+    load(true);
+}
 
 } // namespace
 

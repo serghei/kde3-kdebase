@@ -13,14 +13,16 @@ class DCOPClient;
 class KCookiesPolicies;
 class KCookiesManagement;
 
-class KCookiesMain : public KCModule
-{
+class KCookiesMain : public KCModule {
     Q_OBJECT
 public:
     KCookiesMain(QWidget *parent = 0L);
     ~KCookiesMain();
 
-    KCookiesPolicies* policyDlg() { return policies; }
+    KCookiesPolicies *policyDlg()
+    {
+        return policies;
+    }
 
     virtual void load();
     virtual void save();
@@ -28,10 +30,9 @@ public:
     virtual QString quickHelp() const;
 
 private:
-
-    QTabWidget* tab;
-    KCookiesPolicies* policies;
-    KCookiesManagement* management;
+    QTabWidget *tab;
+    KCookiesPolicies *policies;
+    KCookiesManagement *management;
 };
 
 #endif // __KCOOKIESMAIN_H

@@ -1,4 +1,4 @@
-/* 	
+/*
  *
  *	This file contains the quartz configuration widget
  *
@@ -14,31 +14,30 @@
 #include <qvbox.h>
 #include <kconfig.h>
 
-class QuartzConfig: public QObject
-{
-	Q_OBJECT
+class QuartzConfig : public QObject {
+    Q_OBJECT
 
-	public:
-		QuartzConfig( KConfig* conf, QWidget* parent );
-		~QuartzConfig();
+public:
+    QuartzConfig(KConfig *conf, QWidget *parent);
+    ~QuartzConfig();
 
-	// These public signals/slots work similar to KCM modules
-	signals:
-		void changed();
+    // These public signals/slots work similar to KCM modules
+signals:
+    void changed();
 
-	public slots:
-		void load( KConfig* conf );	
-		void save( KConfig* conf );
-		void defaults();
+public slots:
+    void load(KConfig *conf);
+    void save(KConfig *conf);
+    void defaults();
 
-	protected slots:
-		void slotSelectionChanged();	// Internal use
+protected slots:
+    void slotSelectionChanged(); // Internal use
 
-	private:
-		KConfig*   quartzConfig;
-		QCheckBox* cbColorBorder;
-		QCheckBox* cbExtraSmall;
-		QVBox* gb;
+private:
+    KConfig *quartzConfig;
+    QCheckBox *cbColorBorder;
+    QCheckBox *cbExtraSmall;
+    QVBox *gb;
 };
 
 

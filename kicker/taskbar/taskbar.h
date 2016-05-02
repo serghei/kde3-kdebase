@@ -39,32 +39,40 @@ class Startup;
 class Task;
 class KGlobalAccel;
 
-class TaskBar : public Panner
-{
+class TaskBar : public Panner {
     Q_OBJECT
 
 public:
-    TaskBar( QWidget *parent = 0, const char *name = 0 );
+    TaskBar(QWidget *parent = 0, const char *name = 0);
     ~TaskBar();
 
     QSize sizeHint() const;
-    QSize sizeHint( KPanelExtension::Position, QSize maxSize ) const;
+    QSize sizeHint(KPanelExtension::Position, QSize maxSize) const;
 
-    void setOrientation( Orientation );
-    void setArrowType( Qt::ArrowType at );
+    void setOrientation(Orientation);
+    void setArrowType(Qt::ArrowType at);
 
     int containerCount() const;
     int taskCount() const;
     int showScreen() const;
 
-    bool showIcon() const { return m_showIcon; }
-    bool sortByDesktop() const { return m_sortByDesktop; }
-    bool showAllWindows() const { return m_showAllWindows; }
+    bool showIcon() const
+    {
+        return m_showIcon;
+    }
+    bool sortByDesktop() const
+    {
+        return m_sortByDesktop;
+    }
+    bool showAllWindows() const
+    {
+        return m_showAllWindows;
+    }
 
-    QImage* blendGradient(const QSize& size);
-    
+    QImage *blendGradient(const QSize &size);
+
     void setBackground();
-    
+
     KTextShadowEngine *textShadowEngine();
 
 public slots:
@@ -76,17 +84,17 @@ signals:
 protected slots:
     void add(Task::Ptr);
     void add(Startup::Ptr);
-    void showTaskContainer(TaskContainer*);
+    void showTaskContainer(TaskContainer *);
     void remove(Task::Ptr task, TaskContainer *container = 0);
     void remove(Startup::Ptr startup, TaskContainer *container = 0);
 
-    void desktopChanged( int );
+    void desktopChanged(int);
     void windowChanged(Task::Ptr);
     void windowChangedGeometry(Task::Ptr);
 
     void publishIconGeometry();
 
-    void activateNextTask( bool forward );
+    void activateNextTask(bool forward);
     void slotActivateNextTask();
     void slotActivatePreviousTask();
     void slotSettingsChanged(int);
@@ -94,41 +102,41 @@ protected slots:
 
 protected:
     void reLayoutEventually();
-    void viewportMousePressEvent( QMouseEvent* );
-    void viewportMouseReleaseEvent( QMouseEvent* );
-    void viewportMouseDoubleClickEvent( QMouseEvent* );
-    void viewportMouseMoveEvent( QMouseEvent* );
-    void viewportResizeEvent( QResizeEvent * );
-    void wheelEvent(QWheelEvent*);
-    void propagateMouseEvent( QMouseEvent* );
-    void resizeEvent( QResizeEvent* );
-    void moveEvent( QMoveEvent* );
-    bool idMatch( const QString& id1, const QString& id2 );
+    void viewportMousePressEvent(QMouseEvent *);
+    void viewportMouseReleaseEvent(QMouseEvent *);
+    void viewportMouseDoubleClickEvent(QMouseEvent *);
+    void viewportMouseMoveEvent(QMouseEvent *);
+    void viewportResizeEvent(QResizeEvent *);
+    void wheelEvent(QWheelEvent *);
+    void propagateMouseEvent(QMouseEvent *);
+    void resizeEvent(QResizeEvent *);
+    void moveEvent(QMoveEvent *);
+    bool idMatch(const QString &id1, const QString &id2);
     TaskContainer::List filteredContainers();
 
 private:
-    void sortContainersByDesktop(TaskContainer::List& list);
+    void sortContainersByDesktop(TaskContainer::List &list);
     void setViewportBackground();
 
-    bool			blocklayout;
-    bool			m_showAllWindows;
+    bool blocklayout;
+    bool m_showAllWindows;
     // The screen to show, -1 for all screens
-    int 			m_currentScreen;
-    bool			m_showOnlyCurrentScreen;
-    bool			m_sortByDesktop;
-    bool			m_showIcon;
-    bool			m_showOnlyIconified;
-    ArrowType 			arrowType;
-    TaskContainer::List		containers;
-    TaskContainer::List		m_hiddenContainers;
-    TaskContainer::List		m_deletableContainers;
-    PixmapList			frames;
-    int                         maximumButtonsWithoutShrinking() const;
-    bool                        shouldGroup() const;
-    bool                        isGrouping;
-    void                        reGroup();
-    KGlobalAccel*               keys;
-    KTextShadowEngine* m_textShadowEngine;
+    int m_currentScreen;
+    bool m_showOnlyCurrentScreen;
+    bool m_sortByDesktop;
+    bool m_showIcon;
+    bool m_showOnlyIconified;
+    ArrowType arrowType;
+    TaskContainer::List containers;
+    TaskContainer::List m_hiddenContainers;
+    TaskContainer::List m_deletableContainers;
+    PixmapList frames;
+    int maximumButtonsWithoutShrinking() const;
+    bool shouldGroup() const;
+    bool isGrouping;
+    void reGroup();
+    KGlobalAccel *keys;
+    KTextShadowEngine *m_textShadowEngine;
     QTimer m_relayoutTimer;
     bool m_ignoreUpdates;
     QImage m_blendGradient;

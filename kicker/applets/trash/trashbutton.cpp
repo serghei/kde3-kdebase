@@ -32,30 +32,28 @@
 #include <konq_popupmenu.h>
 
 TrashButton::TrashButton(QWidget *parent)
-	: PanelPopupButton(parent), mActions(this, this),
-	  mFileItem(KFileItem::Unknown, KFileItem::Unknown, "trash:/")
+    : PanelPopupButton(parent), mActions(this, this), mFileItem(KFileItem::Unknown, KFileItem::Unknown, "trash:/")
 {
-	KIO::UDSEntry entry;
-	KIO::NetAccess::stat("trash:/", entry, 0L);
-	mFileItem.assign(KFileItem(entry, "trash:/"));
+    KIO::UDSEntry entry;
+    KIO::NetAccess::stat("trash:/", entry, 0L);
+    mFileItem.assign(KFileItem(entry, "trash:/"));
 
-	KAction *a = KStdAction::paste(this, SLOT(slotPaste()),
-	                               &mActions, "paste");
-	a->setShortcut(0);
+    KAction *a = KStdAction::paste(this, SLOT(slotPaste()), &mActions, "paste");
+    a->setShortcut(0);
 
-	move(0, 0);
-	resize(20, 20);
+    move(0, 0);
+    resize(20, 20);
 
-	setTitle(i18n("Trash"));
-	setIcon( "trashcan_empty" );
+    setTitle(i18n("Trash"));
+    setIcon("trashcan_empty");
 
-	setAcceptDrops(true);
+    setAcceptDrops(true);
 
-	// Activate this code only if we find a way to have both an
-	// action and a popup menu for the same kicker button
-	//connect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
+    // Activate this code only if we find a way to have both an
+    // action and a popup menu for the same kicker button
+    // connect(this, SIGNAL(clicked()), this, SLOT(slotClicked()));
 
-	setPopup(new QPopupMenu());
+    setPopup(new QPopupMenu());
 }
 
 TrashButton::~TrashButton()
@@ -64,43 +62,39 @@ TrashButton::~TrashButton()
 
 void TrashButton::setItemCount(int count)
 {
-    if (count==0)
+    if(count == 0)
     {
-        setIcon( "trashcan_empty" );
+        setIcon("trashcan_empty");
         QToolTip::add(this, i18n("Empty"));
     }
     else
     {
-        setIcon( "trashcan_full" );
+        setIcon("trashcan_full");
         QToolTip::add(this, i18n("One item", "%n items", count));
     }
 }
 
 void TrashButton::initPopup()
 {
-	QPopupMenu *old_popup = popup();
+    QPopupMenu *old_popup = popup();
 
-	KFileItemList items;
-	items.append(&mFileItem);
+    KFileItemList items;
+    items.append(&mFileItem);
 
-	KonqPopupMenu::KonqPopupFlags kpf =
-		  KonqPopupMenu::ShowProperties
-		| KonqPopupMenu::ShowNewWindow;
+    KonqPopupMenu::KonqPopupFlags kpf = KonqPopupMenu::ShowProperties | KonqPopupMenu::ShowNewWindow;
 
-	KParts::BrowserExtension::PopupFlags bef =
-		  KParts::BrowserExtension::DefaultPopupItems;
+    KParts::BrowserExtension::PopupFlags bef = KParts::BrowserExtension::DefaultPopupItems;
 
-	KonqPopupMenu *new_popup = new KonqPopupMenu(0L, items,
-	                                   KURL("trash:/"), mActions, 0L,
-	                                   this, kpf, bef);
-	KPopupTitle *title = new KPopupTitle(new_popup);
-	title->setTitle(i18n("Trash"));
+    KonqPopupMenu *new_popup = new KonqPopupMenu(0L, items, KURL("trash:/"), mActions, 0L, this, kpf, bef);
+    KPopupTitle *title = new KPopupTitle(new_popup);
+    title->setTitle(i18n("Trash"));
 
-	new_popup->insertItem(title, -1, 0);
+    new_popup->insertItem(title, -1, 0);
 
-	setPopup(new_popup);
+    setPopup(new_popup);
 
-	if (old_popup!=0L) delete old_popup;
+    if(old_popup != 0L)
+        delete old_popup;
 }
 
 // Activate this code only if we find a way to have both an
@@ -108,47 +102,47 @@ void TrashButton::initPopup()
 /*
 void TrashButton::slotClicked()
 {
-	mFileItem.run();
+    mFileItem.run();
 }
 */
 
 void TrashButton::slotPaste()
 {
-	KonqOperations::doPaste(this, mFileItem.url());
+    KonqOperations::doPaste(this, mFileItem.url());
 }
 
-void TrashButton::dragEnterEvent(QDragEnterEvent* e)
+void TrashButton::dragEnterEvent(QDragEnterEvent *e)
 {
-	e->accept(true);
+    e->accept(true);
 }
 
 void TrashButton::dropEvent(QDropEvent *e)
 {
-	KonqOperations::doDrop(0L, mFileItem.url(), e, this);
+    KonqOperations::doDrop(0L, mFileItem.url(), e, this);
 }
 
 QString TrashButton::tileName()
 {
-	return mFileItem.name();
+    return mFileItem.name();
 }
 
 void TrashButton::setPanelPosition(KPanelApplet::Position position)
 {
-	switch(position)
-	{
-	case KPanelApplet::pBottom:
-		setPopupDirection(KPanelApplet::Up);
-		break;
-	case KPanelApplet::pTop:
-		setPopupDirection(KPanelApplet::Down);
-		break;
-	case KPanelApplet::pRight:
-		setPopupDirection(KPanelApplet::Left);
-		break;
-	case KPanelApplet::pLeft:
-		setPopupDirection(KPanelApplet::Right);
-		break;
-	}
+    switch(position)
+    {
+        case KPanelApplet::pBottom:
+            setPopupDirection(KPanelApplet::Up);
+            break;
+        case KPanelApplet::pTop:
+            setPopupDirection(KPanelApplet::Down);
+            break;
+        case KPanelApplet::pRight:
+            setPopupDirection(KPanelApplet::Left);
+            break;
+        case KPanelApplet::pLeft:
+            setPopupDirection(KPanelApplet::Right);
+            break;
+    }
 }
 
 #include "trashbutton.moc"

@@ -6,13 +6,13 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -32,31 +32,29 @@ class KAboutData;
 
 #include <kbugreport.h>
 
-class DrKBugReport : public KBugReport
-{
-  Q_OBJECT
+class DrKBugReport : public KBugReport {
+    Q_OBJECT
 
 public:
-  /**
-   * Constructor.
-   */
-  DrKBugReport(QWidget *parent = 0, bool modal = true,
-               const KAboutData *aboutData = 0);
+    /**
+     * Constructor.
+     */
+    DrKBugReport(QWidget *parent = 0, bool modal = true, const KAboutData *aboutData = 0);
 
 public:
-  /**
-   * Allows the debugger to set the default text in the editor.
-   */
-  void setText(const QString &str);
+    /**
+     * Allows the debugger to set the default text in the editor.
+     */
+    void setText(const QString &str);
 
 protected slots:
-  /**
-   * OK has been clicked
-   */
-  virtual void slotOk( void );
+    /**
+     * OK has been clicked
+     */
+    virtual void slotOk(void);
 
 private:
-  QString m_startstring;
+    QString m_startstring;
 };
 
 #endif

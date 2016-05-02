@@ -30,164 +30,166 @@
 #include <klineedit.h>
 #include <dcopclient.h>
 
-KListDebugDialog::KListDebugDialog( QStringList areaList, QWidget *parent, const char *name, bool modal )
-  : KAbstractDebugDialog( parent, name, modal ),
-  m_areaList( areaList )
+KListDebugDialog::KListDebugDialog(QStringList areaList, QWidget *parent, const char *name, bool modal)
+    : KAbstractDebugDialog(parent, name, modal), m_areaList(areaList)
 {
-  setCaption(i18n("Debug Settings"));
+    setCaption(i18n("Debug Settings"));
 
-  QVBoxLayout *lay = new QVBoxLayout( this, KDialog::marginHint(), KDialog::spacingHint() );
+    QVBoxLayout *lay = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
 
-  m_incrSearch = new KLineEdit( this );
-  lay->addWidget( m_incrSearch );
-  connect( m_incrSearch, SIGNAL( textChanged( const QString& ) ),
-           SLOT( generateCheckBoxes( const QString& ) ) );
+    m_incrSearch = new KLineEdit(this);
+    lay->addWidget(m_incrSearch);
+    connect(m_incrSearch, SIGNAL(textChanged(const QString &)), SLOT(generateCheckBoxes(const QString &)));
 
-  QScrollView * scrollView = new QScrollView( this );
-  scrollView->setResizePolicy( QScrollView::AutoOneFit );
-  lay->addWidget( scrollView );
+    QScrollView *scrollView = new QScrollView(this);
+    scrollView->setResizePolicy(QScrollView::AutoOneFit);
+    lay->addWidget(scrollView);
 
-  m_box = new QVBox( scrollView->viewport() );
-  scrollView->addChild( m_box );
+    m_box = new QVBox(scrollView->viewport());
+    scrollView->addChild(m_box);
 
-  generateCheckBoxes( QString::null );
+    generateCheckBoxes(QString::null);
 
-  QHBoxLayout* selectButs = new QHBoxLayout( lay );
-  QPushButton* all = new QPushButton( i18n("&Select All"), this );
-  QPushButton* none = new QPushButton( i18n("&Deselect All"), this );
-  selectButs->addWidget( all );
-  selectButs->addWidget( none );
+    QHBoxLayout *selectButs = new QHBoxLayout(lay);
+    QPushButton *all = new QPushButton(i18n("&Select All"), this);
+    QPushButton *none = new QPushButton(i18n("&Deselect All"), this);
+    selectButs->addWidget(all);
+    selectButs->addWidget(none);
 
-  connect( all, SIGNAL( clicked() ), this, SLOT( selectAll() ) );
-  connect( none, SIGNAL( clicked() ), this, SLOT( deSelectAll() ) );
+    connect(all, SIGNAL(clicked()), this, SLOT(selectAll()));
+    connect(none, SIGNAL(clicked()), this, SLOT(deSelectAll()));
 
-  buildButtons( lay );
-  resize( 350, 400 );
+    buildButtons(lay);
+    resize(350, 400);
 }
 
-void KListDebugDialog::generateCheckBoxes( const QString& filter )
+void KListDebugDialog::generateCheckBoxes(const QString &filter)
 {
-  QPtrListIterator<QCheckBox> cb_it ( boxes );
-  for( ; cb_it.current() ; ++cb_it )
-  {
-    if( (*cb_it)->state() != QButton::NoChange )
-      m_changes.insert( (*cb_it)->name(), (*cb_it)->isChecked() ? 2 : 4 );
-  }
-
-  boxes.setAutoDelete( true );
-  boxes.clear();
-  boxes.setAutoDelete( false );
-
-  QWidget* taborder = m_incrSearch;
-  QStringList::Iterator it = m_areaList.begin();
-  for ( ; it != m_areaList.end() ; ++it )
-  {
-    QString data = (*it).simplifyWhiteSpace();
-    if ( filter.isEmpty() || data.lower().contains( filter.lower() ) )
+    QPtrListIterator< QCheckBox > cb_it(boxes);
+    for(; cb_it.current(); ++cb_it)
     {
-      int space = data.find(" ");
-      if (space == -1)
-        kdError() << "No space:" << data << endl;
-
-      QString areaNumber = data.left(space);
-      //kdDebug() << areaNumber << endl;
-      QCheckBox * cb = new QCheckBox( data, m_box, areaNumber.latin1() );
-      cb->show();
-      boxes.append( cb );
-      setTabOrder( taborder, cb );
-      taborder = cb;
+        if((*cb_it)->state() != QButton::NoChange)
+            m_changes.insert((*cb_it)->name(), (*cb_it)->isChecked() ? 2 : 4);
     }
-  }
 
-  load();
+    boxes.setAutoDelete(true);
+    boxes.clear();
+    boxes.setAutoDelete(false);
+
+    QWidget *taborder = m_incrSearch;
+    QStringList::Iterator it = m_areaList.begin();
+    for(; it != m_areaList.end(); ++it)
+    {
+        QString data = (*it).simplifyWhiteSpace();
+        if(filter.isEmpty() || data.lower().contains(filter.lower()))
+        {
+            int space = data.find(" ");
+            if(space == -1)
+                kdError() << "No space:" << data << endl;
+
+            QString areaNumber = data.left(space);
+            // kdDebug() << areaNumber << endl;
+            QCheckBox *cb = new QCheckBox(data, m_box, areaNumber.latin1());
+            cb->show();
+            boxes.append(cb);
+            setTabOrder(taborder, cb);
+            taborder = cb;
+        }
+    }
+
+    load();
 }
 
 void KListDebugDialog::selectAll()
 {
-  QPtrListIterator<QCheckBox> it ( boxes );
-  for ( ; it.current() ; ++it ) {
-    (*it)->setChecked( true );
-    m_changes.insert( (*it)->name(), 2 );
-  }
+    QPtrListIterator< QCheckBox > it(boxes);
+    for(; it.current(); ++it)
+    {
+        (*it)->setChecked(true);
+        m_changes.insert((*it)->name(), 2);
+    }
 }
 
 void KListDebugDialog::deSelectAll()
 {
-  QPtrListIterator<QCheckBox> it ( boxes );
-  for ( ; it.current() ; ++it ) {
-    (*it)->setChecked( false );
-    m_changes.insert( (*it)->name(), 4 );
-  }
+    QPtrListIterator< QCheckBox > it(boxes);
+    for(; it.current(); ++it)
+    {
+        (*it)->setChecked(false);
+        m_changes.insert((*it)->name(), 4);
+    }
 }
 
 void KListDebugDialog::load()
 {
-  QPtrListIterator<QCheckBox> it ( boxes );
-  for ( ; it.current() ; ++it )
-  {
-      pConfig->setGroup( (*it)->name() ); // Group name = debug area code = cb's name
+    QPtrListIterator< QCheckBox > it(boxes);
+    for(; it.current(); ++it)
+    {
+        pConfig->setGroup((*it)->name()); // Group name = debug area code = cb's name
 
-      int setting = pConfig->readNumEntry( "InfoOutput", 2 );
-      // override setting if in m_changes
-      if( m_changes.find( (*it)->name() ) != m_changes.end() ) {
-        setting = m_changes[ (*it)->name() ];
-      }
+        int setting = pConfig->readNumEntry("InfoOutput", 2);
+        // override setting if in m_changes
+        if(m_changes.find((*it)->name()) != m_changes.end())
+        {
+            setting = m_changes[(*it)->name()];
+        }
 
-      switch (setting) {
-        case 4: // off
-          (*it)->setChecked(false);
-          break;
-        case 2: //shell
-          (*it)->setChecked(true);
-          break;
-        case 3: //syslog
-        case 1: //msgbox
-        case 0: //file
-        default:
-          (*it)->setNoChange();
-          /////// Uses the triState capability of checkboxes
-          ////// Note: it seems some styles don't draw that correctly (BUG)
-          break;
-      }
-  }
+        switch(setting)
+        {
+            case 4: // off
+                (*it)->setChecked(false);
+                break;
+            case 2: // shell
+                (*it)->setChecked(true);
+                break;
+            case 3: // syslog
+            case 1: // msgbox
+            case 0: // file
+            default:
+                (*it)->setNoChange();
+                /////// Uses the triState capability of checkboxes
+                ////// Note: it seems some styles don't draw that correctly (BUG)
+                break;
+        }
+    }
 }
 
 void KListDebugDialog::save()
 {
-  QPtrListIterator<QCheckBox> it ( boxes );
-  for ( ; it.current() ; ++it )
-  {
-      pConfig->setGroup( (*it)->name() ); // Group name = debug area code = cb's name
-      if ( (*it)->state() != QButton::NoChange )
-      {
-          int setting = (*it)->isChecked() ? 2 : 4;
-          pConfig->writeEntry( "InfoOutput", setting );
-      }
-  }
-  //sync done by main.cpp
+    QPtrListIterator< QCheckBox > it(boxes);
+    for(; it.current(); ++it)
+    {
+        pConfig->setGroup((*it)->name()); // Group name = debug area code = cb's name
+        if((*it)->state() != QButton::NoChange)
+        {
+            int setting = (*it)->isChecked() ? 2 : 4;
+            pConfig->writeEntry("InfoOutput", setting);
+        }
+    }
+    // sync done by main.cpp
 
-  // send DCOP message to all clients
-  QByteArray data;
-  if (!kapp->dcopClient()->send("*", "KDebug", "notifyKDebugConfigChanged()", data))
-  {
-    kdError() << "Unable to send DCOP message" << endl;
-  }
+    // send DCOP message to all clients
+    QByteArray data;
+    if(!kapp->dcopClient()->send("*", "KDebug", "notifyKDebugConfigChanged()", data))
+    {
+        kdError() << "Unable to send DCOP message" << endl;
+    }
 
-  m_changes.clear();
+    m_changes.clear();
 }
 
-void KListDebugDialog::activateArea( QCString area, bool activate )
+void KListDebugDialog::activateArea(QCString area, bool activate)
 {
-  QPtrListIterator<QCheckBox> it ( boxes );
-  for ( ; it.current() ; ++it )
-  {
-      if ( area == (*it)->name()  // debug area code = cb's name
-          || (*it)->text().find( QString::fromLatin1(area) ) != -1 ) // area name included in cb text
-      {
-          (*it)->setChecked( activate );
-          return;
-      }
-  }
+    QPtrListIterator< QCheckBox > it(boxes);
+    for(; it.current(); ++it)
+    {
+        if(area == (*it)->name()                                   // debug area code = cb's name
+           || (*it)->text().find(QString::fromLatin1(area)) != -1) // area name included in cb text
+        {
+            (*it)->setChecked(activate);
+            return;
+        }
+    }
 }
 
 #include "klistdebugdialog.moc"

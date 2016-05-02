@@ -33,31 +33,35 @@ class ImportCommand;
 class BookmarkInfoWidget;
 class IKEBCommand;
 
-struct SelcAbilities {
-    bool itemSelected:1;
-    bool group:1;
-    bool root:1;
-    bool separator:1;
-    bool urlIsEmpty:1;
-    bool multiSelect:1;
-    bool singleSelect:1;
-    bool notEmpty:1;
-    bool tbShowState:1;
+struct SelcAbilities
+{
+    bool itemSelected : 1;
+    bool group : 1;
+    bool root : 1;
+    bool separator : 1;
+    bool urlIsEmpty : 1;
+    bool multiSelect : 1;
+    bool singleSelect : 1;
+    bool notEmpty : 1;
+    bool tbShowState : 1;
 };
 
 class CmdHistory : public QObject {
     Q_OBJECT
 public:
     CmdHistory(KActionCollection *collection);
-    virtual ~CmdHistory() { ; }
+    virtual ~CmdHistory()
+    {
+        ;
+    }
 
     void notifyDocSaved();
 
     void clearHistory();
     void addCommand(KCommand *);
     void didCommand(KCommand *);
-    
-    //For an explanation see bookmarkInfo::commitChanges()
+
+    // For an explanation see bookmarkInfo::commitChanges()
     void addInFlightCommand(KCommand *);
 
     static CmdHistory *self();
@@ -76,12 +80,22 @@ class KBookmarkManager;
 class CurrentMgr : public QObject {
     Q_OBJECT
 public:
-    typedef enum {HTMLExport, OperaExport, IEExport, MozillaExport, NetscapeExport} ExportType;
+    typedef enum { HTMLExport, OperaExport, IEExport, MozillaExport, NetscapeExport } ExportType;
 
-    static CurrentMgr* self() { if (!s_mgr) { s_mgr = new CurrentMgr(); } return s_mgr; }
-    static KBookmark bookmarkAt(const QString & a);
+    static CurrentMgr *self()
+    {
+        if(!s_mgr)
+        {
+            s_mgr = new CurrentMgr();
+        }
+        return s_mgr;
+    }
+    static KBookmark bookmarkAt(const QString &a);
 
-    KBookmarkManager* mgr() const { return m_mgr; }
+    KBookmarkManager *mgr() const
+    {
+        return m_mgr;
+    }
     bool showNSBookmarks() const;
     QString path() const;
 
@@ -90,7 +104,7 @@ public:
     void notifyManagers();
     bool managerSave();
     void saveAs(const QString &fileName);
-    void doExport(ExportType type, const QString & path = QString::null);
+    void doExport(ExportType type, const QString &path = QString::null);
     void setUpdate(bool update);
 
     void reloadConfig();
@@ -102,7 +116,10 @@ protected slots:
     void slotBookmarksChanged(const QString &, const QString &);
 
 private:
-    CurrentMgr() : m_mgr(0), ignorenext(0) { ; }
+    CurrentMgr() : m_mgr(0), ignorenext(0)
+    {
+        ;
+    }
     KBookmarkManager *m_mgr;
     static CurrentMgr *s_mgr;
     uint ignorenext;
@@ -111,9 +128,12 @@ private:
 class KEBApp : public KMainWindow {
     Q_OBJECT
 public:
-    static KEBApp* self() { return s_topLevel; }
+    static KEBApp *self()
+    {
+        return s_topLevel;
+    }
 
-    KEBApp(const QString & bookmarksFile, bool readonly, const QString &address, bool browser, const QString &caption);
+    KEBApp(const QString &bookmarksFile, bool readonly, const QString &address, bool browser, const QString &caption);
     virtual ~KEBApp();
 
     void updateStatus(QString url);
@@ -125,18 +145,31 @@ public:
     void notifyCommandExecuted();
     void findURL(QString url);
 
-    QWidget* popupMenuFactory(const char *type) { 
-        return factory()->container(type, this); 
+    QWidget *popupMenuFactory(const char *type)
+    {
+        return factory()->container(type, this);
     }
 
-    KToggleAction* getToggleAction(const char *) const;
+    KToggleAction *getToggleAction(const char *) const;
 
-    QString caption() const { return m_caption; }
-    bool readonly() const { return m_readOnly; }
-    bool browser() const { return m_browser; } 
+    QString caption() const
+    {
+        return m_caption;
+    }
+    bool readonly() const
+    {
+        return m_readOnly;
+    }
+    bool browser() const
+    {
+        return m_browser;
+    }
     bool nsShown() const;
 
-    BookmarkInfoWidget *bkInfo() { return m_bkinfo; }
+    BookmarkInfoWidget *bkInfo()
+    {
+        return m_bkinfo;
+    }
 
 public slots:
     void updateActions();
@@ -147,7 +180,7 @@ protected slots:
     void slotNewToolbarConfig();
 
 private:
-    static KBookmarkManager* bookmarkManager();
+    static KBookmarkManager *bookmarkManager();
 
     void resetActions();
     void createActions();
@@ -167,9 +200,9 @@ public: // only temporary
 private:
     BookmarkInfoWidget *m_bkinfo;
 
-    bool m_canPaste:1;
-    bool m_readOnly:1;
-    bool m_browser:1;
+    bool m_canPaste : 1;
+    bool m_readOnly : 1;
+    bool m_browser : 1;
 };
 
 #endif

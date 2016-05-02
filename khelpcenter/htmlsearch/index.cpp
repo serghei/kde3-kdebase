@@ -6,26 +6,23 @@
 
 #include "htmlsearch.h"
 
-static KCmdLineOptions options[] =
-{
-  { "lang <lang>", I18N_NOOP("The language to index"), "en" },
-   KCmdLineLastOption // End of options.
+static KCmdLineOptions options[] = {
+    {"lang <lang>", I18N_NOOP("The language to index"), "en"},
+    KCmdLineLastOption // End of options.
 };
 
 
 int main(int argc, char *argv[])
 {
-  KAboutData aboutData( "khtmlindex", I18N_NOOP("KHtmlIndex"),
-	"",
-	I18N_NOOP("KDE Index generator for help files."));
+    KAboutData aboutData("khtmlindex", I18N_NOOP("KHtmlIndex"), "", I18N_NOOP("KDE Index generator for help files."));
 
-  KCmdLineArgs::init(argc, argv, &aboutData);
-  KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-  KGlobal::locale()->setMainCatalogue("htmlsearch");
-  KApplication app;
-  HTMLSearch search;
+    KGlobal::locale()->setMainCatalogue("htmlsearch");
+    KApplication app;
+    HTMLSearch search;
 
-  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-  search.generateIndex(args->getOption("lang"));
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    search.generateIndex(args->getOption("lang"));
 }

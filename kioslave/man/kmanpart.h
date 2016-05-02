@@ -37,43 +37,42 @@ class KAboutData;
  * Man Page Viewer
  * \todo: Why is it needed? Why is KHTML alone not possible?
  */
-class KManPartFactory: public KParts::Factory
-{
-   Q_OBJECT
-   public:
-      KManPartFactory( QObject * parent = 0, const char * name = 0 );
-      virtual ~KManPartFactory();
+class KManPartFactory : public KParts::Factory {
+    Q_OBJECT
+public:
+    KManPartFactory(QObject *parent = 0, const char *name = 0);
+    virtual ~KManPartFactory();
 
-      virtual KParts::Part* createPartObject( QWidget * parentWidget, const char * widgetName ,
-                                QObject* parent, const char* name, const char * classname,
-                                const QStringList &args);
+    virtual KParts::Part *createPartObject(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const char *classname,
+                                           const QStringList &args);
 
-      static KInstance * instance();
+    static KInstance *instance();
 
-   private:
-      static KInstance * s_instance;
-      static KAboutData * s_about;
-
+private:
+    static KInstance *s_instance;
+    static KAboutData *s_about;
 };
 
-class KManPart : public KHTMLPart
-{
-   Q_OBJECT
-   public:
-      KManPart( QWidget * parent, const char * name = 0L );
-      KParts::BrowserExtension * extension() {return m_extension;}
+class KManPart : public KHTMLPart {
+    Q_OBJECT
+public:
+    KManPart(QWidget *parent, const char *name = 0L);
+    KParts::BrowserExtension *extension()
+    {
+        return m_extension;
+    }
 
-   public slots:
-      virtual bool openURL( const KURL &url );
-   protected slots:
-      void readData(KIO::Job * , const QByteArray & data);
-      void jobDone( KIO::Job *);
-   protected:
-      virtual bool openFile();
-      KInstance *m_instance;
-      KParts::BrowserExtension * m_extension;
-      KIO::TransferJob *m_job;
+public slots:
+    virtual bool openURL(const KURL &url);
+protected slots:
+    void readData(KIO::Job *, const QByteArray &data);
+    void jobDone(KIO::Job *);
+
+protected:
+    virtual bool openFile();
+    KInstance *m_instance;
+    KParts::BrowserExtension *m_extension;
+    KIO::TransferJob *m_job;
 };
 
 #endif
-

@@ -95,37 +95,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "client.h"
 
 #ifdef WITH_LOGIND
-#define DBUS_UPOWER_SERVICE       "org.freedesktop.login1"
-#define DBUS_UPOWER_PATH          "/org/freedesktop/login1"
-#define DBUS_UPOWER_INTERFACE     "org.freedesktop.login1.Manager"
+#define DBUS_UPOWER_SERVICE "org.freedesktop.login1"
+#define DBUS_UPOWER_PATH "/org/freedesktop/login1"
+#define DBUS_UPOWER_INTERFACE "org.freedesktop.login1.Manager"
 #else
-#define DBUS_UPOWER_SERVICE       "org.freedesktop.UPower"
-#define DBUS_UPOWER_PATH          "/org/freedesktop/UPower"
-#define DBUS_UPOWER_INTERFACE     "org.freedesktop.UPower"
+#define DBUS_UPOWER_SERVICE "org.freedesktop.UPower"
+#define DBUS_UPOWER_PATH "/org/freedesktop/UPower"
+#define DBUS_UPOWER_INTERFACE "org.freedesktop.UPower"
 #define DBUS_PROPERTIES_INTERFACE "org.freedesktop.DBus.Properties"
 #endif
 
-void KSMServer::logout( int confirm, int sdtype, int sdmode )
+void KSMServer::logout(int confirm, int sdtype, int sdmode)
 {
-    shutdown( (KApplication::ShutdownConfirm)confirm,
-              (KApplication::ShutdownType)sdtype,
-              (KApplication::ShutdownMode)sdmode );
+    shutdown((KApplication::ShutdownConfirm)confirm, (KApplication::ShutdownType)sdtype, (KApplication::ShutdownMode)sdmode);
 }
 
-void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
-    KApplication::ShutdownType sdtype, KApplication::ShutdownMode sdmode )
+void KSMServer::shutdown(KApplication::ShutdownConfirm confirm, KApplication::ShutdownType sdtype, KApplication::ShutdownMode sdmode)
 {
     pendingShutdown.stop();
-    if( dialogActive )
+    if(dialogActive)
         return;
-    if( state >= Shutdown ) // already performing shutdown
+    if(state >= Shutdown) // already performing shutdown
         return;
-    if( state != Idle ) // performing startup
+    if(state != Idle) // performing startup
     {
-    // perform shutdown as soon as startup is finished, in order to avoid saving partial session
-        if( !pendingShutdown.isActive())
+        // perform shutdown as soon as startup is finished, in order to avoid saving partial session
+        if(!pendingShutdown.isActive())
         {
-            pendingShutdown.start( 1000 );
+            pendingShutdown.start(1000);
             pendingShutdown_confirm = confirm;
             pendingShutdown_sdtype = sdtype;
             pendingShutdown_sdmode = sdmode;
@@ -136,30 +133,32 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
     KConfig *config = KGlobal::config();
     config->reparseConfiguration(); // config may have changed in the KControl module
 
-    config->setGroup("General" );
-    bool logoutConfirmed =
-        (confirm == KApplication::ShutdownConfirmYes) ? false :
-       (confirm == KApplication::ShutdownConfirmNo) ? true :
-                  !config->readBoolEntry( "confirmLogout", true );
+    config->setGroup("General");
+    bool logoutConfirmed = (confirm == KApplication::ShutdownConfirmYes) ? false : (confirm == KApplication::ShutdownConfirmNo)
+                                                                                       ? true
+                                                                                       : !config->readBoolEntry("confirmLogout", true);
 
-    bool mayShutdown = (config->readBoolEntry( "offerShutdown", true ) && DM().canShutdown());
-    bool maySuspend = config->readBoolEntry( "offerSuspend", true );
-    bool mayHibernate = config->readBoolEntry( "offerHibernate", true );
-    bool lockBeforeSuspendHibernate = config->readBoolEntry( "lockBeforeSuspendHibernate", true );
+    bool mayShutdown = (config->readBoolEntry("offerShutdown", true) && DM().canShutdown());
+    bool maySuspend = config->readBoolEntry("offerSuspend", true);
+    bool mayHibernate = config->readBoolEntry("offerHibernate", true);
+    bool lockBeforeSuspendHibernate = config->readBoolEntry("lockBeforeSuspendHibernate", true);
 
     // FIXME At this moment we can't query for SuspendAllowed/HibernateAllowed because
     //       we haven't support for ConsoleKit yet
 
     // query upower for suspend/hibernate capability
     QDBusConnection dbusConnection;
-    if( maySuspend || mayHibernate ) {
+    if(maySuspend || mayHibernate)
+    {
 
         dbusConnection = QDBusConnection::addConnection(QDBusConnection::SystemBus);
 
-        if( dbusConnection.isConnected() ) {
+        if(dbusConnection.isConnected())
+        {
 
             // can suspend?
-            if( maySuspend ) {
+            if(maySuspend)
+            {
 #ifdef WITH_LOGIND
                 QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, "CanSuspend");
 #else
@@ -169,20 +168,22 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
                 QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
 
-                if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+                if(dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1)
 #ifdef WITH_LOGIND
                     maySuspend = ("yes" == dbusReply[0].toString());
 #else
                     maySuspend = dbusReply[0].toVariant().value.toBool();
 #endif
-                else {
+                else
+                {
                     maySuspend = false;
                     kdDebug() << "[dbus/upower] CanSuspend: " << dbusConnection.lastError().message() << "\n";
                 }
             }
 
             // can hibernate?
-            if( mayHibernate ) {
+            if(mayHibernate)
+            {
 #ifdef WITH_LOGIND
                 QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, "CanHibernate");
 #else
@@ -192,44 +193,44 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
                 QDBusMessage dbusReply = dbusConnection.sendWithReply(dbusMessage);
 
-                if( dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1 )
+                if(dbusReply.type() == QDBusMessage::ReplyMessage && dbusReply.count() == 1)
 #ifdef WITH_LOGIND
                     mayHibernate = ("yes" == dbusReply[0].toString());
 #else
                     mayHibernate = dbusReply[0].toVariant().value.toBool();
 #endif
-                else {
+                else
+                {
                     mayHibernate = false;
                     kdDebug() << "[dbus/upower] CanHibernate: " << dbusConnection.lastError().message() << "\n";
                 }
             }
-
-        } else { // cannot connect to D-Bus
+        }
+        else
+        { // cannot connect to D-Bus
 
             maySuspend = mayHibernate = false;
             kdDebug() << "[dbus] " << dbusConnection.lastError().message() << "\n";
-
         }
     }
 
-    if (!(mayShutdown || maySuspend || mayHibernate)) {
-        if (sdtype != KApplication::ShutdownTypeNone &&
-            sdtype != KApplication::ShutdownTypeDefault &&
-            logoutConfirmed)
+    if(!(mayShutdown || maySuspend || mayHibernate))
+    {
+        if(sdtype != KApplication::ShutdownTypeNone && sdtype != KApplication::ShutdownTypeDefault && logoutConfirmed)
             return; /* unsupported fast shutdown */
         sdtype = KApplication::ShutdownTypeNone;
-    } else if (sdtype == KApplication::ShutdownTypeDefault)
-        sdtype = (KApplication::ShutdownType)
-                 config->readNumEntry( "shutdownType", (int)KApplication::ShutdownTypeNone );
-    if (sdmode == KApplication::ShutdownModeDefault)
+    }
+    else if(sdtype == KApplication::ShutdownTypeDefault)
+        sdtype = (KApplication::ShutdownType)config->readNumEntry("shutdownType", (int)KApplication::ShutdownTypeNone);
+    if(sdmode == KApplication::ShutdownModeDefault)
         sdmode = KApplication::ShutdownModeInteractive;
 
     dialogActive = true;
     QString bopt;
-    if ( !logoutConfirmed ) {
+    if(!logoutConfirmed)
+    {
         KSMShutdownFeedback::start(); // make the screen gray
-        logoutConfirmed =
-            KSMShutdownDlg::confirmShutdown( mayShutdown, maySuspend, mayHibernate, sdtype, bopt );
+        logoutConfirmed = KSMShutdownDlg::confirmShutdown(mayShutdown, maySuspend, mayHibernate, sdtype, bopt);
         // ###### We can't make the screen remain gray while talking to the apps,
         // because this prevents interaction ("do you want to save", etc.)
         // TODO: turn the feedback widget into a list of apps to be closed,
@@ -237,9 +238,10 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
         KSMShutdownFeedback::stop(); // make the screen become normal again
     }
 
-    if ( logoutConfirmed && ( KApplication::ShutdownTypeSuspend == sdtype || KApplication::ShutdownTypeHibernate == sdtype ) ) {
+    if(logoutConfirmed && (KApplication::ShutdownTypeSuspend == sdtype || KApplication::ShutdownTypeHibernate == sdtype))
+    {
 
-        QString operation = ( KApplication::ShutdownTypeSuspend == sdtype ? "Suspend" : "Hibernate" );
+        QString operation = (KApplication::ShutdownTypeSuspend == sdtype ? "Suspend" : "Hibernate");
         QDBusMessage dbusMessage = QDBusMessage::methodCall(DBUS_UPOWER_SERVICE, DBUS_UPOWER_PATH, DBUS_UPOWER_INTERFACE, operation);
 
 #ifdef WITH_LOGIND
@@ -249,39 +251,44 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
         // we need reply only to catch errors
         dbusConnection.sendWithReply(dbusMessage);
 
-        if( dbusConnection.lastError().type() != 0 ) {
+        if(dbusConnection.lastError().type() != 0)
+        {
             QString error = dbusConnection.lastError().message();
-            if( KApplication::ShutdownTypeSuspend == sdtype )
+            if(KApplication::ShutdownTypeSuspend == sdtype)
                 KMessageBox::error(0, i18n("Unable to suspend the machine.\nReason: %1").arg(error), i18n("Suspend error"));
             else
                 KMessageBox::error(0, i18n("Unable to hibernate the machine.\nReason: %1").arg(error), i18n("Hibernate error"));
-        } else if( lockBeforeSuspendHibernate ) {
+        }
+        else if(lockBeforeSuspendHibernate)
+        {
             // NOTE: we have locking there because we won't lock the desktop
             //       in case of suspend/hibernate error
             DCOPRef("kdesktop", "KScreensaverIface").send("lock");
         }
+    }
+    else if(logoutConfirmed)
+    {
 
-    } else if ( logoutConfirmed ) {
-
-	shutdownType = sdtype;
-	shutdownMode = sdmode;
-	bootOption = bopt;
+        shutdownType = sdtype;
+        shutdownMode = sdmode;
+        bootOption = bopt;
 
         // shall we save the session on logout?
-        saveSession = ( config->readEntry( "loginMode", "restorePreviousLogout" ) == "restorePreviousLogout" );
+        saveSession = (config->readEntry("loginMode", "restorePreviousLogout") == "restorePreviousLogout");
 
-        if ( saveSession )
+        if(saveSession)
             sessionGroup = QString("Session: ") + SESSION_PREVIOUS_LOGOUT;
 
         // Set the real desktop background to black so that exit looks
         // clean regardless of what was on "our" desktop.
-        kapp->desktop()->setBackgroundColor( Qt::black );
+        kapp->desktop()->setBackgroundColor(Qt::black);
         state = Shutdown;
         wmPhase1WaitingCount = 0;
-        saveType = saveSession?SmSaveBoth:SmSaveGlobal;
-	performLegacySessionSave();
+        saveType = saveSession ? SmSaveBoth : SmSaveGlobal;
+        performLegacySessionSave();
         startProtection();
-        for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
+        for(KSMClient *c = clients.first(); c; c = clients.next())
+        {
             c->resetState();
             // Whoever came with the idea of phase 2 got it backwards
             // unfortunately. Window manager should be the very first
@@ -297,19 +304,18 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
             // before others a chance to change anything.
             // KWin will check if the session manager is ksmserver,
             // and if yes it will save in phase 1 instead of phase 2.
-            if( isWM( c )) {
+            if(isWM(c))
+            {
                 ++wmPhase1WaitingCount;
-                SmsSaveYourself( c->connection(), saveType,
-                             true, SmInteractStyleAny, false );
+                SmsSaveYourself(c->connection(), saveType, true, SmInteractStyleAny, false);
             }
-
         }
-        if( wmPhase1WaitingCount == 0 ) { // no WM, simply start them all
-            for ( KSMClient* c = clients.first(); c; c = clients.next() )
-                SmsSaveYourself( c->connection(), saveType,
-                             true, SmInteractStyleAny, false );
+        if(wmPhase1WaitingCount == 0)
+        { // no WM, simply start them all
+            for(KSMClient *c = clients.first(); c; c = clients.next())
+                SmsSaveYourself(c->connection(), saveType, true, SmInteractStyleAny, false);
         }
-        if ( clients.isEmpty() )
+        if(clients.isEmpty())
             completeShutdownOrCheckpoint();
     }
     dialogActive = false;
@@ -317,15 +323,15 @@ void KSMServer::shutdown( KApplication::ShutdownConfirm confirm,
 
 void KSMServer::pendingShutdownTimeout()
 {
-    shutdown( pendingShutdown_confirm, pendingShutdown_sdtype, pendingShutdown_sdmode );
+    shutdown(pendingShutdown_confirm, pendingShutdown_sdtype, pendingShutdown_sdmode);
 }
 
 void KSMServer::saveCurrentSession()
 {
-    if ( state != Idle || dialogActive )
+    if(state != Idle || dialogActive)
         return;
 
-    if ( currentSession().isEmpty() || currentSession() == SESSION_PREVIOUS_LOGOUT )
+    if(currentSession().isEmpty() || currentSession() == SESSION_PREVIOUS_LOGOUT)
         sessionGroup = QString("Session: ") + SESSION_BY_USER;
 
     state = Checkpoint;
@@ -333,46 +339,53 @@ void KSMServer::saveCurrentSession()
     saveType = SmSaveLocal;
     saveSession = true;
     performLegacySessionSave();
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
         c->resetState();
-        if( isWM( c )) {
+        if(isWM(c))
+        {
             ++wmPhase1WaitingCount;
-            SmsSaveYourself( c->connection(), saveType, false, SmInteractStyleNone, false );
+            SmsSaveYourself(c->connection(), saveType, false, SmInteractStyleNone, false);
         }
     }
-    if( wmPhase1WaitingCount == 0 ) {
-        for ( KSMClient* c = clients.first(); c; c = clients.next() )
-            SmsSaveYourself( c->connection(), saveType, false, SmInteractStyleNone, false );
+    if(wmPhase1WaitingCount == 0)
+    {
+        for(KSMClient *c = clients.first(); c; c = clients.next())
+            SmsSaveYourself(c->connection(), saveType, false, SmInteractStyleNone, false);
     }
-    if ( clients.isEmpty() )
+    if(clients.isEmpty())
         completeShutdownOrCheckpoint();
 }
 
-void KSMServer::saveCurrentSessionAs( QString session )
+void KSMServer::saveCurrentSessionAs(QString session)
 {
-    if ( state != Idle || dialogActive )
+    if(state != Idle || dialogActive)
         return;
     sessionGroup = "Session: " + session;
     saveCurrentSession();
 }
 
 // callbacks
-void KSMServer::saveYourselfDone( KSMClient* client, bool success )
+void KSMServer::saveYourselfDone(KSMClient *client, bool success)
 {
-    if ( state == Idle ) {
+    if(state == Idle)
+    {
         // State saving when it's not shutdown or checkpoint. Probably
         // a shutdown was cancelled and the client is finished saving
         // only now. Discard the saved state in order to avoid
         // the saved data building up.
         QStringList discard = client->discardCommand();
-        if( !discard.isEmpty())
-            executeCommand( discard );
+        if(!discard.isEmpty())
+            executeCommand(discard);
         return;
     }
-    if ( success ) {
+    if(success)
+    {
         client->saveYourselfDone = true;
         completeShutdownOrCheckpoint();
-    } else {
+    }
+    else
+    {
         // fake success to make KDE's logout not block with broken
         // apps. A perfect ksmserver would display a warning box at
         // the very end.
@@ -380,92 +393,101 @@ void KSMServer::saveYourselfDone( KSMClient* client, bool success )
         completeShutdownOrCheckpoint();
     }
     startProtection();
-    if( isWM( client ) && !client->wasPhase2 && wmPhase1WaitingCount > 0 ) {
+    if(isWM(client) && !client->wasPhase2 && wmPhase1WaitingCount > 0)
+    {
         --wmPhase1WaitingCount;
         // WM finished its phase1, save the rest
-        if( wmPhase1WaitingCount == 0 ) {
-            for ( KSMClient* c = clients.first(); c; c = clients.next() )
-                if( !isWM( c ))
-                    SmsSaveYourself( c->connection(), saveType, saveType != SmSaveLocal,
-                        saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone,
-                        false );
+        if(wmPhase1WaitingCount == 0)
+        {
+            for(KSMClient *c = clients.first(); c; c = clients.next())
+                if(!isWM(c))
+                    SmsSaveYourself(c->connection(), saveType, saveType != SmSaveLocal,
+                                    saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone, false);
         }
     }
 }
 
-void KSMServer::interactRequest( KSMClient* client, int /*dialogType*/ )
+void KSMServer::interactRequest(KSMClient *client, int /*dialogType*/)
 {
-    if ( state == Shutdown )
+    if(state == Shutdown)
         client->pendingInteraction = true;
     else
-        SmsInteract( client->connection() );
+        SmsInteract(client->connection());
 
     handlePendingInteractions();
 }
 
-void KSMServer::interactDone( KSMClient* client, bool cancelShutdown_ )
+void KSMServer::interactDone(KSMClient *client, bool cancelShutdown_)
 {
-    if ( client != clientInteracting )
+    if(client != clientInteracting)
         return; // should not happen
     clientInteracting = 0;
-    if ( cancelShutdown_ )
-        cancelShutdown( client );
+    if(cancelShutdown_)
+        cancelShutdown(client);
     else
         handlePendingInteractions();
 }
 
 
-void KSMServer::phase2Request( KSMClient* client )
+void KSMServer::phase2Request(KSMClient *client)
 {
     client->waitForPhase2 = true;
     client->wasPhase2 = true;
     completeShutdownOrCheckpoint();
-    if( isWM( client ) && wmPhase1WaitingCount > 0 ) {
+    if(isWM(client) && wmPhase1WaitingCount > 0)
+    {
         --wmPhase1WaitingCount;
         // WM finished its phase1 and requests phase2, save the rest
-        if( wmPhase1WaitingCount == 0 ) {
-            for ( KSMClient* c = clients.first(); c; c = clients.next() )
-                if( !isWM( c ))
-                    SmsSaveYourself( c->connection(), saveType, saveType != SmSaveLocal,
-                        saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone,
-                        false );
+        if(wmPhase1WaitingCount == 0)
+        {
+            for(KSMClient *c = clients.first(); c; c = clients.next())
+                if(!isWM(c))
+                    SmsSaveYourself(c->connection(), saveType, saveType != SmSaveLocal,
+                                    saveType != SmSaveLocal ? SmInteractStyleAny : SmInteractStyleNone, false);
         }
     }
 }
 
 void KSMServer::handlePendingInteractions()
 {
-    if ( clientInteracting )
+    if(clientInteracting)
         return;
 
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if ( c->pendingInteraction ) {
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(c->pendingInteraction)
+        {
             clientInteracting = c;
             c->pendingInteraction = false;
             break;
         }
     }
-    if ( clientInteracting ) {
+    if(clientInteracting)
+    {
         endProtection();
-        SmsInteract( clientInteracting->connection() );
-    } else {
+        SmsInteract(clientInteracting->connection());
+    }
+    else
+    {
         startProtection();
     }
 }
 
 
-void KSMServer::cancelShutdown( KSMClient* c )
+void KSMServer::cancelShutdown(KSMClient *c)
 {
-    kdDebug( 1218 ) << "Client " << c->program() << " (" << c->clientId() << ") canceled shutdown." << endl;
-    KNotifyClient::event( 0, "cancellogout", i18n( "Logout canceled by '%1'" ).arg( c->program()));
+    kdDebug(1218) << "Client " << c->program() << " (" << c->clientId() << ") canceled shutdown." << endl;
+    KNotifyClient::event(0, "cancellogout", i18n("Logout canceled by '%1'").arg(c->program()));
     clientInteracting = 0;
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        SmsShutdownCancelled( c->connection() );
-        if( c->saveYourselfDone ) {
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        SmsShutdownCancelled(c->connection());
+        if(c->saveYourselfDone)
+        {
             // Discard also saved state.
             QStringList discard = c->discardCommand();
-            if( !discard.isEmpty())
-                executeCommand( discard );
+            if(!discard.isEmpty())
+                executeCommand(discard);
         }
     }
     state = Idle;
@@ -473,7 +495,7 @@ void KSMServer::cancelShutdown( KSMClient* c )
 
 void KSMServer::startProtection()
 {
-    protectionTimer.start( 10000, true );
+    protectionTimer.start(10000, true);
 }
 
 void KSMServer::endProtection()
@@ -487,12 +509,14 @@ void KSMServer::endProtection()
  */
 void KSMServer::protectionTimeout()
 {
-    if ( ( state != Shutdown && state != Checkpoint ) || clientInteracting )
+    if((state != Shutdown && state != Checkpoint) || clientInteracting)
         return;
 
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if ( !c->saveYourselfDone && !c->waitForPhase2 ) {
-            kdDebug( 1218 ) << "protectionTimeout: client " << c->program() << "(" << c->clientId() << ")" << endl;
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(!c->saveYourselfDone && !c->waitForPhase2)
+        {
+            kdDebug(1218) << "protectionTimeout: client " << c->program() << "(" << c->clientId() << ")" << endl;
             c->saveYourselfDone = true;
         }
     }
@@ -502,56 +526,63 @@ void KSMServer::protectionTimeout()
 
 void KSMServer::completeShutdownOrCheckpoint()
 {
-    if ( state != Shutdown && state != Checkpoint )
+    if(state != Shutdown && state != Checkpoint)
         return;
 
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if ( !c->saveYourselfDone && !c->waitForPhase2 )
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(!c->saveYourselfDone && !c->waitForPhase2)
             return; // not done yet
     }
 
     // do phase 2
     bool waitForPhase2 = false;
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if ( !c->saveYourselfDone && c->waitForPhase2 ) {
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(!c->saveYourselfDone && c->waitForPhase2)
+        {
             c->waitForPhase2 = false;
-            SmsSaveYourselfPhase2( c->connection() );
+            SmsSaveYourselfPhase2(c->connection());
             waitForPhase2 = true;
         }
     }
-    if ( waitForPhase2 )
+    if(waitForPhase2)
         return;
 
-    if ( saveSession )
+    if(saveSession)
         storeSession();
     else
         discardSession();
 
-    if ( state == Shutdown ) {
+    if(state == Shutdown)
+    {
         bool waitForKNotify = true;
-        if( !kapp->dcopClient()->connectDCOPSignal( "knotify", "",
-            "notifySignal(QString,QString,QString,QString,QString,int,int,int,int)",
-            "ksmserver", "notifySlot(QString,QString,QString,QString,QString,int,int,int,int)", false )) {
+        if(!kapp->dcopClient()->connectDCOPSignal("knotify", "", "notifySignal(QString,QString,QString,QString,QString,int,int,int,int)", "ksmserver",
+                                                  "notifySlot(QString,QString,QString,QString,QString,int,int,int,int)", false))
+        {
             waitForKNotify = false;
         }
-        if( !kapp->dcopClient()->connectDCOPSignal( "knotify", "",
-            "playingFinished(int,int)",
-            "ksmserver", "logoutSoundFinished(int,int)", false )) {
+        if(!kapp->dcopClient()->connectDCOPSignal("knotify", "", "playingFinished(int,int)", "ksmserver", "logoutSoundFinished(int,int)", false))
+        {
             waitForKNotify = false;
         }
         // event() can return -1 if KNotifyClient short-circuits and avoids KNotify
-        logoutSoundEvent = KNotifyClient::event( 0, "exitkde" ); // KDE says good bye
-        if( logoutSoundEvent <= 0 )
+        logoutSoundEvent = KNotifyClient::event(0, "exitkde"); // KDE says good bye
+        if(logoutSoundEvent <= 0)
             waitForKNotify = false;
-        if( waitForKNotify ) {
+        if(waitForKNotify)
+        {
             state = WaitingForKNotify;
-            knotifyTimeoutTimer.start( 20000, true );
+            knotifyTimeoutTimer.start(20000, true);
             return;
         }
         startKilling();
-    } else if ( state == Checkpoint ) {
-        for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-            SmsSaveComplete( c->connection());
+    }
+    else if(state == Checkpoint)
+    {
+        for(KSMClient *c = clients.first(); c; c = clients.next())
+        {
+            SmsSaveComplete(c->connection());
         }
         state = Idle;
     }
@@ -562,31 +593,32 @@ void KSMServer::startKilling()
     knotifyTimeoutTimer.stop();
     // kill all clients
     state = Killing;
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if( isWM( c )) // kill the WM as the last one in order to reduce flicker
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(isWM(c)) // kill the WM as the last one in order to reduce flicker
             continue;
-        kdDebug( 1218 ) << "completeShutdown: client " << c->program() << "(" << c->clientId() << ")" << endl;
-        SmsDie( c->connection() );
+        kdDebug(1218) << "completeShutdown: client " << c->program() << "(" << c->clientId() << ")" << endl;
+        SmsDie(c->connection());
     }
 
-    kdDebug( 1218 ) << " We killed all clients. We have now clients.count()=" <<
-       clients.count() << endl;
+    kdDebug(1218) << " We killed all clients. We have now clients.count()=" << clients.count() << endl;
     completeKilling();
-    QTimer::singleShot( 10000, this, SLOT( timeoutQuit() ) );
+    QTimer::singleShot(10000, this, SLOT(timeoutQuit()));
 }
 
 void KSMServer::completeKilling()
 {
-    kdDebug( 1218 ) << "KSMServer::completeKilling clients.count()=" <<
-        clients.count() << endl;
-    if( state == Killing ) {
+    kdDebug(1218) << "KSMServer::completeKilling clients.count()=" << clients.count() << endl;
+    if(state == Killing)
+    {
         bool wait = false;
-        for( KSMClient* c = clients.first(); c; c = clients.next()) {
-            if( isWM( c ))
+        for(KSMClient *c = clients.first(); c; c = clients.next())
+        {
+            if(isWM(c))
                 continue;
             wait = true; // still waiting for clients to go away
         }
-        if( wait )
+        if(wait)
             return;
         killWM();
     }
@@ -596,16 +628,19 @@ void KSMServer::killWM()
 {
     state = KillingWM;
     bool iswm = false;
-    for ( KSMClient* c = clients.first(); c; c = clients.next() ) {
-        if( isWM( c )) {
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        if(isWM(c))
+        {
             iswm = true;
-            kdDebug( 1218 ) << "killWM: client " << c->program() << "(" << c->clientId() << ")" << endl;
-            SmsDie( c->connection() );
+            kdDebug(1218) << "killWM: client " << c->program() << "(" << c->clientId() << ")" << endl;
+            SmsDie(c->connection());
         }
     }
-    if( iswm ) {
+    if(iswm)
+    {
         completeKillingWM();
-        QTimer::singleShot( 5000, this, SLOT( timeoutWMQuit() ) );
+        QTimer::singleShot(5000, this, SLOT(timeoutWMQuit()));
     }
     else
         killingCompleted();
@@ -613,10 +648,10 @@ void KSMServer::killWM()
 
 void KSMServer::completeKillingWM()
 {
-    kdDebug( 1218 ) << "KSMServer::completeKillingWM clients.count()=" <<
-        clients.count() << endl;
-    if( state == KillingWM ) {
-        if( clients.isEmpty())
+    kdDebug(1218) << "KSMServer::completeKillingWM clients.count()=" << clients.count() << endl;
+    if(state == KillingWM)
+    {
+        if(clients.isEmpty())
             killingCompleted();
     }
 }
@@ -628,47 +663,49 @@ void KSMServer::killingCompleted()
 }
 
 // called when KNotify performs notification for logout (not when sound is finished though)
-void KSMServer::notifySlot(QString event ,QString app,QString,QString,QString,int present,int,int,int)
+void KSMServer::notifySlot(QString event, QString app, QString, QString, QString, int present, int, int, int)
 {
-    if( state != WaitingForKNotify )
+    if(state != WaitingForKNotify)
         return;
-    if( event != "exitkde" || app != "ksmserver" )
+    if(event != "exitkde" || app != "ksmserver")
         return;
-    if( present & KNotifyClient::Sound ) // logoutSoundFinished() will be called
+    if(present & KNotifyClient::Sound) // logoutSoundFinished() will be called
         return;
     startKilling();
 }
 
 // This is stupid. The normal DCOP signal connected to notifySlot() above should be simply
 // emitted in KNotify only after the sound is finished playing.
-void KSMServer::logoutSoundFinished( int event, int )
+void KSMServer::logoutSoundFinished(int event, int)
 {
-    if( state != WaitingForKNotify )
+    if(state != WaitingForKNotify)
         return;
-    if( event != logoutSoundEvent )
+    if(event != logoutSoundEvent)
         return;
     startKilling();
 }
 
 void KSMServer::knotifyTimeout()
 {
-    if( state != WaitingForKNotify )
+    if(state != WaitingForKNotify)
         return;
     startKilling();
 }
 
 void KSMServer::timeoutQuit()
 {
-    for (KSMClient *c = clients.first(); c; c = clients.next()) {
-        kdWarning( 1218 ) << "SmsDie timeout, client " << c->program() << "(" << c->clientId() << ")" << endl;
+    for(KSMClient *c = clients.first(); c; c = clients.next())
+    {
+        kdWarning(1218) << "SmsDie timeout, client " << c->program() << "(" << c->clientId() << ")" << endl;
     }
     killWM();
 }
 
 void KSMServer::timeoutWMQuit()
 {
-    if( state == KillingWM ) {
-        kdWarning( 1218 ) << "SmsDie WM timeout" << endl;
+    if(state == KillingWM)
+    {
+        kdWarning(1218) << "SmsDie WM timeout" << endl;
     }
     killingCompleted();
 }

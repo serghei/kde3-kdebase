@@ -26,21 +26,19 @@
 class SMServerConfigImpl;
 
 
-class SMServerConfig : public KCModule
-{
-  Q_OBJECT
+class SMServerConfig : public KCModule {
+    Q_OBJECT
 
 public:
-  SMServerConfig( QWidget *parent=0, const char* name=0, const QStringList &list=QStringList() );
+    SMServerConfig(QWidget *parent = 0, const char *name = 0, const QStringList &list = QStringList());
 
-  void load();
-  void load(bool useDefaults);
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
 private:
-  SMServerConfigImpl* dialog;
-
+    SMServerConfigImpl *dialog;
 };
 
 #endif

@@ -28,46 +28,56 @@
 class KonqMainWindow;
 class KonqView;
 
-class KonqRun : public KParts::BrowserRun
-{
-  Q_OBJECT
+class KonqRun : public KParts::BrowserRun {
+    Q_OBJECT
 public:
-  /**
-   * Create a KonqRun instance, associated to the main view and an
-   * optionnal child view.
-   */
-  KonqRun( KonqMainWindow* mainWindow, KonqView *childView,
-           const KURL &url, const KonqOpenURLRequest & req = KonqOpenURLRequest(),
-           bool trustedSource = false );
+    /**
+     * Create a KonqRun instance, associated to the main view and an
+     * optionnal child view.
+     */
+    KonqRun(KonqMainWindow *mainWindow, KonqView *childView, const KURL &url, const KonqOpenURLRequest &req = KonqOpenURLRequest(),
+            bool trustedSource = false);
 
-  virtual ~KonqRun();
+    virtual ~KonqRun();
 
-  /**
-   * Returns true if we found the servicetype for the given url.
-   */
-  bool foundMimeType() const { return m_bFoundMimeType; }
+    /**
+     * Returns true if we found the servicetype for the given url.
+     */
+    bool foundMimeType() const
+    {
+        return m_bFoundMimeType;
+    }
 
-  KonqView *childView() const { return m_pView; }
+    KonqView *childView() const
+    {
+        return m_pView;
+    }
 
-  const QString & typedURL() const { return m_req.typedURL; }
+    const QString &typedURL() const
+    {
+        return m_req.typedURL;
+    }
 
-  KURL mailtoURL() const { return m_mailto; }
+    KURL mailtoURL() const
+    {
+        return m_mailto;
+    }
 
 protected:
-  virtual void foundMimeType( const QString & _type );
-  virtual void handleError( KIO::Job * job );
-  virtual void init();
-  virtual void scanFile();
+    virtual void foundMimeType(const QString &_type);
+    virtual void handleError(KIO::Job *job);
+    virtual void init();
+    virtual void scanFile();
 
 protected slots:
-  void slotRedirection( KIO::Job *, const KURL& );
+    void slotRedirection(KIO::Job *, const KURL &);
 
 protected:
-  QGuardedPtr<KonqMainWindow> m_pMainWindow;
-  QGuardedPtr<KonqView> m_pView;
-  bool m_bFoundMimeType;
-  KonqOpenURLRequest m_req;
-  KURL m_mailto;
+    QGuardedPtr< KonqMainWindow > m_pMainWindow;
+    QGuardedPtr< KonqView > m_pView;
+    bool m_bFoundMimeType;
+    KonqOpenURLRequest m_req;
+    KURL m_mailto;
 };
 
 #endif

@@ -33,32 +33,34 @@ class KWinModule;
 
 class SwallowApp;
 
-typedef struct _SwallowCommand {
+typedef struct _SwallowCommand
+{
     QString cmdline;
     QString title;
 } SwallowCommand;
 
-typedef QPtrList<SwallowCommand> SwallowCommandList;
-typedef QPtrListIterator<SwallowCommand> SwallowCommandListIterator;
-typedef QPtrList<SwallowApp> SwallowAppList;
+typedef QPtrList< SwallowCommand > SwallowCommandList;
+typedef QPtrListIterator< SwallowCommand > SwallowCommandListIterator;
+typedef QPtrList< SwallowApp > SwallowAppList;
 
-class SwallowApplet : public KPanelApplet
-{
+class SwallowApplet : public KPanelApplet {
     Q_OBJECT
 
 public:
-    SwallowApplet( const QString& configFile, QWidget *parent,
-                          const char *name = 0L );
+    SwallowApplet(const QString &configFile, QWidget *parent, const char *name = 0L);
     ~SwallowApplet();
 
     // returns 0L if we don't have a SwallowApplet object yet,
     // but who cares
-    static KWinModule * winModule() { return wModule; }
-    static void removeApplet( SwallowApp * );
+    static KWinModule *winModule()
+    {
+        return wModule;
+    }
+    static void removeApplet(SwallowApp *);
 
 public: // for KPanelApplet
-    int widthForHeight( int w );
-    int heightForWidth( int h );
+    int widthForHeight(int w);
+    int heightForWidth(int h);
 
     void windowAdded(WId win);
     void processExited(KProcess *proc);
@@ -67,12 +69,12 @@ public slots:
     virtual void preferences();
 
 private slots:
-    void embedded( SwallowApp * );
+    void embedded(SwallowApp *);
 
 private:
     void layoutApps();
-    SwallowCommandList* readConfig();
-    void createApps( SwallowCommandList * );
+    SwallowCommandList *readConfig();
+    void createApps(SwallowCommandList *);
 
 
     static SwallowApplet *self;
@@ -80,35 +82,34 @@ private:
     static SwallowAppList *embeddedList;
     static KWinModule *wModule;
 
-    SwallowCommandList * m_swcList;
+    SwallowCommandList *m_swcList;
     QBoxLayout *m_layout;
-
 };
 
 
-class SwallowApp : public QXEmbed
-{
+class SwallowApp : public QXEmbed {
     Q_OBJECT
-	
+
 public:
-    SwallowApp( const SwallowCommand * swc, QWidget* parent = 0,
-		const char* name = 0);
+    SwallowApp(const SwallowCommand *swc, QWidget *parent = 0, const char *name = 0);
     ~SwallowApp();
 
-    float sizeRatio() const { return wh_ratio; }
+    float sizeRatio() const
+    {
+        return wh_ratio;
+    }
 
 signals:
-    void embedded( SwallowApp * );
+    void embedded(SwallowApp *);
 
 protected slots:
     void windowAdded(WId win);
     void processExited(KProcess *proc);
 
 private:
-    KProcess   	*process;
-    QString  	winTitle;
-    float 	wh_ratio;
-
+    KProcess *process;
+    QString winTitle;
+    float wh_ratio;
 };
 
 #endif // __swallow_h__

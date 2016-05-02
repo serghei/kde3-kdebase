@@ -11,120 +11,123 @@
 #include <klistview.h>
 class QDragObject;
 
-class KDCOPListView : public KListView
-{
-  Q_OBJECT
+class KDCOPListView : public KListView {
+    Q_OBJECT
 
-  public:
-  	KDCOPListView ( QWidget * parent = 0, const char * name = 0 );
-	virtual ~KDCOPListView();
-  	QDragObject *dragObject();
-	void setMode(const QString &mode);
-	QString getCurrentCode() const;
+public:
+    KDCOPListView(QWidget *parent = 0, const char *name = 0);
+    virtual ~KDCOPListView();
+    QDragObject *dragObject();
+    void setMode(const QString &mode);
+    QString getCurrentCode() const;
 
-  private:
-  	QString encode(QListViewItem *code);
-	QString mode;
-
+private:
+    QString encode(QListViewItem *code);
+    QString mode;
 };
 
-class DCOPBrowserItem : public QListViewItem
-{
-  public:
+class DCOPBrowserItem : public QListViewItem {
+public:
+    enum Type
+    {
+        Application,
+        Interface,
+        Function
+    };
 
-    enum Type { Application, Interface, Function };
+    DCOPBrowserItem(QListView *parent, Type type);
+    DCOPBrowserItem(QListViewItem *parent, Type type);
 
-    DCOPBrowserItem(QListView * parent, Type type);
-    DCOPBrowserItem(QListViewItem * parent, Type type);
-
-    virtual ~DCOPBrowserItem() {}
+    virtual ~DCOPBrowserItem()
+    {
+    }
 
     Type type() const;
 
-  private:
-
+private:
     Type type_;
 };
 
-class DCOPBrowserApplicationItem : public QObject, public DCOPBrowserItem
-{
- Q_OBJECT
-  public:
+class DCOPBrowserApplicationItem : public QObject, public DCOPBrowserItem {
+    Q_OBJECT
+public:
+    DCOPBrowserApplicationItem(QListView *parent, const QCString &app);
+    virtual ~DCOPBrowserApplicationItem()
+    {
+    }
 
-    DCOPBrowserApplicationItem(QListView * parent, const QCString & app);
-    virtual ~DCOPBrowserApplicationItem() {}
-
-    QCString app() const { return app_; }
+    QCString app() const
+    {
+        return app_;
+    }
 
     virtual void setOpen(bool o);
 
-  protected:
-
+protected:
     virtual void populate();
 
-  private:
-
+private:
     QCString app_;
-  private slots:
-  /**
-   * Theses two slots are used to get the icon of the application
-   */
-    void retreiveIcon(int callId, const QCString& replyType, const QByteArray &replyData);
-	void slotGotWindowName(int callId, const QCString& replyType, const QByteArray &replyData);
+private slots:
+    /**
+     * Theses two slots are used to get the icon of the application
+     */
+    void retreiveIcon(int callId, const QCString &replyType, const QByteArray &replyData);
+    void slotGotWindowName(int callId, const QCString &replyType, const QByteArray &replyData);
 };
 
-class DCOPBrowserInterfaceItem : public QObject, public DCOPBrowserItem
-{
-  public:
+class DCOPBrowserInterfaceItem : public QObject, public DCOPBrowserItem {
+public:
+    DCOPBrowserInterfaceItem(DCOPBrowserApplicationItem *parent, const QCString &app, const QCString &object, bool def);
 
-    DCOPBrowserInterfaceItem
-    (
-     DCOPBrowserApplicationItem * parent,
-     const QCString & app,
-     const QCString & object,
-     bool def
-    );
+    virtual ~DCOPBrowserInterfaceItem()
+    {
+    }
 
-    virtual ~DCOPBrowserInterfaceItem() {}
-
-    QCString app() const { return app_; }
-    QCString object() const { return object_; }
+    QCString app() const
+    {
+        return app_;
+    }
+    QCString object() const
+    {
+        return object_;
+    }
 
     virtual void setOpen(bool o);
 
-  protected:
-
+protected:
     virtual void populate();
 
-  private:
-
+private:
     QCString app_;
     QCString object_;
 };
 
 
-class DCOPBrowserFunctionItem : public DCOPBrowserItem
-{
-  public:
+class DCOPBrowserFunctionItem : public DCOPBrowserItem {
+public:
+    DCOPBrowserFunctionItem(DCOPBrowserInterfaceItem *parent, const QCString &app, const QCString &object, const QCString &function);
 
-    DCOPBrowserFunctionItem
-    (
-     DCOPBrowserInterfaceItem * parent,
-     const QCString & app,
-     const QCString & object,
-     const QCString & function
-    );
+    virtual ~DCOPBrowserFunctionItem()
+    {
+    }
 
-    virtual ~DCOPBrowserFunctionItem() {}
-
-    QCString app() const { return app_; }
-    QCString object() const { return object_; }
-    QCString function() const { return function_; }
+    QCString app() const
+    {
+        return app_;
+    }
+    QCString object() const
+    {
+        return object_;
+    }
+    QCString function() const
+    {
+        return function_;
+    }
 
     virtual void setOpen(bool o);
 
-  private:
-
+private:
     QCString app_;
     QCString object_;
     QCString function_;

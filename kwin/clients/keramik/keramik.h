@@ -34,165 +34,227 @@ class QSpacerItem;
 
 namespace Keramik {
 
-	enum TilePixmap  { TitleLeft=0, TitleCenter, TitleRight,
-	                   CaptionSmallLeft, CaptionSmallCenter, CaptionSmallRight,
-	                   CaptionLargeLeft, CaptionLargeCenter, CaptionLargeRight,
-					   GrabBarLeft, GrabBarCenter, GrabBarRight,
-	                   BorderLeft, BorderRight, NumTiles };
+enum TilePixmap
+{
+    TitleLeft = 0,
+    TitleCenter,
+    TitleRight,
+    CaptionSmallLeft,
+    CaptionSmallCenter,
+    CaptionSmallRight,
+    CaptionLargeLeft,
+    CaptionLargeCenter,
+    CaptionLargeRight,
+    GrabBarLeft,
+    GrabBarCenter,
+    GrabBarRight,
+    BorderLeft,
+    BorderRight,
+    NumTiles
+};
 
-	enum Button      { MenuButton=0, OnAllDesktopsButton, HelpButton, MinButton,
-	                   MaxButton, CloseButton, AboveButton, BelowButton, ShadeButton,
-	                   NumButtons };
+enum Button
+{
+    MenuButton = 0,
+    OnAllDesktopsButton,
+    HelpButton,
+    MinButton,
+    MaxButton,
+    CloseButton,
+    AboveButton,
+    BelowButton,
+    ShadeButton,
+    NumButtons
+};
 
-	enum ButtonDeco  { Menu=0, OnAllDesktops, NotOnAllDesktops, Help, Minimize, Maximize,
-	                   Restore, Close, AboveOn, AboveOff, BelowOn, BelowOff, ShadeOn, ShadeOff,
-                           NumButtonDecos };
+enum ButtonDeco
+{
+    Menu = 0,
+    OnAllDesktops,
+    NotOnAllDesktops,
+    Help,
+    Minimize,
+    Maximize,
+    Restore,
+    Close,
+    AboveOn,
+    AboveOff,
+    BelowOn,
+    BelowOff,
+    ShadeOn,
+    ShadeOff,
+    NumButtonDecos
+};
 
-	struct SettingsCache
-	{
-		bool largeGrabBars:1;
-		bool smallCaptionBubbles:1;
-	};
+struct SettingsCache
+{
+    bool largeGrabBars : 1;
+    bool smallCaptionBubbles : 1;
+};
 
-	class KeramikHandler : public KDecorationFactory
-	{
-		public:
-			KeramikHandler();
-			~KeramikHandler();
+class KeramikHandler : public KDecorationFactory {
+public:
+    KeramikHandler();
+    ~KeramikHandler();
 
-			virtual QValueList< BorderSize > borderSizes() const;
-			virtual bool reset( unsigned long changed );
-                        virtual KDecoration* createDecoration( KDecorationBridge* );
-			virtual bool supports( Ability ability );
+    virtual QValueList< BorderSize > borderSizes() const;
+    virtual bool reset(unsigned long changed);
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool supports(Ability ability);
 
-			bool showAppIcons() const        { return showIcons; }
-			bool useShadowedText() const     { return shadowedText; }
-			bool largeCaptionBubbles() const { return !smallCaptionBubbles; }
+    bool showAppIcons() const
+    {
+        return showIcons;
+    }
+    bool useShadowedText() const
+    {
+        return shadowedText;
+    }
+    bool largeCaptionBubbles() const
+    {
+        return !smallCaptionBubbles;
+    }
 
-			int titleBarHeight( bool large ) const {
-				return ( large ? activeTiles[CaptionLargeCenter]->height()
-						: activeTiles[CaptionSmallCenter]->height() );
-			}
+    int titleBarHeight(bool large) const
+    {
+        return (large ? activeTiles[CaptionLargeCenter]->height() : activeTiles[CaptionSmallCenter]->height());
+    }
 
-			int grabBarHeight() const
-				{ return activeTiles[GrabBarCenter]->height(); }
+    int grabBarHeight() const
+    {
+        return activeTiles[GrabBarCenter]->height();
+    }
 
-			const QPixmap *roundButton() const  { return titleButtonRound; }
-			const QPixmap *squareButton() const { return titleButtonSquare; }
-			const QBitmap *buttonDeco( ButtonDeco deco ) const
-				{ return buttonDecos[ deco ]; }
+    const QPixmap *roundButton() const
+    {
+        return titleButtonRound;
+    }
+    const QPixmap *squareButton() const
+    {
+        return titleButtonSquare;
+    }
+    const QBitmap *buttonDeco(ButtonDeco deco) const
+    {
+        return buttonDecos[deco];
+    }
 
-			inline const QPixmap *tile( TilePixmap tilePix, bool active ) const;
+    inline const QPixmap *tile(TilePixmap tilePix, bool active) const;
 
-		private:
-			void readConfig();
-			void createPixmaps();
-			void destroyPixmaps();
+private:
+    void readConfig();
+    void createPixmaps();
+    void destroyPixmaps();
 
-			void addWidth  (int width,  QPixmap *&pix, bool left, QPixmap *bottomPix);
-			void addHeight (int height, QPixmap *&pix);
-			void flip( QPixmap *&, QPixmap *& );
-			void pretile( QPixmap *&, int, Qt::Orientation );
-			QPixmap *composite( QImage *, QImage * );
-			QImage  *loadImage( const QString &, const QColor & );
-			QPixmap *loadPixmap( const QString &, const QColor & );
+    void addWidth(int width, QPixmap *&pix, bool left, QPixmap *bottomPix);
+    void addHeight(int height, QPixmap *&pix);
+    void flip(QPixmap *&, QPixmap *&);
+    void pretile(QPixmap *&, int, Qt::Orientation);
+    QPixmap *composite(QImage *, QImage *);
+    QImage *loadImage(const QString &, const QColor &);
+    QPixmap *loadPixmap(const QString &, const QColor &);
 
-			bool showIcons:1, shadowedText:1,
-				smallCaptionBubbles:1, largeGrabBars:1;
-			SettingsCache *settings_cache;
-			KeramikImageDb *imageDb;
+    bool showIcons : 1, shadowedText : 1, smallCaptionBubbles : 1, largeGrabBars : 1;
+    SettingsCache *settings_cache;
+    KeramikImageDb *imageDb;
 
-			QPixmap *activeTiles[ NumTiles ];
-			QPixmap *inactiveTiles[ NumTiles ];
-			QBitmap *buttonDecos[ NumButtonDecos ];
+    QPixmap *activeTiles[NumTiles];
+    QPixmap *inactiveTiles[NumTiles];
+    QBitmap *buttonDecos[NumButtonDecos];
 
-			QPixmap *titleButtonRound, *titleButtonSquare;
+    QPixmap *titleButtonRound, *titleButtonSquare;
 
-	}; // class KeramikHandler
+}; // class KeramikHandler
 
-	class KeramikClient;
-	class KeramikButton : public QButton
-	{
-		public:
-			KeramikButton( KeramikClient *, const char *, Button, const QString &, const int realizeBtns = LeftButton );
-			~KeramikButton();
+class KeramikClient;
+class KeramikButton : public QButton {
+public:
+    KeramikButton(KeramikClient *, const char *, Button, const QString &, const int realizeBtns = LeftButton);
+    ~KeramikButton();
 
-			ButtonState lastButton() const { return lastbutton; }
+    ButtonState lastButton() const
+    {
+        return lastbutton;
+    }
 
-		private:
-			void enterEvent( QEvent * );
-			void leaveEvent( QEvent * );
-			void mousePressEvent( QMouseEvent * );
-			void mouseReleaseEvent( QMouseEvent * );
-			void drawButton( QPainter * );
+private:
+    void enterEvent(QEvent *);
+    void leaveEvent(QEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    void drawButton(QPainter *);
 
-		private:
-			KeramikClient *client;
-			Button button;
-			bool hover;
-			ButtonState lastbutton;
-			int realizeButtons;
-	}; // class KeramikButton
+private:
+    KeramikClient *client;
+    Button button;
+    bool hover;
+    ButtonState lastbutton;
+    int realizeButtons;
+}; // class KeramikButton
 
 
-	class KeramikClient : public KDecoration
-	{
-		Q_OBJECT
+class KeramikClient : public KDecoration {
+    Q_OBJECT
 
-		public:
+public:
+    KeramikClient(KDecorationBridge *bridge, KDecorationFactory *factory);
+    ~KeramikClient();
+    virtual void init();
+    virtual void reset(unsigned long changed);
+    virtual Position mousePosition(const QPoint &p) const;
+    virtual void borders(int &left, int &right, int &top, int &bottom) const;
+    virtual void resize(const QSize &s);
+    virtual QSize minimumSize() const;
+    virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual void activeChange();
+    virtual void captionChange();
+    virtual void maximizeChange();
+    virtual void desktopChange();
+    virtual void shadeChange();
 
-			KeramikClient( KDecorationBridge* bridge, KDecorationFactory* factory );
-			~KeramikClient();
-                        virtual void init();
-			virtual void reset( unsigned long changed );
-			virtual Position mousePosition( const QPoint& p ) const;
-		    	virtual void borders( int& left, int& right, int& top, int& bottom ) const;
-			virtual void resize( const QSize& s );
-			virtual QSize minimumSize() const;
-			virtual bool eventFilter( QObject* o, QEvent* e );
-			virtual void activeChange();
-			virtual void captionChange();
-                        virtual void maximizeChange();
-                        virtual void desktopChange();
-                        virtual void shadeChange();
+private:
+    void createLayout();
+    void addButtons(QBoxLayout *, const QString &);
+    void updateMask(); // FRAME
+    void updateCaptionBuffer();
+    void iconChange();
+    void resizeEvent(QResizeEvent *);          // FRAME
+    void paintEvent(QPaintEvent *);            // FRAME
+    void mouseDoubleClickEvent(QMouseEvent *); // FRAME
+    void wheelEvent(QWheelEvent *);            // FRAME
+    int width() const
+    {
+        return widget()->width();
+    }
+    int height() const
+    {
+        return widget()->height();
+    }
 
-		private:
-			void createLayout();
-			void addButtons( QBoxLayout*, const QString & );
-			void updateMask(); // FRAME
-			void updateCaptionBuffer();
-			void iconChange();
-			void resizeEvent( QResizeEvent *); // FRAME
-			void paintEvent( QPaintEvent *); // FRAME
-			void mouseDoubleClickEvent( QMouseEvent * ); // FRAME
-			void wheelEvent( QWheelEvent *); //FRAME
-			int width() const { return widget()->width(); }
-			int height() const { return widget()->height(); }
+    void calculateCaptionRect();
 
-			void calculateCaptionRect();
+    inline bool maximizedVertical() const
+    {
+        return (maximizeMode() & MaximizeVertical);
+    }
 
-			inline bool maximizedVertical() const {
-				return ( maximizeMode() & MaximizeVertical );
-			}
+private slots:
+    void menuButtonPressed();
+    void slotMaximize();
+    void slotAbove();
+    void slotBelow();
+    void slotShade();
+    void keepAboveChange(bool);
+    void keepBelowChange(bool);
 
-		private slots:
-			void menuButtonPressed();
-			void slotMaximize();
-			void slotAbove();
-			void slotBelow();
-			void slotShade();
-			void keepAboveChange( bool );
-			void keepBelowChange( bool );
-
-		private:
-			QSpacerItem   *topSpacer, *titlebar;
-			KeramikButton *button[ NumButtons ];
-			QRect          captionRect;
-			QPixmap        captionBuffer;
-			QPixmap       *activeIcon, *inactiveIcon;
-			bool           captionBufferDirty:1, maskDirty:1;
-			bool           largeCaption:1, largeTitlebar:1;
-	}; // class KeramikClient
+private:
+    QSpacerItem *topSpacer, *titlebar;
+    KeramikButton *button[NumButtons];
+    QRect captionRect;
+    QPixmap captionBuffer;
+    QPixmap *activeIcon, *inactiveIcon;
+    bool captionBufferDirty : 1, maskDirty : 1;
+    bool largeCaption : 1, largeTitlebar : 1;
+}; // class KeramikClient
 
 } // namespace Keramik
 

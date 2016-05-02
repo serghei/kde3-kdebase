@@ -28,135 +28,149 @@
 #include <kurl.h>
 #include <libkonq_export.h>
 
-namespace KIO
-{
-  class Job;
+namespace KIO {
+class Job;
 }
 
 class KonqUndoJob;
 
 struct KonqBasicOperation
 {
-  typedef QValueStack<KonqBasicOperation> Stack;
+    typedef QValueStack< KonqBasicOperation > Stack;
 
-  KonqBasicOperation()
-  { m_valid = false; }
+    KonqBasicOperation()
+    {
+        m_valid = false;
+    }
 
-  bool m_valid;
-  bool m_directory;
-  bool m_renamed;
-  bool m_link;
-  KURL m_src;
-  KURL m_dst;
-  QString m_target;
+    bool m_valid;
+    bool m_directory;
+    bool m_renamed;
+    bool m_link;
+    KURL m_src;
+    KURL m_dst;
+    QString m_target;
 };
 
 struct KonqCommand
 {
-  typedef QValueStack<KonqCommand> Stack;
+    typedef QValueStack< KonqCommand > Stack;
 
-  enum Type { COPY, MOVE, LINK, MKDIR, TRASH };
+    enum Type
+    {
+        COPY,
+        MOVE,
+        LINK,
+        MKDIR,
+        TRASH
+    };
 
-  KonqCommand()
-  { m_valid = false; }
+    KonqCommand()
+    {
+        m_valid = false;
+    }
 
-  bool m_valid;
+    bool m_valid;
 
-  Type m_type;
-  KonqBasicOperation::Stack m_opStack;
-  KURL::List m_src;
-  KURL m_dst;
+    Type m_type;
+    KonqBasicOperation::Stack m_opStack;
+    KURL::List m_src;
+    KURL m_dst;
 };
 
-class KonqCommandRecorder : public QObject
-{
-  Q_OBJECT
+class KonqCommandRecorder : public QObject {
+    Q_OBJECT
 public:
-  KonqCommandRecorder( KonqCommand::Type op, const KURL::List &src, const KURL &dst, KIO::Job *job );
-  virtual ~KonqCommandRecorder();
+    KonqCommandRecorder(KonqCommand::Type op, const KURL::List &src, const KURL &dst, KIO::Job *job);
+    virtual ~KonqCommandRecorder();
 
 private slots:
-  void slotResult( KIO::Job *job );
+    void slotResult(KIO::Job *job);
 
-  void slotCopyingDone( KIO::Job *, const KURL &from, const KURL &to, bool directory, bool renamed );
-  void slotCopyingLinkDone( KIO::Job *, const KURL &from, const QString &target, const KURL &to );
+    void slotCopyingDone(KIO::Job *, const KURL &from, const KURL &to, bool directory, bool renamed);
+    void slotCopyingLinkDone(KIO::Job *, const KURL &from, const QString &target, const KURL &to);
 
 private:
-  class KonqCommandRecorderPrivate;
-  KonqCommandRecorderPrivate *d;
+    class KonqCommandRecorderPrivate;
+    KonqCommandRecorderPrivate *d;
 };
 
-class LIBKONQ_EXPORT KonqUndoManager : public QObject, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
-  friend class KonqUndoJob;
+class LIBKONQ_EXPORT KonqUndoManager : public QObject, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
+    friend class KonqUndoJob;
+
 public:
-  enum UndoState { MAKINGDIRS, MOVINGFILES, REMOVINGDIRS, REMOVINGFILES };
+    enum UndoState
+    {
+        MAKINGDIRS,
+        MOVINGFILES,
+        REMOVINGDIRS,
+        REMOVINGFILES
+    };
 
-  KonqUndoManager();
-  virtual ~KonqUndoManager();
+    KonqUndoManager();
+    virtual ~KonqUndoManager();
 
-  static void incRef();
-  static void decRef();
-  static KonqUndoManager *self();
+    static void incRef();
+    static void decRef();
+    static KonqUndoManager *self();
 
-  void addCommand( const KonqCommand &cmd );
+    void addCommand(const KonqCommand &cmd);
 
-  bool undoAvailable() const;
-  QString undoText() const;
+    bool undoAvailable() const;
+    QString undoText() const;
 
 public slots:
-  void undo();
+    void undo();
 
 signals:
-  void undoAvailable( bool avail );
-  void undoTextChanged( const QString &text );
+    void undoAvailable(bool avail);
+    void undoTextChanged(const QString &text);
 
 protected:
-  /**
-   * @internal
-   */
-  void stopUndo( bool step );
+    /**
+     * @internal
+     */
+    void stopUndo(bool step);
 
 private:
-k_dcop:
-  virtual ASYNC push( const KonqCommand &cmd );
-  virtual ASYNC pop();
-  virtual ASYNC lock();
-  virtual ASYNC unlock();
+    k_dcop : virtual ASYNC push(const KonqCommand &cmd);
+    virtual ASYNC pop();
+    virtual ASYNC lock();
+    virtual ASYNC unlock();
 
-  virtual KonqCommand::Stack get() const;
+    virtual KonqCommand::Stack get() const;
 
 private slots:
-  void slotResult( KIO::Job *job );
+    void slotResult(KIO::Job *job);
 
 private:
-  void undoStep();
+    void undoStep();
 
-  void undoMakingDirectories();
-  void undoMovingFiles();
-  void undoRemovingFiles();
-  void undoRemovingDirectories();
+    void undoMakingDirectories();
+    void undoMovingFiles();
+    void undoRemovingFiles();
+    void undoRemovingDirectories();
 
-  void broadcastPush( const KonqCommand &cmd );
-  void broadcastPop();
-  void broadcastLock();
-  void broadcastUnlock();
+    void broadcastPush(const KonqCommand &cmd);
+    void broadcastPop();
+    void broadcastLock();
+    void broadcastUnlock();
 
-  void addDirToUpdate( const KURL& url );
-  bool initializeFromKDesky();
+    void addDirToUpdate(const KURL &url);
+    bool initializeFromKDesky();
 
-  class KonqUndoManagerPrivate;
-  KonqUndoManagerPrivate *d;
-  static KonqUndoManager *s_self;
-  static unsigned long s_refCnt;
+    class KonqUndoManagerPrivate;
+    KonqUndoManagerPrivate *d;
+    static KonqUndoManager *s_self;
+    static unsigned long s_refCnt;
 };
 
-QDataStream &operator<<( QDataStream &stream, const KonqBasicOperation &op );
-QDataStream &operator>>( QDataStream &stream, KonqBasicOperation &op );
+QDataStream &operator<<(QDataStream &stream, const KonqBasicOperation &op);
+QDataStream &operator>>(QDataStream &stream, KonqBasicOperation &op);
 
-QDataStream &operator<<( QDataStream &stream, const KonqCommand &cmd );
-QDataStream &operator>>( QDataStream &stream, KonqCommand &cmd );
+QDataStream &operator<<(QDataStream &stream, const KonqCommand &cmd);
+QDataStream &operator>>(QDataStream &stream, KonqCommand &cmd);
 
 #endif

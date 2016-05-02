@@ -27,33 +27,32 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qpopupmenu.h>
 
-class KDE_EXPORT TaskRMBMenu : public QPopupMenu
-{
-	Q_OBJECT
+class KDE_EXPORT TaskRMBMenu : public QPopupMenu {
+    Q_OBJECT
 
 public:
-	TaskRMBMenu(const Task::List&, bool showAll = true, QWidget *parent = 0, const char *name = 0);
-	TaskRMBMenu(Task::Ptr, bool showAll = true, QWidget *parent = 0, const char *name = 0);
+    TaskRMBMenu(const Task::List &, bool showAll = true, QWidget *parent = 0, const char *name = 0);
+    TaskRMBMenu(Task::Ptr, bool showAll = true, QWidget *parent = 0, const char *name = 0);
 
 private:
-	void fillMenu(Task::Ptr);
-	void fillMenu();
-    QPopupMenu* makeAdvancedMenu(Task::Ptr);
-	QPopupMenu* makeDesktopsMenu(Task::Ptr);
-	QPopupMenu* makeDesktopsMenu();
+    void fillMenu(Task::Ptr);
+    void fillMenu();
+    QPopupMenu *makeAdvancedMenu(Task::Ptr);
+    QPopupMenu *makeDesktopsMenu(Task::Ptr);
+    QPopupMenu *makeDesktopsMenu();
 
 private slots:
-	void slotMinimizeAll();
-	void slotMaximizeAll();
-	void slotRestoreAll();
-	void slotShadeAll();
-	void slotCloseAll();
-	void slotAllToDesktop( int desktop );
-	void slotAllToCurrentDesktop();
+    void slotMinimizeAll();
+    void slotMaximizeAll();
+    void slotRestoreAll();
+    void slotShadeAll();
+    void slotCloseAll();
+    void slotAllToDesktop(int desktop);
+    void slotAllToCurrentDesktop();
 
 private:
-	Task::List tasks;
-	bool showAll;
+    Task::List tasks;
+    bool showAll;
 };
 
 #endif

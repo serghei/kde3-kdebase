@@ -17,22 +17,19 @@
 class QWidget;
 class QCheckBox;
 
-class KRandomSetup : public KDialogBase
-{
-	Q_OBJECT
-	public:
-		KRandomSetup( QWidget *parent = NULL, const char *name = NULL );
+class KRandomSetup : public KDialogBase {
+    Q_OBJECT
+public:
+    KRandomSetup(QWidget *parent = NULL, const char *name = NULL);
 
-	private:
+private:
+    QWidget *preview;
+    QCheckBox *openGL;
+    QCheckBox *manipulateScreen;
 
-		QWidget *preview;
-		QCheckBox *openGL;
-		QCheckBox *manipulateScreen;
+private slots:
 
-		private slots:
-
-		void slotOk();
-
+    void slotOk();
 };
 
 #endif

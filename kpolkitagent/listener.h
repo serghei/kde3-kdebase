@@ -26,18 +26,18 @@
 
 G_BEGIN_DECLS
 
-#define POLKIT_KDE3_TYPE_LISTENER          (polkit_kde3_listener_get_type())
-#define POLKIT_KDE3_LISTENER(o)            (G_TYPE_CHECK_INSTANCE_CAST ((o), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3Listener))
-#define POLKIT_KDE3_LISTENER_CLASS(k)      (G_TYPE_CHECK_CLASS_CAST((k), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3ListenerClass))
-#define POLKIT_KDE3_LISTENER_GET_CLASS(o)  (G_TYPE_INSTANCE_GET_CLASS ((o), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3ListenerClass))
-#define POLKIT_KDE3_IS_LISTENER(o)         (G_TYPE_CHECK_INSTANCE_TYPE ((o), POLKIT_KDE3_TYPE_LISTENER))
-#define POLKIT_KDE3_IS_LISTENER_CLASS(k)   (G_TYPE_CHECK_CLASS_TYPE ((k), POLKIT_KDE3_TYPE_LISTENER))
+#define POLKIT_KDE3_TYPE_LISTENER (polkit_kde3_listener_get_type())
+#define POLKIT_KDE3_LISTENER(o) (G_TYPE_CHECK_INSTANCE_CAST((o), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3Listener))
+#define POLKIT_KDE3_LISTENER_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3ListenerClass))
+#define POLKIT_KDE3_LISTENER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), POLKIT_KDE3_TYPE_LISTENER, PolkitKDE3ListenerClass))
+#define POLKIT_KDE3_IS_LISTENER(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), POLKIT_KDE3_TYPE_LISTENER))
+#define POLKIT_KDE3_IS_LISTENER_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), POLKIT_KDE3_TYPE_LISTENER))
 
 typedef struct _PolkitKDE3Listener PolkitKDE3Listener;
 typedef struct _PolkitKDE3ListenerClass PolkitKDE3ListenerClass;
 
-GType                 polkit_kde3_listener_get_type   (void) G_GNUC_CONST;
-PolkitAgentListener  *polkit_kde3_listener_new        (void);
+GType polkit_kde3_listener_get_type(void) G_GNUC_CONST;
+PolkitAgentListener *polkit_kde3_listener_new(void);
 
 G_END_DECLS
 

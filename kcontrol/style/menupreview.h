@@ -24,38 +24,37 @@
 
 class KPixmap;
 
-class MenuPreview : public QWidget
-{
-	Q_OBJECT
+class MenuPreview : public QWidget {
+    Q_OBJECT
 
 public:
-	enum PreviewMode {
-		NoEffect = 0,
-		Tint,
-		Blend 
-	};
+    enum PreviewMode
+    {
+        NoEffect = 0,
+        Tint,
+        Blend
+    };
 
-	MenuPreview( QWidget* parent, int opacity, PreviewMode pvm );
-	~MenuPreview();
+    MenuPreview(QWidget *parent, int opacity, PreviewMode pvm);
+    ~MenuPreview();
 
 public slots:
-	void setOpacity( int opacity );
-	void setPreviewMode( PreviewMode pvm );
+    void setOpacity(int opacity);
+    void setPreviewMode(PreviewMode pvm);
 
 protected:
-	void paintEvent( QPaintEvent* pe );
+    void paintEvent(QPaintEvent *pe);
 
 private:
-	void createPixmaps();
-	void blendPixmaps();
+    void createPixmaps();
+    void blendPixmaps();
 
-	KPixmap* pixBackground;
-	KPixmap* pixOverlay;
-	KPixmap* pixBlended;
-	float menuOpacity;
-	PreviewMode mode;
+    KPixmap *pixBackground;
+    KPixmap *pixOverlay;
+    KPixmap *pixBlended;
+    float menuOpacity;
+    PreviewMode mode;
 };
 
 // vim: set noet ts=4:
 #endif // __MENUPREVIEW_H
-

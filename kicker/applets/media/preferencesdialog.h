@@ -28,26 +28,25 @@
   *@author ervin
   */
 
-class PreferencesDialog : public KDialogBase
-{
-   Q_OBJECT
+class PreferencesDialog : public KDialogBase {
+    Q_OBJECT
 public:
-	PreferencesDialog(KFileItemList media, QWidget *parent=0, const char *name=0);
-	~PreferencesDialog();
+    PreferencesDialog(KFileItemList media, QWidget *parent = 0, const char *name = 0);
+    ~PreferencesDialog();
 
-	QStringList excludedMediumTypes();
-	void setExcludedMediumTypes(QStringList excludedTypesList);
+    QStringList excludedMediumTypes();
+    void setExcludedMediumTypes(QStringList excludedTypesList);
 
-	QStringList excludedMedia();
-	void setExcludedMedia(QStringList excludedList);
+    QStringList excludedMedia();
+    void setExcludedMedia(QStringList excludedList);
 
 protected slots:
-	void slotDefault();
+    void slotDefault();
 
 private:
-	KListView *mpMediumTypesListView;
-	KListView *mpMediaListView;
-	KFileItemList mMedia;
+    KListView *mpMediumTypesListView;
+    KListView *mpMediaListView;
+    KFileItemList mMedia;
 };
 
 #endif

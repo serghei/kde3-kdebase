@@ -22,10 +22,7 @@ class DCOPClientTransaction;
  * Screen saver engine.  Handles screensaver window, starting screensaver
  * hacks, and password entry.
  */
-class SaverEngine
-    : public QWidget,
-      virtual public KScreensaverIface
-{
+class SaverEngine : public QWidget, virtual public KScreensaverIface {
     Q_OBJECT
 public:
     SaverEngine();
@@ -54,7 +51,7 @@ public:
     /**
      * enable/disable the screensaver
      */
-    virtual bool enable( bool e );
+    virtual bool enable(bool e);
 
     /**
      * return true if the screen is currently blanked
@@ -71,7 +68,7 @@ public:
      * laptops where one might not want a cpu thirsty screensaver
      * draining the battery.
      */
-    virtual void setBlankOnly( bool blankOnly );
+    virtual void setBlankOnly(bool blankOnly);
 
     /**
      * Called by kdesktop_lock when locking is in effect.
@@ -83,31 +80,40 @@ protected slots:
     void lockProcessExited();
 
 protected:
-    enum LockType { DontLock, DefaultLock, ForceLock };
-    bool startLockProcess( LockType lock_type );
+    enum LockType
+    {
+        DontLock,
+        DefaultLock,
+        ForceLock
+    };
+    bool startLockProcess(LockType lock_type);
     void stopLockProcess();
     bool handleKeyPress(XKeyEvent *xke);
     void processLockTransactions();
     xautolock_corner_t applyManualSettings(int);
 
 protected:
-    enum State { Waiting, Preparing, Saving };
-    bool        mEnabled;
+    enum State
+    {
+        Waiting,
+        Preparing,
+        Saving
+    };
+    bool mEnabled;
 
-    State       mState;
-    XAutoLock   *mXAutoLock;
-    KProcess    mLockProcess;
-    int		mTimeout;
+    State mState;
+    XAutoLock *mXAutoLock;
+    KProcess mLockProcess;
+    int mTimeout;
 
     // the original X screensaver parameters
-    int         mXTimeout;
-    int         mXInterval;
-    int         mXBlanking;
-    int         mXExposures;
+    int mXTimeout;
+    int mXInterval;
+    int mXBlanking;
+    int mXExposures;
 
-    bool	mBlankOnly;  // only use the blanker, not the defined saver
-    QValueVector< DCOPClientTransaction* > mLockTransactions;
+    bool mBlankOnly; // only use the blanker, not the defined saver
+    QValueVector< DCOPClientTransaction * > mLockTransactions;
 };
 
 #endif
-

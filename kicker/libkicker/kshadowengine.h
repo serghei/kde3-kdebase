@@ -40,8 +40,7 @@ class KShadowSettings;
  * @author laur.ivan@corvil.com
  * @since 3.2
  */
-class KDE_EXPORT KShadowEngine
-{
+class KDE_EXPORT KShadowEngine {
 public:
     /// Creates a new shadow engine.
     KShadowEngine();
@@ -79,44 +78,43 @@ public:
     * @param bgColor the background color
     * @return the resulting image
     */
-    QImage makeShadow(const QPixmap& textPixmap, const QColor &bgColor);
+    QImage makeShadow(const QPixmap &textPixmap, const QColor &bgColor);
 
 private:
     // No static objects in libs, and no static deleters in kdefx...
-    //static KShadowSettings s_defaultShadowSettings;
+    // static KShadowSettings s_defaultShadowSettings;
 
     KShadowSettings *m_shadowSettings;
 
     /*
     * a simple algorithm with 3 pixels thickness
     */
-    double defaultDecay(QImage& source, int x, int y);
+    double defaultDecay(QImage &source, int x, int y);
 
     /*
     * a slower algorithm where the influence of a pixel
     * is  qGray(px)/(abs(dx) + abs(dy) +1).
     */
-    double doubleLinearDecay(QImage& source, int x, int y);
+    double doubleLinearDecay(QImage &source, int x, int y);
 
     /*
     * a very slow algorithm where the influence of a pixel
     * is  qGray(px)/(sqrt(sqr(dx) + sqr(dy)) +1).
     */
-    double radialDecay(QImage& source, int x, int y);
+    double radialDecay(QImage &source, int x, int y);
 
     /*
     * a nice/fast algorithm proposed by Bernardo Hung
     */
-    double noDecay(QImage& source, int x, int y);
+    double noDecay(QImage &source, int x, int y);
 
     void *d;
 };
 
-class KDE_EXPORT KTextShadowEngine : public KShadowEngine
-{
+class KDE_EXPORT KTextShadowEngine : public KShadowEngine {
 public:
     KTextShadowEngine();
-    
+
     void drawText(QPainter &p, const QRect &tr, int tf, const QString &str, const QSize &size);
 };
 

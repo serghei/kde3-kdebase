@@ -27,10 +27,8 @@
 
 struct display;
 
-char *      open_ck_session       (struct passwd *pwent,
-                                   struct display *display);
-void        close_ck_session      (const char    *cookie);
-void        unlock_ck_session     (const char    *user,
-                                   const char    *x11_display);
+char *open_ck_session(struct passwd *pwent, struct display *display);
+void close_ck_session(const char *cookie);
+void unlock_ck_session(const char *user, const char *x11_display);
 
 #endif /* __CONSOLE_KIT_H */

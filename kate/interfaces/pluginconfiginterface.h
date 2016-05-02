@@ -21,43 +21,40 @@
 
 #include <kdemacros.h>
 
-namespace Kate
-{
+namespace Kate {
 
 /*
 *  This is an interface for the KTextEditor::Document/Plugin/ViewPlugin classes !!!
 */
-class KDE_EXPORT PluginConfigInterface
-{
-  friend class PrivatePluginConfigInterface;
+class KDE_EXPORT PluginConfigInterface {
+    friend class PrivatePluginConfigInterface;
 
-  public:
+public:
     PluginConfigInterface();
     virtual ~PluginConfigInterface();
 
-    unsigned int pluginConfigInterfaceNumber () const;
+    unsigned int pluginConfigInterfaceNumber() const;
 
-  //
-  // slots !!!
-  //
-  public:    
+    //
+    // slots !!!
+    //
+public:
     /**
       Read/Write the config to the standard place where this editor
       part saves it config, say: read/save default values for that
       editor part
     */
-    virtual void readConfig () = 0;
-    virtual void writeConfig () = 0;           
-                                                                             
-  private:
+    virtual void readConfig() = 0;
+    virtual void writeConfig() = 0;
+
+private:
     class PrivatePluginConfigInterface *d;
     static unsigned int globalPluginConfigInterfaceNumber;
     unsigned int myPluginConfigInterfaceNumber;
 };
 
 class Plugin;
-KDE_EXPORT PluginConfigInterface *pluginConfigInterface (Plugin *plugin);
-
+KDE_EXPORT PluginConfigInterface *pluginConfigInterface(Plugin *plugin);
 }
 
 #endif

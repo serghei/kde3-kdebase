@@ -16,7 +16,7 @@
 #include <qcolor.h>
 #include <qvaluevector.h>
 
-template <class QString, class T> class QMap;
+template < class QString, class T > class QMap;
 class KStandardDirs;
 class KSimpleConfig;
 class KConfig;
@@ -29,28 +29,39 @@ class QImage;
  * A pattern is a raster image. An entry for earch pattern is
  * stored as a .desktop file in $(datadir)/kdesktop/patterns.
  */
-class KBackgroundPattern
-{
+class KBackgroundPattern {
 public:
-    KBackgroundPattern(QString name=QString::null);
+    KBackgroundPattern(QString name = QString::null);
     ~KBackgroundPattern();
 
-    void copyConfig(const KBackgroundPattern*);
+    void copyConfig(const KBackgroundPattern *);
 
-    QString name() const { return m_Name; }
+    QString name() const
+    {
+        return m_Name;
+    }
     void load(QString name);
 
     void setComment(const QString &comment);
-    QString comment() const {return m_Comment; }
+    QString comment() const
+    {
+        return m_Comment;
+    }
 
     void setPattern(QString file);
-    QString pattern() const { return m_Pattern; }
+    QString pattern() const
+    {
+        return m_Pattern;
+    }
 
     void readSettings();
     void writeSettings();
 
     bool isAvailable();
-    bool isGlobal()const { return m_bReadOnly; }
+    bool isGlobal() const
+    {
+        return m_bReadOnly;
+    }
     bool remove();
 
     int hash();
@@ -58,7 +69,7 @@ public:
     static QStringList list();
 
 private:
-    void init(bool force_rw=false);
+    void init(bool force_rw = false);
     QString fingerprint();
 
     bool dirty, hashdirty;
@@ -87,31 +98,48 @@ private:
  * An entry for each program is stored as a .desktop file in
  * $(datadir)/kdesktop/programs.
  */
-class KBackgroundProgram
-{
+class KBackgroundProgram {
 public:
-    KBackgroundProgram(QString name=QString::null);
+    KBackgroundProgram(QString name = QString::null);
     ~KBackgroundProgram();
 
-    void copyConfig(const KBackgroundProgram*);
+    void copyConfig(const KBackgroundProgram *);
 
-    QString name()const { return m_Name; }
-    void load(const QString & name);
+    QString name() const
+    {
+        return m_Name;
+    }
+    void load(const QString &name);
 
     void setComment(const QString &comment);
-    QString comment()const { return m_Comment; }
+    QString comment() const
+    {
+        return m_Comment;
+    }
 
     void setCommand(const QString &command);
-    QString command()const { return m_Command; }
+    QString command() const
+    {
+        return m_Command;
+    }
 
     void setPreviewCommand(const QString &command);
-    QString previewCommand()const { return m_PreviewCommand; }
+    QString previewCommand() const
+    {
+        return m_PreviewCommand;
+    }
 
     void setRefresh(int refresh);
-    int refresh()const { return m_Refresh; }
+    int refresh() const
+    {
+        return m_Refresh;
+    }
 
     void setExecutable(const QString &executable);
-    QString executable()const { return m_Executable; }
+    QString executable() const
+    {
+        return m_Executable;
+    }
 
     void readSettings();
     void writeSettings();
@@ -122,13 +150,16 @@ public:
     int hash();
 
     bool isAvailable();
-    bool isGlobal()const { return m_bReadOnly; }
+    bool isGlobal() const
+    {
+        return m_bReadOnly;
+    }
     bool remove();
 
     static QStringList list();
 
 private:
-    void init(bool force_rw=false);
+    void init(bool force_rw = false);
     QString fingerprint();
 
     bool dirty, hashdirty;
@@ -146,10 +177,7 @@ private:
  * KBackgroundSettings: A class to read/write/manipulate
  * KDE desktop settings.
  */
-class KBackgroundSettings
-    : public KBackgroundPattern,
-      public KBackgroundProgram
-{
+class KBackgroundSettings : public KBackgroundPattern, public KBackgroundProgram {
 public:
     /**
      * @param drawBackgroundPerScreen if false, then all screens (in xinerama
@@ -159,82 +187,160 @@ public:
     KBackgroundSettings(int desk, int screen, bool drawBackgroundPerScreen, KConfig *config);
     ~KBackgroundSettings();
 
-    void copyConfig(const KBackgroundSettings*);
+    void copyConfig(const KBackgroundSettings *);
 
-    bool drawBackgroundPerScreen() const { return m_bDrawBackgroundPerScreen; }
+    bool drawBackgroundPerScreen() const
+    {
+        return m_bDrawBackgroundPerScreen;
+    }
     void setDrawBackgroundPerScreen(bool draw);
 
-    int desk() const { return m_Desk; }
-    int screen() const { return m_Screen; }
-//     void load(int desk, int screen, bool drawBackgroundPerScreen, bool reparseConfig=true);
+    int desk() const
+    {
+        return m_Desk;
+    }
+    int screen() const
+    {
+        return m_Screen;
+    }
+    //     void load(int desk, int screen, bool drawBackgroundPerScreen, bool reparseConfig=true);
     void load(int desk, int screen, bool drawBackgroundPerScreen, bool reparseConfig);
 
     void setColorA(const QColor &color);
-    QColor colorA() const { return m_ColorA; }
+    QColor colorA() const
+    {
+        return m_ColorA;
+    }
     void setColorB(const QColor &color);
-    QColor colorB() const { return m_ColorB; }
+    QColor colorB() const
+    {
+        return m_ColorB;
+    }
 
     void setProgram(QString program);
     void setPatternName(QString pattern);
 
-    enum BackgroundMode {
-	Flat, Pattern, Program,
-	HorizontalGradient, VerticalGradient, PyramidGradient,
-	PipeCrossGradient, EllipticGradient, lastBackgroundMode
+    enum BackgroundMode
+    {
+        Flat,
+        Pattern,
+        Program,
+        HorizontalGradient,
+        VerticalGradient,
+        PyramidGradient,
+        PipeCrossGradient,
+        EllipticGradient,
+        lastBackgroundMode
     };
     void setBackgroundMode(int mode);
-    int backgroundMode() const { return m_BackgroundMode; }
+    int backgroundMode() const
+    {
+        return m_BackgroundMode;
+    }
 
-    enum BlendMode {
-        NoBlending, FlatBlending,
-	HorizontalBlending, VerticalBlending, PyramidBlending,
-	PipeCrossBlending, EllipticBlending,
-	IntensityBlending, SaturateBlending, ContrastBlending,
-	HueShiftBlending, lastBlendMode
+    enum BlendMode
+    {
+        NoBlending,
+        FlatBlending,
+        HorizontalBlending,
+        VerticalBlending,
+        PyramidBlending,
+        PipeCrossBlending,
+        EllipticBlending,
+        IntensityBlending,
+        SaturateBlending,
+        ContrastBlending,
+        HueShiftBlending,
+        lastBlendMode
     };
     void setBlendMode(int mode);
-    int blendMode() const { return m_BlendMode; }
+    int blendMode() const
+    {
+        return m_BlendMode;
+    }
 
     void setReverseBlending(bool value);
-    bool reverseBlending() const { return m_ReverseBlending; }
+    bool reverseBlending() const
+    {
+        return m_ReverseBlending;
+    }
 
     void setBlendBalance(int value);
-    int blendBalance() const { return m_BlendBalance; }
+    int blendBalance() const
+    {
+        return m_BlendBalance;
+    }
 
     void setWallpaper(QString name);
-    QString wallpaper() const { return m_Wallpaper; }
+    QString wallpaper() const
+    {
+        return m_Wallpaper;
+    }
 
-    enum WallpaperMode {
-	NoWallpaper, Centred, Tiled, CenterTiled, CentredMaxpect, TiledMaxpect,
-	Scaled, CentredAutoFit, ScaleAndCrop, lastWallpaperMode
+    enum WallpaperMode
+    {
+        NoWallpaper,
+        Centred,
+        Tiled,
+        CenterTiled,
+        CentredMaxpect,
+        TiledMaxpect,
+        Scaled,
+        CentredAutoFit,
+        ScaleAndCrop,
+        lastWallpaperMode
     };
     void setWallpaperMode(int mode);
-    int wallpaperMode() const { return m_WallpaperMode; }
+    int wallpaperMode() const
+    {
+        return m_WallpaperMode;
+    }
 
     void setWallpaperList(QStringList);
     QStringList wallpaperList() const;
     QStringList wallpaperFiles() const;
 
     void setWallpaperChangeInterval(int);
-    int wallpaperChangeInterval() const { return m_Interval; }
+    int wallpaperChangeInterval() const
+    {
+        return m_Interval;
+    }
 
-    enum MultiMode {
-	NoMulti, InOrder, Random, NoMultiRandom
+    enum MultiMode
+    {
+        NoMulti,
+        InOrder,
+        Random,
+        NoMultiRandom
     };
     void setMultiWallpaperMode(int mode);
-    int multiWallpaperMode() const { return m_MultiMode; }
+    int multiWallpaperMode() const
+    {
+        return m_MultiMode;
+    }
 
-    enum MinOptDepth {
-        AlwaysOpt, Opt16bpp, Opt15bpp, NeverOpt };
+    enum MinOptDepth
+    {
+        AlwaysOpt,
+        Opt16bpp,
+        Opt15bpp,
+        NeverOpt
+    };
 
-    void setMinOptimizationDepth( int mode );
-    int minOptimizationDepth() const { return m_MinOptimizationDepth; }
+    void setMinOptimizationDepth(int mode);
+    int minOptimizationDepth() const
+    {
+        return m_MinOptimizationDepth;
+    }
     bool optimize() const;
 
-    void setUseShm( bool use );
-    bool useShm() const { return m_bShm; }
+    void setUseShm(bool use);
+    bool useShm() const
+    {
+        return m_bShm;
+    }
 
-    void changeWallpaper(bool init=false);
+    void changeWallpaper(bool init = false);
     void updateWallpaperFiles();
     void randomizeWallpaperFiles();
 
@@ -243,18 +349,24 @@ public:
      * @return true if the currentWallpaper has changed
      */
     bool discardCurrentWallpaper();
-    int lastWallpaperChange() const { return m_LastChange; }
+    int lastWallpaperChange() const
+    {
+        return m_LastChange;
+    }
     bool needWallpaperChange();
 
-    void readSettings(bool reparse=false);
+    void readSettings(bool reparse = false);
     void writeSettings();
     QString configGroupName() const;
 
     int hash();
     QString fingerprint();
 
-    void setEnabled( const bool enable );
-    bool enabled() const { return m_bEnabled; }
+    void setEnabled(const bool enable);
+    bool enabled() const
+    {
+        return m_bEnabled;
+    }
 
 private:
     void updateHash();
@@ -288,10 +400,10 @@ private:
     bool m_bEnabled;
 
 public:
-    QMap<QString,int> m_BMMap;
-    QMap<QString,int> m_WMMap;
-    QMap<QString,int> m_MMMap;
-    QMap<QString,int> m_BlMMap;
+    QMap< QString, int > m_BMMap;
+    QMap< QString, int > m_WMMap;
+    QMap< QString, int > m_MMMap;
+    QMap< QString, int > m_BlMMap;
     char *m_BMRevMap[16];
     char *m_WMRevMap[16];
     char *m_MMRevMap[16];
@@ -302,52 +414,87 @@ public:
 /**
  * A class to read/modify the global desktop background settings.
  */
-class KGlobalBackgroundSettings
-{
+class KGlobalBackgroundSettings {
 public:
     KGlobalBackgroundSettings(KConfig *config);
 
     QString deskName(int desk);
-    //void setDeskName(int desk, QString name);
+    // void setDeskName(int desk, QString name);
 
-    int cacheSize() { return m_CacheSize; }
+    int cacheSize()
+    {
+        return m_CacheSize;
+    }
     void setCacheSize(int size);
 
     bool drawBackgroundPerScreen(int desk) const;
     void setDrawBackgroundPerScreen(int desk, bool perScreen);
 
-    bool limitCache() { return m_bLimitCache; }
+    bool limitCache()
+    {
+        return m_bLimitCache;
+    }
     void setLimitCache(bool limit);
 
-    bool commonScreenBackground() { return m_bCommonScreen; }
+    bool commonScreenBackground()
+    {
+        return m_bCommonScreen;
+    }
     void setCommonScreenBackground(bool common);
 
-    bool commonDeskBackground() { return m_bCommonDesk; }
+    bool commonDeskBackground()
+    {
+        return m_bCommonDesk;
+    }
     void setCommonDeskBackground(bool common);
 
-    bool dockPanel() { return m_bDock; }
+    bool dockPanel()
+    {
+        return m_bDock;
+    }
     void setDockPanel(bool dock);
 
-    bool exportBackground() {return m_bExport; }
+    bool exportBackground()
+    {
+        return m_bExport;
+    }
     void setExportBackground(bool _export);
 
     void setTextColor(QColor _color);
-    QColor textColor() const { return m_TextColor; }
+    QColor textColor() const
+    {
+        return m_TextColor;
+    }
 
     void setTextBackgroundColor(QColor _color);
-    QColor textBackgroundColor() const { return m_TextBackgroundColor; }
+    QColor textBackgroundColor() const
+    {
+        return m_TextBackgroundColor;
+    }
 
     void setShadowEnabled(bool enabled);
-    bool shadowEnabled() const { return m_shadowEnabled; }
+    bool shadowEnabled() const
+    {
+        return m_shadowEnabled;
+    }
 
     void setTextLines(int lines);
-    int textLines() const { return m_textLines; }
+    int textLines() const
+    {
+        return m_textLines;
+    }
     void setTextWidth(int width);
-    int textWidth() const { return m_textWidth; }
+    int textWidth() const
+    {
+        return m_textWidth;
+    }
 
     void readSettings();
     void writeSettings();
-    KConfig* getConfig() { return m_pConfig; }
+    KConfig *getConfig()
+    {
+        return m_pConfig;
+    }
 
 private:
     bool dirty;
@@ -365,7 +512,7 @@ private:
     int m_textWidth;
     KConfig *m_pConfig;
     bool m_bDeleteConfig;
-    QValueVector<bool> m_bDrawBackgroundPerScreen; // m_bDrawBackgroundPerScreen[desk]
+    QValueVector< bool > m_bDrawBackgroundPerScreen; // m_bDrawBackgroundPerScreen[desk]
 };
 
 

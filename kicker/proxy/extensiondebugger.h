@@ -27,21 +27,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class AppletInfo;
 class KPanelExtension;
 
-class ExtensionContainer : public QWidget
-{
+class ExtensionContainer : public QWidget {
     Q_OBJECT
 
 public:
-    ExtensionContainer(KPanelExtension *extension, QWidget* parent = 0, const char* name = 0);
+    ExtensionContainer(KPanelExtension *extension, QWidget *parent = 0, const char *name = 0);
 
 protected:
-    void resizeEvent( QResizeEvent *ev );
+    void resizeEvent(QResizeEvent *ev);
 
 private slots:
     void showPreferences();
 
 private:
-    KPanelExtension     *m_extension;
+    KPanelExtension *m_extension;
 };
 
 #endif

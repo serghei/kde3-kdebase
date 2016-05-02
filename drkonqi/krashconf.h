@@ -34,80 +34,153 @@
 
 #include "krashdcopinterface.h"
 
-class KrashConfig : public QObject, public KrashDCOPInterface
-{
-  Q_OBJECT
+class KrashConfig : public QObject, public KrashDCOPInterface {
+    Q_OBJECT
 
 public:
-  KrashConfig();
-  virtual ~KrashConfig();
+    KrashConfig();
+    virtual ~KrashConfig();
 
-k_dcop:
-  virtual QString programName() const { return m_aboutData->programName(); };
-  virtual QCString appName() const { return m_aboutData->appName(); };
-  virtual int signalNumber() const { return m_signalnum; };
-  virtual int pid() const { return m_pid; };
-  virtual bool startedByKdeinit() const { return m_startedByKdeinit; };
-  virtual bool safeMode() const { return m_safeMode; };
-  virtual QString signalName() const { return m_signalName; };
-  virtual QString signalText() const { return m_signalText; };
-  virtual QString whatToDoText() const { return m_whatToDoText; }
-  virtual QString errorDescriptionText() const { return m_errorDescriptionText; };
+    k_dcop : virtual QString programName() const
+    {
+        return m_aboutData->programName();
+    };
+    virtual QCString appName() const
+    {
+        return m_aboutData->appName();
+    };
+    virtual int signalNumber() const
+    {
+        return m_signalnum;
+    };
+    virtual int pid() const
+    {
+        return m_pid;
+    };
+    virtual bool startedByKdeinit() const
+    {
+        return m_startedByKdeinit;
+    };
+    virtual bool safeMode() const
+    {
+        return m_safeMode;
+    };
+    virtual QString signalName() const
+    {
+        return m_signalName;
+    };
+    virtual QString signalText() const
+    {
+        return m_signalText;
+    };
+    virtual QString whatToDoText() const
+    {
+        return m_whatToDoText;
+    }
+    virtual QString errorDescriptionText() const
+    {
+        return m_errorDescriptionText;
+    };
 
-  virtual ASYNC registerDebuggingApplication(const QString& launchName);
+    virtual ASYNC registerDebuggingApplication(const QString &launchName);
 
 public:
-  QString debugger() const { return m_debugger; }
-  QString debuggerBatch() const { return m_debuggerBatch; }
-  QString tryExec() const { return m_tryExec; }
-  QString backtraceCommand() const { return m_backtraceCommand; }
-  QString removeFromBacktraceRegExp() const { return m_removeFromBacktraceRegExp; }
-  QString invalidStackFrameRegExp() const { return m_invalidStackFrameRegExp; }
-  QString frameRegExp() const { return m_frameRegExp; }
-  QString neededInValidBacktraceRegExp() const { return m_neededInValidBacktraceRegExp; }
-  QString kcrashRegExp() const { return m_kcrashRegExp; }
-  bool showBacktrace() const { return m_showbacktrace; };
-  bool showDebugger() const { return m_showdebugger && !m_debugger.isNull(); };
-  bool showBugReport() const { return m_showbugreport; };
-  bool disableChecks() const { return m_disablechecks; };
-  const KAboutData *aboutData() const { return m_aboutData; }
-  QString execName() const { return m_execname; }
+    QString debugger() const
+    {
+        return m_debugger;
+    }
+    QString debuggerBatch() const
+    {
+        return m_debuggerBatch;
+    }
+    QString tryExec() const
+    {
+        return m_tryExec;
+    }
+    QString backtraceCommand() const
+    {
+        return m_backtraceCommand;
+    }
+    QString removeFromBacktraceRegExp() const
+    {
+        return m_removeFromBacktraceRegExp;
+    }
+    QString invalidStackFrameRegExp() const
+    {
+        return m_invalidStackFrameRegExp;
+    }
+    QString frameRegExp() const
+    {
+        return m_frameRegExp;
+    }
+    QString neededInValidBacktraceRegExp() const
+    {
+        return m_neededInValidBacktraceRegExp;
+    }
+    QString kcrashRegExp() const
+    {
+        return m_kcrashRegExp;
+    }
+    bool showBacktrace() const
+    {
+        return m_showbacktrace;
+    };
+    bool showDebugger() const
+    {
+        return m_showdebugger && !m_debugger.isNull();
+    };
+    bool showBugReport() const
+    {
+        return m_showbugreport;
+    };
+    bool disableChecks() const
+    {
+        return m_disablechecks;
+    };
+    const KAboutData *aboutData() const
+    {
+        return m_aboutData;
+    }
+    QString execName() const
+    {
+        return m_execname;
+    }
 
-  void expandString(QString &str, bool shell, const QString &tempFile = QString::null) const;
+    void expandString(QString &str, bool shell, const QString &tempFile = QString::null) const;
 
-  void acceptDebuggingApp();
+    void acceptDebuggingApp();
 
 signals:
-  void newDebuggingApplication(const QString& launchName);
+    void newDebuggingApplication(const QString &launchName);
 
 private:
-  void readConfig();
+    void readConfig();
 
 private:
-  KAboutData *m_aboutData;
-  int m_pid;
-  int m_signalnum;
-  bool m_showdebugger;
-  bool m_showbacktrace;
-  bool m_showbugreport;
-  bool m_startedByKdeinit;
-  bool m_safeMode;
-  bool m_disablechecks;
-  QString m_signalName;
-  QString m_signalText;
-  QString m_whatToDoText;
-  QString m_errorDescriptionText;
-  QString m_execname;
+    KAboutData *m_aboutData;
+    int m_pid;
+    int m_signalnum;
+    bool m_showdebugger;
+    bool m_showbacktrace;
+    bool m_showbugreport;
+    bool m_startedByKdeinit;
+    bool m_safeMode;
+    bool m_disablechecks;
+    QString m_signalName;
+    QString m_signalText;
+    QString m_whatToDoText;
+    QString m_errorDescriptionText;
+    QString m_execname;
 
-  QString m_debugger;
-  QString m_debuggerBatch;
-  QString m_tryExec;
-  QString m_backtraceCommand;
-  QString m_removeFromBacktraceRegExp;
-  QString m_invalidStackFrameRegExp;
-  QString m_frameRegExp;
-  QString m_neededInValidBacktraceRegExp;
-  QString m_kcrashRegExp;
+    QString m_debugger;
+    QString m_debuggerBatch;
+    QString m_tryExec;
+    QString m_backtraceCommand;
+    QString m_removeFromBacktraceRegExp;
+    QString m_invalidStackFrameRegExp;
+    QString m_frameRegExp;
+    QString m_neededInValidBacktraceRegExp;
+    QString m_kcrashRegExp;
 };
 
 #endif

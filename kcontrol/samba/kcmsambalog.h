@@ -22,7 +22,7 @@
  */
 #ifndef kcmsambalog_h_included
 #define kcmsambalog_h_included
- 
+
 #include <qlabel.h>
 #include <qcstring.h>
 #include <qcheckbox.h>
@@ -35,52 +35,52 @@
 
 #define LOGGROUPNAME "SambaLogFileSettings"
 
-class LogView: public QWidget
-{
-   Q_OBJECT
-   public:
-      LogView(QWidget *parent=0, KConfig *config=0, const char *name=0);
-      virtual ~LogView() {};
-      void saveSettings();
-      void loadSettings();
-   private:
-      KConfig *configFile;
-      int filesCount, connectionsCount;
-      KURLRequester logFileName;
-      QLabel label;
-      QListView viewHistory;
-      QCheckBox showConnOpen, showConnClose, showFileOpen, showFileClose;
-      QPushButton updateButton;
-   private slots:
-      void updateList();
-   signals:
-      void contentsChanged(QListView* list, int nrOfFiles, int nrOfConnections);
+class LogView : public QWidget {
+    Q_OBJECT
+public:
+    LogView(QWidget *parent = 0, KConfig *config = 0, const char *name = 0);
+    virtual ~LogView(){};
+    void saveSettings();
+    void loadSettings();
+
+private:
+    KConfig *configFile;
+    int filesCount, connectionsCount;
+    KURLRequester logFileName;
+    QLabel label;
+    QListView viewHistory;
+    QCheckBox showConnOpen, showConnClose, showFileOpen, showFileClose;
+    QPushButton updateButton;
+private slots:
+    void updateList();
+signals:
+    void contentsChanged(QListView *list, int nrOfFiles, int nrOfConnections);
 };
 
-class QListViewItemX:public QListViewItem
-{
-   public:
-      //a faster constructor saves a lot time
-      QListViewItemX( QListView * parent,
-                      const char *c0,     const char *c1 = 0,
-                      const char *c2 = 0, const char *c3 = 0,
-                      const char *c4 = 0, const char *c5 = 0,
-                      const char *c6 = 0, const char *c7 = 0 )
-         :QListViewItem(parent)
-      {
-         setText( 0, c0 );
-         setText( 1, c1 );
-         setText( 2, c2 );
-         setText( 3, c3 );
-         if (c4==0) return;
-         setText( 4, c4 );
-         if (c5==0) return;
-         setText( 5, c5 );
-         if (c6==0) return;
-         setText( 6, c6 );
-         if (c7==0) return;
-         setText( 7, c7 );
-      };
+class QListViewItemX : public QListViewItem {
+public:
+    // a faster constructor saves a lot time
+    QListViewItemX(QListView *parent, const char *c0, const char *c1 = 0, const char *c2 = 0, const char *c3 = 0, const char *c4 = 0,
+                   const char *c5 = 0, const char *c6 = 0, const char *c7 = 0)
+        : QListViewItem(parent)
+    {
+        setText(0, c0);
+        setText(1, c1);
+        setText(2, c2);
+        setText(3, c3);
+        if(c4 == 0)
+            return;
+        setText(4, c4);
+        if(c5 == 0)
+            return;
+        setText(5, c5);
+        if(c6 == 0)
+            return;
+        setText(6, c6);
+        if(c7 == 0)
+            return;
+        setText(7, c7);
+    };
 };
 
 #endif // main_included

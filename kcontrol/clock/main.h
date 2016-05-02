@@ -28,20 +28,19 @@ class Tzone;
 class QTabWidget;
 
 
-class KclockModule : public KCModule
-{
-  Q_OBJECT
+class KclockModule : public KCModule {
+    Q_OBJECT
 
 public:
-  KclockModule(QWidget *parent, const char *name, const QStringList &);
-  
-  void	save();
-  void	load();
+    KclockModule(QWidget *parent, const char *name, const QStringList &);
+
+    void save();
+    void load();
 
 private:
-  QTabWidget   *tab;
-  Tzone	*tzone;
-  Dtime	*dtime;
+    QTabWidget *tab;
+    Tzone *tzone;
+    Dtime *dtime;
 };
 
 #endif // main_included

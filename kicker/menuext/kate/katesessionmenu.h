@@ -24,18 +24,18 @@
 #include <kpanelmenu.h>
 
 class KateSessionMenu : public KPanelMenu {
-  Q_OBJECT
-  public:
-    KateSessionMenu( QWidget *parent=0, const char *name=0, const QStringList& /*args*/=QStringList() );
+    Q_OBJECT
+public:
+    KateSessionMenu(QWidget *parent = 0, const char *name = 0, const QStringList & /*args*/ = QStringList());
     ~KateSessionMenu();
 
-  public slots:
+public slots:
     virtual void initialize();
 
-  protected slots:
-    virtual void slotExec( int id );
+protected slots:
+    virtual void slotExec(int id);
 
-  private:
+private:
     QStringList m_sessions;
     QWidget *m_parent;
 };

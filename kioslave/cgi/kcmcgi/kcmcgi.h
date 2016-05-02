@@ -25,11 +25,10 @@ class QPushButton;
 
 class KConfig;
 
-class KCMCgi : public KCModule
-{
+class KCMCgi : public KCModule {
     Q_OBJECT
-  public:
-    KCMCgi( QWidget *parent = 0, const char *name = 0 );
+public:
+    KCMCgi(QWidget *parent = 0, const char *name = 0);
     ~KCMCgi();
 
     void load();
@@ -37,13 +36,14 @@ class KCMCgi : public KCModule
     void defaults();
     QString quickHelp() const;
 
-  public slots:
+public slots:
 
-  protected slots:
+protected slots:
     void addPath();
     void removePath();
-    void slotItemSelected( QListBoxItem * item );
-  private:
+    void slotItemSelected(QListBoxItem *item);
+
+private:
     void updateButton();
     QListBox *mListBox;
     QPushButton *mAddButton;

@@ -28,47 +28,50 @@
 class KEBListViewItem;
 class BookmarkIteratorHolder;
 
-class BookmarkIterator : public QObject
-{
-   Q_OBJECT
+class BookmarkIterator : public QObject {
+    Q_OBJECT
 
 public:
-   BookmarkIterator(QValueList<KBookmark> bks);
-   virtual ~BookmarkIterator();
-   virtual BookmarkIteratorHolder* holder() const = 0;
+    BookmarkIterator(QValueList< KBookmark > bks);
+    virtual ~BookmarkIterator();
+    virtual BookmarkIteratorHolder *holder() const = 0;
 
 public slots:
-   void nextOne();
-   void delayedEmitNextOne();
-   void slotCancelTest(BookmarkIterator *t);
+    void nextOne();
+    void delayedEmitNextOne();
+    void slotCancelTest(BookmarkIterator *t);
 
 signals:
-   void deleteSelf(BookmarkIterator *);
+    void deleteSelf(BookmarkIterator *);
 
 protected:
-   virtual void doAction() = 0;
-   virtual bool isApplicable(const KBookmark &bk) const = 0;
-   KEBListViewItem* curItem() const;
-   const KBookmark curBk() const;
+    virtual void doAction() = 0;
+    virtual bool isApplicable(const KBookmark &bk) const = 0;
+    KEBListViewItem *curItem() const;
+    const KBookmark curBk() const;
 
 private:
-   KBookmark m_bk;
-   QValueList<KBookmark> m_bklist;
+    KBookmark m_bk;
+    QValueList< KBookmark > m_bklist;
 };
 
-class BookmarkIteratorHolder
-{
+class BookmarkIteratorHolder {
 public:
-   void cancelAllItrs();
-   void removeItr(BookmarkIterator*);
-   void insertItr(BookmarkIterator*);
+    void cancelAllItrs();
+    void removeItr(BookmarkIterator *);
+    void insertItr(BookmarkIterator *);
+
 protected:
-   BookmarkIteratorHolder();
-   virtual ~BookmarkIteratorHolder() {};
-   virtual void doItrListChanged() = 0;
-   int count() const { return m_itrs.count(); }
+    BookmarkIteratorHolder();
+    virtual ~BookmarkIteratorHolder(){};
+    virtual void doItrListChanged() = 0;
+    int count() const
+    {
+        return m_itrs.count();
+    }
+
 private:
-   QPtrList<BookmarkIterator> m_itrs;
+    QPtrList< BookmarkIterator > m_itrs;
 };
 
 #endif

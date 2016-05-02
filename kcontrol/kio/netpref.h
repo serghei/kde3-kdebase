@@ -12,12 +12,11 @@ class QGridLayout;
 
 class KIntNumInput;
 
-class KIOPreferences : public KCModule
-{
+class KIOPreferences : public KCModule {
     Q_OBJECT
 
 public:
-    KIOPreferences( QWidget* parent = 0);
+    KIOPreferences(QWidget *parent = 0);
     ~KIOPreferences();
 
     void load();
@@ -27,18 +26,21 @@ public:
     QString quickHelp() const;
 
 protected slots:
-    void configChanged() { emit changed(true); }
+    void configChanged()
+    {
+        emit changed(true);
+    }
 
 private:
-    QVGroupBox* gb_Ftp;
-    QVGroupBox* gb_Timeout;
-    QCheckBox* cb_ftpEnablePasv;
-    QCheckBox* cb_ftpMarkPartial;
+    QVGroupBox *gb_Ftp;
+    QVGroupBox *gb_Timeout;
+    QCheckBox *cb_ftpEnablePasv;
+    QCheckBox *cb_ftpMarkPartial;
 
-    KIntNumInput* sb_socketRead;
-    KIntNumInput* sb_proxyConnect;
-    KIntNumInput* sb_serverConnect;
-    KIntNumInput* sb_serverResponse;
+    KIntNumInput *sb_socketRead;
+    KIntNumInput *sb_proxyConnect;
+    KIntNumInput *sb_serverConnect;
+    KIntNumInput *sb_serverResponse;
 };
 
 #endif // KIOPREFERENCES_H

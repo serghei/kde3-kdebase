@@ -36,65 +36,38 @@
 #include <kmessagebox.h>
 #include <qpushbutton.h>
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelApplet *init(QWidget *parent, const QString &configFile)
 {
-  KDE_EXPORT KPanelApplet*  init(QWidget * parent, const QString & configFile)
-  {
     KGlobal::locale()->insertCatalogue("naughtyapplet");
 
-    return new NaughtyApplet
-      (
-       configFile,
-       KPanelApplet::Normal,
-       KPanelApplet::About | KPanelApplet::Preferences,
-       parent,
-       "naughtyapplet"
-      );
-  }
+    return new NaughtyApplet(configFile, KPanelApplet::Normal, KPanelApplet::About | KPanelApplet::Preferences, parent, "naughtyapplet");
+}
 }
 
-NaughtyApplet::NaughtyApplet
-(
- const QString & configFile,
- Type t,
- int actions,
- QWidget * parent,
- const char * name
-)
-  : KPanelApplet(configFile, t, actions, parent, name)
+NaughtyApplet::NaughtyApplet(const QString &configFile, Type t, int actions, QWidget *parent, const char *name)
+    : KPanelApplet(configFile, t, actions, parent, name)
 {
-  KGlobal::iconLoader()->addAppDir("naughtyapplet");
-  setBackgroundOrigin( AncestorOrigin );
+    KGlobal::iconLoader()->addAppDir("naughtyapplet");
+    setBackgroundOrigin(AncestorOrigin);
 
-  button_ = new SimpleButton(this);
-  button_->setFixedSize(20, 20);
+    button_ = new SimpleButton(this);
+    button_->setFixedSize(20, 20);
 
-  QVBoxLayout * layout = new QVBoxLayout(this);
-  layout->addWidget(button_);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(button_);
 
-  monitor_ = new NaughtyProcessMonitor(2, 20, this);
+    monitor_ = new NaughtyProcessMonitor(2, 20, this);
 
-  connect
-    (
-     button_,   SIGNAL(clicked()),
-     this,      SLOT(slotPreferences())
-    );
+    connect(button_, SIGNAL(clicked()), this, SLOT(slotPreferences()));
 
-  connect
-    (
-     monitor_,  SIGNAL(runawayProcess(ulong, const QString &)),
-     this,      SLOT(slotWarn(ulong, const QString &))
-    );
+    connect(monitor_, SIGNAL(runawayProcess(ulong, const QString &)), this, SLOT(slotWarn(ulong, const QString &)));
 
-  connect
-    (
-     monitor_,  SIGNAL(load(uint)),
-     this,      SLOT(slotLoad(uint))
-    );
+    connect(monitor_, SIGNAL(load(uint)), this, SLOT(slotLoad(uint)));
 
-  loadSettings();
+    loadSettings();
 
-  monitor_->start();
+    monitor_->start();
 }
 
 NaughtyApplet::~NaughtyApplet()
@@ -102,122 +75,100 @@ NaughtyApplet::~NaughtyApplet()
     KGlobal::locale()->removeCatalogue("naughtyapplet");
 }
 
-  void
-NaughtyApplet::slotWarn(ulong pid, const QString & name)
+void NaughtyApplet::slotWarn(ulong pid, const QString &name)
 {
-  if (ignoreList_.contains(name))
-    return;
+    if(ignoreList_.contains(name))
+        return;
 
-  QString s = i18n("A program called '%1' is slowing down the others "
-                   "on your machine. It may have a bug that is causing "
-                   "this, or it may just be busy.\n"
-                   "Would you like to try to stop the program?");
+    QString s = i18n(
+        "A program called '%1' is slowing down the others "
+        "on your machine. It may have a bug that is causing "
+        "this, or it may just be busy.\n"
+        "Would you like to try to stop the program?");
 
-  int retval = KMessageBox::warningYesNo(this, s.arg(name), QString::null, i18n("Stop"), i18n("Keep Running"));
+    int retval = KMessageBox::warningYesNo(this, s.arg(name), QString::null, i18n("Stop"), i18n("Keep Running"));
 
-  if (KMessageBox::Yes == retval)
-    monitor_->kill(pid);
-  else
-  {
-    s = i18n("In future, should busy programs called '%1' be ignored?");
-
-    retval = KMessageBox::questionYesNo(this, s.arg(name), QString::null, i18n("Ignore"), i18n("Do Not Ignore"));
-
-    if (KMessageBox::Yes == retval)
+    if(KMessageBox::Yes == retval)
+        monitor_->kill(pid);
+    else
     {
-      ignoreList_.append(name);
-      config()->writeEntry("IgnoreList", ignoreList_);
-      config()->sync();
+        s = i18n("In future, should busy programs called '%1' be ignored?");
+
+        retval = KMessageBox::questionYesNo(this, s.arg(name), QString::null, i18n("Ignore"), i18n("Do Not Ignore"));
+
+        if(KMessageBox::Yes == retval)
+        {
+            ignoreList_.append(name);
+            config()->writeEntry("IgnoreList", ignoreList_);
+            config()->sync();
+        }
     }
-  }
 }
 
-  int
-NaughtyApplet::widthForHeight(int) const
+int NaughtyApplet::widthForHeight(int) const
 {
-  return 20;
+    return 20;
 }
 
-  int
-NaughtyApplet::heightForWidth(int) const
+int NaughtyApplet::heightForWidth(int) const
 {
-  return 20;
+    return 20;
 }
 
-  void
-NaughtyApplet::slotLoad(uint l)
+void NaughtyApplet::slotLoad(uint l)
 {
-  if (l > monitor_->triggerLevel())
-    button_->setPixmap(BarIcon("naughty-sad"));
-  else
-    button_->setPixmap(BarIcon("naughty-happy"));
+    if(l > monitor_->triggerLevel())
+        button_->setPixmap(BarIcon("naughty-sad"));
+    else
+        button_->setPixmap(BarIcon("naughty-happy"));
 }
 
-  void
-NaughtyApplet::about()
+void NaughtyApplet::about()
 {
-  KAboutData about
-    (
-     "naughtyapplet",
-     I18N_NOOP("Naughty applet"),
-     "1.0",
-     I18N_NOOP("Runaway process catcher"),
-     KAboutData::License_GPL_V2,
-     "(C) 2000 Rik Hemsley (rikkus) <rik@kde.org>"
-   );
+    KAboutData about("naughtyapplet", I18N_NOOP("Naughty applet"), "1.0", I18N_NOOP("Runaway process catcher"), KAboutData::License_GPL_V2,
+                     "(C) 2000 Rik Hemsley (rikkus) <rik@kde.org>");
 
-  KAboutApplication a(&about, this);
-  a.exec();
+    KAboutApplication a(&about, this);
+    a.exec();
 }
 
-  void
-NaughtyApplet::slotPreferences()
+void NaughtyApplet::slotPreferences()
 {
-  preferences();
+    preferences();
 }
 
-  void
-NaughtyApplet::preferences()
+void NaughtyApplet::preferences()
 {
-  NaughtyConfigDialog d
-    (
-     ignoreList_,
-     monitor_->interval(),
-     monitor_->triggerLevel(),
-     this
-    );
+    NaughtyConfigDialog d(ignoreList_, monitor_->interval(), monitor_->triggerLevel(), this);
 
-  QDialog::DialogCode retval = QDialog::DialogCode(d.exec());
+    QDialog::DialogCode retval = QDialog::DialogCode(d.exec());
 
-  if (QDialog::Accepted == retval)
-  {
-    ignoreList_ = d.ignoreList();
-    monitor_->setInterval(d.updateInterval());
-    monitor_->setTriggerLevel(d.threshold());
-    saveSettings();
-  }
+    if(QDialog::Accepted == retval)
+    {
+        ignoreList_ = d.ignoreList();
+        monitor_->setInterval(d.updateInterval());
+        monitor_->setTriggerLevel(d.threshold());
+        saveSettings();
+    }
 }
 
-  void
-NaughtyApplet::loadSettings()
+void NaughtyApplet::loadSettings()
 {
-  ignoreList_ = config()->readListEntry("IgnoreList");
-  monitor_->setInterval(config()->readUnsignedNumEntry("UpdateInterval", 2));
-  monitor_->setTriggerLevel(config()->readUnsignedNumEntry("Threshold", 20));
+    ignoreList_ = config()->readListEntry("IgnoreList");
+    monitor_->setInterval(config()->readUnsignedNumEntry("UpdateInterval", 2));
+    monitor_->setTriggerLevel(config()->readUnsignedNumEntry("Threshold", 20));
 
-  // Add 'X' as a default.
-  if (ignoreList_.isEmpty() && !config()->hasKey("IgnoreList"))
-    ignoreList_.append("X");
+    // Add 'X' as a default.
+    if(ignoreList_.isEmpty() && !config()->hasKey("IgnoreList"))
+        ignoreList_.append("X");
 }
 
-  void
-NaughtyApplet::saveSettings()
+void NaughtyApplet::saveSettings()
 {
-  config()->writeEntry("IgnoreList",      ignoreList_);
-  config()->writeEntry("UpdateInterval",  monitor_->interval());
-  config()->writeEntry("Threshold",       monitor_->triggerLevel());
-  config()->sync();
+    config()->writeEntry("IgnoreList", ignoreList_);
+    config()->writeEntry("UpdateInterval", monitor_->interval());
+    config()->writeEntry("Threshold", monitor_->triggerLevel());
+    config()->sync();
 }
 
 #include "NaughtyApplet.moc"
-

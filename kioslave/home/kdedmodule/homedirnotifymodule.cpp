@@ -22,16 +22,14 @@
 #include <klocale.h>
 #include <kglobal.h>
 
-HomeDirNotifyModule::HomeDirNotifyModule(const QCString &obj)
-	: KDEDModule(obj)
+HomeDirNotifyModule::HomeDirNotifyModule(const QCString &obj) : KDEDModule(obj)
 {
 }
 
 extern "C" {
-	KDE_EXPORT KDEDModule *create_homedirnotify(const QCString &obj)
-	{
-		KGlobal::locale()->insertCatalogue("kio_home");
-		return new HomeDirNotifyModule(obj);
-	}
+KDE_EXPORT KDEDModule *create_homedirnotify(const QCString &obj)
+{
+    KGlobal::locale()->insertCatalogue("kio_home");
+    return new HomeDirNotifyModule(obj);
 }
-
+}

@@ -23,34 +23,38 @@
 #include <qwidget.h>
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 
 /**
   Interface to the toolviewmanager
  */
-class KDE_EXPORT ToolViewManager : public QObject
-{
-  friend class PrivateToolViewManager;
+class KDE_EXPORT ToolViewManager : public QObject {
+    friend class PrivateToolViewManager;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     /**
      * Construtor, should not interest, internal usage
      */
-    ToolViewManager (void *toolViewManager);
+    ToolViewManager(void *toolViewManager);
 
     /**
      * Desctructor
      */
-    virtual ~ToolViewManager ();
+    virtual ~ToolViewManager();
 
-  public:
+public:
     /**
      * positions
      */
-    enum Position {Left, Right, Top, Bottom};
+    enum Position
+    {
+        Left,
+        Right,
+        Top,
+        Bottom
+    };
 
     /**
      * add a given widget to the given sidebar if possible, name is very important
@@ -60,7 +64,7 @@ class KDE_EXPORT ToolViewManager : public QObject
      * @param text text to use in addition to icon
      * @return created toolview on success or 0
      */
-    QWidget *createToolView (const QString &identifier, ToolViewManager::Position pos, const QPixmap &icon, const QString &text);
+    QWidget *createToolView(const QString &identifier, ToolViewManager::Position pos, const QPixmap &icon, const QString &text);
 
     /**
      * Move the toolview
@@ -68,29 +72,28 @@ class KDE_EXPORT ToolViewManager : public QObject
      * @param pos position to move widget to
      * @return bool success
      */
-    bool moveToolView (QWidget *widget, ToolViewManager::Position pos);
+    bool moveToolView(QWidget *widget, ToolViewManager::Position pos);
 
     /**
      * Show the toolview
      * @param widget to show, widget given must be widget constructed by createToolView
      * @return bool success
      */
-    bool showToolView (QWidget *widget);
+    bool showToolView(QWidget *widget);
 
     /**
      * Hide the toolview
      * @param widget to hide, widget given must be widget constructed by createToolView
      * @return bool success
      */
-    bool hideToolView (QWidget *widget);
+    bool hideToolView(QWidget *widget);
 
-  private:
+private:
     /**
      * REALLY PRIVATE ;)
      */
     class PrivateToolViewManager *d;
 };
-
 }
 
 #endif

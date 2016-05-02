@@ -33,89 +33,89 @@
 #include <kiconloader.h>
 #include <qwhatsthis.h>
 
-class KatePluginListItem : public QCheckListItem
-{
-  public:
+class KatePluginListItem : public QCheckListItem {
+public:
     KatePluginListItem(bool checked, KatePluginInfo *info, QListView *parent);
-    KatePluginInfo *info() const { return mInfo; }
+    KatePluginInfo *info() const
+    {
+        return mInfo;
+    }
 
-  protected:
+protected:
     void stateChange(bool);
 
-  private:
+private:
     KatePluginInfo *mInfo;
     bool silentStateChange;
 };
 
 KatePluginListItem::KatePluginListItem(bool checked, KatePluginInfo *info, QListView *parent)
-  : QCheckListItem(parent, info->service->name(), CheckBox)
-  , mInfo(info)
-  , silentStateChange(false)
+    : QCheckListItem(parent, info->service->name(), CheckBox), mInfo(info), silentStateChange(false)
 {
-  silentStateChange = true;
-  setOn(checked);
-  silentStateChange = false;
+    silentStateChange = true;
+    setOn(checked);
+    silentStateChange = false;
 }
 
 void KatePluginListItem::stateChange(bool b)
 {
-  if(!silentStateChange)
-    static_cast<KatePluginListView *>(listView())->stateChanged(this, b);
+    if(!silentStateChange)
+        static_cast< KatePluginListView * >(listView())->stateChanged(this, b);
 }
 
-KatePluginListView::KatePluginListView(QWidget *parent, const char *name)
-  : KListView(parent, name)
+KatePluginListView::KatePluginListView(QWidget *parent, const char *name) : KListView(parent, name)
 {
 }
 
 void KatePluginListView::stateChanged(KatePluginListItem *item, bool b)
 {
-  emit stateChange(item, b);
+    emit stateChange(item, b);
 }
 
-KateConfigPluginPage::KateConfigPluginPage(QWidget *parent, KateConfigDialog *dialog):QVBox(parent)
+KateConfigPluginPage::KateConfigPluginPage(QWidget *parent, KateConfigDialog *dialog) : QVBox(parent)
 {
-  myDialog=dialog;
+    myDialog = dialog;
 
-  KatePluginListView* listView = new KatePluginListView(this);
-  listView->addColumn(i18n("Name"));
-  listView->addColumn(i18n("Comment"));
-  QWhatsThis::add(listView,i18n("Here you can see all available Kate plugins. Those with a check mark are loaded, and will be loaded again the next time Kate is started."));
+    KatePluginListView *listView = new KatePluginListView(this);
+    listView->addColumn(i18n("Name"));
+    listView->addColumn(i18n("Comment"));
+    QWhatsThis::add(listView, i18n("Here you can see all available Kate plugins. Those with a check mark are loaded, and will be loaded again the "
+                                   "next time Kate is started."));
 
-  connect(listView, SIGNAL(stateChange(KatePluginListItem *, bool)), this, SLOT(stateChange(KatePluginListItem *, bool)));
+    connect(listView, SIGNAL(stateChange(KatePluginListItem *, bool)), this, SLOT(stateChange(KatePluginListItem *, bool)));
 
-  KatePluginList &pluginList (KatePluginManager::self()->pluginList());
-  for (unsigned int i=0; i < pluginList.size(); ++i)
-  {
-    KatePluginListItem *item = new KatePluginListItem(pluginList[i].load, &pluginList[i], listView);
-    item->setText(0, pluginList[i].service->name());
-    item->setText(1, pluginList[i].service->comment());
-  }
+    KatePluginList &pluginList(KatePluginManager::self()->pluginList());
+    for(unsigned int i = 0; i < pluginList.size(); ++i)
+    {
+        KatePluginListItem *item = new KatePluginListItem(pluginList[i].load, &pluginList[i], listView);
+        item->setText(0, pluginList[i].service->name());
+        item->setText(1, pluginList[i].service->comment());
+    }
 }
 
- void KateConfigPluginPage::stateChange(KatePluginListItem *item, bool b)
+void KateConfigPluginPage::stateChange(KatePluginListItem *item, bool b)
 {
-  if(b)
-    loadPlugin(item);
-  else
-    unloadPlugin(item);
+    if(b)
+        loadPlugin(item);
+    else
+        unloadPlugin(item);
 
-  emit changed();
+    emit changed();
 }
 
-void KateConfigPluginPage::loadPlugin (KatePluginListItem *item)
+void KateConfigPluginPage::loadPlugin(KatePluginListItem *item)
 {
-  KatePluginManager::self()->loadPlugin (item->info());
-  KatePluginManager::self()->enablePluginGUI (item->info());
-  myDialog->addPluginPage (item->info()->plugin);
+    KatePluginManager::self()->loadPlugin(item->info());
+    KatePluginManager::self()->enablePluginGUI(item->info());
+    myDialog->addPluginPage(item->info()->plugin);
 
-  item->setOn(true);
+    item->setOn(true);
 }
 
-void KateConfigPluginPage::unloadPlugin (KatePluginListItem *item)
+void KateConfigPluginPage::unloadPlugin(KatePluginListItem *item)
 {
-  myDialog->removePluginPage (item->info()->plugin);
-  KatePluginManager::self()->unloadPlugin (item->info());
+    myDialog->removePluginPage(item->info()->plugin);
+    KatePluginManager::self()->unloadPlugin(item->info());
 
-  item->setOn(false);
+    item->setOn(false);
 }

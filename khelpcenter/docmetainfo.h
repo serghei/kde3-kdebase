@@ -17,9 +17,8 @@ class DocEntryTraverser;
 /*!
   This class provides some meta information about help documents.
 */
-class DocMetaInfo
-{
-  public:
+class DocMetaInfo {
+public:
     /*!
       Return instance of DocMetaInfo. There can only be one instance at a time.
     */
@@ -27,37 +26,37 @@ class DocMetaInfo
 
     ~DocMetaInfo();
 
-    void scanMetaInfo( bool force = false );
+    void scanMetaInfo(bool force = false);
 
-    DocEntry *addDocEntry( const QString &fileName );
+    DocEntry *addDocEntry(const QString &fileName);
 
-    void addDocEntry( DocEntry * );
+    void addDocEntry(DocEntry *);
 
     DocEntry::List docEntries();
-    
+
     DocEntry::List searchEntries();
 
-    void traverseEntries( DocEntryTraverser * );
+    void traverseEntries(DocEntryTraverser *);
 
-    void startTraverseEntries( DocEntryTraverser *traverser );
-    void startTraverseEntry( DocEntry *entry, DocEntryTraverser *traverser );
-    void endProcess( DocEntry *entry, DocEntryTraverser *traverser );
-    void endTraverseEntries( DocEntryTraverser * );
+    void startTraverseEntries(DocEntryTraverser *traverser);
+    void startTraverseEntry(DocEntry *entry, DocEntryTraverser *traverser);
+    void endProcess(DocEntry *entry, DocEntryTraverser *traverser);
+    void endTraverseEntries(DocEntryTraverser *);
 
-    static QString languageName( const QString &langcode );
+    static QString languageName(const QString &langcode);
 
-  protected:
-    DocEntry *scanMetaInfoDir( const QString &filename, DocEntry *parent );
-    DocEntry *addDirEntry( const QDir &dir, DocEntry *parent );
-    void traverseEntry( DocEntry *, DocEntryTraverser * );
+protected:
+    DocEntry *scanMetaInfoDir(const QString &filename, DocEntry *parent);
+    DocEntry *addDirEntry(const QDir &dir, DocEntry *parent);
+    void traverseEntry(DocEntry *, DocEntryTraverser *);
 
-  private:
+private:
     /*!
       DocMetaInfo is a singleton. Private constructor prevents direct
       instantisation.
     */
     DocMetaInfo();
-  
+
     DocEntry::List mDocEntries;
     DocEntry::List mSearchEntries;
 
@@ -65,7 +64,7 @@ class DocMetaInfo
 
     QStringList mLanguages;
 
-    QMap<QString,QString> mLanguageNames;
+    QMap< QString, QString > mLanguageNames;
 
     HTMLSearch *mHtmlSearch;
 
@@ -73,7 +72,6 @@ class DocMetaInfo
 
     static DocMetaInfo *mSelf;
 };
-
 }
 
 #endif

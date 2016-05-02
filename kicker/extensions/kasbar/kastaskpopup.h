@@ -66,25 +66,22 @@ class KasTaskItem;
  *
  * @author Richard Moore, rich@kde.org
  */
-class KasTaskPopup : public KasPopup
-{
+class KasTaskPopup : public KasPopup {
     Q_OBJECT
 
 public:
-    KasTaskPopup( KasTaskItem *item, const char *name=0 );
+    KasTaskPopup(KasTaskItem *item, const char *name = 0);
     virtual ~KasTaskPopup();
 
 public slots:
     void refresh();
 
 protected:
-    virtual void paintEvent( QPaintEvent * );
+    virtual void paintEvent(QPaintEvent *);
 
- private:
+private:
     KasTaskItem *item;
     KPixmap titleBg;
 };
 
 #endif // KASTASKPOPUP_H
-
-

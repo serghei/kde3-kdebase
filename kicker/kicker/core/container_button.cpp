@@ -56,29 +56,25 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "container_button.h"
 #include "container_button.moc"
 
-ButtonContainer::ButtonContainer(QPopupMenu* opMenu, QWidget* parent)
-  : BaseContainer(opMenu, parent)
-  , _button(0)
-  , _layout(0)
-  , _oldpos(0,0)
+ButtonContainer::ButtonContainer(QPopupMenu *opMenu, QWidget *parent) : BaseContainer(opMenu, parent), _button(0), _layout(0), _oldpos(0, 0)
 {
-     setBackgroundOrigin(AncestorOrigin);
+    setBackgroundOrigin(AncestorOrigin);
 }
 
 bool ButtonContainer::isValid() const
 {
-   if (_button)
-   {
-       return _button->isValid();
-   }
+    if(_button)
+    {
+        return _button->isValid();
+    }
 
-   return false; // Can this happen?
+    return false; // Can this happen?
 }
 
 // Buttons Shouldn't be square when larger than a certain size.
 int ButtonContainer::widthForHeight(int height) const
 {
-    if (isValid())
+    if(isValid())
     {
         return _button->widthForHeight(height);
     }
@@ -86,9 +82,9 @@ int ButtonContainer::widthForHeight(int height) const
     return height;
 }
 
-int ButtonContainer::heightForWidth(int width)  const
+int ButtonContainer::heightForWidth(int width) const
 {
-    if (isValid())
+    if(isValid())
     {
         return _button->heightForWidth(width);
     }
@@ -98,8 +94,8 @@ int ButtonContainer::heightForWidth(int width)  const
 
 void ButtonContainer::setBackground()
 {
-    PanelButton* b = button();
-    if (!b)
+    PanelButton *b = button();
+    if(!b)
         return;
 
     b->unsetPalette();
@@ -107,16 +103,16 @@ void ButtonContainer::setBackground()
 
 void ButtonContainer::configure()
 {
-    if (_button)
+    if(_button)
     {
         _button->configure();
     }
 }
 
-void ButtonContainer::doSaveConfiguration(KConfigGroup& config, bool layoutOnly) const
+void ButtonContainer::doSaveConfiguration(KConfigGroup &config, bool layoutOnly) const
 {
     // immutability is checked by ContainerBase
-    if (_button && !layoutOnly)
+    if(_button && !layoutOnly)
     {
         _button->saveConfig(config);
     }
@@ -126,7 +122,7 @@ void ButtonContainer::setPopupDirection(KPanelApplet::Direction d)
 {
     BaseContainer::setPopupDirection(d);
 
-    if (_button)
+    if(_button)
     {
         _button->setPopupDirection(d);
     }
@@ -140,9 +136,10 @@ void ButtonContainer::setOrientation(Orientation o)
         _button->setOrientation(o);
 }
 
-void ButtonContainer::embedButton(PanelButton* b)
+void ButtonContainer::embedButton(PanelButton *b)
 {
-    if (!b) return;
+    if(!b)
+        return;
 
     delete _layout;
     _layout = new QVBoxLayout(this);
@@ -153,21 +150,18 @@ void ButtonContainer::embedButton(PanelButton* b)
     connect(_button, SIGNAL(requestSave()), SIGNAL(requestSave()));
     connect(_button, SIGNAL(hideme(bool)), SLOT(hideRequested(bool)));
     connect(_button, SIGNAL(removeme()), SLOT(removeRequested()));
-    connect(_button, SIGNAL(dragme(const QPixmap)),
-            SLOT(dragButton(const QPixmap)));
-    connect(_button, SIGNAL(dragme(const KURL::List, const QPixmap)),
-            SLOT(dragButton(const KURL::List, const QPixmap)));
+    connect(_button, SIGNAL(dragme(const QPixmap)), SLOT(dragButton(const QPixmap)));
+    connect(_button, SIGNAL(dragme(const KURL::List, const QPixmap)), SLOT(dragButton(const KURL::List, const QPixmap)));
 }
 
-QPopupMenu* ButtonContainer::createOpMenu()
+QPopupMenu *ButtonContainer::createOpMenu()
 {
-    return new PanelAppletOpMenu(_actions, appletOpMenu(), 0, _button->title(),
-                                 _button->icon(), this);
+    return new PanelAppletOpMenu(_actions, appletOpMenu(), 0, _button->title(), _button->icon(), this);
 }
 
 void ButtonContainer::removeRequested()
 {
-    if (isImmutable())
+    if(isImmutable())
     {
         return;
     }
@@ -177,7 +171,7 @@ void ButtonContainer::removeRequested()
 
 void ButtonContainer::hideRequested(bool shouldHide)
 {
-    if (shouldHide)
+    if(shouldHide)
     {
         hide();
     }
@@ -189,12 +183,12 @@ void ButtonContainer::hideRequested(bool shouldHide)
 
 void ButtonContainer::dragButton(const KURL::List urls, const QPixmap icon)
 {
-    if (isImmutable())
+    if(isImmutable())
     {
         return;
     }
 
-    KMultipleDrag* dd = new KMultipleDrag(this);
+    KMultipleDrag *dd = new KMultipleDrag(this);
     dd->addDragObject(new KURLDrag(urls, 0));
     dd->addDragObject(new PanelDrag(this, 0));
     dd->setPixmap(icon);
@@ -205,7 +199,7 @@ void ButtonContainer::dragButton(const KURL::List urls, const QPixmap icon)
 
 void ButtonContainer::dragButton(const QPixmap icon)
 {
-    PanelDrag* dd = new PanelDrag(this, this);
+    PanelDrag *dd = new PanelDrag(this, this);
     dd->setPixmap(icon);
     grabKeyboard();
     dd->drag();
@@ -214,84 +208,81 @@ void ButtonContainer::dragButton(const QPixmap icon)
 
 bool ButtonContainer::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == _button && e->type() == QEvent::MouseButtonPress)
+    if(o == _button && e->type() == QEvent::MouseButtonPress)
     {
         static bool sentinal = false;
 
-        if (sentinal)
+        if(sentinal)
         {
             return false;
         }
 
         sentinal = true;
-        QMouseEvent* me = static_cast<QMouseEvent*>(e);
-        switch (me->button())
+        QMouseEvent *me = static_cast< QMouseEvent * >(e);
+        switch(me->button())
         {
-        case MidButton:
-        {
-            if (isImmutable())
+            case MidButton:
             {
-                break;
-            }
-
-            _button->setDown(true);
-            _moveOffset = me->pos();
-            emit moveme(this);
-            sentinal = false;
-            return true;
-        }
-
-        case RightButton:
-        {
-            if (!kapp->authorizeKAction("kicker_rmb") ||
-                isImmutable())
-            {
-                break;
-            }
-
-            QPopupMenu* menu = opMenu();
-            connect( menu, SIGNAL( aboutToHide() ), this, SLOT( slotMenuClosed() ) );
-            QPoint pos = KickerLib::popupPosition(popupDirection(), menu, this,
-                                                  (orientation() == Horizontal) ?
-                                                   QPoint(0, 0) : me->pos());
-
-            Kicker::the()->setInsertionPoint(me->globalPos());
-
-            KickerTip::enableTipping(false);
-            switch (menu->exec(pos))
-            {
-            case PanelAppletOpMenu::Move:
-                _moveOffset = rect().center();
-                emit moveme(this);
-                break;
-            case PanelAppletOpMenu::Remove:
-                emit removeme(this);
-                break;
-            case PanelAppletOpMenu::Help:
-                help();
-                break;
-            case PanelAppletOpMenu::About:
-                about();
-                break;
-            case PanelAppletOpMenu::Preferences:
-                if (_button)
+                if(isImmutable())
                 {
-                    _button->properties();
+                    break;
                 }
-                break;
+
+                _button->setDown(true);
+                _moveOffset = me->pos();
+                emit moveme(this);
+                sentinal = false;
+                return true;
+            }
+
+            case RightButton:
+            {
+                if(!kapp->authorizeKAction("kicker_rmb") || isImmutable())
+                {
+                    break;
+                }
+
+                QPopupMenu *menu = opMenu();
+                connect(menu, SIGNAL(aboutToHide()), this, SLOT(slotMenuClosed()));
+                QPoint pos = KickerLib::popupPosition(popupDirection(), menu, this, (orientation() == Horizontal) ? QPoint(0, 0) : me->pos());
+
+                Kicker::the()->setInsertionPoint(me->globalPos());
+
+                KickerTip::enableTipping(false);
+                switch(menu->exec(pos))
+                {
+                    case PanelAppletOpMenu::Move:
+                        _moveOffset = rect().center();
+                        emit moveme(this);
+                        break;
+                    case PanelAppletOpMenu::Remove:
+                        emit removeme(this);
+                        break;
+                    case PanelAppletOpMenu::Help:
+                        help();
+                        break;
+                    case PanelAppletOpMenu::About:
+                        about();
+                        break;
+                    case PanelAppletOpMenu::Preferences:
+                        if(_button)
+                        {
+                            _button->properties();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                KickerTip::enableTipping(true);
+
+                Kicker::the()->setInsertionPoint(QPoint());
+                clearOpMenu();
+                sentinal = false;
+                return true;
+            }
+
             default:
                 break;
-            }
-            KickerTip::enableTipping(true);
-
-            Kicker::the()->setInsertionPoint(QPoint());
-            clearOpMenu();
-            sentinal = false;
-            return true;
-        }
-
-        default:
-            break;
         }
 
         sentinal = false;
@@ -301,7 +292,7 @@ bool ButtonContainer::eventFilter(QObject *o, QEvent *e)
 
 void ButtonContainer::completeMoveOperation()
 {
-    if (_button)
+    if(_button)
     {
         _button->setDown(false);
         setBackground();
@@ -310,79 +301,66 @@ void ButtonContainer::completeMoveOperation()
 
 void ButtonContainer::slotMenuClosed()
 {
-    if (_button)
+    if(_button)
         _button->setDown(false);
 }
 
-void ButtonContainer::checkImmutability(const KConfigGroup& config)
+void ButtonContainer::checkImmutability(const KConfigGroup &config)
 {
-    m_immutable = config.groupIsImmutable() ||
-                  config.entryIsImmutable("ConfigFile") ||
-                  config.entryIsImmutable("FreeSpace2");
+    m_immutable = config.groupIsImmutable() || config.entryIsImmutable("ConfigFile") || config.entryIsImmutable("FreeSpace2");
 }
 
 // KMenuButton containerpan
-KMenuButtonContainer::KMenuButtonContainer(const KConfigGroup& config, QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+KMenuButtonContainer::KMenuButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new KButton(this) );
+    embedButton(new KButton(this));
     _actions = PanelAppletOpMenu::KMenuEditor;
 }
 
-KMenuButtonContainer::KMenuButtonContainer(QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+KMenuButtonContainer::KMenuButtonContainer(QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new KButton(this) );
+    embedButton(new KButton(this));
     _actions = PanelAppletOpMenu::KMenuEditor;
 }
 
-int KMenuButtonContainer::heightForWidth( int width ) const
+int KMenuButtonContainer::heightForWidth(int width) const
 {
-    if ( width < 32 )
+    if(width < 32)
         return width + 10;
     else
         return ButtonContainer::heightForWidth(width);
 }
 
 // DesktopButton container
-DesktopButtonContainer::DesktopButtonContainer(QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+DesktopButtonContainer::DesktopButtonContainer(QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new DesktopButton(this) );
+    embedButton(new DesktopButton(this));
 }
 
-DesktopButtonContainer::DesktopButtonContainer(const KConfigGroup& config,
-                                               QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+DesktopButtonContainer::DesktopButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new DesktopButton(this) );
+    embedButton(new DesktopButton(this));
 }
 
 // ServiceButton container
-ServiceButtonContainer::ServiceButtonContainer( const QString& desktopFile,
-                                                QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+ServiceButtonContainer::ServiceButtonContainer(const QString &desktopFile, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new ServiceButton( desktopFile, this ) );
+    embedButton(new ServiceButton(desktopFile, this));
     _actions = KPanelApplet::Preferences;
 }
 
-ServiceButtonContainer::ServiceButtonContainer( const KService::Ptr &service,
-                                                QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+ServiceButtonContainer::ServiceButtonContainer(const KService::Ptr &service, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new ServiceButton( service, this ) );
+    embedButton(new ServiceButton(service, this));
     _actions = KPanelApplet::Preferences;
 }
 
-ServiceButtonContainer::ServiceButtonContainer( const KConfigGroup& config,
-                                                QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+ServiceButtonContainer::ServiceButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new ServiceButton( config, this ) );
+    embedButton(new ServiceButton(config, this));
     _actions = KPanelApplet::Preferences;
 }
 
@@ -397,18 +375,16 @@ QString ServiceButtonContainer::visibleName() const
 }
 
 // URLButton container
-URLButtonContainer::URLButtonContainer( const QString& url, QPopupMenu* opMenu, QWidget* parent )
-  : ButtonContainer(opMenu, parent)
+URLButtonContainer::URLButtonContainer(const QString &url, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new URLButton( url, this ) );
+    embedButton(new URLButton(url, this));
     _actions = KPanelApplet::Preferences;
 }
 
-URLButtonContainer::URLButtonContainer( const KConfigGroup& config, QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+URLButtonContainer::URLButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new URLButton( config, this ) );
+    embedButton(new URLButton(config, this));
     _actions = KPanelApplet::Preferences;
 }
 
@@ -423,33 +399,31 @@ QString URLButtonContainer::visibleName() const
 }
 
 // BrowserButton container
-BrowserButtonContainer::BrowserButtonContainer(const QString &startDir, QPopupMenu* opMenu, const QString& icon, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+BrowserButtonContainer::BrowserButtonContainer(const QString &startDir, QPopupMenu *opMenu, const QString &icon, QWidget *parent)
+    : ButtonContainer(opMenu, parent)
 {
-    embedButton( new BrowserButton(icon, startDir, this) );
+    embedButton(new BrowserButton(icon, startDir, this));
     _actions = KPanelApplet::Preferences;
 }
 
-BrowserButtonContainer::BrowserButtonContainer( const KConfigGroup& config, QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+BrowserButtonContainer::BrowserButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new BrowserButton(config, this) );
+    embedButton(new BrowserButton(config, this));
     _actions = KPanelApplet::Preferences;
 }
 
 // ServiceMenuButton container
-ServiceMenuButtonContainer::ServiceMenuButtonContainer(const QString& relPath, QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+ServiceMenuButtonContainer::ServiceMenuButtonContainer(const QString &relPath, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new ServiceMenuButton(relPath, this) );
+    embedButton(new ServiceMenuButton(relPath, this));
 }
 
-ServiceMenuButtonContainer::ServiceMenuButtonContainer( const KConfigGroup& config, QPopupMenu* opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+ServiceMenuButtonContainer::ServiceMenuButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent)
+    : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new ServiceMenuButton(config, this) );
+    embedButton(new ServiceMenuButton(config, this));
 }
 
 QString ServiceMenuButtonContainer::icon() const
@@ -463,71 +437,58 @@ QString ServiceMenuButtonContainer::visibleName() const
 }
 
 // WindowListButton container
-WindowListButtonContainer::WindowListButtonContainer(const KConfigGroup& config, QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+WindowListButtonContainer::WindowListButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent)
+    : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new WindowListButton(this) );
+    embedButton(new WindowListButton(this));
 }
 
-WindowListButtonContainer::WindowListButtonContainer(QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+WindowListButtonContainer::WindowListButtonContainer(QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new WindowListButton(this) );
+    embedButton(new WindowListButton(this));
 }
 
 // BookmarkButton container
-BookmarksButtonContainer::BookmarksButtonContainer(const KConfigGroup& config, QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+BookmarksButtonContainer::BookmarksButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new BookmarksButton(this) );
+    embedButton(new BookmarksButton(this));
     _actions = PanelAppletOpMenu::BookmarkEditor;
 }
 
-BookmarksButtonContainer::BookmarksButtonContainer(QPopupMenu *opMenu, QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+BookmarksButtonContainer::BookmarksButtonContainer(QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new BookmarksButton(this) );
+    embedButton(new BookmarksButton(this));
     _actions = PanelAppletOpMenu::BookmarkEditor;
 }
 
 // NonKDEAppButton container
-NonKDEAppButtonContainer::NonKDEAppButtonContainer(const QString &name,
-                                                   const QString &description,
-                                                   const QString &filePath,
-                                                   const QString &icon,
-                                                   const QString &cmdLine,
-                                                   bool inTerm,
-                                                   QPopupMenu* opMenu,
-                                                   QWidget* parent)
-  : ButtonContainer(opMenu, parent)
+NonKDEAppButtonContainer::NonKDEAppButtonContainer(const QString &name, const QString &description, const QString &filePath, const QString &icon,
+                                                   const QString &cmdLine, bool inTerm, QPopupMenu *opMenu, QWidget *parent)
+    : ButtonContainer(opMenu, parent)
 {
-    embedButton(new NonKDEAppButton(name, description, filePath, icon, cmdLine,
-                                    inTerm, this));
+    embedButton(new NonKDEAppButton(name, description, filePath, icon, cmdLine, inTerm, this));
     _actions = KPanelApplet::Preferences;
 }
 
-NonKDEAppButtonContainer::NonKDEAppButtonContainer( const KConfigGroup& config, QPopupMenu* opMenu, QWidget *parent)
-  : ButtonContainer(opMenu, parent)
+NonKDEAppButtonContainer::NonKDEAppButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new NonKDEAppButton(config, this) );
+    embedButton(new NonKDEAppButton(config, this));
     _actions = KPanelApplet::Preferences;
 }
 
 // ExtensionButton container
-ExtensionButtonContainer::ExtensionButtonContainer(const QString& df, QPopupMenu* opMenu, QWidget *parent)
-  : ButtonContainer(opMenu, parent)
+ExtensionButtonContainer::ExtensionButtonContainer(const QString &df, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
-    embedButton( new ExtensionButton(df, this) );
+    embedButton(new ExtensionButton(df, this));
 }
 
-ExtensionButtonContainer::ExtensionButtonContainer( const KConfigGroup& config, QPopupMenu* opMenu, QWidget *parent)
-  : ButtonContainer(opMenu, parent)
+ExtensionButtonContainer::ExtensionButtonContainer(const KConfigGroup &config, QPopupMenu *opMenu, QWidget *parent) : ButtonContainer(opMenu, parent)
 {
     checkImmutability(config);
-    embedButton( new ExtensionButton(config, this) );
+    embedButton(new ExtensionButton(config, this));
 }
 
 QString ExtensionButtonContainer::icon() const
@@ -539,4 +500,3 @@ QString ExtensionButtonContainer::visibleName() const
 {
     return button()->title();
 }
-

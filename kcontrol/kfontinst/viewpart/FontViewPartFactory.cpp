@@ -33,20 +33,18 @@
 #include <kinstance.h>
 #include <assert.h>
 
-extern "C"
+extern "C" {
+KDE_EXPORT void *init_libkfontviewpart()
 {
-    KDE_EXPORT void* init_libkfontviewpart()
-    {
-        KGlobal::locale()->insertCatalogue("kfontinst");
-        return new KFI::CFontViewPartFactory;
-    }
+    KGlobal::locale()->insertCatalogue("kfontinst");
+    return new KFI::CFontViewPartFactory;
+}
 }
 
-namespace KFI
-{
+namespace KFI {
 
-KInstance * CFontViewPartFactory::theirInstance=NULL;
-KAboutData * CFontViewPartFactory::theirAbout=NULL;
+KInstance *CFontViewPartFactory::theirInstance = NULL;
+KAboutData *CFontViewPartFactory::theirAbout = NULL;
 
 CFontViewPartFactory::CFontViewPartFactory()
 {
@@ -55,12 +53,12 @@ CFontViewPartFactory::CFontViewPartFactory()
 CFontViewPartFactory::~CFontViewPartFactory()
 {
     delete theirAbout;
-    theirAbout=0L;
+    theirAbout = 0L;
     delete theirInstance;
-    theirInstance=0L;
+    theirInstance = 0L;
 }
 
-QObject * CFontViewPartFactory::createObject(QObject *parent, const char *name, const char *, const QStringList &)
+QObject *CFontViewPartFactory::createObject(QObject *parent, const char *name, const char *, const QStringList &)
 {
     if(parent && !parent->isWidgetType())
     {
@@ -68,10 +66,10 @@ QObject * CFontViewPartFactory::createObject(QObject *parent, const char *name, 
         return 0L;
     }
 
-    return new CFontViewPart((QWidget*) parent, name);
+    return new CFontViewPart((QWidget *)parent, name);
 }
 
-KInstance* CFontViewPartFactory::instance()
+KInstance *CFontViewPartFactory::instance()
 {
     if(!theirInstance)
     {
@@ -80,7 +78,6 @@ KInstance* CFontViewPartFactory::instance()
     }
     return theirInstance;
 }
-
 }
 
 #include "FontViewPartFactory.moc"

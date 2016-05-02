@@ -36,52 +36,52 @@ class QGridLayout;
 class KConsole;
 class KGVerify;
 
-#define ex_exit    1
-#define ex_greet   2
-#define ex_choose  3
+#define ex_exit 1
+#define ex_greet 2
+#define ex_choose 3
 
 class KGDialog : public FDialog {
-	Q_OBJECT
-	typedef FDialog inherited;
+    Q_OBJECT
+    typedef FDialog inherited;
 
-  public:
-	KGDialog( bool themed = false );
+public:
+    KGDialog(bool themed = false);
 
-  public slots:
-	void slotActivateMenu( int id );
-	void slotExit();
-	void slotSwitch();
-	void slotReallySwitch();
-	void slotConsole();
-	void slotShutdown( int id );
+public slots:
+    void slotActivateMenu(int id);
+    void slotExit();
+    void slotSwitch();
+    void slotReallySwitch();
+    void slotConsole();
+    void slotShutdown(int id);
 
-  protected:
+protected:
 #ifdef XDMCP
-	void completeMenu( int _switchIf, int _switchCode, const QString &_switchMsg, int _switchAccel );
+    void completeMenu(int _switchIf, int _switchCode, const QString &_switchMsg, int _switchAccel);
 #else
-	void completeMenu();
+    void completeMenu();
 #endif
-	void inserten( const QString& txt, int accel, const char *member );
-	int inserten( const QString& txt, int accel, QPopupMenu *cmnu );
+    void inserten(const QString &txt, int accel, const char *member);
+    int inserten(const QString &txt, int accel, QPopupMenu *cmnu);
 
-	bool needSep;
-	QPopupMenu *optMenu;
-	KGVerify *verify;
+    bool needSep;
+    QPopupMenu *optMenu;
+    KGVerify *verify;
 #ifdef WITH_KDM_XCONSOLE
-	KConsole *consoleView;
+    KConsole *consoleView;
 #endif
 
-  private slots:
-	void slotDisplaySelected( int vt );
-	void slotPopulateDisplays();
+private slots:
+    void slotDisplaySelected(int vt);
+    void slotPopulateDisplays();
 
-  private:
-	void ensureMenu();
+private:
+    void ensureMenu();
 
 #ifdef HAVE_VTS
-	QPopupMenu *dpyMenu;
+    QPopupMenu *dpyMenu;
 #endif
-	int switchCode;
+    int switchCode;
 };
 
 #endif /* KGDIALOG_H */

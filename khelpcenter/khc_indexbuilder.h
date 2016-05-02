@@ -30,30 +30,28 @@ class KProcess;
 
 namespace KHC {
 
-class IndexBuilder : public QObject
-{
+class IndexBuilder : public QObject {
     Q_OBJECT
-  public:
-    IndexBuilder(const QString& cmdFile);
+public:
+    IndexBuilder(const QString &cmdFile);
 
     void sendProgressSignal();
-    void sendErrorSignal( const QString &error );
+    void sendErrorSignal(const QString &error);
     void quit();
 
     void processCmdQueue();
 
-  protected slots:
+protected slots:
     void buildIndices();
-    void slotProcessExited( KProcess * );
-    void slotReceivedStdout( KProcess *, char *buffer, int buflen );
-    void slotReceivedStderr( KProcess *, char *buffer, int buflen );
+    void slotProcessExited(KProcess *);
+    void slotReceivedStdout(KProcess *, char *buffer, int buflen);
+    void slotReceivedStderr(KProcess *, char *buffer, int buflen);
 
-  private:
+private:
     QString m_cmdFile;
     QTimer mTimer;
     QStringList mCmdQueue;
 };
-
 }
 
 #endif

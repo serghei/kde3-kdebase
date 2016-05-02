@@ -28,51 +28,51 @@ class KListView;
 class QStringList;
 class QPushButton;
 
-class KDEDConfig : public KCModule
-{
-Q_OBJECT
+class KDEDConfig : public KCModule {
+    Q_OBJECT
 public:
-	KDEDConfig(QWidget* parent, const char* name= 0L, const QStringList& foo = QStringList());
-	~KDEDConfig() {};
+    KDEDConfig(QWidget *parent, const char *name = 0L, const QStringList &foo = QStringList());
+    ~KDEDConfig(){};
 
-	void       load();
-	void       load( bool useDefaults );
-	void       save();
-	void       defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
 protected slots:
-	void slotReload();
-	void slotStartService();
-	void slotStopService();
-	void slotServiceRunningToggled();
-	void slotEvalItem(QListViewItem *item);
-	void slotItemChecked(QCheckListItem *item);
-	void getServiceStatus();
+    void slotReload();
+    void slotStartService();
+    void slotStopService();
+    void slotServiceRunningToggled();
+    void slotEvalItem(QListViewItem *item);
+    void slotItemChecked(QCheckListItem *item);
+    void getServiceStatus();
 
-        bool autoloadEnabled(KConfig *config, const QString &filename);
-        void setAutoloadEnabled(KConfig *config, const QString &filename, bool b);
+    bool autoloadEnabled(KConfig *config, const QString &filename);
+    void setAutoloadEnabled(KConfig *config, const QString &filename, bool b);
 
 private:
-	KListView *_lvLoD;
-	KListView *_lvStartup;
-	QPushButton *_pbStart;
-	QPushButton *_pbStop;
-	
-	QString RUNNING;
-	QString NOT_RUNNING;
+    KListView *_lvLoD;
+    KListView *_lvStartup;
+    QPushButton *_pbStart;
+    QPushButton *_pbStop;
+
+    QString RUNNING;
+    QString NOT_RUNNING;
 };
 
-class CheckListItem : public QObject, public QCheckListItem
-{
-	Q_OBJECT
+class CheckListItem : public QObject, public QCheckListItem {
+    Q_OBJECT
 public:
-	CheckListItem(QListView* parent, const QString &text);
-	~CheckListItem() { }
+    CheckListItem(QListView *parent, const QString &text);
+    ~CheckListItem()
+    {
+    }
 signals:
-	void changed(QCheckListItem*);
+    void changed(QCheckListItem *);
+
 protected:
-	virtual void stateChange(bool);
+    virtual void stateChange(bool);
 };
 
 #endif // KCMKDED_H
-

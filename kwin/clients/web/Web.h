@@ -30,56 +30,50 @@ class QLabel;
 class QSpacerItem;
 class QBoxLayout;
 
-namespace Web
-{
+namespace Web {
 
-  class WebButton;
+class WebButton;
 
-  class WebClient : public KCommonDecoration
-  {
-    public:
+class WebClient : public KCommonDecoration {
+public:
+    WebClient(KDecorationBridge *bridge, KDecorationFactory *factory);
+    ~WebClient();
 
-      WebClient(KDecorationBridge* bridge, KDecorationFactory* factory);
-      ~WebClient();
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual KCommonDecorationButton *createButton(ButtonType type);
 
-      virtual QString visibleName() const;
-      virtual QString defaultButtonsLeft() const;
-      virtual QString defaultButtonsRight() const;
-      virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
-      virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-      virtual KCommonDecorationButton *createButton(ButtonType type);
+    virtual void updateWindowShape();
 
-      virtual void updateWindowShape();
+    virtual void init();
 
-      virtual void init();
+protected:
+    virtual void reset(unsigned long changed);
 
-    protected:
-      virtual void reset( unsigned long changed );
+    virtual void paintEvent(QPaintEvent *);
 
-      virtual void paintEvent(QPaintEvent *);
+private:
+    int titleHeight_, borderSize_;
 
-    private:
+    bool shape_;
 
-      int titleHeight_, borderSize_;
+    QBitmap _buttonBitmap(ButtonType t) const;
+};
 
-      bool shape_;
-
-      QBitmap       _buttonBitmap(ButtonType t) const;
-  };
-
-  class WebFactory : public QObject, public KDecorationFactory
-  {
+class WebFactory : public QObject, public KDecorationFactory {
     Q_OBJECT
 
-    public:
-
-      WebFactory() {};
-      virtual ~WebFactory() {};
-      virtual KDecoration* createDecoration( KDecorationBridge* );
-      virtual bool reset( unsigned long changed );
-      virtual bool supports( Ability ability );
-      virtual QValueList< BorderSize > borderSizes() const;
-  };
+public:
+    WebFactory(){};
+    virtual ~WebFactory(){};
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool reset(unsigned long changed);
+    virtual bool supports(Ability ability);
+    virtual QValueList< BorderSize > borderSizes() const;
+};
 }
 
 #endif

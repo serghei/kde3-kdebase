@@ -23,82 +23,78 @@
 #include <qpixmap.h>
 #include <kicontheme.h>
 
-namespace Kate
-{
+namespace Kate {
 
-class KDE_EXPORT PluginConfigPage : public QWidget
-{
-  Q_OBJECT
+class KDE_EXPORT PluginConfigPage : public QWidget {
+    Q_OBJECT
 
-  public:
-    PluginConfigPage ( QWidget *parent=0, const char *name=0 );
-    virtual ~PluginConfigPage ();
+public:
+    PluginConfigPage(QWidget *parent = 0, const char *name = 0);
+    virtual ~PluginConfigPage();
 
-  //
-  // slots !!!
-  //
-  public:
+    //
+    // slots !!!
+    //
+public:
     /**
       Applies the changes to the document
     */
-    virtual void apply () = 0;
-    
+    virtual void apply() = 0;
+
     /**
       Reset the changes
     */
-    virtual void reset () = 0;
-    
+    virtual void reset() = 0;
+
     /**
       Sets default options
     */
-    virtual void defaults () = 0;
+    virtual void defaults() = 0;
 
-  signals:
-	void changed();
+signals:
+    void changed();
 };
 
 /*
 *  This is an interface for the KTextEditor::Document/Plugin/ViewPlugin classes !!!
 */
-class KDE_EXPORT PluginConfigInterfaceExtension
-{
-  friend class PrivatePluginConfigInterfaceExtension;
+class KDE_EXPORT PluginConfigInterfaceExtension {
+    friend class PrivatePluginConfigInterfaceExtension;
 
-  public:
+public:
     PluginConfigInterfaceExtension();
     virtual ~PluginConfigInterfaceExtension();
 
-    unsigned int pluginConfigInterfaceExtensionNumber () const;
+    unsigned int pluginConfigInterfaceExtensionNumber() const;
 
-  //
-  // slots !!!
-  //
-  public:    
+    //
+    // slots !!!
+    //
+public:
     /**
       Number of available config pages
     */
-    virtual uint configPages () const = 0;
-    
+    virtual uint configPages() const = 0;
+
     /**
       returns config page with the given number,
       config pages from 0 to configPages()-1 are available
       if configPages() > 0
-    */ 
-    virtual PluginConfigPage *configPage (uint number = 0, QWidget *parent = 0, const char *name=0 ) = 0;
-  
-    virtual QString configPageName (uint number = 0) const = 0;
-    virtual QString configPageFullName (uint number = 0) const = 0;
-    virtual QPixmap configPagePixmap (uint number = 0, int size = KIcon::SizeSmall) const = 0;    
-    
-  private:
+    */
+    virtual PluginConfigPage *configPage(uint number = 0, QWidget *parent = 0, const char *name = 0) = 0;
+
+    virtual QString configPageName(uint number = 0) const = 0;
+    virtual QString configPageFullName(uint number = 0) const = 0;
+    virtual QPixmap configPagePixmap(uint number = 0, int size = KIcon::SizeSmall) const = 0;
+
+private:
     class PrivatePluginConfigInterfaceExtension *d;
     static unsigned int globalPluginConfigInterfaceExtensionNumber;
     unsigned int myPluginConfigInterfaceExtensionNumber;
 };
 
 class Plugin;
-KDE_EXPORT PluginConfigInterfaceExtension *pluginConfigInterfaceExtension (Plugin *plugin);
-
+KDE_EXPORT PluginConfigInterfaceExtension *pluginConfigInterfaceExtension(Plugin *plugin);
 }
 
 #endif

@@ -26,13 +26,13 @@
 #include <dcopobject.h>
 #include <kurl.h>
 
-class KonqHistoryEntry
-{
+class KonqHistoryEntry {
 public:
-    //Should URLs be marshaled as strings (for DCOP, V2 history format)?
+    // Should URLs be marshaled as strings (for DCOP, V2 history format)?
     static bool marshalURLAsStrings;
-    KonqHistoryEntry()
-	: numberOfTimesVisited(1) {}
+    KonqHistoryEntry() : numberOfTimesVisited(1)
+    {
+    }
 
     KURL url;
     QString typedURL;
@@ -45,8 +45,8 @@ public:
 
 // QDataStream operators (read and write a KonqHistoryEntry
 // from/into a QDataStream
-QDataStream& operator<< (QDataStream& s, const KonqHistoryEntry& e);
-QDataStream& operator>> (QDataStream& s, KonqHistoryEntry& e);
+QDataStream &operator<<(QDataStream &s, const KonqHistoryEntry &e);
+QDataStream &operator>>(QDataStream &s, KonqHistoryEntry &e);
 
 ///////////////////////////////////////////////////////////////////
 
@@ -56,22 +56,21 @@ QDataStream& operator>> (QDataStream& s, KonqHistoryEntry& e);
  * dcopidl2cpp barfs on every second construct ;(
  * Implementations of the pure virtual methods are in KonqHistoryManager
  */
-class KonqHistoryComm : public DCOPObject
-{
+class KonqHistoryComm : public DCOPObject {
     K_DCOP
 
 protected:
-    KonqHistoryComm( QCString objId ) : DCOPObject( objId ) {}
+    KonqHistoryComm(QCString objId) : DCOPObject(objId)
+    {
+    }
 
-k_dcop:
-    virtual ASYNC notifyHistoryEntry( KonqHistoryEntry e, QCString saveId) = 0;
-    virtual ASYNC notifyMaxCount( Q_UINT32 count, QCString saveId ) = 0;
-    virtual ASYNC notifyMaxAge( Q_UINT32 days, QCString saveId ) = 0;
-    virtual ASYNC notifyClear( QCString saveId ) = 0;
-    virtual ASYNC notifyRemove( KURL url, QCString saveId ) = 0;
-    virtual ASYNC notifyRemove( KURL::List url, QCString saveId ) = 0;
+    k_dcop : virtual ASYNC notifyHistoryEntry(KonqHistoryEntry e, QCString saveId) = 0;
+    virtual ASYNC notifyMaxCount(Q_UINT32 count, QCString saveId) = 0;
+    virtual ASYNC notifyMaxAge(Q_UINT32 days, QCString saveId) = 0;
+    virtual ASYNC notifyClear(QCString saveId) = 0;
+    virtual ASYNC notifyRemove(KURL url, QCString saveId) = 0;
+    virtual ASYNC notifyRemove(KURL::List url, QCString saveId) = 0;
     virtual QStringList allURLs() const = 0;
-
 };
 
 #endif // KONQ_HISTORYCOMM_H

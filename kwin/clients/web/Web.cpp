@@ -27,25 +27,23 @@
 #include "Web.h"
 #include "WebButton.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KDecorationFactory *create_factory()
 {
-  KDE_EXPORT KDecorationFactory *create_factory()
-  {
     return new Web::WebFactory();
-  }
+}
 }
 
 namespace Web {
 
-WebClient::WebClient(KDecorationBridge* bridge, KDecorationFactory* factory)
-  : KCommonDecoration(bridge, factory)
+WebClient::WebClient(KDecorationBridge *bridge, KDecorationFactory *factory) : KCommonDecoration(bridge, factory)
 {
-  // Empty.
+    // Empty.
 }
 
 WebClient::~WebClient()
 {
-  // Empty.
+    // Empty.
 }
 
 QString WebClient::visibleName() const
@@ -65,7 +63,8 @@ QString WebClient::defaultButtonsRight() const
 
 bool WebClient::decorationBehaviour(DecorationBehaviour behaviour) const
 {
-    switch (behaviour) {
+    switch(behaviour)
+    {
         case DB_MenuClose:
             return false;
 
@@ -82,43 +81,45 @@ bool WebClient::decorationBehaviour(DecorationBehaviour behaviour) const
 
 int WebClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const KCommonDecorationButton *btn) const
 {
-//   bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
+    //   bool maximized = maximizeMode()==MaximizeFull && !options()->moveResizeMaximizedWindows();
 
-  switch (lm) {
-    case LM_BorderLeft:
-    case LM_BorderRight:
-    case LM_BorderBottom:
-      return borderSize_;
+    switch(lm)
+    {
+        case LM_BorderLeft:
+        case LM_BorderRight:
+        case LM_BorderBottom:
+            return borderSize_;
 
-    case LM_TitleEdgeLeft:
-    case LM_TitleEdgeRight:
-    case LM_TitleEdgeTop:
-    case LM_TitleEdgeBottom:
-      return 0;
+        case LM_TitleEdgeLeft:
+        case LM_TitleEdgeRight:
+        case LM_TitleEdgeTop:
+        case LM_TitleEdgeBottom:
+            return 0;
 
-    case LM_TitleBorderLeft:
-    case LM_TitleBorderRight:
-      return 0;
+        case LM_TitleBorderLeft:
+        case LM_TitleBorderRight:
+            return 0;
 
-    case LM_TitleHeight:
-    case LM_ButtonWidth:
-    case LM_ButtonHeight:
-      return titleHeight_;
+        case LM_TitleHeight:
+        case LM_ButtonWidth:
+        case LM_ButtonHeight:
+            return titleHeight_;
 
-    case LM_ButtonSpacing:
-      return 0;
+        case LM_ButtonSpacing:
+            return 0;
 
-    case LM_ExplicitButtonSpacer:
-      return 0;
+        case LM_ExplicitButtonSpacer:
+            return 0;
 
-    default:
-      return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
-  }
+        default:
+            return KCommonDecoration::layoutMetric(lm, respectWindowState, btn);
+    }
 }
 
 KCommonDecorationButton *WebClient::createButton(ButtonType type)
 {
-    switch (type) {
+    switch(type)
+    {
         case MenuButton:
             return new WebButton(MenuButton, this, "menu", shape_);
 
@@ -151,210 +152,215 @@ KCommonDecorationButton *WebClient::createButton(ButtonType type)
     }
 }
 
-  void
-WebClient::init()
+void WebClient::init()
 {
-  // title height
-  const int textVMargin   = 2;
-  QFontMetrics fm(options()->font(isActive(), isToolWindow()));
-
-  // border size
-  switch(options()->preferredBorderSize( factory())) {
-    case BorderLarge:
-      borderSize_ = 8;
-      break;
-    case BorderVeryLarge:
-      borderSize_ = 12;
-      break;
-    case BorderHuge:
-      borderSize_ = 18;
-      break;
-    case BorderVeryHuge:
-      borderSize_ = 27;
-      break;
-    case BorderOversized:
-      borderSize_ = 40;
-      break;
-    case BorderNormal:
-    default:
-      borderSize_ = 4;
-  }
-  titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
-  if (0 != titleHeight_ % 2)
-    titleHeight_ += 1;
-
-  KConfig c("kwinwebrc");
-  c.setGroup("General");
-  shape_ = c.readBoolEntry("Shape", true);
-
-  KCommonDecoration::init();
-}
-
-  void
-WebClient::reset( unsigned long changed )
-{
-  if (changed & SettingColors)
-  {
-    // repaint the whole thing
-    widget()->repaint(false);
-  } else if (changed & SettingFont) {
-    // font has changed -- update title height
     // title height
-    const int textVMargin   = 2;
+    const int textVMargin = 2;
     QFontMetrics fm(options()->font(isActive(), isToolWindow()));
+
+    // border size
+    switch(options()->preferredBorderSize(factory()))
+    {
+        case BorderLarge:
+            borderSize_ = 8;
+            break;
+        case BorderVeryLarge:
+            borderSize_ = 12;
+            break;
+        case BorderHuge:
+            borderSize_ = 18;
+            break;
+        case BorderVeryHuge:
+            borderSize_ = 27;
+            break;
+        case BorderOversized:
+            borderSize_ = 40;
+            break;
+        case BorderNormal:
+        default:
+            borderSize_ = 4;
+    }
     titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
-    if (0 != titleHeight_ % 2)
-      titleHeight_ += 1;
+    if(0 != titleHeight_ % 2)
+        titleHeight_ += 1;
 
-    widget()->repaint(false);
-  }
+    KConfig c("kwinwebrc");
+    c.setGroup("General");
+    shape_ = c.readBoolEntry("Shape", true);
 
-  KCommonDecoration::reset(changed);
+    KCommonDecoration::init();
 }
 
-  void
-WebClient::paintEvent(QPaintEvent * pe)
+void WebClient::reset(unsigned long changed)
 {
-  int r_x, r_y, r_x2, r_y2;
-  widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
-  const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
-  const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
-  const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);
-  const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
-  const int ttlHeight = layoutMetric(LM_TitleHeight);
-  const int titleEdgeBottomBottom = r_y+titleEdgeTop+ttlHeight+titleEdgeBottom-1;
-  QRect titleRect = QRect(r_x+titleEdgeLeft+buttonsLeftWidth(), r_y+titleEdgeTop,
-            r_x2-titleEdgeRight-buttonsRightWidth()-(r_x+titleEdgeLeft+buttonsLeftWidth()),
-            titleEdgeBottomBottom-(r_y+titleEdgeTop) );
-  titleRect.setTop(1);
+    if(changed & SettingColors)
+    {
+        // repaint the whole thing
+        widget()->repaint(false);
+    }
+    else if(changed & SettingFont)
+    {
+        // font has changed -- update title height
+        // title height
+        const int textVMargin = 2;
+        QFontMetrics fm(options()->font(isActive(), isToolWindow()));
+        titleHeight_ = QMAX(QMAX(14, fm.height() + textVMargin * 2), borderSize_);
+        if(0 != titleHeight_ % 2)
+            titleHeight_ += 1;
 
-  QPainter p(widget());
+        widget()->repaint(false);
+    }
 
-  p.setPen(Qt::black);
-  p.setBrush(options()->colorGroup(ColorFrame, isActive()).background());
+    KCommonDecoration::reset(changed);
+}
 
-  p.setClipRegion(pe->region() - titleRect);
+void WebClient::paintEvent(QPaintEvent *pe)
+{
+    int r_x, r_y, r_x2, r_y2;
+    widget()->rect().coords(&r_x, &r_y, &r_x2, &r_y2);
+    const int titleEdgeLeft = layoutMetric(LM_TitleEdgeLeft);
+    const int titleEdgeTop = layoutMetric(LM_TitleEdgeTop);
+    const int titleEdgeRight = layoutMetric(LM_TitleEdgeRight);
+    const int titleEdgeBottom = layoutMetric(LM_TitleEdgeBottom);
+    const int ttlHeight = layoutMetric(LM_TitleHeight);
+    const int titleEdgeBottomBottom = r_y + titleEdgeTop + ttlHeight + titleEdgeBottom - 1;
+    QRect titleRect =
+        QRect(r_x + titleEdgeLeft + buttonsLeftWidth(), r_y + titleEdgeTop,
+              r_x2 - titleEdgeRight - buttonsRightWidth() - (r_x + titleEdgeLeft + buttonsLeftWidth()), titleEdgeBottomBottom - (r_y + titleEdgeTop));
+    titleRect.setTop(1);
 
-  p.drawRect(widget()->rect());
+    QPainter p(widget());
 
-  p.setClipRegion(pe->region());
+    p.setPen(Qt::black);
+    p.setBrush(options()->colorGroup(ColorFrame, isActive()).background());
 
-  p.fillRect(titleRect, options()->color(ColorTitleBar, isActive()));
+    p.setClipRegion(pe->region() - titleRect);
 
-  if (shape_)
-  {
-    int r(width());
-    int b(height());
+    p.drawRect(widget()->rect());
 
-    // Draw edge of top-left corner inside the area removed by the mask.
+    p.setClipRegion(pe->region());
 
-    p.drawPoint(3, 1);
-    p.drawPoint(4, 1);
-    p.drawPoint(2, 2);
-    p.drawPoint(1, 3);
-    p.drawPoint(1, 4);
+    p.fillRect(titleRect, options()->color(ColorTitleBar, isActive()));
 
-    // Draw edge of top-right corner inside the area removed by the mask.
+    if(shape_)
+    {
+        int r(width());
+        int b(height());
 
-    p.drawPoint(r - 5, 1);
-    p.drawPoint(r - 4, 1);
-    p.drawPoint(r - 3, 2);
-    p.drawPoint(r - 2, 3);
-    p.drawPoint(r - 2, 4);
+        // Draw edge of top-left corner inside the area removed by the mask.
 
-    // Draw edge of bottom-left corner inside the area removed by the mask.
+        p.drawPoint(3, 1);
+        p.drawPoint(4, 1);
+        p.drawPoint(2, 2);
+        p.drawPoint(1, 3);
+        p.drawPoint(1, 4);
 
-    p.drawPoint(1, b - 5);
-    p.drawPoint(1, b - 4);
-    p.drawPoint(2, b - 3);
-    p.drawPoint(3, b - 2);
-    p.drawPoint(4, b - 2);
+        // Draw edge of top-right corner inside the area removed by the mask.
 
-    // Draw edge of bottom-right corner inside the area removed by the mask.
+        p.drawPoint(r - 5, 1);
+        p.drawPoint(r - 4, 1);
+        p.drawPoint(r - 3, 2);
+        p.drawPoint(r - 2, 3);
+        p.drawPoint(r - 2, 4);
 
-    p.drawPoint(r - 2, b - 5);
-    p.drawPoint(r - 2, b - 4);
-    p.drawPoint(r - 3, b - 3);
-    p.drawPoint(r - 4, b - 2);
-    p.drawPoint(r - 5, b - 2);
-  }
+        // Draw edge of bottom-left corner inside the area removed by the mask.
 
-  p.setFont(options()->font(isActive(), isToolWindow()));
+        p.drawPoint(1, b - 5);
+        p.drawPoint(1, b - 4);
+        p.drawPoint(2, b - 3);
+        p.drawPoint(3, b - 2);
+        p.drawPoint(4, b - 2);
 
-  p.setPen(options()->color(ColorFont, isActive()));
+        // Draw edge of bottom-right corner inside the area removed by the mask.
 
-  p.drawText(titleRect, AlignCenter, caption());
+        p.drawPoint(r - 2, b - 5);
+        p.drawPoint(r - 2, b - 4);
+        p.drawPoint(r - 3, b - 3);
+        p.drawPoint(r - 4, b - 2);
+        p.drawPoint(r - 5, b - 2);
+    }
+
+    p.setFont(options()->font(isActive(), isToolWindow()));
+
+    p.setPen(options()->color(ColorFont, isActive()));
+
+    p.drawText(titleRect, AlignCenter, caption());
 }
 
 void WebClient::updateWindowShape()
 {
-  if (!shape_)
-    return;
+    if(!shape_)
+        return;
 
-  QRegion mask(0, 0, width(), height());
+    QRegion mask(0, 0, width(), height());
 
-  int r(width());
-  int b(height());
+    int r(width());
+    int b(height());
 
-  // Remove top-left corner.
+    // Remove top-left corner.
 
-  mask -= QRegion(0, 0, 5, 1);
-  mask -= QRegion(0, 1, 3, 1);
-  mask -= QRegion(0, 2, 2, 1);
-  mask -= QRegion(0, 3, 1, 2);
+    mask -= QRegion(0, 0, 5, 1);
+    mask -= QRegion(0, 1, 3, 1);
+    mask -= QRegion(0, 2, 2, 1);
+    mask -= QRegion(0, 3, 1, 2);
 
-  // Remove top-right corner.
+    // Remove top-right corner.
 
-  mask -= QRegion(r - 5, 0, 5, 1);
-  mask -= QRegion(r - 3, 1, 3, 1);
-  mask -= QRegion(r - 2, 2, 2, 1);
-  mask -= QRegion(r - 1, 3, 1, 2);
+    mask -= QRegion(r - 5, 0, 5, 1);
+    mask -= QRegion(r - 3, 1, 3, 1);
+    mask -= QRegion(r - 2, 2, 2, 1);
+    mask -= QRegion(r - 1, 3, 1, 2);
 
-  // Remove bottom-left corner.
+    // Remove bottom-left corner.
 
-  mask -= QRegion(0, b - 5, 1, 3);
-  mask -= QRegion(0, b - 3, 2, 1);
-  mask -= QRegion(0, b - 2, 3, 1);
-  mask -= QRegion(0, b - 1, 5, 1);
+    mask -= QRegion(0, b - 5, 1, 3);
+    mask -= QRegion(0, b - 3, 2, 1);
+    mask -= QRegion(0, b - 2, 3, 1);
+    mask -= QRegion(0, b - 1, 5, 1);
 
-  // Remove bottom-right corner.
+    // Remove bottom-right corner.
 
-  mask -= QRegion(r - 5, b - 1, 5, 1);
-  mask -= QRegion(r - 3, b - 2, 3, 1);
-  mask -= QRegion(r - 2, b - 3, 2, 1);
-  mask -= QRegion(r - 1, b - 5, 1, 2);
+    mask -= QRegion(r - 5, b - 1, 5, 1);
+    mask -= QRegion(r - 3, b - 2, 3, 1);
+    mask -= QRegion(r - 2, b - 3, 2, 1);
+    mask -= QRegion(r - 1, b - 5, 1, 2);
 
-  setMask(mask);
+    setMask(mask);
 }
 
-KDecoration* WebFactory::createDecoration( KDecorationBridge* b )
+KDecoration *WebFactory::createDecoration(KDecorationBridge *b)
 {
-  return(new WebClient(b, this));
+    return (new WebClient(b, this));
 }
 
 bool WebFactory::reset(unsigned long changed)
 {
-  // Do we need to "hit the wooden hammer" ?
-  bool needHardReset = true;
-  if (changed & SettingColors || changed & SettingFont)
-  {
-    needHardReset = false;
-  } else if (changed & SettingButtons) {
-    // handled by KCommonDecoration
-    needHardReset = false;
-  }
+    // Do we need to "hit the wooden hammer" ?
+    bool needHardReset = true;
+    if(changed & SettingColors || changed & SettingFont)
+    {
+        needHardReset = false;
+    }
+    else if(changed & SettingButtons)
+    {
+        // handled by KCommonDecoration
+        needHardReset = false;
+    }
 
-  if (needHardReset) {
-    return true;
-  } else {
-    resetDecorations(changed);
-    return false;
-  }
+    if(needHardReset)
+    {
+        return true;
+    }
+    else
+    {
+        resetDecorations(changed);
+        return false;
+    }
 }
 
-bool WebFactory::supports( Ability ability )
+bool WebFactory::supports(Ability ability)
 {
-    switch( ability )
+    switch(ability)
     {
         case AbilityAnnounceButtons:
         case AbilityButtonOnAllDesktops:
@@ -374,10 +380,8 @@ bool WebFactory::supports( Ability ability )
 
 QValueList< WebFactory::BorderSize > WebFactory::borderSizes() const
 { // the list must be sorted
-  return QValueList< BorderSize >() << BorderNormal << BorderLarge <<
-      BorderVeryLarge <<  BorderHuge << BorderVeryHuge << BorderOversized;
+    return QValueList< BorderSize >() << BorderNormal << BorderLarge << BorderVeryLarge << BorderHuge << BorderVeryHuge << BorderOversized;
 }
-
 }
 
 #include "Web.moc"

@@ -28,12 +28,9 @@
 K_EXPORT_KICKER_MENUEXT(systemmenu, SystemMenu)
 
 
-SystemMenu::SystemMenu(QWidget *parent, const char *name,
-                       const QStringList &/*args*/)
-  : KPanelMenu( parent, name)
+SystemMenu::SystemMenu(QWidget *parent, const char *name, const QStringList & /*args*/) : KPanelMenu(parent, name)
 {
-    connect( &m_dirLister, SIGNAL( completed() ),
-             this, SLOT( slotCompleted() ) );
+    connect(&m_dirLister, SIGNAL(completed()), this, SLOT(slotCompleted()));
 
     m_dirLister.openURL(KURL("system:/"));
 }
@@ -42,8 +39,7 @@ SystemMenu::~SystemMenu()
 {
 }
 
-void SystemMenu::append(const QString &icon, const KURL &url,
-                        const QString &label)
+void SystemMenu::append(const QString &icon, const KURL &url, const QString &label)
 {
     int id = insertItem(KickerLib::menuIconSet(icon), label);
     m_urlMap.insert(id, url);
@@ -51,11 +47,12 @@ void SystemMenu::append(const QString &icon, const KURL &url,
 
 void SystemMenu::initialize()
 {
-    if (isVisible()) return;
+    if(isVisible())
+        return;
 
     clear();
 
-    if (m_entries.isEmpty())
+    if(m_entries.isEmpty())
     {
         insertItem(i18n("Empty..."));
         return;
@@ -66,7 +63,7 @@ void SystemMenu::initialize()
     KFileItemList::ConstIterator it = m_entries.begin();
     KFileItemList::ConstIterator end = m_entries.end();
 
-    for (; it!=end; ++it)
+    for(; it != end; ++it)
     {
         QString icon = (*it)->iconName();
         KURL url = (*it)->url();
@@ -77,7 +74,8 @@ void SystemMenu::initialize()
 
 void SystemMenu::slotExec(int id)
 {
-    if(!m_urlMap.contains(id)) return;
+    if(!m_urlMap.contains(id))
+        return;
 
     new KRun(m_urlMap[id]); // will delete itself
 }

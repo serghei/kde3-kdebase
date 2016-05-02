@@ -34,8 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 static const int REMOVEALLID = 1000;
 
-PanelRemoveExtensionMenu::PanelRemoveExtensionMenu( QWidget *parent, const char *name )
-    : QPopupMenu( parent, name )
+PanelRemoveExtensionMenu::PanelRemoveExtensionMenu(QWidget *parent, const char *name) : QPopupMenu(parent, name)
 {
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
     connect(this, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
@@ -51,58 +50,57 @@ void PanelRemoveExtensionMenu::slotAboutToShow()
 
     clear();
     m_containers = ExtensionManager::the()->containers();
-    QValueList<PanelMenuItemInfo> items;
+    QValueList< PanelMenuItemInfo > items;
 
     ExtensionList::iterator itEnd = m_containers.end();
-    for (ExtensionList::iterator it = m_containers.begin(); it != itEnd; ++it)
+    for(ExtensionList::iterator it = m_containers.begin(); it != itEnd; ++it)
     {
         const AppletInfo info = (*it)->info();
         QString name = info.name().replace("&", "&&");
-        switch ((*it)->position())
+        switch((*it)->position())
         {
             case KPanelExtension::Top:
                 name = i18n("%1 (Top)").arg(name);
-            break;
+                break;
             case KPanelExtension::Right:
                 name = i18n("%1 (Right)").arg(name);
-            break;
+                break;
             case KPanelExtension::Bottom:
                 name = i18n("%1 (Bottom)").arg(name);
-            break;
+                break;
             case KPanelExtension::Left:
                 name = i18n("%1 (Left)").arg(name);
-            break;
+                break;
             case KPanelExtension::Floating:
                 name = i18n("%1 (Floating)").arg(name);
-            break;
-         }
+                break;
+        }
         items.append(PanelMenuItemInfo(QString::null, name, id));
         ++id;
     }
 
     qHeapSort(items);
-    QValueList<PanelMenuItemInfo>::iterator itEnd2 = items.end();
-    for (QValueList<PanelMenuItemInfo>::iterator it = items.begin(); it != itEnd2; ++it)
+    QValueList< PanelMenuItemInfo >::iterator itEnd2 = items.end();
+    for(QValueList< PanelMenuItemInfo >::iterator it = items.begin(); it != itEnd2; ++it)
     {
         (*it).plug(this);
     }
 
-    if (m_containers.count() > 1)
+    if(m_containers.count() > 1)
     {
         insertSeparator();
         insertItem(i18n("All"), REMOVEALLID);
     }
 }
 
-void PanelRemoveExtensionMenu::slotExec( int id )
+void PanelRemoveExtensionMenu::slotExec(int id)
 {
-    if (id == REMOVEALLID)
+    if(id == REMOVEALLID)
     {
         ExtensionManager::the()->removeAllContainers();
     }
-    else if (m_containers.at(id) != m_containers.end())
+    else if(m_containers.at(id) != m_containers.end())
     {
         ExtensionManager::the()->removeContainer(*m_containers.at(id));
     }
 }
-

@@ -36,11 +36,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 K_EXPORT_KICKER_MENUEXT(konqueror, KonquerorProfilesMenu)
 
-KonquerorProfilesMenu::KonquerorProfilesMenu(QWidget *parent, const char *name, const QStringList & /*args*/)
-: KPanelMenu("", parent, name)
+KonquerorProfilesMenu::KonquerorProfilesMenu(QWidget *parent, const char *name, const QStringList & /*args*/) : KPanelMenu("", parent, name)
 {
     static bool kdeprintIconsInitialized = false;
-    if ( !kdeprintIconsInitialized ) {
+    if(!kdeprintIconsInitialized)
+    {
         KGlobal::iconLoader()->addAppDir("kdeprint");
         kdeprintIconsInitialized = true;
     }
@@ -52,43 +52,44 @@ KonquerorProfilesMenu::~KonquerorProfilesMenu()
 
 void KonquerorProfilesMenu::initialize()
 {
-   if (initialized()) clear();
-   setInitialized(true);
+    if(initialized())
+        clear();
+    setInitialized(true);
 
-   QStringList profiles = KGlobal::dirs()->findAllResources( "data", "konqueror/profiles/*", false, true );
+    QStringList profiles = KGlobal::dirs()->findAllResources("data", "konqueror/profiles/*", false, true);
 
-   m_profiles.resize(profiles.count());
-   int id=1;
-   QStringList::ConstIterator pEnd = profiles.end();
-   for (QStringList::ConstIterator pIt = profiles.begin(); pIt != pEnd; ++pIt )
-   {
-      QFileInfo info( *pIt );
-      QString profileName = KIO::decodeFileName( info.baseName() );
-      QString niceName=profileName;
-      KSimpleConfig cfg( *pIt, true );
-      if ( cfg.hasGroup( "Profile" ) )
-      {
-         cfg.setGroup( "Profile" );
-         if ( cfg.hasKey( "Name" ) )
-            niceName = cfg.readEntry( "Name" );
+    m_profiles.resize(profiles.count());
+    int id = 1;
+    QStringList::ConstIterator pEnd = profiles.end();
+    for(QStringList::ConstIterator pIt = profiles.begin(); pIt != pEnd; ++pIt)
+    {
+        QFileInfo info(*pIt);
+        QString profileName = KIO::decodeFileName(info.baseName());
+        QString niceName = profileName;
+        KSimpleConfig cfg(*pIt, true);
+        if(cfg.hasGroup("Profile"))
+        {
+            cfg.setGroup("Profile");
+            if(cfg.hasKey("Name"))
+                niceName = cfg.readEntry("Name");
 
-         insertItem(niceName, id);
-         m_profiles[id-1]=profileName;
-         id++;
-      }
-   }
+            insertItem(niceName, id);
+            m_profiles[id - 1] = profileName;
+            id++;
+        }
+    }
 }
 
 void KonquerorProfilesMenu::slotExec(int id)
 {
-   QStringList args;
-   args<<"--profile"<<m_profiles[id-1];
-   kapp->kdeinitExec("konqueror", args);
+    QStringList args;
+    args << "--profile" << m_profiles[id - 1];
+    kapp->kdeinitExec("konqueror", args);
 }
 
 void KonquerorProfilesMenu::reload()
 {
-   initialize();
+    initialize();
 }
 
 void KonquerorProfilesMenu::slotAboutToShow()
@@ -99,4 +100,3 @@ void KonquerorProfilesMenu::slotAboutToShow()
 
 
 #include "konqy_menu.moc"
-

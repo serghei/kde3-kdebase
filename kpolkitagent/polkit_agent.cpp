@@ -36,8 +36,7 @@ static PolkitAuthority *authority = NULL;
 static PolkitSubject *session = NULL;
 
 
-PolkitAgent::PolkitAgent(const QCString &obj)
-    : KDEDModule(obj), listener(NULL)
+PolkitAgent::PolkitAgent(const QCString &obj) : KDEDModule(obj), listener(NULL)
 {
     initialize();
 }
@@ -55,7 +54,8 @@ void PolkitAgent::initialize()
 
     GError *error = NULL;
     authority = ::polkit_authority_get_sync(NULL /* GCancellable* */, &error);
-    if(NULL == authority) {
+    if(NULL == authority)
+    {
         kdDebug() << "Error getting authority: " << error->message << endl;
         goto err;
     }
@@ -63,20 +63,17 @@ void PolkitAgent::initialize()
     listener = ::polkit_kde3_listener_new();
 
     error = NULL;
-    session = ::polkit_unix_session_new_for_process_sync (::getpid(), NULL, &error);
-    if(NULL != error) {
+    session = ::polkit_unix_session_new_for_process_sync(::getpid(), NULL, &error);
+    if(NULL != error)
+    {
         kdDebug() << "Unable to determine the session we are in: " << error->message << endl;
         goto err;
     }
 
     error = NULL;
-    if(!::polkit_agent_listener_register(
-                listener,
-                POLKIT_AGENT_REGISTER_FLAGS_NONE,
-                session,
-                "/org/kde3/PolicyKit1/AuthenticationAgent",
-                NULL, /* GCancellable */
-                &error))
+    if(!::polkit_agent_listener_register(listener, POLKIT_AGENT_REGISTER_FLAGS_NONE, session, "/org/kde3/PolicyKit1/AuthenticationAgent",
+                                         NULL, /* GCancellable */
+                                         &error))
     {
         kdDebug() << "Cannot register authentication agent: " << error->message << endl;
         goto err;
@@ -85,7 +82,8 @@ void PolkitAgent::initialize()
     return;
 
 err:
-    if(error) {
+    if(error)
+    {
         ::g_error_free(error);
     }
     cleanup();
@@ -94,28 +92,30 @@ err:
 
 void PolkitAgent::cleanup()
 {
-    if(NULL != authority) {
+    if(NULL != authority)
+    {
         ::g_object_unref(authority);
         authority = NULL;
     }
 
-    if(NULL != session) {
+    if(NULL != session)
+    {
         ::g_object_unref(session);
         session = NULL;
     }
 
-    if(NULL != listener) {
+    if(NULL != listener)
+    {
         ::g_object_unref(listener);
         listener = NULL;
     }
 }
 
 
-extern "C"
+extern "C" {
+KDE_EXPORT KDEDModule *create_polkit_agent(const QCString &name)
 {
-    KDE_EXPORT KDEDModule *create_polkit_agent(const QCString &name)
-    {
-        KGlobal::locale()->insertCatalogue("polkit_agent");
-        return new PolkitAgent(name);
-    }
+    KGlobal::locale()->insertCatalogue("polkit_agent");
+    return new PolkitAgent(name);
+}
 }

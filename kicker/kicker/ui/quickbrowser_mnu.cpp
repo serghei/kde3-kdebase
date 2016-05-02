@@ -33,28 +33,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "quickbrowser_mnu.h"
 #include "quickbrowser_mnu.moc"
 
-PanelQuickBrowser::PanelQuickBrowser(QWidget *parent, const char *name)
-  : KPanelMenu("", parent, name) {}
+PanelQuickBrowser::PanelQuickBrowser(QWidget *parent, const char *name) : KPanelMenu("", parent, name)
+{
+}
 
 void PanelQuickBrowser::initialize()
 {
-    if(initialized()) return;
+    if(initialized())
+        return;
     setInitialized(true);
 
     KURL url;
-    
+
     url.setPath(QDir::homeDirPath());
-    if (kapp->authorizeURLAction("list", KURL(), url))
-        insertItem(SmallIcon("kfm_home"), i18n("&Home Folder"),
-               new PanelBrowserMenu(url.path(), this));
-               
+    if(kapp->authorizeURLAction("list", KURL(), url))
+        insertItem(SmallIcon("kfm_home"), i18n("&Home Folder"), new PanelBrowserMenu(url.path(), this));
+
     url.setPath(QDir::rootDirPath());
-    if (kapp->authorizeURLAction("list", KURL(), url))
-        insertItem(SmallIcon("folder_red"), i18n("&Root Folder"),
-               new PanelBrowserMenu(url.path(), this));
-               
+    if(kapp->authorizeURLAction("list", KURL(), url))
+        insertItem(SmallIcon("folder_red"), i18n("&Root Folder"), new PanelBrowserMenu(url.path(), this));
+
     url.setPath(QDir::rootDirPath() + "etc");
-    if (kapp->authorizeURLAction("list", KURL(), url))
-        insertItem(SmallIcon("folder_yellow"), i18n("System &Configuration"),
-               new PanelBrowserMenu(url.path(), this));
+    if(kapp->authorizeURLAction("list", KURL(), url))
+        insertItem(SmallIcon("folder_yellow"), i18n("System &Configuration"), new PanelBrowserMenu(url.path(), this));
 }

@@ -6,16 +6,15 @@
 #include <dcopobject.h>
 #include <dcopref.h>
 
-class KDesktopIface : virtual public DCOPObject
-{
+class KDesktopIface : virtual public DCOPObject {
     K_DCOP
 public:
-
-k_dcop:
-    /**
-     * @internal
-     */
-    virtual void runAutoStart() = 0;
+    k_dcop :
+        /**
+         * @internal
+         */
+        virtual void
+        runAutoStart() = 0;
 
     /**
      * Re-arrange the desktop icons.
@@ -24,7 +23,10 @@ k_dcop:
     /**
      * @deprecated
      */
-    void rearrangeIcons( bool ) { rearrangeIcons(); }
+    void rearrangeIcons(bool)
+    {
+        rearrangeIcons();
+    }
     /**
      * Lineup the desktop icons.
      */
@@ -58,15 +60,21 @@ k_dcop:
      * Display the "Run Command" dialog (minicli) and prefill
      * @since 3.4
      */
-    virtual void popupExecuteCommand(const QString& command) = 0;
+    virtual void popupExecuteCommand(const QString &command) = 0;
     /**
      * Get the background dcop interface (KBackgroundIface)
      */
-    DCOPRef background() { return DCOPRef( "kdesktop", "KBackgroundIface" ); }
+    DCOPRef background()
+    {
+        return DCOPRef("kdesktop", "KBackgroundIface");
+    }
     /**
      * Get the screensaver dcop interface (KScreensaverIface)
      */
-    DCOPRef screenSaver() { return DCOPRef( "kdesktop", "KScreensaverIface" ); }
+    DCOPRef screenSaver()
+    {
+        return DCOPRef("kdesktop", "KScreensaverIface");
+    }
     /**
      * Full refresh
      */
@@ -82,7 +90,7 @@ k_dcop:
     /**
      * Set whether KDesktop should use a virtual root.
      */
-    virtual void setVRoot( bool enable )= 0;
+    virtual void setVRoot(bool enable) = 0;
     /**
      * Clears the command history and completion items
      */
@@ -94,13 +102,13 @@ k_dcop:
     /**
      * Disable icons on the desktop.
      */
-    virtual void setIconsEnabled( bool enable )= 0;
+    virtual void setIconsEnabled(bool enable) = 0;
 
     /**
      * Should be called by any application that wants to tell KDesktop
      * to switch desktops e.g.  the minipager applet on kicker.
      */
-    virtual void switchDesktops( int delta ) = 0;
+    virtual void switchDesktops(int delta) = 0;
 
     /**
      * slot for kicker; called when the number or size of panels change the available
@@ -110,4 +118,3 @@ k_dcop:
 };
 
 #endif
-

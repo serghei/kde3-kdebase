@@ -25,16 +25,15 @@
 
 #include "notifieraction.h"
 
-class ActionListBoxItem : public QListBoxPixmap
-{
+class ActionListBoxItem : public QListBoxPixmap {
 public:
-	ActionListBoxItem(NotifierAction *action, QString mimetype, QListBox *parent);
-	~ActionListBoxItem();
+    ActionListBoxItem(NotifierAction *action, QString mimetype, QListBox *parent);
+    ~ActionListBoxItem();
 
-	NotifierAction *action() const;
+    NotifierAction *action() const;
 
 private:
-	NotifierAction *m_action;
+    NotifierAction *m_action;
 };
 
 #endif

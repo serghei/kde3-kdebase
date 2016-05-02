@@ -27,28 +27,27 @@ class QCheckBox;
 class KIntNumInput;
 class QPushButton;
 
-class KBellConfig : public KCModule
-{
-  Q_OBJECT
+class KBellConfig : public KCModule {
+    Q_OBJECT
 
- public:
-  KBellConfig(QWidget *parent, const char *name);
+public:
+    KBellConfig(QWidget *parent, const char *name);
 
-  void load();
-  void load( bool useDefaults );
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
- protected slots:
-  void ringBell();
-  void useBell( bool );
+protected slots:
+    void ringBell();
+    void useBell(bool);
 
- private:
-  QPushButton  *m_testButton;
-  KIntNumInput *m_volume;
-  KIntNumInput *m_pitch;
-  KIntNumInput *m_duration;
-  QCheckBox    *m_useBell;
+private:
+    QPushButton *m_testButton;
+    KIntNumInput *m_volume;
+    KIntNumInput *m_pitch;
+    KIntNumInput *m_duration;
+    QCheckBox *m_useBell;
 };
 
 #endif

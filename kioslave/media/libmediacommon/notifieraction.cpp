@@ -34,64 +34,63 @@ NotifierAction::~NotifierAction()
 
 void NotifierAction::setIconName(const QString &iconName)
 {
-	m_iconName = iconName;
+    m_iconName = iconName;
 }
 
 void NotifierAction::setLabel(const QString &label)
 {
-	m_label = label;
+    m_label = label;
 }
 
 QString NotifierAction::iconName() const
 {
-	return m_iconName;
+    return m_iconName;
 }
 
 QPixmap NotifierAction::pixmap() const
 {
-	QFile f( m_iconName );
-	
-	if ( f.exists() )
-	{
-		return QPixmap( m_iconName );
-	}
-	else
-	{
-		QString path = KGlobal::iconLoader()->iconPath( m_iconName, -32 );
-		return QPixmap( path );
-	}
+    QFile f(m_iconName);
+
+    if(f.exists())
+    {
+        return QPixmap(m_iconName);
+    }
+    else
+    {
+        QString path = KGlobal::iconLoader()->iconPath(m_iconName, -32);
+        return QPixmap(path);
+    }
 }
 
 QString NotifierAction::label() const
 {
-	return m_label;
+    return m_label;
 }
 
-void NotifierAction::addAutoMimetype( const QString &mimetype )
+void NotifierAction::addAutoMimetype(const QString &mimetype)
 {
-	if ( !m_autoMimetypes.contains( mimetype ) )
-	{
-		m_autoMimetypes.append( mimetype );
-	}
+    if(!m_autoMimetypes.contains(mimetype))
+    {
+        m_autoMimetypes.append(mimetype);
+    }
 }
 
-void NotifierAction::removeAutoMimetype( const QString &mimetype )
+void NotifierAction::removeAutoMimetype(const QString &mimetype)
 {
-	m_autoMimetypes.remove( mimetype );
+    m_autoMimetypes.remove(mimetype);
 }
 
 QStringList NotifierAction::autoMimetypes()
 {
-	return m_autoMimetypes;
+    return m_autoMimetypes;
 }
 
 bool NotifierAction::isWritable() const
 {
-	return false;
+    return false;
 }
 
-bool NotifierAction::supportsMimetype(const QString &/*mimetype*/) const
+bool NotifierAction::supportsMimetype(const QString & /*mimetype*/) const
 {
-	return true;
+    return true;
 }
-

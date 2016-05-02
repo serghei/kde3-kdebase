@@ -26,25 +26,24 @@ class QButtonGroup;
  * This widget contains the details for a filetype group.
  * Currently this only involves the embedding configuration.
  */
-class FileGroupDetails : public QWidget
-{
-  Q_OBJECT
+class FileGroupDetails : public QWidget {
+    Q_OBJECT
 public:
-  FileGroupDetails(QWidget *parent = 0, const char *name = 0);
+    FileGroupDetails(QWidget *parent = 0, const char *name = 0);
 
-  void setTypeItem( TypesListItem * item );
+    void setTypeItem(TypesListItem *item);
 
 signals:
-  void changed(bool);
+    void changed(bool);
 
 protected slots:
-  void slotAutoEmbedClicked(int button);
+    void slotAutoEmbedClicked(int button);
 
 private:
-  TypesListItem * m_item;
+    TypesListItem *m_item;
 
-  // Embedding config
-  QButtonGroup *m_autoEmbed;
+    // Embedding config
+    QButtonGroup *m_autoEmbed;
 };
 
 #endif

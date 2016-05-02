@@ -32,76 +32,71 @@
 
 #include "kpager.h"
 
-static KCmdLineOptions pagerOpts[] =
-{
-    { "hidden", I18N_NOOP("Create pager but keep the window hidden"), 0 },
-    KCmdLineLastOption
-};
+static KCmdLineOptions pagerOpts[] = {{"hidden", I18N_NOOP("Create pager but keep the window hidden"), 0}, KCmdLineLastOption};
 
 bool closed_by_sm = false;
 
-class KPagerApplication : public KUniqueApplication
-{
+class KPagerApplication : public KUniqueApplication {
 public:
-  KPagerApplication() : KUniqueApplication() {}
-
-  void commitData(QSessionManager& sm) {
-    if (mainWidget()->isHidden()) {
-      sm.setRestartHint( QSessionManager::RestartNever );
-      return;
+    KPagerApplication() : KUniqueApplication()
+    {
     }
-    closed_by_sm = true;
-    KUniqueApplication::commitData( sm );
-    closed_by_sm = false;
-  }
 
-  int newInstance() {
-    mainWidget()->show();
-    return 0;
-  }
+    void commitData(QSessionManager &sm)
+    {
+        if(mainWidget()->isHidden())
+        {
+            sm.setRestartHint(QSessionManager::RestartNever);
+            return;
+        }
+        closed_by_sm = true;
+        KUniqueApplication::commitData(sm);
+        closed_by_sm = false;
+    }
 
+    int newInstance()
+    {
+        mainWidget()->show();
+        return 0;
+    }
 };
 
 int main(int argc, char **argv)
 {
-    KAboutData *aboutdata = new KAboutData("kpager", "KPager", "1.5",
-					   I18N_NOOP("Desktop Overview"), KAboutData::License_GPL,
-					   "(C) 1998-2002, Antonio Larrosa Jimenez","",
-					   "http://developer.kde.org/~larrosa/kpager.html");
+    KAboutData *aboutdata = new KAboutData("kpager", "KPager", "1.5", I18N_NOOP("Desktop Overview"), KAboutData::License_GPL,
+                                           "(C) 1998-2002, Antonio Larrosa Jimenez", "", "http://developer.kde.org/~larrosa/kpager.html");
 
-    aboutdata->addAuthor("Antonio Larrosa Jimenez",
-			 I18N_NOOP("Original Developer/Maintainer"),"larrosa@kde.org",
-			 "http://developer.kde.org/~larrosa/index.html");
-    aboutdata->addAuthor("Matthias Elter",
-			 I18N_NOOP("Developer"),"elter@kde.org", "");
-    aboutdata->addAuthor("Matthias Ettrich",
-			 I18N_NOOP("Developer"),"ettrich@kde.org", "");
+    aboutdata->addAuthor("Antonio Larrosa Jimenez", I18N_NOOP("Original Developer/Maintainer"), "larrosa@kde.org",
+                         "http://developer.kde.org/~larrosa/index.html");
+    aboutdata->addAuthor("Matthias Elter", I18N_NOOP("Developer"), "elter@kde.org", "");
+    aboutdata->addAuthor("Matthias Ettrich", I18N_NOOP("Developer"), "ettrich@kde.org", "");
 
     KCmdLineArgs::init(argc, argv, aboutdata);
     KCmdLineArgs::addCmdLineOptions(pagerOpts);
     KUniqueApplication::addCmdLineOptions();
 
-    if (!KUniqueApplication::start())
+    if(!KUniqueApplication::start())
     {
-      kdError() << "kpager is already running!" << endl;
-      return 0;
+        kdError() << "kpager is already running!" << endl;
+        return 0;
     }
 
 
-    KApplication * app = new KPagerApplication;
+    KApplication *app = new KPagerApplication;
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-    KPagerMainWindow *kpager = new KPagerMainWindow(0,"KPager");
-    kpager->setPlainCaption( i18n("Desktop Pager") );
+    KPagerMainWindow *kpager = new KPagerMainWindow(0, "KPager");
+    kpager->setPlainCaption(i18n("Desktop Pager"));
 
 
     app->setMainWidget(kpager);
-    if (!args->isSet("hidden")) kpager->show();
-    else kpager->hide();
+    if(!args->isSet("hidden"))
+        kpager->show();
+    else
+        kpager->hide();
 
     int ret = app->exec();
 
     delete app;
     return ret;
 }
-

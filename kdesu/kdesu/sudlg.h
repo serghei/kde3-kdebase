@@ -9,24 +9,25 @@
 
 #include <kpassdlg.h>
 
-class KDEsuDialog
-    : public KPasswordDialog
-{
+class KDEsuDialog : public KPasswordDialog {
     Q_OBJECT
 
 public:
-    KDEsuDialog(QCString user, QCString auth_user, bool enableKeep, const QString& icon , bool withIgnoreButton=false);
+    KDEsuDialog(QCString user, QCString auth_user, bool enableKeep, const QString &icon, bool withIgnoreButton = false);
     ~KDEsuDialog();
 
-    enum ResultCodes { AsUser = 10 };
-    
+    enum ResultCodes
+    {
+        AsUser = 10
+    };
+
 protected:
     bool checkPassword(const char *password);
     void slotUser1();
-    
+
 private:
     QCString m_User;
 };
-    
+
 
 #endif // __SuDlg_h_Included__

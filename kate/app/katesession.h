@@ -37,56 +37,64 @@ class KPushButton;
 
 class QCheckBox;
 
-class KateSession  : public KShared
-{
-  public:
+class KateSession : public KShared {
+public:
     /**
      * Define a Shared-Pointer type
      */
-    typedef KSharedPtr<KateSession> Ptr;
+    typedef KSharedPtr< KateSession > Ptr;
 
-  public:
+public:
     /**
      * create a session from given file
      * @param fileName session filename, relative
      * @param name session name
      * @param manager pointer to the manager
      */
-    KateSession (KateSessionManager *manager, const QString &fileName, const QString &name);
+    KateSession(KateSessionManager *manager, const QString &fileName, const QString &name);
 
     /**
      * init the session object, after construction or create
      */
-    void init ();
+    void init();
 
     /**
      * destruct me
      */
-    ~KateSession ();
+    ~KateSession();
 
     /**
      * session filename, absolute, calculated out of relative filename + session dir
      * @return absolute path to session file
      */
-    QString sessionFile () const;
+    QString sessionFile() const;
 
     /**
      * relative session filename
      * @return relative filename for this session
      */
-    const QString &sessionFileRelative () const { return m_sessionFileRel; }
+    const QString &sessionFileRelative() const
+    {
+        return m_sessionFileRel;
+    }
 
     /**
      * session name
      * @return name for this session
      */
-    const QString &sessionName () const { return m_sessionName; }
+    const QString &sessionName() const
+    {
+        return m_sessionName;
+    }
 
     /**
      * is this a valid session? if not, don't use any session if this is
      * the active one
      */
-    bool isNew () const { return m_sessionName.isEmpty(); }
+    bool isNew() const
+    {
+        return m_sessionName.isEmpty();
+    }
 
     /**
      * create the session file, if not existing
@@ -94,14 +102,14 @@ class KateSession  : public KShared
      * @param force force to create new file
      * @return true if created, false if no creation needed
      */
-    bool create (const QString &name, bool force = false);
+    bool create(const QString &name, bool force = false);
 
     /**
      * rename this session
      * @param name new name
      * @return success
      */
-    bool rename (const QString &name);
+    bool rename(const QString &name);
 
     /**
      * config to read
@@ -109,7 +117,7 @@ class KateSession  : public KShared
      * return 0 if we have no file to read config from atm
      * @return config to read from
      */
-    KConfig *configRead ();
+    KConfig *configRead();
 
     /**
      * config to write
@@ -117,15 +125,18 @@ class KateSession  : public KShared
      * return 0 if we have no file to write config to atm
      * @return config to write from
      */
-    KConfig *configWrite ();
+    KConfig *configWrite();
 
     /**
      * count of documents in this session
      * @return documents count
      */
-    unsigned int documents () const { return m_documents; }
+    unsigned int documents() const
+    {
+        return m_documents;
+    }
 
-  private:
+private:
     /**
      * session filename, in local location we can write to
      * relative filename to the session dirs :)
@@ -158,13 +169,12 @@ class KateSession  : public KShared
     KSimpleConfig *m_writeConfig;
 };
 
-typedef QValueList<KateSession::Ptr> KateSessionList;
+typedef QValueList< KateSession::Ptr > KateSessionList;
 
-class KateSessionManager : public QObject
-{
-  Q_OBJECT
+class KateSessionManager : public QObject {
+    Q_OBJECT
 
-  public:
+public:
     KateSessionManager(QObject *parent);
     ~KateSessionManager();
 
@@ -178,7 +188,11 @@ class KateSessionManager : public QObject
      * allow access to the session list
      * kept up to date by watching the dir
      */
-    inline KateSessionList & sessionList () { updateSessionList (); return m_sessionList; }
+    inline KateSessionList &sessionList()
+    {
+        updateSessionList();
+        return m_sessionList;
+    }
 
     /**
      * activate a session
@@ -189,20 +203,20 @@ class KateSessionManager : public QObject
      * @param saveLast try to save last session or not?
      * @param loadNew load new session stuff?
      */
-    void activateSession (KateSession::Ptr session, bool closeLast = true, bool saveLast = true, bool loadNew = true);
+    void activateSession(KateSession::Ptr session, bool closeLast = true, bool saveLast = true, bool loadNew = true);
 
     /**
      * create a new session
      * @param name session name
      */
-    KateSession::Ptr createSession (const QString &name);
+    KateSession::Ptr createSession(const QString &name);
 
     /**
      * return session with given name
      * if no existing session matches, create new one with this name
      * @param name session name
      */
-    KateSession::Ptr giveSession (const QString &name);
+    KateSession::Ptr giveSession(const QString &name);
 
     /**
      * save current session
@@ -211,64 +225,70 @@ class KateSessionManager : public QObject
      * @param rememberAsLast remember this session as last used?
      * @return success
      */
-    bool saveActiveSession (bool tryAsk = false, bool rememberAsLast = false);
+    bool saveActiveSession(bool tryAsk = false, bool rememberAsLast = false);
 
     /**
      * return the current active session
      * sessionFile == empty means we have no session around for this instance of kate
      * @return session active atm
      */
-    inline KateSession::Ptr activeSession () { return m_activeSession; }
+    inline KateSession::Ptr activeSession()
+    {
+        return m_activeSession;
+    }
 
     /**
      * session dir
      * @return global session dir
      */
-    inline const QString &sessionsDir () const { return m_sessionsDir; }
+    inline const QString &sessionsDir() const
+    {
+        return m_sessionsDir;
+    }
 
     /**
      * initial session chooser, on app start
      * @return success, if false, app should exit
      */
-    bool chooseSession ();
+    bool chooseSession();
 
-  public slots:
+public slots:
     /**
      * try to start a new session
      * asks user first for name
      */
-    void sessionNew ();
+    void sessionNew();
 
     /**
      * try to open a existing session
      */
-    void sessionOpen ();
+    void sessionOpen();
 
     /**
      * try to save current session
      */
-    void sessionSave ();
+    void sessionSave();
 
     /**
      * try to save as current session
      */
-    void sessionSaveAs ();
+    void sessionSaveAs();
 
     /**
      * show dialog to manage our sessions
      */
-    void sessionManage ();
+    void sessionManage();
 
-  private slots:
-    void dirty (const QString &path);
+private slots:
+    void dirty(const QString &path);
 
-  public:
+public:
     /**
      * trigger update of session list
      */
-    void updateSessionList ();
+    void updateSessionList();
 
-  private:
+private:
     /**
      * absolute path to dir in home dir where to store the sessions
      */
@@ -285,134 +305,135 @@ class KateSessionManager : public QObject
     KateSession::Ptr m_activeSession;
 };
 
-class KateSessionChooser : public KDialogBase
-{
-  Q_OBJECT
+class KateSessionChooser : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    KateSessionChooser (QWidget *parent, const QString &lastSession);
-    ~KateSessionChooser ();
+public:
+    KateSessionChooser(QWidget *parent, const QString &lastSession);
+    ~KateSessionChooser();
 
-    KateSession::Ptr selectedSession ();
+    KateSession::Ptr selectedSession();
 
-    bool reopenLastSession ();
+    bool reopenLastSession();
 
-    enum {
-      resultQuit = QDialog::Rejected,
-      resultOpen,
-      resultNew,
-      resultNone
+    enum
+    {
+        resultQuit = QDialog::Rejected,
+        resultOpen,
+        resultNew,
+        resultNone
     };
 
-  protected slots:
+protected slots:
     /**
      * open session
      */
-    void slotUser1 ();
+    void slotUser1();
 
     /**
      * new session
      */
-    void slotUser2 ();
+    void slotUser2();
 
     /**
      * quit kate
      */
-    void slotUser3 ();
+    void slotUser3();
 
     /**
      * selection has changed
      */
-    void selectionChanged ();
+    void selectionChanged();
 
-  private:
+private:
     KListView *m_sessions;
     QCheckBox *m_useLast;
 };
 
-class KateSessionOpenDialog : public KDialogBase
-{
-  Q_OBJECT
+class KateSessionOpenDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    KateSessionOpenDialog (QWidget *parent);
-    ~KateSessionOpenDialog ();
+public:
+    KateSessionOpenDialog(QWidget *parent);
+    ~KateSessionOpenDialog();
 
-    KateSession::Ptr selectedSession ();
+    KateSession::Ptr selectedSession();
 
-    enum {
-      resultOk,
-      resultCancel
+    enum
+    {
+        resultOk,
+        resultCancel
     };
 
-  protected slots:
+protected slots:
     /**
      * cancel pressed
      */
-    void slotUser1 ();
+    void slotUser1();
 
     /**
      * ok pressed
      */
-    void slotUser2 ();
+    void slotUser2();
 
-  private:
+private:
     KListView *m_sessions;
 };
 
-class KateSessionManageDialog : public KDialogBase
-{
-  Q_OBJECT
+class KateSessionManageDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    KateSessionManageDialog (QWidget *parent);
-    ~KateSessionManageDialog ();
+public:
+    KateSessionManageDialog(QWidget *parent);
+    ~KateSessionManageDialog();
 
-  protected slots:
+protected slots:
     /**
      * close pressed
      */
-    void slotUser1 ();
+    void slotUser1();
 
     /**
      * selection has changed
      */
-    void selectionChanged ();
+    void selectionChanged();
 
     /**
      * try to rename session
      */
-    void rename ();
+    void rename();
 
     /**
      * try to delete session
      */
-    void del ();
+    void del();
 
-  private:
+private:
     /**
      * update our list
      */
-    void updateSessionList ();
+    void updateSessionList();
 
-  private:
+private:
     KListView *m_sessions;
     KPushButton *m_rename;
     KPushButton *m_del;
 };
 
-class KateSessionsAction : public KActionMenu
-{
-  Q_OBJECT
+class KateSessionsAction : public KActionMenu {
+    Q_OBJECT
 
-  public:
-    KateSessionsAction(const QString& text, QObject* parent = 0, const char* name = 0);
-    ~KateSessionsAction (){;};
+public:
+    KateSessionsAction(const QString &text, QObject *parent = 0, const char *name = 0);
+    ~KateSessionsAction()
+    {
+        ;
+    };
 
-  public  slots:
+public slots:
     void slotAboutToShow();
 
-    void openSession (int i);
+    void openSession(int i);
 };
 
 #endif

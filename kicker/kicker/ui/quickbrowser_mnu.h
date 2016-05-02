@@ -26,18 +26,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <kpanelmenu.h>
 
-class PanelQuickBrowser : public KPanelMenu
-{
+class PanelQuickBrowser : public KPanelMenu {
     Q_OBJECT
 
 public:
-    PanelQuickBrowser(QWidget *parent=0, const char *name=0);
+    PanelQuickBrowser(QWidget *parent = 0, const char *name = 0);
 
 public slots:
     virtual void initialize();
 
 protected slots:
-    void slotExec(int) {}
+    void slotExec(int)
+    {
+    }
 };
 
 #endif

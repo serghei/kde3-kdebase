@@ -2,8 +2,8 @@
 
     kpager.h  - KPager's main window
     Copyright (C) 2000  Antonio Larrosa Jimenez
-			Matthias Ettrich
-			Matthias Elter
+            Matthias Ettrich
+            Matthias Elter
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -34,12 +34,11 @@
 class KPager;
 class QPopupMenu;
 
-class KPagerMainWindow : public KMainWindow, public virtual KPagerIface
-{
+class KPagerMainWindow : public KMainWindow, public virtual KPagerIface {
     Q_OBJECT
 
 public:
-    KPagerMainWindow(QWidget *parent=0, const char *name=0);
+    KPagerMainWindow(QWidget *parent = 0, const char *name = 0);
     ~KPagerMainWindow();
 
     virtual void showAt(int x, int y);
@@ -47,7 +46,7 @@ public:
 
 public slots:
     virtual void reallyClose();
-    
+
 protected:
     bool queryClose();
     void showEvent(QShowEvent *ev);
@@ -57,36 +56,43 @@ protected:
     bool m_reallyClose;
 };
 
-class KPager : public QFrame
-{
+class KPager : public QFrame {
     Q_OBJECT
 
     friend class KPagerMainWindow;
 
 public:
-    KPager(KPagerMainWindow *parent=0, const char *name=0);
+    KPager(KPagerMainWindow *parent = 0, const char *name = 0);
     ~KPager();
 
-    class KWinModule *kwin() const { return m_winmodule; };
+    class KWinModule *kwin() const
+    {
+        return m_winmodule;
+    };
     void updateLayout();
 
     void redrawDesktops();
 
-    void showPopupMenu( WId wid, QPoint pos);
+    void showPopupMenu(WId wid, QPoint pos);
 
-    KWin::WindowInfo* info( WId win );
+    KWin::WindowInfo *info(WId win);
 
     QSize sizeHint() const;
 
-    enum LayoutTypes { Classical=0, Horizontal, Vertical };
+    enum LayoutTypes
+    {
+        Classical = 0,
+        Horizontal,
+        Vertical
+    };
 
 public slots:
     void configureDialog();
 
-    void slotActiveWindowChanged( WId win );
-    void slotWindowAdded( WId );
-    void slotWindowRemoved( WId );
-    void slotWindowChanged( WId, unsigned int );
+    void slotActiveWindowChanged(WId win);
+    void slotWindowAdded(WId);
+    void slotWindowRemoved(WId);
+    void slotWindowChanged(WId, unsigned int);
     void slotStackingOrderChanged();
     void slotDesktopNamesChanged();
     void slotNumberOfDesktopsChanged(int ndesktops);
@@ -102,7 +108,8 @@ protected slots:
     void sendToDesktop(int desk);
 
 protected:
-    enum WindowOperation {
+    enum WindowOperation
+    {
         MaximizeOp = 100,
         IconifyOp,
         StickyOp,
@@ -111,9 +118,9 @@ protected:
 
 protected:
     KWinModule *m_winmodule;
-    QValueList<class Desktop *> m_desktops;
+    QValueList< class Desktop * > m_desktops;
 
-    QIntDict<KWin::WindowInfo> m_windows;
+    QIntDict< KWin::WindowInfo > m_windows;
     WId m_activeWin;
 
     const QString lWidth();
@@ -130,7 +137,7 @@ protected:
     bool m_showStickyOption; // To be removed after the message freeze
 
     QTimer *m_grabWinTimer;
-    int     m_currentDesktop;
+    int m_currentDesktop;
 
 public:
     static const LayoutTypes c_defLayout;

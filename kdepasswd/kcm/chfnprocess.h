@@ -14,20 +14,26 @@
 #include <qcstring.h>
 #include <kdesu/process.h>
 
-class ChfnProcess : public PtyProcess
-{
+class ChfnProcess : public PtyProcess {
 public:
+    enum Errors
+    {
+        ChfnNotFound = 1,
+        PasswordError = 2,
+        MiscError = 3
+    };
 
-  enum Errors { ChfnNotFound=1, PasswordError=2, MiscError=3 };
+    int exec(const char *pass, const char *name);
 
-  int exec(const char *pass, const char *name);
-
-  QCString error() { return m_Error; }
+    QCString error()
+    {
+        return m_Error;
+    }
 
 private:
-  int ConverseChfn(const char *pass);
+    int ConverseChfn(const char *pass);
 
-  QCString m_Error;
+    QCString m_Error;
 };
 
 #endif

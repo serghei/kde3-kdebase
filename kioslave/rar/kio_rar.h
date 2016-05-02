@@ -31,19 +31,18 @@ class KURL;
 class QCString;
 class KRar;
 
-class kio_rarProtocol : public QObject, public KIO::SlaveBase
-{
-Q_OBJECT
+class kio_rarProtocol : public QObject, public KIO::SlaveBase {
+    Q_OBJECT
 public:
     kio_rarProtocol(const QCString &pool_socket, const QCString &app_socket);
     virtual ~kio_rarProtocol();
-    //virtual void mimetype(const KURL& url);
-    virtual void get(const KURL& url);
-    virtual void listDir( const KURL & url );
-    virtual void stat( const KURL & url );
-    virtual void del( const KURL &url, bool isFile );
-//    virtual void put( const KURL &url, int permissions, bool overwrite, bool resume );
-//    virtual void rename( const KURL &src, const KURL &dest, bool _overwrite );
+    // virtual void mimetype(const KURL& url);
+    virtual void get(const KURL &url);
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
+    virtual void del(const KURL &url, bool isFile);
+    //    virtual void put( const KURL &url, int permissions, bool overwrite, bool resume );
+    //    virtual void rename( const KURL &src, const KURL &dest, bool _overwrite );
 private:
     QString rarProgram;
     KIO::filesize_t processed;
@@ -51,9 +50,9 @@ private:
     KShellProcess *procShell;
     time_t m_archiveTime;
     KRar *m_archiveFile;
-    int checkFile( const KURL &url, KURL &fileUrl );
+    int checkFile(const KURL &url, KURL &fileUrl);
 public slots:
-    void receivedData( KProcess *, char* buffer, int len );
+    void receivedData(KProcess *, char *buffer, int len);
 };
 
 #endif /* _kio_rar_H_ */

@@ -73,8 +73,7 @@
 //-------------------------------
 // Samba client library includes
 //-------------------------------
-extern "C"
-{
+extern "C" {
 #include <libsmbclient.h>
 }
 
@@ -83,8 +82,8 @@ extern "C"
 //---------------------------
 #include "kio_smb_internal.h"
 
-#define MAX_XFER_BUF_SIZE           16348
-#define KIO_SMB                     7106
+#define MAX_XFER_BUF_SIZE 16348
+#define KIO_SMB 7106
 
 using namespace KIO;
 class KProcess;
@@ -92,34 +91,33 @@ class KProcess;
 //===========================================================================
 
 
-class SMBSlave : public QObject, public KIO::SlaveBase
-{
+class SMBSlave : public QObject, public KIO::SlaveBase {
     Q_OBJECT
 
 private:
     //---------------------------------------------------------------------
     // please make sure your private data does not duplicate existing data
     //---------------------------------------------------------------------
-    bool     m_initialized_smbc;
+    bool m_initialized_smbc;
 
     /**
      * From Controlcenter
      */
-    QString  m_default_user;
-//    QString  m_default_workgroup; //currently unused, Alex <neundorf@kde.org>
-    QString  m_default_password;
-    QString  m_default_encoding;
+    QString m_default_user;
+    //    QString  m_default_workgroup; //currently unused, Alex <neundorf@kde.org>
+    QString m_default_password;
+    QString m_default_encoding;
 
     /**
      * we store the current url, it's needed for
      * callback authorisation method
      */
-    SMBUrl   m_current_url;
+    SMBUrl m_current_url;
 
     /**
      * From Controlcenter, show SHARE$ or not
      */
-//    bool m_showHiddenShares;     //currently unused, Alex <neundorf@kde.org>
+    //    bool m_showHiddenShares;     //currently unused, Alex <neundorf@kde.org>
 
     /**
      * libsmbclient need global variables to store in,
@@ -127,6 +125,7 @@ private:
      * looks like gcc (C/C++) failure
      */
     struct stat st;
+
 protected:
     //---------------------------------------------
     // Authentication functions (kio_smb_auth.cpp)
@@ -147,7 +146,7 @@ protected:
     // Cache functions (kio_smb_auth.cpp)
     //---------------------------------------------
 
-    //Stat methods
+    // Stat methods
 
     //-----------------------------------------
     // Browsing functions (kio_smb_browse.cpp)
@@ -161,7 +160,7 @@ protected:
      *                ignore_errors do not call error(), but warning()
      * Return :       false if any error occoured (errno), else true
      */
-    bool browse_stat_path(const SMBUrl& url, UDSEntry& udsentry, bool ignore_errors);
+    bool browse_stat_path(const SMBUrl &url, UDSEntry &udsentry, bool ignore_errors);
 
     /**
      * Description :  call smbc_stat and return stats of the url
@@ -172,7 +171,7 @@ protected:
      *                method segfault on returning try to change the stat*
      *                variable
      */
-    int cache_stat( const SMBUrl& url, struct stat* st );
+    int cache_stat(const SMBUrl &url, struct stat *st);
 
     //---------------------------------------------
     // Configuration functions (kio_smb_config.cpp)
@@ -212,19 +211,16 @@ protected:
      * Parameter :    KURL the url to check
      * Return :       new KURL if its corrected. else the same KURL
      */
-    KURL checkURL(const KURL& kurl) const;
+    KURL checkURL(const KURL &kurl) const;
 
     void reportError(const SMBUrl &kurl);
 
 public:
-
     //-----------------------------------------------------------------------
     // smbclient authentication callback (note that this is called by  the
     // global ::auth_smbc_get_data() call.
-    void auth_smbc_get_data(const char *server,const char *share,
-                            char *workgroup, int wgmaxlen,
-                            char *username, int unmaxlen,
-                            char *password, int pwmaxlen);
+    void auth_smbc_get_data(const char *server, const char *share, char *workgroup, int wgmaxlen, char *username, int unmaxlen, char *password,
+                            int pwmaxlen);
 
 
     //-----------------------------------------------------------------------
@@ -234,32 +230,32 @@ public:
     //-----------------------------------------------------------------------
 
     // Functions overwritten in kio_smb.cpp
-    SMBSlave(const QCString& pool, const QCString& app);
+    SMBSlave(const QCString &pool, const QCString &app);
     virtual ~SMBSlave();
 
     // Functions overwritten in kio_smb_browse.cpp
-    virtual void listDir( const KURL& url );
-    virtual void stat( const KURL& url );
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
 
     // Functions overwritten in kio_smb_config.cpp
     virtual void reparseConfiguration();
 
     // Functions overwritten in kio_smb_dir.cpp
-    virtual void copy( const KURL& src, const KURL &dest, int permissions, bool overwrite );
-    virtual void del( const KURL& kurl, bool isfile);
-    virtual void mkdir( const KURL& kurl, int permissions );
-    virtual void rename( const KURL& src, const KURL& dest, bool overwrite );
+    virtual void copy(const KURL &src, const KURL &dest, int permissions, bool overwrite);
+    virtual void del(const KURL &kurl, bool isfile);
+    virtual void mkdir(const KURL &kurl, int permissions);
+    virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
 
     // Functions overwritten in kio_smb_file.cpp
-    virtual void get( const KURL& kurl );
-    virtual void put( const KURL& kurl, int permissions, bool overwrite, bool resume );
+    virtual void get(const KURL &kurl);
+    virtual void put(const KURL &kurl, int permissions, bool overwrite, bool resume);
 
     // Functions not implemented  (yet)
-    //virtual void setHost(const QString& host, int port, const QString& user, const QString& pass);
-    //virtual void openConnection();
-    //virtual void closeConnection();
-    //virtual void slave_status();
-    virtual void special( const QByteArray & );
+    // virtual void setHost(const QString& host, int port, const QString& user, const QString& pass);
+    // virtual void openConnection();
+    // virtual void closeConnection();
+    // virtual void slave_status();
+    virtual void special(const QByteArray &);
 
 private slots:
     void readOutput(KProcess *proc, char *buffer, int buflen);
@@ -267,35 +263,28 @@ private slots:
 
 private:
     QString mybuf, mystderr;
-
 };
 
 //===========================================================================
 // pointer to the slave created in kdemain
-extern SMBSlave* G_TheSlave;
+extern SMBSlave *G_TheSlave;
 
 
 //==========================================================================
 // the global libsmbclient authentication callback function
-extern "C"
-{
+extern "C" {
 
-void auth_smbc_get_data(const char *server,const char *share,
-                        char *workgroup, int wgmaxlen,
-                        char *username, int unmaxlen,
-                        char *password, int pwmaxlen);
-
+void auth_smbc_get_data(const char *server, const char *share, char *workgroup, int wgmaxlen, char *username, int unmaxlen, char *password,
+                        int pwmaxlen);
 }
 
 
 //===========================================================================
 // Main slave entrypoint (see kio_smb.cpp)
-extern "C"
-{
+extern "C" {
 
-int kdemain( int argc, char **argv );
-
+int kdemain(int argc, char **argv);
 }
 
 
-#endif  //#endif KIO_SMB_H_INCLUDED
+#endif //#endif KIO_SMB_H_INCLUDED

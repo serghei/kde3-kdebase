@@ -21,26 +21,24 @@
 
 #include <qtextbrowser.h>
 
-Kate::MessageView::MessageView( QWidget *parent, const char *name )
-  : Kate::DockViewBase( parent, name )
+Kate::MessageView::MessageView(QWidget *parent, const char *name) : Kate::DockViewBase(parent, name)
 {
-  m_view = new QTextBrowser( this );
-  // m_view->setFormat( Qt::richText ); // should be!!
-  connect( m_view, SIGNAL( linkClicked( const QString & ) ), 
-           SIGNAL( linkClicked( const QString & ) ) );
+    m_view = new QTextBrowser(this);
+    // m_view->setFormat( Qt::richText ); // should be!!
+    connect(m_view, SIGNAL(linkClicked(const QString &)), SIGNAL(linkClicked(const QString &)));
 }
 
 Kate::MessageView::~MessageView()
 {
 }
 
-void Kate::MessageView::addMessage( const QString &msg )
+void Kate::MessageView::addMessage(const QString &msg)
 {
-  m_view->append( msg );
-  m_view->scrollToBottom();
+    m_view->append(msg);
+    m_view->scrollToBottom();
 }
 
 void Kate::MessageView::clear()
 {
-  m_view->clear();
+    m_view->clear();
 }

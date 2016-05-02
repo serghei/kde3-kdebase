@@ -33,21 +33,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kpanelmenu.h>
 #include <kparts/componentfactory.h>
 
-MenuInfo::MenuInfo(const QString& desktopFile)
+MenuInfo::MenuInfo(const QString &desktopFile)
 {
     KSimpleConfig df(locate("data", QString::fromLatin1("kicker/menuext/%1").arg(desktopFile)));
     df.setGroup("Desktop Entry");
 
     QStringList list = df.readListEntry("X-KDE-AuthorizeAction");
-    if (kapp && !list.isEmpty())
+    if(kapp && !list.isEmpty())
     {
-       for(QStringList::ConstIterator it = list.begin();
-           it != list.end();
-           ++it)
-       {
-          if (!kapp->authorize((*it).stripWhiteSpace()))
-             return;
-       }
+        for(QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
+        {
+            if(!kapp->authorize((*it).stripWhiteSpace()))
+                return;
+        }
     }
 
     name_ = df.readEntry("Name");
@@ -57,12 +55,10 @@ MenuInfo::MenuInfo(const QString& desktopFile)
     desktopfile_ = desktopFile;
 }
 
-KPanelMenu* MenuInfo::load(QWidget *parent, const char *name)
+KPanelMenu *MenuInfo::load(QWidget *parent, const char *name)
 {
-    if (library_.isEmpty())
+    if(library_.isEmpty())
         return 0;
 
-    return KParts::ComponentFactory::createInstanceFromLibrary<KPanelMenu>(
-               QFile::encodeName( library_ ),
-               parent, name );
+    return KParts::ComponentFactory::createInstanceFromLibrary< KPanelMenu >(QFile::encodeName(library_), parent, name);
 }

@@ -28,78 +28,76 @@
 
 using namespace KHC;
 
-NavigatorItem::NavigatorItem( DocEntry *entry, QListView *parent,
-                              QListViewItem *after )
-  : QListViewItem( parent, after )
+NavigatorItem::NavigatorItem(DocEntry *entry, QListView *parent, QListViewItem *after) : QListViewItem(parent, after)
 {
-  init( entry );
+    init(entry);
 }
 
-NavigatorItem::NavigatorItem( DocEntry *entry, QListViewItem *parent,
-                              QListViewItem *after )
-  : QListViewItem( parent, after )
+NavigatorItem::NavigatorItem(DocEntry *entry, QListViewItem *parent, QListViewItem *after) : QListViewItem(parent, after)
 {
-  init( entry );
+    init(entry);
 }
 
-NavigatorItem::NavigatorItem( DocEntry *entry, QListView *parent )
-  : QListViewItem( parent )
+NavigatorItem::NavigatorItem(DocEntry *entry, QListView *parent) : QListViewItem(parent)
 {
-    init( entry );
+    init(entry);
 }
 
-NavigatorItem::NavigatorItem( DocEntry *entry, QListViewItem *parent )
-  : QListViewItem( parent )
+NavigatorItem::NavigatorItem(DocEntry *entry, QListViewItem *parent) : QListViewItem(parent)
 {
-  init( entry );
+    init(entry);
 }
 
 NavigatorItem::~NavigatorItem()
 {
-  delete mToc;
+    delete mToc;
 
-  if ( mAutoDeleteDocEntry ) delete mEntry;
+    if(mAutoDeleteDocEntry)
+        delete mEntry;
 }
 
-void NavigatorItem::init( DocEntry *entry )
+void NavigatorItem::init(DocEntry *entry)
 {
-  mEntry = entry;
-  mAutoDeleteDocEntry = false;
-  mToc = 0;
+    mEntry = entry;
+    mAutoDeleteDocEntry = false;
+    mToc = 0;
 
-  updateItem();
+    updateItem();
 }
 
 DocEntry *NavigatorItem::entry() const
 {
-  return mEntry;
+    return mEntry;
 }
 
-void NavigatorItem::setAutoDeleteDocEntry( bool enabled )
+void NavigatorItem::setAutoDeleteDocEntry(bool enabled)
 {
-  mAutoDeleteDocEntry = enabled;
+    mAutoDeleteDocEntry = enabled;
 }
 
 void NavigatorItem::updateItem()
 {
-  setText( 0, entry()->name() );
-  setPixmap( 0, SmallIcon( entry()->icon() ) );
+    setText(0, entry()->name());
+    setPixmap(0, SmallIcon(entry()->icon()));
 }
 
 TOC *NavigatorItem::createTOC()
 {
-    mToc = new TOC( this );
+    mToc = new TOC(this);
     return mToc;
 }
 
-void NavigatorItem::setOpen( bool open )
+void NavigatorItem::setOpen(bool open)
 {
-  QListViewItem::setOpen( open );
+    QListViewItem::setOpen(open);
 
-  if ( entry()->icon().isEmpty() || entry()->icon() == "contents2" ) {
-    if ( open && childCount() > 0 ) setPixmap( 0, SmallIcon( "contents" ) );
-    else setPixmap( 0, SmallIcon( "contents2" ) );
-  }
+    if(entry()->icon().isEmpty() || entry()->icon() == "contents2")
+    {
+        if(open && childCount() > 0)
+            setPixmap(0, SmallIcon("contents"));
+        else
+            setPixmap(0, SmallIcon("contents2"));
+    }
 }
 
 // vim:ts=2:sw=2:et

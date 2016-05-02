@@ -30,11 +30,10 @@ class QGroupBox;
 class KConfig;
 class ConfigDialog;
 
-class PlastikConfig : public QObject
-{
+class PlastikConfig : public QObject {
     Q_OBJECT
 public:
-    PlastikConfig(KConfig* config, QWidget* parent);
+    PlastikConfig(KConfig *config, QWidget *parent);
     ~PlastikConfig();
 
 signals:

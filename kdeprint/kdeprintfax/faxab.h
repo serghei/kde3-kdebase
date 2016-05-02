@@ -30,35 +30,34 @@ class KListView;
 class AddressBook;
 class QPushButton;
 
-class FaxAB : public KDialog
-{
-	Q_OBJECT
+class FaxAB : public KDialog {
+    Q_OBJECT
 public:
-	FaxAB(QWidget *parent = 0, const char *name = 0);
-	~FaxAB();
-	bool isValid();
+    FaxAB(QWidget *parent = 0, const char *name = 0);
+    ~FaxAB();
+    bool isValid();
 
-	static bool getEntry(QStringList& number, QStringList& name, QStringList& enterprise, QWidget *parent = 0);
-	static bool getEntryByNumber(const QString& number, QString& name, QString& enterprise);
+    static bool getEntry(QStringList &number, QStringList &name, QStringList &enterprise, QWidget *parent = 0);
+    static bool getEntryByNumber(const QString &number, QString &name, QString &enterprise);
 
 protected slots:
-	void slotEditAb();
-	void slotAbChanged(AddressBook*);
+    void slotEditAb();
+    void slotAbChanged(AddressBook *);
 
 protected:
-	void initialize();
+    void initialize();
 
 private:
-	struct FaxABEntry
-	{
-		QString           m_name;
-		KABC::PhoneNumber m_number;
-		QString           m_enterprise;
-	};
+    struct FaxABEntry
+    {
+        QString m_name;
+        KABC::PhoneNumber m_number;
+        QString m_enterprise;
+    };
 
-	KListView*                  m_list;
-	QMap<QString,FaxABEntry>    m_entries;
-	QPushButton*                m_ok;
+    KListView *m_list;
+    QMap< QString, FaxABEntry > m_entries;
+    QPushButton *m_ok;
 };
 
 #endif

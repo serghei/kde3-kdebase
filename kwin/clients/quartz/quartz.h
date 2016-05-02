@@ -28,66 +28,65 @@ namespace Quartz {
 
 class QuartzClient;
 
-class QuartzHandler: public QObject, public KDecorationFactory
-{
-	Q_OBJECT
-	public:
-		QuartzHandler();
-		~QuartzHandler();
+class QuartzHandler : public QObject, public KDecorationFactory {
+    Q_OBJECT
+public:
+    QuartzHandler();
+    ~QuartzHandler();
 
-		virtual KDecoration* createDecoration( KDecorationBridge* );
-		virtual bool reset(unsigned long changed);
-		virtual bool supports( Ability ability );
-		virtual QValueList< BorderSize > borderSizes() const;
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool reset(unsigned long changed);
+    virtual bool supports(Ability ability);
+    virtual QValueList< BorderSize > borderSizes() const;
 
-	private:
-		void readConfig();
-		void createPixmaps();
-		void freePixmaps();
-		void drawBlocks(KPixmap* pi, KPixmap &p, const QColor &c1, const QColor &c2);
+private:
+    void readConfig();
+    void createPixmaps();
+    void freePixmaps();
+    void drawBlocks(KPixmap *pi, KPixmap &p, const QColor &c1, const QColor &c2);
 };
 
 
-class QuartzButton : public KCommonDecorationButton
-{
-	public:
-		QuartzButton(ButtonType type, QuartzClient *parent, const char *name);
-		~QuartzButton();
-		void setBitmap(const unsigned char *bitmap);
+class QuartzButton : public KCommonDecorationButton {
+public:
+    QuartzButton(ButtonType type, QuartzClient *parent, const char *name);
+    ~QuartzButton();
+    void setBitmap(const unsigned char *bitmap);
 
-		void reset(unsigned long changed);
+    void reset(unsigned long changed);
 
-	protected:
-		void drawButton(QPainter *p);
+protected:
+    void drawButton(QPainter *p);
 
-		QBitmap* deco;
+    QBitmap *deco;
 };
 
 
-class QuartzClient : public KCommonDecoration
-{
-	public:
-		QuartzClient(KDecorationBridge* bridge, KDecorationFactory* factory);
-		~QuartzClient() {;}
+class QuartzClient : public KCommonDecoration {
+public:
+    QuartzClient(KDecorationBridge *bridge, KDecorationFactory *factory);
+    ~QuartzClient()
+    {
+        ;
+    }
 
-		virtual QString visibleName() const;
-		virtual QString defaultButtonsLeft() const;
-		virtual QString defaultButtonsRight() const;
-		virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
-		virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
-		virtual KCommonDecorationButton *createButton(ButtonType type);
+    virtual QString visibleName() const;
+    virtual QString defaultButtonsLeft() const;
+    virtual QString defaultButtonsRight() const;
+    virtual bool decorationBehaviour(DecorationBehaviour behaviour) const;
+    virtual int layoutMetric(LayoutMetric lm, bool respectWindowState = true, const KCommonDecorationButton * = 0) const;
+    virtual KCommonDecorationButton *createButton(ButtonType type);
 
-		virtual void init();
+    virtual void init();
 
-	protected:
-		virtual void reset( unsigned long changed );
-		void paintEvent( QPaintEvent* );
+protected:
+    virtual void reset(unsigned long changed);
+    void paintEvent(QPaintEvent *);
 
-	private:
-		int 		  titleHeight, borderSize;
-		bool          largeButtons;
+private:
+    int titleHeight, borderSize;
+    bool largeButtons;
 };
-
 }
 
 #endif

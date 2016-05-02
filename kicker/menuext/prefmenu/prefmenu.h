@@ -29,46 +29,38 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <kpanelmenu.h>
 #include <ksycocaentry.h>
 
-typedef QMap<int, KSycocaEntry::Ptr> EntryMap;
-typedef QPtrList<QPopupMenu> PopupMenuList;
+typedef QMap< int, KSycocaEntry::Ptr > EntryMap;
+typedef QPtrList< QPopupMenu > PopupMenuList;
 
-class PrefMenu : public KPanelMenu
-{
+class PrefMenu : public KPanelMenu {
     Q_OBJECT
 
-    public:
-        PrefMenu(QWidget *parent,
-                 const char *name,
-                 const QStringList & /*args*/);
-        PrefMenu(const QString& label,
-                 const QString& root,
-                 QWidget *parent);
-        ~PrefMenu();
+public:
+    PrefMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
+    PrefMenu(const QString &label, const QString &root, QWidget *parent);
+    ~PrefMenu();
 
-    protected:
-        void insertMenuItem(KService::Ptr & s,
-                            int nId,
-                            int nIndex= -1,
-                            const QStringList *suppressGenericNames = 0);
-        virtual void mousePressEvent(QMouseEvent *);
-        virtual void mouseMoveEvent(QMouseEvent *);
-        virtual void dragEnterEvent(QDragEnterEvent *);
-        virtual void dragLeaveEvent(QDragLeaveEvent *);
+protected:
+    void insertMenuItem(KService::Ptr &s, int nId, int nIndex = -1, const QStringList *suppressGenericNames = 0);
+    virtual void mousePressEvent(QMouseEvent *);
+    virtual void mouseMoveEvent(QMouseEvent *);
+    virtual void dragEnterEvent(QDragEnterEvent *);
+    virtual void dragLeaveEvent(QDragLeaveEvent *);
 
-        bool m_clearOnClose;
-        QString m_root;
-        QPoint m_dragStartPos;
-        EntryMap m_entryMap;
-        PopupMenuList m_subMenus;
+    bool m_clearOnClose;
+    QString m_root;
+    QPoint m_dragStartPos;
+    EntryMap m_entryMap;
+    PopupMenuList m_subMenus;
 
-    protected slots:
-        void initialize();
-        void slotExec(int id); // from KPanelMenu
-        void slotClear(); // from KPanelMenu
-        void clearOnClose();
-        void aboutToClose();
-        void launchControlCenter();
-        void dragObjectDestroyed();
+protected slots:
+    void initialize();
+    void slotExec(int id); // from KPanelMenu
+    void slotClear();      // from KPanelMenu
+    void clearOnClose();
+    void aboutToClose();
+    void launchControlCenter();
+    void dragObjectDestroyed();
 };
 
 #endif

@@ -4,7 +4,7 @@
 
 /* #define XENIX        /* XENIX implies UNIX                           */
 /* #define SIII         /* SIII  implies UNIX, (NDELAY a la System III) */
-#define UNIX            /* UNIX                                         */
+#define UNIX /* UNIX                                         */
 #define TERMIO
 /* #define VMS          /* VMS not done yet -- send me your version!!!! */
 /* #define SARG20       /* Sargasso C for TOPS-20                       */
@@ -15,13 +15,13 @@
 /* indented. Then unix c can't find them, but Sargasso C *can*.		*/
 /* Admittedly kludgey, but it works...)					*/
 #ifdef SARG10
-  #define _UNIXCON  /* Make UNIX-flavored I/O on TOPS */
-  #strings low      /* put strings in lowseg mem so we can modify them. */
+#define _UNIXCON /* Make UNIX-flavored I/O on TOPS */
+#strings low     /* put strings in lowseg mem so we can modify them. */
 #endif
 #ifdef SARG20
-  #define _UNIXCON  /* Make UNIX-flavored I/O on TOPS */
-  #strings low      /* put strings in lowseg mem so we can modify them. */
-  #include <TOPS20.HDR>
+#define _UNIXCON /* Make UNIX-flavored I/O on TOPS */
+#strings low     /* put strings in lowseg mem so we can modify them. */
+#include <TOPS20.HDR>
 #endif
 
 #include <stdio.h>
@@ -30,9 +30,9 @@
 #ifdef UNIX
 #include <ctype.h>
 #ifdef TERMIO
-# include <termio.h>
+#include <termio.h>
 #else
-# include <sgtty.h>
+#include <sgtty.h>
 #endif
 #include <signal.h>
 #include <setjmp.h>

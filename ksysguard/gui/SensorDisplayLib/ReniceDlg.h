@@ -1,7 +1,7 @@
 /*
     KSysGuard, the KDE System Guard
 
-	Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
+    Copyright (c) 1999 Chris Schlaeger <cs@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-	KSysGuard is currently maintained by Chris Schlaeger <cs@kde.org>. Please do
-	not commit any changes without consulting me first. Thanks!
+    KSysGuard is currently maintained by Chris Schlaeger <cs@kde.org>. Please do
+    not commit any changes without consulting me first. Thanks!
 
 */
 
@@ -38,24 +38,23 @@ class KIntNumInput;
  * This class creates and handles a simple dialog to change the scheduling
  * priority of a process.
  */
-class ReniceDlg : public KDialogBase
-{
-	Q_OBJECT
+class ReniceDlg : public KDialogBase {
+    Q_OBJECT
 
 public:
-	ReniceDlg(QWidget* parent, const char* name, int currentPPrio, int pid);
+    ReniceDlg(QWidget *parent, const char *name, int currentPPrio, int pid);
 
 public slots:
-	void slotOk();
-	void slotCancel();
+    void slotOk();
+    void slotCancel();
 
 private:
-	QBoxLayout* vLay;
-	QBoxLayout* butLay;
-	QBoxLayout* sldLay;
+    QBoxLayout *vLay;
+    QBoxLayout *butLay;
+    QBoxLayout *sldLay;
 
-	QLabel* message;
-	KIntNumInput* input;
+    QLabel *message;
+    KIntNumInput *input;
 };
 
 #endif

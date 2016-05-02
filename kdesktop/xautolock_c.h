@@ -34,40 +34,41 @@
 #undef HAVE_XIDLE
 #undef HasXidle
 
-#define DEFAULT_TIMEOUT           600
+#define DEFAULT_TIMEOUT 600
 
-#define CHECK_INTERVAL           5000      /* ms */
+#define CHECK_INTERVAL 5000 /* ms */
 
-#define CREATION_DELAY             30      /* should be > 10 and
-                                              < min (45,(MIN_MINUTES*30))  */
-#define TIME_CHANGE_LIMIT         120      /* if the time changes by more
-                                              than x secs then we will
-                                              assume someone has changed
-                                              date or machine has suspended */
+#define CREATION_DELAY                                                                                                                               \
+    30 /* should be > 10 and                                                                                                                         \
+          < min (45,(MIN_MINUTES*30))  */
+#define TIME_CHANGE_LIMIT                                                                                                                            \
+    120 /* if the time changes by more                                                                                                               \
+           than x secs then we will                                                                                                                  \
+           assume someone has changed                                                                                                                \
+           date or machine has suspended */
 
-#define cornerSize                  5
+#define cornerSize 5
 
-#define cornerDelay                 5
+#define cornerDelay 5
 
-#define cornerRedelay               5
+#define cornerRedelay 5
 
 typedef enum { ca_nothing, ca_dontLock, ca_forceLock } xautolock_corner_t;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
-void xautolock_processEvent( XEvent* ev );
-void xautolock_queryIdleTime( Display* d);
-void xautolock_processQueue( void );
-void xautolock_queryPointer (Display* d);
-void xautolock_initDiy (Display* d);
-void xautolock_resetTriggers( void );
-void xautolock_setTrigger( time_t );
-int xautolock_ignoreWindow( Window );
+void xautolock_processEvent(XEvent *ev);
+void xautolock_queryIdleTime(Display *d);
+void xautolock_processQueue(void);
+void xautolock_queryPointer(Display *d);
+void xautolock_initDiy(Display *d);
+void xautolock_resetTriggers(void);
+void xautolock_setTrigger(time_t);
+int xautolock_ignoreWindow(Window);
 extern int xautolock_useXidle;
 extern int xautolock_useMit;
-extern xautolock_corner_t xautolock_corners[ 4 ];
+extern xautolock_corner_t xautolock_corners[4];
 #ifdef __cplusplus
 }
 #endif

@@ -27,42 +27,39 @@
 class FakeUASProvider;
 class UAProviderDlgUI;
 
-class UALineEdit : public KLineEdit
-{
-  Q_OBJECT
+class UALineEdit : public KLineEdit {
+    Q_OBJECT
 
 public:
-  UALineEdit( QWidget *parent, const char *name=0 );
+    UALineEdit(QWidget *parent, const char *name = 0);
 
 protected:
-  virtual void keyPressEvent( QKeyEvent * );
+    virtual void keyPressEvent(QKeyEvent *);
 };
 
-class UAProviderDlg : public KDialog
-{
-  Q_OBJECT
+class UAProviderDlg : public KDialog {
+    Q_OBJECT
 
 public:
-  UAProviderDlg( const QString& caption, QWidget *parent = 0,
-                 FakeUASProvider* provider = 0, const char *name = 0 );
-  ~UAProviderDlg();
+    UAProviderDlg(const QString &caption, QWidget *parent = 0, FakeUASProvider *provider = 0, const char *name = 0);
+    ~UAProviderDlg();
 
-  void setSiteName( const QString& );
-  void setIdentity( const QString& );
+    void setSiteName(const QString &);
+    void setIdentity(const QString &);
 
-  QString siteName();
-  QString identity();
-  QString alias();
+    QString siteName();
+    QString identity();
+    QString alias();
 
 protected slots:
-  void slotActivated( const QString& );
-  void slotTextChanged( const QString& );
+    void slotActivated(const QString &);
+    void slotTextChanged(const QString &);
 
 protected:
-  void init();
+    void init();
 
 private:
-  FakeUASProvider* m_provider;
-  UAProviderDlgUI* dlg;
+    FakeUASProvider *m_provider;
+    UAProviderDlgUI *dlg;
 };
 #endif

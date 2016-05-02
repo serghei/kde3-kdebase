@@ -33,17 +33,16 @@
 #include <qmap.h>
 #include <qpair.h>
 
-namespace KParts { class Factory; }
+namespace KParts {
+class Factory;
+}
 
 class KConfig;
 class DCOPObject;
 
-class KateDocumentInfo
-{
-  public:
-    KateDocumentInfo ()
-     : modifiedOnDisc (false),
-       modifiedOnDiscReason (0)
+class KateDocumentInfo {
+public:
+    KateDocumentInfo() : modifiedOnDisc(false), modifiedOnDiscReason(0)
     {
     }
 
@@ -51,97 +50,117 @@ class KateDocumentInfo
     unsigned char modifiedOnDiscReason;
 };
 
-typedef QPair<KURL,QDateTime> TPair;
+typedef QPair< KURL, QDateTime > TPair;
 
-class KateDocManager : public QObject
-{
-  Q_OBJECT
+class KateDocManager : public QObject {
+    Q_OBJECT
 
-  public:
-    KateDocManager (QObject *parent);
-    ~KateDocManager ();
+public:
+    KateDocManager(QObject *parent);
+    ~KateDocManager();
 
-    static KateDocManager *self ();
+    static KateDocManager *self();
 
-    Kate::DocumentManager *documentManager () { return m_documentManager; };
+    Kate::DocumentManager *documentManager()
+    {
+        return m_documentManager;
+    };
 
-    Kate::Document *createDoc ();
-    void deleteDoc (Kate::Document *doc);
+    Kate::Document *createDoc();
+    void deleteDoc(Kate::Document *doc);
 
-    Kate::Document *document (uint n);
+    Kate::Document *document(uint n);
 
-    Kate::Document *activeDocument ();
-    void setActiveDocument (Kate::Document *doc);
+    Kate::Document *activeDocument();
+    void setActiveDocument(Kate::Document *doc);
 
-    Kate::Document *firstDocument ();
-    Kate::Document *nextDocument ();
+    Kate::Document *firstDocument();
+    Kate::Document *nextDocument();
 
     // search document with right documentNumber()
-    Kate::Document *documentWithID (uint id);
+    Kate::Document *documentWithID(uint id);
 
-    const KateDocumentInfo *documentInfo (Kate::Document *doc);
+    const KateDocumentInfo *documentInfo(Kate::Document *doc);
 
-    int findDocument (Kate::Document *doc);
+    int findDocument(Kate::Document *doc);
     /** Returns the documentNumber of the doc with url URL or -1 if no such doc is found */
-    int findDocument (KURL url);
+    int findDocument(KURL url);
     // Anders: The above is not currently stable ?
-    Kate::Document *findDocumentByUrl( KURL url );
+    Kate::Document *findDocumentByUrl(KURL url);
 
     bool isOpen(KURL url);
 
-    uint documents ();
+    uint documents();
 
-    QPtrList<Kate::Document> &documentList () { return m_docList; };
+    QPtrList< Kate::Document > &documentList()
+    {
+        return m_docList;
+    };
 
-    Kate::Document *openURL(const KURL&,const QString &encoding=QString::null,uint *id =0,bool isTempFile=false);
+    Kate::Document *openURL(const KURL &, const QString &encoding = QString::null, uint *id = 0, bool isTempFile = false);
 
-    bool closeDocument(class Kate::Document *,bool closeURL=true);
+    bool closeDocument(class Kate::Document *, bool closeURL = true);
     bool closeDocument(uint);
     bool closeDocumentWithID(uint);
-    bool closeAllDocuments(bool closeURL=true);
+    bool closeAllDocuments(bool closeURL = true);
 
-    QPtrList<Kate::Document> modifiedDocumentList();
+    QPtrList< Kate::Document > modifiedDocumentList();
     bool queryCloseDocuments(KateMainWindow *w);
 
-    void saveDocumentList (class KConfig *config);
-    void restoreDocumentList (class KConfig *config);
+    void saveDocumentList(class KConfig *config);
+    void restoreDocumentList(class KConfig *config);
 
-    DCOPObject *dcopObject () { return m_dcop; };
+    DCOPObject *dcopObject()
+    {
+        return m_dcop;
+    };
 
-    inline bool getSaveMetaInfos() { return m_saveMetaInfos; };
-    inline void setSaveMetaInfos(bool b) { m_saveMetaInfos = b; };
+    inline bool getSaveMetaInfos()
+    {
+        return m_saveMetaInfos;
+    };
+    inline void setSaveMetaInfos(bool b)
+    {
+        m_saveMetaInfos = b;
+    };
 
-    inline int getDaysMetaInfos() { return m_daysMetaInfos; };
-    inline void setDaysMetaInfos(int i) { m_daysMetaInfos = i; };
+    inline int getDaysMetaInfos()
+    {
+        return m_daysMetaInfos;
+    };
+    inline void setDaysMetaInfos(int i)
+    {
+        m_daysMetaInfos = i;
+    };
 
-  public slots:
+public slots:
     /**
      * saves all documents that has at least one view.
      * documents with no views are ignored :P
      */
     void saveAll();
 
-  signals:
-    void documentCreated (Kate::Document *doc);
-    void documentDeleted (uint documentNumber);
-    void documentChanged ();
-    void initialDocumentReplaced ();
+signals:
+    void documentCreated(Kate::Document *doc);
+    void documentDeleted(uint documentNumber);
+    void documentChanged();
+    void initialDocumentReplaced();
 
-  private slots:
-    void slotModifiedOnDisc (Kate::Document *doc, bool b, unsigned char reason);
+private slots:
+    void slotModifiedOnDisc(Kate::Document *doc, bool b, unsigned char reason);
     void slotModChanged(Kate::Document *doc);
 
-  private:
+private:
     bool loadMetaInfos(Kate::Document *doc, const KURL &url);
     void saveMetaInfos(Kate::Document *doc);
     bool computeUrlMD5(const KURL &url, QCString &result);
 
     Kate::DocumentManager *m_documentManager;
-    QPtrList<Kate::Document> m_docList;
-    QIntDict<Kate::Document> m_docDict;
-    QPtrDict<KateDocumentInfo> m_docInfos;
-    QMap<uint,TPair> m_tempFiles;
-    QGuardedPtr<Kate::Document> m_currentDoc;
+    QPtrList< Kate::Document > m_docList;
+    QIntDict< Kate::Document > m_docDict;
+    QPtrDict< KateDocumentInfo > m_docInfos;
+    QMap< uint, TPair > m_tempFiles;
+    QGuardedPtr< Kate::Document > m_currentDoc;
     KConfig *m_metaInfos;
     bool m_saveMetaInfos;
     int m_daysMetaInfos;
@@ -149,7 +168,6 @@ class KateDocManager : public QObject
     DCOPObject *m_dcop;
 
     KParts::Factory *m_factory;
-
 };
 
 #endif

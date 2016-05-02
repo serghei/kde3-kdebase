@@ -29,37 +29,36 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "kicker.h"
 #include "extensionop_mnu.h"
 
-PanelExtensionOpMenu::PanelExtensionOpMenu(const QString& extension, int actions, QWidget *parent, const char *name)
-  : QPopupMenu(parent, name)
+PanelExtensionOpMenu::PanelExtensionOpMenu(const QString &extension, int actions, QWidget *parent, const char *name) : QPopupMenu(parent, name)
 {
-    if (!Kicker::the()->isImmutable())
+    if(!Kicker::the()->isImmutable())
     {
         insertItem(SmallIcon("remove"), i18n("&Remove"), Remove);
     }
 
-    if (actions & KPanelExtension::ReportBug)
+    if(actions & KPanelExtension::ReportBug)
     {
         insertSeparator();
         insertItem(i18n("Report &Bug..."), ReportBug);
     }
 
-    if (actions & KPanelExtension::Help
-        || actions & KPanelExtension::About)
-	insertSeparator();
+    if(actions & KPanelExtension::Help || actions & KPanelExtension::About)
+        insertSeparator();
 
-    if (actions & KPanelExtension::About)
+    if(actions & KPanelExtension::About)
     {
         insertItem(i18n("&About"), About);
     }
 
-    if (actions & KPanelExtension::Help)
+    if(actions & KPanelExtension::Help)
     {
         insertItem(SmallIcon("help"), KStdGuiItem::help().text(), Help);
     }
 
-    if (!Kicker::the()->isImmutable() && (actions & KPanelExtension::Preferences)) {
-	insertSeparator();
-	insertItem(SmallIcon("configure"), i18n("&Configure %1...").arg(extension), Preferences);
+    if(!Kicker::the()->isImmutable() && (actions & KPanelExtension::Preferences))
+    {
+        insertSeparator();
+        insertItem(SmallIcon("configure"), i18n("&Configure %1...").arg(extension), Preferences);
     }
 
     adjustSize();

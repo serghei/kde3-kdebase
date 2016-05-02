@@ -23,21 +23,20 @@
 class QWidget;
 class QWhatsThis;
 
-class HelpWidget : public QWhatsThis
-{
+class HelpWidget : public QWhatsThis {
 public:
-  HelpWidget(QWidget *parent);
+    HelpWidget(QWidget *parent);
 
-  void setText( const QString& docPath, const QString& text);
-  void setBaseText();
-  QString text() const;
+    void setText(const QString &docPath, const QString &text);
+    void setBaseText();
+    QString text() const;
 
-  bool clicked(const QString &);
-  void handbookRequest();
+    bool clicked(const QString &);
+    void handbookRequest();
 
 private:
-  QString docpath;
-  QString helptext;
+    QString docpath;
+    QString helptext;
 };
 
 #endif

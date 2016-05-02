@@ -49,28 +49,29 @@
 
 // SHUFFLE all these functions around, the order is just plain stupid
 
-BookmarkLineEdit::BookmarkLineEdit( QWidget *parent )
-    : KLineEdit( parent )
+BookmarkLineEdit::BookmarkLineEdit(QWidget *parent) : KLineEdit(parent)
 {
 }
 
 void BookmarkLineEdit::cut()
 {
-    QString select( selectedText() );
-    int pos( selectionStart() );
-    QString newText(  text().remove( pos, select.length() ) );
+    QString select(selectedText());
+    int pos(selectionStart());
+    QString newText(text().remove(pos, select.length()));
     KLineEdit::cut();
-    setEdited( true ); //KDE 4 setModified( true );
-    emit textChanged( newText );
-    setText( newText );
+    setEdited(true); // KDE 4 setModified( true );
+    emit textChanged(newText);
+    setText(newText);
 }
 
 
-void BookmarkInfoWidget::showBookmark(const KBookmark &bk) {
+void BookmarkInfoWidget::showBookmark(const KBookmark &bk)
+{
     commitChanges();
     m_bk = bk;
 
-    if (m_bk.isNull()) {
+    if(m_bk.isNull())
+    {
         // all read only and blank
 
         m_title_le->setReadOnly(true);
@@ -95,40 +96,38 @@ void BookmarkInfoWidget::showBookmark(const KBookmark &bk) {
     }
 
     // read/write fields
-    m_title_le->setReadOnly( (bk.isSeparator()|| !bk.hasParent() )? true : false);
+    m_title_le->setReadOnly((bk.isSeparator() || !bk.hasParent()) ? true : false);
     m_title_le->setText(bk.fullText());
 
     m_url_le->setReadOnly(bk.isGroup() || bk.isSeparator());
     m_url_le->setText(bk.isGroup() ? QString::null : bk.url().pathOrURL());
 
-    m_comment_le->setReadOnly((bk.isSeparator()|| !bk.hasParent()) ? true : false );
-    m_comment_le->setText(
-            NodeEditCommand::getNodeText(bk, QStringList() << "desc"));
+    m_comment_le->setReadOnly((bk.isSeparator() || !bk.hasParent()) ? true : false);
+    m_comment_le->setText(NodeEditCommand::getNodeText(bk, QStringList() << "desc"));
 
     // readonly fields
     updateStatus();
- 
 }
 
 void BookmarkInfoWidget::updateStatus()
 {
-   QString visitDate =
-        CurrentMgr::makeTimeStr( NodeEditCommand::getNodeText(m_bk, QStringList() << "info" << "metadata"
-                                                             << "time_visited" ));
+    QString visitDate = CurrentMgr::makeTimeStr(NodeEditCommand::getNodeText(m_bk, QStringList() << "info"
+                                                                                                 << "metadata"
+                                                                                                 << "time_visited"));
     m_visitdate_le->setReadOnly(true);
     m_visitdate_le->setText(visitDate);
 
-    QString creationDate =
-        CurrentMgr::makeTimeStr( NodeEditCommand::getNodeText(m_bk, QStringList() << "info" << "metadata"
-                                                             << "time_added" ));
+    QString creationDate = CurrentMgr::makeTimeStr(NodeEditCommand::getNodeText(m_bk, QStringList() << "info"
+                                                                                                    << "metadata"
+                                                                                                    << "time_added"));
     m_credate_le->setReadOnly(true);
     m_credate_le->setText(creationDate);
 
     // TODO - get the actual field name from the spec if it exists, else copy galeon
     m_visitcount_le->setReadOnly(true);
-    m_visitcount_le->setText(
-            NodeEditCommand::getNodeText(m_bk, QStringList() << "info" << "metadata"
-                                                           << "visit_count" ));
+    m_visitcount_le->setText(NodeEditCommand::getNodeText(m_bk, QStringList() << "info"
+                                                                              << "metadata"
+                                                                              << "visit_count"));
 }
 
 void BookmarkInfoWidget::commitChanges()
@@ -148,9 +147,9 @@ void BookmarkInfoWidget::commitTitle()
     }
 }
 
-void BookmarkInfoWidget::slotTextChangedTitle(const QString &str) 
+void BookmarkInfoWidget::slotTextChangedTitle(const QString &str)
 {
-    if (m_bk.isNull() || !m_title_le->isModified())
+    if(m_bk.isNull() || !m_title_le->isModified())
         return;
 
     timer->start(1000, true);
@@ -178,8 +177,9 @@ void BookmarkInfoWidget::commitURL()
     }
 }
 
-void BookmarkInfoWidget::slotTextChangedURL(const QString &str) {
-    if (m_bk.isNull() || !m_url_le->isModified())
+void BookmarkInfoWidget::slotTextChangedURL(const QString &str)
+{
+    if(m_bk.isNull() || !m_url_le->isModified())
         return;
 
     timer->start(1000, true);
@@ -204,13 +204,14 @@ void BookmarkInfoWidget::commitComment()
     if(commentcmd)
     {
         emit updateListViewItem();
-        CurrentMgr::self()->notifyManagers( CurrentMgr::bookmarkAt( commentcmd->affectedBookmarks() ).toGroup());
+        CurrentMgr::self()->notifyManagers(CurrentMgr::bookmarkAt(commentcmd->affectedBookmarks()).toGroup());
         commentcmd = 0;
     }
 }
 
-void BookmarkInfoWidget::slotTextChangedComment(const QString &str) {
-    if (m_bk.isNull() || !m_comment_le->isModified())
+void BookmarkInfoWidget::slotTextChangedComment(const QString &str)
+{
+    if(m_bk.isNull() || !m_comment_le->isModified())
         return;
 
     timer->start(1000, true);
@@ -228,11 +229,11 @@ void BookmarkInfoWidget::slotTextChangedComment(const QString &str) {
     }
 }
 
-BookmarkInfoWidget::BookmarkInfoWidget(QWidget *parent, const char *name)
-    : QWidget(parent, name), m_connected(false) {
+BookmarkInfoWidget::BookmarkInfoWidget(QWidget *parent, const char *name) : QWidget(parent, name), m_connected(false)
+{
 
     timer = new QTimer(this);
-    connect(timer, SIGNAL( timeout() ), SLOT( commitChanges()));
+    connect(timer, SIGNAL(timeout()), SLOT(commitChanges()));
 
     titlecmd = 0;
     urlcmd = 0;
@@ -243,51 +244,35 @@ BookmarkInfoWidget::BookmarkInfoWidget(QWidget *parent, const char *name)
 
     m_title_le = new BookmarkLineEdit(this);
     grid->addWidget(m_title_le, 0, 1);
-    grid->addWidget(
-            new QLabel(m_title_le, i18n("Name:"), this),
-            0, 0);
+    grid->addWidget(new QLabel(m_title_le, i18n("Name:"), this), 0, 0);
 
-    connect(m_title_le, SIGNAL( textChanged(const QString &) ),
-                        SLOT( slotTextChangedTitle(const QString &) ));
-    connect(m_title_le, SIGNAL( lostFocus() ), SLOT( commitTitle() ));
+    connect(m_title_le, SIGNAL(textChanged(const QString &)), SLOT(slotTextChangedTitle(const QString &)));
+    connect(m_title_le, SIGNAL(lostFocus()), SLOT(commitTitle()));
 
     m_url_le = new BookmarkLineEdit(this);
     grid->addWidget(m_url_le, 1, 1);
-    grid->addWidget(
-            new QLabel(m_url_le, i18n("Location:"), this),
-            1, 0);
+    grid->addWidget(new QLabel(m_url_le, i18n("Location:"), this), 1, 0);
 
-    connect(m_url_le, SIGNAL( textChanged(const QString &) ),
-                      SLOT( slotTextChangedURL(const QString &) ));
-    connect(m_url_le, SIGNAL( lostFocus() ), SLOT( commitURL() ));
+    connect(m_url_le, SIGNAL(textChanged(const QString &)), SLOT(slotTextChangedURL(const QString &)));
+    connect(m_url_le, SIGNAL(lostFocus()), SLOT(commitURL()));
 
     m_comment_le = new BookmarkLineEdit(this);
     grid->addWidget(m_comment_le, 2, 1);
-    grid->addWidget(
-            new QLabel(m_comment_le, i18n("Comment:"), this),
-            2, 0);
-    connect(m_comment_le, SIGNAL( textChanged(const QString &) ),
-                          SLOT( slotTextChangedComment(const QString &) ));
-    connect(m_comment_le, SIGNAL( lostFocus() ), SLOT( commitComment() ));
+    grid->addWidget(new QLabel(m_comment_le, i18n("Comment:"), this), 2, 0);
+    connect(m_comment_le, SIGNAL(textChanged(const QString &)), SLOT(slotTextChangedComment(const QString &)));
+    connect(m_comment_le, SIGNAL(lostFocus()), SLOT(commitComment()));
 
     m_credate_le = new KLineEdit(this);
     grid->addWidget(m_credate_le, 0, 3);
-    grid->addWidget(
-            new QLabel(m_credate_le, i18n("First viewed:"), this),
-            0, 2);
+    grid->addWidget(new QLabel(m_credate_le, i18n("First viewed:"), this), 0, 2);
 
     m_visitdate_le = new KLineEdit(this);
     grid->addWidget(m_visitdate_le, 1, 3);
-    grid->addWidget(
-            new QLabel(m_visitdate_le, i18n("Viewed last:"), this),
-            1, 2 );
+    grid->addWidget(new QLabel(m_visitdate_le, i18n("Viewed last:"), this), 1, 2);
 
     m_visitcount_le = new KLineEdit(this);
     grid->addWidget(m_visitcount_le, 2, 3);
-    grid->addWidget(
-            new QLabel(m_visitcount_le, i18n("Times visited:"), this),
-            2, 2);
+    grid->addWidget(new QLabel(m_visitcount_le, i18n("Times visited:"), this), 2, 2);
 }
 
 #include "bookmarkinfo.moc"
-

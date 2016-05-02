@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 1999, 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -43,84 +43,81 @@ class SensorManagerIterator;
   connection yet or the hostname is empty, a dialog will be shown to
   enter the connections details.
  */
-class KDE_EXPORT SensorManager : public QObject
-{
-  Q_OBJECT
+class KDE_EXPORT SensorManager : public QObject {
+    Q_OBJECT
 
-  friend class SensorManagerIterator;
+    friend class SensorManagerIterator;
 
-  public:
+public:
     SensorManager();
     ~SensorManager();
 
-    bool engageHost( const QString &hostName );
-    bool engage( const QString &hostName, const QString &shell = "ssh",
-                 const QString &command = "", int port = -1 );
+    bool engageHost(const QString &hostName);
+    bool engage(const QString &hostName, const QString &shell = "ssh", const QString &command = "", int port = -1);
 
-    void requestDisengage( const SensorAgent *agent );
-    bool disengage( const SensorAgent *agent );
-    bool disengage( const QString &hostName );
-    bool resynchronize( const QString &hostName );
-    void hostLost( const SensorAgent *agent );
-    void notify( const QString &msg ) const;
+    void requestDisengage(const SensorAgent *agent);
+    bool disengage(const SensorAgent *agent);
+    bool disengage(const QString &hostName);
+    bool resynchronize(const QString &hostName);
+    void hostLost(const SensorAgent *agent);
+    void notify(const QString &msg) const;
 
-    void setBroadcaster( QWidget *wdg );
+    void setBroadcaster(QWidget *wdg);
 
-    virtual bool event( QEvent *event );
+    virtual bool event(QEvent *event);
 
-    bool sendRequest( const QString &hostName, const QString &request,
-                      SensorClient *client, int id = 0 );
+    bool sendRequest(const QString &hostName, const QString &request, SensorClient *client, int id = 0);
 
-    const QString hostName( const SensorAgent *sensor ) const;
-    bool hostInfo( const QString &host, QString &shell,
-                   QString &command, int &port );
+    const QString hostName(const SensorAgent *sensor) const;
+    bool hostInfo(const QString &host, QString &shell, QString &command, int &port);
 
-    const QString& translateUnit( const QString &unit ) const;
-    const QString& translateSensorPath( const QString &path ) const;
-    const QString& translateSensorType( const QString &type ) const;
-    QString translateSensor(const QString& u) const;
+    const QString &translateUnit(const QString &unit) const;
+    const QString &translateSensorPath(const QString &path) const;
+    const QString &translateSensorType(const QString &type) const;
+    QString translateSensor(const QString &u) const;
 
-    void readProperties( KConfig *cfg );
-    void saveProperties( KConfig *cfg );
+    void readProperties(KConfig *cfg);
+    void saveProperties(KConfig *cfg);
 
-    void disconnectClient( SensorClient *client );
-	
-  public slots:
-    void reconfigure( const SensorAgent *agent );
+    void disconnectClient(SensorClient *client);
 
-  signals:
+public slots:
+    void reconfigure(const SensorAgent *agent);
+
+signals:
     void update();
-    void hostConnectionLost( const QString &hostName );
+    void hostConnectionLost(const QString &hostName);
 
-  protected:
-    QDict<SensorAgent> mAgents;
+protected:
+    QDict< SensorAgent > mAgents;
 
-  private:
+private:
     /**
       These dictionary stores the localized versions of the sensor
       descriptions and units.
      */
-    QDict<QString> mDescriptions;
-    QDict<QString> mUnits;
-    QDict<QString> mDict;
-    QDict<QString> mTypes;
+    QDict< QString > mDescriptions;
+    QDict< QString > mUnits;
+    QDict< QString > mDict;
+    QDict< QString > mTypes;
 
-    QWidget* mBroadcaster;
+    QWidget *mBroadcaster;
 
-    HostConnector* mHostConnector;
+    HostConnector *mHostConnector;
 };
 
-KDE_EXPORT extern SensorManager* SensorMgr;
+KDE_EXPORT extern SensorManager *SensorMgr;
 
-class KDE_EXPORT SensorManagerIterator : public QDictIterator<SensorAgent>
-{
-  public:
-    SensorManagerIterator( const SensorManager *sm )
-      : QDictIterator<SensorAgent>( sm->mAgents ) { }
+class KDE_EXPORT SensorManagerIterator : public QDictIterator< SensorAgent > {
+public:
+    SensorManagerIterator(const SensorManager *sm) : QDictIterator< SensorAgent >(sm->mAgents)
+    {
+    }
 
-    ~SensorManagerIterator() { }
+    ~SensorManagerIterator()
+    {
+    }
 };
-
 }
 
 #endif

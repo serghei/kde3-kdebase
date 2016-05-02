@@ -28,63 +28,62 @@
 #include "kshellcmddialog.h"
 #include "kshellcmdexecutor.h"
 
-KShellCommandDialog::KShellCommandDialog(const QString& title, const QString& command, QWidget* parent, bool modal)
-   :KDialog(parent,"p",modal)
+KShellCommandDialog::KShellCommandDialog(const QString &title, const QString &command, QWidget *parent, bool modal) : KDialog(parent, "p", modal)
 {
-   QVBoxLayout * box=new QVBoxLayout (this,marginHint(),spacingHint());
+    QVBoxLayout *box = new QVBoxLayout(this, marginHint(), spacingHint());
 
-   QLabel *label=new QLabel(title,this);
-   m_shell=new KShellCommandExecutor(command,this);
+    QLabel *label = new QLabel(title, this);
+    m_shell = new KShellCommandExecutor(command, this);
 
-   QHBox *buttonsBox=new QHBox(this);
-   buttonsBox->setSpacing(spacingHint());
+    QHBox *buttonsBox = new QHBox(this);
+    buttonsBox->setSpacing(spacingHint());
 
-   cancelButton= new KPushButton(KStdGuiItem::cancel(), buttonsBox);
-   closeButton= new KPushButton(KStdGuiItem::close(), buttonsBox);
-   closeButton->setDefault(true);
+    cancelButton = new KPushButton(KStdGuiItem::cancel(), buttonsBox);
+    closeButton = new KPushButton(KStdGuiItem::close(), buttonsBox);
+    closeButton->setDefault(true);
 
-   label->resize(label->sizeHint());
-   m_shell->resize(m_shell->sizeHint());
-   closeButton->setFixedSize(closeButton->sizeHint());
-   cancelButton->setFixedSize(cancelButton->sizeHint());
+    label->resize(label->sizeHint());
+    m_shell->resize(m_shell->sizeHint());
+    closeButton->setFixedSize(closeButton->sizeHint());
+    cancelButton->setFixedSize(cancelButton->sizeHint());
 
-   box->addWidget(label,0);
-   box->addWidget(m_shell,1);
-   box->addWidget(buttonsBox,0);
+    box->addWidget(label, 0);
+    box->addWidget(m_shell, 1);
+    box->addWidget(buttonsBox, 0);
 
-   m_shell->setFocus();
+    m_shell->setFocus();
 
-   connect(cancelButton, SIGNAL(clicked()), m_shell, SLOT(slotFinished()));
-   connect(m_shell, SIGNAL(finished()), this, SLOT(disableStopButton()));
-   connect(closeButton,SIGNAL(clicked()), this, SLOT(slotClose()));
+    connect(cancelButton, SIGNAL(clicked()), m_shell, SLOT(slotFinished()));
+    connect(m_shell, SIGNAL(finished()), this, SLOT(disableStopButton()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(slotClose()));
 }
 
 KShellCommandDialog::~KShellCommandDialog()
 {
-   delete m_shell;
-   m_shell=0;
+    delete m_shell;
+    m_shell = 0;
 }
 
 void KShellCommandDialog::disableStopButton()
 {
-   cancelButton->setEnabled(false);
+    cancelButton->setEnabled(false);
 }
 
 void KShellCommandDialog::slotClose()
 {
-   delete m_shell;
-   m_shell=0;
-   accept();
+    delete m_shell;
+    m_shell = 0;
+    accept();
 }
 
-//blocking
+// blocking
 int KShellCommandDialog::executeCommand()
 {
-   if (m_shell==0)
-      return 0;
-   //kdDebug()<<"---------- KShellCommandDialog::executeCommand()"<<endl;
-   m_shell->exec();
-   return exec();
+    if(m_shell == 0)
+        return 0;
+    // kdDebug()<<"---------- KShellCommandDialog::executeCommand()"<<endl;
+    m_shell->exec();
+    return exec();
 }
 
 #include "kshellcmddialog.moc"

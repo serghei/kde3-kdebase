@@ -30,46 +30,40 @@
 
 class KonqDirPart;
 
-typedef KParts::GenericFactory<KFindPart> KFindFactory;
-K_EXPORT_COMPONENT_FACTORY( libkfindpart, KFindFactory )
+typedef KParts::GenericFactory< KFindPart > KFindFactory;
+K_EXPORT_COMPONENT_FACTORY(libkfindpart, KFindFactory)
 
-KFindPart::KFindPart( QWidget * parentWidget, const char *widgetName, 
-	              QObject *parent, const char *name ,
-		      const QStringList & /*args*/ )
-    : KonqDirPart (parent, name )/*KParts::ReadOnlyPart*/
+KFindPart::KFindPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const QStringList & /*args*/)
+    : KonqDirPart(parent, name) /*KParts::ReadOnlyPart*/
 {
-    setInstance( KFindFactory::instance() );
+    setInstance(KFindFactory::instance());
 
-    setBrowserExtension( new KonqDirPartBrowserExtension( this ) );
+    setBrowserExtension(new KonqDirPartBrowserExtension(this));
 
     kdDebug() << "KFindPart::KFindPart " << this << endl;
-    m_kfindWidget = new Kfind( parentWidget, widgetName );
+    m_kfindWidget = new Kfind(parentWidget, widgetName);
     m_kfindWidget->setMaximumHeight(m_kfindWidget->minimumSizeHint().height());
-    const KFileItem *item = ((KonqDirPart*)parent)->currentItem();
-    kdDebug() << "Kfind: currentItem:  " << ( item ? item->url().path().local8Bit() : QString("null") ) << endl;
+    const KFileItem *item = ((KonqDirPart *)parent)->currentItem();
+    kdDebug() << "Kfind: currentItem:  " << (item ? item->url().path().local8Bit() : QString("null")) << endl;
     QDir d;
-  	if( item && d.exists( item->url().path() ))
-	  	m_kfindWidget->setURL( item->url() );
+    if(item && d.exists(item->url().path()))
+        m_kfindWidget->setURL(item->url());
 
-    setWidget( m_kfindWidget );
+    setWidget(m_kfindWidget);
 
-    connect( m_kfindWidget, SIGNAL(started()),
-             this, SLOT(slotStarted()) );
-    connect( m_kfindWidget, SIGNAL(destroyMe()),
-             this, SLOT(slotDestroyMe()) );
-    connect(m_kfindWidget->dirlister,SIGNAL(deleteItem(KFileItem*)), this, SLOT(removeFile(KFileItem*)));
-    connect(m_kfindWidget->dirlister,SIGNAL(newItems(const KFileItemList&)), this, SLOT(newFiles(const KFileItemList&)));
-    //setXMLFile( "kfind.rc" );
+    connect(m_kfindWidget, SIGNAL(started()), this, SLOT(slotStarted()));
+    connect(m_kfindWidget, SIGNAL(destroyMe()), this, SLOT(slotDestroyMe()));
+    connect(m_kfindWidget->dirlister, SIGNAL(deleteItem(KFileItem *)), this, SLOT(removeFile(KFileItem *)));
+    connect(m_kfindWidget->dirlister, SIGNAL(newItems(const KFileItemList &)), this, SLOT(newFiles(const KFileItemList &)));
+    // setXMLFile( "kfind.rc" );
     query = new KQuery(this);
-    connect(query, SIGNAL(addFile(const KFileItem *, const QString&)),
-            SLOT(addFile(const KFileItem *, const QString&)));
-    connect(query, SIGNAL(result(int)),
-            SLOT(slotResult(int)));
+    connect(query, SIGNAL(addFile(const KFileItem *, const QString &)), SLOT(addFile(const KFileItem *, const QString &)));
+    connect(query, SIGNAL(result(int)), SLOT(slotResult(int)));
 
     m_kfindWidget->setQuery(query);
     m_bShowsResult = false;
 
-    m_lstFileItems.setAutoDelete( true );
+    m_lstFileItems.setAutoDelete(true);
 }
 
 KFindPart::~KFindPart()
@@ -78,12 +72,12 @@ KFindPart::~KFindPart()
 
 KAboutData *KFindPart::createAboutData()
 {
-    return new KAboutData( "kfindpart", I18N_NOOP( "Find Component" ), "1.0" );
+    return new KAboutData("kfindpart", I18N_NOOP("Find Component"), "1.0");
 }
 
-bool KFindPart::doOpenURL( const KURL &url )
+bool KFindPart::doOpenURL(const KURL &url)
 {
-    m_kfindWidget->setURL( url );
+    m_kfindWidget->setURL(url);
     return true;
 }
 
@@ -96,118 +90,119 @@ void KFindPart::slotStarted()
     emit clear();
 }
 
-void KFindPart::addFile(const KFileItem *item, const QString& /*matchingLine*/)
+void KFindPart::addFile(const KFileItem *item, const QString & /*matchingLine*/)
 {
     // item is deleted by caller
     // we need to clone it
     KFileItem *clonedItem = new KFileItem(*item);
-    m_lstFileItems.append( clonedItem );
+    m_lstFileItems.append(clonedItem);
 
     KFileItemList lstNewItems;
     lstNewItems.append(clonedItem);
     emit newItems(lstNewItems);
-   
-  /*
-  win->insertItem(item);
 
-  if (!isResultReported)
-  {
-    emit haveResults(true);
-    isResultReported = true;
-  }
+    /*
+    win->insertItem(item);
 
-  */
+    if (!isResultReported)
+    {
+      emit haveResults(true);
+      isResultReported = true;
+    }
+
+    */
 }
 
 /* An item has been removed, so update konqueror's view */
 void KFindPart::removeFile(KFileItem *item)
 {
-  KFileItem *iter;
-  KFileItemList listiter;
+    KFileItem *iter;
+    KFileItemList listiter;
 
-  emit started();
-  emit clear();
+    emit started();
+    emit clear();
 
-  m_lstFileItems.remove( item );  //not working ?
+    m_lstFileItems.remove(item); // not working ?
 
-  for(iter=m_lstFileItems.first(); iter; iter=m_lstFileItems.next() ) {
-    if(iter->url()!=item->url())
-      listiter.append(iter);
-  }
-  
-  emit newItems(listiter);
-  emit finished();
+    for(iter = m_lstFileItems.first(); iter; iter = m_lstFileItems.next())
+    {
+        if(iter->url() != item->url())
+            listiter.append(iter);
+    }
+
+    emit newItems(listiter);
+    emit finished();
 }
 
-void KFindPart::newFiles(const KFileItemList&)
+void KFindPart::newFiles(const KFileItemList &)
 {
-  if(m_bShowsResult)
-    return;
-  emit started();
-  emit clear();
-  if (m_lstFileItems.count())
-    emit newItems(m_lstFileItems);
-  emit finished();
+    if(m_bShowsResult)
+        return;
+    emit started();
+    emit clear();
+    if(m_lstFileItems.count())
+        emit newItems(m_lstFileItems);
+    emit finished();
 }
 
 void KFindPart::slotResult(int errorCode)
 {
-  if (errorCode == 0)
-    emit finished();
-    //setStatusMsg(i18n("Ready."));
-  else if (errorCode == KIO::ERR_USER_CANCELED)
-    emit canceled();
-    //setStatusMsg(i18n("Aborted."));
-  else
-    emit canceled(); // TODO ?
-    //setStatusMsg(i18n("Error."));
-  m_bShowsResult=false;
-  m_kfindWidget->searchFinished();
+    if(errorCode == 0)
+        emit finished();
+    // setStatusMsg(i18n("Ready."));
+    else if(errorCode == KIO::ERR_USER_CANCELED)
+        emit canceled();
+    // setStatusMsg(i18n("Aborted."));
+    else
+        emit canceled(); // TODO ?
+                         // setStatusMsg(i18n("Error."));
+    m_bShowsResult = false;
+    m_kfindWidget->searchFinished();
 }
 
 void KFindPart::slotDestroyMe()
 {
-  m_kfindWidget->stopSearch();
-  emit clear(); // this is necessary to clear the delayed-mimetypes items list
-  m_lstFileItems.clear(); // clear our internal list
-  emit findClosed();
+    m_kfindWidget->stopSearch();
+    emit clear();           // this is necessary to clear the delayed-mimetypes items list
+    m_lstFileItems.clear(); // clear our internal list
+    emit findClosed();
 }
 
-void KFindPart::saveState( QDataStream& stream )
+void KFindPart::saveState(QDataStream &stream)
 {
-  KonqDirPart::saveState(stream); 
+    KonqDirPart::saveState(stream);
 
-  m_kfindWidget->saveState( &stream );
-  //Now we'll save the search result
-  KFileItem *fileitem=m_lstFileItems.first();
-  stream << m_lstFileItems.count();
-  while(fileitem!=NULL)
-  {
+    m_kfindWidget->saveState(&stream);
+    // Now we'll save the search result
+    KFileItem *fileitem = m_lstFileItems.first();
+    stream << m_lstFileItems.count();
+    while(fileitem != NULL)
+    {
         stream << *fileitem;
-        fileitem=m_lstFileItems.next();
-  }
+        fileitem = m_lstFileItems.next();
+    }
 }
 
-void KFindPart::restoreState( QDataStream& stream )
+void KFindPart::restoreState(QDataStream &stream)
 {
-  KonqDirPart::restoreState(stream); 
-  int nbitems;
-  KURL itemUrl;
+    KonqDirPart::restoreState(stream);
+    int nbitems;
+    KURL itemUrl;
 
-  m_kfindWidget->restoreState( &stream );
+    m_kfindWidget->restoreState(&stream);
 
-  stream >> nbitems;
-  slotStarted();
-  for(int i=0;i<nbitems;i++)
-  {
-    KFileItem* item = new KFileItem( KFileItem::Unknown, KFileItem::Unknown, KURL() );
-    stream >> *item;
-    m_lstFileItems.append(item);
-  }
-  if (nbitems)
-    emit newItems(m_lstFileItems);
+    stream >> nbitems;
+    slotStarted();
+    for(int i = 0; i < nbitems; i++)
+    {
+        KFileItem *item = new KFileItem(KFileItem::Unknown, KFileItem::Unknown, KURL());
+        stream >> *item;
+        m_lstFileItems.append(item);
+    }
+    if(nbitems)
+        emit newItems(m_lstFileItems);
 
-  emit finished();
+    emit finished();
 }
 
 #include "kfindpart.moc"

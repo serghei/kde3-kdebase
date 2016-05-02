@@ -28,25 +28,39 @@ class QPopupMenu;
 class KActionCollection;
 class KDesktopFile;
 
-class AppTreeItem : public KListViewItem
-{
+class AppTreeItem : public KListViewItem {
 
 public:
-    AppTreeItem(QListViewItem *parent, const QString& storageId);
-    AppTreeItem(QListViewItem *parent, QListViewItem *after, const QString& storageId);
-    AppTreeItem(QListView *parent, const QString& storageId);
-    AppTreeItem(QListView *parent, QListViewItem* after, const QString& storageId);
+    AppTreeItem(QListViewItem *parent, const QString &storageId);
+    AppTreeItem(QListViewItem *parent, QListViewItem *after, const QString &storageId);
+    AppTreeItem(QListView *parent, const QString &storageId);
+    AppTreeItem(QListView *parent, QListViewItem *after, const QString &storageId);
 
-    QString storageId() const { return m_storageId; }
-    void setDirectoryPath(const QString& path) { m_directoryPath = path; }
+    QString storageId() const
+    {
+        return m_storageId;
+    }
+    void setDirectoryPath(const QString &path)
+    {
+        m_directoryPath = path;
+    }
 
-    QString name() const { return m_name; }
+    QString name() const
+    {
+        return m_name;
+    }
     void setName(const QString &name);
 
-    QString accel() const { return m_accel; }
+    QString accel() const
+    {
+        return m_accel;
+    }
     void setAccel(const QString &accel);
 
-    bool isDirectory() const { return !m_directoryPath.isEmpty(); }
+    bool isDirectory() const
+    {
+        return !m_directoryPath.isEmpty();
+    }
 
     virtual void setOpen(bool o);
 
@@ -58,26 +72,25 @@ private:
     QString m_accel;
 };
 
-class AppTreeView : public KListView
-{
+class AppTreeView : public KListView {
     friend class AppTreeItem;
     Q_OBJECT
 public:
-    AppTreeView(QWidget *parent=0, const char *name=0);
+    AppTreeView(QWidget *parent = 0, const char *name = 0);
     ~AppTreeView();
     void fill();
 
 signals:
-    void entrySelected(const QString&, const QString &, bool);
+    void entrySelected(const QString &, const QString &, bool);
 
 protected slots:
     void itemSelected(QListViewItem *);
 
 protected:
-    void fillBranch(const QString& relPath, AppTreeItem* parent);
+    void fillBranch(const QString &relPath, AppTreeItem *parent);
 
-    QStringList fileList(const QString& relativePath);
-    QStringList dirList(const QString& relativePath);
+    QStringList fileList(const QString &relativePath);
+    QStringList dirList(const QString &relativePath);
 };
 
 

@@ -16,8 +16,7 @@ namespace Laptop {
 
 class LaptopClient;
 
-class LaptopButton : public KCommonDecorationButton
-{
+class LaptopButton : public KCommonDecorationButton {
 public:
     LaptopButton(ButtonType type, LaptopClient *parent, const char *name);
     void setBitmap(const unsigned char *bitmap);
@@ -28,10 +27,9 @@ protected:
     QBitmap deco;
 };
 
-class LaptopClient : public KCommonDecoration
-{
+class LaptopClient : public KCommonDecoration {
 public:
-    LaptopClient( KDecorationBridge* b, KDecorationFactory* f );
+    LaptopClient(KDecorationBridge *b, KDecorationFactory *f);
     ~LaptopClient();
 
     virtual QString visibleName() const;
@@ -44,33 +42,35 @@ public:
     virtual QRegion cornerShape(WindowCorner corner);
 
     void init();
+
 protected:
-    void paintEvent( QPaintEvent* );
-    void reset( unsigned long );
+    void paintEvent(QPaintEvent *);
+    void reset(unsigned long);
     void updateActiveBuffer();
     void captionChange();
+
 private:
     bool mustDrawHandle() const;
     bool isTransient() const;
+
 private:
     KPixmap activeBuffer;
     int lastBufferWidth;
     bool bufferDirty;
 };
 
-class LaptopClientFactory : public QObject, public KDecorationFactory
-{
+class LaptopClientFactory : public QObject, public KDecorationFactory {
 public:
     LaptopClientFactory();
     virtual ~LaptopClientFactory();
-    virtual KDecoration* createDecoration( KDecorationBridge* );
-    virtual bool reset( unsigned long changed );
-    virtual bool supports( Ability ability );
+    virtual KDecoration *createDecoration(KDecorationBridge *);
+    virtual bool reset(unsigned long changed);
+    virtual bool supports(Ability ability);
     virtual QValueList< BorderSize > borderSizes() const;
+
 private:
     void findPreferredHandleSize();
 };
-
 }
 
 #endif

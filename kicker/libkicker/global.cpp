@@ -37,121 +37,120 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "global.h"
 #include "kickerSettings.h"
 
-namespace KickerLib
-{
+namespace KickerLib {
 
-KPanelExtension::Position directionToPosition(KPanelApplet::Direction d )
+KPanelExtension::Position directionToPosition(KPanelApplet::Direction d)
 {
-    switch (d)
+    switch(d)
     {
         case KPanelApplet::Down:
             return KPanelExtension::Top;
-        break;
+            break;
 
         case KPanelApplet::Left:
             return KPanelExtension::Right;
-        break;
+            break;
 
         case KPanelApplet::Right:
             return KPanelExtension::Left;
-        break;
+            break;
 
         case KPanelApplet::Up:
         default:
             return KPanelExtension::Bottom;
-        break;
+            break;
     }
 }
 
 KPanelExtension::Position directionToPopupPosition(KPanelApplet::Direction d)
 {
-    switch (d)
+    switch(d)
     {
         case KPanelApplet::Up:
             return KPanelExtension::Top;
-        break;
+            break;
 
         case KPanelApplet::Down:
             return KPanelExtension::Bottom;
-        break;
+            break;
 
         case KPanelApplet::Left:
             return KPanelExtension::Left;
-        break;
+            break;
 
         case KPanelApplet::Right:
         default:
             return KPanelExtension::Right;
-        break;
+            break;
     }
 }
 
 KPanelApplet::Direction positionToDirection(KPanelExtension::Position p)
 {
-    switch (p)
+    switch(p)
     {
         case KPanelExtension::Top:
             return KPanelApplet::Down;
-        break;
+            break;
 
         case KPanelExtension::Right:
             return KPanelApplet::Left;
-        break;
+            break;
 
         case KPanelExtension::Left:
             return KPanelApplet::Right;
-        break;
+            break;
 
         case KPanelExtension::Bottom:
         default:
             return KPanelApplet::Up;
-        break;
+            break;
     }
 }
 
 KPanelApplet::Direction arrowToDirection(Qt::ArrowType p)
 {
-    switch (p)
+    switch(p)
     {
         case Qt::DownArrow:
             return KPanelApplet::Down;
-        break;
+            break;
 
         case Qt::LeftArrow:
             return KPanelApplet::Left;
-        break;
+            break;
 
         case Qt::RightArrow:
             return KPanelApplet::Right;
-        break;
+            break;
 
         case Qt::UpArrow:
         default:
             return KPanelApplet::Up;
-        break;
+            break;
     }
 }
 
 int sizeValue(KPanelExtension::Size s)
 {
-    switch (s)
+    switch(s)
     {
         case KPanelExtension::SizeTiny:
             return 24;
-        break;
+            break;
 
         case KPanelExtension::SizeSmall:
             return 30;
-        break;
+            break;
 
         case KPanelExtension::SizeNormal:
             return 46;
-        break;
+            break;
 
         case KPanelExtension::SizeLarge:
         default:
             return 58;
-        break;
+            break;
     }
 }
 
@@ -160,106 +159,101 @@ int maxButtonDim()
     return (2 * KickerSettings::iconMargin()) + KIcon::SizeLarge;
 }
 
-QString newDesktopFile(const KURL& url)
+QString newDesktopFile(const KURL &url)
 {
-   QString base = url.fileName();
-   if (base.endsWith(".desktop"))
-      base.truncate(base.length()-8);
-   QRegExp r("(.*)(?=-\\d+)");
-   if (r.search(base) > -1)
-      base = r.cap(1);
+    QString base = url.fileName();
+    if(base.endsWith(".desktop"))
+        base.truncate(base.length() - 8);
+    QRegExp r("(.*)(?=-\\d+)");
+    if(r.search(base) > -1)
+        base = r.cap(1);
 
-   QString file = base + ".desktop";
+    QString file = base + ".desktop";
 
-   for(int n = 1; ++n; )
-   {
-      QString path = locate("appdata", file);
-      if (path.isEmpty())
-         break;
-
-      file = QString("%2-%1.desktop").arg(n).arg(base);
-   }
-   file = locateLocal("appdata", file);
-   return file;
-}
-
-QString copyDesktopFile(const KURL& url)
-{
-   QString file = newDesktopFile(url);
-   KURL dest;
-   dest.setPath(file);
-   KIO::NetAccess::upload(url.path(), dest, 0);
-   return file;
-}
-
-QPopupMenu* reduceMenu(QPopupMenu *menu)
-{
-    if (menu->count() != 1)
+    for(int n = 1; ++n;)
     {
-       return menu;
+        QString path = locate("appdata", file);
+        if(path.isEmpty())
+            break;
+
+        file = QString("%2-%1.desktop").arg(n).arg(base);
+    }
+    file = locateLocal("appdata", file);
+    return file;
+}
+
+QString copyDesktopFile(const KURL &url)
+{
+    QString file = newDesktopFile(url);
+    KURL dest;
+    dest.setPath(file);
+    KIO::NetAccess::upload(url.path(), dest, 0);
+    return file;
+}
+
+QPopupMenu *reduceMenu(QPopupMenu *menu)
+{
+    if(menu->count() != 1)
+    {
+        return menu;
     }
 
     QMenuItem *item = menu->findItem(menu->idAt(0));
 
-    if (item->popup())
+    if(item->popup())
     {
-       return reduceMenu(item->popup());
+        return reduceMenu(item->popup());
     }
 
     return menu;
 }
 
-QPoint popupPosition(KPanelApplet::Direction d,
-                     const QWidget* popup,
-                     const QWidget* source,
-                     const QPoint& offset)
+QPoint popupPosition(KPanelApplet::Direction d, const QWidget *popup, const QWidget *source, const QPoint &offset)
 {
     QRect r;
-    if (source->isTopLevel())
+    if(source->isTopLevel())
     {
         r = source->geometry();
     }
     else
     {
-        r = QRect(source->mapToGlobal(QPoint(0, 0)),
-                  source->mapToGlobal(QPoint(source->width(), source->height())));
+        r = QRect(source->mapToGlobal(QPoint(0, 0)), source->mapToGlobal(QPoint(source->width(), source->height())));
 
-        switch (d)
+        switch(d)
         {
             case KPanelApplet::Left:
             case KPanelApplet::Right:
-                r.setLeft( source->topLevelWidget()->x() );
-                r.setWidth( source->topLevelWidget()->width() );
+                r.setLeft(source->topLevelWidget()->x());
+                r.setWidth(source->topLevelWidget()->width());
                 break;
             case KPanelApplet::Up:
             case KPanelApplet::Down:
-                r.setTop( source->topLevelWidget()->y() );
-                r.setHeight( source->topLevelWidget()->height() );
+                r.setTop(source->topLevelWidget()->y());
+                r.setHeight(source->topLevelWidget()->height());
                 break;
         }
     }
 
-    switch (d)
+    switch(d)
     {
         case KPanelApplet::Left:
         case KPanelApplet::Right:
         {
-            QDesktopWidget* desktop = QApplication::desktop();
-            QRect screen = desktop->screenGeometry(desktop->screenNumber(const_cast<QWidget*>(source)));
-            int x = (d == KPanelApplet::Left) ? r.left() - popup->width() :
-                                                r.right() + 1;
+            QDesktopWidget *desktop = QApplication::desktop();
+            QRect screen = desktop->screenGeometry(desktop->screenNumber(const_cast< QWidget * >(source)));
+            int x = (d == KPanelApplet::Left) ? r.left() - popup->width() : r.right() + 1;
             int y = r.top() + offset.y();
 
             // try to keep this on screen
-            if (y + popup->height() > screen.bottom())
+            if(y + popup->height() > screen.bottom())
             {
                 y = r.bottom() - popup->height() + offset.y();
 
-                if (y < screen.top())
+                if(y < screen.top())
                 {
                     y = screen.bottom() - popup->height();
 
-                    if (y < screen.top())
+                    if(y < screen.top())
                     {
                         y = screen.top();
                     }
@@ -273,20 +267,19 @@ QPoint popupPosition(KPanelApplet::Direction d,
         default:
         {
             int x = 0;
-            int y = (d == KPanelApplet::Up) ? r.top() - popup->height() :
-                                              r.bottom() + 1;
+            int y = (d == KPanelApplet::Up) ? r.top() - popup->height() : r.bottom() + 1;
 
-            if (QApplication::reverseLayout())
+            if(QApplication::reverseLayout())
             {
                 x = r.right() - popup->width() + 1;
 
-                if (offset.x() > 0)
+                if(offset.x() > 0)
                 {
                     x -= r.width() - offset.x();
                 }
 
                 // try to keep this on the screen
-                if (x - popup->width() < 0)
+                if(x - popup->width() < 0)
                 {
                     x = r.left();
                 }
@@ -295,16 +288,16 @@ QPoint popupPosition(KPanelApplet::Direction d,
             }
             else
             {
-                QDesktopWidget* desktop = QApplication::desktop();
-                QRect screen = desktop->screenGeometry(desktop->screenNumber(const_cast<QWidget*>(source)));
+                QDesktopWidget *desktop = QApplication::desktop();
+                QRect screen = desktop->screenGeometry(desktop->screenNumber(const_cast< QWidget * >(source)));
                 x = r.left() + offset.x();
 
                 // try to keep this on the screen
-                if (x + popup->width() > screen.right())
+                if(x + popup->width() > screen.right())
                 {
                     x = r.right() - popup->width() + 1 + offset.x();
 
-                    if (x < screen.left())
+                    if(x < screen.left())
                     {
                         x = screen.left();
                     }
@@ -316,7 +309,7 @@ QPoint popupPosition(KPanelApplet::Direction d,
     }
 }
 
-void colorize(QImage& image)
+void colorize(QImage &image)
 {
     KConfig *config = KGlobal::config();
     config->setGroup("WM");
@@ -330,8 +323,8 @@ void colorize(QImage& image)
     inactiveTitle.hsv(&h2, &s2, &v2);
     QApplication::palette().active().background().hsv(&h3, &s3, &v3);
 
-    if ( (kAbs(h1-h3)+kAbs(s1-s3)+kAbs(v1-v3) < kAbs(h2-h3)+kAbs(s2-s3)+kAbs(v2-v3)) &&
-            ((kAbs(h1-h3)+kAbs(s1-s3)+kAbs(v1-v3) < 32) || (s1 < 32)) && (s2 > s1))
+    if((kAbs(h1 - h3) + kAbs(s1 - s3) + kAbs(v1 - v3) < kAbs(h2 - h3) + kAbs(s2 - s3) + kAbs(v2 - v3))
+       && ((kAbs(h1 - h3) + kAbs(s1 - s3) + kAbs(v1 - v3) < 32) || (s1 < 32)) && (s2 > s1))
         color = inactiveTitle;
     else
         color = activeTitle;
@@ -340,11 +333,14 @@ void colorize(QImage& image)
     int r, g, b;
     color.rgb(&r, &g, &b);
     int gray = qGray(r, g, b);
-    if (gray > 180) {
+    if(gray > 180)
+    {
         r = (r - (gray - 180) < 0 ? 0 : r - (gray - 180));
         g = (g - (gray - 180) < 0 ? 0 : g - (gray - 180));
         b = (b - (gray - 180) < 0 ? 0 : b - (gray - 180));
-    } else if (gray < 76) {
+    }
+    else if(gray < 76)
+    {
         r = (r + (76 - gray) > 255 ? 255 : r + (76 - gray));
         g = (g + (76 - gray) > 255 ? 255 : g + (76 - gray));
         b = (b + (76 - gray) > 255 ? 255 : b + (76 - gray));
@@ -353,7 +349,7 @@ void colorize(QImage& image)
     KIconEffect::colorize(image, color, 1.0);
 }
 
-QColor blendColors(const QColor& c1, const QColor& c2)
+QColor blendColors(const QColor &c1, const QColor &c2)
 {
     int r1, g1, b1;
     int r2, g2, b2;
@@ -361,80 +357,68 @@ QColor blendColors(const QColor& c1, const QColor& c2)
     c1.rgb(&r1, &g1, &b1);
     c2.rgb(&r2, &g2, &b2);
 
-    r1 += (int) (.5 * (r2 - r1));
-    g1 += (int) (.5 * (g2 - g1));
-    b1 += (int) (.5 * (b2 - b1));
+    r1 += (int)(.5 * (r2 - r1));
+    g1 += (int)(.5 * (g2 - g1));
+    b1 += (int)(.5 * (b2 - b1));
 
     return QColor(r1, g1, b1);
 }
 
-QColor shadowColor(const QColor& c)
+QColor shadowColor(const QColor &c)
 {
     int r = c.red();
     int g = c.green();
     int b = c.blue();
 
-    if ( r < 128 )
+    if(r < 128)
         r = 255;
     else
         r = 0;
 
-    if ( g < 128 )
+    if(g < 128)
         g = 255;
     else
         g = 0;
 
-    if ( b < 128 )
+    if(b < 128)
         b = 255;
     else
         b = 0;
 
-    return QColor( r, g, b );
+    return QColor(r, g, b);
 }
 
-QIconSet menuIconSet(const QString& icon)
+QIconSet menuIconSet(const QString &icon)
 {
     QIconSet iconset;
     int iconSize = KickerSettings::menuEntryHeight();
 
-    if (iconSize < 0)
+    if(iconSize < 0)
     {
         return iconset;
     }
 
-    if (icon != "unknown")
+    if(icon != "unknown")
     {
-        if (iconSize > 0)
+        if(iconSize > 0)
         {
-            iconset = KGlobal::iconLoader()->loadIconSet(icon,
-                                                     KIcon::NoGroup,
-                                                     iconSize, true);
+            iconset = KGlobal::iconLoader()->loadIconSet(icon, KIcon::NoGroup, iconSize, true);
         }
-        else if (iconSize == 0)
+        else if(iconSize == 0)
         {
-            QPixmap normal = KGlobal::iconLoader()->loadIcon(icon,
-                                                         KIcon::Small,
-                                                         0,
-                                                         KIcon::DefaultState,
-                                                         0,
-                                                         true);
+            QPixmap normal = KGlobal::iconLoader()->loadIcon(icon, KIcon::Small, 0, KIcon::DefaultState, 0, true);
 
-            QPixmap active = KGlobal::iconLoader()->loadIcon(icon,
-                                                         KIcon::Small,
-                                                         0,
-                                                         KIcon::ActiveState,
-                                                         0,
-                                                         true);
+            QPixmap active = KGlobal::iconLoader()->loadIcon(icon, KIcon::Small, 0, KIcon::ActiveState, 0, true);
 
             // make sure they are not larger than 20x20
-            if (normal.width() > 20 || normal.height() > 20)
+            if(normal.width() > 20 || normal.height() > 20)
             {
-                normal.convertFromImage(normal.convertToImage().smoothScale(20,20));
+                normal.convertFromImage(normal.convertToImage().smoothScale(20, 20));
             }
 
-            if (active.width() > 20 || active.height() > 20)
+            if(active.width() > 20 || active.height() > 20)
             {
-                active.convertFromImage(active.convertToImage().smoothScale(20,20));
+                active.convertFromImage(active.convertToImage().smoothScale(20, 20));
             }
 
             iconset.setPixmap(normal, QIconSet::Small, QIconSet::Normal);
@@ -442,7 +426,7 @@ QIconSet menuIconSet(const QString& icon)
         }
     }
 
-    if (iconset.isNull())
+    if(iconset.isNull())
     {
         QPixmap pix(iconSize, iconSize);
         QBitmap map(iconSize, iconSize, true);
@@ -458,8 +442,8 @@ void drawBlendedRect(QPainter *p, const QRect &r, const QColor &color, int alpha
     static QPixmap pix;
     static QColor last_color = Qt::black;
     static int last_alpha = 0;
-    
-    if (pix.isNull() || last_color != color || last_alpha != alpha)
+
+    if(pix.isNull() || last_color != color || last_alpha != alpha)
     {
         QImage img(16, 16, 32);
         img.setAlphaBuffer(false);
@@ -474,4 +458,3 @@ void drawBlendedRect(QPainter *p, const QRect &r, const QColor &color, int alpha
 }
 
 } // namespace
-

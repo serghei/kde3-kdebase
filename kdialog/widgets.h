@@ -24,20 +24,18 @@
 #include <qwidget.h>
 #include <qstring.h>
 
-namespace Widgets
-{
-    bool inputBox(QWidget *parent, const QString& title, const QString& text, const QString& init, QString &result);
-    bool passwordBox(QWidget *parent, const QString& title, const QString& text, QCString &result);
-    int textBox(QWidget *parent, int width, int height, const QString& title, const QString& file);
-    int textInputBox(QWidget *parent, int width, int height, const QString& title, const QStringList& args, QCString &result);
-    bool listBox(QWidget *parent, const QString& title, const QString& text, const QStringList& args, const QString &defaultEntry, QString &result);
-    bool checkList(QWidget *parent, const QString& title, const QString& text, const QStringList& args, bool separateOutput, QStringList &result);
-    bool radioBox(QWidget *parent, const QString& title, const QString& text, const QStringList& args, QString &result);
-    bool comboBox(QWidget *parent, const QString& title, const QString& text, const QStringList& args, const QString& defaultEntry, QString &result);
-    bool progressBar(QWidget *parent, const QString& title, const QString& text, int totalSteps);
+namespace Widgets {
+bool inputBox(QWidget *parent, const QString &title, const QString &text, const QString &init, QString &result);
+bool passwordBox(QWidget *parent, const QString &title, const QString &text, QCString &result);
+int textBox(QWidget *parent, int width, int height, const QString &title, const QString &file);
+int textInputBox(QWidget *parent, int width, int height, const QString &title, const QStringList &args, QCString &result);
+bool listBox(QWidget *parent, const QString &title, const QString &text, const QStringList &args, const QString &defaultEntry, QString &result);
+bool checkList(QWidget *parent, const QString &title, const QString &text, const QStringList &args, bool separateOutput, QStringList &result);
+bool radioBox(QWidget *parent, const QString &title, const QString &text, const QStringList &args, QString &result);
+bool comboBox(QWidget *parent, const QString &title, const QString &text, const QStringList &args, const QString &defaultEntry, QString &result);
+bool progressBar(QWidget *parent, const QString &title, const QString &text, int totalSteps);
 
-    void handleXGeometry(QWidget * dlg);
-
+void handleXGeometry(QWidget *dlg);
 }
 
 #endif

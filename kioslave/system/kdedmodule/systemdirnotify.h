@@ -23,25 +23,23 @@
 #include <kdirnotify.h>
 #include <qmap.h>
 
-class SystemDirNotify : public KDirNotify
-{
-K_DCOP
+class SystemDirNotify : public KDirNotify {
+    K_DCOP
 
 public:
-	SystemDirNotify();
+    SystemDirNotify();
 
-k_dcop:
-	virtual ASYNC FilesAdded (const KURL &directory);
-	virtual ASYNC FilesRemoved (const KURL::List &fileList);
-	virtual ASYNC FilesChanged (const KURL::List &fileList);
+    k_dcop : virtual ASYNC FilesAdded(const KURL &directory);
+    virtual ASYNC FilesRemoved(const KURL::List &fileList);
+    virtual ASYNC FilesChanged(const KURL::List &fileList);
 
 private:
-	void init();
-	KURL toSystemURL(const KURL &url);
-	KURL::List toSystemURLList(const KURL::List &list);
+    void init();
+    KURL toSystemURL(const KURL &url);
+    KURL::List toSystemURLList(const KURL::List &list);
 
-	QMap<KURL,KURL> m_urlMap;
-	bool mInited;
+    QMap< KURL, KURL > m_urlMap;
+    bool mInited;
 };
 
 #endif

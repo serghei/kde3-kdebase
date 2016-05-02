@@ -33,28 +33,26 @@ class KJavaScriptOptions;
 
 class QTabWidget;
 
-class KJSParts : public KCModule
-{
-  Q_OBJECT
+class KJSParts : public KCModule {
+    Q_OBJECT
 
 public:
+    KJSParts(KConfig *config, QWidget *parent, const char *name);
+    virtual ~KJSParts();
 
-  KJSParts(KConfig *config,QWidget *parent, const char *name);
-  virtual ~KJSParts();
-
-  void load();
-  void save();
-  void defaults();
-  QString quickHelp() const;
+    void load();
+    void save();
+    void defaults();
+    QString quickHelp() const;
 
 
 private:
-  QTabWidget   *tab;
+    QTabWidget *tab;
 
-  KJavaScriptOptions *javascript;
-  KJavaOptions       *java;
+    KJavaScriptOptions *javascript;
+    KJavaOptions *java;
 
-  KConfig *mConfig;
+    KConfig *mConfig;
 };
 
 #endif

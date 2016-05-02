@@ -22,10 +22,11 @@
 #include "toplevel.h"
 
 extern "C" {
-  KDE_EXPORT void *init_kcm_locale() {
+KDE_EXPORT void *init_kcm_locale()
+{
     KLocale::setMainCatalogue("kcmlocale");
     return new KLocaleFactory("kcmlocale");
-  }
+}
 }
 
 /*

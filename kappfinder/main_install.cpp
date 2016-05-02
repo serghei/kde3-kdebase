@@ -32,33 +32,34 @@
 #include "common.h"
 
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  KInstance instance( "kappfinder_install" );
-  int added = 0;
+    KInstance instance("kappfinder_install");
+    int added = 0;
 
-  if ( argc != 2 ) {
-    fprintf( stderr, "Usage: kappfinder_install $directory\n" );
-    return -1;
-  }
+    if(argc != 2)
+    {
+        fprintf(stderr, "Usage: kappfinder_install $directory\n");
+        return -1;
+    }
 
-  QStringList templates = KGlobal::dirs()->findAllResources( "data", "kappfinder/apps/*.desktop", true );
+    QStringList templates = KGlobal::dirs()->findAllResources("data", "kappfinder/apps/*.desktop", true);
 
-  QString dir = QString( argv[ 1 ] ) + "/";
+    QString dir = QString(argv[1]) + "/";
 
-  QPtrList<AppLnkCache> appCache;
-  appCache.setAutoDelete( true );
+    QPtrList< AppLnkCache > appCache;
+    appCache.setAutoDelete(true);
 
-  QStringList::Iterator it;
-  for ( it = templates.begin(); it != templates.end(); ++it )
-    scanDesktopFile( appCache, *it, dir );
+    QStringList::Iterator it;
+    for(it = templates.begin(); it != templates.end(); ++it)
+        scanDesktopFile(appCache, *it, dir);
 
-  createDesktopFiles( appCache, added );
-  decorateDirs( dir );
+    createDesktopFiles(appCache, added);
+    decorateDirs(dir);
 
-  appCache.clear();
+    appCache.clear();
 
-  printf( "%i application(s) added\n", added );
+    printf("%i application(s) added\n", added);
 
-  return 0;
+    return 0;
 }

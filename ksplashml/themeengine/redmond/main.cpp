@@ -18,21 +18,19 @@
 
 #include "themeredmond.h"
 
-extern "C"
+extern "C" {
+ThemeEngineConfig *KsThemeConfig(QWidget *parent, KConfig *config)
 {
-  ThemeEngineConfig *KsThemeConfig( QWidget *parent, KConfig *config )
-  {
-    return new CfgRedmond( parent, config );
-  }
-
-  QStringList KsThemeSupports()
-  {
-    return ThemeRedmond::names();
-  }
-
-  void* KsThemeInit( QWidget *parent, ObjKsTheme *theme )
-  {
-    return new ThemeRedmond( parent, theme );
-  }
+    return new CfgRedmond(parent, config);
 }
 
+QStringList KsThemeSupports()
+{
+    return ThemeRedmond::names();
+}
+
+void *KsThemeInit(QWidget *parent, ObjKsTheme *theme)
+{
+    return new ThemeRedmond(parent, theme);
+}
+}

@@ -28,48 +28,47 @@
 #include <klocale.h>
 #include <kiconloader.h>
 
-ConfigDlg::ConfigDlg(QWidget *parent, const char *name)
-: KDialogBase(IconList, i18n("Configuration"), Ok|Cancel, Ok, parent, name, true)
+ConfigDlg::ConfigDlg(QWidget *parent, const char *name) : KDialogBase(IconList, i18n("Configuration"), Ok | Cancel, Ok, parent, name, true)
 {
-	QVBox	*page1 = addVBoxPage(i18n("Personal"), i18n("Personal Settings"), DesktopIcon("kdmconfig"));
-	m_general = new ConfGeneral(page1, "Personal");
+    QVBox *page1 = addVBoxPage(i18n("Personal"), i18n("Personal Settings"), DesktopIcon("kdmconfig"));
+    m_general = new ConfGeneral(page1, "Personal");
 
-	QVBox	*page2 = addVBoxPage(i18n("Page setup"), i18n("Page Setup"), DesktopIcon("editcopy"));
-	m_fax = new ConfFax(page2, "Fax");
+    QVBox *page2 = addVBoxPage(i18n("Page setup"), i18n("Page Setup"), DesktopIcon("editcopy"));
+    m_fax = new ConfFax(page2, "Fax");
 
-	QVBox	*page3 = addVBoxPage(i18n("System"), i18n("Fax System Selection"), DesktopIcon("kdeprintfax"));
-	m_system = new ConfSystem(page3, "System");
+    QVBox *page3 = addVBoxPage(i18n("System"), i18n("Fax System Selection"), DesktopIcon("kdeprintfax"));
+    m_system = new ConfSystem(page3, "System");
 
-	QVBox	*page4 = addVBoxPage(i18n("Filters"), i18n("Filters Configuration"), DesktopIcon("filter"));
-	m_filters = new ConfFilters(page4, "Filters");
+    QVBox *page4 = addVBoxPage(i18n("Filters"), i18n("Filters Configuration"), DesktopIcon("filter"));
+    m_filters = new ConfFilters(page4, "Filters");
 
-	resize(450, 300);
+    resize(450, 300);
 }
 
 void ConfigDlg::load()
 {
-	m_general->load();
-	m_fax->load();
-	m_system->load();
-	m_filters->load();
+    m_general->load();
+    m_fax->load();
+    m_system->load();
+    m_filters->load();
 }
 
 void ConfigDlg::save()
 {
-	m_general->save();
-	m_fax->save();
-	m_system->save();
-	m_filters->save();
+    m_general->save();
+    m_fax->save();
+    m_system->save();
+    m_filters->save();
 }
 
 bool ConfigDlg::configure(QWidget *parent)
 {
-	ConfigDlg	dlg(parent);
-	dlg.load();
-	if (dlg.exec())
-	{
-		dlg.save();
-		return true;
-	}
-	return false;
+    ConfigDlg dlg(parent);
+    dlg.load();
+    if(dlg.exec())
+    {
+        dlg.save();
+        return true;
+    }
+    return false;
 }

@@ -23,25 +23,25 @@
 
 #ifndef kcmsambaimports_h_included
 #define kcmsambaimports_h_included
- 
+
 #include <qtimer.h>
 #include <qlistview.h>
 #include <kconfig.h>
 
-class ImportsView: public QWidget
-{
-   Q_OBJECT
-   public:
-      ImportsView(QWidget *parent, KConfig *config=0, const char * name=0);
-      virtual ~ImportsView() {};
-      void saveSettings() {};
-      void loadSettings() {};
+class ImportsView : public QWidget {
+    Q_OBJECT
+public:
+    ImportsView(QWidget *parent, KConfig *config = 0, const char *name = 0);
+    virtual ~ImportsView(){};
+    void saveSettings(){};
+    void loadSettings(){};
+
 private:
-   KConfig *configFile;
-   QListView list;
-   QTimer timer;
+    KConfig *configFile;
+    QListView list;
+    QTimer timer;
 private slots:
-   void updateList();
+    void updateList();
 };
 
 #endif // main_included

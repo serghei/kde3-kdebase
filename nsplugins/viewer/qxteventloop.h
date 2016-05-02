@@ -42,37 +42,34 @@
 #include <qeventloop.h>
 
 
-
 #include <X11/Intrinsic.h>
 
 class QXtEventLoopPrivate;
 
-class QXtEventLoop : public QEventLoop
-{
+class QXtEventLoop : public QEventLoop {
     Q_OBJECT
 
 public:
-    QXtEventLoop( const char *applicationClass, XtAppContext context = NULL, XrmOptionDescRec *options = 0, int numOptions = 0);
+    QXtEventLoop(const char *applicationClass, XtAppContext context = NULL, XrmOptionDescRec *options = 0, int numOptions = 0);
     ~QXtEventLoop();
 
     XtAppContext applicationContext() const;
 
-    void registerSocketNotifier( QSocketNotifier * );
-    void unregisterSocketNotifier( QSocketNotifier * );
+    void registerSocketNotifier(QSocketNotifier *);
+    void unregisterSocketNotifier(QSocketNotifier *);
 
-    static void registerWidget( QWidget* );
-    static void unregisterWidget( QWidget* );
-    static bool redeliverEvent( XEvent *event );
-    static XEvent* lastEvent();
+    static void registerWidget(QWidget *);
+    static void unregisterWidget(QWidget *);
+    static bool redeliverEvent(XEvent *event);
+    static XEvent *lastEvent();
 
 protected:
-    bool processEvents( ProcessEventsFlags flags );
+    bool processEvents(ProcessEventsFlags flags);
 
 private:
     void appStartingUp();
     void appClosingDown();
     QXtEventLoopPrivate *d;
-
 };
 
 #endif

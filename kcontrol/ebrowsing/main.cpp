@@ -35,26 +35,26 @@
 #include "filteropts.h"
 #include "main.h"
 
-typedef KGenericFactory<KURIFilterModule, QWidget> KURIFactory;
-K_EXPORT_COMPONENT_FACTORY( kcm_kurifilt, KURIFactory("kcmkurifilt") )
+typedef KGenericFactory< KURIFilterModule, QWidget > KURIFactory;
+K_EXPORT_COMPONENT_FACTORY(kcm_kurifilt, KURIFactory("kcmkurifilt"))
 
 class FilterOptions;
 
-KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStringList &)
-                 :KCModule(KURIFactory::instance(), parent, name)
+KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStringList &) : KCModule(KURIFactory::instance(), parent, name)
 {
 
     filter = KURIFilter::self();
 
-    setQuickHelp( i18n("<h1>Enhanced Browsing</h1> In this module you can configure some enhanced browsing"
-      " features of KDE. <h2>Internet Keywords</h2>Internet Keywords let you"
-      " type in the name of a brand, a project, a celebrity, etc... and go to the"
-      " relevant location. For example you can just type"
-      " \"KDE\" or \"K Desktop Environment\" in Konqueror to go to KDE's homepage."
-      "<h2>Web Shortcuts</h2>Web Shortcuts are a quick way of using Web search engines. For example, type \"altavista:frobozz\""
-      " or \"av:frobozz\" and Konqueror will do a search on AltaVista for \"frobozz\"."
-      " Even easier: just press Alt+F2 (if you have not"
-      " changed this shortcut) and enter the shortcut in the KDE Run Command dialog."));
+    setQuickHelp(
+        i18n("<h1>Enhanced Browsing</h1> In this module you can configure some enhanced browsing"
+             " features of KDE. <h2>Internet Keywords</h2>Internet Keywords let you"
+             " type in the name of a brand, a project, a celebrity, etc... and go to the"
+             " relevant location. For example you can just type"
+             " \"KDE\" or \"K Desktop Environment\" in Konqueror to go to KDE's homepage."
+             "<h2>Web Shortcuts</h2>Web Shortcuts are a quick way of using Web search engines. For example, type \"altavista:frobozz\""
+             " or \"av:frobozz\" and Konqueror will do a search on AltaVista for \"frobozz\"."
+             " Even easier: just press Alt+F2 (if you have not"
+             " changed this shortcut) and enter the shortcut in the KDE Run Command dialog."));
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -66,12 +66,12 @@ KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStr
 
     modules.setAutoDelete(true);
 
-    QMap<QString,KCModule*> helper;
-    QPtrListIterator<KURIFilterPlugin> it = filter->pluginsIterator();
-    for (; it.current(); ++it)
+    QMap< QString, KCModule * > helper;
+    QPtrListIterator< KURIFilterPlugin > it = filter->pluginsIterator();
+    for(; it.current(); ++it)
     {
         KCModule *module = it.current()->configModule(this, 0);
-        if (module)
+        if(module)
         {
             modules.append(module);
             helper.insert(it.current()->configName(), module);
@@ -79,12 +79,12 @@ KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStr
         }
     }
 
-    if (modules.count() > 1)
+    if(modules.count() > 1)
     {
         QTabWidget *tab = new QTabWidget(this);
 
-        QMapIterator<QString,KCModule*> it2;
-        for (it2 = helper.begin(); it2 != helper.end(); ++it2)
+        QMapIterator< QString, KCModule * > it2;
+        for(it2 = helper.begin(); it2 != helper.end(); ++it2)
         {
             tab->addTab(it2.data(), it2.key());
         }
@@ -92,7 +92,7 @@ KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStr
         tab->showPage(modules.first());
         widget = tab;
     }
-    else if (modules.count() == 1)
+    else if(modules.count() == 1)
     {
         widget = modules.first();
         layout->setMargin(-KDialog::marginHint());
@@ -103,28 +103,28 @@ KURIFilterModule::KURIFilterModule(QWidget *parent, const char *name, const QStr
 
 void KURIFilterModule::load()
 {
-    QPtrListIterator<KCModule> it(modules);
-    for (; it.current(); ++it)
+    QPtrListIterator< KCModule > it(modules);
+    for(; it.current(); ++it)
     {
-	  it.current()->load();
+        it.current()->load();
     }
 }
 
 void KURIFilterModule::save()
 {
-    QPtrListIterator<KCModule> it(modules);
-    for (; it.current(); ++it)
+    QPtrListIterator< KCModule > it(modules);
+    for(; it.current(); ++it)
     {
-	  it.current()->save();
+        it.current()->save();
     }
 }
 
 void KURIFilterModule::defaults()
 {
-    QPtrListIterator<KCModule> it(modules);
-    for (; it.current(); ++it)
+    QPtrListIterator< KCModule > it(modules);
+    for(; it.current(); ++it)
     {
-	  it.current()->defaults();
+        it.current()->defaults();
     }
 }
 

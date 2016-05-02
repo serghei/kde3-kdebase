@@ -52,11 +52,10 @@ class SearchEngine;
 class SearchWidget;
 class Formatter;
 
-class Navigator : public QWidget
-{
+class Navigator : public QWidget {
     Q_OBJECT
-  public:
-    Navigator(View *, QWidget *parent=0, const char *name=0);
+public:
+    Navigator(View *, QWidget *parent = 0, const char *name = 0);
     virtual ~Navigator();
 
     KURL homeURL();
@@ -64,52 +63,54 @@ class Navigator : public QWidget
     SearchEngine *searchEngine() const;
     Formatter *formatter() const;
 
-    const GlossaryEntry &glossEntry(const QString &term) const { return mGlossaryTree->entry( term ); }
+    const GlossaryEntry &glossEntry(const QString &term) const
+    {
+        return mGlossaryTree->entry(term);
+    }
 
-    void insertParentAppDocs( const QString &name, NavigatorItem *parent );
-    void insertAppletDocs( NavigatorItem *parent );
-    NavigatorItem *insertScrollKeeperDocs( NavigatorItem *parentItem,
-                                 NavigatorItem *after );
-    void insertInfoDocs( NavigatorItem *parentItem );
-    void insertIOSlaveDocs(const QString &, NavigatorItem*parent);
-    
-    void createItemFromDesktopFile( NavigatorItem *item, const QString &name );
+    void insertParentAppDocs(const QString &name, NavigatorItem *parent);
+    void insertAppletDocs(NavigatorItem *parent);
+    NavigatorItem *insertScrollKeeperDocs(NavigatorItem *parentItem, NavigatorItem *after);
+    void insertInfoDocs(NavigatorItem *parentItem);
+    void insertIOSlaveDocs(const QString &, NavigatorItem *parent);
+
+    void createItemFromDesktopFile(NavigatorItem *item, const QString &name);
 
     bool showMissingDocs() const;
 
     void clearSelection();
 
-    void showOverview( NavigatorItem *item, const KURL &url );
+    void showOverview(NavigatorItem *item, const KURL &url);
 
     void readConfig();
     void writeConfig();
 
-  public slots:
-    void openInternalUrl( const KURL &url );
-    void slotItemSelected(QListViewItem* index);
+public slots:
+    void openInternalUrl(const KURL &url);
+    void slotItemSelected(QListViewItem *index);
     void slotSearch();
-    void slotShowSearchResult( const QString & );
-    void slotSelectGlossEntry( const QString &id );
-    void selectItem( const KURL &url );
+    void slotShowSearchResult(const QString &);
+    void slotSelectGlossEntry(const QString &id);
+    void selectItem(const KURL &url);
     void showIndexDialog();
 
-  signals:
-    void itemSelected(const QString& itemURL);
+signals:
+    void itemSelected(const QString &itemURL);
     void glossSelected(const GlossaryEntry &entry);
 
-  protected slots:
+protected slots:
     void slotSearchFinished();
-    void slotTabChanged( QWidget * );
+    void slotTabChanged(QWidget *);
     void checkSearchButton();
 
     bool checkSearchIndex();
 
     void clearSearch();
 
-  protected:
-    QString createChildrenList( QListViewItem *child );
+protected:
+    QString createChildrenList(QListViewItem *child);
 
-  private:
+private:
     void setupContentsTab();
     void setupIndexTab();
     void setupSearchTab();
@@ -130,23 +131,22 @@ class Navigator : public QWidget
     QLineEdit *mSearchEdit;
     QPushButton *mSearchButton;
 
-    QPtrList<NavigatorItem> manualItems, pluginItems;
+    QPtrList< NavigatorItem > manualItems, pluginItems;
 
     bool mShowMissingDocs;
-    
+
     SearchEngine *mSearchEngine;
 
     View *mView;
 
     KURL mHomeUrl;
-    
+
     bool mSelected;
 
     KURL mLastUrl;
 
     int mDirLevel;
 };
-
 }
 
 #endif

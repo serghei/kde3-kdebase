@@ -26,35 +26,36 @@
 
 #include "klocale.h"
 
-KListBoxDialog::KListBoxDialog(QString text, QWidget *parent)
-    : KDialogBase( parent, 0, true, QString::null, Ok|Cancel, Ok, true )
+KListBoxDialog::KListBoxDialog(QString text, QWidget *parent) : KDialogBase(parent, 0, true, QString::null, Ok | Cancel, Ok, true)
 {
-  QVBox *page = makeVBoxMainWidget();
+    QVBox *page = makeVBoxMainWidget();
 
-  label = new QLabel(text, page);
-  label->setAlignment(AlignCenter);
+    label = new QLabel(text, page);
+    label->setAlignment(AlignCenter);
 
-  table = new QListBox(page);
-  table->setFocus();
+    table = new QListBox(page);
+    table->setFocus();
 }
 
-void KListBoxDialog::insertItem(const QString& item)
+void KListBoxDialog::insertItem(const QString &item)
 {
-  table->insertItem(item);
-  table->setCurrentItem(0);
+    table->insertItem(item);
+    table->setCurrentItem(0);
 }
 
-void KListBoxDialog::setCurrentItem(const QString& item)
+void KListBoxDialog::setCurrentItem(const QString &item)
 {
-  for ( int i=0; i < (int) table->count(); i++ ) {
-    if ( table->text(i) == item ) {
-      table->setCurrentItem(i);
-      break;
+    for(int i = 0; i < (int)table->count(); i++)
+    {
+        if(table->text(i) == item)
+        {
+            table->setCurrentItem(i);
+            break;
+        }
     }
-  }
 }
 
 int KListBoxDialog::currentItem()
 {
-  return table->currentItem();
+    return table->currentItem();
 }

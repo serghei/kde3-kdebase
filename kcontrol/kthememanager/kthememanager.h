@@ -59,11 +59,10 @@ private:
  * @brief The Theme Manager config module.
  * @author Lukas Tinkl <lukas@kde.org>
  */
-class kthememanager: public KCModule
-{
+class kthememanager : public KCModule {
     Q_OBJECT
 public:
-    kthememanager( QWidget *parent=0, const char *name=0 );
+    kthememanager(QWidget *parent = 0, const char *name = 0);
     virtual ~kthememanager();
 
     /**
@@ -81,8 +80,8 @@ public:
     virtual void defaults();
 
 protected:
-    void dragEnterEvent ( QDragEnterEvent * ev );
-    void dropEvent ( QDropEvent * ev );
+    void dragEnterEvent(QDragEnterEvent *ev);
+    void dropEvent(QDropEvent *ev);
 
 signals:
     /**
@@ -109,13 +108,13 @@ private slots:
     /**
      * Update the theme's info and preview
      */
-    void slotThemeChanged( QListViewItem * item );
+    void slotThemeChanged(QListViewItem *item);
 
     /**
      * Invoked when one drag and drops @p urls onto the kcm
      * @see signal filesDropped
      */
-    void slotFilesDropped( const KURL::List & urls );
+    void slotFilesDropped(const KURL::List &urls);
     void updateButton();
 
 private:
@@ -127,7 +126,7 @@ private:
     /**
      * Performs the actual theme installation.
      */
-    void addNewTheme( const KURL & url );
+    void addNewTheme(const KURL &url);
 
     /**
      * Perform internal initialization of paths.
@@ -139,19 +138,19 @@ private:
      * @param themeName The theme name
      * @return The theme's version number or -1 if not installed
      */
-    static float getThemeVersion( const QString & themeName );
+    static float getThemeVersion(const QString &themeName);
 
     void queryLNFModules();
 
     /**
      * Updates the preview widget
      */
-    void updatePreview( const QString & pixFile );
+    void updatePreview(const QString &pixFile);
     bool themeExist(const QString &_themeName);
-    KThemeDlg * dlg;
+    KThemeDlg *dlg;
 
-    KTheme * m_theme;
-    KTheme * m_origTheme;
+    KTheme *m_theme;
+    KTheme *m_origTheme;
 };
 
 #endif

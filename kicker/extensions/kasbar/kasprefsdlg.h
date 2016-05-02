@@ -74,69 +74,66 @@ class KasResources;
 /**
  * Prefs dialog for KasBar
  */
-class KasPrefsDialog : public KDialogBase
-{
-   Q_OBJECT
+class KasPrefsDialog : public KDialogBase {
+    Q_OBJECT
 
 public:
-   KasPrefsDialog( KasTasker *kas, QWidget *parent=0 );
-   ~KasPrefsDialog();
+    KasPrefsDialog(KasTasker *kas, QWidget *parent = 0);
+    ~KasPrefsDialog();
 
-   void addLookPage();
-   void addBackgroundPage();
-   void addThumbsPage();
-   void addBehavePage();
-   void addIndicatorsPage();
-   void addColorsPage();
-   void addAdvancedPage();
+    void addLookPage();
+    void addBackgroundPage();
+    void addThumbsPage();
+    void addBehavePage();
+    void addIndicatorsPage();
+    void addColorsPage();
+    void addAdvancedPage();
 
 public slots:
-   void itemSizeChanged( int sz );
+    void itemSizeChanged(int sz);
 
 protected:
-   virtual void accept();
-   virtual void reject();
+    virtual void accept();
+    virtual void reject();
 
 private slots:
-   void customSizeChanged ( int value );
+    void customSizeChanged(int value);
 
 private:
+    QComboBox *itemSizeCombo;
+    QSpinBox *customSize;
+    QCheckBox *transCheck;
+    QCheckBox *tintCheck;
+    KColorButton *tintButton;
+    QSlider *tintAmount;
+    QCheckBox *thumbsCheck;
+    QCheckBox *embedThumbsCheck;
+    QSlider *thumbSizeSlider;
+    QSpinBox *thumbUpdateSpin;
+    QCheckBox *notifierCheck;
+    QCheckBox *modifiedCheck;
+    QCheckBox *progressCheck;
+    QCheckBox *showAllWindowsCheck;
+    QCheckBox *onlyShowMinimizedCheck;
+    KIntSpinBox *maxBoxesSpin;
+    QCheckBox *detachedCheck;
+    QCheckBox *groupWindowsCheck;
+    QCheckBox *groupInactiveCheck;
+    QCheckBox *attentionCheck;
+    QCheckBox *inactiveFramesCheck;
 
-   QComboBox *itemSizeCombo;
-   QSpinBox *customSize;
-   QCheckBox *transCheck;
-   QCheckBox *tintCheck;
-   KColorButton *tintButton;
-   QSlider *tintAmount;
-   QCheckBox *thumbsCheck;
-   QCheckBox *embedThumbsCheck;
-   QSlider *thumbSizeSlider;
-   QSpinBox *thumbUpdateSpin;
-   QCheckBox *notifierCheck;
-   QCheckBox *modifiedCheck;
-   QCheckBox *progressCheck;
-   QCheckBox *showAllWindowsCheck;
-   QCheckBox *onlyShowMinimizedCheck;
-   KIntSpinBox *maxBoxesSpin;
-   QCheckBox *detachedCheck;
-   QCheckBox *groupWindowsCheck;
-   QCheckBox *groupInactiveCheck;
-   QCheckBox *attentionCheck;
-   QCheckBox *inactiveFramesCheck;
+    KColorButton *labelPenButton;
+    KColorButton *labelBackgroundButton;
+    KColorButton *inactivePenButton;
+    KColorButton *inactiveBgButton;
+    KColorButton *activePenButton;
+    KColorButton *activeBgButton;
 
-   KColorButton *labelPenButton;
-   KColorButton *labelBackgroundButton;
-   KColorButton *inactivePenButton;
-   KColorButton *inactiveBgButton;
-   KColorButton *activePenButton;
-   KColorButton *activeBgButton;
+    KColorButton *progressButton;
+    KColorButton *attentionButton;
 
-   KColorButton *progressButton;
-   KColorButton *attentionButton;
-
-   KasTasker *kasbar;
-   KasResources *res;
+    KasTasker *kasbar;
+    KasResources *res;
 };
 
 #endif // KASPREFSDLG_H
-

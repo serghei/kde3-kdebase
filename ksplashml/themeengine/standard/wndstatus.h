@@ -24,27 +24,25 @@ class QLabel;
 class KProgress;
 
 /** @short Window displaying status and progress bar. */
-class WndStatus:
-      public QHBox
-{
-  Q_OBJECT
+class WndStatus : public QHBox {
+    Q_OBJECT
 public:
-  WndStatus( QPalette,
-             int, // Xinerama screen
-             bool, // At top?
-             bool, // Progress indicator visible?
-             const QFont&, // Status bar font
-             const QColor&, const QColor &, // Foreground/Background color
-             const QString& // Icon
-           );
+    WndStatus(QPalette,
+              int,                            // Xinerama screen
+              bool,                           // At top?
+              bool,                           // Progress indicator visible?
+              const QFont &,                  // Status bar font
+              const QColor &, const QColor &, // Foreground/Background color
+              const QString &                 // Icon
+              );
 
 public slots:
-  void slotSetMessage( const QString& );
-  void slotUpdateProgress( int );
-  void slotUpdateSteps( int );
+    void slotSetMessage(const QString &);
+    void slotUpdateProgress(int);
+    void slotUpdateSteps(int);
 
 protected:
-  QLabel *m_label;
-  KProgress *m_progress;
+    QLabel *m_label;
+    KProgress *m_progress;
 };
 #endif

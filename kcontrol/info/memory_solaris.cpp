@@ -11,84 +11,85 @@
 /* Stop <sys/swap.h> from crapping out on 32-bit architectures. */
 
 #if !defined(_LP64) && _FILE_OFFSET_BITS == 64
-# undef _FILE_OFFSET_BITS
-# define _FILE_OFFSET_BITS 32
+#undef _FILE_OFFSET_BITS
+#define _FILE_OFFSET_BITS 32
 #endif
 
 #include <sys/stat.h>
 #include <sys/swap.h>
 #include <vm/anon.h>
 
-#define PAGETOK(a) (( (t_memsize) sysconf( _SC_PAGESIZE )) *  (t_memsize) a)
+#define PAGETOK(a) (((t_memsize)sysconf(_SC_PAGESIZE)) * (t_memsize)a)
 
-void KMemoryWidget::update() {
+void KMemoryWidget::update()
+{
 
-	kstat_ctl_t	*kctl;
-	kstat_t		*ksp;
-	kstat_named_t	*kdata;
+    kstat_ctl_t *kctl;
+    kstat_t *ksp;
+    kstat_named_t *kdata;
 
-	/*
-	 *  get a kstat handle first and update the user's kstat chain
-	 */
-	if( (kctl = kstat_open()) == NULL )
-		return;
-	while( kstat_chain_update( kctl ) != 0 )
-		;
+    /*
+     *  get a kstat handle first and update the user's kstat chain
+     */
+    if((kctl = kstat_open()) == NULL)
+        return;
+    while(kstat_chain_update(kctl) != 0)
+        ;
 
-	/*
-	 *  traverse the kstat chain to find the appropriate kstat
-	 */
-	if( (ksp = kstat_lookup( kctl, "unix", 0, "system_pages" )) == NULL )
-		return;
+    /*
+     *  traverse the kstat chain to find the appropriate kstat
+     */
+    if((ksp = kstat_lookup(kctl, "unix", 0, "system_pages")) == NULL)
+        return;
 
-	if( kstat_read( kctl, ksp, NULL ) == -1 )
-		return;
+    if(kstat_read(kctl, ksp, NULL) == -1)
+        return;
 
-	/*
-	 *  lookup the data
-	 */
+/*
+ *  lookup the data
+ */
 #if 0
 	kdata = (kstat_named_t *) kstat_data_lookup( ksp, "physmem" );
 	if( kdata != NULL ) {
 		Memory_Info[TOTAL_MEM] = PAGETOK(kdata->value.ui32);
 	}
 #endif
-	Memory_Info[TOTAL_MEM] = PAGETOK(sysconf(_SC_PHYS_PAGES));
+    Memory_Info[TOTAL_MEM] = PAGETOK(sysconf(_SC_PHYS_PAGES));
 
-	kdata = (kstat_named_t *) kstat_data_lookup( ksp, "freemem" );
-	if( kdata != NULL )
-		Memory_Info[FREE_MEM] = PAGETOK(kdata->value.ui32);
+    kdata = (kstat_named_t *)kstat_data_lookup(ksp, "freemem");
+    if(kdata != NULL)
+        Memory_Info[FREE_MEM] = PAGETOK(kdata->value.ui32);
 
 #warning "FIXME: Memory_Info[CACHED_MEM]"
-	Memory_Info[CACHED_MEM] = NO_MEMORY_INFO; // cached memory in ram
-	  
-	kstat_close( kctl );
+    Memory_Info[CACHED_MEM] = NO_MEMORY_INFO; // cached memory in ram
 
-	/*
-	 *  Swap Info
-	 */
+    kstat_close(kctl);
 
-	struct anoninfo		am_swap;
-	long			swaptotal;
-	long			swapfree;
-	long			swapused;
+    /*
+     *  Swap Info
+     */
 
-	swaptotal = swapused = swapfree = 0L;
+    struct anoninfo am_swap;
+    long swaptotal;
+    long swapfree;
+    long swapused;
 
-	/*
-	 *  Retrieve overall swap information from anonymous memory structure -
-	 *  which is the same way "swap -s" retrieves it's statistics.
-	 *
-	 *  swapctl(SC_LIST, void *arg) does not return what we are looking for.
-	 */
+    swaptotal = swapused = swapfree = 0L;
 
-	if (swapctl(SC_AINFO, &am_swap) == -1)
-		return;
+    /*
+     *  Retrieve overall swap information from anonymous memory structure -
+     *  which is the same way "swap -s" retrieves it's statistics.
+     *
+     *  swapctl(SC_LIST, void *arg) does not return what we are looking for.
+     */
 
-	swaptotal = am_swap.ani_max;
-	swapused = am_swap.ani_resv;
-	swapfree = swaptotal - swapused;
+    if(swapctl(SC_AINFO, &am_swap) == -1)
+        return;
 
-	Memory_Info[SWAP_MEM]     = PAGETOK(swaptotal);
-	Memory_Info[FREESWAP_MEM] = PAGETOK(swapfree);
+    swaptotal = am_swap.ani_max;
+    swapused = am_swap.ani_resv;
+    swapfree = swaptotal - swapused;
+
+    Memory_Info[SWAP_MEM] = PAGETOK(swaptotal);
+    Memory_Info[FREESWAP_MEM] = PAGETOK(swapfree);
 }

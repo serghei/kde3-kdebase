@@ -53,64 +53,55 @@ class QSplitter;
 class QDropEvent;
 class KFileItem;
 
-namespace KFI
-{
+namespace KFI {
 
-class CKCmFontInst : public KCModule
-{
+class CKCmFontInst : public KCModule {
     Q_OBJECT
 
-    public:
-
-    CKCmFontInst(QWidget *parent=NULL, const char *name=NULL, const QStringList &list=QStringList());
+public:
+    CKCmFontInst(QWidget *parent = NULL, const char *name = NULL, const QStringList &list = QStringList());
     virtual ~CKCmFontInst();
 
-    void    setMimeTypes(bool showBitmap);
+    void setMimeTypes(bool showBitmap);
 
-    public slots:
+public slots:
 
-    void    filterFonts();
+    void filterFonts();
     QString quickHelp() const;
-    void    listView();
-    void    iconView();
-    void    setupMenu();
-    void    setupViewMenu();
-    void    fileHighlighted(const KFileItem *item);
-    void    loadingFinished();
-    void    addFonts();
-    void    removeFonts();
-    void    configure();
-    void    print();
-    void    dropped(const KFileItem *i, QDropEvent *e, const KURL::List &urls);
-    void    infoMessage(const QString &msg);
-    void    updateInformation(int dirs, int fonts);
-    void    delResult(KIO::Job *job);
-    void    jobResult(KIO::Job *job);
+    void listView();
+    void iconView();
+    void setupMenu();
+    void setupViewMenu();
+    void fileHighlighted(const KFileItem *item);
+    void loadingFinished();
+    void addFonts();
+    void removeFonts();
+    void configure();
+    void print();
+    void dropped(const KFileItem *i, QDropEvent *e, const KURL::List &urls);
+    void infoMessage(const QString &msg);
+    void updateInformation(int dirs, int fonts);
+    void delResult(KIO::Job *job);
+    void jobResult(KIO::Job *job);
 
-    private:
+private:
+    void addFonts(const KURL::List &src, const KURL &dest);
 
-    void    addFonts(const KURL::List &src, const KURL &dest);
-
-    private:
-
-    KDirOperator         *itsDirOp;
-    KURL                 itsTop;
-    KToggleAction        *itsShowBitmapAct;
-    KAction              *itsSepDirsAct,
-                         *itsShowHiddenAct,
-                         *itsDeleteAct;
-    KRadioAction         *itsListAct,
-                         *itsIconAct;
-    KActionMenu          *itsViewMenuAct;
+private:
+    KDirOperator *itsDirOp;
+    KURL itsTop;
+    KToggleAction *itsShowBitmapAct;
+    KAction *itsSepDirsAct, *itsShowHiddenAct, *itsDeleteAct;
+    KRadioAction *itsListAct, *itsIconAct;
+    KActionMenu *itsViewMenuAct;
 #ifdef HAVE_XFT
     KParts::ReadOnlyPart *itsPreview;
 #endif
-    QSplitter            *itsSplitter;
-    KConfig              itsConfig;
-    bool                 itsEmbeddedAdmin;
-    QLabel               *itsStatusLabel;
+    QSplitter *itsSplitter;
+    KConfig itsConfig;
+    bool itsEmbeddedAdmin;
+    QLabel *itsStatusLabel;
 };
-
 }
 
 #endif

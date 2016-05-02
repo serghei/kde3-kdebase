@@ -41,44 +41,44 @@ class QSplitter;
 class SensorBrowser;
 class Workspace;
 
-class TopLevel : public KMainWindow, public KSGRD::SensorClient, public DCOPObject
-{
-  Q_OBJECT
-  K_DCOP
+class TopLevel : public KMainWindow, public KSGRD::SensorClient, public DCOPObject {
+    Q_OBJECT
+    K_DCOP
 
-  public:
-    TopLevel( const char *name = 0 );
+public:
+    TopLevel(const char *name = 0);
 
-  virtual void saveProperties( KConfig* );
-  virtual void readProperties( KConfig* );
+    virtual void saveProperties(KConfig *);
+    virtual void readProperties(KConfig *);
 
-  virtual void answerReceived( int id, const QString& );
+    virtual void answerReceived(int id, const QString &);
 
-  void beATaskManager();
-  void showRequestedSheets();
-  void initStatusBar();
+    void beATaskManager();
+    void showRequestedSheets();
+    void initStatusBar();
 
-  k_dcop:
-    // calling ksysguard with kwin/kicker hot-key
-    ASYNC showProcesses();
+    k_dcop :
+        // calling ksysguard with kwin/kicker hot-key
+        ASYNC
+        showProcesses();
     ASYNC showOnCurrentDesktop();
-    ASYNC loadWorkSheet( const QString &fileName );
-    ASYNC removeWorkSheet( const QString &fileName );
+    ASYNC loadWorkSheet(const QString &fileName);
+    ASYNC removeWorkSheet(const QString &fileName);
     QStringList listHosts();
-    QStringList listSensors( const QString &hostName );
-    QString readIntegerSensor( const QString &sensorLocator );
-    QStringList readListSensor( const QString &sensorLocator );
+    QStringList listSensors(const QString &hostName);
+    QString readIntegerSensor(const QString &sensorLocator);
+    QStringList readListSensor(const QString &sensorLocator);
 
-  public slots:
-    void registerRecentURL( const KURL &url );
+public slots:
+    void registerRecentURL(const KURL &url);
     void resetWorkSheets();
 
-  protected:
-    virtual void customEvent( QCustomEvent* );
-    virtual void timerEvent( QTimerEvent* );
+protected:
+    virtual void customEvent(QCustomEvent *);
+    virtual void timerEvent(QTimerEvent *);
     virtual bool queryClose();
 
-  protected slots:
+protected slots:
     void connectHost();
     void disconnectHost();
     void updateStatusBar();
@@ -87,24 +87,24 @@ class TopLevel : public KMainWindow, public KSGRD::SensorClient, public DCOPObje
     void slotNewToolbarConfig();
     void serviceAdded(DNSSD::RemoteService::Ptr srv);
 
-  private:
-    void setSwapInfo( long, long, const QString& );
+private:
+    void setSwapInfo(long, long, const QString &);
 
-    QPtrList<DCOPClientTransaction> mDCopFIFO;
+    QPtrList< DCOPClientTransaction > mDCopFIFO;
 
-    QSplitter* mSplitter;
-    KRecentFilesAction* mActionOpenRecent;
+    QSplitter *mSplitter;
+    KRecentFilesAction *mActionOpenRecent;
 
-    SensorBrowser* mSensorBrowser;
-    Workspace* mWorkSpace;
-    
-    DNSSD::ServiceBrowser* mServiceBrowser;
+    SensorBrowser *mSensorBrowser;
+    Workspace *mWorkSpace;
+
+    DNSSD::ServiceBrowser *mServiceBrowser;
 
     bool mDontSaveSession;
     int mTimerId;
 };
 
-extern TopLevel* Toplevel;
+extern TopLevel *Toplevel;
 
 /*
    since there is only a forward declaration of DCOPClientTransaction
@@ -113,9 +113,8 @@ extern TopLevel* Toplevel;
 */
 typedef unsigned long CARD32;
 
-class DCOPClientTransaction
-{
-  public:
+class DCOPClientTransaction {
+public:
     Q_INT32 id;
     CARD32 key;
     QCString senderId;

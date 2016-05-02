@@ -11,26 +11,24 @@
 /**
  * An item that displays the system load.
  */
-class KDE_EXPORT KasLoadItem : public KasItem
-{
+class KDE_EXPORT KasLoadItem : public KasItem {
     Q_OBJECT
 
 public:
-    KasLoadItem( KasBar *parent );
+    KasLoadItem(KasBar *parent);
     virtual ~KasLoadItem();
 
-    void paint( QPainter *p );
+    void paint(QPainter *p);
 
 public slots:
     void updateDisplay();
-    void showMenuAt( QMouseEvent *ev );
-    void showMenuAt( QPoint p );
+    void showMenuAt(QMouseEvent *ev);
+    void showMenuAt(QPoint p);
 
 private:
-    QValueList<double> valuesOne;
-    QValueList<double> valuesFive;
-    QValueList<double> valuesFifteen;
+    QValueList< double > valuesOne;
+    QValueList< double > valuesFive;
+    QValueList< double > valuesFifteen;
 };
 
 #endif // KASLOADITEM_H
-

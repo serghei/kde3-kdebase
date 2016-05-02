@@ -32,116 +32,104 @@
 #include "actionlistboxitem.h"
 #include "notificationdialogview.h"
 
-NotificationDialog::NotificationDialog( KFileItem medium, NotifierSettings *settings,
-                                        QWidget* parent, const char* name )
-	: KDialogBase( parent, name, false, i18n( "Medium Detected" ), Ok|Cancel|User1, Ok, true),
-	  m_medium(medium), m_settings( settings )
+NotificationDialog::NotificationDialog(KFileItem medium, NotifierSettings *settings, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, false, i18n("Medium Detected"), Ok | Cancel | User1, Ok, true), m_medium(medium), m_settings(settings)
 {
-	setCaption( KIO::decodeFileName(m_medium.name()) );
-	clearWState( WState_Polished );
+    setCaption(KIO::decodeFileName(m_medium.name()));
+    clearWState(WState_Polished);
 
-	QWidget *page = new QWidget( this );
-	setMainWidget(page);
-	QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout *topLayout = new QVBoxLayout(page, 0, spacingHint());
 
-	m_view = new NotificationDialogView( page );
+    m_view = new NotificationDialogView(page);
 
-	topLayout->addWidget(m_view);
-	m_view->iconLabel->setPixmap( m_medium.pixmap(64) );
-	m_view->mimetypeLabel->setText( i18n( "<b>Medium type:</b>" ) + " "
-	                              + m_medium.mimeTypePtr()->comment() );
+    topLayout->addWidget(m_view);
+    m_view->iconLabel->setPixmap(m_medium.pixmap(64));
+    m_view->mimetypeLabel->setText(i18n("<b>Medium type:</b>") + " " + m_medium.mimeTypePtr()->comment());
 
-	updateActionsListBox();
+    updateActionsListBox();
 
-	resize( QSize(400,400).expandedTo( minimumSizeHint() ) );
+    resize(QSize(400, 400).expandedTo(minimumSizeHint()));
 
 
-	m_actionWatcher = new KDirWatch();
-	QString services_dir
-		= locateLocal( "data", "konqueror/servicemenus", true );
-	m_actionWatcher->addDir( services_dir );
+    m_actionWatcher = new KDirWatch();
+    QString services_dir = locateLocal("data", "konqueror/servicemenus", true);
+    m_actionWatcher->addDir(services_dir);
 
-	setButtonText( User1, i18n("Configure...") );
+    setButtonText(User1, i18n("Configure..."));
 
-	connect( m_actionWatcher, SIGNAL( dirty( const QString & ) ),
-	         this, SLOT( slotActionsChanged( const QString & ) ) );
-	connect( this , SIGNAL( okClicked() ),
-	         this, SLOT( slotOk() ) );
-	connect( this, SIGNAL( user1Clicked() ),
-	         this, SLOT( slotConfigure() ) );
-	connect( m_view->actionsList, SIGNAL( doubleClicked ( QListBoxItem*, const QPoint & ) ),
-	         this, SLOT( slotOk() ) );
+    connect(m_actionWatcher, SIGNAL(dirty(const QString &)), this, SLOT(slotActionsChanged(const QString &)));
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotOk()));
+    connect(this, SIGNAL(user1Clicked()), this, SLOT(slotConfigure()));
+    connect(m_view->actionsList, SIGNAL(doubleClicked(QListBoxItem *, const QPoint &)), this, SLOT(slotOk()));
 
-	connect( this, SIGNAL( finished() ),
-	         this, SLOT( delayedDestruct() ) );
+    connect(this, SIGNAL(finished()), this, SLOT(delayedDestruct()));
 
-	m_actionWatcher->startScan();
-	QPushButton * btn = actionButton( Ok );
-	btn->setFocus();
+    m_actionWatcher->startScan();
+    QPushButton *btn = actionButton(Ok);
+    btn->setFocus();
 }
 
 NotificationDialog::~NotificationDialog()
 {
-	delete m_actionWatcher;
-	delete m_settings;
+    delete m_actionWatcher;
+    delete m_settings;
 }
 
 void NotificationDialog::updateActionsListBox()
 {
-	m_view->actionsList->clear();
+    m_view->actionsList->clear();
 
-	QValueList<NotifierAction*> actions
-		= m_settings->actionsForMimetype( m_medium.mimetype() );
+    QValueList< NotifierAction * > actions = m_settings->actionsForMimetype(m_medium.mimetype());
 
-	QValueList<NotifierAction*>::iterator it = actions.begin();
-	QValueList<NotifierAction*>::iterator end = actions.end();
+    QValueList< NotifierAction * >::iterator it = actions.begin();
+    QValueList< NotifierAction * >::iterator end = actions.end();
 
-	for ( ; it!=end; ++it )
-	{
-		new ActionListBoxItem( *it, m_medium.mimetype(),
-		                       m_view->actionsList );
-	}
+    for(; it != end; ++it)
+    {
+        new ActionListBoxItem(*it, m_medium.mimetype(), m_view->actionsList);
+    }
 
-	m_view->actionsList->setSelected( 0, true );
+    m_view->actionsList->setSelected(0, true);
 }
 
 
-void NotificationDialog::slotActionsChanged(const QString &/*dir*/)
+void NotificationDialog::slotActionsChanged(const QString & /*dir*/)
 {
-	m_settings->reload();
-	updateActionsListBox();
+    m_settings->reload();
+    updateActionsListBox();
 }
 
 void NotificationDialog::slotOk()
 {
-	QListBoxItem *item = m_view->actionsList->selectedItem();
+    QListBoxItem *item = m_view->actionsList->selectedItem();
 
-	if ( item != 0L )
-	{
-		ActionListBoxItem *action_item
-			= static_cast<ActionListBoxItem*>( item );
-		NotifierAction *action = action_item->action();
+    if(item != 0L)
+    {
+        ActionListBoxItem *action_item = static_cast< ActionListBoxItem * >(item);
+        NotifierAction *action = action_item->action();
 
-		launchAction( action );
-	}
+        launchAction(action);
+    }
 }
 
-void NotificationDialog::launchAction( NotifierAction *action )
+void NotificationDialog::launchAction(NotifierAction *action)
 {
-	if ( m_view->autoActionCheck->isChecked() )
-	{
-		m_settings->setAutoAction(  m_medium.mimetype(), action );
-		m_settings->save();
-	}
+    if(m_view->autoActionCheck->isChecked())
+    {
+        m_settings->setAutoAction(m_medium.mimetype(), action);
+        m_settings->save();
+    }
 
-	action->execute(m_medium);
+    action->execute(m_medium);
 
-	QDialog::accept();
+    QDialog::accept();
 }
 
 void NotificationDialog::slotConfigure()
 {
-	KRun::runCommand("kcmshell media");
+    KRun::runCommand("kcmshell media");
 }
 
 #include "notificationdialog.moc"

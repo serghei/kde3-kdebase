@@ -38,13 +38,10 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-namespace KFI
-{
+namespace KFI {
 
-class CFontEngine
-{
-    public:
-
+class CFontEngine {
+public:
     enum EType
     {
         // These have PS Info / support AFM stuff...
@@ -56,7 +53,7 @@ class CFontEngine
 
     enum EWeight
     {
-        WEIGHT_UNKNOWN=0,
+        WEIGHT_UNKNOWN = 0,
         WEIGHT_THIN,
         WEIGHT_ULTRA_LIGHT,
         WEIGHT_EXTRA_LIGHT,
@@ -81,62 +78,83 @@ class CFontEngine
         ITALIC_OBLIQUE
     };
 
-    private:
-
+private:
     struct TFtData
     {
         TFtData();
         ~TFtData();
 
         FT_Library library;
-        FT_Face    face;
-        bool       open;
+        FT_Face face;
+        bool open;
     };
 
-    public:
+public:
+    CFontEngine() : itsType(NONE)
+    {
+    }
+    ~CFontEngine()
+    {
+        closeFont();
+    }
 
-    CFontEngine() : itsType(NONE)               { }
-    ~CFontEngine()                              { closeFont(); }
-
-    static EType   getType(const char *fname);
+    static EType getType(const char *fname);
     static QString weightStr(EWeight w);
-    static QString italicStr(EItalic i)         { return ITALIC_NONE==i ? "r" : ITALIC_ITALIC==i ? "i" : "o"; }
+    static QString italicStr(EItalic i)
+    {
+        return ITALIC_NONE == i ? "r" : ITALIC_ITALIC == i ? "i" : "o";
+    }
 
     //
     // General functions - these should be used instead of specfic ones below...
     //
-    bool            openFont(const QString &file, int face=0);
-    void            closeFont();
+    bool openFont(const QString &file, int face = 0);
+    void closeFont();
 
     //
-    const QString & getFamilyName()   { return itsFamily; }
-    const QString & getPsName()       { return itsPsName; }
-    EWeight         getWeight()       { return itsWeight; }
-    EItalic         getItalic()       { return itsItalic; }
-    EType           getType()         { return itsType; }
-    int             getNumFaces()     { return itsFt.open ? itsFt.face->num_faces : 1; }
-    bool            hasPsInfo()       { return itsType!=NONE; }
+    const QString &getFamilyName()
+    {
+        return itsFamily;
+    }
+    const QString &getPsName()
+    {
+        return itsPsName;
+    }
+    EWeight getWeight()
+    {
+        return itsWeight;
+    }
+    EItalic getItalic()
+    {
+        return itsItalic;
+    }
+    EType getType()
+    {
+        return itsType;
+    }
+    int getNumFaces()
+    {
+        return itsFt.open ? itsFt.face->num_faces : 1;
+    }
+    bool hasPsInfo()
+    {
+        return itsType != NONE;
+    }
 
-    static EWeight  strToWeight(const char *str);
+    static EWeight strToWeight(const char *str);
 
-    private:
+private:
+    bool openFontFt(const QString &file);
+    void closeFaceFt();
 
-    bool            openFontFt(const QString &file);
-    void            closeFaceFt();
-
-    private:
-
+private:
     EWeight itsWeight;
-    EType   itsType;
+    EType itsType;
     EItalic itsItalic;
-    QString itsFamily,
-            itsPsName,
-            itsPath;
-    int     itsNumFaces,
-            itsFaceIndex;   // Only for TTC fonts - at the moment...
+    QString itsFamily, itsPsName, itsPath;
+    int itsNumFaces, itsFaceIndex; // Only for TTC fonts - at the moment...
     TFtData itsFt;
 };
-
 }
 
 #endif

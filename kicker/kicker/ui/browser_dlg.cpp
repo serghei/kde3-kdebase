@@ -35,69 +35,71 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "browser_dlg.h"
 #include "browser_dlg.moc"
 
-PanelBrowserDialog::PanelBrowserDialog( const QString& path, const QString &icon, QWidget *parent, const char *name )
-    :  KDialogBase( parent, name, true, i18n( "Quick Browser Configuration" ), Ok|Cancel, Ok, true )
+PanelBrowserDialog::PanelBrowserDialog(const QString &path, const QString &icon, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, i18n("Quick Browser Configuration"), Ok | Cancel, Ok, true)
 {
-    setMinimumWidth( 300 );
+    setMinimumWidth(300);
 
     QVBox *page = makeVBoxMainWidget();
 
-    QHBox *hbox2 = new QHBox( page );
-    hbox2->setSpacing( KDialog::spacingHint() );
-    QLabel *label1 = new QLabel( i18n( "Button icon:" ), hbox2 );
+    QHBox *hbox2 = new QHBox(page);
+    hbox2->setSpacing(KDialog::spacingHint());
+    QLabel *label1 = new QLabel(i18n("Button icon:"), hbox2);
 
-    iconBtn = new KIconButton( hbox2 );
-    iconBtn->setFixedSize( 50, 50 );
-    iconBtn->setIconType( KIcon::Panel, KIcon::FileSystem );
-    label1->setBuddy( iconBtn );
+    iconBtn = new KIconButton(hbox2);
+    iconBtn->setFixedSize(50, 50);
+    iconBtn->setIconType(KIcon::Panel, KIcon::FileSystem);
+    label1->setBuddy(iconBtn);
 
-    QHBox *hbox1 = new QHBox( page );
-    hbox1->setSpacing( KDialog::spacingHint() );
-    QLabel *label2 = new QLabel( i18n ( "Path:" ), hbox1 );
-    pathInput = new KLineEdit( hbox1 );
-    connect( pathInput, SIGNAL( textChanged ( const QString & )), this, SLOT( slotPathChanged( const QString & )));
+    QHBox *hbox1 = new QHBox(page);
+    hbox1->setSpacing(KDialog::spacingHint());
+    QLabel *label2 = new QLabel(i18n("Path:"), hbox1);
+    pathInput = new KLineEdit(hbox1);
+    connect(pathInput, SIGNAL(textChanged(const QString &)), this, SLOT(slotPathChanged(const QString &)));
 
-    pathInput->setText( path );
+    pathInput->setText(path);
     pathInput->setFocus();
-    label2->setBuddy( pathInput );
-    browseBtn = new QPushButton( i18n( "&Browse..." ), hbox1 );
-    if ( icon.isEmpty() ) {
+    label2->setBuddy(pathInput);
+    browseBtn = new QPushButton(i18n("&Browse..."), hbox1);
+    if(icon.isEmpty())
+    {
         KURL u;
-        u.setPath( path );
-        iconBtn->setIcon( KMimeType::iconForURL( u ) );
+        u.setPath(path);
+        iconBtn->setIcon(KMimeType::iconForURL(u));
     }
     else
-        iconBtn->setIcon( icon );
+        iconBtn->setIcon(icon);
 
-    connect( browseBtn, SIGNAL( clicked() ), this, SLOT( browse() ) );
+    connect(browseBtn, SIGNAL(clicked()), this, SLOT(browse()));
 }
 
 PanelBrowserDialog::~PanelBrowserDialog()
 {
-
 }
 
-void PanelBrowserDialog::slotPathChanged( const QString &_text )
+void PanelBrowserDialog::slotPathChanged(const QString &_text)
 {
-    enableButtonOK( !_text.isEmpty() );
+    enableButtonOK(!_text.isEmpty());
 }
 
 void PanelBrowserDialog::browse()
 {
-    QString dir = KFileDialog::getExistingDirectory( pathInput->text(), 0, i18n( "Select Folder" ) );
-    if ( !dir.isEmpty() ) {
-        pathInput->setText( dir );
+    QString dir = KFileDialog::getExistingDirectory(pathInput->text(), 0, i18n("Select Folder"));
+    if(!dir.isEmpty())
+    {
+        pathInput->setText(dir);
         KURL u;
-        u.setPath( dir );
-        iconBtn->setIcon( KMimeType::iconForURL( u ) );
+        u.setPath(dir);
+        iconBtn->setIcon(KMimeType::iconForURL(u));
     }
 }
 
 void PanelBrowserDialog::slotOk()
 {
     QDir dir(path());
-    if( !dir.exists() ) {
-        KMessageBox::sorry( this, i18n("'%1' is not a valid folder.").arg(path()) );
+    if(!dir.exists())
+    {
+        KMessageBox::sorry(this, i18n("'%1' is not a valid folder.").arg(path()));
         return;
     }
     KDialogBase::slotOk();

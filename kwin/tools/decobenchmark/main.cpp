@@ -37,101 +37,97 @@
 #include "preview.h"
 #include "main.h"
 
-static KCmdLineOptions options[] =
+static KCmdLineOptions options[] = {{"+decoration", "Decoration library to use, such as kwin3_plastik.", 0},
+                                    {"+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize', 'recreation')", 0},
+                                    {"+repetitions", "Number of test repetitions.", 0},
+                                    {0, 0, 0}};
+
+DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, int count) : m_tests(tests), m_count(count)
 {
-	{ "+decoration", "Decoration library to use, such as kwin3_plastik.", 0 },
-	{ "+tests", "Which test should be executed ('all', 'repaint', 'caption', 'resize', 'recreation')", 0 },
-	{ "+repetitions", "Number of test repetitions.", 0 },
-	{ 0, 0, 0 }
-};
+    KConfig kwinConfig("kwinrc");
+    kwinConfig.setGroup("Style");
 
-DecoBenchApplication::DecoBenchApplication(const QString &library, Tests tests, int count) :
-		m_tests(tests),
-		m_count(count)
-{
-	KConfig kwinConfig("kwinrc");
-	kwinConfig.setGroup("Style");
+    plugins = new KDecorationPreviewPlugins(&kwinConfig);
+    preview = new KDecorationPreview(plugins, 0);
 
-	plugins = new KDecorationPreviewPlugins( &kwinConfig );
-	preview = new KDecorationPreview( plugins, 0 );
+    if(plugins->loadPlugin(library))
+        kdDebug() << "Decoration library " << library << " loaded..." << endl;
+    else
+        kdError() << "Error loading decoration library " << library << "!" << endl;
 
-	if (plugins->loadPlugin(library) )
-		kdDebug() << "Decoration library " << library << " loaded..." << endl;
-	else
-		kdError() << "Error loading decoration library " << library << "!" << endl;
+    if(preview->recreateDecoration())
+        kdDebug() << "Decoration created..." << endl;
+    else
+        kdError() << "Error creating decoration!" << endl;
 
-	if (preview->recreateDecoration() )
-		kdDebug() << "Decoration created..." << endl;
-	else
-		kdError() << "Error creating decoration!" << endl;
-
-	preview->show();
+    preview->show();
 }
 
 DecoBenchApplication::~DecoBenchApplication()
 {
-	delete preview;
-	delete plugins;
+    delete preview;
+    delete plugins;
 }
 
 void DecoBenchApplication::executeTest()
 {
-	clock_t stime = clock();
-	timeb astart, aend;
-	ftime(&astart);
+    clock_t stime = clock();
+    timeb astart, aend;
+    ftime(&astart);
 
-	if (m_tests == AllTests || m_tests == RepaintTest)
-		preview->performRepaintTest(m_count);
-	if (m_tests == AllTests || m_tests == CaptionTest)
-		preview->performCaptionTest(m_count);
-	if (m_tests == AllTests || m_tests == ResizeTest)
-		preview->performResizeTest(m_count);
-	if (m_tests == AllTests || m_tests == RecreationTest)
-		preview->performRecreationTest(m_count);
+    if(m_tests == AllTests || m_tests == RepaintTest)
+        preview->performRepaintTest(m_count);
+    if(m_tests == AllTests || m_tests == CaptionTest)
+        preview->performCaptionTest(m_count);
+    if(m_tests == AllTests || m_tests == ResizeTest)
+        preview->performResizeTest(m_count);
+    if(m_tests == AllTests || m_tests == RecreationTest)
+        preview->performRecreationTest(m_count);
 
-	clock_t etime = clock();
-	ftime(&aend);
+    clock_t etime = clock();
+    ftime(&aend);
 
-	long long time_diff = (aend.time - astart.time)*1000+aend.millitm - astart.millitm;
-	kdDebug() << "Total:" << (float(time_diff)/1000) << endl;
-	quit();
+    long long time_diff = (aend.time - astart.time) * 1000 + aend.millitm - astart.millitm;
+    kdDebug() << "Total:" << (float(time_diff) / 1000) << endl;
+    quit();
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	QString style = "keramik";
-	// KApplication app(argc, argv);
-	KAboutData about("decobenchmark", "DecoBenchmark", "0.1", "kwin decoration performance tester...", KAboutData::License_LGPL, "(C) 2005 Sandro Giessl");
-	KCmdLineArgs::init(argc, argv, &about);
-	KCmdLineArgs::addCmdLineOptions( options );
+    QString style = "keramik";
+    // KApplication app(argc, argv);
+    KAboutData about("decobenchmark", "DecoBenchmark", "0.1", "kwin decoration performance tester...", KAboutData::License_LGPL,
+                     "(C) 2005 Sandro Giessl");
+    KCmdLineArgs::init(argc, argv, &about);
+    KCmdLineArgs::addCmdLineOptions(options);
 
-	KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-	if (args->count() != 3)
-		KCmdLineArgs::usage("Wrong number of arguments!");
+    if(args->count() != 3)
+        KCmdLineArgs::usage("Wrong number of arguments!");
 
-	QString library = QString(args->arg(0) );
-	QString t = QString(args->arg(1) );
-	int count = QString(args->arg(2) ).toInt();
+    QString library = QString(args->arg(0));
+    QString t = QString(args->arg(1));
+    int count = QString(args->arg(2)).toInt();
 
-	Tests test;
-	if (t == "all")
-		test = AllTests;
-	else if (t == "repaint")
-		test = RepaintTest;
-	else if (t == "caption")
-		test = CaptionTest;
-	else if (t == "resize")
-		test = ResizeTest;
-	else if (t == "recreation")
-		test = RecreationTest;
-	else
-		KCmdLineArgs::usage("Specify a valid test!");
+    Tests test;
+    if(t == "all")
+        test = AllTests;
+    else if(t == "repaint")
+        test = RepaintTest;
+    else if(t == "caption")
+        test = CaptionTest;
+    else if(t == "resize")
+        test = ResizeTest;
+    else if(t == "recreation")
+        test = RecreationTest;
+    else
+        KCmdLineArgs::usage("Specify a valid test!");
 
-	DecoBenchApplication app(library, test, count);
+    DecoBenchApplication app(library, test, count);
 
-	QTimer::singleShot(0, &app, SLOT(executeTest()));
-	app.exec();
+    QTimer::singleShot(0, &app, SLOT(executeTest()));
+    app.exec();
 }
 #include "main.moc"
 

@@ -30,78 +30,73 @@
 #include "policydlg_ui.h"
 
 
-class DomainLineValidator : public QValidator
-{
+class DomainLineValidator : public QValidator {
 public:
-  DomainLineValidator(QObject *parent)
-  :QValidator(parent, "domainValidator")
-  {
-  }
-
-  State validate(QString &input, int &) const
-  {
-    if (input.isEmpty() || (input == "."))
-      return Intermediate;
-
-    int length = input.length();
-
-    for(int i = 0 ; i < length; i++)
+    DomainLineValidator(QObject *parent) : QValidator(parent, "domainValidator")
     {
-      if (!input[i].isLetterOrNumber() && input[i] != '.' && input[i] != '-')
-        return Invalid;
     }
 
-    return Acceptable;
-  }
+    State validate(QString &input, int &) const
+    {
+        if(input.isEmpty() || (input == "."))
+            return Intermediate;
+
+        int length = input.length();
+
+        for(int i = 0; i < length; i++)
+        {
+            if(!input[i].isLetterOrNumber() && input[i] != '.' && input[i] != '-')
+                return Invalid;
+        }
+
+        return Acceptable;
+    }
 };
 
 
-PolicyDlg::PolicyDlg (const QString& caption, QWidget *parent,
-    const char *name)
-    : KDialogBase(parent, name, true, caption, Ok|Cancel, Ok, true)
+PolicyDlg::PolicyDlg(const QString &caption, QWidget *parent, const char *name) : KDialogBase(parent, name, true, caption, Ok | Cancel, Ok, true)
 {
-  m_dlgUI = new PolicyDlgUI (this);
-  setMainWidget(m_dlgUI);
+    m_dlgUI = new PolicyDlgUI(this);
+    setMainWidget(m_dlgUI);
 
-  m_dlgUI->leDomain->setValidator(new DomainLineValidator(m_dlgUI->leDomain));
-  m_dlgUI->cbPolicy->setMinimumWidth( m_dlgUI->cbPolicy->fontMetrics().maxWidth() * 25 );
-  
-  enableButtonOK( false );
-  connect(m_dlgUI->leDomain, SIGNAL(textChanged(const QString&)),
-    SLOT(slotTextChanged(const QString&)));
+    m_dlgUI->leDomain->setValidator(new DomainLineValidator(m_dlgUI->leDomain));
+    m_dlgUI->cbPolicy->setMinimumWidth(m_dlgUI->cbPolicy->fontMetrics().maxWidth() * 25);
 
-  setFixedSize (sizeHint());
-  m_dlgUI->leDomain->setFocus ();
+    enableButtonOK(false);
+    connect(m_dlgUI->leDomain, SIGNAL(textChanged(const QString &)), SLOT(slotTextChanged(const QString &)));
+
+    setFixedSize(sizeHint());
+    m_dlgUI->leDomain->setFocus();
 }
 
-void PolicyDlg::setEnableHostEdit( bool state, const QString& host )
+void PolicyDlg::setEnableHostEdit(bool state, const QString &host)
 {
-  if ( !host.isEmpty() )
-    m_dlgUI->leDomain->setText( host );
-  m_dlgUI->leDomain->setEnabled( state );
+    if(!host.isEmpty())
+        m_dlgUI->leDomain->setText(host);
+    m_dlgUI->leDomain->setEnabled(state);
 }
 
-void PolicyDlg::setPolicy (int policy)
+void PolicyDlg::setPolicy(int policy)
 {
-  if ( policy > -1 && policy <= static_cast<int>(m_dlgUI->cbPolicy->count()) )
-    m_dlgUI->cbPolicy->setCurrentItem(policy-1);
+    if(policy > -1 && policy <= static_cast< int >(m_dlgUI->cbPolicy->count()))
+        m_dlgUI->cbPolicy->setCurrentItem(policy - 1);
 
-  if ( !m_dlgUI->leDomain->isEnabled() )
-    m_dlgUI->cbPolicy->setFocus();
+    if(!m_dlgUI->leDomain->isEnabled())
+        m_dlgUI->cbPolicy->setFocus();
 }
 
-int PolicyDlg::advice () const
+int PolicyDlg::advice() const
 {
-  return m_dlgUI->cbPolicy->currentItem() + 1;
+    return m_dlgUI->cbPolicy->currentItem() + 1;
 }
 
-QString PolicyDlg::domain () const
+QString PolicyDlg::domain() const
 {
-  return m_dlgUI->leDomain->text();
+    return m_dlgUI->leDomain->text();
 }
 
-void PolicyDlg::slotTextChanged( const QString& text )
+void PolicyDlg::slotTextChanged(const QString &text)
 {
-  enableButtonOK( text.length() > 1 );
+    enableButtonOK(text.length() > 1);
 }
 #include "policydlg.moc"

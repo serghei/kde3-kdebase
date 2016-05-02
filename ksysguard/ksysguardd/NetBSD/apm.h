@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
-	Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
-    
+
+    Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -21,14 +21,14 @@
 #ifndef _apm_h_
 #define _apm_h_
 
-void initApm(struct SensorModul* sm);
+void initApm(struct SensorModul *sm);
 void exitApm(void);
 
 int updateApm(void);
 
-void printApmBatFill(const char*);
-void printApmBatFillInfo(const char*);
-void printApmBatTime(const char*);
-void printApmBatTimeInfo(const char*);
+void printApmBatFill(const char *);
+void printApmBatFillInfo(const char *);
+void printApmBatTime(const char *);
+void printApmBatTimeInfo(const char *);
 
 #endif

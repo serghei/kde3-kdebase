@@ -19,54 +19,53 @@
 #define KOSPAGE_H
 
 
-#include"kospagedlg.h"
+#include "kospagedlg.h"
 
 /**Abstract class for the second page.  Uses save() to change the according settings and applies them.
   *@author Ralf Nolden
   */
 
-class KOSPage : public KOSPageDlg  {
-	Q_OBJECT
+class KOSPage : public KOSPageDlg {
+    Q_OBJECT
 public:
-	KOSPage(QWidget *parent=0, const char *name=0);
-	~KOSPage();
-	void save(bool currSettings=true);
-	void saveCheckState(bool currSettings);
-	void writeKDE();
-	void writeUNIX();
-	void writeWindows();
-	void writeMacOS();
-	void writeKeyEntrys(QString keyfile);
-	void writeUserKeys();
-	void writeUserDefaults();
-	/** retrieve the user's local values */
-	void getUserDefaults();
-	void slotMacDescription();
-	void slotWindowsDescription();
-	void slotUnixDescription();
-	void slotKDEDescription();
-	/** resets the radio button selected to kde */
-	void setDefaults();
+    KOSPage(QWidget *parent = 0, const char *name = 0);
+    ~KOSPage();
+    void save(bool currSettings = true);
+    void saveCheckState(bool currSettings);
+    void writeKDE();
+    void writeUNIX();
+    void writeWindows();
+    void writeMacOS();
+    void writeKeyEntrys(QString keyfile);
+    void writeUserKeys();
+    void writeUserDefaults();
+    /** retrieve the user's local values */
+    void getUserDefaults();
+    void slotMacDescription();
+    void slotWindowsDescription();
+    void slotUnixDescription();
+    void slotKDEDescription();
+    /** resets the radio button selected to kde */
+    void setDefaults();
 signals: // Signals
-	/** emits either of: KDE, CDE, win or mac in save() depending
-	on the selection made by the user. */
-	void selectedOS(const QString&);
+    /** emits either of: KDE, CDE, win or mac in save() depending
+    on the selection made by the user. */
+    void selectedOS(const QString &);
+
 private:
-	KConfig* cglobal;
-	KConfig* claunch;
-	KConfig* cwin;
-	KConfig* cdesktop;
-	KConfig* ckcminput;
-	KConfig* ckcmdisplay;
-	KConfig* ckonqueror;
-	KConfig* cklipper;
-	KConfig* ckaccess;
-	// DEFAULT VALUES SET BY USER
-	bool b_Gestures, b_MacMenuBar, b_SingleClick, b_BusyCursor, b_ShowMenuBar,
-		 b_DesktopUnderline, b_KonqUnderline, b_ChangeCursor, b_syncClipboards;
-	QString	s_TitlebarDCC, s_FocusPolicy, s_AltTabStyle, s_MMB,
-			s_TitlebarMMB, s_TitlebarRMB;
-	QMap<QString, QString> map_AppUserKeys, map_GlobalUserKeys;
-	// DEFAULT VALLUES SET BY USER (END)
+    KConfig *cglobal;
+    KConfig *claunch;
+    KConfig *cwin;
+    KConfig *cdesktop;
+    KConfig *ckcminput;
+    KConfig *ckcmdisplay;
+    KConfig *ckonqueror;
+    KConfig *cklipper;
+    KConfig *ckaccess;
+    // DEFAULT VALUES SET BY USER
+    bool b_Gestures, b_MacMenuBar, b_SingleClick, b_BusyCursor, b_ShowMenuBar, b_DesktopUnderline, b_KonqUnderline, b_ChangeCursor, b_syncClipboards;
+    QString s_TitlebarDCC, s_FocusPolicy, s_AltTabStyle, s_MMB, s_TitlebarMMB, s_TitlebarRMB;
+    QMap< QString, QString > map_AppUserKeys, map_GlobalUserKeys;
+    // DEFAULT VALLUES SET BY USER (END)
 };
 #endif

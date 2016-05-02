@@ -22,22 +22,20 @@
 #include <kurl.h>
 #include <kdirnotify.h>
 
-class RemoteDirNotify : public KDirNotify
-{
-K_DCOP
+class RemoteDirNotify : public KDirNotify {
+    K_DCOP
 
 public:
-	RemoteDirNotify();
+    RemoteDirNotify();
 
-k_dcop:
-	virtual ASYNC FilesAdded (const KURL &directory);
-	virtual ASYNC FilesRemoved (const KURL::List &fileList);
-	virtual ASYNC FilesChanged (const KURL::List &fileList);
+    k_dcop : virtual ASYNC FilesAdded(const KURL &directory);
+    virtual ASYNC FilesRemoved(const KURL::List &fileList);
+    virtual ASYNC FilesChanged(const KURL::List &fileList);
 
 private:
-	KURL toRemoteURL(const KURL &url);
-	KURL::List toRemoteURLList(const KURL::List &list);
-	KURL m_baseURL;
+    KURL toRemoteURL(const KURL &url);
+    KURL::List toRemoteURLList(const KURL::List &list);
+    KURL m_baseURL;
 };
 
 #endif

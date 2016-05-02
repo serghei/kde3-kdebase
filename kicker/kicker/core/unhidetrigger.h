@@ -32,31 +32,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <qobject.h>
 
-class UnhideTrigger : public QObject
-{
-	Q_OBJECT
+class UnhideTrigger : public QObject {
+    Q_OBJECT
 public:
-	enum Trigger { None = 0, Top, TopRight, Right, BottomRight, Bottom, BottomLeft, Left, TopLeft };
-	static UnhideTrigger* the();
+    enum Trigger
+    {
+        None = 0,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
+        TopLeft
+    };
+    static UnhideTrigger *the();
 
-	void setEnabled( bool enable );
-	bool isEnabled() const;
+    void setEnabled(bool enable);
+    bool isEnabled() const;
 
-	// this is called whenever an item accepts a trigger, thereby preventing further calling of it again
-	void triggerAccepted( UnhideTrigger::Trigger t, int XineramaScreen );
-	void resetTriggerThrottle();
+    // this is called whenever an item accepts a trigger, thereby preventing further calling of it again
+    void triggerAccepted(UnhideTrigger::Trigger t, int XineramaScreen);
+    void resetTriggerThrottle();
 
 signals:
-	void triggerUnhide( UnhideTrigger::Trigger t, int XineramaScreen );
+    void triggerUnhide(UnhideTrigger::Trigger t, int XineramaScreen);
 private slots:
-	void pollMouse();
+    void pollMouse();
+
 private:
-	UnhideTrigger();
-	void emitTrigger( Trigger t , int XineramaScreen );
-	Trigger _lastTrigger;
-	int _lastXineramaScreen;
-	QTimer *_timer;
-	int enabledCount;
+    UnhideTrigger();
+    void emitTrigger(Trigger t, int XineramaScreen);
+    Trigger _lastTrigger;
+    int _lastXineramaScreen;
+    QTimer *_timer;
+    int enabledCount;
 };
 
 #endif

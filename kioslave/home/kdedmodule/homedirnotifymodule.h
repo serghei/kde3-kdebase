@@ -23,14 +23,14 @@
 
 #include "homedirnotify.h"
 
-class HomeDirNotifyModule : public KDEDModule
-{
-K_DCOP
+class HomeDirNotifyModule : public KDEDModule {
+    K_DCOP
 
 public:
-	HomeDirNotifyModule(const QCString &obj);
+    HomeDirNotifyModule(const QCString &obj);
+
 private:
-	HomeDirNotify notifier;
+    HomeDirNotify notifier;
 };
 
 #endif

@@ -34,8 +34,7 @@
 #include "config.h"
 #include "configdialog.h"
 
-PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
-    : QObject(parent), m_config(0), m_dialog(0)
+PlastikConfig::PlastikConfig(KConfig *config, QWidget *parent) : QObject(parent), m_config(0), m_dialog(0)
 {
     // create the configuration object
     m_config = new KConfig("kwinplastikrc");
@@ -49,32 +48,30 @@ PlastikConfig::PlastikConfig(KConfig* config, QWidget* parent)
     load(config);
 
     // setup the connections
-    connect(m_dialog->titleAlign, SIGNAL(clicked(int)),
-            this, SIGNAL(changed()));
-    connect(m_dialog->animateButtons, SIGNAL(toggled(bool)),
-            this, SIGNAL(changed()));
-    connect(m_dialog->menuClose, SIGNAL(toggled(bool)),
-            this, SIGNAL(changed()));
-    connect(m_dialog->titleShadow, SIGNAL(toggled(bool)),
-            this, SIGNAL(changed()));
-    connect(m_dialog->coloredBorder, SIGNAL(toggled(bool)),
-            this, SIGNAL(changed()));
+    connect(m_dialog->titleAlign, SIGNAL(clicked(int)), this, SIGNAL(changed()));
+    connect(m_dialog->animateButtons, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_dialog->menuClose, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_dialog->titleShadow, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
+    connect(m_dialog->coloredBorder, SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 }
 
 PlastikConfig::~PlastikConfig()
 {
-    if (m_dialog) delete m_dialog;
-    if (m_config) delete m_config;
+    if(m_dialog)
+        delete m_dialog;
+    if(m_config)
+        delete m_config;
 }
 
-void PlastikConfig::load(KConfig*)
+void PlastikConfig::load(KConfig *)
 {
     m_config->setGroup("General");
 
 
     QString value = m_config->readEntry("TitleAlignment", "AlignLeft");
-    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->child(value.latin1());
-    if (button) button->setChecked(true);
+    QRadioButton *button = (QRadioButton *)m_dialog->titleAlign->child(value.latin1());
+    if(button)
+        button->setChecked(true);
     bool animateButtons = m_config->readBoolEntry("AnimateButtons", true);
     m_dialog->animateButtons->setChecked(animateButtons);
     bool menuClose = m_config->readBoolEntry("CloseOnMenuDoubleClick", true);
@@ -85,24 +82,25 @@ void PlastikConfig::load(KConfig*)
     m_dialog->coloredBorder->setChecked(coloredBorder);
 }
 
-void PlastikConfig::save(KConfig*)
+void PlastikConfig::save(KConfig *)
 {
     m_config->setGroup("General");
 
-    QRadioButton *button = (QRadioButton*)m_dialog->titleAlign->selected();
-    if (button) m_config->writeEntry("TitleAlignment", QString(button->name()));
-    m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked() );
-    m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked() );
-    m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked() );
-    m_config->writeEntry("ColoredBorder", m_dialog->coloredBorder->isChecked() );
+    QRadioButton *button = (QRadioButton *)m_dialog->titleAlign->selected();
+    if(button)
+        m_config->writeEntry("TitleAlignment", QString(button->name()));
+    m_config->writeEntry("AnimateButtons", m_dialog->animateButtons->isChecked());
+    m_config->writeEntry("CloseOnMenuDoubleClick", m_dialog->menuClose->isChecked());
+    m_config->writeEntry("TitleShadow", m_dialog->titleShadow->isChecked());
+    m_config->writeEntry("ColoredBorder", m_dialog->coloredBorder->isChecked());
     m_config->sync();
 }
 
 void PlastikConfig::defaults()
 {
-    QRadioButton *button =
-        (QRadioButton*)m_dialog->titleAlign->child("AlignLeft");
-    if (button) button->setChecked(true);
+    QRadioButton *button = (QRadioButton *)m_dialog->titleAlign->child("AlignLeft");
+    if(button)
+        button->setChecked(true);
     m_dialog->animateButtons->setChecked(true);
     m_dialog->menuClose->setChecked(false);
     m_dialog->titleShadow->setChecked(true);
@@ -113,11 +111,11 @@ void PlastikConfig::defaults()
 // Plugin Stuff                                                             //
 //////////////////////////////////////////////////////////////////////////////
 
-extern "C"
+extern "C" {
+KDE_EXPORT QObject *allocate_config(KConfig *config, QWidget *parent)
 {
-    KDE_EXPORT QObject* allocate_config(KConfig* config, QWidget* parent) {
-        return (new PlastikConfig(config, parent));
-    }
+    return (new PlastikConfig(config, parent));
+}
 }
 
 #include "config.moc"

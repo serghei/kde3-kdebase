@@ -22,8 +22,7 @@
 
 class PositionTab;
 
-class PositionConfig : public KCModule
-{
+class PositionConfig : public KCModule {
     Q_OBJECT
 
 public:

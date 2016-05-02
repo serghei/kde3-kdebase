@@ -22,12 +22,13 @@
 #include <kparts/plugin.h>
 #include <klibloader.h>
 
-class KShellCmdPlugin : public KParts::Plugin
-{
+class KShellCmdPlugin : public KParts::Plugin {
     Q_OBJECT
 public:
-    KShellCmdPlugin( QObject* parent, const char* name, const QStringList & );
-    ~KShellCmdPlugin() {}
+    KShellCmdPlugin(QObject *parent, const char *name, const QStringList &);
+    ~KShellCmdPlugin()
+    {
+    }
 
 public slots:
     void slotExecuteShellCommand();

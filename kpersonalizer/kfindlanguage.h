@@ -20,19 +20,20 @@
 
 class KFindLanguage {
 public:
-	KFindLanguage();
-	~KFindLanguage();
-	QStringList getLangList() const;
-	QMap<QString,QString> getLangMap() const;
-	QString getBestLang() const;
-	QString getOldLang() const;
-	QString getCountry() const;
+    KFindLanguage();
+    ~KFindLanguage();
+    QStringList getLangList() const;
+    QMap< QString, QString > getLangMap() const;
+    QString getBestLang() const;
+    QString getOldLang() const;
+    QString getCountry() const;
+
 private:
-	QStringList m_langlist;          // stores tags like "en_US"
-	QMap<QString,QString> m_langmap; // stores tag -> name pairs
-	QString m_country;
-	QString m_oldlang;
-	QString m_bestlang;
+    QStringList m_langlist;             // stores tags like "en_US"
+    QMap< QString, QString > m_langmap; // stores tag -> name pairs
+    QString m_country;
+    QString m_oldlang;
+    QString m_bestlang;
 };
 
 #endif

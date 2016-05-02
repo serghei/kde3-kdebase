@@ -28,10 +28,9 @@ class QLineEdit;
 class QPushButton;
 class KService;
 
-class KServiceListItem : public QListBoxText
-{
+class KServiceListItem : public QListBoxText {
 public:
-    KServiceListItem(  KService *pService, int kind );
+    KServiceListItem(KService *pService, int kind);
     bool isImmutable();
     QString desktopPath;
     QString localPath;
@@ -43,35 +42,38 @@ public:
  * module, once for applications and once for services.
  * The "kind" is determined by the argument given to the constructor.
  */
-class KServiceListWidget : public QGroupBox
-{
-  Q_OBJECT
+class KServiceListWidget : public QGroupBox {
+    Q_OBJECT
 public:
-  enum { SERVICELIST_APPLICATIONS, SERVICELIST_SERVICES };
-  KServiceListWidget(int kind, QWidget *parent = 0, const char *name = 0);
+    enum
+    {
+        SERVICELIST_APPLICATIONS,
+        SERVICELIST_SERVICES
+    };
+    KServiceListWidget(int kind, QWidget *parent = 0, const char *name = 0);
 
-  void setTypeItem( TypesListItem * item );
+    void setTypeItem(TypesListItem *item);
 
 signals:
-  void changed(bool);
+    void changed(bool);
 
 protected slots:
-  void promoteService();
-  void demoteService();
-  void addService();
-  void editService();
-  void removeService();
-  void enableMoveButtons(int index);
+    void promoteService();
+    void demoteService();
+    void addService();
+    void editService();
+    void removeService();
+    void enableMoveButtons(int index);
 
 protected:
-  void updatePreferredServices();
+    void updatePreferredServices();
 
 private:
-  int m_kind;
-  QListBox *servicesLB;
-  QPushButton *servUpButton, *servDownButton;
-  QPushButton *servNewButton, *servEditButton, *servRemoveButton;
-  TypesListItem *m_item;
+    int m_kind;
+    QListBox *servicesLB;
+    QPushButton *servUpButton, *servDownButton;
+    QPushButton *servNewButton, *servEditButton, *servRemoveButton;
+    TypesListItem *m_item;
 };
 
 #endif

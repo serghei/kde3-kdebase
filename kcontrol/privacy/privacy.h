@@ -28,12 +28,11 @@
 #include "kprivacymanager.h"
 #include "kprivacysettings.h"
 
-class Privacy: public KCModule
-{
+class Privacy : public KCModule {
     Q_OBJECT
 
 public:
-    Privacy( QWidget *parent=0, const char *name=0 );
+    Privacy(QWidget *parent = 0, const char *name = 0);
     ~Privacy();
 
     virtual void load();
@@ -47,16 +46,16 @@ public slots:
     void selectNone();
 
 private:
-    KCMPrivacyDialog  *cleaningDialog;
-    KPrivacySettings  *p3pSettings;
+    KCMPrivacyDialog *cleaningDialog;
+    KPrivacySettings *p3pSettings;
     KPrivacyManager *m_privacymanager;
 
-    QPtrList<QCheckListItem> checklist;
+    QPtrList< QCheckListItem > checklist;
 
     KListViewItem *generalCLI;
     KListViewItem *webbrowsingCLI;
 
-    QCheckListItem *clearThumbnails;	
+    QCheckListItem *clearThumbnails;
     QCheckListItem *clearRunCommandHistory;
     QCheckListItem *clearAllCookies;
     QCheckListItem *clearSavedClipboardContents;
@@ -66,9 +65,7 @@ private:
     QCheckListItem *clearRecentDocuments;
     QCheckListItem *clearQuickStartMenu;
     QCheckListItem *clearFavIcons;
-    //QCheckListItem *clearFileDialogHistory;
-
-
+    // QCheckListItem *clearFileDialogHistory;
 };
 
 #endif

@@ -31,35 +31,33 @@ class KIntNumInput;
 
 namespace KHC {
 
-class FontDialog : public KDialogBase
-{
-	Q_OBJECT
-	public:
-		FontDialog( QWidget *parent, const char *name = 0 );
+class FontDialog : public KDialogBase {
+    Q_OBJECT
+public:
+    FontDialog(QWidget *parent, const char *name = 0);
 
-	protected slots:
-		virtual void slotOk();
+protected slots:
+    virtual void slotOk();
 
-	private:
-		void setupFontSizesBox();
-		void setupFontTypesBox();
-		void setupFontEncodingBox();
+private:
+    void setupFontSizesBox();
+    void setupFontTypesBox();
+    void setupFontEncodingBox();
 
-		void load();
-		void save();
+    void load();
+    void save();
 
-		KIntNumInput *m_minFontSize;
-		KIntNumInput *m_medFontSize;
-		KFontCombo *m_standardFontCombo;
-		KFontCombo *m_fixedFontCombo;
-		KFontCombo *m_serifFontCombo;
-		KFontCombo *m_sansSerifFontCombo;
-		KFontCombo *m_italicFontCombo;
-		KFontCombo *m_fantasyFontCombo;
-		KComboBox *m_defaultEncoding;
-		QSpinBox *m_fontSizeAdjustement;
+    KIntNumInput *m_minFontSize;
+    KIntNumInput *m_medFontSize;
+    KFontCombo *m_standardFontCombo;
+    KFontCombo *m_fixedFontCombo;
+    KFontCombo *m_serifFontCombo;
+    KFontCombo *m_sansSerifFontCombo;
+    KFontCombo *m_italicFontCombo;
+    KFontCombo *m_fantasyFontCombo;
+    KComboBox *m_defaultEncoding;
+    QSpinBox *m_fontSizeAdjustement;
 };
-
 }
 
 #endif // FONTDIALOG_H

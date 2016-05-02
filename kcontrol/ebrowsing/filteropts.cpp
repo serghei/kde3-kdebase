@@ -29,20 +29,17 @@
 
 #include "filteropts.h"
 
-FilterOptions::FilterOptions(QWidget *parent, const char *name)
-    		  :KCModule(parent, name)
+FilterOptions::FilterOptions(QWidget *parent, const char *name) : KCModule(parent, name)
 {
 
     QGridLayout *lay = new QGridLayout(this, 1, 1, 10, 5);
 
     lay->addWidget(new QLabel(i18n("Under construction..."), this), 0, 0);
     lay->activate();
-
 }
 
-void FilterOptions::load( bool useDefaults )
+void FilterOptions::load(bool useDefaults)
 {
-	
 }
 
 void FilterOptions::save()
@@ -51,7 +48,7 @@ void FilterOptions::save()
 
 void FilterOptions::defaults()
 {
-    load( true );
+    load(true);
 }
 
 void FilterOptions::moduleChanged(bool state)

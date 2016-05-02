@@ -39,7 +39,7 @@ class KIconEffect;
 class KIconLoader;
 class KIconTheme;
 
-struct Effect 
+struct Effect
 {
     int type;
     float value;
@@ -52,25 +52,33 @@ struct Effect
 /**
  * The General Icons tab in kcontrol.
  */
-class KIconConfig: public KCModule
-{
+class KIconConfig : public KCModule {
     Q_OBJECT
 
 public:
-    KIconConfig(QWidget *parent, const char *name=0);
+    KIconConfig(QWidget *parent, const char *name = 0);
     ~KIconConfig();
 
     virtual void load();
-    virtual void load( bool useDefaults );
+    virtual void load(bool useDefaults);
     virtual void save();
     virtual void defaults();
     void preview();
 
 private slots:
-    void slotEffectSetup0() { EffectSetup(0); }
-    void slotEffectSetup1() { EffectSetup(1); }
-    void slotEffectSetup2() { EffectSetup(2); }
-    
+    void slotEffectSetup0()
+    {
+        EffectSetup(0);
+    }
+    void slotEffectSetup1()
+    {
+        EffectSetup(1);
+    }
+    void slotEffectSetup2()
+    {
+        EffectSetup(2);
+    }
+
     void slotUsage(int index);
     void slotSize(int index);
     void slotDPCheck(bool check);
@@ -88,11 +96,11 @@ private:
 
     bool mbDP[6], mbChanged[6], mbAnimated[6];
     int mSizes[6];
-    QValueList<int> mAvSizes[6];
+    QValueList< int > mAvSizes[6];
 
     Effect mEffects[6][3];
     Effect mDefaultEffect[3];
-    
+
     int mUsage;
     QString mTheme, mExample;
     QStringList mGroups, mStates;
@@ -109,19 +117,19 @@ private:
     QComboBox *mpSizeBox;
     QCheckBox *mpDPCheck, *wordWrapCB, *underlineCB, *mpAnimatedCheck;
     QTabWidget *m_pTabWidget;
-    QWidget *m_pTab1;                                    
+    QWidget *m_pTab1;
 };
 
-class KIconEffectSetupDialog: public KDialogBase
-{
+class KIconEffectSetupDialog : public KDialogBase {
     Q_OBJECT
-     
+
 public:
-    KIconEffectSetupDialog(const Effect &, const Effect &,
-                           const QString &, const QImage &,
-			   QWidget *parent=0L, char *name=0L);
+    KIconEffectSetupDialog(const Effect &, const Effect &, const QString &, const QImage &, QWidget *parent = 0L, char *name = 0L);
     ~KIconEffectSetupDialog();
-    Effect effect() { return mEffect; }
+    Effect effect()
+    {
+        return mEffect;
+    }
 
 protected:
     void preview();
@@ -147,6 +155,6 @@ private:
     QImage mExample;
     QGroupBox *mpEffectGroup;
     QLabel *mpPreview, *mpEffectLabel, *mpEffectColor, *mpEffectColor2;
-};                      
-                      
+};
+
 #endif

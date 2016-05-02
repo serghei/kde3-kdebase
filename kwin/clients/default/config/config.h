@@ -17,32 +17,31 @@
 #include <qlabel.h>
 #include <qvbox.h>
 
-class KDEDefaultConfig: public QObject
-{
-	Q_OBJECT
+class KDEDefaultConfig : public QObject {
+    Q_OBJECT
 
-	public:
-		KDEDefaultConfig( KConfig* conf, QWidget* parent );
-		~KDEDefaultConfig();
+public:
+    KDEDefaultConfig(KConfig *conf, QWidget *parent);
+    ~KDEDefaultConfig();
 
-	// These public signals/slots work similar to KCM modules
-	signals:
-		void changed();
+    // These public signals/slots work similar to KCM modules
+signals:
+    void changed();
 
-	public slots:
-		void load( KConfig* conf );
-		void save( KConfig* conf );
-		void defaults();
+public slots:
+    void load(KConfig *conf);
+    void save(KConfig *conf);
+    void defaults();
 
-	protected slots:
-		void slotSelectionChanged();	// Internal use
+protected slots:
+    void slotSelectionChanged(); // Internal use
 
-	private:
-		QCheckBox* cbShowStipple;
-		QCheckBox* cbShowGrabBar;
-		QCheckBox* cbUseGradients;
-		QVBox* gb;
-		bool 	   highcolor;
+private:
+    QCheckBox *cbShowStipple;
+    QCheckBox *cbShowGrabBar;
+    QCheckBox *cbUseGradients;
+    QVBox *gb;
+    bool highcolor;
 };
 
 #endif

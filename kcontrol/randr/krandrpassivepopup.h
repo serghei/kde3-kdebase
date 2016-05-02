@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2003 Lubos Lunak <l.lunak@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -24,24 +24,24 @@
 #include <qtimer.h>
 #include <X11/Xlib.h>
 
-class KRandrPassivePopup
-    : public KPassivePopup
-    {
+class KRandrPassivePopup : public KPassivePopup {
     Q_OBJECT
-    public:
-	static KRandrPassivePopup *message( const QString &caption, const QString &text,
-	    const QPixmap &icon, QWidget *parent, const char *name=0, int timeout = -1 );
-    protected:
-	virtual bool eventFilter( QObject* o, QEvent* e );
-	virtual bool x11Event( XEvent* e );
-    private slots:
-	void slotPositionSelf();
-    private:
-        KRandrPassivePopup( QWidget *parent=0, const char *name=0, WFlags f=0 );
-	void startWatchingWidget( QWidget* w );
-	QValueList< QWidget* > watched_widgets;
-	QValueList< Window > watched_windows;
-	QTimer update_timer;
-    };
+public:
+    static KRandrPassivePopup *message(const QString &caption, const QString &text, const QPixmap &icon, QWidget *parent, const char *name = 0,
+                                       int timeout = -1);
+
+protected:
+    virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual bool x11Event(XEvent *e);
+private slots:
+    void slotPositionSelf();
+
+private:
+    KRandrPassivePopup(QWidget *parent = 0, const char *name = 0, WFlags f = 0);
+    void startWatchingWidget(QWidget *w);
+    QValueList< QWidget * > watched_widgets;
+    QValueList< Window > watched_windows;
+    QTimer update_timer;
+};
 
 #endif

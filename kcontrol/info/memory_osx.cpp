@@ -32,62 +32,63 @@
 void KMemoryWidget::update()
 {
 
-	vm_statistics_data_t vm_info;
-	mach_msg_type_number_t info_count;
-	DIR *dirp;
-	struct dirent *dp;
-	t_memsize total;
+    vm_statistics_data_t vm_info;
+    mach_msg_type_number_t info_count;
+    DIR *dirp;
+    struct dirent *dp;
+    t_memsize total;
 
-	info_count = HOST_VM_INFO_COUNT;
-	if (host_statistics(mach_host_self (), HOST_VM_INFO, (host_info_t)&vm_info, &info_count)) {
-		kdDebug() << "could not get memory statistics" << endl;
-		return;
-	}
+    info_count = HOST_VM_INFO_COUNT;
+    if(host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vm_info, &info_count))
+    {
+        kdDebug() << "could not get memory statistics" << endl;
+        return;
+    }
 
-	Memory_Info[TOTAL_MEM]    = MEMORY(vm_info.active_count + vm_info.inactive_count +
-		vm_info.free_count + vm_info.wire_count) * vm_page_size;
-	Memory_Info[FREE_MEM]     = MEMORY(vm_info.free_count) * vm_page_size;
-	Memory_Info[SHARED_MEM]   = NO_MEMORY_INFO;
-	Memory_Info[BUFFER_MEM]   = NO_MEMORY_INFO;
-	Memory_Info[CACHED_MEM]   = NO_MEMORY_INFO;
+    Memory_Info[TOTAL_MEM] = MEMORY(vm_info.active_count + vm_info.inactive_count + vm_info.free_count + vm_info.wire_count) * vm_page_size;
+    Memory_Info[FREE_MEM] = MEMORY(vm_info.free_count) * vm_page_size;
+    Memory_Info[SHARED_MEM] = NO_MEMORY_INFO;
+    Memory_Info[BUFFER_MEM] = NO_MEMORY_INFO;
+    Memory_Info[CACHED_MEM] = NO_MEMORY_INFO;
 
-	dirp = opendir("/private/var/vm");
-	if (!dirp) {
-		kdDebug() << "unable to open /private/var/vm" << endl;
-		return;
-	}
+    dirp = opendir("/private/var/vm");
+    if(!dirp)
+    {
+        kdDebug() << "unable to open /private/var/vm" << endl;
+        return;
+    }
 
-	total = 0;
+    total = 0;
 
-	while ((dp = readdir (dirp)) != NULL) {
-		struct stat sb;
-		char fname [MAXNAMLEN];
+    while((dp = readdir(dirp)) != NULL)
+    {
+        struct stat sb;
+        char fname[MAXNAMLEN];
 
-		if (strncmp (dp->d_name, "swapfile", 8))
-			continue;
+        if(strncmp(dp->d_name, "swapfile", 8))
+            continue;
 
-		strcpy (fname, "/private/var/vm/");
-		strcat (fname, dp->d_name);
-		if (stat (fname, &sb) < 0)
-			continue;
+        strcpy(fname, "/private/var/vm/");
+        strcat(fname, dp->d_name);
+        if(stat(fname, &sb) < 0)
+            continue;
 
-		total += sb.st_size;
-	}
-	closedir (dirp);
+        total += sb.st_size;
+    }
+    closedir(dirp);
 
-	info_count = HOST_VM_INFO_COUNT;
-	if (host_statistics (mach_host_self (), HOST_VM_INFO,
-		(host_info_t) &vm_info, &info_count)) {
-			kdDebug() << "unable to get VM info" << endl;
-	}
+    info_count = HOST_VM_INFO_COUNT;
+    if(host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vm_info, &info_count))
+    {
+        kdDebug() << "unable to get VM info" << endl;
+    }
 
-	Memory_Info[SWAP_MEM]     = total;
-	// off_t used = (vm_info.pageouts - vm_info.pageins) * vm_page_size;
-	Memory_Info[FREESWAP_MEM] = NO_MEMORY_INFO;
+    Memory_Info[SWAP_MEM] = total;
+    // off_t used = (vm_info.pageouts - vm_info.pageins) * vm_page_size;
+    Memory_Info[FREESWAP_MEM] = NO_MEMORY_INFO;
 
-	/* free = MEMORY(vm_info.free_count) * vm_page_size;
-	   used = MEMORY(vm_info.active_count) * vm_page_size;
-	   total = MEMORY(vm_info.active_count + vm_info.inactive_count +
-		vm_info.free_count + vm_info.wire_count) * vm_page_size; */
-
+    /* free = MEMORY(vm_info.free_count) * vm_page_size;
+       used = MEMORY(vm_info.active_count) * vm_page_size;
+       total = MEMORY(vm_info.active_count + vm_info.inactive_count +
+        vm_info.free_count + vm_info.wire_count) * vm_page_size; */
 }

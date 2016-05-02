@@ -35,24 +35,22 @@ class SimpleButton;
 class KWindowListMenu;
 class TaskBar;
 
-class KDE_EXPORT TaskBarContainer : public QFrame, public DCOPObject
-{
+class KDE_EXPORT TaskBarContainer : public QFrame, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
 public:
-    TaskBarContainer( bool enableFrame, QWidget* parent = 0, const char* name = 0 );
+    TaskBarContainer(bool enableFrame, QWidget *parent = 0, const char *name = 0);
     ~TaskBarContainer();
 
-    void orientationChange( Orientation );
-    void popupDirectionChange( KPanelApplet::Direction );
+    void orientationChange(Orientation);
+    void popupDirectionChange(KPanelApplet::Direction);
     void preferences();
-    //FIXME: don't use Position, use Orientation
-    QSize sizeHint( KPanelExtension::Position, QSize maxSize ) const;
+    // FIXME: don't use Position, use Orientation
+    QSize sizeHint(KPanelExtension::Position, QSize maxSize) const;
     void setBackground();
 
-k_dcop:
-    void configChanged();
+    k_dcop : void configChanged();
 
 signals:
     void containerCountChanged();
@@ -64,12 +62,12 @@ protected slots:
     void reconnectWindowListButton();
 
 private:
-    KPanelApplet::Direction      direction;
-    bool                         showWindowListButton;
-    QBoxLayout *                 layout;
-    TaskBar *                    taskBar;
-    SimpleButton *               windowListButton;
-    KWindowListMenu *            windowListMenu;
+    KPanelApplet::Direction direction;
+    bool showWindowListButton;
+    QBoxLayout *layout;
+    TaskBar *taskBar;
+    SimpleButton *windowListButton;
+    KWindowListMenu *windowListMenu;
 };
 
 #endif

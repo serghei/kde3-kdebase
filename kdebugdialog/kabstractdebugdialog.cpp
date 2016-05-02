@@ -25,10 +25,9 @@
 #include <klocale.h>
 #include <kstdguiitem.h>
 
-KAbstractDebugDialog::KAbstractDebugDialog( QWidget *parent, const char *name, bool modal )
-    : KDialog( parent, name, modal )
+KAbstractDebugDialog::KAbstractDebugDialog(QWidget *parent, const char *name, bool modal) : KDialog(parent, name, modal)
 {
-    pConfig = new KConfig( "kdebugrc" );
+    pConfig = new KConfig("kdebugrc");
 }
 
 KAbstractDebugDialog::~KAbstractDebugDialog()
@@ -36,50 +35,50 @@ KAbstractDebugDialog::~KAbstractDebugDialog()
     delete pConfig;
 }
 
-void KAbstractDebugDialog::buildButtons( QVBoxLayout * topLayout )
+void KAbstractDebugDialog::buildButtons(QVBoxLayout *topLayout)
 {
-  QHBoxLayout *hbox = new QHBoxLayout( KDialog::spacingHint() );
-  topLayout->addLayout( hbox );
-  pHelpButton = new KPushButton( KStdGuiItem::help(), this );
-  hbox->addWidget( pHelpButton );
-  hbox->addStretch(10);
-  QSpacerItem *spacer = new QSpacerItem(40, 0);
-  hbox->addItem(spacer);
-  pOKButton = new KPushButton( KStdGuiItem::ok(), this );
-  hbox->addWidget( pOKButton );
-  pApplyButton = new KPushButton( KStdGuiItem::apply(), this );
-  hbox->addWidget( pApplyButton );
-  pCancelButton = new KPushButton( KStdGuiItem::cancel(), this );
-  hbox->addWidget( pCancelButton );
+    QHBoxLayout *hbox = new QHBoxLayout(KDialog::spacingHint());
+    topLayout->addLayout(hbox);
+    pHelpButton = new KPushButton(KStdGuiItem::help(), this);
+    hbox->addWidget(pHelpButton);
+    hbox->addStretch(10);
+    QSpacerItem *spacer = new QSpacerItem(40, 0);
+    hbox->addItem(spacer);
+    pOKButton = new KPushButton(KStdGuiItem::ok(), this);
+    hbox->addWidget(pOKButton);
+    pApplyButton = new KPushButton(KStdGuiItem::apply(), this);
+    hbox->addWidget(pApplyButton);
+    pCancelButton = new KPushButton(KStdGuiItem::cancel(), this);
+    hbox->addWidget(pCancelButton);
 
-  int w1 = pHelpButton->sizeHint().width();
-  int w2 = pOKButton->sizeHint().width();
-  int w3 = pCancelButton->sizeHint().width();
-  int w4 = QMAX( w1, QMAX( w2, w3 ) );
-  int w5 = pApplyButton->sizeHint().width();
-  w4 = QMAX(w4, w5);
+    int w1 = pHelpButton->sizeHint().width();
+    int w2 = pOKButton->sizeHint().width();
+    int w3 = pCancelButton->sizeHint().width();
+    int w4 = QMAX(w1, QMAX(w2, w3));
+    int w5 = pApplyButton->sizeHint().width();
+    w4 = QMAX(w4, w5);
 
-  pHelpButton->setFixedWidth( w4 );
-  pOKButton->setFixedWidth( w4 );
-  pApplyButton->setFixedWidth( w4 );
-  pCancelButton->setFixedWidth( w4 );
+    pHelpButton->setFixedWidth(w4);
+    pOKButton->setFixedWidth(w4);
+    pApplyButton->setFixedWidth(w4);
+    pCancelButton->setFixedWidth(w4);
 
-  connect( pHelpButton, SIGNAL( clicked() ), SLOT( slotShowHelp() ) );
-  connect( pOKButton, SIGNAL( clicked() ), SLOT( accept() ) );
-  connect( pApplyButton, SIGNAL( clicked() ), SLOT( slotApply() ) );
-  connect( pCancelButton, SIGNAL( clicked() ), SLOT( reject() ) );
+    connect(pHelpButton, SIGNAL(clicked()), SLOT(slotShowHelp()));
+    connect(pOKButton, SIGNAL(clicked()), SLOT(accept()));
+    connect(pApplyButton, SIGNAL(clicked()), SLOT(slotApply()));
+    connect(pCancelButton, SIGNAL(clicked()), SLOT(reject()));
 }
 
 void KAbstractDebugDialog::slotShowHelp()
 {
-  if (kapp)
-    kapp->invokeHelp();
+    if(kapp)
+        kapp->invokeHelp();
 }
 
 void KAbstractDebugDialog::slotApply()
 {
-  save();
-  pConfig->sync();
+    save();
+    pConfig->sync();
 }
 
 #include "kabstractdebugdialog.moc"

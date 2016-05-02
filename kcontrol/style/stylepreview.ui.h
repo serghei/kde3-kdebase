@@ -33,21 +33,21 @@ void StylePreview::init()
 {
     // Ensure that the user can't toy with the child widgets.
     // Method borrowed from Qt's qtconfig.
-    QObjectList* l = queryList("QWidget");
+    QObjectList *l = queryList("QWidget");
     QObjectListIt it(*l);
-    QObject* obj;
-    while ((obj = it.current()) != 0)
+    QObject *obj;
+    while((obj = it.current()) != 0)
     {
         ++it;
         obj->installEventFilter(this);
-        ((QWidget*)obj)->setFocusPolicy(NoFocus);
+        ((QWidget *)obj)->setFocusPolicy(NoFocus);
     }
     delete l;
 }
 
-bool StylePreview::eventFilter( QObject* /* obj */, QEvent* ev )
+bool StylePreview::eventFilter(QObject * /* obj */, QEvent *ev)
 {
-    switch( ev->type() )
+    switch(ev->type())
     {
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease:

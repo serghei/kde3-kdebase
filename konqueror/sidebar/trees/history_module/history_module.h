@@ -36,33 +36,40 @@ class KonqSidebarHistorySettings;
 class KonqSidebarTree;
 class KonqSidebarTreeItem;
 
-class KonqSidebarHistoryModule : public QObject, public KonqSidebarTreeModule
-{
+class KonqSidebarHistoryModule : public QObject, public KonqSidebarTreeModule {
     Q_OBJECT
 
 public:
-    enum {
+    enum
+    {
         ModuleContextMenu = 1,
-        EntryContextMenu  = 2
+        EntryContextMenu = 2
     };
 
-    KonqSidebarHistoryModule( KonqSidebarTree * parentTree, const char * name = 0 );
+    KonqSidebarHistoryModule(KonqSidebarTree *parentTree, const char *name = 0);
     virtual ~KonqSidebarHistoryModule();
 
-    virtual void addTopLevelItem( KonqSidebarTreeTopLevelItem * item );
-    virtual bool handleTopLevelContextMenu( KonqSidebarTreeTopLevelItem *item, const QPoint& pos );
+    virtual void addTopLevelItem(KonqSidebarTreeTopLevelItem *item);
+    virtual bool handleTopLevelContextMenu(KonqSidebarTreeTopLevelItem *item, const QPoint &pos);
 
-    void showPopupMenu( int which, const QPoint& pos );
+    void showPopupMenu(int which, const QPoint &pos);
 
     // called by the items
     void showPopupMenu();
-    void groupOpened( KonqSidebarHistoryGroupItem *item, bool open );
-    const QDateTime& currentTime() const { return m_currentTime; }
-    bool sortsByName() const { return m_sortsByName; }
+    void groupOpened(KonqSidebarHistoryGroupItem *item, bool open);
+    const QDateTime &currentTime() const
+    {
+        return m_currentTime;
+    }
+    bool sortsByName() const
+    {
+        return m_sortsByName;
+    }
 
-    static QString groupForURL( const KURL& url ) {
-	static const QString& misc = KGlobal::staticQString(i18n("Miscellaneous"));
-	return url.host().isEmpty() ? misc : url.host();
+    static QString groupForURL(const KURL &url)
+    {
+        static const QString &misc = KGlobal::staticQString(i18n("Miscellaneous"));
+        return url.host().isEmpty() ? misc : url.host();
     }
 
 public slots:
@@ -70,15 +77,15 @@ public slots:
 
 private slots:
     void slotCreateItems();
-    void slotEntryAdded( const KonqHistoryEntry * );
-    void slotEntryRemoved( const KonqHistoryEntry * );
+    void slotEntryAdded(const KonqHistoryEntry *);
+    void slotEntryRemoved(const KonqHistoryEntry *);
 
     void slotNewWindow();
     void slotRemoveEntry();
     void slotPreferences();
     void slotSettingsChanged();
 
-    void slotItemExpanded( QListViewItem * );
+    void slotItemExpanded(QListViewItem *);
 
     void slotSortByName();
     void slotSortByDate();
@@ -86,13 +93,13 @@ private slots:
     void slotClearHistory();
 
 private:
-    KonqSidebarHistoryGroupItem *getGroupItem( const KURL& url );
+    KonqSidebarHistoryGroupItem *getGroupItem(const KURL &url);
 
     void sortingChanged();
-    typedef QDictIterator<KonqSidebarHistoryGroupItem> HistoryItemIterator;
-    QDict<KonqSidebarHistoryGroupItem> m_dict;
+    typedef QDictIterator< KonqSidebarHistoryGroupItem > HistoryItemIterator;
+    QDict< KonqSidebarHistoryGroupItem > m_dict;
 
-    KonqSidebarTreeTopLevelItem * m_topLevelItem;
+    KonqSidebarTreeTopLevelItem *m_topLevelItem;
 
     KActionCollection *m_collection;
 

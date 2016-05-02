@@ -31,53 +31,53 @@ class KConfig;
 class FakeUASProvider;
 class UserAgentDlgUI;
 
-class UserAgentDlg : public KCModule
-{
-  Q_OBJECT
+class UserAgentDlg : public KCModule {
+    Q_OBJECT
 
 public:
-  UserAgentDlg ( QWidget * parent = 0) ;
-  ~UserAgentDlg();
+    UserAgentDlg(QWidget *parent = 0);
+    ~UserAgentDlg();
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
-  QString quickHelp() const;
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
+    QString quickHelp() const;
 
 private slots:
-  void updateButtons();
-  void selectionChanged();
+    void updateButtons();
+    void selectionChanged();
 
-  void addPressed();
-  void changePressed();
-  void deletePressed();
-  void deleteAllPressed();
+    void addPressed();
+    void changePressed();
+    void deletePressed();
+    void deleteAllPressed();
 
-  void configChanged();
-  void changeDefaultUAModifiers( int );
+    void configChanged();
+    void changeDefaultUAModifiers(int);
 
 private:
-  bool handleDuplicate( const QString&, const QString&, const QString& );
+    bool handleDuplicate(const QString &, const QString &, const QString &);
 
-  enum {
-    SHOW_OS = 0,
-    SHOW_OS_VERSION,
-    SHOW_PLATFORM,
-    SHOW_MACHINE,
-    SHOW_LANGUAGE
-  };
+    enum
+    {
+        SHOW_OS = 0,
+        SHOW_OS_VERSION,
+        SHOW_PLATFORM,
+        SHOW_MACHINE,
+        SHOW_LANGUAGE
+    };
 
-  // Useragent modifiers...
-  QString m_ua_keys;
+    // Useragent modifiers...
+    QString m_ua_keys;
 
-  // Fake user-agent modifiers...
-  FakeUASProvider* m_provider;
+    // Fake user-agent modifiers...
+    FakeUASProvider *m_provider;
 
-  //
-  int d_itemsSelected;
+    //
+    int d_itemsSelected;
 
-  KConfig *m_config;
-  UserAgentDlgUI* dlg;
+    KConfig *m_config;
+    UserAgentDlgUI *dlg;
 };
 
 #endif

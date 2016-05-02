@@ -53,104 +53,98 @@
 #include "themepage.h"
 
 #define RIGHT_HANDED 0
-#define LEFT_HANDED  1
+#define LEFT_HANDED 1
 
 class QCheckBox;
 class QSlider;
 class QTabWidget;
 
-class MouseSettings
-{
+class MouseSettings {
 public:
-  void save(KConfig *);
-  void load(KConfig *);
-  void apply(bool force=false);
-public:
- int num_buttons;
- int middle_button;
- bool handedEnabled;
- bool m_handedNeedsApply;
- int handed;
- double accelRate;
- int thresholdMove;
- int doubleClickInterval;
- int dragStartTime;
- int dragStartDist;
- bool singleClick;
- int autoSelectDelay;
- int visualActivate;
- bool changeCursor;
- int wheelScrollLines;
- bool reverseScrollPolarity;
+    void save(KConfig *);
+    void load(KConfig *);
+    void apply(bool force = false);
 
- #ifdef HAVE_LIBUSB
- // TODO: In Qt4, replace with a better container.
- QPtrList <LogitechMouse> logitechMouseList;
- #endif
+public:
+    int num_buttons;
+    int middle_button;
+    bool handedEnabled;
+    bool m_handedNeedsApply;
+    int handed;
+    double accelRate;
+    int thresholdMove;
+    int doubleClickInterval;
+    int dragStartTime;
+    int dragStartDist;
+    bool singleClick;
+    int autoSelectDelay;
+    int visualActivate;
+    bool changeCursor;
+    int wheelScrollLines;
+    bool reverseScrollPolarity;
+
+#ifdef HAVE_LIBUSB
+    // TODO: In Qt4, replace with a better container.
+    QPtrList< LogitechMouse > logitechMouseList;
+#endif
 };
 
-class MouseConfig : public KCModule
-{
-  Q_OBJECT
+class MouseConfig : public KCModule {
+    Q_OBJECT
 public:
-  MouseConfig(QWidget *parent=0, const char* name=0);
-  ~MouseConfig();
+    MouseConfig(QWidget *parent = 0, const char *name = 0);
+    ~MouseConfig();
 
-  void save();
-  void load();
-  void load( bool useDefaults );
-  void defaults();
+    void save();
+    void load();
+    void load(bool useDefaults);
+    void defaults();
 
 private slots:
 
-  void slotClick();
-  /** No descriptions */
-  void slotHandedChanged(int val);
-  void slotScrollPolarityChanged();
-  void checkAccess();
-  void slotThreshChanged(int value);
-  void slotDragStartDistChanged(int value);
-  void slotWheelScrollLinesChanged(int value);
+    void slotClick();
+    /** No descriptions */
+    void slotHandedChanged(int val);
+    void slotScrollPolarityChanged();
+    void checkAccess();
+    void slotThreshChanged(int value);
+    void slotDragStartDistChanged(int value);
+    void slotWheelScrollLinesChanged(int value);
 
 private:
+    double getAccel();
+    int getThreshold();
+    int getHandedness();
 
-  double getAccel();
-  int getThreshold();
-  int getHandedness();
+    void setAccel(double);
+    void setThreshold(int);
+    void setHandedness(int);
 
-  void setAccel(double);
-  void setThreshold(int);
-  void setHandedness(int);
+    KDoubleNumInput *accel;
+    KIntNumInput *thresh;
+    KIntNumInput *doubleClickInterval;
+    KIntNumInput *dragStartTime;
+    KIntNumInput *dragStartDist;
+    KIntNumInput *wheelScrollLines;
 
-  KDoubleNumInput *accel;
-  KIntNumInput *thresh;
-  KIntNumInput *doubleClickInterval;
-  KIntNumInput *dragStartTime;
-  KIntNumInput *dragStartDist;
-  KIntNumInput *wheelScrollLines;
+    QButtonGroup *handedBox;
+    //  QRadioButton *leftHanded, *rightHanded;
+    //  QCheckBox *doubleClick;
+    //  QCheckBox *cbAutoSelect;
+    QLabel *lDelay;
+    //  QSlider *slAutoSelect;
+    //  QCheckBox *cbVisualActivate;
+    //  QCheckBox *cbCursor;
+    //  QCheckBox *cbLargeCursor;
 
-  QButtonGroup *handedBox;
-//  QRadioButton *leftHanded, *rightHanded;
-//  QCheckBox *doubleClick;
-//  QCheckBox *cbAutoSelect;
-  QLabel *lDelay;
-//  QSlider *slAutoSelect;
-//  QCheckBox *cbVisualActivate;
-//  QCheckBox *cbCursor;
-//  QCheckBox *cbLargeCursor;
+    QTabWidget *tabwidget;
+    QWidget *tab2;
+    KMouseDlg *tab1;
+    ThemePage *themetab;
+    MouseSettings *settings;
 
-  QTabWidget *tabwidget;
-  QWidget *tab2;
-  KMouseDlg* tab1;
-  ThemePage* themetab;
-  MouseSettings *settings;
-
- QCheckBox *mouseKeys;
-  KIntNumInput *mk_delay, *mk_interval, *mk_time_to_max, *mk_max_speed,
-    *mk_curve;
-
-
+    QCheckBox *mouseKeys;
+    KIntNumInput *mk_delay, *mk_interval, *mk_time_to_max, *mk_max_speed, *mk_curve;
 };
 
 #endif
-

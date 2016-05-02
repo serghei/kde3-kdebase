@@ -34,30 +34,30 @@ static int osf1c2_getprpwent(char *p, char *n, int len);
 #include <string.h>
 #include <stdlib.h>
 
-AuthReturn Authenticate(const char *method,
-        const char *login, char *(*conv) (ConvRequest, const char *))
+AuthReturn Authenticate(const char *method, const char *login, char *(*conv)(ConvRequest, const char *))
 {
-  char *passwd;
-  char c2passwd[256];
+    char *passwd;
+    char c2passwd[256];
 
-  if (strcmp(method, "classic"))
-    return AuthError;
+    if(strcmp(method, "classic"))
+        return AuthError;
 
-  if (!osf1c2_getprpwent(c2passwd, login, sizeof(c2passwd)))
-    return AuthBad;
+    if(!osf1c2_getprpwent(c2passwd, login, sizeof(c2passwd)))
+        return AuthBad;
 
-  if (!*c2passwd)
-    return AuthOk;
+    if(!*c2passwd)
+        return AuthOk;
 
-  if (!(passwd = conv(ConvGetHidden, 0)))
-    return AuthAbort;
+    if(!(passwd = conv(ConvGetHidden, 0)))
+        return AuthAbort;
 
-  if (!strcmp(c2passwd, osf1c2crypt(passwd, c2passwd))) {
+    if(!strcmp(c2passwd, osf1c2crypt(passwd, c2passwd)))
+    {
+        dispose(passwd);
+        return AuthOk; /* Success */
+    }
     dispose(passwd);
-    return AuthOk; /* Success */
-  }
-  dispose(passwd);
-  return AuthBad; /* Password wrong or account locked */
+    return AuthBad; /* Password wrong or account locked */
 }
 
 
@@ -90,114 +90,111 @@ within ssh. See the file COPYING for full licensing informations.
 #include <prot.h>
 #include <sia.h>
 
-static int     c2security = -1;
-static int     crypt_algo;
+static int c2security = -1;
+static int crypt_algo;
 
-static void
-initialize_osf_security(int ac, char **av)
+static void initialize_osf_security(int ac, char **av)
 {
-  FILE *f;
-  char buf[256];
-  char siad[] = "siad_ses_init=";
+    FILE *f;
+    char buf[256];
+    char siad[] = "siad_ses_init=";
 
-  if (access(SIAIGOODFILE, F_OK) == -1)
+    if(access(SIAIGOODFILE, F_OK) == -1)
     {
-      /* Broken OSF/1 system, better don't run on it. */
-      fprintf(stderr, SIAIGOODFILE);
-      fprintf(stderr, " does not exist. Your OSF/1 system is probably broken\n");
-      exit(1);
+        /* Broken OSF/1 system, better don't run on it. */
+        fprintf(stderr, SIAIGOODFILE);
+        fprintf(stderr, " does not exist. Your OSF/1 system is probably broken\n");
+        exit(1);
     }
-  if ((f = fopen(MATRIX_CONF, "r")) == NULL)
+    if((f = fopen(MATRIX_CONF, "r")) == NULL)
     {
-      /* Another way OSF/1 is probably broken. */
-      fprintf(stderr, "%s unreadable. Your OSF/1 system is probably broken.\n"
+        /* Another way OSF/1 is probably broken. */
+        fprintf(stderr, "%s unreadable. Your OSF/1 system is probably broken.\n"
 
-             MATRIX_CONF);
-      exit(1);
+                MATRIX_CONF);
+        exit(1);
     }
 
-  /* Read matrix.conf to check if we run C2 or not */
-  while (fgets(buf, sizeof(buf), f) != NULL)
+    /* Read matrix.conf to check if we run C2 or not */
+    while(fgets(buf, sizeof(buf), f) != NULL)
     {
-      if (strncmp(buf, siad, sizeof(siad) - 1) == 0)
-       {
-         if (strstr(buf, "OSFC2") != NULL)
-           c2security = 1;
-         else if (strstr(buf, "BSD") != NULL)
-           c2security = 0;
-         break;
-       }
-    }
-  fclose(f);
-  if (c2security == -1)
-    {
-      fprintf(stderr, "C2 security initialization failed : could not determine security level.\n");
-      exit(1);
-    }
-  if (c2security == 1)
-    set_auth_parameters(ac, av);
-}
-
-
-static int
-osf1c2_getprpwent(char *p, char *n, int len)
-{
-  time_t pschg, tnow;
-
-  if (c2security == 1)
-    {
-      struct es_passwd *es;
-      struct pr_passwd *pr = getprpwnam(n);
-      if (pr)
-       {
-         strlcpy(p, pr->ufld.fd_encrypt, len);
-         crypt_algo = pr->ufld.fd_oldcrypt;
-
-         tnow = time(NULL);
-         if (pr->uflg.fg_schange == 1)
-           pschg = pr->ufld.fd_schange;
-         else
-           pschg = 0;
-         if (pr->uflg.fg_template == 0)
-           {
-             /** default template, system values **/
-             if (pr->sflg.fg_lifetime == 1)
-               if (pr->sfld.fd_lifetime > 0 &&
-                   pschg + pr->sfld.fd_lifetime < tnow)
-                 return 1;
-           }
-         else                      /** user template, specific values **/
-           {
-             es = getespwnam(pr->ufld.fd_template);
-             if (es)
-               {
-                 if (es->uflg->fg_expire == 1)
-                   if (es->ufld->fd_expire > 0 &&
-                       pschg + es->ufld->fd_expire < tnow)
-                     return 1;
-               }
-           }
-       }
-    }
-  else
-    {
-      struct passwd *pw = getpwnam(n);
-      if (pw)
+        if(strncmp(buf, siad, sizeof(siad) - 1) == 0)
         {
-          strlcpy(p, pw->pw_passwd, len);
-          return 1;
+            if(strstr(buf, "OSFC2") != NULL)
+                c2security = 1;
+            else if(strstr(buf, "BSD") != NULL)
+                c2security = 0;
+            break;
         }
     }
-  return 0;
+    fclose(f);
+    if(c2security == -1)
+    {
+        fprintf(stderr, "C2 security initialization failed : could not determine security level.\n");
+        exit(1);
+    }
+    if(c2security == 1)
+        set_auth_parameters(ac, av);
 }
 
-static char *
-osf1c2crypt(const char *pw, char *salt)
+
+static int osf1c2_getprpwent(char *p, char *n, int len)
 {
-   if (c2security == 1) {
-     return(dispcrypt(pw, salt, crypt_algo));
-   } else
-     return(crypt(pw, salt));
+    time_t pschg, tnow;
+
+    if(c2security == 1)
+    {
+        struct es_passwd *es;
+        struct pr_passwd *pr = getprpwnam(n);
+        if(pr)
+        {
+            strlcpy(p, pr->ufld.fd_encrypt, len);
+            crypt_algo = pr->ufld.fd_oldcrypt;
+
+            tnow = time(NULL);
+            if(pr->uflg.fg_schange == 1)
+                pschg = pr->ufld.fd_schange;
+            else
+                pschg = 0;
+            if(pr->uflg.fg_template == 0)
+            {
+                /** default template, system values **/
+                if(pr->sflg.fg_lifetime == 1)
+                    if(pr->sfld.fd_lifetime > 0 && pschg + pr->sfld.fd_lifetime < tnow)
+                        return 1;
+            }
+            else /** user template, specific values **/
+            {
+                es = getespwnam(pr->ufld.fd_template);
+                if(es)
+                {
+                    if(es->uflg->fg_expire == 1)
+                        if(es->ufld->fd_expire > 0 && pschg + es->ufld->fd_expire < tnow)
+                            return 1;
+                }
+            }
+        }
+    }
+    else
+    {
+        struct passwd *pw = getpwnam(n);
+        if(pw)
+        {
+            strlcpy(p, pw->pw_passwd, len);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static char *osf1c2crypt(const char *pw, char *salt)
+{
+    if(c2security == 1)
+    {
+        return (dispcrypt(pw, salt, crypt_algo));
+    }
+    else
+        return (crypt(pw, salt));
 }
 
 #endif

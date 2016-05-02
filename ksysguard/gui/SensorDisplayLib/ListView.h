@@ -2,7 +2,7 @@
     KSysGuard, the KDE System Guard
 
     Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -29,84 +29,92 @@
 
 #include <SensorDisplay.h>
 
-typedef const char* (*KeyFunc)(const char*);
+typedef const char *(*KeyFunc)(const char *);
 
 class QLabel;
 class QBoxGroup;
 class ListViewSettings;
 
-class PrivateListView : public QListView
-{
-	Q_OBJECT
+class PrivateListView : public QListView {
+    Q_OBJECT
 public:
-  enum ColumnType { Text, Int, Float, Time, DiskStat };
+    enum ColumnType
+    {
+        Text,
+        Int,
+        Float,
+        Time,
+        DiskStat
+    };
 
-	PrivateListView(QWidget *parent = 0, const char *name = 0);
-	
-	void addColumn(const QString& label, const QString& type);
-	void removeColumns(void);
-	void update(const QString& answer);
-	int columnType( uint pos ) const;
+    PrivateListView(QWidget *parent = 0, const char *name = 0);
+
+    void addColumn(const QString &label, const QString &type);
+    void removeColumns(void);
+    void update(const QString &answer);
+    int columnType(uint pos) const;
 
 private:
-  QStringList mColumnTypes;
+    QStringList mColumnTypes;
 };
 
-class PrivateListViewItem : public QListViewItem
-{
+class PrivateListViewItem : public QListViewItem {
 public:
-	PrivateListViewItem(PrivateListView *parent = 0);
+    PrivateListViewItem(PrivateListView *parent = 0);
 
-	void paintCell(QPainter *p, const QColorGroup &, int column, int width, int alignment) {
-		QColorGroup cgroup = _parent->colorGroup();
-		QListViewItem::paintCell(p, cgroup, column, width, alignment);
-		p->setPen(cgroup.color(QColorGroup::Link));
-		p->drawLine(0, height() - 1, width - 1, height() - 1);
-	}
+    void paintCell(QPainter *p, const QColorGroup &, int column, int width, int alignment)
+    {
+        QColorGroup cgroup = _parent->colorGroup();
+        QListViewItem::paintCell(p, cgroup, column, width, alignment);
+        p->setPen(cgroup.color(QColorGroup::Link));
+        p->drawLine(0, height() - 1, width - 1, height() - 1);
+    }
 
-	void paintFocus(QPainter *, const QColorGroup, const QRect) {}
+    void paintFocus(QPainter *, const QColorGroup, const QRect)
+    {
+    }
 
-	virtual int compare( QListViewItem*, int column, bool ascending ) const;
+    virtual int compare(QListViewItem *, int column, bool ascending) const;
 
 private:
-	QWidget *_parent;
-};	
+    QWidget *_parent;
+};
 
-class ListView : public KSGRD::SensorDisplay
-{
-	Q_OBJECT
+class ListView : public KSGRD::SensorDisplay {
+    Q_OBJECT
 public:
-	ListView(QWidget* parent = 0, const char* name = 0,
-			const QString& = QString::null, int min = 0, int max = 0);
-	~ListView() {}
+    ListView(QWidget *parent = 0, const char *name = 0, const QString & = QString::null, int min = 0, int max = 0);
+    ~ListView()
+    {
+    }
 
-	bool addSensor(const QString& hostName, const QString& sensorName, const QString& sensorType, const QString& sensorDescr);
-	void answerReceived(int id, const QString& answer);
-	void resizeEvent(QResizeEvent*);
-	void updateList();
+    bool addSensor(const QString &hostName, const QString &sensorName, const QString &sensorType, const QString &sensorDescr);
+    void answerReceived(int id, const QString &answer);
+    void resizeEvent(QResizeEvent *);
+    void updateList();
 
-	bool restoreSettings(QDomElement& element);
-	bool saveSettings(QDomDocument& doc, QDomElement& element, bool save = true);
+    bool restoreSettings(QDomElement &element);
+    bool saveSettings(QDomDocument &doc, QDomElement &element, bool save = true);
 
-	virtual bool hasSettingsDialog() const
-	{
-		return (true);
-	}
+    virtual bool hasSettingsDialog() const
+    {
+        return (true);
+    }
 
-	virtual void timerEvent(QTimerEvent*)
-	{
-		updateList();
-	}
+    virtual void timerEvent(QTimerEvent *)
+    {
+        updateList();
+    }
 
-	void configureSettings();
+    void configureSettings();
 
 public slots:
-	void applySettings();
-	void applyStyle();
+    void applySettings();
+    void applyStyle();
 
 private:
-	PrivateListView* monitor;
-	ListViewSettings* lvs;
+    PrivateListView *monitor;
+    ListViewSettings *lvs;
 };
 
 #endif

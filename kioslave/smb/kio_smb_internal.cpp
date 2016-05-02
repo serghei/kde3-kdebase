@@ -48,9 +48,8 @@ SMBUrl::SMBUrl()
 }
 
 //-----------------------------------------------------------------------
-SMBUrl::SMBUrl(const KURL& kurl)
-    : KURL(kurl)
-  //-----------------------------------------------------------------------
+SMBUrl::SMBUrl(const KURL &kurl) : KURL(kurl)
+//-----------------------------------------------------------------------
 {
     updateCache();
 }
@@ -66,7 +65,7 @@ void SMBUrl::addPath(const QString &filedir)
 //-----------------------------------------------------------------------
 bool SMBUrl::cd(const QString &filedir)
 {
-    if (!KURL::cd(filedir))
+    if(!KURL::cd(filedir))
         return false;
     updateCache();
     return true;
@@ -74,19 +73,22 @@ bool SMBUrl::cd(const QString &filedir)
 
 //-----------------------------------------------------------------------
 void SMBUrl::updateCache()
-  //-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 {
     cleanPath();
 
     // SMB URLs are UTF-8 encoded
     kdDebug(KIO_SMB) << "updateCache " << KURL::path() << endl;
-    if (KURL::url() == "smb:/")
+    if(KURL::url() == "smb:/")
         m_surl = "smb://";
-    else {
+    else
+    {
         QString surl = "smb://";
-        if (KURL::hasUser()) {
+        if(KURL::hasUser())
+        {
             surl += KURL::encode_string(KURL::user(), 106);
-            if (KURL::hasPass()) {
+            if(KURL::hasPass())
+            {
                 surl += ":" + KURL::encode_string(KURL::pass(), 106);
             }
             surl += "@";
@@ -102,25 +104,25 @@ void SMBUrl::updateCache()
 
 //-----------------------------------------------------------------------
 SMBUrlType SMBUrl::getType() const
-  // Returns the type of this SMBUrl:
-  //   SMBURLTYPE_UNKNOWN  - Type could not be determined. Bad SMB Url.
-  //   SMBURLTYPE_ENTIRE_NETWORK - "smb:/" is entire network
-  //   SMBURLTYPE_WORKGROUP_OR_SERVER - "smb:/mygroup" or "smb:/myserver"
-  //   SMBURLTYPE_SHARE_OR_PATH - "smb:/mygroupe/mymachine/myshare/mydir"
-  //-----------------------------------------------------------------------
+// Returns the type of this SMBUrl:
+//   SMBURLTYPE_UNKNOWN  - Type could not be determined. Bad SMB Url.
+//   SMBURLTYPE_ENTIRE_NETWORK - "smb:/" is entire network
+//   SMBURLTYPE_WORKGROUP_OR_SERVER - "smb:/mygroup" or "smb:/myserver"
+//   SMBURLTYPE_SHARE_OR_PATH - "smb:/mygroupe/mymachine/myshare/mydir"
+//-----------------------------------------------------------------------
 {
     if(m_type != SMBURLTYPE_UNKNOWN)
         return m_type;
 
-    if (protocol() != "smb")
+    if(protocol() != "smb")
     {
         m_type = SMBURLTYPE_UNKNOWN;
         return m_type;
     }
 
-    if (path(1) == "/")
+    if(path(1) == "/")
     {
-        if (host().isEmpty())
+        if(host().isEmpty())
             m_type = SMBURLTYPE_ENTIRE_NETWORK;
         else
             m_type = SMBURLTYPE_WORKGROUP_OR_SERVER;
@@ -132,4 +134,3 @@ SMBUrlType SMBUrl::getType() const
 
     return m_type;
 }
-

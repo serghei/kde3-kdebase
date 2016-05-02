@@ -20,15 +20,15 @@
 #ifndef TESTREMOTE_H
 #define TESTREMOTE_H
 
-class TestRemote
-{
+class TestRemote {
 public:
-    TestRemote() {}
+    TestRemote()
+    {
+    }
     void setup();
     void runAll();
 
     // tests
-
 };
 
 #endif

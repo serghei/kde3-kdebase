@@ -19,52 +19,50 @@
 class QSpinBox;
 class KFontCombo;
 
-class KAppearanceOptions : public KCModule
-{
-  Q_OBJECT
+class KAppearanceOptions : public KCModule {
+    Q_OBJECT
 public:
-  KAppearanceOptions(KConfig *config, QString group, QWidget *parent=0, const char *name=0);
-  ~KAppearanceOptions();
+    KAppearanceOptions(KConfig *config, QString group, QWidget *parent = 0, const char *name = 0);
+    ~KAppearanceOptions();
 
-  virtual void load();
-  virtual void load( bool useDefaults );
-  virtual void save();
-  virtual void defaults();
+    virtual void load();
+    virtual void load(bool useDefaults);
+    virtual void save();
+    virtual void defaults();
 
 public slots:
-  void slotFontSize( int );
-  void slotMinimumFontSize( int );
-  void slotStandardFont(const QString& n);
-  void slotFixedFont(const QString& n);
-  void slotSerifFont( const QString& n );
-  void slotSansSerifFont( const QString& n );
-  void slotCursiveFont( const QString& n );
-  void slotFantasyFont( const QString& n );
-  void slotEncoding( const QString& n);
-  void slotFontSizeAdjust( int value );
+    void slotFontSize(int);
+    void slotMinimumFontSize(int);
+    void slotStandardFont(const QString &n);
+    void slotFixedFont(const QString &n);
+    void slotSerifFont(const QString &n);
+    void slotSansSerifFont(const QString &n);
+    void slotCursiveFont(const QString &n);
+    void slotFantasyFont(const QString &n);
+    void slotEncoding(const QString &n);
+    void slotFontSizeAdjust(int value);
 
 private:
-  void updateGUI();
+    void updateGUI();
 
 private:
+    KConfig *m_pConfig;
+    QString m_groupname;
+    QStringList m_families;
 
-  KConfig *m_pConfig;
-  QString m_groupname;
-  QStringList m_families;
+    KIntNumInput *m_minSize;
+    KIntNumInput *m_MedSize;
+    KIntNumInput *m_pageDPI;
+    KFontCombo *m_pFonts[6];
+    QComboBox *m_pEncoding;
+    QSpinBox *m_pFontSizeAdjust;
 
-  KIntNumInput* m_minSize;
-  KIntNumInput* m_MedSize;
-  KIntNumInput* m_pageDPI;
-  KFontCombo* m_pFonts[6];
-  QComboBox* m_pEncoding;
-  QSpinBox *m_pFontSizeAdjust;
-
-  int fSize;
-  int fMinSize;
-  QStringList encodings;
-  QStringList fonts;
-  QStringList defaultFonts;
-  QString encodingName;
+    int fSize;
+    int fMinSize;
+    QStringList encodings;
+    QStringList fonts;
+    QStringList defaultFonts;
+    QString encodingName;
 };
 
 #endif // __APPEARANCE_H__

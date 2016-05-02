@@ -14,18 +14,16 @@ License. See the file "COPYING" for the exact licensing terms.
 
 #include <kdecoration_plugins_p.h>
 
-namespace KWinInternal
-{
+namespace KWinInternal {
 
-class PluginMgr
-    : public KDecorationPlugins
-    {
-    public:
-        PluginMgr();
-        virtual bool provides( Requirement );
-    protected:
-        virtual void error( const QString& error_msg );
-    };
+class PluginMgr : public KDecorationPlugins {
+public:
+    PluginMgr();
+    virtual bool provides(Requirement);
+
+protected:
+    virtual void error(const QString &error_msg);
+};
 
 } // namespace
 

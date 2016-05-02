@@ -26,53 +26,49 @@
 #include "../app/katepluginmanager.h"
 #include "../app/kateapp.h"
 
-namespace Kate
-{
+namespace Kate {
 
-class PrivatePluginManager
-  {
-  public:
-    PrivatePluginManager ()
+class PrivatePluginManager {
+public:
+    PrivatePluginManager()
     {
     }
 
-    ~PrivatePluginManager ()
+    ~PrivatePluginManager()
     {
     }
 
     KatePluginManager *pluginMan;
-  };
+};
 
-PluginManager::PluginManager (void *pluginManager) : QObject ((KatePluginManager*) pluginManager)
+PluginManager::PluginManager(void *pluginManager) : QObject((KatePluginManager *)pluginManager)
 {
-  d = new PrivatePluginManager ();
-  d->pluginMan = (KatePluginManager*) pluginManager;
+    d = new PrivatePluginManager();
+    d->pluginMan = (KatePluginManager *)pluginManager;
 }
 
-PluginManager::~PluginManager ()
+PluginManager::~PluginManager()
 {
-  delete d;
+    delete d;
 }
 
 Plugin *PluginManager::plugin(const QString &name)
 {
-	return d->pluginMan->plugin(name);
+    return d->pluginMan->plugin(name);
 }
 
 bool PluginManager::pluginAvailable(const QString &name)
 {
-  return d->pluginMan->pluginAvailable (name);
+    return d->pluginMan->pluginAvailable(name);
 }
 
-Plugin *PluginManager::loadPlugin(const QString &name,bool permanent)
+Plugin *PluginManager::loadPlugin(const QString &name, bool permanent)
 {
-  return d->pluginMan->loadPlugin (name, permanent);
+    return d->pluginMan->loadPlugin(name, permanent);
 }
 
-void PluginManager::unloadPlugin(const QString &name,bool permanent)
+void PluginManager::unloadPlugin(const QString &name, bool permanent)
 {
-  d->pluginMan->unloadPlugin (name, permanent);
+    d->pluginMan->unloadPlugin(name, permanent);
 }
-
 }
-

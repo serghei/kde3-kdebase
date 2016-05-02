@@ -40,22 +40,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "taskbarextension.h"
 #include "taskbarextension.moc"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KPanelExtension *init(QWidget *parent, const QString &configFile)
 {
-    KDE_EXPORT KPanelExtension* init( QWidget *parent, const QString& configFile )
-    {
-        KGlobal::locale()->insertCatalogue( "taskbarextension" );
-   	return new TaskBarExtension( configFile, KPanelExtension::Stretch,
-				     KPanelExtension::Preferences, parent, "taskbarextension" );
-    }
+    KGlobal::locale()->insertCatalogue("taskbarextension");
+    return new TaskBarExtension(configFile, KPanelExtension::Stretch, KPanelExtension::Preferences, parent, "taskbarextension");
+}
 }
 
-TaskBarExtension::TaskBarExtension(const QString& configFile, Type type,
-                                   int actions, QWidget *parent, const char *name)
-    : KPanelExtension(configFile, type, actions, parent, name),
-      m_bgImage(0),
-      m_bgFilename(0),
-      m_rootPixmap(0)
+TaskBarExtension::TaskBarExtension(const QString &configFile, Type type, int actions, QWidget *parent, const char *name)
+    : KPanelExtension(configFile, type, actions, parent, name), m_bgImage(0), m_bgFilename(0), m_rootPixmap(0)
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
     m_container = new TaskBarContainer(false, this);
@@ -63,57 +57,54 @@ TaskBarExtension::TaskBarExtension(const QString& configFile, Type type,
     positionChange(position());
     layout->addWidget(m_container);
 
-    connect(m_container, SIGNAL(containerCountChanged()),
-            SIGNAL(updateLayout()));
+    connect(m_container, SIGNAL(containerCountChanged()), SIGNAL(updateLayout()));
 
     kapp->dcopClient()->setNotifications(true);
-    connectDCOPSignal("kicker", "kicker", "configurationChanged()",
-                      "configure()", false);
+    connectDCOPSignal("kicker", "kicker", "configurationChanged()", "configure()", false);
 
-    connect(kapp, SIGNAL(kdisplayPaletteChanged()),
-            SLOT(setBackgroundTheme()));
+    connect(kapp, SIGNAL(kdisplayPaletteChanged()), SLOT(setBackgroundTheme()));
 
     QTimer::singleShot(0, this, SLOT(setBackgroundTheme()));
 }
 
 TaskBarExtension::~TaskBarExtension()
 {
-    KGlobal::locale()->removeCatalogue( "taskbarextension" );
+    KGlobal::locale()->removeCatalogue("taskbarextension");
 }
 
-void TaskBarExtension::positionChange( Position p )
+void TaskBarExtension::positionChange(Position p)
 {
 
     m_container->orientationChange(orientation());
 
-    switch (p)
+    switch(p)
     {
-    case Bottom:
-        m_container->popupDirectionChange(KPanelApplet::Up);
-        break;
-    case Top:
-        m_container->popupDirectionChange(KPanelApplet::Down);
-        break;
-    case Right:
-        m_container->popupDirectionChange(KPanelApplet::Left);
-        break;
-    case Left:
-        m_container->popupDirectionChange(KPanelApplet::Right);
-        break;
-    case Floating:
-        if (orientation() == Horizontal)
-        {
+        case Bottom:
+            m_container->popupDirectionChange(KPanelApplet::Up);
+            break;
+        case Top:
             m_container->popupDirectionChange(KPanelApplet::Down);
-        }
-        else if (QApplication::reverseLayout())
-        {
+            break;
+        case Right:
             m_container->popupDirectionChange(KPanelApplet::Left);
-        }
-        else
-        {
+            break;
+        case Left:
             m_container->popupDirectionChange(KPanelApplet::Right);
-        }
-        break;
+            break;
+        case Floating:
+            if(orientation() == Horizontal)
+            {
+                m_container->popupDirectionChange(KPanelApplet::Down);
+            }
+            else if(QApplication::reverseLayout())
+            {
+                m_container->popupDirectionChange(KPanelApplet::Left);
+            }
+            else
+            {
+                m_container->popupDirectionChange(KPanelApplet::Right);
+            }
+            break;
     }
     setBackgroundTheme();
 }
@@ -125,14 +116,14 @@ void TaskBarExtension::preferences()
 
 QSize TaskBarExtension::sizeHint(Position p, QSize maxSize) const
 {
-    if (p == Left || p == Right)
+    if(p == Left || p == Right)
         maxSize.setWidth(sizeInPixels());
     else
         maxSize.setHeight(sizeInPixels());
 
-//    kdDebug(1210) << "TaskBarExtension::sizeHint( Position, QSize )" << endl;
-//    kdDebug(1210) << " width: " << size.width() << endl;
-//    kdDebug(1210) << "height: " << size.height() << endl;
+    //    kdDebug(1210) << "TaskBarExtension::sizeHint( Position, QSize )" << endl;
+    //    kdDebug(1210) << " width: " << size.width() << endl;
+    //    kdDebug(1210) << "height: " << size.height() << endl;
     return m_container->sizeHint(p, maxSize);
 }
 
@@ -144,14 +135,13 @@ void TaskBarExtension::configure()
 
 void TaskBarExtension::setBackgroundTheme()
 {
-    if (KickerSettings::transparent())
+    if(KickerSettings::transparent())
     {
-        if (!m_rootPixmap)
+        if(!m_rootPixmap)
         {
             m_rootPixmap = new KRootPixmap(this);
             m_rootPixmap->setCustomPainting(true);
-            connect(m_rootPixmap, SIGNAL(backgroundUpdated(const QPixmap&)),
-                    SLOT(updateBackground(const QPixmap&)));
+            connect(m_rootPixmap, SIGNAL(backgroundUpdated(const QPixmap &)), SLOT(updateBackground(const QPixmap &)));
         }
         else
         {
@@ -163,7 +153,7 @@ void TaskBarExtension::setBackgroundTheme()
         m_rootPixmap->start();
         return;
     }
-    else if (m_rootPixmap)
+    else if(m_rootPixmap)
     {
         delete m_rootPixmap;
         m_rootPixmap = 0;
@@ -172,26 +162,26 @@ void TaskBarExtension::setBackgroundTheme()
     unsetPalette();
     m_container->unsetPalette();
 
-    if (KickerSettings::useBackgroundTheme())
+    if(KickerSettings::useBackgroundTheme())
     {
         QString bgFilename = locate("appdata", KickerSettings::backgroundTheme());
 
-        if (m_bgFilename != bgFilename)
+        if(m_bgFilename != bgFilename)
         {
             m_bgFilename = bgFilename;
             m_bgImage.load(m_bgFilename);
         }
 
-        if (!m_bgImage.isNull())
+        if(!m_bgImage.isNull())
         {
             QImage bgImage = m_bgImage;
 
-            if (orientation() == Vertical)
+            if(orientation() == Vertical)
             {
-                if (KickerSettings::rotateBackground())
+                if(KickerSettings::rotateBackground())
                 {
                     QWMatrix matrix;
-                    matrix.rotate(position() == KPanelExtension::Left ? 90: 270);
+                    matrix.rotate(position() == KPanelExtension::Left ? 90 : 270);
                     bgImage = bgImage.xForm(matrix);
                 }
 
@@ -199,8 +189,7 @@ void TaskBarExtension::setBackgroundTheme()
             }
             else
             {
-                if (position() == KPanelExtension::Top &&
-                    KickerSettings::rotateBackground())
+                if(position() == KPanelExtension::Top && KickerSettings::rotateBackground())
                 {
                     QWMatrix matrix;
                     matrix.rotate(180);
@@ -210,7 +199,7 @@ void TaskBarExtension::setBackgroundTheme()
                 bgImage = bgImage.scaleHeight(size().height());
             }
 
-            if (KickerSettings::colorizeBackground())
+            if(KickerSettings::colorizeBackground())
             {
                 KickerLib::colorize(bgImage);
             }
@@ -220,7 +209,7 @@ void TaskBarExtension::setBackgroundTheme()
     }
 }
 
-void TaskBarExtension::updateBackground(const QPixmap& bgImage)
+void TaskBarExtension::updateBackground(const QPixmap &bgImage)
 {
     unsetPalette();
     setPaletteBackgroundPixmap(bgImage);
@@ -233,4 +222,3 @@ void TaskBarExtension::resizeEvent(QResizeEvent *e)
     QFrame::resizeEvent(e);
     setBackgroundTheme();
 }
-

@@ -23,22 +23,20 @@
 
 class KListBox;
 
-namespace Kate
-{
+namespace Kate {
 
 class ListboxView : public DockViewBase {
-  Q_OBJECT
-  public:
-    ListboxView( QWidget *parent=0, const char *name=0 );
-    ListboxView( const QString &titlePrefix, const QString &title, QWidget *parent=0, const char *name=0 );
+    Q_OBJECT
+public:
+    ListboxView(QWidget *parent = 0, const char *name = 0);
+    ListboxView(const QString &titlePrefix, const QString &title, QWidget *parent = 0, const char *name = 0);
     ~ListboxView();
-    
-    KListBox * listbox();
-  
-  private:
+
+    KListBox *listbox();
+
+private:
     class ListboxViewPrivate *d;
 };
-
 }
 
 #endif // _KATE_LISTBOX_VIEW_H_

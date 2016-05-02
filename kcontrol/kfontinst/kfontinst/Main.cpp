@@ -51,7 +51,7 @@
 #define KFI_XF86CFG "XF86Config"
 #define KFI_XORGCFG "xorg.conf"
 
-static const char * getFile(const char *entry, const char **posibilities)
+static const char *getFile(const char *entry, const char **posibilities)
 {
     if(KFI::Misc::fExists(entry))
         return entry;
@@ -59,7 +59,7 @@ static const char * getFile(const char *entry, const char **posibilities)
     {
         int f;
 
-        for(f=0; posibilities[f]; ++f)
+        for(f = 0; posibilities[f]; ++f)
             if(KFI::Misc::fExists(posibilities[f]))
                 break;
 
@@ -67,58 +67,50 @@ static const char * getFile(const char *entry, const char **posibilities)
     }
 }
 
-static const char * constXConfigFiles[]=
-{   
-    "/etc/X11/"KFI_XORGCFG,
-    "/etc/X11/"KFI_XORGCFG"-4",
-    "/etc/"KFI_XORGCFG,
-    "/usr/X11R6/etc/X11/"KFI_XORGCFG,
-    "/usr/X11R6/etc/X11/"KFI_XORGCFG"-4",
-    "/usr/X11R6/lib/X11/"KFI_XORGCFG,
-    "/usr/X11R6/lib/X11/"KFI_XORGCFG"-4",
+static const char *constXConfigFiles[] = {"/etc/X11/" KFI_XORGCFG,
+                                          "/etc/X11/" KFI_XORGCFG "-4",
+                                          "/etc/" KFI_XORGCFG,
+                                          "/usr/X11R6/etc/X11/" KFI_XORGCFG,
+                                          "/usr/X11R6/etc/X11/" KFI_XORGCFG "-4",
+                                          "/usr/X11R6/lib/X11/" KFI_XORGCFG,
+                                          "/usr/X11R6/lib/X11/" KFI_XORGCFG "-4",
 
-    "/etc/X11/"KFI_XF86CFG"-4",
-    "/etc/X11/"KFI_XF86CFG,
-    "/etc/"KFI_XF86CFG"-4",
-    "/etc/"KFI_XF86CFG,
-    "/usr/X11R6/etc/X11/"KFI_XF86CFG"-4",
-    "/usr/X11R6/etc/X11/"KFI_XF86CFG,
-    "/usr/X11R6/lib/X11/"KFI_XF86CFG"-4",
-    "/usr/X11R6/lib/X11/"KFI_XF86CFG,
+                                          "/etc/X11/" KFI_XF86CFG "-4",
+                                          "/etc/X11/" KFI_XF86CFG,
+                                          "/etc/" KFI_XF86CFG "-4",
+                                          "/etc/" KFI_XF86CFG,
+                                          "/usr/X11R6/etc/X11/" KFI_XF86CFG "-4",
+                                          "/usr/X11R6/etc/X11/" KFI_XF86CFG,
+                                          "/usr/X11R6/lib/X11/" KFI_XF86CFG "-4",
+                                          "/usr/X11R6/lib/X11/" KFI_XF86CFG,
 
-    NULL
-};  
+                                          NULL};
 
-static const char * constXfsConfigFiles[]=
-{
-    "/etc/X11/fs/config",
-    "/usr/openwin/lib/X11/fonts/fontserver.cfg",
-    NULL
-};
+static const char *constXfsConfigFiles[] = {"/etc/X11/fs/config", "/usr/openwin/lib/X11/fonts/fontserver.cfg", NULL};
 
-KFI::CXConfig * getXCfg(bool root)
+KFI::CXConfig *getXCfg(bool root)
 {
     if(root)
     {
         //
         // Try to determine location for X and xfs config files...
         // ...note on some systems (Solaris and HP-UX) only the xfs file will be found
-        bool          xfs=false;
-        KFI::CXConfig *xcfg=NULL;
-        QString       xConfigFile=getFile(QFile::encodeName(constXConfigFiles[0]), constXConfigFiles),
-                      xfsConfigFile=getFile(QFile::encodeName(constXfsConfigFiles[0]), constXfsConfigFiles);
-            
+        bool xfs = false;
+        KFI::CXConfig *xcfg = NULL;
+        QString xConfigFile = getFile(QFile::encodeName(constXConfigFiles[0]), constXConfigFiles),
+                xfsConfigFile = getFile(QFile::encodeName(constXfsConfigFiles[0]), constXfsConfigFiles);
+
         // If found xfs, but not X - then assume that xfs is being used...
         if(!xfsConfigFile.isEmpty() && xConfigFile.isEmpty())
-            xfs=true;
+            xfs = true;
         else if(!xConfigFile.isEmpty()) // Read xConfig file to determine which one...
         {
-            xcfg=new KFI::CXConfig(KFI::CXConfig::X11, xConfigFile);
+            xcfg = new KFI::CXConfig(KFI::CXConfig::X11, xConfigFile);
 
             if(!xfsConfigFile.isEmpty() && xcfg->xfsInPath())
             {
                 delete xcfg;
-                xfs=true;
+                xfs = true;
             }
         }
 
@@ -193,63 +185,53 @@ void refresh(bool refreshX, bool refreshXfs, bool root)
 int main(int argc, char *argv[])
 {
 #ifdef HAVE_GETOPT_H
-    static struct option options[]=
-    {
-        { "configure_x",    0, 0, 'x' },
-        { "configure_gs",   0, 0, 'g' },
-        { "add_to_fc_cfg",  0, 0, 'f' },
-        { "add_to_x_cfg",   0, 0, 'a' },
-        { "refresh_x",      0, 0, 'r' },
-        { "refresh_xfs",    0, 0, 's' },
-        { 0,                0, 0, 0   }
-    };
+    static struct option options[] = {{"configure_x", 0, 0, 'x'},
+                                      {"configure_gs", 0, 0, 'g'},
+                                      {"add_to_fc_cfg", 0, 0, 'f'},
+                                      {"add_to_x_cfg", 0, 0, 'a'},
+                                      {"refresh_x", 0, 0, 'r'},
+                                      {"refresh_xfs", 0, 0, 's'},
+                                      {0, 0, 0, 0}};
 #endif
 
-    int  c=0,
-         rv=0;
-    bool doX=false,
-         doGs=false,
-         addToX=false,
-         addToFc=false,
-         refreshX=false,
-         refreshXfs=false,
-         root=KFI::Misc::root();
+    int c = 0, rv = 0;
+    bool doX = false, doGs = false, addToX = false, addToFc = false, refreshX = false, refreshXfs = false, root = KFI::Misc::root();
 
 #ifdef HAVE_GETOPT_H
     int optIndex;
-    while(-1!=(c=getopt_long(argc, argv, "xgfars", options, &optIndex)))
+    while(-1 != (c = getopt_long(argc, argv, "xgfars", options, &optIndex)))
 #else
-    while(-1!=(c=getopt(argc, argv, "xgfars")))
+    while(-1 != (c = getopt(argc, argv, "xgfars")))
 #endif
         switch(c)
         {
             case 'x':
-                doX=true;
+                doX = true;
                 break;
             case 'g':
-                doGs=true;
+                doGs = true;
                 break;
             case 'f':
-                addToFc=true;
+                addToFc = true;
                 break;
             case 'a':
-                addToX=true;
+                addToX = true;
                 break;
             case 'r':
-                refreshX=true;
+                refreshX = true;
                 break;
             case 's':
-                refreshXfs=true;
+                refreshXfs = true;
                 break;
             case '?':
                 usage(argv[0]);
                 break;
         }
 
-    int  left=argc-optind;
-    bool folderRequired=doX || addToX || addToFc || (!root && doGs);
+    int left = argc - optind;
+    bool folderRequired = doX || addToX || addToFc || (!root && doGs);
 
-    if (left>1 || (0==left && folderRequired) || (!doX && !doGs && !addToX && !addToFc))
+    if(left > 1 || (0 == left && folderRequired) || (!doX && !doGs && !addToX && !addToFc))
         usage(argv[0]);
     else
     {
@@ -257,76 +239,75 @@ int main(int argc, char *argv[])
 
         if(folderRequired)
         {
-            folder=argv[optind];
-            unsigned int len=folder.length();
+            folder = argv[optind];
+            unsigned int len = folder.length();
 
             // Remove quotes...
-            if( (folder[0]==QChar('\'') || folder[0]==QChar('\"')) &&
-                (folder[len-1]==QChar('\'') || folder[len-1]==QChar('\"')))
-                folder=folder.mid(1, len-2);
-            folder=KFI::Misc::dirSyntax(folder);
+            if((folder[0] == QChar('\'') || folder[0] == QChar('\"')) && (folder[len - 1] == QChar('\'') || folder[len - 1] == QChar('\"')))
+                folder = folder.mid(1, len - 2);
+            folder = KFI::Misc::dirSyntax(folder);
         }
 
         if(folderRequired && !KFI::Misc::dExists(folder))
         {
             std::cerr << "ERROR: " << QFile::encodeName(folder) << " does not exist!" << std::endl;
-            rv=-2;
+            rv = -2;
         }
         else
         {
             if(!folder.isEmpty())
             {
-                if(0==rv && addToFc)
+                if(0 == rv && addToFc)
                 {
                     //
                     // Only add folder to fontconfig's config if its not already there...
-                    FcStrList *list=FcConfigGetFontDirs(FcConfigGetCurrent());
-                    FcChar8   *dir;
-                    bool      found=false;
+                    FcStrList *list = FcConfigGetFontDirs(FcConfigGetCurrent());
+                    FcChar8 *dir;
+                    bool found = false;
 
-                    while((dir=FcStrListNext(list)))
-                        if(0==KFI::Misc::dirSyntax((const char *)dir).find(folder))
-                            found=true;
+                    while((dir = FcStrListNext(list)))
+                        if(0 == KFI::Misc::dirSyntax((const char *)dir).find(folder))
+                            found = true;
 
                     if(!found)
                     {
-                        KXftConfig *xft=new KXftConfig(KXftConfig::Dirs, root);
+                        KXftConfig *xft = new KXftConfig(KXftConfig::Dirs, root);
 
                         xft->addDir(folder);
-                        rv=xft->apply() ? 0 : -3;
+                        rv = xft->apply() ? 0 : -3;
                         delete xft;
-                   }
+                    }
                 }
 
-                if(0==rv && addToX && root)
+                if(0 == rv && addToX && root)
                 {
-                    KFI::CXConfig *x=NULL;
+                    KFI::CXConfig *x = NULL;
 
-                    if((x=getXCfg(true)))
+                    if((x = getXCfg(true)))
                     {
                         x->addPath(folder);
-                        rv=x->writeConfig() ? 0 : -4;
+                        rv = x->writeConfig() ? 0 : -4;
                         delete x;
                     }
                     else
-                        rv=-5;
+                        rv = -5;
                 }
             }
 
-            if(0==rv && (doX || doGs))
+            if(0 == rv && (doX || doGs))
             {
-                if(0==rv && doX)
-                    rv=KFI::CXConfig::configureDir(folder) ? 0 : -5;
+                if(0 == rv && doX)
+                    rv = KFI::CXConfig::configureDir(folder) ? 0 : -5;
 
                 refresh(refreshX, refreshXfs, root);
 
-                if(0==rv && doGs)
+                if(0 == rv && doGs)
                 {
                     KFI::CFontEngine fe;
-                    rv=KFI::Fontmap::create(root ? QString::null : folder, fe) ? 0 : -6;
+                    rv = KFI::Fontmap::create(root ? QString::null : folder, fe) ? 0 : -6;
                 }
             }
-            else if(0==rv)
+            else if(0 == rv)
                 refresh(refreshX, refreshXfs, root);
         }
     }

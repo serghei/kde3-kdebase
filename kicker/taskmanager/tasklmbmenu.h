@@ -30,16 +30,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "taskmanager.h"
 
-class TaskMenuItem : public QCustomMenuItem
-{
+class TaskMenuItem : public QCustomMenuItem {
 public:
-    TaskMenuItem(const QString &text,
-                 bool active, bool minimized, bool attention);
+    TaskMenuItem(const QString &text, bool active, bool minimized, bool attention);
     ~TaskMenuItem();
 
-    void paint(QPainter*, const QColorGroup&, bool, bool, int, int, int, int);
+    void paint(QPainter *, const QColorGroup &, bool, bool, int, int, int, int);
     QSize sizeHint();
-    void setAttentionState(bool state) { m_attentionState = state; }
+    void setAttentionState(bool state)
+    {
+        m_attentionState = state;
+    }
 
 private:
     QString m_text;
@@ -51,35 +52,34 @@ private:
 
 /*****************************************************************************/
 
-class KDE_EXPORT TaskLMBMenu : public QPopupMenu
-{
+class KDE_EXPORT TaskLMBMenu : public QPopupMenu {
     Q_OBJECT
 
 public:
-    TaskLMBMenu(const Task::List& list, QWidget *parent = 0, const char *name = 0);
+    TaskLMBMenu(const Task::List &list, QWidget *parent = 0, const char *name = 0);
 
 protected slots:
     void dragSwitch();
     void attentionTimeout();
 
 protected:
-    void dragEnterEvent(QDragEnterEvent*);
-    void dragLeaveEvent(QDragLeaveEvent*);
-    void dragMoveEvent(QDragMoveEvent*);
-    void mousePressEvent(QMouseEvent*);
-    void mouseMoveEvent(QMouseEvent*);
-    void mouseReleaseEvent(QMouseEvent*);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragLeaveEvent(QDragLeaveEvent *);
+    void dragMoveEvent(QDragMoveEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
 
 private:
     void fillMenu();
 
     Task::List m_tasks;
-    int        m_lastDragId;
-    bool       m_attentionState;
-    QTimer*    m_attentionTimer;
-    QTimer*    m_dragSwitchTimer;
-    QPoint     m_dragStartPos;
-    QValueList<TaskMenuItem*> m_attentionMap;
+    int m_lastDragId;
+    bool m_attentionState;
+    QTimer *m_attentionTimer;
+    QTimer *m_dragSwitchTimer;
+    QPoint m_dragStartPos;
+    QValueList< TaskMenuItem * > m_attentionMap;
 };
 
 #endif

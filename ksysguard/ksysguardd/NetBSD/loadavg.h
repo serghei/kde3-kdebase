@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
-	Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
-    
+
+    Copyright (c) 2001 Tobias Koenig <tokoe@kde.org>
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -21,16 +21,16 @@
 #ifndef _loadavg_h_
 #define _loadavg_h_
 
-void initLoadAvg(struct SensorModul* sm);
+void initLoadAvg(struct SensorModul *sm);
 void exitLoadAvg(void);
 
 int updateLoadAvg(void);
 
-void printLoadAvg1(const char*);
-void printLoadAvg1Info(const char*);
-void printLoadAvg5(const char*);
-void printLoadAvg5Info(const char*);
-void printLoadAvg15(const char*);
-void printLoadAvg15Info(const char*);
+void printLoadAvg1(const char *);
+void printLoadAvg1Info(const char *);
+void printLoadAvg5(const char *);
+void printLoadAvg5Info(const char *);
+void printLoadAvg15(const char *);
+void printLoadAvg15Info(const char *);
 
 #endif

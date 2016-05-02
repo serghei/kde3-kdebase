@@ -23,29 +23,27 @@
 #include <kapplication.h>
 #include <krun.h>
 
-class clientApp : public KApplication
-{
-  Q_OBJECT
+class clientApp : public KApplication {
+    Q_OBJECT
 public:
-  /** Parse command-line arguments and "do it" */
-  static bool doIt();
+    /** Parse command-line arguments and "do it" */
+    static bool doIt();
 
-  /** Make konqueror open a window for @p url */
-  static bool createNewWindow(const KURL & url, bool newTab, bool tempFile, const QString & mimetype = QString::null);
+    /** Make konqueror open a window for @p url */
+    static bool createNewWindow(const KURL &url, bool newTab, bool tempFile, const QString &mimetype = QString::null);
 
-  /** Make konqueror open a window for @p profile, @p url and @p mimetype */
-  static bool openProfile(const QString & profile, const QString & url, const QString & mimetype = QString::null);
+    /** Make konqueror open a window for @p profile, @p url and @p mimetype */
+    static bool openProfile(const QString &profile, const QString &url, const QString &mimetype = QString::null);
 
 protected slots:
-  void slotResult( KIO::Job * );
-  void delayedQuit();
-  void slotDialogCanceled();
+    void slotResult(KIO::Job *);
+    void delayedQuit();
+    void slotDialogCanceled();
 
 private:
-  static void sendASNChange();
-  static bool m_ok;
-  static QCString startup_id_str;
-
+    static void sendASNChange();
+    static bool m_ok;
+    static QCString startup_id_str;
 };
 
 #endif

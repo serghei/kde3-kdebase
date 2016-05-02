@@ -35,119 +35,118 @@
 
 #include "WorkSheetSettings.h"
 
-WorkSheetSettings::WorkSheetSettings( QWidget* parent, const char* name )
-  : KDialogBase( parent, name, true, QString::null, Ok|Cancel, Ok, true )
+WorkSheetSettings::WorkSheetSettings(QWidget *parent, const char *name) : KDialogBase(parent, name, true, QString::null, Ok | Cancel, Ok, true)
 {
-  setCaption( i18n( "Worksheet Properties" ) );
+    setCaption(i18n("Worksheet Properties"));
 
-  QWidget *page = new QWidget( this );
-  setMainWidget( page );
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
 
-  QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
+    QVBoxLayout *topLayout = new QVBoxLayout(page, 0, spacingHint());
 
-  QGroupBox *group = new QGroupBox( 0, Qt::Vertical, i18n( "Title" ), page );
-  group->layout()->setMargin( marginHint() );
-  group->layout()->setSpacing( spacingHint() );
+    QGroupBox *group = new QGroupBox(0, Qt::Vertical, i18n("Title"), page);
+    group->layout()->setMargin(marginHint());
+    group->layout()->setSpacing(spacingHint());
 
-  QGridLayout *groupLayout = new QGridLayout( group->layout(), 1, 1 );
-  groupLayout->setAlignment( Qt::AlignTop );
+    QGridLayout *groupLayout = new QGridLayout(group->layout(), 1, 1);
+    groupLayout->setAlignment(Qt::AlignTop);
 
-  mSheetTitle = new KLineEdit( group );
-  groupLayout->addWidget( mSheetTitle, 0, 0 );
+    mSheetTitle = new KLineEdit(group);
+    groupLayout->addWidget(mSheetTitle, 0, 0);
 
-  topLayout->addWidget( group );
+    topLayout->addWidget(group);
 
-  group = new QGroupBox( 0, Qt::Vertical, i18n( "Properties" ), page );
-  group->layout()->setMargin( marginHint() );
-  group->layout()->setSpacing( spacingHint() );
+    group = new QGroupBox(0, Qt::Vertical, i18n("Properties"), page);
+    group->layout()->setMargin(marginHint());
+    group->layout()->setSpacing(spacingHint());
 
-  groupLayout = new QGridLayout( group->layout(), 3, 2 );
-  groupLayout->setAlignment( Qt::AlignTop );
+    groupLayout = new QGridLayout(group->layout(), 3, 2);
+    groupLayout->setAlignment(Qt::AlignTop);
 
-  QLabel *label = new QLabel( i18n( "Rows:" ), group );
-  groupLayout->addWidget( label, 0, 0 );
+    QLabel *label = new QLabel(i18n("Rows:"), group);
+    groupLayout->addWidget(label, 0, 0);
 
-  mRows = new KIntNumInput( 1, group );
-  mRows->setMaxValue( 42 );
-  mRows->setMinValue( 1 );
-  groupLayout->addWidget( mRows, 0, 1 );
-  label->setBuddy( mRows );
+    mRows = new KIntNumInput(1, group);
+    mRows->setMaxValue(42);
+    mRows->setMinValue(1);
+    groupLayout->addWidget(mRows, 0, 1);
+    label->setBuddy(mRows);
 
-  label = new QLabel( i18n( "Columns:" ), group );
-  groupLayout->addWidget( label, 1, 0 );
+    label = new QLabel(i18n("Columns:"), group);
+    groupLayout->addWidget(label, 1, 0);
 
-  mColumns = new KIntNumInput( 1, group );
-  mColumns->setMaxValue( 42 );
-  mColumns->setMinValue( 1 );
-  groupLayout->addWidget( mColumns, 1, 1 );
-  label->setBuddy( mColumns );
+    mColumns = new KIntNumInput(1, group);
+    mColumns->setMaxValue(42);
+    mColumns->setMinValue(1);
+    groupLayout->addWidget(mColumns, 1, 1);
+    label->setBuddy(mColumns);
 
-  label = new QLabel( i18n( "Update interval:" ), group );
-  groupLayout->addWidget( label, 2, 0 );
+    label = new QLabel(i18n("Update interval:"), group);
+    groupLayout->addWidget(label, 2, 0);
 
-  mInterval = new KIntNumInput( 2, group );
-  mInterval->setMaxValue( 300 );
-  mInterval->setMinValue( 1 );
-  mInterval->setSuffix( i18n( " sec" ) );
-  groupLayout->addWidget( mInterval, 2, 1 );
-  label->setBuddy( mInterval );
+    mInterval = new KIntNumInput(2, group);
+    mInterval->setMaxValue(300);
+    mInterval->setMinValue(1);
+    mInterval->setSuffix(i18n(" sec"));
+    groupLayout->addWidget(mInterval, 2, 1);
+    label->setBuddy(mInterval);
 
-  topLayout->addWidget( group );
+    topLayout->addWidget(group);
 
-  QWhatsThis::add( mRows, i18n( "Enter the number of rows the sheet should have." ) );
-  QWhatsThis::add( mColumns, i18n( "Enter the number of columns the sheet should have." ) );
-  QWhatsThis::add( mInterval, i18n( "All displays of the sheet are updated at the rate specified here." ) );
-  QToolTip::add( mSheetTitle, i18n( "Enter the title of the worksheet here." ) );
+    QWhatsThis::add(mRows, i18n("Enter the number of rows the sheet should have."));
+    QWhatsThis::add(mColumns, i18n("Enter the number of columns the sheet should have."));
+    QWhatsThis::add(mInterval, i18n("All displays of the sheet are updated at the rate specified here."));
+    QToolTip::add(mSheetTitle, i18n("Enter the title of the worksheet here."));
 
-  KAcceleratorManager::manage( page );
+    KAcceleratorManager::manage(page);
 
-  mSheetTitle->setFocus();
+    mSheetTitle->setFocus();
 
-  resize( QSize( 250, 230 ).expandedTo( minimumSizeHint() ) );
+    resize(QSize(250, 230).expandedTo(minimumSizeHint()));
 }
 
 WorkSheetSettings::~WorkSheetSettings()
 {
 }
 
-void WorkSheetSettings::setRows( int rows )
+void WorkSheetSettings::setRows(int rows)
 {
-  mRows->setValue( rows );
+    mRows->setValue(rows);
 }
 
 int WorkSheetSettings::rows() const
 {
-  return mRows->value();
+    return mRows->value();
 }
 
-void WorkSheetSettings::setColumns( int columns )
+void WorkSheetSettings::setColumns(int columns)
 {
-  mColumns->setValue( columns );
+    mColumns->setValue(columns);
 }
 
 int WorkSheetSettings::columns() const
 {
-  return mColumns->value();
+    return mColumns->value();
 }
 
-void WorkSheetSettings::setInterval( int interval )
+void WorkSheetSettings::setInterval(int interval)
 {
-  mInterval->setValue( interval );
+    mInterval->setValue(interval);
 }
 
 int WorkSheetSettings::interval() const
 {
-  return mInterval->value();
+    return mInterval->value();
 }
 
-void WorkSheetSettings::setSheetTitle( const QString &title )
+void WorkSheetSettings::setSheetTitle(const QString &title)
 {
-  mSheetTitle->setText( title );
+    mSheetTitle->setText(title);
 }
 
 QString WorkSheetSettings::sheetTitle() const
 {
-  return mSheetTitle->text();
+    return mSheetTitle->text();
 }
 
 #include "WorkSheetSettings.moc"

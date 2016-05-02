@@ -24,25 +24,23 @@
 
 #include <qmap.h>
 
-class HomeDirNotify : public KDirNotify
-{
-K_DCOP
+class HomeDirNotify : public KDirNotify {
+    K_DCOP
 
 public:
-	HomeDirNotify();
+    HomeDirNotify();
 
-k_dcop:
-	virtual ASYNC FilesAdded (const KURL &directory);
-	virtual ASYNC FilesRemoved (const KURL::List &fileList);
-	virtual ASYNC FilesChanged (const KURL::List &fileList);
+    k_dcop : virtual ASYNC FilesAdded(const KURL &directory);
+    virtual ASYNC FilesRemoved(const KURL::List &fileList);
+    virtual ASYNC FilesChanged(const KURL::List &fileList);
 
 private:
-	void init();
-	KURL toHomeURL(const KURL &url);
-	KURL::List toHomeURLList(const KURL::List &list);
-	
-	QMap<QString,KURL> m_homeFoldersMap;
-	bool mInited;
+    void init();
+    KURL toHomeURL(const KURL &url);
+    KURL::List toHomeURLList(const KURL::List &list);
+
+    QMap< QString, KURL > m_homeFoldersMap;
+    bool mInited;
 };
 
 #endif

@@ -22,29 +22,28 @@
 #include <kprogress.h>
 #include "progressdialogiface.h"
 
-class ProgressDialog : public KProgressDialog, virtual public ProgressDialogIface
-{
+class ProgressDialog : public KProgressDialog, virtual public ProgressDialogIface {
     Q_OBJECT
 
-    public:
-      ProgressDialog(QWidget* parent = 0, const QString& caption = QString::null, const QString& text = QString::null, int totalSteps = 100);
-      
-      void setTotalSteps( int );
-      int totalSteps() const;
-    
-      void setProgress( int );
-      int progress() const;
-      
-      void setLabel(const QString&);
-    
-      void showCancelButton(bool show);
-      bool wasCancelled() const;
-      void ignoreCancel();
+public:
+    ProgressDialog(QWidget *parent = 0, const QString &caption = QString::null, const QString &text = QString::null, int totalSteps = 100);
 
-      void setAutoClose( bool );
-      bool autoClose() const;
-                  
-      void close();
+    void setTotalSteps(int);
+    int totalSteps() const;
+
+    void setProgress(int);
+    int progress() const;
+
+    void setLabel(const QString &);
+
+    void showCancelButton(bool show);
+    bool wasCancelled() const;
+    void ignoreCancel();
+
+    void setAutoClose(bool);
+    bool autoClose() const;
+
+    void close();
 };
 
 #endif // PROGRESSDIALOG_H

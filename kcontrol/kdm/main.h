@@ -36,48 +36,43 @@ class KDMUsersWidget;
 class KDMConvenienceWidget;
 class KBackground;
 
-class KDModule : public KCModule
-{
-  Q_OBJECT
+class KDModule : public KCModule {
+    Q_OBJECT
 
 public:
+    KDModule(QWidget *parent, const char *name, const QStringList &);
+    ~KDModule();
 
-  KDModule(QWidget *parent, const char *name, const QStringList &);
-  ~KDModule();
-
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 public slots:
 
-  void slotMinMaxUID(int min, int max);
+    void slotMinMaxUID(int min, int max);
 
 signals:
 
-  void clearUsers();
-  void addUsers(const QMap<QString,int> &);
-  void delUsers(const QMap<QString,int> &);
+    void clearUsers();
+    void addUsers(const QMap< QString, int > &);
+    void delUsers(const QMap< QString, int > &);
 
 private:
+    QTabWidget *tab;
 
-  QTabWidget		*tab;
+    KDMAppearanceWidget *appearance;
+    KBackground *background;
+    KDMFontWidget *font;
+    KDMSessionsWidget *sessions;
+    KDMUsersWidget *users;
+    KDMConvenienceWidget *convenience;
 
-  KDMAppearanceWidget	*appearance;
-  KBackground		*background;
-  KDMFontWidget		*font;
-  KDMSessionsWidget	*sessions;
-  KDMUsersWidget	*users;
-  KDMConvenienceWidget	*convenience;
+    QMap< QString, QPair< int, QStringList > > usermap;
+    QMap< QString, int > groupmap;
+    int minshowuid, maxshowuid;
+    bool updateOK;
 
-  QMap<QString, QPair<int,QStringList> >	usermap;
-  QMap<QString,int>	groupmap;
-  int			minshowuid, maxshowuid;
-  bool			updateOK;
-
-  void propagateUsers();
-
+    void propagateUsers();
 };
 
 #endif
-

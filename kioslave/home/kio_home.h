@@ -23,22 +23,20 @@
 #include <kio/forwardingslavebase.h>
 #include "homeimpl.h"
 
-class HomeProtocol : public KIO::ForwardingSlaveBase
-{
+class HomeProtocol : public KIO::ForwardingSlaveBase {
 public:
-	HomeProtocol(const QCString &protocol, const QCString &pool,
-	             const QCString &app);
-	virtual ~HomeProtocol();
+    HomeProtocol(const QCString &protocol, const QCString &pool, const QCString &app);
+    virtual ~HomeProtocol();
 
-	virtual bool rewriteURL(const KURL &url, KURL &newUrl);
-	
-	virtual void listDir(const KURL &url);
-	virtual void stat(const KURL &url);
+    virtual bool rewriteURL(const KURL &url, KURL &newUrl);
+
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
 
 private:
-	void listRoot();
-	
-	HomeImpl m_impl;
+    void listRoot();
+
+    HomeImpl m_impl;
 };
 
 #endif

@@ -29,31 +29,28 @@ class CSSCustomDialog;
 class KDialogBase;
 
 
-class CSSConfig : public KCModule
-{
-  Q_OBJECT
+class CSSConfig : public KCModule {
+    Q_OBJECT
 
 public:
-	  
-  CSSConfig(QWidget *parent = 0L, const char *name = 0L, const QStringList &list =QStringList() );
+    CSSConfig(QWidget *parent = 0L, const char *name = 0L, const QStringList &list = QStringList());
 
-  void load();
-  void load( bool useDefaults );
-  void save();
-  void defaults();
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
 public slots:
- 
-  void slotPreview();
-  void slotCustomize();
+
+    void slotPreview();
+    void slotCustomize();
 
 private:
+    QMap< QString, QString > cssDict();
 
-  QMap<QString,QString> cssDict();
-
-  CSSConfigDialog *configDialog;
-  CSSCustomDialog *customDialog;
-  KDialogBase *customDialogBase;
+    CSSConfigDialog *configDialog;
+    CSSCustomDialog *customDialog;
+    KDialogBase *customDialogBase;
 };
 
 

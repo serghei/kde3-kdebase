@@ -50,10 +50,11 @@ private:
 #endif
 
 signals:
-    void powerSourcesChanged(const PowerSources&);
+    void powerSourcesChanged(const PowerSources &);
 
 private:
-    struct Private; Private *d;
+    struct Private;
+    Private *d;
 };
 
 

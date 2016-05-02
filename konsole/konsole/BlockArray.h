@@ -26,10 +26,14 @@
 //#error Dont use in KDE 2.1
 
 #define BlockSize (1 << 12)
-#define ENTRIES   ((BlockSize - sizeof(size_t) ) / sizeof(unsigned char))
+#define ENTRIES ((BlockSize - sizeof(size_t)) / sizeof(unsigned char))
 
-struct Block {
-    Block() { size = 0; }
+struct Block
+{
+    Block()
+    {
+        size = 0;
+    }
     unsigned char data[ENTRIES];
     size_t size;
 };
@@ -90,11 +94,17 @@ public:
     */
     bool setSize(size_t newsize);
 
-    size_t len() const { return length; }
+    size_t len() const
+    {
+        return length;
+    }
 
     bool has(size_t index) const;
 
-    size_t getCurrent() const { return current; }
+    size_t getCurrent() const
+    {
+        return current;
+    }
 
 private:
     void unmap();
@@ -112,7 +122,6 @@ private:
 
     int ion;
     size_t length;
-
 };
 
 

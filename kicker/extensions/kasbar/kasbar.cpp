@@ -76,653 +76,687 @@ static const int LARGE_EXTENT = 68;
 static const int HUGE_EXTENT = 84;
 static const int ENORMOUS_EXTENT = 148;
 
-KasBar::KasBar( Orientation o, QWidget *parent, const char *name, WFlags f )
-   : QWidget( parent, name, f ),
-     master_(0),
-     orient( o ),
-     direction_( o == Horizontal ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom ),
-     itemUnderMouse_( 0 ),
-     boxesPerLine_(10), // Temp value
-     inDrag( false ),
-     detached( false ),
-     maxBoxes_( 100 ), // Temp value
-     itemSize_( Medium ),
-     itemExtent_( MEDIUM_EXTENT ),
-     paintInactiveFrame_( true ),
-     transparent_( false ),
-     rootPix( 0 ),
-     enableTint_( false ),
-     tintAmount_( 0.1 ), 
-     tintColour_( colorGroup().mid() ),
-     useMask_( true ),
-     res(0)
+KasBar::KasBar(Orientation o, QWidget *parent, const char *name, WFlags f)
+    : QWidget(parent, name, f)
+    , master_(0)
+    , orient(o)
+    , direction_(o == Horizontal ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom)
+    , itemUnderMouse_(0)
+    , boxesPerLine_(10)
+    , // Temp value
+    inDrag(false)
+    , detached(false)
+    , maxBoxes_(100)
+    , // Temp value
+    itemSize_(Medium)
+    , itemExtent_(MEDIUM_EXTENT)
+    , paintInactiveFrame_(true)
+    , transparent_(false)
+    , rootPix(0)
+    , enableTint_(false)
+    , tintAmount_(0.1)
+    , tintColour_(colorGroup().mid())
+    , useMask_(true)
+    , res(0)
 {
-    setBackgroundMode( NoBackground );
-    items.setAutoDelete( true );
-    setMouseTracking( true );
-    setMaxBoxes( 0 );
+    setBackgroundMode(NoBackground);
+    items.setAutoDelete(true);
+    setMouseTracking(true);
+    setMaxBoxes(0);
 
-    connect( this, SIGNAL( configChanged() ), SLOT( repaint() ) );
+    connect(this, SIGNAL(configChanged()), SLOT(repaint()));
 }
 
-KasBar::KasBar( Orientation o, KasBar *master, QWidget *parent, const char *name, WFlags f )
-   : QWidget( parent, name, f ),
-     master_(master),
-     orient( o ),
-     direction_( o == Horizontal ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom ),
-     itemUnderMouse_( 0 ),
-     boxesPerLine_(10), // Temp value
-     inDrag( false ),
-     detached( false ),
-     maxBoxes_( 100 ), // Temp value
-     itemSize_( Medium ),
-     itemExtent_( MEDIUM_EXTENT ),
-     paintInactiveFrame_( true ),
-     transparent_( false ),
-     rootPix( 0 ),
-     enableTint_( false ),
-     tintAmount_( 0.1 ), 
-     tintColour_( colorGroup().mid() ),
-     useMask_( true ),
-     res(0)
+KasBar::KasBar(Orientation o, KasBar *master, QWidget *parent, const char *name, WFlags f)
+    : QWidget(parent, name, f)
+    , master_(master)
+    , orient(o)
+    , direction_(o == Horizontal ? QBoxLayout::LeftToRight : QBoxLayout::TopToBottom)
+    , itemUnderMouse_(0)
+    , boxesPerLine_(10)
+    , // Temp value
+    inDrag(false)
+    , detached(false)
+    , maxBoxes_(100)
+    , // Temp value
+    itemSize_(Medium)
+    , itemExtent_(MEDIUM_EXTENT)
+    , paintInactiveFrame_(true)
+    , transparent_(false)
+    , rootPix(0)
+    , enableTint_(false)
+    , tintAmount_(0.1)
+    , tintColour_(colorGroup().mid())
+    , useMask_(true)
+    , res(0)
 {
-    setBackgroundMode( NoBackground );
-    items.setAutoDelete( true );
-    setMouseTracking( true );
-    setMaxBoxes( 0 );
-    connect( master_, SIGNAL( configChanged() ), SLOT( repaint() ) );
+    setBackgroundMode(NoBackground);
+    items.setAutoDelete(true);
+    setMouseTracking(true);
+    setMaxBoxes(0);
+    connect(master_, SIGNAL(configChanged()), SLOT(repaint()));
 }
 
 KasBar::~KasBar()
 {
-   delete res;
+    delete res;
 }
 
 KasResources *KasBar::resources()
 {
-    if ( res )
-	return res;
+    if(res)
+        return res;
 
-    if ( isTopLevel() ) {
-	res = new KasResources( this );
-	connect( res, SIGNAL( changed() ), SIGNAL( configChanged() ) );
-	connect( this, SIGNAL( itemSizeChanged(int) ), res, SLOT( itemSizeChanged() ) );
-	return res;
+    if(isTopLevel())
+    {
+        res = new KasResources(this);
+        connect(res, SIGNAL(changed()), SIGNAL(configChanged()));
+        connect(this, SIGNAL(itemSizeChanged(int)), res, SLOT(itemSizeChanged()));
+        return res;
     }
 
     return master_->resources();
 }
 
-KasBar *KasBar::createChildBar( Orientation o, QWidget *parent, const char *name )
+KasBar *KasBar::createChildBar(Orientation o, QWidget *parent, const char *name)
 {
-    KasBar *child = new KasBar( o, this, parent, name );
+    KasBar *child = new KasBar(o, this, parent, name);
     child->rereadMaster();
     return child;
 }
 
-void KasBar::setItemSize( int size )
+void KasBar::setItemSize(int size)
 {
-   switch( size ) {
-   case Small:
-     setItemExtent( SMALL_EXTENT );
-     break;
-   case Medium:
-     setItemExtent( MEDIUM_EXTENT );
-     break;
-   case Large:
-     setItemExtent( LARGE_EXTENT );
-     break;
-   case Huge:
-     setItemExtent( HUGE_EXTENT );
-     break;
-   case Enormous:
-     setItemExtent( ENORMOUS_EXTENT );
-     break;
-   default:
-       break;
-   }
+    switch(size)
+    {
+        case Small:
+            setItemExtent(SMALL_EXTENT);
+            break;
+        case Medium:
+            setItemExtent(MEDIUM_EXTENT);
+            break;
+        case Large:
+            setItemExtent(LARGE_EXTENT);
+            break;
+        case Huge:
+            setItemExtent(HUGE_EXTENT);
+            break;
+        case Enormous:
+            setItemExtent(ENORMOUS_EXTENT);
+            break;
+        default:
+            break;
+    }
 }
 
-void KasBar::setItemExtent( int size )
+void KasBar::setItemExtent(int size)
 {
-    if ( size == itemExtent_ )
-	return;
+    if(size == itemExtent_)
+        return;
 
     itemExtent_ = size;
 
-    if ( size < MEDIUM_EXTENT )
-	itemSize_ = Small;
-    else if ( size < LARGE_EXTENT )
-	itemSize_ = Medium;
-    else if ( size < HUGE_EXTENT )
-	itemSize_ = Large;
-    else if ( size < ENORMOUS_EXTENT )
-	itemSize_ = Huge;
+    if(size < MEDIUM_EXTENT)
+        itemSize_ = Small;
+    else if(size < LARGE_EXTENT)
+        itemSize_ = Medium;
+    else if(size < HUGE_EXTENT)
+        itemSize_ = Large;
+    else if(size < ENORMOUS_EXTENT)
+        itemSize_ = Huge;
     else
-	itemSize_ = Enormous;
-    
-   emit itemSizeChanged( itemSize_ );
-   emit configChanged();
+        itemSize_ = Enormous;
 
-   updateLayout();
+    emit itemSizeChanged(itemSize_);
+    emit configChanged();
+
+    updateLayout();
 }
 
-void KasBar::setTransparent( bool enable )
+void KasBar::setTransparent(bool enable)
 {
-   if ( transparent_ == enable )
-      return;
+    if(transparent_ == enable)
+        return;
 
-   transparent_ = enable;
+    transparent_ = enable;
 
-   if ( transparent_ ) {
-       kdDebug(1345) << "KasBar: Enabling transparency" << endl;
+    if(transparent_)
+    {
+        kdDebug(1345) << "KasBar: Enabling transparency" << endl;
 
-       rootPix = new KRootPixmap( this );
-       connect( rootPix, SIGNAL( backgroundUpdated(const QPixmap &) ),
-		this, SLOT( setBackground(const QPixmap &) ) );
+        rootPix = new KRootPixmap(this);
+        connect(rootPix, SIGNAL(backgroundUpdated(const QPixmap &)), this, SLOT(setBackground(const QPixmap &)));
 
-       rootPix->setCustomPainting( true );
+        rootPix->setCustomPainting(true);
 
-       if ( enableTint_ )
-	   rootPix->setFadeEffect( tintAmount_, tintColour_ );
+        if(enableTint_)
+            rootPix->setFadeEffect(tintAmount_, tintColour_);
 
-       rootPix->start();
-   }
-   else {
-       kdDebug(1345) << "KasBar: Disabling transparency" << endl;
+        rootPix->start();
+    }
+    else
+    {
+        kdDebug(1345) << "KasBar: Disabling transparency" << endl;
 
-       rootPix->stop();
-       delete rootPix;
-       rootPix = 0;
-   }
+        rootPix->stop();
+        delete rootPix;
+        rootPix = 0;
+    }
 
-   emit configChanged();
+    emit configChanged();
 }
 
-void KasBar::setTint( bool enable )
+void KasBar::setTint(bool enable)
 {
-   if ( enableTint_ == enable )
-      return;
+    if(enableTint_ == enable)
+        return;
 
-   enableTint_ = enable;
+    enableTint_ = enable;
 
-   if ( transparent_ && rootPix ) {
-      if ( enableTint_ ) {
-	 rootPix->setFadeEffect( tintAmount_, tintColour_ );
-      }
-      else {
-	 rootPix->setFadeEffect( 0.0, tintColour_ );
-      }
+    if(transparent_ && rootPix)
+    {
+        if(enableTint_)
+        {
+            rootPix->setFadeEffect(tintAmount_, tintColour_);
+        }
+        else
+        {
+            rootPix->setFadeEffect(0.0, tintColour_);
+        }
 
-      emit configChanged();
-      repaint( true );
-   }
+        emit configChanged();
+        repaint(true);
+    }
 }
 
-void KasBar::setTint( double amount, QColor color )
+void KasBar::setTint(double amount, QColor color)
 {
-   tintAmount_ = amount;
-   tintColour_ = color;
+    tintAmount_ = amount;
+    tintColour_ = color;
 
-   if ( transparent_ && enableTint_ ) {
-      rootPix->setFadeEffect( tintAmount_, tintColour_ );
-      emit configChanged();
+    if(transparent_ && enableTint_)
+    {
+        rootPix->setFadeEffect(tintAmount_, tintColour_);
+        emit configChanged();
 
-      if ( rootPix->isAvailable() )
-	rootPix->repaint( true );
-   }
+        if(rootPix->isAvailable())
+            rootPix->repaint(true);
+    }
 }
 
-void KasBar::setTintColor( const QColor &c )
+void KasBar::setTintColor(const QColor &c)
 {
-   setTint( tintAmount_, c );
+    setTint(tintAmount_, c);
 }
 
-void KasBar::setTintAmount( int percent )
+void KasBar::setTintAmount(int percent)
 {
-   double amt = (double) percent / 100.0;
-   setTint( amt, tintColour_ );
+    double amt = (double)percent / 100.0;
+    setTint(amt, tintColour_);
 }
 
-void KasBar::setMaxBoxes( int count )
+void KasBar::setMaxBoxes(int count)
 {
-   if ( count == maxBoxes_ )
-       return;
+    if(count == maxBoxes_)
+        return;
 
-   if ( count == 0 )
-       count = 15; // XXX Hacked
+    if(count == 0)
+        count = 15; // XXX Hacked
 
-   maxBoxes_ = count;
-   emit configChanged();
-   setBoxesPerLine( count );
+    maxBoxes_ = count;
+    emit configChanged();
+    setBoxesPerLine(count);
 }
 
-void KasBar::setBoxesPerLine( int count )
+void KasBar::setBoxesPerLine(int count)
 {
-   boxesPerLine_ = QMIN( count, maxBoxes_ );
-   updateLayout();
+    boxesPerLine_ = QMIN(count, maxBoxes_);
+    updateLayout();
 }
 
-void KasBar::setDetachedPosition( const QPoint &pos )
+void KasBar::setDetachedPosition(const QPoint &pos)
 {
-    if ( detachedPos == pos )
-	return;
+    if(detachedPos == pos)
+        return;
 
     detachedPos = pos;
-    emit detachedPositionChanged( pos );
+    emit detachedPositionChanged(pos);
 }
 
-void KasBar::setDirection( Direction dir )
+void KasBar::setDirection(Direction dir)
 {
-    if ( direction_ == dir )
-	return;
+    if(direction_ == dir)
+        return;
 
-    if ( ( dir == QBoxLayout::LeftToRight ) || ( dir == QBoxLayout::RightToLeft ) )
-	orient = Horizontal;
+    if((dir == QBoxLayout::LeftToRight) || (dir == QBoxLayout::RightToLeft))
+        orient = Horizontal;
     else
-	orient = Vertical;
+        orient = Vertical;
 
     direction_ = dir;
     emit directionChanged();
     updateLayout();
 }
 
-void KasBar::setOrientation( Orientation o )
+void KasBar::setOrientation(Orientation o)
 {
-    if ( orient == o )
-	return;
+    if(orient == o)
+        return;
 
-    if ( o == Horizontal )
-	setDirection( QBoxLayout::LeftToRight );
+    if(o == Horizontal)
+        setDirection(QBoxLayout::LeftToRight);
     else
-	setDirection( QBoxLayout::TopToBottom );
+        setDirection(QBoxLayout::TopToBottom);
 }
 
 void KasBar::toggleOrientation()
 {
-    switch( direction_ ) {
-	case QBoxLayout::LeftToRight:
-	    setDirection( QBoxLayout::RightToLeft );
-	    break;
-	case QBoxLayout::RightToLeft:
-	    setDirection( QBoxLayout::TopToBottom );
-	    break;
-	case QBoxLayout::TopToBottom:
-	    setDirection( QBoxLayout::BottomToTop );
-	    break;
-	case QBoxLayout::BottomToTop:
-	    setDirection( QBoxLayout::LeftToRight );
-	    break;
-	default:
-	    kdWarning() << "toggleOrientation got an odd direction: " << (uint) direction_ << endl;
-	    setDirection( QBoxLayout::LeftToRight );
-	    break;
+    switch(direction_)
+    {
+        case QBoxLayout::LeftToRight:
+            setDirection(QBoxLayout::RightToLeft);
+            break;
+        case QBoxLayout::RightToLeft:
+            setDirection(QBoxLayout::TopToBottom);
+            break;
+        case QBoxLayout::TopToBottom:
+            setDirection(QBoxLayout::BottomToTop);
+            break;
+        case QBoxLayout::BottomToTop:
+            setDirection(QBoxLayout::LeftToRight);
+            break;
+        default:
+            kdWarning() << "toggleOrientation got an odd direction: " << (uint)direction_ << endl;
+            setDirection(QBoxLayout::LeftToRight);
+            break;
     }
 }
 
 void KasBar::toggleDetached()
 {
-    setDetached( !detached );
+    setDetached(!detached);
 }
 
-void KasBar::setDetached( bool detach )
+void KasBar::setDetached(bool detach)
 {
-    if ( detached == detach )
-	return;
+    if(detached == detach)
+        return;
 
     detached = detach;
     updateLayout();
-    emit detachedChanged( detached );
+    emit detachedChanged(detached);
 }
 
-QSize KasBar::sizeHint( Orientation o,  QSize sz )
+QSize KasBar::sizeHint(Orientation o, QSize sz)
 {
-    if ( o == Horizontal )
-	setBoxesPerLine( sz.width() / itemExtent() );
+    if(o == Horizontal)
+        setBoxesPerLine(sz.width() / itemExtent());
     else
-	setBoxesPerLine( sz.height() / itemExtent() );
+        setBoxesPerLine(sz.height() / itemExtent());
 
-   unsigned int r=0, c=0;
-   if( items.count() > (unsigned int) boxesPerLine_ ) {
-      r = items.count()/boxesPerLine_;
-      c = boxesPerLine_;
-   }
-   else {
-      r = 1;
-      c = items.count();
-   }
+    unsigned int r = 0, c = 0;
+    if(items.count() > (unsigned int)boxesPerLine_)
+    {
+        r = items.count() / boxesPerLine_;
+        c = boxesPerLine_;
+    }
+    else
+    {
+        r = 1;
+        c = items.count();
+    }
 
-   if( r*c < items.count() ) // remainders
-      ++r;
+    if(r * c < items.count()) // remainders
+        ++r;
 
-   QSize s;
-   if( o == Horizontal ) {
-      s.setWidth( c*itemExtent() );
-      s.setHeight( r*itemExtent() );
-   }
-   else {
-      s.setWidth( r*itemExtent() );
-      s.setHeight( c*itemExtent() );
-   }
+    QSize s;
+    if(o == Horizontal)
+    {
+        s.setWidth(c * itemExtent());
+        s.setHeight(r * itemExtent());
+    }
+    else
+    {
+        s.setWidth(r * itemExtent());
+        s.setHeight(c * itemExtent());
+    }
 
-   return s;
+    return s;
 }
 
 void KasBar::updateLayout()
 {
-//    kdDebug(1345) << "KasBar: updateLayout(), count is " << items.count() << endl;
-    if ( !isUpdatesEnabled() )
-	return;
+    //    kdDebug(1345) << "KasBar: updateLayout(), count is " << items.count() << endl;
+    if(!isUpdatesEnabled())
+        return;
     bool updates = isUpdatesEnabled();
-    setUpdatesEnabled( false );
+    setUpdatesEnabled(false);
 
-// This is for testing a rectangular layout
-//    boxesPerLine_ = (uint) ceil(sqrt( items.count() ));
+    // This is for testing a rectangular layout
+    //    boxesPerLine_ = (uint) ceil(sqrt( items.count() ));
 
-   // Work out the number of rows and columns
-   unsigned int r=0, c=0;
-   if( items.count() > (unsigned int) boxesPerLine_ ) {
-      r = items.count()/boxesPerLine_;
-      c = boxesPerLine_;
-   }
-   else{
-      r = 1;
-      c = items.count();
-   }
+    // Work out the number of rows and columns
+    unsigned int r = 0, c = 0;
+    if(items.count() > (unsigned int)boxesPerLine_)
+    {
+        r = items.count() / boxesPerLine_;
+        c = boxesPerLine_;
+    }
+    else
+    {
+        r = 1;
+        c = items.count();
+    }
 
-   if( r*c < items.count() ) // remainders
-      ++r;
+    if(r * c < items.count()) // remainders
+        ++r;
 
-   QSize sz;
-   if ( orient == Horizontal )
-       sz = QSize( c * itemExtent(), r * itemExtent() );
-   else
-       sz = QSize( r * itemExtent(), c * itemExtent() );
+    QSize sz;
+    if(orient == Horizontal)
+        sz = QSize(c * itemExtent(), r * itemExtent());
+    else
+        sz = QSize(r * itemExtent(), c * itemExtent());
 
-   if ( sz != size() ) {
-       resize( sz );
-   }
+    if(sz != size())
+    {
+        resize(sz);
+    }
 
-   setUpdatesEnabled( updates );
+    setUpdatesEnabled(updates);
 
-   QWidget *top = topLevelWidget();
-   QRegion mask;
+    QWidget *top = topLevelWidget();
+    QRegion mask;
 
-   KasItem *i;
-   if ( orient == Horizontal ) {
-       for ( i = items.first(); i; i = items.next() ) {
-	   int x = (items.at() % c) * itemExtent();
+    KasItem *i;
+    if(orient == Horizontal)
+    {
+        for(i = items.first(); i; i = items.next())
+        {
+            int x = (items.at() % c) * itemExtent();
 
-	   if ( direction_ == QBoxLayout::RightToLeft )
-	       x = width() - x - itemExtent();
+            if(direction_ == QBoxLayout::RightToLeft)
+                x = width() - x - itemExtent();
 
-	   i->setPos( x, (items.at() / c) * itemExtent() );
-	   i->update();
-	   mask = mask.unite( QRegion( QRect( i->pos(), QSize(itemExtent(),itemExtent()) ) ) );
-       }
-   }
-   else {
-       for ( i = items.first(); i; i = items.next() ) {
-	   int y = (items.at() / r) * itemExtent();
+            i->setPos(x, (items.at() / c) * itemExtent());
+            i->update();
+            mask = mask.unite(QRegion(QRect(i->pos(), QSize(itemExtent(), itemExtent()))));
+        }
+    }
+    else
+    {
+        for(i = items.first(); i; i = items.next())
+        {
+            int y = (items.at() / r) * itemExtent();
 
-	   if ( direction_ == QBoxLayout::BottomToTop )
-	       y = height() - y - itemExtent();
+            if(direction_ == QBoxLayout::BottomToTop)
+                y = height() - y - itemExtent();
 
-	   i->setPos( (items.at() % r) * itemExtent(), y );
-	   i->update();
-	   mask = mask.unite( QRegion( QRect( i->pos(), QSize(itemExtent(),itemExtent()) ) ) );
-       }
-   }
+            i->setPos((items.at() % r) * itemExtent(), y);
+            i->update();
+            mask = mask.unite(QRegion(QRect(i->pos(), QSize(itemExtent(), itemExtent()))));
+        }
+    }
 
-   if ( useMask_ )
-       top->setMask( mask );
-   else
-       top->clearMask();
-   update();
+    if(useMask_)
+        top->setMask(mask);
+    else
+        top->clearMask();
+    update();
 }
 
 void KasBar::rereadMaster()
 {
-    if ( !master_ )
-	return;
+    if(!master_)
+        return;
 
-    setItemSize( master_->itemSize() );
-    setTint( master_->hasTint() );
-    setTintColor( master_->tintColor() );
-    setTintAmount( master_->tintAmount() );
+    setItemSize(master_->itemSize());
+    setTint(master_->hasTint());
+    setTintColor(master_->tintColor());
+    setTintAmount(master_->tintAmount());
 }
 
-void KasBar::append( KasItem *i )
+void KasBar::append(KasItem *i)
 {
-   if ( !i )
-      return;
+    if(!i)
+        return;
 
-   items.append( i );
-   updateLayout();
+    items.append(i);
+    updateLayout();
 }
 
-void KasBar::insert( int index, KasItem *i )
+void KasBar::insert(int index, KasItem *i)
 {
-   if ( (!i) || (index < 0) )
-      return;
+    if((!i) || (index < 0))
+        return;
 
-   items.insert( index, i );
-   updateLayout();
+    items.insert(index, i);
+    updateLayout();
 }
 
-void KasBar::remove( KasItem *i )
+void KasBar::remove(KasItem *i)
 {
-   items.remove( i );
+    items.remove(i);
 
-   if ( i == itemUnderMouse_ )
-      itemUnderMouse_ = 0;
-   updateLayout();
+    if(i == itemUnderMouse_)
+        itemUnderMouse_ = 0;
+    updateLayout();
 }
 
 void KasBar::clear()
 {
-   items.clear();
-   itemUnderMouse_ = 0;
-   updateLayout();
+    items.clear();
+    itemUnderMouse_ = 0;
+    updateLayout();
 }
 
 void KasBar::mousePressEvent(QMouseEvent *ev)
 {
-   KasItem *i = itemAt( ev->pos() );
-   if ( i )
-      i->mousePressEvent( ev );
+    KasItem *i = itemAt(ev->pos());
+    if(i)
+        i->mousePressEvent(ev);
 
-   pressPos = ev->globalPos();
+    pressPos = ev->globalPos();
 }
 
 void KasBar::mouseReleaseEvent(QMouseEvent *ev)
 {
-   if ( !inDrag ) {
-       KasItem *i = itemAt( ev->pos() );
-       if ( i )
-	   i->mouseReleaseEvent( ev );
-   }
-   else if ( detached ) {
-       setDetachedPosition( pos() );
-       emit configChanged();
-   }
+    if(!inDrag)
+    {
+        KasItem *i = itemAt(ev->pos());
+        if(i)
+            i->mouseReleaseEvent(ev);
+    }
+    else if(detached)
+    {
+        setDetachedPosition(pos());
+        emit configChanged();
+    }
 
-   pressPos = QPoint();
-   inDrag = false;
+    pressPos = QPoint();
+    inDrag = false;
 }
 
 void KasBar::updateMouseOver()
 {
-    updateMouseOver( mapFromGlobal( QCursor::pos() ) );
+    updateMouseOver(mapFromGlobal(QCursor::pos()));
 }
 
-void KasBar::updateMouseOver( QPoint pos )
+void KasBar::updateMouseOver(QPoint pos)
 {
-   KasItem *i = itemAt(pos);
+    KasItem *i = itemAt(pos);
 
-   if ( i == itemUnderMouse_ )
-       return;
+    if(i == itemUnderMouse_)
+        return;
 
-   if ( itemUnderMouse_ )
-       itemUnderMouse_->mouseLeave();
-   if ( i )
-       i->mouseEnter();
-   if ( i && itemUnderMouse_ )
-       itemUnderMouse_->hidePopup();
+    if(itemUnderMouse_)
+        itemUnderMouse_->mouseLeave();
+    if(i)
+        i->mouseEnter();
+    if(i && itemUnderMouse_)
+        itemUnderMouse_->hidePopup();
 
-   itemUnderMouse_ = i;
+    itemUnderMouse_ = i;
 }
 
 void KasBar::mouseMoveEvent(QMouseEvent *ev)
 {
-    if ( detached && (!pressPos.isNull()) ) {
-	QPoint moved = ev->globalPos() - pressPos;
+    if(detached && (!pressPos.isNull()))
+    {
+        QPoint moved = ev->globalPos() - pressPos;
 
-	if ( !inDrag ) {
-	    if ( moved.manhattanLength() > 6 ) {
-		inDrag = true;
-		emit dragStarted();
-	    }
-	}
+        if(!inDrag)
+        {
+            if(moved.manhattanLength() > 6)
+            {
+                inDrag = true;
+                emit dragStarted();
+            }
+        }
 
-	if ( inDrag ) {
-	    if ( itemUnderMouse_ )
-		itemUnderMouse_->hidePopup();
+        if(inDrag)
+        {
+            if(itemUnderMouse_)
+                itemUnderMouse_->hidePopup();
 
-	    move( pos() + moved );
-	    pressPos = ev->globalPos();
-	}
+            move(pos() + moved);
+            pressPos = ev->globalPos();
+        }
     }
-    else {
-	updateMouseOver( ev->pos() );
+    else
+    {
+        updateMouseOver(ev->pos());
     }
 }
 
-void KasBar::dragMoveEvent ( QDragMoveEvent *ev )
+void KasBar::dragMoveEvent(QDragMoveEvent *ev)
 {
-   KasItem *i = itemAt( ev->pos() );
-   if ( itemUnderMouse_ != i ) {
-      if ( itemUnderMouse_ )
-	 itemUnderMouse_->dragLeave();
-      if ( i )
-	 i->dragEnter();
-      itemUnderMouse_ = i;
-   }
+    KasItem *i = itemAt(ev->pos());
+    if(itemUnderMouse_ != i)
+    {
+        if(itemUnderMouse_)
+            itemUnderMouse_->dragLeave();
+        if(i)
+            i->dragEnter();
+        itemUnderMouse_ = i;
+    }
 }
 
 void KasBar::paintEvent(QPaintEvent *ev)
 {
-   QPainter q( this );
-   q.drawPixmap( ev->rect().topLeft(), offscreen, ev->rect() );
+    QPainter q(this);
+    q.drawPixmap(ev->rect().topLeft(), offscreen, ev->rect());
 }
 
 void KasBar::resizeEvent(QResizeEvent *ev)
 {
-    offscreen.resize( ev->size() );
-    QPainter p( &offscreen );
-    paintBackground( &p, QRect(QPoint(0,0),size()) );
+    offscreen.resize(ev->size());
+    QPainter p(&offscreen);
+    paintBackground(&p, QRect(QPoint(0, 0), size()));
     QWidget::resizeEvent(ev);
     emit layoutChanged();
 }
 
 
-QPoint KasBar::itemPos( KasItem *i )
+QPoint KasBar::itemPos(KasItem *i)
 {
     return i->pos();
 }
 
-void KasBar::updateItem( KasItem *i )
+void KasBar::updateItem(KasItem *i)
 {
-    if ( !i )
-	return;
-    if ( !isShown() )
-	return;
+    if(!i)
+        return;
+    if(!isShown())
+        return;
 
-    QPainter p( &offscreen );
+    QPainter p(&offscreen);
     QPoint pos = i->pos();
 
-    paintBackground( &p, QRect( pos, QSize( itemExtent(), itemExtent() ) ) );
-    i->paint( &p, pos.x(), pos.y() );
-    update( QRect( pos, QSize( itemExtent(), itemExtent() ) ) );
+    paintBackground(&p, QRect(pos, QSize(itemExtent(), itemExtent())));
+    i->paint(&p, pos.x(), pos.y());
+    update(QRect(pos, QSize(itemExtent(), itemExtent())));
 }
 
-void KasBar::repaintItem(KasItem *i, bool erase )
+void KasBar::repaintItem(KasItem *i, bool erase)
 {
-    if ( !i )
-	return;
-    if ( !isShown() )
-	return;
+    if(!i)
+        return;
+    if(!isShown())
+        return;
 
-    QPainter p( &offscreen );
+    QPainter p(&offscreen);
     QPoint pos = i->pos();
 
-    paintBackground( &p, QRect( pos, QSize( itemExtent(), itemExtent() ) ) );
-    i->paint( &p, pos.x(), pos.y() );
-    repaint( QRect( pos, QSize( itemExtent(), itemExtent()  ) ), transparent_ || erase );
+    paintBackground(&p, QRect(pos, QSize(itemExtent(), itemExtent())));
+    i->paint(&p, pos.x(), pos.y());
+    repaint(QRect(pos, QSize(itemExtent(), itemExtent())), transparent_ || erase);
 }
 
-KasItem* KasBar::itemAt(const QPoint &p)
+KasItem *KasBar::itemAt(const QPoint &p)
 {
-   KasItem *i;
-   QRect cr;
+    KasItem *i;
+    QRect cr;
 
-   for (i = items.first(); i; i = items.next()) {
-       cr.setTopLeft( i->pos() );
-       cr.setSize( QSize( itemExtent(), itemExtent() ) );
+    for(i = items.first(); i; i = items.next())
+    {
+        cr.setTopLeft(i->pos());
+        cr.setSize(QSize(itemExtent(), itemExtent()));
 
-       if(cr.contains(p))
-	   return i;
-   }
+        if(cr.contains(p))
+            return i;
+    }
 
-   return 0;
+    return 0;
 }
 
-void KasBar::setBackground( const QPixmap &newBg )
+void KasBar::setBackground(const QPixmap &newBg)
 {
     bg = newBg;
 
-    QPainter p( &offscreen );
-    paintBackground( &p, QRect(QPoint(0,0),size()) );
+    QPainter p(&offscreen);
+    paintBackground(&p, QRect(QPoint(0, 0), size()));
 
     updateLayout();
 }
 
-void KasBar::setMasked( bool mask )
+void KasBar::setMasked(bool mask)
 {
-    if ( useMask_ == mask )
-	return;
+    if(useMask_ == mask)
+        return;
 
     useMask_ = mask;
 }
 
-void KasBar::setPaintInactiveFrames( bool enable )
+void KasBar::setPaintInactiveFrames(bool enable)
 {
     paintInactiveFrame_ = enable;
     update();
 }
 
-void KasBar::paintBackground( QPainter *p, const QRect &r )
+void KasBar::paintBackground(QPainter *p, const QRect &r)
 {
     // If we're transparent
-    if ( transparent_ ) {
-	if ( !bg.isNull() ) {
-	    p->drawPixmap( r.topLeft(), bg, r );
-	    return;
-	}
+    if(transparent_)
+    {
+        if(!bg.isNull())
+        {
+            p->drawPixmap(r.topLeft(), bg, r);
+            return;
+        }
     }
 }
 
 void KasBar::addTestItems()
 {
-   KasItem *i = new KasItem( this );
-   insert( 0, i );
-   i->setText( "Animated" );
-   i->setIcon( KGlobal::iconLoader()->loadIcon( "icons", KIcon::NoGroup, KIcon::SizeMedium ) );
-   i->setAnimation( resources()->startupAnimation() );
-   QTimer *aniTimer = new QTimer( i );
-   connect( aniTimer, SIGNAL( timeout() ), i, SLOT( advanceAnimation() ) );
-   aniTimer->start( 100 );
-   i->setShowAnimation( true );
+    KasItem *i = new KasItem(this);
+    insert(0, i);
+    i->setText("Animated");
+    i->setIcon(KGlobal::iconLoader()->loadIcon("icons", KIcon::NoGroup, KIcon::SizeMedium));
+    i->setAnimation(resources()->startupAnimation());
+    QTimer *aniTimer = new QTimer(i);
+    connect(aniTimer, SIGNAL(timeout()), i, SLOT(advanceAnimation()));
+    aniTimer->start(100);
+    i->setShowAnimation(true);
 
-   updateLayout();
+    updateLayout();
 }

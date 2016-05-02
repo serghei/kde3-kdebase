@@ -42,123 +42,127 @@ class QPushButton;
 class QPopupMenu;
 class QListViewItem;
 
-struct SessType {
-	QString name, type;
-	bool hid;
-	int prio;
+struct SessType
+{
+    QString name, type;
+    bool hid;
+    int prio;
 
-	SessType() {}
-	SessType( const QString &n, const QString &t, bool h, int p ) :
-		name( n ), type( t ), hid( h ), prio( p ) {}
-	bool operator<( const SessType &st ) {
-		return hid != st.hid ? hid < st.hid :
-		       prio != st.prio ? prio < st.prio :
-		       name < st.name;
-	}
+    SessType()
+    {
+    }
+    SessType(const QString &n, const QString &t, bool h, int p) : name(n), type(t), hid(h), prio(p)
+    {
+    }
+    bool operator<(const SessType &st)
+    {
+        return hid != st.hid ? hid < st.hid : prio != st.prio ? prio < st.prio : name < st.name;
+    }
 };
 
 class KGreeter : public KGDialog, public KGVerifyHandler {
-	Q_OBJECT
-	typedef KGDialog inherited;
+    Q_OBJECT
+    typedef KGDialog inherited;
 
-  public:
-	KGreeter( bool themed = false );
-	~KGreeter();
+public:
+    KGreeter(bool themed = false);
+    ~KGreeter();
 
-  public slots:
-	void accept();
-	void reject();
-	void slotUserClicked( QListViewItem * );
-	void slotSessionSelected( int );
-	void slotUserEntered();
+public slots:
+    void accept();
+    void reject();
+    void slotUserClicked(QListViewItem *);
+    void slotSessionSelected(int);
+    void slotUserEntered();
 
-  protected:
-	void installUserList();
-	void insertUser( const QImage &, const QString &, struct passwd * );
-	void insertUsers();
-	void putSession( const QString &, const QString &, bool, const char * );
-	void insertSessions();
-	virtual void pluginSetup();
-	void setPrevWM( int );
+protected:
+    void installUserList();
+    void insertUser(const QImage &, const QString &, struct passwd *);
+    void insertUsers();
+    void putSession(const QString &, const QString &, bool, const char *);
+    void insertSessions();
+    virtual void pluginSetup();
+    void setPrevWM(int);
 
-	QString curUser, dName;
-	KSimpleConfig *stsFile;
-	UserListView *userView;
-	QStringList *userList;
-	QPopupMenu *sessMenu;
-	QValueVector<SessType> sessionTypes;
-	int nNormals, nSpecials;
-	int curPrev, curSel;
-	bool prevValid;
-	bool needLoad;
+    QString curUser, dName;
+    KSimpleConfig *stsFile;
+    UserListView *userView;
+    QStringList *userList;
+    QPopupMenu *sessMenu;
+    QValueVector< SessType > sessionTypes;
+    int nNormals, nSpecials;
+    int curPrev, curSel;
+    bool prevValid;
+    bool needLoad;
 
-	static int curPlugin;
-	static PluginList pluginList;
+    static int curPlugin;
+    static PluginList pluginList;
 
-  private slots:
-	void slotLoadPrevWM();
+private slots:
+    void slotLoadPrevWM();
 
-  public: // from KGVerifyHandler
-	virtual void verifyPluginChanged( int id );
-	virtual void verifyClear();
-	virtual void verifyOk();
-	virtual void verifyFailed();
-//	virtual void verifyRetry();
-	virtual void verifySetUser( const QString &user );
+public: // from KGVerifyHandler
+    virtual void verifyPluginChanged(int id);
+    virtual void verifyClear();
+    virtual void verifyOk();
+    virtual void verifyFailed();
+    //	virtual void verifyRetry();
+    virtual void verifySetUser(const QString &user);
 };
 
 class KStdGreeter : public KGreeter {
-	Q_OBJECT
-	typedef KGreeter inherited;
+    Q_OBJECT
+    typedef KGreeter inherited;
 
-  public:
-	KStdGreeter();
+public:
+    KStdGreeter();
 
-  protected:
-	virtual void pluginSetup();
+protected:
+    virtual void pluginSetup();
 
-  private:
-	KdmClock *clock;
-	QLabel *pixLabel;
-	QPushButton *goButton;
-	QPushButton *menuButton;
+private:
+    KdmClock *clock;
+    QLabel *pixLabel;
+    QPushButton *goButton;
+    QPushButton *menuButton;
 
-  public: // from KGVerifyHandler
-	virtual void verifyFailed();
-	virtual void verifyRetry();
+public: // from KGVerifyHandler
+    virtual void verifyFailed();
+    virtual void verifyRetry();
 };
 
 class KThemedGreeter : public KGreeter {
-	Q_OBJECT
-	typedef KGreeter inherited;
+    Q_OBJECT
+    typedef KGreeter inherited;
 
-  public:
-	KThemedGreeter();
-	bool isOK() { return themer != 0; }
-	static QString timedUser;
-	static int timedDelay;
+public:
+    KThemedGreeter();
+    bool isOK()
+    {
+        return themer != 0;
+    }
+    static QString timedUser;
+    static int timedDelay;
 
-  public slots:
-	void slotThemeActivated( const QString &id );
-	void slotSessMenu();
-	void slotActionMenu();
+public slots:
+    void slotThemeActivated(const QString &id);
+    void slotSessMenu();
+    void slotActionMenu();
 
-  protected:
-	virtual void updateStatus( bool fail, bool caps, int timedleft );
-	virtual void pluginSetup();
-	virtual void keyPressEvent( QKeyEvent * );
-	virtual bool event( QEvent *e );
+protected:
+    virtual void updateStatus(bool fail, bool caps, int timedleft);
+    virtual void pluginSetup();
+    virtual void keyPressEvent(QKeyEvent *);
+    virtual bool event(QEvent *e);
 
-  private:
-//	KdmClock *clock;
-	KdmThemer *themer;
-	KdmItem *caps_warning, *xauth_warning, *pam_error, *timed_label,
-	        *console_rect, *userlist_rect,
-	        *session_button, *system_button;
+private:
+    //	KdmClock *clock;
+    KdmThemer *themer;
+    KdmItem *caps_warning, *xauth_warning, *pam_error, *timed_label, *console_rect, *userlist_rect, *session_button, *system_button;
 
-  public: // from KGVerifyHandler
-	virtual void verifyFailed();
-	virtual void verifyRetry();
+public: // from KGVerifyHandler
+    virtual void verifyFailed();
+    virtual void verifyRetry();
 };
 
 #endif /* KGREETER_H */

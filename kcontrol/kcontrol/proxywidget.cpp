@@ -39,113 +39,121 @@
 #include <kdebug.h>
 #include <qtimer.h>
 
-class WhatsThis : public QWhatsThis
-{
+class WhatsThis : public QWhatsThis {
 public:
-    WhatsThis( ProxyWidget* parent )
-    : QWhatsThis( parent ), proxy( parent ) {}
+    WhatsThis(ProxyWidget *parent) : QWhatsThis(parent), proxy(parent)
+    {
+    }
     ~WhatsThis(){};
 
 
-    QString text( const QPoint &  ) {
-    if ( !proxy->quickHelp().isEmpty() )
-        return proxy->quickHelp();
-    else
-        return i18n("The currently loaded configuration module.");
+    QString text(const QPoint &)
+    {
+        if(!proxy->quickHelp().isEmpty())
+            return proxy->quickHelp();
+        else
+            return i18n("The currently loaded configuration module.");
     }
 
 private:
-    ProxyWidget* proxy;
+    ProxyWidget *proxy;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 static void setVisible(QPushButton *btn, bool vis)
 {
-  if (vis)
-    btn->show();
-  else
-    btn->hide();
+    if(vis)
+        btn->show();
+    else
+        btn->hide();
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-class RootInfoWidget : public QLabel
-{
+class RootInfoWidget : public QLabel {
 public:
     RootInfoWidget(QWidget *parent, const char *name);
-    void setRootMsg(const QString& s) { setText(s); }
+    void setRootMsg(const QString &s)
+    {
+        setText(s);
+    }
 };
 
-RootInfoWidget::RootInfoWidget(QWidget *parent, const char *name = 0)
-    : QLabel(parent, name)
+RootInfoWidget::RootInfoWidget(QWidget *parent, const char *name = 0) : QLabel(parent, name)
 {
     setFrameShape(QFrame::Box);
     setFrameShadow(QFrame::Raised);
 
-    setText(i18n("<b>Changes in this module require root access.</b><br>"
-                      "Click the \"Administrator Mode\" button to "
-                      "allow modifications in this module."));
+    setText(
+        i18n("<b>Changes in this module require root access.</b><br>"
+             "Click the \"Administrator Mode\" button to "
+             "allow modifications in this module."));
 
-	QWhatsThis::add(this, i18n("This module requires special permissions, probably "
-                              "for system-wide modifications; therefore, it is "
-                              "required that you provide the root password to be "
-                              "able to change the module's properties.  If you "
-                              "do not provide the password, the module will be "
-                              "disabled."));
+    QWhatsThis::add(this, i18n("This module requires special permissions, probably "
+                               "for system-wide modifications; therefore, it is "
+                               "required that you provide the root password to be "
+                               "able to change the module's properties.  If you "
+                               "do not provide the password, the module will be "
+                               "disabled."));
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class ProxyView : public QScrollView
-{
+class ProxyView : public QScrollView {
 public:
-    ProxyView(KCModule *client, const QString& title, QWidget *parent, bool run_as_root, const char *name);
+    ProxyView(KCModule *client, const QString &title, QWidget *parent, bool run_as_root, const char *name);
 
 private:
     virtual void resizeEvent(QResizeEvent *);
 
     QWidget *contentWidget;
-    KCModule    *client;
+    KCModule *client;
     bool scroll;
 };
 
-class ProxyContentWidget : public QWidget
-{
+class ProxyContentWidget : public QWidget {
 public:
-    ProxyContentWidget( QWidget* parent ) : QWidget( parent ) {}
-    ~ProxyContentWidget(){}
+    ProxyContentWidget(QWidget *parent) : QWidget(parent)
+    {
+    }
+    ~ProxyContentWidget()
+    {
+    }
 
     // this should be really done by qscrollview in AutoOneFit mode!
-    QSize sizeHint() const { return minimumSizeHint(); }
+    QSize sizeHint() const
+    {
+        return minimumSizeHint();
+    }
 };
 
 
-ProxyView::ProxyView(KCModule *_client, const QString&, QWidget *parent, bool run_as_root, const char *name)
+ProxyView::ProxyView(KCModule *_client, const QString &, QWidget *parent, bool run_as_root, const char *name)
     : QScrollView(parent, name), client(_client)
 {
-  setResizePolicy(QScrollView::AutoOneFit);
-  setFrameStyle( NoFrame );
-  contentWidget = new ProxyContentWidget( viewport() );
+    setResizePolicy(QScrollView::AutoOneFit);
+    setFrameStyle(NoFrame);
+    contentWidget = new ProxyContentWidget(viewport());
 
-  QVBoxLayout* vbox = new QVBoxLayout( contentWidget );
+    QVBoxLayout *vbox = new QVBoxLayout(contentWidget);
 
-  if (run_as_root && _client->useRootOnlyMsg()) // notify the user
-  {
-      RootInfoWidget *infoBox = new RootInfoWidget(contentWidget);
-      vbox->addWidget( infoBox );
-      QString msg = _client->rootOnlyMsg();
-      if (!msg.isEmpty())
-	      infoBox->setRootMsg(msg);
-      vbox->setSpacing(KDialog::spacingHint());
-  }
-  client->reparent(contentWidget,0,QPoint(0,0),true);
-  vbox->addWidget( client );
-  vbox->activate(); // make sure we have a proper minimumSizeHint
-  addChild(contentWidget);
+    if(run_as_root && _client->useRootOnlyMsg()) // notify the user
+    {
+        RootInfoWidget *infoBox = new RootInfoWidget(contentWidget);
+        vbox->addWidget(infoBox);
+        QString msg = _client->rootOnlyMsg();
+        if(!msg.isEmpty())
+            infoBox->setRootMsg(msg);
+        vbox->setSpacing(KDialog::spacingHint());
+    }
+    client->reparent(contentWidget, 0, QPoint(0, 0), true);
+    vbox->addWidget(client);
+    vbox->activate(); // make sure we have a proper minimumSizeHint
+    addChild(contentWidget);
 }
 
 void ProxyView::resizeEvent(QResizeEvent *e)
@@ -157,167 +165,164 @@ void ProxyView::resizeEvent(QResizeEvent *e)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-ProxyWidget::ProxyWidget(KCModule *client, QString title, const char *name,
-             bool run_as_root)
-  : QWidget(0, name)
-  , _client(client)
+ProxyWidget::ProxyWidget(KCModule *client, QString title, const char *name, bool run_as_root) : QWidget(0, name), _client(client)
 {
- setCaption(title);
+    setCaption(title);
 
- if (getuid()==0 ) {
-	 // Make root modules look as similar as possible...
-	 QCString replyType;
-	 QByteArray replyData;
-	 
-	 if (kapp->dcopClient()->call("kcontrol", "moduleIface", "getPalette()", QByteArray(),
-				 replyType, replyData))
-		 if ( replyType == "QPalette") {
-			 QDataStream reply( replyData, IO_ReadOnly );
-			 QPalette pal;
-			 reply >> pal;
-			 setPalette(pal);
-		 }
-/* // Doesn't work ...
-	 if (kapp->dcopClient()->call("kcontrol", "moduleIface", "getStyle()", QByteArray(),
-				 replyType, replyData))
-		 if ( replyType == "QString") {
-			 QDataStream reply( replyData, IO_ReadOnly );
-			 QString style; 
-			 reply >> style;
-			 setStyle(style);
-		 }
-*/	 
-	 if (kapp->dcopClient()->call("kcontrol", "moduleIface", "getFont()", QByteArray(),
-				 replyType, replyData))
-		 if ( replyType == "QFont") {
-			 QDataStream reply( replyData, IO_ReadOnly );
-			 QFont font;
-			 reply >> font;
-			 setFont(font);
-		 }
- }
-	 
-  view = new ProxyView(client, title, this, run_as_root, "proxyview");
-  (void) new WhatsThis( this );
+    if(getuid() == 0)
+    {
+        // Make root modules look as similar as possible...
+        QCString replyType;
+        QByteArray replyData;
 
-  connect(_client, SIGNAL(changed(bool)), SLOT(clientChanged(bool)));
-  connect(_client, SIGNAL(quickHelpChanged()), SIGNAL(quickHelpChanged()));
+        if(kapp->dcopClient()->call("kcontrol", "moduleIface", "getPalette()", QByteArray(), replyType, replyData))
+            if(replyType == "QPalette")
+            {
+                QDataStream reply(replyData, IO_ReadOnly);
+                QPalette pal;
+                reply >> pal;
+                setPalette(pal);
+            }
+        /* // Doesn't work ...
+             if (kapp->dcopClient()->call("kcontrol", "moduleIface", "getStyle()", QByteArray(),
+                         replyType, replyData))
+                 if ( replyType == "QString") {
+                     QDataStream reply( replyData, IO_ReadOnly );
+                     QString style;
+                     reply >> style;
+                     setStyle(style);
+                 }
+        */
+        if(kapp->dcopClient()->call("kcontrol", "moduleIface", "getFont()", QByteArray(), replyType, replyData))
+            if(replyType == "QFont")
+            {
+                QDataStream reply(replyData, IO_ReadOnly);
+                QFont font;
+                reply >> font;
+                setFont(font);
+            }
+    }
 
-  _sep = new KSeparator(KSeparator::HLine, this);
+    view = new ProxyView(client, title, this, run_as_root, "proxyview");
+    (void)new WhatsThis(this);
 
-  _handbook= new KPushButton( KGuiItem(KStdGuiItem::help().text(),"contents"), this );
-  _default = new KPushButton( KStdGuiItem::defaults(), this );
-  _apply =   new KPushButton( KStdGuiItem::apply(), this );
-  _reset =   new KPushButton( KGuiItem( i18n( "&Reset" ), "undo" ), this );
-  _root =    new KPushButton( KGuiItem(i18n( "&Administrator Mode" )), this );
+    connect(_client, SIGNAL(changed(bool)), SLOT(clientChanged(bool)));
+    connect(_client, SIGNAL(quickHelpChanged()), SIGNAL(quickHelpChanged()));
 
-  bool mayModify = (!run_as_root || !_client->useRootOnlyMsg()) && !KCGlobal::isInfoCenter();
+    _sep = new KSeparator(KSeparator::HLine, this);
 
-  // only enable the requested buttons
-  int b = _client->buttons();
-  setVisible(_handbook, (b & KCModule::Help));
-  setVisible(_default, mayModify && (b & KCModule::Default));
-  setVisible(_apply, mayModify && (b & KCModule::Apply));
-  setVisible(_reset, mayModify && (b & KCModule::Apply));
-  setVisible(_root, run_as_root);
+    _handbook = new KPushButton(KGuiItem(KStdGuiItem::help().text(), "contents"), this);
+    _default = new KPushButton(KStdGuiItem::defaults(), this);
+    _apply = new KPushButton(KStdGuiItem::apply(), this);
+    _reset = new KPushButton(KGuiItem(i18n("&Reset"), "undo"), this);
+    _root = new KPushButton(KGuiItem(i18n("&Administrator Mode")), this);
 
-  // disable initial buttons
-  _apply->setEnabled( false );
-  _reset->setEnabled( false );
+    bool mayModify = (!run_as_root || !_client->useRootOnlyMsg()) && !KCGlobal::isInfoCenter();
 
-  connect(_handbook, SIGNAL(clicked()), SLOT(handbookClicked()));
-  connect(_default, SIGNAL(clicked()), SLOT(defaultClicked()));
-  connect(_apply, SIGNAL(clicked()), SLOT(applyClicked()));
-  connect(_reset, SIGNAL(clicked()), SLOT(resetClicked()));
-  connect(_root, SIGNAL(clicked()), SLOT(rootClicked()));
+    // only enable the requested buttons
+    int b = _client->buttons();
+    setVisible(_handbook, (b & KCModule::Help));
+    setVisible(_default, mayModify && (b & KCModule::Default));
+    setVisible(_apply, mayModify && (b & KCModule::Apply));
+    setVisible(_reset, mayModify && (b & KCModule::Apply));
+    setVisible(_root, run_as_root);
 
-  QVBoxLayout *top = new QVBoxLayout(this, KDialog::marginHint(), 
-      KDialog::spacingHint());
-  top->addWidget(view);
-  top->addWidget(_sep);
+    // disable initial buttons
+    _apply->setEnabled(false);
+    _reset->setEnabled(false);
 
-  QHBoxLayout *buttons = new QHBoxLayout(top, 4);
-  buttons->addWidget(_handbook);
-  buttons->addWidget(_default);
-  if (run_as_root) 
-  {
-    buttons->addWidget(_root);
-  }
+    connect(_handbook, SIGNAL(clicked()), SLOT(handbookClicked()));
+    connect(_default, SIGNAL(clicked()), SLOT(defaultClicked()));
+    connect(_apply, SIGNAL(clicked()), SLOT(applyClicked()));
+    connect(_reset, SIGNAL(clicked()), SLOT(resetClicked()));
+    connect(_root, SIGNAL(clicked()), SLOT(rootClicked()));
 
-  buttons->addStretch(1);
-  if (mayModify)
-  {
-    buttons->addWidget(_apply);
-    buttons->addWidget(_reset);
-  }
+    QVBoxLayout *top = new QVBoxLayout(this, KDialog::marginHint(), KDialog::spacingHint());
+    top->addWidget(view);
+    top->addWidget(_sep);
 
-  top->activate();
+    QHBoxLayout *buttons = new QHBoxLayout(top, 4);
+    buttons->addWidget(_handbook);
+    buttons->addWidget(_default);
+    if(run_as_root)
+    {
+        buttons->addWidget(_root);
+    }
+
+    buttons->addStretch(1);
+    if(mayModify)
+    {
+        buttons->addWidget(_apply);
+        buttons->addWidget(_reset);
+    }
+
+    top->activate();
 }
 
 ProxyWidget::~ProxyWidget()
 {
-  delete _client;
+    delete _client;
 }
 
 QString ProxyWidget::quickHelp() const
 {
-  if (_client)
-    return _client->quickHelp();
-  else
-    return "";
+    if(_client)
+        return _client->quickHelp();
+    else
+        return "";
 }
 
 void ProxyWidget::handbookClicked()
 {
-  if (getuid()!=0)
-	  emit handbookRequest();
-  else
-     kapp->dcopClient()->send("kcontrol", "moduleIface", "invokeHandbook()", QByteArray());
+    if(getuid() != 0)
+        emit handbookRequest();
+    else
+        kapp->dcopClient()->send("kcontrol", "moduleIface", "invokeHandbook()", QByteArray());
 }
 
 void ProxyWidget::helpClicked()
 {
-  if (getuid()!=0)
-         emit helpRequest();
-  else
-     kapp->dcopClient()->send("kcontrol", "moduleIface", "invokeHelp()", QByteArray());
+    if(getuid() != 0)
+        emit helpRequest();
+    else
+        kapp->dcopClient()->send("kcontrol", "moduleIface", "invokeHelp()", QByteArray());
 }
 
 void ProxyWidget::defaultClicked()
 {
-  clientChanged(true);
-  _client->defaults();
+    clientChanged(true);
+    _client->defaults();
 }
 
 void ProxyWidget::applyClicked()
 {
-  _client->save();
-  clientChanged(false);
+    _client->save();
+    clientChanged(false);
 }
 
 void ProxyWidget::resetClicked()
 {
-  _client->load();
-  clientChanged(false);
+    _client->load();
+    clientChanged(false);
 }
 
 void ProxyWidget::rootClicked()
 {
-  emit runAsRoot();
+    emit runAsRoot();
 }
 
 void ProxyWidget::clientChanged(bool state)
 {
-  _apply->setEnabled(state);
-  _reset->setEnabled(state);
+    _apply->setEnabled(state);
+    _reset->setEnabled(state);
 
-  // forward the signal
-  emit changed(state);
+    // forward the signal
+    emit changed(state);
 }
 
 const KAboutData *ProxyWidget::aboutData() const
 {
-  return _client->aboutData();
+    return _client->aboutData();
 }
 
 // vim: sw=2 sts=2 et

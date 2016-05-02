@@ -24,29 +24,25 @@
 class QHBoxLayout;
 class QVBox;
 
-class SidebarExtension : public KPanelExtension
-{
+class SidebarExtension : public KPanelExtension {
     Q_OBJECT
 
 public:
-    SidebarExtension( const QString& configFile,
-                     Type t = Normal,
-                     int actions = 0,
-                     QWidget *parent = 0, const char *name = 0 );
+    SidebarExtension(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
 
     virtual ~SidebarExtension();
 
-    QSize sizeHint( Position, QSize maxSize ) const;
+    QSize sizeHint(Position, QSize maxSize) const;
     Position preferedPosition() const;
 
-    virtual void positionChange( Position position );
+    virtual void positionChange(Position position);
 
 protected:
     virtual void about();
     virtual void preferences();
-    virtual bool eventFilter( QObject *o, QEvent *e );
+    virtual bool eventFilter(QObject *o, QEvent *e);
 protected slots:
-    void openURLRequest( const KURL &, const KParts::URLArgs &);
+    void openURLRequest(const KURL &, const KParts::URLArgs &);
     void needLayoutUpdate(bool);
 
 private:
@@ -60,4 +56,3 @@ private:
 };
 
 #endif
-

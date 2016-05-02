@@ -30,33 +30,36 @@ class KActionMenu;
 class QTextStream;
 class KPopupMenu;
 
-class KBookmarkHandler : public QObject, public KBookmarkOwner
-{
+class KBookmarkHandler : public QObject, public KBookmarkOwner {
     Q_OBJECT
 
 public:
-    KBookmarkHandler( KateFileSelector *parent, KPopupMenu *kpopupmenu=0 );
+    KBookmarkHandler(KateFileSelector *parent, KPopupMenu *kpopupmenu = 0);
     ~KBookmarkHandler();
 
     // KBookmarkOwner interface:
-    virtual void openBookmarkURL( const QString& url ) { emit openURL( url ); }
+    virtual void openBookmarkURL(const QString &url)
+    {
+        emit openURL(url);
+    }
     virtual QString currentURL() const;
 
-    KPopupMenu *menu() const { return m_menu; }
+    KPopupMenu *menu() const
+    {
+        return m_menu;
+    }
 
 signals:
-    void openURL( const QString& url );
+    void openURL(const QString &url);
 
 private slots:
-    void slotNewBookmark( const QString& text, const QCString& url,
-                          const QString& additionalInfo );
-    void slotNewFolder( const QString& text, bool open,
-                        const QString& additionalInfo );
+    void slotNewBookmark(const QString &text, const QCString &url, const QString &additionalInfo);
+    void slotNewFolder(const QString &text, bool open, const QString &additionalInfo);
     void newSeparator();
     void endFolder();
 
 protected:
-    virtual void virtual_hook( int id, void* data );
+    virtual void virtual_hook(int id, void *data);
 
 private:
     KateFileSelector *mParent;
@@ -65,7 +68,7 @@ private:
 
     QTextStream *m_importStream;
 
-    //class KBookmarkHandlerPrivate *d;
+    // class KBookmarkHandlerPrivate *d;
 };
 
 

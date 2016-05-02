@@ -36,13 +36,11 @@ class KActionCollection;
 class KBookmarkOwner;
 class Panel;
 
-class PanelKMenu : public PanelServiceMenu, public DCOPObject
-{
+class PanelKMenu : public PanelServiceMenu, public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-k_dcop:
-    void slotServiceStartedByStorageId(QString starter, QString desktopPath);
+    k_dcop : void slotServiceStartedByStorageId(QString starter, QString desktopPath);
 
 public:
     PanelKMenu();
@@ -69,7 +67,7 @@ protected slots:
     void slotLock();
     void slotLogout();
     void slotPopulateSessions();
-    void slotSessionActivated( int );
+    void slotSessionActivated(int);
     void slotSaveSession();
     void slotRunCommand();
     void slotEditUserContact();
@@ -79,7 +77,7 @@ protected slots:
 
 protected:
     QRect sideImageRect();
-    QMouseEvent translateMouseEvent(QMouseEvent* e);
+    QMouseEvent translateMouseEvent(QMouseEvent *e);
     void resizeEvent(QResizeEvent *);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *);
@@ -91,16 +89,16 @@ protected:
     virtual void clearSubmenus();
 
 private:
-    QPopupMenu                 *sessionsMenu;
-    QPixmap                     sidePixmap;
-    QPixmap                     sideTilePixmap;
-    int                         client_id;
-    bool                        delay_init;
-    QIntDict<KickerClientMenu>  clients;
-    KBookmarkMenu              *bookmarkMenu;
-    KActionCollection          *actionCollection;
-    KBookmarkOwner             *bookmarkOwner;
-    PopupMenuList               dynamicSubMenus;
+    QPopupMenu *sessionsMenu;
+    QPixmap sidePixmap;
+    QPixmap sideTilePixmap;
+    int client_id;
+    bool delay_init;
+    QIntDict< KickerClientMenu > clients;
+    KBookmarkMenu *bookmarkMenu;
+    KActionCollection *actionCollection;
+    KBookmarkOwner *bookmarkOwner;
+    PopupMenuList dynamicSubMenus;
 };
 
 #endif

@@ -26,22 +26,20 @@
 
 #include "medium.h"
 
-class KFileMediaPlugin : public KFilePlugin
-{
-Q_OBJECT
+class KFileMediaPlugin : public KFilePlugin {
+    Q_OBJECT
 public:
-	KFileMediaPlugin(QObject *parent, const char *name,
-	                 const QStringList &args);
+    KFileMediaPlugin(QObject *parent, const char *name, const QStringList &args);
 
-	bool readInfo(KFileMetaInfo &info, uint what = KFileMetaInfo::Fastest);
+    bool readInfo(KFileMetaInfo &info, uint what = KFileMetaInfo::Fastest);
 
 private:
-	void addMimeType(const char *mimeType);
-	const Medium askMedium(KFileMetaInfo &info);
+    void addMimeType(const char *mimeType);
+    const Medium askMedium(KFileMetaInfo &info);
 
-	KIO::filesize_t m_total;
-	KIO::filesize_t m_used;
-	KIO::filesize_t m_free;
+    KIO::filesize_t m_total;
+    KIO::filesize_t m_used;
+    KIO::filesize_t m_free;
 };
 
 #endif

@@ -28,110 +28,119 @@
 
 CONTAINER LogFileList = 0;
 CONTAINER SensorList = 0;
-char* RegisterDomain = 0;
+char *RegisterDomain = 0;
 
-void LogFileList_cleanup( void *ptr );
-void freeConfigFile( void );
+void LogFileList_cleanup(void *ptr);
+void freeConfigFile(void);
 
-void LogFileList_cleanup( void *ptr )
+void LogFileList_cleanup(void *ptr)
 {
-  if ( ptr ) {
-    if ( ((ConfigLogFile*)ptr)->name )
-      free( ((ConfigLogFile*)ptr)->name );
+    if(ptr)
+    {
+        if(((ConfigLogFile *)ptr)->name)
+            free(((ConfigLogFile *)ptr)->name);
 
-    free( ptr );
-  }
+        free(ptr);
+    }
 }
 
-void freeConfigFile( void )
+void freeConfigFile(void)
 {
-  destr_ctnr( LogFileList, LogFileList_cleanup );
-  destr_ctnr( SensorList, free );
+    destr_ctnr(LogFileList, LogFileList_cleanup);
+    destr_ctnr(SensorList, free);
 }
 
-void parseConfigFile( const char *filename )
+void parseConfigFile(const char *filename)
 {
-  FILE* config;
-  char line[ 2048 ];
-  char *begin, *token, *tmp;
-  ConfigLogFile *confLog;
+    FILE *config;
+    char line[2048];
+    char *begin, *token, *tmp;
+    ConfigLogFile *confLog;
 
-  LogFileList = new_ctnr();
-  SensorList = new_ctnr();
+    LogFileList = new_ctnr();
+    SensorList = new_ctnr();
 
-  if ( ( config = fopen( filename, "r" ) ) == NULL ) {
-    log_error( "can't open config file '%s'", filename );
+    if((config = fopen(filename, "r")) == NULL)
+    {
+        log_error("can't open config file '%s'", filename);
 
-    /**
-      If we can't open a config file we have to add the
-      available sensors manually
-     */
-    push_ctnr( SensorList, strdup( "ProcessList" ) );
-    push_ctnr( SensorList, strdup( "Memory" ) );
-    push_ctnr( SensorList, strdup( "Stat" ) );
-    push_ctnr( SensorList, strdup( "NetDev" ) );
-    push_ctnr( SensorList, strdup( "NetStat" ) );
-    push_ctnr( SensorList, strdup( "Apm" ) );
-    push_ctnr( SensorList, strdup( "Acpi" ) );
-    push_ctnr( SensorList, strdup( "CpuInfo" ) );
-    push_ctnr( SensorList, strdup( "LoadAvg" ) );
-    push_ctnr( SensorList, strdup( "LmSensors" ) );
-    push_ctnr( SensorList, strdup( "DiskStat" ) );
-    push_ctnr( SensorList, strdup( "LogFile" ) );
-    push_ctnr( SensorList, strdup( "DellLaptop" ) );
+        /**
+          If we can't open a config file we have to add the
+          available sensors manually
+         */
+        push_ctnr(SensorList, strdup("ProcessList"));
+        push_ctnr(SensorList, strdup("Memory"));
+        push_ctnr(SensorList, strdup("Stat"));
+        push_ctnr(SensorList, strdup("NetDev"));
+        push_ctnr(SensorList, strdup("NetStat"));
+        push_ctnr(SensorList, strdup("Apm"));
+        push_ctnr(SensorList, strdup("Acpi"));
+        push_ctnr(SensorList, strdup("CpuInfo"));
+        push_ctnr(SensorList, strdup("LoadAvg"));
+        push_ctnr(SensorList, strdup("LmSensors"));
+        push_ctnr(SensorList, strdup("DiskStat"));
+        push_ctnr(SensorList, strdup("LogFile"));
+        push_ctnr(SensorList, strdup("DellLaptop"));
 
-    return;
-  }
+        return;
+    }
 
-  while ( fgets( line, sizeof( line ), config ) != NULL ) {
-    if ( ( line[ 0 ] == '#') || ( strlen( line ) == 0 ) )
-      continue;
+    while(fgets(line, sizeof(line), config) != NULL)
+    {
+        if((line[0] == '#') || (strlen(line) == 0))
+            continue;
 
-    if ( strchr( line, '#' ) )
-      *( strchr( line, '#' ) ) = '\0';
+        if(strchr(line, '#'))
+            *(strchr(line, '#')) = '\0';
 
-    if ( line[ strlen( line ) - 1 ] == '\n' )
-      line[ strlen( line ) - 1 ] = '\0';
+        if(line[strlen(line) - 1] == '\n')
+            line[strlen(line) - 1] = '\0';
 
-    if ( !strncmp( line, "RegisterDomain",14) && (begin = strchr( line, '=' )) ) RegisterDomain=strdup(begin+1);
+        if(!strncmp(line, "RegisterDomain", 14) && (begin = strchr(line, '=')))
+            RegisterDomain = strdup(begin + 1);
 
-    if ( !strncmp( line, "LogFiles", 8 ) && (begin = strchr( line, '=' )) ) {
-      begin++;
+        if(!strncmp(line, "LogFiles", 8) && (begin = strchr(line, '=')))
+        {
+            begin++;
 
-      for ( token = strtok( begin, "," ); token; token = strtok( NULL, "," ) ) {
-        if ( ( confLog = (ConfigLogFile *)malloc( sizeof( ConfigLogFile ) ) ) == NULL ) {
-          log_error( "malloc() no free memory avail" );
-          continue;
+            for(token = strtok(begin, ","); token; token = strtok(NULL, ","))
+            {
+                if((confLog = (ConfigLogFile *)malloc(sizeof(ConfigLogFile))) == NULL)
+                {
+                    log_error("malloc() no free memory avail");
+                    continue;
+                }
+                confLog->name = strdup(token);
+                tmp = strchr(confLog->name, ':');
+                *tmp = '\0';
+                confLog->path = tmp;
+                confLog->path++;
+
+                push_ctnr(LogFileList, confLog);
+            }
         }
-        confLog->name = strdup( token );
-        tmp = strchr( confLog->name, ':' );
-        *tmp = '\0';
-        confLog->path = tmp;
-        confLog->path++;
 
-        push_ctnr( LogFileList, confLog );
-      }
+        if(!strncmp(line, "Sensors", 7) && (begin = strchr(line, '=')))
+        {
+            begin++;
+
+            for(token = strtok(begin, ","); token; token = strtok(NULL, ","))
+                push_ctnr(SensorList, strdup(token));
+        }
     }
 
-    if ( !strncmp( line, "Sensors", 7 ) && (begin = strchr( line, '=' )) ) {
-      begin++;
-
-      for ( token = strtok( begin, ","); token; token = strtok( NULL, "," ) )
-        push_ctnr( SensorList, strdup( token ) );
-    }
-	}
-
-	fclose( config );
+    fclose(config);
 }
 
-int sensorAvailable( const char *sensor )
+int sensorAvailable(const char *sensor)
 {
-  char* name;
+    char *name;
 
-  for ( name = first_ctnr( SensorList ); name; name = next_ctnr( SensorList ) ) {
-    if ( !strcmp( name, sensor ) )
-      return 1;
-  }
+    for(name = first_ctnr(SensorList); name; name = next_ctnr(SensorList))
+    {
+        if(!strcmp(name, sensor))
+            return 1;
+    }
 
-  return 0;
+    return 0;
 }

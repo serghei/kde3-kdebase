@@ -12,4 +12,4 @@
 
 #include "themestandard.h"
 
-K_EXPORT_COMPONENT_FACTORY( ksplashstandard, KGenericFactory<ThemeStandard>( "ksplash" ) )
+K_EXPORT_COMPONENT_FACTORY(ksplashstandard, KGenericFactory< ThemeStandard >("ksplash"))

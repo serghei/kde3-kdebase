@@ -47,11 +47,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // then every KButton will cause it to be reconstructed.
 // So we rely on Kicker to delete MenuManager on the way out
 // ensuring it's the last thing to go.
-MenuManager* MenuManager::m_self = 0;
+MenuManager *MenuManager::m_self = 0;
 
-MenuManager* MenuManager::the()
+MenuManager *MenuManager::the()
 {
-    if (!m_self)
+    if(!m_self)
     {
         m_self = new MenuManager();
     }
@@ -59,18 +59,16 @@ MenuManager* MenuManager::the()
     return m_self;
 }
 
-MenuManager::MenuManager(QObject *parent)
-    : QObject(parent, "MenuManager"), DCOPObject("MenuManager")
+MenuManager::MenuManager(QObject *parent) : QObject(parent, "MenuManager"), DCOPObject("MenuManager")
 {
     m_kmenu = new PanelKMenu;
     kapp->dcopClient()->setNotifications(true);
-    connect(kapp->dcopClient(), SIGNAL(applicationRemoved(const QCString&)),
-            this, SLOT(applicationRemoved(const QCString&)));
+    connect(kapp->dcopClient(), SIGNAL(applicationRemoved(const QCString &)), this, SLOT(applicationRemoved(const QCString &)));
 }
 
 MenuManager::~MenuManager()
 {
-    if (this == m_self)
+    if(this == m_self)
     {
         m_self = 0;
     }
@@ -90,24 +88,24 @@ void MenuManager::showKMenu()
 
 void MenuManager::popupKMenu(const QPoint &p)
 {
-//    kdDebug(1210) << "popupKMenu()" << endl;
-    if (m_kmenu->isVisible())
+    //    kdDebug(1210) << "popupKMenu()" << endl;
+    if(m_kmenu->isVisible())
     {
         m_kmenu->hide();
     }
-    else if (p.isNull())
+    else if(p.isNull())
     {
         m_kmenu->popup(QCursor::pos());
     }
     else
     {
-        m_kmenu->popup( p );
+        m_kmenu->popup(p);
     }
 }
 
 void MenuManager::registerKButton(PanelPopupButton *button)
 {
-    if (!button)
+    if(!button)
     {
         return;
     }
@@ -120,12 +118,12 @@ void MenuManager::unregisterKButton(PanelPopupButton *button)
     m_kbuttons.remove(button);
 }
 
-PanelPopupButton* MenuManager::findKButtonFor(QPopupMenu* menu)
+PanelPopupButton *MenuManager::findKButtonFor(QPopupMenu *menu)
 {
     KButtonList::const_iterator itEnd = m_kbuttons.constEnd();
-    for (KButtonList::const_iterator it = m_kbuttons.constBegin(); it != itEnd; ++it)
+    for(KButtonList::const_iterator it = m_kbuttons.constBegin(); it != itEnd; ++it)
     {
-        if ((*it)->popup() == menu)
+        if((*it)->popup() == menu)
         {
             return *it;
         }
@@ -136,7 +134,7 @@ PanelPopupButton* MenuManager::findKButtonFor(QPopupMenu* menu)
 
 void MenuManager::kmenuAccelActivated()
 {
-    if (m_kmenu->isVisible())
+    if(m_kmenu->isVisible())
     {
         m_kmenu->hide();
         return;
@@ -144,15 +142,15 @@ void MenuManager::kmenuAccelActivated()
 
     m_kmenu->initialize();
 
-    if (m_kbuttons.isEmpty())
+    if(m_kbuttons.isEmpty())
     {
         // no button to use, make it behave like a desktop menu
         QPoint p;
         // Popup the K-menu at the center of the screen.
-        QDesktopWidget* desktop = KApplication::desktop();
+        QDesktopWidget *desktop = KApplication::desktop();
         QRect r = desktop->screenGeometry(desktop->screenNumber(QCursor::pos()));
         // kMenu->rect() is not valid before showing, use sizeHint()
-        p = r.center() - QRect( QPoint( 0, 0 ), m_kmenu->sizeHint()).center();
+        p = r.center() - QRect(QPoint(0, 0), m_kmenu->sizeHint()).center();
         m_kmenu->popup(p);
 
         // when the cursor is in the area where the menu pops up,
@@ -167,18 +165,18 @@ void MenuManager::kmenuAccelActivated()
         // We cannot rely on the popup menu's current size(), if it wasn't
         // shown before, so we resize it here according to its sizeHint().
         const QSize size = m_kmenu->sizeHint();
-        m_kmenu->resize(size.width(),size.height());
+        m_kmenu->resize(size.width(), size.height());
 
-        PanelPopupButton* button = findKButtonFor(m_kmenu);
+        PanelPopupButton *button = findKButtonFor(m_kmenu);
 
         // let's unhide the panel while we're at it. traverse the widget
         // hierarchy until we find the panel, if any
-        QObject* menuParent = button->parent();
-        while (menuParent)
+        QObject *menuParent = button->parent();
+        while(menuParent)
         {
-            ExtensionContainer* ext = dynamic_cast<ExtensionContainer*>(menuParent);
+            ExtensionContainer *ext = dynamic_cast< ExtensionContainer * >(menuParent);
 
-            if (ext)
+            if(ext)
             {
                 ext->unhideIfHidden();
                 // make sure it's unhidden before we use it to figure out
@@ -199,13 +197,13 @@ QCString MenuManager::createMenu(QPixmap icon, QString text)
     static int menucount = 0;
     menucount++;
     QCString name;
-    name.sprintf("kickerclientmenu-%d", menucount );
-    KickerClientMenu* p = new KickerClientMenu( 0, name );
+    name.sprintf("kickerclientmenu-%d", menucount);
+    KickerClientMenu *p = new KickerClientMenu(0, name);
     clientmenus.append(p);
     m_kmenu->initialize();
     p->text = text;
     p->icon = icon;
-    p->idInParentMenu = m_kmenu->insertClientMenu( p );
+    p->idInParentMenu = m_kmenu->insertClientMenu(p);
     p->createdBy = kapp->dcopClient()->senderId();
     m_kmenu->adjustSize();
     return name;
@@ -215,11 +213,11 @@ void MenuManager::removeMenu(QCString menu)
 {
     bool iterate = true;
     ClientMenuList::iterator it = clientmenus.begin();
-    for (; it != clientmenus.end(); iterate ? ++it : it)
+    for(; it != clientmenus.end(); iterate ? ++it : it)
     {
         iterate = true;
-        KickerClientMenu* m = *it;
-        if (m->objId() == menu)
+        KickerClientMenu *m = *it;
+        if(m->objId() == menu)
         {
             m_kmenu->removeClientMenu(m->idInParentMenu);
             it = clientmenus.erase(it);
@@ -230,15 +228,15 @@ void MenuManager::removeMenu(QCString menu)
 }
 
 
-void MenuManager::applicationRemoved(const QCString& appRemoved)
+void MenuManager::applicationRemoved(const QCString &appRemoved)
 {
     bool iterate = true;
     ClientMenuList::iterator it = clientmenus.begin();
-    for (; it != clientmenus.end(); iterate ? ++it : it)
+    for(; it != clientmenus.end(); iterate ? ++it : it)
     {
         iterate = true;
-        KickerClientMenu* m = *it;
-        if (m->createdBy == appRemoved)
+        KickerClientMenu *m = *it;
+        if(m->createdBy == appRemoved)
         {
             m_kmenu->removeClientMenu(m->idInParentMenu);
             it = clientmenus.erase(it);
@@ -248,25 +246,27 @@ void MenuManager::applicationRemoved(const QCString& appRemoved)
     m_kmenu->adjustSize();
 }
 
-bool MenuManager::process(const QCString &fun, const QByteArray &data,
-				QCString &replyType, QByteArray &replyData)
+bool MenuManager::process(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData)
 {
-    if ( fun == "createMenu(QPixmap,QString)" ) {
-	QDataStream dataStream( data, IO_ReadOnly );
-	QPixmap icon;
-	QString text;
-	dataStream >> icon >> text;
-	QDataStream reply( replyData, IO_WriteOnly );
-	reply << createMenu( icon, text );
-	replyType = "QCString";
-	return true;
-    } else if ( fun == "removeMenu(QCString)" ) {
-	QDataStream dataStream( data, IO_ReadOnly );
-	QCString menu;
-	dataStream >> menu;
-	removeMenu( menu );
-	replyType = "void";
-	return true;
+    if(fun == "createMenu(QPixmap,QString)")
+    {
+        QDataStream dataStream(data, IO_ReadOnly);
+        QPixmap icon;
+        QString text;
+        dataStream >> icon >> text;
+        QDataStream reply(replyData, IO_WriteOnly);
+        reply << createMenu(icon, text);
+        replyType = "QCString";
+        return true;
+    }
+    else if(fun == "removeMenu(QCString)")
+    {
+        QDataStream dataStream(data, IO_ReadOnly);
+        QCString menu;
+        dataStream >> menu;
+        removeMenu(menu);
+        replyType = "void";
+        return true;
     }
     return false;
 }

@@ -41,249 +41,250 @@ class KColorButton;
 class KIntNumInput;
 
 #define TRANSPARENT 0
-#define OPAQUE      1
+#define OPAQUE 1
 
-#define CLICK_TO_FOCUS     0
+#define CLICK_TO_FOCUS 0
 #define FOCUS_FOLLOW_MOUSE 1
 
-#define TITLEBAR_PLAIN  0
+#define TITLEBAR_PLAIN 0
 #define TITLEBAR_SHADED 1
 
-#define RESIZE_TRANSPARENT  0
-#define RESIZE_OPAQUE       1
+#define RESIZE_TRANSPARENT 0
+#define RESIZE_OPAQUE 1
 
-#define SMART_PLACEMENT        0
-#define MAXIMIZING_PLACEMENT   1
-#define CASCADE_PLACEMENT      2
-#define RANDOM_PLACEMENT       3
-#define CENTERED_PLACEMENT     4
+#define SMART_PLACEMENT 0
+#define MAXIMIZING_PLACEMENT 1
+#define CASCADE_PLACEMENT 2
+#define RANDOM_PLACEMENT 3
+#define CENTERED_PLACEMENT 4
 #define ZEROCORNERED_PLACEMENT 5
-#define INTERACTIVE_PLACEMENT  6
-#define MANUAL_PLACEMENT       7
+#define INTERACTIVE_PLACEMENT 6
+#define MANUAL_PLACEMENT 7
 
-#define  CLICK_TO_FOCUS               0
-#define  FOCUS_FOLLOWS_MOUSE          1
-#define  FOCUS_UNDER_MOUSE            2
-#define  FOCUS_STRICTLY_UNDER_MOUSE   3
+#define CLICK_TO_FOCUS 0
+#define FOCUS_FOLLOWS_MOUSE 1
+#define FOCUS_UNDER_MOUSE 2
+#define FOCUS_STRICTLY_UNDER_MOUSE 3
 
 class QSpinBox;
 
-class KFocusConfig : public KCModule
-{
-  Q_OBJECT
+class KFocusConfig : public KCModule {
+    Q_OBJECT
 public:
-  KFocusConfig( bool _standAlone, KConfig *_config, QWidget *parent=0, const char* name=0 );
-  ~KFocusConfig();
+    KFocusConfig(bool _standAlone, KConfig *_config, QWidget *parent = 0, const char *name = 0);
+    ~KFocusConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 private slots:
-  void setDelayFocusEnabled();
-  void setAutoRaiseEnabled();
-  void autoRaiseOnTog(bool);//CT 23Oct1998
-  void delayFocusOnTog(bool);
-  void clickRaiseOnTog(bool);
-  void updateAltTabMode();
-	void changed() { emit KCModule::changed(true); }
+    void setDelayFocusEnabled();
+    void setAutoRaiseEnabled();
+    void autoRaiseOnTog(bool); // CT 23Oct1998
+    void delayFocusOnTog(bool);
+    void clickRaiseOnTog(bool);
+    void updateAltTabMode();
+    void changed()
+    {
+        emit KCModule::changed(true);
+    }
 
 
 private:
+    int getFocus(void);
+    int getAutoRaiseInterval(void);
+    int getDelayFocusInterval(void);
 
-  int getFocus( void );
-  int getAutoRaiseInterval( void );
-  int getDelayFocusInterval( void );
+    void setFocus(int);
+    void setAutoRaiseInterval(int);
+    void setAutoRaise(bool);
+    void setDelayFocusInterval(int);
+    void setDelayFocus(bool);
+    void setClickRaise(bool);
+    void setAltTabMode(bool);
+    void setTraverseAll(bool);
+    void setRollOverDesktops(bool);
+    void setShowPopupinfo(bool);
 
-  void setFocus(int);
-  void setAutoRaiseInterval(int);
-  void setAutoRaise(bool);
-  void setDelayFocusInterval(int);
-  void setDelayFocus(bool);
-  void setClickRaise(bool);
-  void setAltTabMode(bool);
-  void setTraverseAll(bool);
-  void setRollOverDesktops(bool);
-  void setShowPopupinfo(bool);
+    QButtonGroup *fcsBox;
+    QComboBox *focusCombo;
+    QCheckBox *autoRaiseOn;
+    QCheckBox *delayFocusOn;
+    QCheckBox *clickRaiseOn;
+    KIntNumInput *autoRaise;
+    KIntNumInput *delayFocus;
 
-  QButtonGroup *fcsBox;
-  QComboBox *focusCombo;
-  QCheckBox *autoRaiseOn;
-  QCheckBox *delayFocusOn;
-  QCheckBox *clickRaiseOn;
-  KIntNumInput *autoRaise;
-  KIntNumInput *delayFocus;
+    QButtonGroup *kbdBox;
+    QCheckBox *altTabPopup;
+    QCheckBox *traverseAll;
+    QCheckBox *rollOverDesktops;
+    QCheckBox *showPopupinfo;
 
-  QButtonGroup *kbdBox;
-  QCheckBox    *altTabPopup;
-  QCheckBox    *traverseAll;
-  QCheckBox    *rollOverDesktops;
-  QCheckBox    *showPopupinfo;
-
-  KConfig *config;
-  bool     standAlone;
+    KConfig *config;
+    bool standAlone;
 };
 
-class KMovingConfig : public KCModule
-{
-  Q_OBJECT
+class KMovingConfig : public KCModule {
+    Q_OBJECT
 public:
-  KMovingConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
-  ~KMovingConfig();
+    KMovingConfig(bool _standAlone, KConfig *config, QWidget *parent = 0, const char *name = 0);
+    ~KMovingConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 private slots:
-  void setMinimizeAnim( bool );
-  void setMinimizeAnimSpeed( int );
-	void changed() { emit KCModule::changed(true); }
-  void slotBrdrSnapChanged( int );
-  void slotWndwSnapChanged( int );
+    void setMinimizeAnim(bool);
+    void setMinimizeAnimSpeed(int);
+    void changed()
+    {
+        emit KCModule::changed(true);
+    }
+    void slotBrdrSnapChanged(int);
+    void slotWndwSnapChanged(int);
 
 private:
-  int getMove( void );
-  bool getMinimizeAnim( void );
-  int getMinimizeAnimSpeed( void );
-  int getResizeOpaque ( void );
-  bool getGeometryTip( void ); //KS
-  int getPlacement( void ); //CT
+    int getMove(void);
+    bool getMinimizeAnim(void);
+    int getMinimizeAnimSpeed(void);
+    int getResizeOpaque(void);
+    bool getGeometryTip(void); // KS
+    int getPlacement(void);    // CT
 
-  void setMove(int);
-  void setResizeOpaque(int);
-  void setGeometryTip(bool); //KS
-  void setPlacement(int); //CT
-  void setMoveResizeMaximized(bool);
+    void setMove(int);
+    void setResizeOpaque(int);
+    void setGeometryTip(bool); // KS
+    void setPlacement(int);    // CT
+    void setMoveResizeMaximized(bool);
 
-  QButtonGroup *windowsBox;
-  QCheckBox *opaque;
-  QCheckBox *resizeOpaqueOn;
-  QCheckBox *geometryTipOn;
-  QCheckBox* minimizeAnimOn;
-  QSlider *minimizeAnimSlider;
-  QLabel *minimizeAnimSlowLabel, *minimizeAnimFastLabel;
-  QCheckBox *moveResizeMaximized;
+    QButtonGroup *windowsBox;
+    QCheckBox *opaque;
+    QCheckBox *resizeOpaqueOn;
+    QCheckBox *geometryTipOn;
+    QCheckBox *minimizeAnimOn;
+    QSlider *minimizeAnimSlider;
+    QLabel *minimizeAnimSlowLabel, *minimizeAnimFastLabel;
+    QCheckBox *moveResizeMaximized;
 
-  QComboBox *placementCombo;
+    QComboBox *placementCombo;
 
-  KConfig *config;
-  bool     standAlone;
+    KConfig *config;
+    bool standAlone;
 
-  int getBorderSnapZone();
-  void setBorderSnapZone( int );
-  int getWindowSnapZone();
-  void setWindowSnapZone( int );
+    int getBorderSnapZone();
+    void setBorderSnapZone(int);
+    int getWindowSnapZone();
+    void setWindowSnapZone(int);
 
-  QVButtonGroup *MagicBox;
-  KIntNumInput *BrdrSnap, *WndwSnap;
-  QCheckBox *OverlapSnap;
-
+    QVButtonGroup *MagicBox;
+    KIntNumInput *BrdrSnap, *WndwSnap;
+    QCheckBox *OverlapSnap;
 };
 
-class KAdvancedConfig : public KCModule
-{
-  Q_OBJECT
+class KAdvancedConfig : public KCModule {
+    Q_OBJECT
 public:
-  KAdvancedConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
-  ~KAdvancedConfig();
+    KAdvancedConfig(bool _standAlone, KConfig *config, QWidget *parent = 0, const char *name = 0);
+    ~KAdvancedConfig();
 
-  void load();
-  void save();
-  void defaults();
+    void load();
+    void save();
+    void defaults();
 
 private slots:
-  void shadeHoverChanged(bool);
+    void shadeHoverChanged(bool);
 
-  //copied from kcontrol/konq/kwindesktop, aleXXX
-  void setEBorders();
+    // copied from kcontrol/konq/kwindesktop, aleXXX
+    void setEBorders();
 
-  void changed() { emit KCModule::changed(true); }
+    void changed()
+    {
+        emit KCModule::changed(true);
+    }
 
 private:
+    int getShadeHoverInterval(void);
+    void setAnimateShade(bool);
+    void setShadeHover(bool);
+    void setShadeHoverInterval(int);
 
-  int getShadeHoverInterval (void );
-  void setAnimateShade(bool);
-  void setShadeHover(bool);
-  void setShadeHoverInterval(int);
+    QCheckBox *animateShade;
+    QButtonGroup *shBox;
+    QCheckBox *shadeHoverOn;
+    KIntNumInput *shadeHover;
 
-  QCheckBox *animateShade;
-  QButtonGroup *shBox;
-  QCheckBox *shadeHoverOn;
-  KIntNumInput *shadeHover;
+    KConfig *config;
+    bool standAlone;
 
-  KConfig *config;
-  bool     standAlone;
+    int getElectricBorders(void);
+    int getElectricBorderDelay();
+    void setElectricBorders(int);
+    void setElectricBorderDelay(int);
 
-  int getElectricBorders( void );
-  int getElectricBorderDelay();
-  void setElectricBorders( int );
-  void setElectricBorderDelay( int );
+    QVButtonGroup *electricBox;
+    QRadioButton *active_disable;
+    QRadioButton *active_move;
+    QRadioButton *active_always;
+    KIntNumInput *delays;
 
-  QVButtonGroup *electricBox;
-  QRadioButton *active_disable;
-  QRadioButton *active_move;
-  QRadioButton *active_always;
-  KIntNumInput *delays;
-  
-  void setFocusStealing( int );
-  void setHideUtilityWindowsForInactive( bool );
+    void setFocusStealing(int);
+    void setHideUtilityWindowsForInactive(bool);
 
-  QComboBox* focusStealing;
-  QCheckBox* hideUtilityWindowsForInactive;
+    QComboBox *focusStealing;
+    QCheckBox *hideUtilityWindowsForInactive;
 };
 
 class KProcess;
-class KTranslucencyConfig : public KCModule
-{
-  Q_OBJECT
+class KTranslucencyConfig : public KCModule {
+    Q_OBJECT
 public:
-  KTranslucencyConfig( bool _standAlone, KConfig *config, QWidget *parent=0, const char* name=0 );
-  ~KTranslucencyConfig();
-  
-  void load();
-  void save();
-  void defaults();
-  
-private:
-  QCheckBox *useTranslucency;
-  QCheckBox *activeWindowTransparency;
-  QCheckBox *inactiveWindowTransparency;
-  QCheckBox *movingWindowTransparency;
-  QCheckBox *dockWindowTransparency;
-  QCheckBox *keepAboveAsActive;
-  QCheckBox *disableARGB;
-  QCheckBox *fadeInWindows;
-  QCheckBox *fadeOnOpacityChange;
-  QCheckBox *useShadows;
-  QCheckBox *removeShadowsOnResize;
-  QCheckBox *removeShadowsOnMove;
-  QGroupBox *sGroup;
-  QCheckBox *onlyDecoTranslucent;
-//   QPushButton *xcompmgrButton;
-  KIntNumInput *activeWindowOpacity;
-  KIntNumInput *inactiveWindowOpacity;
-  KIntNumInput *movingWindowOpacity;
-  KIntNumInput *dockWindowOpacity;
-  KIntNumInput *dockWindowShadowSize;
-  KIntNumInput *activeWindowShadowSize;
-  KIntNumInput *inactiveWindowShadowSize;
-  KIntNumInput *shadowTopOffset;
-  KIntNumInput *shadowLeftOffset;
-  KIntNumInput *fadeInSpeed;
-  KIntNumInput *fadeOutSpeed;
-  KColorButton *shadowColor;
-  KConfig *config;
-  bool     standAlone;
-  bool alphaActivated;
-  bool resetKompmgr_;
-  bool kompmgrAvailable();
-  bool kompmgrAvailable_;
-  KProcess *kompmgr;
-  
-private slots:
-  void resetKompmgr();
-  void showWarning(bool alphaActivated);
+    KTranslucencyConfig(bool _standAlone, KConfig *config, QWidget *parent = 0, const char *name = 0);
+    ~KTranslucencyConfig();
 
+    void load();
+    void save();
+    void defaults();
+
+private:
+    QCheckBox *useTranslucency;
+    QCheckBox *activeWindowTransparency;
+    QCheckBox *inactiveWindowTransparency;
+    QCheckBox *movingWindowTransparency;
+    QCheckBox *dockWindowTransparency;
+    QCheckBox *keepAboveAsActive;
+    QCheckBox *disableARGB;
+    QCheckBox *fadeInWindows;
+    QCheckBox *fadeOnOpacityChange;
+    QCheckBox *useShadows;
+    QCheckBox *removeShadowsOnResize;
+    QCheckBox *removeShadowsOnMove;
+    QGroupBox *sGroup;
+    QCheckBox *onlyDecoTranslucent;
+    //   QPushButton *xcompmgrButton;
+    KIntNumInput *activeWindowOpacity;
+    KIntNumInput *inactiveWindowOpacity;
+    KIntNumInput *movingWindowOpacity;
+    KIntNumInput *dockWindowOpacity;
+    KIntNumInput *dockWindowShadowSize;
+    KIntNumInput *activeWindowShadowSize;
+    KIntNumInput *inactiveWindowShadowSize;
+    KIntNumInput *shadowTopOffset;
+    KIntNumInput *shadowLeftOffset;
+    KIntNumInput *fadeInSpeed;
+    KIntNumInput *fadeOutSpeed;
+    KColorButton *shadowColor;
+    KConfig *config;
+    bool standAlone;
+    bool alphaActivated;
+    bool resetKompmgr_;
+    bool kompmgrAvailable();
+    bool kompmgrAvailable_;
+    KProcess *kompmgr;
+
+private slots:
+    void resetKompmgr();
+    void showWarning(bool alphaActivated);
 };
 #endif

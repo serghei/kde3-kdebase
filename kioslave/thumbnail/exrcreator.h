@@ -22,10 +22,9 @@
 
 #include <kio/thumbcreator.h>
 
-class EXRCreator : public ThumbCreator
-{
+class EXRCreator : public ThumbCreator {
 public:
-    EXRCreator() {};
+    EXRCreator(){};
     virtual bool create(const QString &path, int, int, QImage &img);
     virtual Flags flags() const;
 };

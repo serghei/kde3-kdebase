@@ -1,6 +1,6 @@
 /* 	info_sgi.cpp
-	
-	!!!!! this file will be included by info.cpp !!!!!
+
+    !!!!! this file will be included by info.cpp !!!!!
 */
 
 #define INFO_CPU_AVAILABLE
@@ -15,68 +15,67 @@
 #define INFO_XSERVER_AVAILABLE
 
 
-/*  all following functions should return TRUE, when the Information 
+/*  all following functions should return TRUE, when the Information
     was filled into the lBox-Widget.
     returning false indicates, that information was not available.
 */
-       
+
 
 #include <sys/systeminfo.h>
 
-bool GetInfo_CPU( QListView *lBox )
+bool GetInfo_CPU(QListView *lBox)
 {
-      QString str;
-      char buf[256];
+    QString str;
+    char buf[256];
 
-      sysinfo(SI_ARCHITECTURE, buf, sizeof(buf));
-      str = QString::fromLocal8Bit(buf);
-      new QListViewItem(lBox, str);
-      return true;
+    sysinfo(SI_ARCHITECTURE, buf, sizeof(buf));
+    str = QString::fromLocal8Bit(buf);
+    new QListViewItem(lBox, str);
+    return true;
 }
 
 
-bool GetInfo_IRQ( QListView * )
+bool GetInfo_IRQ(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_DMA( QListView * )
+bool GetInfo_DMA(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_PCI( QListView * )
+bool GetInfo_PCI(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_IO_Ports( QListView * )
+bool GetInfo_IO_Ports(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Sound( QListView * )
+bool GetInfo_Sound(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Devices( QListView * )
+bool GetInfo_Devices(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_SCSI( QListView * )
+bool GetInfo_SCSI(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_Partitions( QListView * )
+bool GetInfo_Partitions(QListView *)
 {
-	return false;
+    return false;
 }
 
-bool GetInfo_XServer_and_Video( QListView *lBox )
+bool GetInfo_XServer_and_Video(QListView *lBox)
 {
-	return GetInfo_XServer_Generic( lBox );
+    return GetInfo_XServer_Generic(lBox);
 }
-

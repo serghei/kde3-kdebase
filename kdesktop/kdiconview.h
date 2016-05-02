@@ -40,27 +40,35 @@ class KDesktopShadowSettings;
  * The shadow is supported by the new KFileIVIDesktop objects
  * which replace KFileIVI objects.
  */
-class KDIconView : public KonqIconViewWidget, public KDirNotify
-{
+class KDIconView : public KonqIconViewWidget, public KDirNotify {
     Q_OBJECT
 
 public:
-    KDIconView( QWidget *parent, const char* name = 0L );
+    KDIconView(QWidget *parent, const char *name = 0L);
     ~KDIconView();
 
-    virtual void initConfig( bool init );
+    virtual void initConfig(bool init);
     void configureMedia();
     /**
      * Start listing
      */
     void start();
 
-    KActionCollection *actionCollection() { return &m_actionCollection; }
+    KActionCollection *actionCollection()
+    {
+        return &m_actionCollection;
+    }
 
-    enum SortCriterion {
-        NameCaseSensitive = 0, NameCaseInsensitive, Size, Type, Date };
+    enum SortCriterion
+    {
+        NameCaseSensitive = 0,
+        NameCaseInsensitive,
+        Size,
+        Type,
+        Date
+    };
 
-    void rearrangeIcons( SortCriterion sc, bool bSortDirectoriesFirst);
+    void rearrangeIcons(SortCriterion sc, bool bSortDirectoriesFirst);
 
     /**
      * Re-arrange the desktop icons without confirmation.
@@ -69,7 +77,7 @@ public:
 
     void lineupIcons(QIconView::Arrangement);
 
-    void setAutoAlign( bool b );
+    void setAutoAlign(bool b);
 
     QStringList selectedURLs();
 
@@ -86,47 +94,52 @@ public:
     /**
      * Called when the desktop icons area has changed
      */
-    void updateWorkArea( const QRect &wr );
+    void updateWorkArea(const QRect &wr);
 
     /**
      * Reimplemented from KonqIconViewWidget (for image drops)
      */
-    virtual void setWallpaper(const KURL &url) { emit newWallpaper( url ); }
-    void setLastIconPosition( const QPoint & );
+    virtual void setWallpaper(const KURL &url)
+    {
+        emit newWallpaper(url);
+    }
+    void setLastIconPosition(const QPoint &);
 
     static KURL desktopURL();
 
     /// KDirNotify interface, for trash:/
-    virtual void FilesAdded( const KURL & directory );
-    virtual void FilesRemoved( const KURL::List & fileList );
-    virtual void FilesChanged( const KURL::List & ) {}
+    virtual void FilesAdded(const KURL &directory);
+    virtual void FilesRemoved(const KURL::List &fileList);
+    virtual void FilesChanged(const KURL::List &)
+    {
+    }
 
     void startDirLister();
 
 protected slots:
 
     // slots connected to the icon view
-    void slotReturnPressed( QIconViewItem *item );
-    void slotExecuted( QIconViewItem *item );
-    void slotMouseButtonPressed(int _button, QIconViewItem* _item, const QPoint& _global);
-    void slotMouseButtonClickedKDesktop(int _button, QIconViewItem* _item, const QPoint& _global);
-    void slotContextMenuRequested(QIconViewItem* _item, const QPoint& _global);
-    void slotEnableAction( const char * name, bool enabled );
-    void slotAboutToCreate(const QPoint &pos, const QValueList<KIO::CopyInfo> &files);
+    void slotReturnPressed(QIconViewItem *item);
+    void slotExecuted(QIconViewItem *item);
+    void slotMouseButtonPressed(int _button, QIconViewItem *_item, const QPoint &_global);
+    void slotMouseButtonClickedKDesktop(int _button, QIconViewItem *_item, const QPoint &_global);
+    void slotContextMenuRequested(QIconViewItem *_item, const QPoint &_global);
+    void slotEnableAction(const char *name, bool enabled);
+    void slotAboutToCreate(const QPoint &pos, const QValueList< KIO::CopyInfo > &files);
 
-    void slotItemRenamed(QIconViewItem*, const QString &name);
+    void slotItemRenamed(QIconViewItem *, const QString &name);
 
     // slots connected to the directory lister
-    void slotStarted( const KURL& url );
+    void slotStarted(const KURL &url);
     void slotCompleted();
-    void slotNewItems( const KFileItemList& );
-    void slotDeleteItem( KFileItem * );
-    void slotRefreshItems( const KFileItemList& );
+    void slotNewItems(const KFileItemList &);
+    void slotDeleteItem(KFileItem *);
+    void slotRefreshItems(const KFileItemList &);
 
     // slots connected to the popupmenu (actions)
     void slotCut();
     void slotCopy();
-    void slotTrashActivated( KAction::ActivationReason reason, Qt::ButtonState state );
+    void slotTrashActivated(KAction::ActivationReason reason, Qt::ButtonState state);
     void slotDelete();
     void slotPopupPasteTo();
     void slotProperties();
@@ -137,11 +150,11 @@ protected slots:
 
     // For communication with KDesktop
 signals:
-    void colorDropEvent( QDropEvent *e );
-    void imageDropEvent( QDropEvent *e );
-    void newWallpaper( const KURL & );
+    void colorDropEvent(QDropEvent *e);
+    void imageDropEvent(QDropEvent *e);
+    void newWallpaper(const KURL &);
     void iconMoved();
-    void wheelRolled( int delta );
+    void wheelRolled(int delta);
 
 public slots:
     /**
@@ -158,24 +171,24 @@ protected:
     void setupSortKeys();
     void initDotDirectories();
 
-    bool makeFriendlyText( KFileIVI *fileIVI );
-    static QString stripDesktopExtension( const QString & text );
-    bool isDesktopFile( KFileItem * _item ) const;
-    bool isFreePosition( const QIconViewItem *item ) const;
-    bool isFreePosition( const QIconViewItem *item, const QRect& rect ) const;
-    void moveToFreePosition(QIconViewItem *item );
+    bool makeFriendlyText(KFileIVI *fileIVI);
+    static QString stripDesktopExtension(const QString &text);
+    bool isDesktopFile(KFileItem *_item) const;
+    bool isFreePosition(const QIconViewItem *item) const;
+    bool isFreePosition(const QIconViewItem *item, const QRect &rect) const;
+    void moveToFreePosition(QIconViewItem *item);
 
     bool deleteGlobalDesktopFiles();
 
     static void renameDesktopFile(const QString &path, const QString &name);
 
-    void popupMenu( const QPoint &_global, const KFileItemList& _items );
-    virtual void showEvent( QShowEvent *e );
-    virtual void contentsDropEvent( QDropEvent *e );
-    virtual void viewportWheelEvent( QWheelEvent * );
-    virtual void contentsMousePressEvent( QMouseEvent *e );
-    virtual void mousePressEvent( QMouseEvent *e );
-    virtual void wheelEvent( QWheelEvent* e );
+    void popupMenu(const QPoint &_global, const KFileItemList &_items);
+    virtual void showEvent(QShowEvent *e);
+    virtual void contentsDropEvent(QDropEvent *e);
+    virtual void viewportWheelEvent(QWheelEvent *);
+    virtual void contentsMousePressEvent(QMouseEvent *e);
+    virtual void mousePressEvent(QMouseEvent *e);
+    virtual void wheelEvent(QWheelEvent *e);
 
 private:
     void refreshTrashIcon();
@@ -207,7 +220,7 @@ private:
     bool m_bVertAlign;
 
     /** The directory lister - created only in start() */
-    KDirLister* m_dirLister;
+    KDirLister *m_dirLister;
 
     /** The list of urls to be merged into the desktop, in addition to desktopURL */
     KURL::List m_mergeDirs;

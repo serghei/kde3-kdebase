@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 2000 Chris Schlaeger <cs@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -33,13 +33,13 @@
 #define MENU_ID_SIGALRM 12
 #define MENU_ID_SIGCHLD 13
 #define MENU_ID_SIGCONT 14
-#define MENU_ID_SIGFPE  15
-#define MENU_ID_SIGHUP  16
-#define MENU_ID_SIGILL  17
-#define MENU_ID_SIGINT  18
+#define MENU_ID_SIGFPE 15
+#define MENU_ID_SIGHUP 16
+#define MENU_ID_SIGILL 17
+#define MENU_ID_SIGINT 18
 #define MENU_ID_SIGKILL 19
 #define MENU_ID_SIGPIPE 20
-#define MENU_ID_SIGQUIT 21 
+#define MENU_ID_SIGQUIT 21
 #define MENU_ID_SIGSEGV 22
 #define MENU_ID_SIGSTOP 23
 #define MENU_ID_SIGTERM 24

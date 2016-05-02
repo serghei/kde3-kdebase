@@ -27,19 +27,17 @@ class QStringList;
 class QPushButton;
 class QListView;
 
-class KCMNic:public KCModule
-{
-   Q_OBJECT
-   public:
-      KCMNic(QWidget *parent=0, const char * name=0, const QStringList &list = QStringList( ));
+class KCMNic : public KCModule {
+    Q_OBJECT
+public:
+    KCMNic(QWidget *parent = 0, const char *name = 0, const QStringList &list = QStringList());
 
-   protected slots:
-      void update();
+protected slots:
+    void update();
 
-   protected:
-      QListView *m_list;
-      QPushButton *m_updateButton;
+protected:
+    QListView *m_list;
+    QPushButton *m_updateButton;
 };
 
 #endif
-

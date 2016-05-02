@@ -32,30 +32,42 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 class KRootPixmap;
 class TaskBarContainer;
 
-class TaskBarExtension : public KPanelExtension, virtual public DCOPObject
-{
+class TaskBarExtension : public KPanelExtension, virtual public DCOPObject {
     Q_OBJECT
     K_DCOP
 
-k_dcop:
-    int panelSize() { return sizeInPixels(); }
-    int panelOrientation() { return static_cast<int>(orientation()); }
-    int panelPosition() { return static_cast<int>(position()); }
-    void setPanelSize(int size) { setSize(static_cast<Size>(size),true);}///slotSetSize(size); }
+    k_dcop : int panelSize()
+    {
+        return sizeInPixels();
+    }
+    int panelOrientation()
+    {
+        return static_cast< int >(orientation());
+    }
+    int panelPosition()
+    {
+        return static_cast< int >(position());
+    }
+    void setPanelSize(int size)
+    {
+        setSize(static_cast< Size >(size), true);
+    } /// slotSetSize(size); }
     void configure();
 
 public:
-    TaskBarExtension( const QString& configFile, Type t = Normal,
-		      int actions = 0, QWidget *parent = 0, const char *name = 0 );
+    TaskBarExtension(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     ~TaskBarExtension();
 
-    QSize sizeHint( Position, QSize maxSize ) const;
-    Position preferedPosition() const { return Bottom; }
+    QSize sizeHint(Position, QSize maxSize) const;
+    Position preferedPosition() const
+    {
+        return Bottom;
+    }
 
 protected:
-    void resizeEvent(QResizeEvent*);
+    void resizeEvent(QResizeEvent *);
 
-    void positionChange( Position );
+    void positionChange(Position);
     void preferences();
 
 private:
@@ -66,7 +78,7 @@ private:
 
 private slots:
     void setBackgroundTheme();
-    void updateBackground(const QPixmap&);
+    void updateBackground(const QPixmap &);
 };
 
 #endif

@@ -25,7 +25,7 @@
 #include <qdialog.h>
 #include <qprogressbar.h>
 
-#define COUNTDOWN 30 
+#define COUNTDOWN 30
 
 AutoLogout::AutoLogout(LockProcess *parent) : QDialog(parent, "password dialog", true, WX11BypassWM)
 {
@@ -33,11 +33,12 @@ AutoLogout::AutoLogout(LockProcess *parent) : QDialog(parent, "password dialog",
     frame->setFrameStyle(QFrame::Panel | QFrame::Raised);
     frame->setLineWidth(2);
 
-    QLabel *pixLabel = new QLabel( frame, "pixlabel" );
+    QLabel *pixLabel = new QLabel(frame, "pixlabel");
     pixLabel->setPixmap(DesktopIcon("exit"));
 
     QLabel *greetLabel = new QLabel(i18n("<nobr><qt><b>Automatic Log Out</b></qt><nobr>"), frame);
-    QLabel *infoLabel = new QLabel(i18n("<qt>To prevent being logged out, resume using this session by moving the mouse or pressing a key.</qt>"), frame);
+    QLabel *infoLabel =
+        new QLabel(i18n("<qt>To prevent being logged out, resume using this session by moving the mouse or pressing a key.</qt>"), frame);
 
     mStatusLabel = new QLabel("<b> </b>", frame);
     mStatusLabel->setAlignment(QLabel::AlignCenter);
@@ -46,8 +47,8 @@ AutoLogout::AutoLogout(LockProcess *parent) : QDialog(parent, "password dialog",
     mProgressRemaining = new QProgressBar(frame);
     mProgressRemaining->setPercentageVisible(false);
 
-    QVBoxLayout *unlockDialogLayout = new QVBoxLayout( this );
-    unlockDialogLayout->addWidget( frame );
+    QVBoxLayout *unlockDialogLayout = new QVBoxLayout(this);
+    unlockDialogLayout->addWidget(frame);
 
     frameLayout = new QGridLayout(frame, 1, 1, KDialog::marginHint(), KDialog::spacingHint());
     frameLayout->addMultiCellWidget(pixLabel, 0, 2, 0, 0, Qt::AlignCenter | Qt::AlignTop);
@@ -64,7 +65,7 @@ AutoLogout::AutoLogout(LockProcess *parent) : QDialog(parent, "password dialog",
 
     updateInfo(mRemaining);
 
-    mCountdownTimerId = startTimer(1000/25);
+    mCountdownTimerId = startTimer(1000 / 25);
 
     connect(qApp, SIGNAL(activity()), SLOT(slotActivity()));
 }
@@ -77,21 +78,20 @@ AutoLogout::~AutoLogout()
 void AutoLogout::updateInfo(int timeout)
 {
     mStatusLabel->setText(i18n("<nobr><qt>You will be automatically logged out in 1 second</qt></nobr>",
-                               "<nobr><qt>You will be automatically logged out in %n seconds</qt></nobr>",
-                               timeout / 25) );
+                               "<nobr><qt>You will be automatically logged out in %n seconds</qt></nobr>", timeout / 25));
     mProgressRemaining->setProgress(timeout);
 }
 
 void AutoLogout::timerEvent(QTimerEvent *ev)
 {
-    if (ev->timerId() == mCountdownTimerId)
+    if(ev->timerId() == mCountdownTimerId)
     {
         updateInfo(mRemaining);
-	--mRemaining;
-	if (mRemaining < 0)
-	{
-		logout();
-	}
+        --mRemaining;
+        if(mRemaining < 0)
+        {
+            logout();
+        }
     }
 }
 
@@ -102,8 +102,8 @@ void AutoLogout::slotActivity()
 
 void AutoLogout::logout()
 {
-	killTimers();
-	DCOPRef("ksmserver","ksmserver").send("logout", 0, 0, 0);
+    killTimers();
+    DCOPRef("ksmserver", "ksmserver").send("logout", 0, 0, 0);
 }
 
 void AutoLogout::show()

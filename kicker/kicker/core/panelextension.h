@@ -38,21 +38,28 @@ class QGridLayout;
 // This is the KPanelExtension responsible for the main kicker panel
 // Prior to KDE 3.4 it was the ChildPanelExtension
 
-class PanelExtension : public KPanelExtension, virtual public  DCOPObject
-{
+class PanelExtension : public KPanelExtension, virtual public DCOPObject {
     Q_OBJECT
     K_DCOP
 
 public:
-    PanelExtension(const QString& configFile, QWidget *parent = 0, const char *name = 0);
+    PanelExtension(const QString &configFile, QWidget *parent = 0, const char *name = 0);
     virtual ~PanelExtension();
 
-    QPopupMenu* opMenu();
+    QPopupMenu *opMenu();
 
-k_dcop:
-    int panelSize() { return sizeInPixels(); }
-    int panelOrientation() { return static_cast<int>(orientation()); }
-    int panelPosition() { return static_cast<int>(position()); }
+    k_dcop : int panelSize()
+    {
+        return sizeInPixels();
+    }
+    int panelOrientation()
+    {
+        return static_cast< int >(orientation());
+    }
+    int panelPosition()
+    {
+        return static_cast< int >(position());
+    }
 
     void setPanelSize(int size);
     void addKMenuButton();
@@ -61,33 +68,34 @@ k_dcop:
     void addURLButton(const QString &url);
     void addBrowserButton(const QString &startDir);
     void addServiceButton(const QString &desktopEntry);
-    void addServiceMenuButton(const QString &name, const QString& relPath);
-    void addNonKDEAppButton(const QString &filePath, const QString &icon,
-                            const QString &cmdLine, bool inTerm);
-    void addNonKDEAppButton(const QString &title, const QString &description,
-                            const QString &filePath, const QString &icon,
-                            const QString &cmdLine, bool inTerm);
+    void addServiceMenuButton(const QString &name, const QString &relPath);
+    void addNonKDEAppButton(const QString &filePath, const QString &icon, const QString &cmdLine, bool inTerm);
+    void addNonKDEAppButton(const QString &title, const QString &description, const QString &filePath, const QString &icon, const QString &cmdLine,
+                            bool inTerm);
 
     void addApplet(const QString &desktopFile);
     void addAppletContainer(const QString &desktopFile); // KDE4: remove, useless
 
-    bool insertApplet(const QString& desktopFile, int index);
-    bool insertImmutableApplet(const QString& desktopFile, int index);
+    bool insertApplet(const QString &desktopFile, int index);
+    bool insertImmutableApplet(const QString &desktopFile, int index);
     QStringList listApplets();
     bool removeApplet(int index);
 
-    void restart(); // KDE4: remove, moved to Kicker
+    void restart();   // KDE4: remove, moved to Kicker
     void configure(); // KDE4: remove, moved to Kikcker
 
 public:
     QSize sizeHint(Position, QSize maxSize) const;
-    Position preferedPosition() const { return Bottom; }
-    bool eventFilter( QObject *, QEvent * );
+    Position preferedPosition() const
+    {
+        return Bottom;
+    }
+    bool eventFilter(QObject *, QEvent *);
 
 protected:
     void positionChange(Position);
 
-    ContainerArea    *_containerArea;
+    ContainerArea *_containerArea;
 
 protected slots:
     void configurationChanged();
@@ -97,30 +105,29 @@ protected slots:
     virtual void populateContainerArea();
 
 private:
-    QPopupMenu* _opMnu;
-    QPopupMenu* m_panelAddMenu;
-    QPopupMenu* m_removeMnu;
-    QPopupMenu* m_addExtensionMenu;
-    QPopupMenu* m_removeExtensionMenu;
+    QPopupMenu *_opMnu;
+    QPopupMenu *m_panelAddMenu;
+    QPopupMenu *m_removeMnu;
+    QPopupMenu *m_addExtensionMenu;
+    QPopupMenu *m_removeExtensionMenu;
     QString _configFile;
     bool m_opMenuBuilt;
 };
 
-class MenubarExtension : public PanelExtension
-{
+class MenubarExtension : public PanelExtension {
     Q_OBJECT
 
-    public:
-        MenubarExtension(const AppletInfo& info);
-        virtual ~MenubarExtension();
+public:
+    MenubarExtension(const AppletInfo &info);
+    virtual ~MenubarExtension();
 
-    protected slots:
-        virtual void populateContainerArea();
+protected slots:
+    virtual void populateContainerArea();
 
-    private:
-        MenubarExtension();
+private:
+    MenubarExtension();
 
-        AppletContainer* m_menubar;
+    AppletContainer *m_menubar;
 };
 
 #endif

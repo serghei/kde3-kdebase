@@ -14,4 +14,4 @@
 
 #include "themelegacy.h"
 
-K_EXPORT_COMPONENT_FACTORY( ksplashdefault, KGenericFactory<ThemeDefault>( "ksplash" ) )
+K_EXPORT_COMPONENT_FACTORY(ksplashdefault, KGenericFactory< ThemeDefault >("ksplash"))

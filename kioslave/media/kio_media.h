@@ -24,31 +24,28 @@
 
 #include "mediaimpl.h"
 
-class MediaProtocol : public KIO::ForwardingSlaveBase
-{
-Q_OBJECT
+class MediaProtocol : public KIO::ForwardingSlaveBase {
+    Q_OBJECT
 public:
-	MediaProtocol(const QCString &protocol, const QCString &pool,
-	              const QCString &app);
-	virtual ~MediaProtocol();
+    MediaProtocol(const QCString &protocol, const QCString &pool, const QCString &app);
+    virtual ~MediaProtocol();
 
-	virtual bool rewriteURL(const KURL &url, KURL &newUrl);
+    virtual bool rewriteURL(const KURL &url, KURL &newUrl);
 
-	virtual void put(const KURL &url, int permissions,
-	                 bool overwrite, bool resume);
-	virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
-	virtual void mkdir(const KURL &url, int permissions);
-	virtual void del(const KURL &url, bool isFile);
-	virtual void stat(const KURL &url);
-	virtual void listDir(const KURL &url);
+    virtual void put(const KURL &url, int permissions, bool overwrite, bool resume);
+    virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
+    virtual void mkdir(const KURL &url, int permissions);
+    virtual void del(const KURL &url, bool isFile);
+    virtual void stat(const KURL &url);
+    virtual void listDir(const KURL &url);
 
 private slots:
-	void slotWarning( const QString &msg );
-	
-private:
-	void listRoot();
+    void slotWarning(const QString &msg);
 
-	MediaImpl m_impl;
+private:
+    void listRoot();
+
+    MediaImpl m_impl;
 };
 
 #endif

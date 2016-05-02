@@ -28,30 +28,28 @@ class KConfig;
 
 namespace KHC {
 
-class HtmlSearchConfig : public QWidget
-{
+class HtmlSearchConfig : public QWidget {
     Q_OBJECT
-  public:
+public:
     HtmlSearchConfig(QWidget *parent = 0L, const char *name = 0L);
     virtual ~HtmlSearchConfig();
 
-    void load( KConfig * );
-    void save( KConfig * );
+    void load(KConfig *);
+    void save(KConfig *);
     void defaults();
     void makeReadOnly();
 
-  signals:
+signals:
     void changed();
 
-  protected slots:
-    void urlClicked(const QString&);
+protected slots:
+    void urlClicked(const QString &);
 
-  private:
+private:
     KURLRequester *mHtsearchUrl;
     KURLRequester *mIndexerBin;
     KURLRequester *mDbDir;
 };
-
 }
 
 #endif

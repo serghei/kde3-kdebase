@@ -37,64 +37,58 @@
 #include "propsdlgshareplugin.h"
 #include "../libmediacommon/medium.h"
 
-typedef KGenericFactory<PropsDlgSharePlugin, KPropertiesDialog> PropsDlgSharePluginFactory;
+typedef KGenericFactory< PropsDlgSharePlugin, KPropertiesDialog > PropsDlgSharePluginFactory;
 
-K_EXPORT_COMPONENT_FACTORY( media_propsdlgplugin,
-                            PropsDlgSharePluginFactory("media_propsdlgplugin") )
+K_EXPORT_COMPONENT_FACTORY(media_propsdlgplugin, PropsDlgSharePluginFactory("media_propsdlgplugin"))
 
-class PropsDlgSharePlugin::Private                            
-{
-  public:
-    PropertiesPage* page; 
+class PropsDlgSharePlugin::Private {
+public:
+    PropertiesPage *page;
 };
-                            
-PropsDlgSharePlugin::PropsDlgSharePlugin( KPropertiesDialog *dlg,
-					  const char *, const QStringList & )
-  : KPropsDlgPlugin(dlg), d(0)
+
+PropsDlgSharePlugin::PropsDlgSharePlugin(KPropertiesDialog *dlg, const char *, const QStringList &) : KPropsDlgPlugin(dlg), d(0)
 {
-  if (properties->items().count() != 1)
-    return;
+    if(properties->items().count() != 1)
+        return;
 
-  KFileItem *item = properties->items().first();
+    KFileItem *item = properties->items().first();
 
-  DCOPRef mediamanager("kded", "mediamanager");
-  kdDebug() << "properties " << item->url() << endl;
-  DCOPReply reply = mediamanager.call( "properties", item->url().url() );
-  
-  if ( !reply.isValid() )
-    return;
-  
-  QVBox* vbox = properties->addVBoxPage(i18n("&Mounting"));
-  
-  d = new Private();
-  
-  d->page = new PropertiesPage(vbox, Medium::create(reply).id());
-  connect(d->page, SIGNAL(changed()),
-	  SLOT(slotChanged()));
+    DCOPRef mediamanager("kded", "mediamanager");
+    kdDebug() << "properties " << item->url() << endl;
+    DCOPReply reply = mediamanager.call("properties", item->url().url());
 
-  //  QTimer::singleShot(100, this, SLOT(slotChanged()));
-  
-}                            
+    if(!reply.isValid())
+        return;
+
+    QVBox *vbox = properties->addVBoxPage(i18n("&Mounting"));
+
+    d = new Private();
+
+    d->page = new PropertiesPage(vbox, Medium::create(reply).id());
+    connect(d->page, SIGNAL(changed()), SLOT(slotChanged()));
+
+    //  QTimer::singleShot(100, this, SLOT(slotChanged()));
+}
 
 void PropsDlgSharePlugin::slotChanged()
 {
-  kdDebug() << "slotChanged()\n";
-  setDirty(true);
+    kdDebug() << "slotChanged()\n";
+    setDirty(true);
 }
 
 PropsDlgSharePlugin::~PropsDlgSharePlugin()
 {
-  delete d;
+    delete d;
 }
 
-void PropsDlgSharePlugin::applyChanges() 
+void PropsDlgSharePlugin::applyChanges()
 {
-  kdDebug() << "applychanges\n";
-  if (!d->page->save()) {
-    properties->abortApplying();
-  }
+    kdDebug() << "applychanges\n";
+    if(!d->page->save())
+    {
+        properties->abortApplying();
+    }
 }
 
 
 #include "propsdlgshareplugin.moc"
-

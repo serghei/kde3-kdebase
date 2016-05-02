@@ -1,7 +1,7 @@
 //
 // C++ Interface: kxkbtraywindow
 //
-// Description: 
+// Description:
 //
 //
 // Author: Andriy Rysin <rysin@kde.org>, (C) 2006
@@ -28,64 +28,73 @@ class XkbRules;
     catching keyboard/mouse events and displaying menu when selected
 */
 
-class KxkbLabelController: public QObject
-{
-// 	Q_OBJECT
-			
+class KxkbLabelController : public QObject {
+    // 	Q_OBJECT
+
 public:
-	enum { START_MENU_ID = 100, CONFIG_MENU_ID = 130, HELP_MENU_ID = 131 };
+    enum
+    {
+        START_MENU_ID = 100,
+        CONFIG_MENU_ID = 130,
+        HELP_MENU_ID = 131
+    };
 
-    KxkbLabelController(QLabel *label, QPopupMenu* contextMenu);
+    KxkbLabelController(QLabel *label, QPopupMenu *contextMenu);
 
-    void initLayoutList(const QValueList<LayoutUnit>& layouts, const XkbRules& rule);
-    void setCurrentLayout(const LayoutUnit& layout);
-// 	void setCurrentLayout(const QString& layout, const QString &variant);
-	void setError(const QString& layoutInfo="");
-    void setShowFlag(bool showFlag) { m_showFlag = showFlag; }
-	void show() { label->show(); }
-	
-// signals:
-// 
-// 	void menuActivated(int);
-//     void toggled();
+    void initLayoutList(const QValueList< LayoutUnit > &layouts, const XkbRules &rule);
+    void setCurrentLayout(const LayoutUnit &layout);
+    // 	void setCurrentLayout(const QString& layout, const QString &variant);
+    void setError(const QString &layoutInfo = "");
+    void setShowFlag(bool showFlag)
+    {
+        m_showFlag = showFlag;
+    }
+    void show()
+    {
+        label->show();
+    }
 
-// protected:
-// 
-//     void mouseReleaseEvent(QMouseEvent *);
+    // signals:
+    //
+    // 	void menuActivated(int);
+    //     void toggled();
+
+    // protected:
+    //
+    //     void mouseReleaseEvent(QMouseEvent *);
 
 private:
-	QLabel* label;
-	QPopupMenu* contextMenu;
-	
-	const int m_menuStartIndex;
-	bool m_showFlag;
-	int m_prevLayoutCount;
-    QMap<QString, QString> m_descriptionMap;
-	
-	void setToolTip(const QString& tip);
-	void setPixmap(const QPixmap& pixmap);
+    QLabel *label;
+    QPopupMenu *contextMenu;
+
+    const int m_menuStartIndex;
+    bool m_showFlag;
+    int m_prevLayoutCount;
+    QMap< QString, QString > m_descriptionMap;
+
+    void setToolTip(const QString &tip);
+    void setPixmap(const QPixmap &pixmap);
 };
 
 
-class KxkbSystemTray : public KSystemTray
-{
-	Q_OBJECT 
-			
-	public:
-	KxkbSystemTray():
-		KSystemTray(NULL)
-	{}
-	
-	void mouseReleaseEvent(QMouseEvent *ev)
-	{
-		if (ev->button() == QMouseEvent::LeftButton)
-			emit toggled();
-		KSystemTray::mouseReleaseEvent(ev);
-	}
+class KxkbSystemTray : public KSystemTray {
+    Q_OBJECT
 
-	signals:
- 		void menuActivated(int);
-		void toggled();
+public:
+    KxkbSystemTray() : KSystemTray(NULL)
+    {
+    }
+
+    void mouseReleaseEvent(QMouseEvent *ev)
+    {
+        if(ev->button() == QMouseEvent::LeftButton)
+            emit toggled();
+        KSystemTray::mouseReleaseEvent(ev);
+    }
+
+signals:
+    void menuActivated(int);
+    void toggled();
 };
 
 

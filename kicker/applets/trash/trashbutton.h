@@ -30,31 +30,30 @@
 #include <kpanelapplet.h>
 #include <kactioncollection.h>
 
-class TrashButton : public PanelPopupButton
-{
-Q_OBJECT
+class TrashButton : public PanelPopupButton {
+    Q_OBJECT
 
 public:
-	TrashButton(QWidget *parent);
-	~TrashButton();
-	void setItemCount(int count);
-	void setPanelPosition(KPanelApplet::Position position);
+    TrashButton(QWidget *parent);
+    ~TrashButton();
+    void setItemCount(int count);
+    void setPanelPosition(KPanelApplet::Position position);
 
 protected:
-	QString tileName();
-	void initPopup();
-	void dragEnterEvent(QDragEnterEvent *e);
-	void dropEvent(QDropEvent *e);
+    QString tileName();
+    void initPopup();
+    void dragEnterEvent(QDragEnterEvent *e);
+    void dropEvent(QDropEvent *e);
 
 protected slots:
-        // Activate this code only if we find a way to have both an
-	// action and a popup menu for the same kicker button
-	//void slotClicked();
-	void slotPaste();
+    // Activate this code only if we find a way to have both an
+    // action and a popup menu for the same kicker button
+    // void slotClicked();
+    void slotPaste();
 
 private:
-	KActionCollection mActions;
-	KFileItem mFileItem;
+    KActionCollection mActions;
+    KFileItem mFileItem;
 };
 
 #endif

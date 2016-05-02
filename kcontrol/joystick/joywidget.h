@@ -35,11 +35,10 @@ class QCheckBox;
 class QHBox;
 
 // the widget which displays all buttons, values, etc.
-class JoyWidget : public QWidget
-{
-  Q_OBJECT
-  
-  public:
+class JoyWidget : public QWidget {
+    Q_OBJECT
+
+public:
     JoyWidget(QWidget *parent = 0, const char *name = 0);
 
     ~JoyWidget();
@@ -47,23 +46,23 @@ class JoyWidget : public QWidget
     // initialize list of possible devices and open the first available
     void init();
 
-  public slots:
+public slots:
     // reset calibration values to their value when this KCM was started
     void resetCalibration();
 
-  private slots:
+private slots:
     void checkDevice();
     void deviceChanged(const QString &dev);
     void traceChanged(bool);
     void calibrateDevice();
 
-  private:
-    void showDeviceProps(JoyDevice *joy);  // fill widgets with given device parameters
-    void restoreCurrDev(); // restores the content of the combobox to reflect the current open device
+private:
+    void showDeviceProps(JoyDevice *joy); // fill widgets with given device parameters
+    void restoreCurrDev();                // restores the content of the combobox to reflect the current open device
 
-  private:
-    QHBox  *messageBox;
-    QLabel *message;  // in case of no device, show here a message rather than in a dialog
+private:
+    QHBox *messageBox;
+    QLabel *message; // in case of no device, show here a message rather than in a dialog
     QComboBox *device;
     PosWidget *xyPos;
     QTable *buttonTbl;

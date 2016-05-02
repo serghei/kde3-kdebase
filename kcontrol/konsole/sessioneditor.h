@@ -29,40 +29,42 @@
 
 #include "sessiondialog.h"
 
-class SessionEditor : public SessionDialog
-{
-  Q_OBJECT 
-  public:
-    SessionEditor(QWidget* parent=0, const char *name=0);
+class SessionEditor : public SessionDialog {
+    Q_OBJECT
+public:
+    SessionEditor(QWidget *parent = 0, const char *name = 0);
     ~SessionEditor();
- 
-    bool isModified() const { return sesMod; }
+
+    bool isModified() const
+    {
+        return sesMod;
+    }
     void querySave();
 
-  signals:
+signals:
     void changed();
     void getList();
 
-  public slots:
+public slots:
     void schemaListChanged(const QStringList &titles, const QStringList &filenames);
 
-  private slots:
+private slots:
     void readSession(int);
     void saveCurrent();
     void removeCurrent();
     void sessionModified();
 
-  private: 
+private:
     void show();
     void loadAllKeytab();
-    void loadAllSession(QString currentFile="");
-    QString readKeymapTitle(const QString& filename);
+    void loadAllSession(QString currentFile = "");
+    QString readKeymapTitle(const QString &filename);
 
     bool sesMod;
     int oldSession;
     bool loaded;
-    QPtrList<QString> keytabFilename;
-    QPtrList<QString> schemaFilename;
+    QPtrList< QString > keytabFilename;
+    QPtrList< QString > schemaFilename;
 };
 
 #endif

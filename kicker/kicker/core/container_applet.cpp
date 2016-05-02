@@ -54,32 +54,27 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "container_applet.h"
 #include "container_applet.moc"
 
-#define APPLET_MARGIN  1
+#define APPLET_MARGIN 1
 
-AppletContainer::AppletContainer(const AppletInfo& info,
-                                 QPopupMenu* opMenu,
-                                 bool immutable,
-                                 QWidget* parent )
-  : BaseContainer(opMenu,
-                  parent,
-                  QString(info.library() + "container").latin1()),
-    _info(info),
-    _handle(0),
-    _layout(0),
-    _type(KPanelApplet::Normal),
-    _widthForHeightHint(0),
-    _heightForWidthHint(0),
-    _firstuse(true)
+AppletContainer::AppletContainer(const AppletInfo &info, QPopupMenu *opMenu, bool immutable, QWidget *parent)
+    : BaseContainer(opMenu, parent, QString(info.library() + "container").latin1())
+    , _info(info)
+    , _handle(0)
+    , _layout(0)
+    , _type(KPanelApplet::Normal)
+    , _widthForHeightHint(0)
+    , _heightForWidthHint(0)
+    , _firstuse(true)
 {
     setBackgroundOrigin(AncestorOrigin);
 
-    //setup appletframe
+    // setup appletframe
     _appletframe = new QHBox(this);
-    _appletframe->setBackgroundOrigin( AncestorOrigin );
+    _appletframe->setBackgroundOrigin(AncestorOrigin);
     _appletframe->setFrameStyle(QFrame::NoFrame);
     _appletframe->installEventFilter(this);
 
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         _layout = new QBoxLayout(this, QBoxLayout::LeftToRight, 0, 0);
     }
@@ -88,13 +83,12 @@ AppletContainer::AppletContainer(const AppletInfo& info,
         _layout = new QBoxLayout(this, QBoxLayout::TopToBottom, 0, 0);
     }
 
-    _layout->setResizeMode( QLayout::FreeResize );
+    _layout->setResizeMode(QLayout::FreeResize);
 
     _layout->addSpacing(APPLET_MARGIN);
     _handle = new AppletHandle(this);
     _layout->addWidget(_handle, 0);
-    connect(_handle, SIGNAL(moveApplet(const QPoint&)),
-            this, SLOT(moveApplet(const QPoint&)));
+    connect(_handle, SIGNAL(moveApplet(const QPoint &)), this, SLOT(moveApplet(const QPoint &)));
     connect(_handle, SIGNAL(showAppletMenu()), this, SLOT(showAppletMenu()));
 
     _layout->addWidget(_appletframe, 1);
@@ -102,15 +96,14 @@ AppletContainer::AppletContainer(const AppletInfo& info,
 
     _deskFile = info.desktopFile();
     _configFile = info.configFile();
-    _applet = PluginManager::the()->loadApplet( info, _appletframe );
+    _applet = PluginManager::the()->loadApplet(info, _appletframe);
 
-    if (!_applet)
+    if(!_applet)
     {
         _valid = false;
-        KMessageBox::error(this,
-                           i18n("The %1 applet could not be loaded. Please check your installation.")
-                               .arg(info.name().isEmpty() ? _deskFile : info.name()),
-                           i18n("Applet Loading Error"));
+        KMessageBox::error(
+            this, i18n("The %1 applet could not be loaded. Please check your installation.").arg(info.name().isEmpty() ? _deskFile : info.name()),
+            i18n("Applet Loading Error"));
         return;
     }
 
@@ -128,8 +121,7 @@ AppletContainer::AppletContainer(const AppletInfo& info,
     connect(_applet, SIGNAL(requestFocus()), SLOT(activateWindow()));
     connect(_applet, SIGNAL(requestFocus(bool)), SLOT(focusRequested(bool)));
 
-    connect(Kicker::the(), SIGNAL(configurationChanged()),
-            this, SLOT(slotReconfigure()));
+    connect(Kicker::the(), SIGNAL(configurationChanged()), this, SLOT(slotReconfigure()));
 }
 
 void AppletContainer::configure()
@@ -137,17 +129,15 @@ void AppletContainer::configure()
     _handle->setPopupDirection(popupDirection());
     _handle->setFadeOutHandle(KickerSettings::fadeOutAppletHandles());
 
-    if (isImmutable() ||
-        KickerSettings::hideAppletHandles() ||
-        !kapp->authorizeKAction("kicker_rmb"))
+    if(isImmutable() || KickerSettings::hideAppletHandles() || !kapp->authorizeKAction("kicker_rmb"))
     {
-        if (_handle->isVisibleTo(this))
+        if(_handle->isVisibleTo(this))
         {
             _handle->hide();
             setBackground();
         }
     }
-    else if (!_handle->isVisibleTo(this))
+    else if(!_handle->isVisibleTo(this))
     {
         _handle->show();
         setBackground();
@@ -161,7 +151,7 @@ void AppletContainer::slotReconfigure()
 
 void AppletContainer::setPopupDirection(KPanelApplet::Direction d)
 {
-    if (!_firstuse && _dir == d)
+    if(!_firstuse && _dir == d)
     {
         return;
     }
@@ -172,7 +162,7 @@ void AppletContainer::setPopupDirection(KPanelApplet::Direction d)
     _handle->setPopupDirection(d);
     resetLayout();
 
-    if (_applet)
+    if(_applet)
     {
         _applet->setPosition((KPanelApplet::Position)KickerLib::directionToPosition(d));
     }
@@ -180,7 +170,8 @@ void AppletContainer::setPopupDirection(KPanelApplet::Direction d)
 
 void AppletContainer::setOrientation(KPanelExtension::Orientation o)
 {
-    if (_orient == o) return;
+    if(_orient == o)
+        return;
 
     BaseContainer::setOrientation(o);
     setBackground();
@@ -191,19 +182,19 @@ void AppletContainer::resetLayout()
 {
     _handle->resetLayout();
 
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        _layout->setDirection( QBoxLayout::LeftToRight );
+        _layout->setDirection(QBoxLayout::LeftToRight);
     }
     else
     {
-        _layout->setDirection( QBoxLayout::TopToBottom );
+        _layout->setDirection(QBoxLayout::TopToBottom);
     }
 
     _layout->activate();
 }
 
-void AppletContainer::moveApplet( const QPoint& moveOffset )
+void AppletContainer::moveApplet(const QPoint &moveOffset)
 {
     _moveOffset = moveOffset;
     emit moveme(this);
@@ -216,7 +207,7 @@ void AppletContainer::signalToBeRemoved()
 
 void AppletContainer::showAppletMenu()
 {
-    if (!kapp->authorizeKAction("kicker_rmb"))
+    if(!kapp->authorizeKAction("kicker_rmb"))
     {
         return;
     }
@@ -255,7 +246,7 @@ void AppletContainer::showAppletMenu()
     clearOpMenu();
 }
 
-void AppletContainer::slotRemoved(KConfig* config)
+void AppletContainer::slotRemoved(KConfig *config)
 {
     BaseContainer::slotRemoved(config);
 
@@ -264,8 +255,7 @@ void AppletContainer::slotRemoved(KConfig* config)
     delete _applet;
     _applet = 0;
 
-    if (_configFile.isEmpty() ||
-        _info.isUniqueApplet())
+    if(_configFile.isEmpty() || _info.isUniqueApplet())
     {
         return;
     }
@@ -280,7 +270,7 @@ void AppletContainer::activateWindow()
 
 void AppletContainer::focusRequested(bool focus)
 {
-    if (focus)
+    if(focus)
     {
         KWin::forceActiveWindow(topLevelWidget()->winId());
     }
@@ -288,41 +278,36 @@ void AppletContainer::focusRequested(bool focus)
     emit maintainFocus(focus);
 }
 
-void AppletContainer::doLoadConfiguration( KConfigGroup& config )
+void AppletContainer::doLoadConfiguration(KConfigGroup &config)
 {
     setWidthForHeightHint(config.readNumEntry("WidthForHeightHint", 0));
     setHeightForWidthHint(config.readNumEntry("HeightForWidthHint", 0));
 }
 
-void AppletContainer::doSaveConfiguration( KConfigGroup& config,
-                                           bool layoutOnly ) const
+void AppletContainer::doSaveConfiguration(KConfigGroup &config, bool layoutOnly) const
 {
     // immutability is checked by ContainerBase
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        config.writeEntry( "WidthForHeightHint", widthForHeight(height()) );
+        config.writeEntry("WidthForHeightHint", widthForHeight(height()));
     }
     else
     {
-        config.writeEntry( "HeightForWidthHint", heightForWidth(width()) );
+        config.writeEntry("HeightForWidthHint", heightForWidth(width()));
     }
 
-    if (!layoutOnly)
+    if(!layoutOnly)
     {
-        config.writePathEntry( "ConfigFile", _configFile );
-        config.writePathEntry( "DesktopFile", _deskFile );
+        config.writePathEntry("ConfigFile", _configFile);
+        config.writePathEntry("DesktopFile", _deskFile);
     }
 }
 
-QPopupMenu* AppletContainer::createOpMenu()
+QPopupMenu *AppletContainer::createOpMenu()
 {
-    QPopupMenu* opMenu = new PanelAppletOpMenu(_actions, appletOpMenu(),
-                                               appletsOwnMenu(),
-                                               _info.name(), _info.icon(),
-                                               this);
+    QPopupMenu *opMenu = new PanelAppletOpMenu(_actions, appletOpMenu(), appletsOwnMenu(), _info.name(), _info.icon(), this);
 
-    connect(opMenu, SIGNAL(escapePressed()),
-            _handle, SLOT(toggleMenuButtonOff()));
+    connect(opMenu, SIGNAL(escapePressed()), _handle, SLOT(toggleMenuButtonOff()));
 
     return opMenu;
 }
@@ -339,9 +324,9 @@ void AppletContainer::slotUpdateLayout()
 }
 
 
-const QPopupMenu* AppletContainer::appletsOwnMenu() const
+const QPopupMenu *AppletContainer::appletsOwnMenu() const
 {
-    if (!_applet)
+    if(!_applet)
     {
         return 0;
     }
@@ -356,22 +341,21 @@ void AppletContainer::slotDelayedDestruct()
 
 void AppletContainer::alignmentChange(KPanelExtension::Alignment a)
 {
-    if (!_applet)
+    if(!_applet)
     {
         return;
     }
 
-    _applet->setAlignment( (KPanelApplet::Alignment)a );
+    _applet->setAlignment((KPanelApplet::Alignment)a);
 }
 
 int AppletContainer::widthForHeight(int h) const
 {
-    int handleSize = (_handle->isVisibleTo(const_cast<AppletContainer*>(this))?
-                                             _handle->widthForHeight(h) : 0);
+    int handleSize = (_handle->isVisibleTo(const_cast< AppletContainer * >(this)) ? _handle->widthForHeight(h) : 0);
 
-    if (!_applet)
+    if(!_applet)
     {
-        if (_widthForHeightHint > 0)
+        if(_widthForHeightHint > 0)
         {
             return _widthForHeightHint + handleSize;
         }
@@ -386,12 +370,11 @@ int AppletContainer::widthForHeight(int h) const
 
 int AppletContainer::heightForWidth(int w) const
 {
-    int handleSize = (_handle->isVisibleTo(const_cast<AppletContainer*>(this))?
-                                               _handle->heightForWidth(w) : 0);
+    int handleSize = (_handle->isVisibleTo(const_cast< AppletContainer * >(this)) ? _handle->heightForWidth(w) : 0);
 
-    if (!_applet)
+    if(!_applet)
     {
-        if (_heightForWidthHint > 0)
+        if(_heightForWidthHint > 0)
         {
             return _heightForWidthHint + handleSize;
         }
@@ -406,33 +389,37 @@ int AppletContainer::heightForWidth(int w) const
 
 void AppletContainer::about()
 {
-    if (!_applet) return;
-    _applet->action( KPanelApplet::About );
+    if(!_applet)
+        return;
+    _applet->action(KPanelApplet::About);
 }
 
 void AppletContainer::help()
 {
-    if (!_applet) return;
-    _applet->action( KPanelApplet::Help );
+    if(!_applet)
+        return;
+    _applet->action(KPanelApplet::Help);
 }
 
 void AppletContainer::preferences()
 {
-    if (!_applet) return;
-    _applet->action( KPanelApplet::Preferences );
+    if(!_applet)
+        return;
+    _applet->action(KPanelApplet::Preferences);
 }
 
 void AppletContainer::reportBug()
 {
-    if (!_applet) return;
-    _applet->action( KPanelApplet::ReportBug );
+    if(!_applet)
+        return;
+    _applet->action(KPanelApplet::ReportBug);
 }
 
 void AppletContainer::setBackground()
 {
     // can happen in perverse moments when an applet isn't loaded but the contanier
     // get's asked to update it's bground anyways
-    if (!_applet)
+    if(!_applet)
     {
         return;
     }
@@ -443,8 +430,8 @@ void AppletContainer::setBackground()
     setBackgroundOrigin(AncestorOrigin);
     _applet->update();
     _handle->update();
-    
-    if (KickerSettings::transparent())
+
+    if(KickerSettings::transparent())
     {
         // Trick to tell applets that they must refresh their transparent background if they need.
         QMoveEvent e(_applet->pos(), _applet->pos());
@@ -455,21 +442,19 @@ void AppletContainer::setBackground()
 void AppletContainer::setImmutable(bool immutable)
 {
     // The menu applet must be kept immutable
-    if (_deskFile == "menuapplet.desktop" && !immutable)
+    if(_deskFile == "menuapplet.desktop" && !immutable)
         return;
 
     BaseContainer::setImmutable(immutable);
-    if (isImmutable() ||
-        KickerSettings::hideAppletHandles() ||
-        !kapp->authorizeKAction("kicker_rmb"))
+    if(isImmutable() || KickerSettings::hideAppletHandles() || !kapp->authorizeKAction("kicker_rmb"))
     {
-        if (_handle->isVisibleTo(this))
+        if(_handle->isVisibleTo(this))
         {
             _handle->hide();
             setBackground();
         }
     }
-    else if (!_handle->isVisibleTo(this))
+    else if(!_handle->isVisibleTo(this))
     {
         QToolTip::add(_handle, _info.name());
         _handle->show();

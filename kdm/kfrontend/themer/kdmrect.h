@@ -32,34 +32,36 @@
  */
 
 class KdmRect : public KdmItem {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	KdmRect( KdmItem *parent, const QDomNode &node, const char *name = 0 );
+    KdmRect(KdmItem *parent, const QDomNode &node, const char *name = 0);
 
 protected:
-	// draw the rect
-	virtual void drawContents( QPainter *p, const QRect &r );
+    // draw the rect
+    virtual void drawContents(QPainter *p, const QRect &r);
 
-	// handle switching between normal / active / prelight configurations
-	virtual void statusChanged();
+    // handle switching between normal / active / prelight configurations
+    virtual void statusChanged();
 
-	struct RectStruct {
-		struct RectClass {
-			float alpha;
-			QColor color;
-			bool present;
-			QFont font;
-		} normal, active, prelight;
-		bool hasBorder;
-	} rect;
+    struct RectStruct
+    {
+        struct RectClass
+        {
+            float alpha;
+            QColor color;
+            bool present;
+            QFont font;
+        } normal, active, prelight;
+        bool hasBorder;
+    } rect;
 
-//	virtual void setWidget( QWidget *widget );
-//	virtual void setLayoutItem( QLayoutItem *item );
+    //	virtual void setWidget( QWidget *widget );
+    //	virtual void setLayoutItem( QLayoutItem *item );
 
 private:
-	void setAttribs( QWidget *widget );
-	void recursiveSetAttribs( QLayoutItem *item );
+    void setAttribs(QWidget *widget);
+    void recursiveSetAttribs(QLayoutItem *item);
 };
 
 #endif

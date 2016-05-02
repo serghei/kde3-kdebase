@@ -6,38 +6,42 @@ namespace KHC {
 class DocEntry;
 class DocMetaInfo;
 
-class DocEntryTraverser
-{
-  public:
-    DocEntryTraverser() : mNotifyee( 0 ), mParent( 0 ), mParentEntry( 0 ) {}
-    virtual ~DocEntryTraverser() {}
-    
-    void setNotifyee( DocMetaInfo * );
+class DocEntryTraverser {
+public:
+    DocEntryTraverser() : mNotifyee(0), mParent(0), mParentEntry(0)
+    {
+    }
+    virtual ~DocEntryTraverser()
+    {
+    }
 
-    virtual void process( DocEntry * ) = 0;
+    void setNotifyee(DocMetaInfo *);
 
-    virtual void startProcess( DocEntry * );
+    virtual void process(DocEntry *) = 0;
 
-    virtual DocEntryTraverser *createChild( DocEntry *parentEntry ) = 0;
+    virtual void startProcess(DocEntry *);
+
+    virtual DocEntryTraverser *createChild(DocEntry *parentEntry) = 0;
 
     virtual void deleteTraverser();
 
-    virtual void finishTraversal() {}
+    virtual void finishTraversal()
+    {
+    }
 
-    DocEntryTraverser *childTraverser( DocEntry *parentEntry );
+    DocEntryTraverser *childTraverser(DocEntry *parentEntry);
     virtual DocEntryTraverser *parentTraverser();
 
-    void setParentEntry( DocEntry * );
+    void setParentEntry(DocEntry *);
     DocEntry *parentEntry();
 
-  protected:
+protected:
     DocMetaInfo *mNotifyee;
     DocEntryTraverser *mParent;
 
-  private:
-    DocEntry *mParentEntry;    
+private:
+    DocEntry *mParentEntry;
 };
-
 }
 
 #endif

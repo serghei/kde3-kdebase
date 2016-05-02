@@ -27,40 +27,38 @@
 
 class KlipperAppletWidget;
 
-class KlipperApplet : public KPanelApplet
-{
-  Q_OBJECT
+class KlipperApplet : public KPanelApplet {
+    Q_OBJECT
 public:
-    KlipperApplet(const QString& configFile, Type t = Normal, int actions = 0,
-                  QWidget *parent = 0, const char *name = 0);
+    KlipperApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
     ~KlipperApplet();
 
     int widthForHeight(int h) const;
     int heightForWidth(int w) const;
+
 protected:
-    void resizeEvent( QResizeEvent* );
+    void resizeEvent(QResizeEvent *);
     void preferences();
     void help();
     void about();
 
 private:
     void centerWidget();
-    KlipperAppletWidget* widget;
+    KlipperAppletWidget *widget;
 };
 
-class KlipperAppletWidget : public KlipperWidget
-{
+class KlipperAppletWidget : public KlipperWidget {
     Q_OBJECT
     K_DCOP
-k_dcop:
-    int newInstance();
+    k_dcop : int newInstance();
+
 public:
-    KlipperAppletWidget( QWidget* parent = NULL );
+    KlipperAppletWidget(QWidget *parent = NULL);
     virtual ~KlipperAppletWidget();
+
 private:
     void init();
-    static DCOPClient* s_dcop;
-
+    static DCOPClient *s_dcop;
 };
 
 #endif

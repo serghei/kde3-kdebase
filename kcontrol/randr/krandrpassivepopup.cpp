@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2003 Lubos Lunak <l.lunak@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -25,94 +25,91 @@
 // widgets moves (needed because after a resolution switch Kicker will
 // reposition itself, causing normal KPassivePopup to stay at weird places)
 
-KRandrPassivePopup::KRandrPassivePopup( QWidget *parent, const char *name, WFlags f )
-    : KPassivePopup( parent, name, f )
-    {
-    connect( &update_timer, SIGNAL( timeout()), SLOT( slotPositionSelf()));
-    }
-    
-KRandrPassivePopup* KRandrPassivePopup::message( const QString &caption, const QString &text,
-    const QPixmap &icon, QWidget *parent, const char *name, int timeout )
-    {
-    KRandrPassivePopup *pop = new KRandrPassivePopup( parent, name );
-    pop->setAutoDelete( true );
-    pop->setView( caption, text, icon );
-    pop->setTimeout( timeout );
-    pop->show();
-    pop->startWatchingWidget( parent );
-    return pop;
-    }
+KRandrPassivePopup::KRandrPassivePopup(QWidget *parent, const char *name, WFlags f) : KPassivePopup(parent, name, f)
+{
+    connect(&update_timer, SIGNAL(timeout()), SLOT(slotPositionSelf()));
+}
 
-void KRandrPassivePopup::startWatchingWidget( QWidget* widget_P )
-    {
-    static Atom wm_state = XInternAtom( qt_xdisplay() , "WM_STATE", False );
+KRandrPassivePopup *KRandrPassivePopup::message(const QString &caption, const QString &text, const QPixmap &icon, QWidget *parent, const char *name,
+                                                int timeout)
+{
+    KRandrPassivePopup *pop = new KRandrPassivePopup(parent, name);
+    pop->setAutoDelete(true);
+    pop->setView(caption, text, icon);
+    pop->setTimeout(timeout);
+    pop->show();
+    pop->startWatchingWidget(parent);
+    return pop;
+}
+
+void KRandrPassivePopup::startWatchingWidget(QWidget *widget_P)
+{
+    static Atom wm_state = XInternAtom(qt_xdisplay(), "WM_STATE", False);
     Window win = widget_P->winId();
     bool x11_events = false;
     for(;;)
-	{
-	Window root, parent;
-	Window* children;
-	unsigned int nchildren;
-	XQueryTree( qt_xdisplay(), win, &root, &parent, &children, &nchildren );
-	if( children != NULL )
-	    XFree( children );
-	if( win == root ) // huh?
-	    break;
-	win = parent;
-	
-	QWidget* widget = QWidget::find( win );
-	if( widget != NULL )
-	    {
-	    widget->installEventFilter( this );
-	    watched_widgets.append( widget );
-	    }
-	else
-	    {
-	    XWindowAttributes attrs;
-	    XGetWindowAttributes( qt_xdisplay(), win, &attrs );
-	    XSelectInput( qt_xdisplay(), win, attrs.your_event_mask | StructureNotifyMask );
-	    watched_windows.append( win );
-	    x11_events = true;
-	    }
-	Atom type;
-	int format;
-	unsigned long nitems, after;
-	unsigned char* data;
-	if( XGetWindowProperty( qt_xdisplay(), win, wm_state, 0, 0, False, AnyPropertyType,
-	    &type, &format, &nitems, &after, &data ) == Success )
-	    {
-	    if( data != NULL )
-		XFree( data );
-	    if( type != None ) // toplevel window
-		break;
-	    }
-	}
-    if( x11_events )
-	kapp->installX11EventFilter( this );
-    }
-    	
-bool KRandrPassivePopup::eventFilter( QObject* o, QEvent* e )
     {
-    if( e->type() == QEvent::Move && o->isWidgetType()
-	&& watched_widgets.contains( static_cast< QWidget* >( o )))
-        QTimer::singleShot( 0, this, SLOT( slotPositionSelf()));
-    return false;
-    }
+        Window root, parent;
+        Window *children;
+        unsigned int nchildren;
+        XQueryTree(qt_xdisplay(), win, &root, &parent, &children, &nchildren);
+        if(children != NULL)
+            XFree(children);
+        if(win == root) // huh?
+            break;
+        win = parent;
 
-bool KRandrPassivePopup::x11Event( XEvent* e )
-    {
-    if( e->type == ConfigureNotify && watched_windows.contains( e->xconfigure.window ))
-	{
-	if( !update_timer.isActive())
-	    update_timer.start( 10, true );
-	return false;
-	}
-    return KPassivePopup::x11Event( e );
+        QWidget *widget = QWidget::find(win);
+        if(widget != NULL)
+        {
+            widget->installEventFilter(this);
+            watched_widgets.append(widget);
+        }
+        else
+        {
+            XWindowAttributes attrs;
+            XGetWindowAttributes(qt_xdisplay(), win, &attrs);
+            XSelectInput(qt_xdisplay(), win, attrs.your_event_mask | StructureNotifyMask);
+            watched_windows.append(win);
+            x11_events = true;
+        }
+        Atom type;
+        int format;
+        unsigned long nitems, after;
+        unsigned char *data;
+        if(XGetWindowProperty(qt_xdisplay(), win, wm_state, 0, 0, False, AnyPropertyType, &type, &format, &nitems, &after, &data) == Success)
+        {
+            if(data != NULL)
+                XFree(data);
+            if(type != None) // toplevel window
+                break;
+        }
     }
-        
+    if(x11_events)
+        kapp->installX11EventFilter(this);
+}
+
+bool KRandrPassivePopup::eventFilter(QObject *o, QEvent *e)
+{
+    if(e->type() == QEvent::Move && o->isWidgetType() && watched_widgets.contains(static_cast< QWidget * >(o)))
+        QTimer::singleShot(0, this, SLOT(slotPositionSelf()));
+    return false;
+}
+
+bool KRandrPassivePopup::x11Event(XEvent *e)
+{
+    if(e->type == ConfigureNotify && watched_windows.contains(e->xconfigure.window))
+    {
+        if(!update_timer.isActive())
+            update_timer.start(10, true);
+        return false;
+    }
+    return KPassivePopup::x11Event(e);
+}
+
 void KRandrPassivePopup::slotPositionSelf()
-    {
+{
     positionSelf();
-    }
-    
+}
+
 #include "krandrpassivepopup.moc"

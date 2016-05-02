@@ -27,29 +27,28 @@
  * This class provides a Popup Menu with programs that can be executed and
  * that reads its configuration from a config file.
  */
-class KCustomMenu : public QPopupMenu
-{
-   Q_OBJECT
+class KCustomMenu : public QPopupMenu {
+    Q_OBJECT
 public:
-   /**
-    * Create a custome menu described by @p configfile.
-    */
-   KCustomMenu(const QString &configfile, QWidget *parent=0);
+    /**
+     * Create a custome menu described by @p configfile.
+     */
+    KCustomMenu(const QString &configfile, QWidget *parent = 0);
 
-   /**
-    * Destructor
-    */
-   ~KCustomMenu();
-   
+    /**
+     * Destructor
+     */
+    ~KCustomMenu();
+
 protected slots:
-   void slotActivated(int id);
+    void slotActivated(int id);
 
-protected:      
-   void insertMenuItem(KService::Ptr &s, int nId, int nIndex = -1);
+protected:
+    void insertMenuItem(KService::Ptr &s, int nId, int nIndex = -1);
 
 private:
-   class KCustomMenuPrivate;
-   KCustomMenuPrivate *d;   
+    class KCustomMenuPrivate;
+    KCustomMenuPrivate *d;
 };
 
 

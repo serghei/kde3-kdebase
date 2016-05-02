@@ -7,13 +7,13 @@
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright
  *    notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
@@ -34,28 +34,25 @@
 #include "drbugreport.moc"
 #include "drbugreport.h"
 
-DrKBugReport::DrKBugReport(QWidget *parent, bool modal,
-                           const KAboutData *aboutData)
-  : KBugReport(parent, modal, aboutData)
+DrKBugReport::DrKBugReport(QWidget *parent, bool modal, const KAboutData *aboutData) : KBugReport(parent, modal, aboutData)
 {
 }
 
 void DrKBugReport::setText(const QString &str)
 {
-  m_lineedit->setText(str);
-  m_startstring = str.simplifyWhiteSpace();
+    m_lineedit->setText(str);
+    m_startstring = str.simplifyWhiteSpace();
 }
 
 void DrKBugReport::slotOk()
 {
-  if (!m_startstring.isEmpty() &&
-      m_lineedit->text().simplifyWhiteSpace() == m_startstring)
-  {
-    QString msg = i18n("You have to edit the description "
-                       "before the report can be sent.");
-    KMessageBox::error(this, msg);
-    return;
-  }
-  KBugReport::slotOk();
+    if(!m_startstring.isEmpty() && m_lineedit->text().simplifyWhiteSpace() == m_startstring)
+    {
+        QString msg = i18n(
+            "You have to edit the description "
+            "before the report can be sent.");
+        KMessageBox::error(this, msg);
+        return;
+    }
+    KBugReport::slotOk();
 }
-

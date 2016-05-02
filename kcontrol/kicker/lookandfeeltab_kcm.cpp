@@ -28,18 +28,15 @@
 #include <kaboutdata.h>
 #include <kdialog.h>
 
-LookAndFeelConfig::LookAndFeelConfig(QWidget *parent, const char *name)
-  : KCModule(parent, name)
+LookAndFeelConfig::LookAndFeelConfig(QWidget *parent, const char *name) : KCModule(parent, name)
 {
 
-    KAboutData *about =
-    new KAboutData(I18N_NOOP("kcmkicker"), I18N_NOOP("KDE Panel Control Module"),
-                  0, 0, KAboutData::License_GPL,
-                  I18N_NOOP("(c) 1999 - 2001 Matthias Elter\n(c) 2002 Aaron J. Seigo"));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmkicker"), I18N_NOOP("KDE Panel Control Module"), 0, 0, KAboutData::License_GPL,
+                                       I18N_NOOP("(c) 1999 - 2001 Matthias Elter\n(c) 2002 Aaron J. Seigo"));
 
     about->addAuthor("Matthias Elter", 0, "elter@kde.org");
     about->addAuthor("Aaron J. Seigo", 0, "aseigo@olympusproject.org");
-    setAboutData( about );
+    setAboutData(about);
 
     KickerConfig::initScreenNumber();
     QVBoxLayout *layout = new QVBoxLayout(this, 0, KDialog::spacingHint());
@@ -83,12 +80,12 @@ void LookAndFeelConfig::defaults()
 
 QString LookAndFeelConfig::quickHelp() const
 {
-    return i18n("<h1>Panel</h1> Here you can configure the KDE panel (also"
-                " referred to as 'kicker'). This includes options like the position and"
-                " size of the panel, as well as its hiding behavior and its looks.<p>"
-                " Note that you can also access some of these options directly by clicking"
-                " on the panel, e.g. dragging it with the left mouse button or using the"
-                " context menu on right mouse button click. This context menu also offers you"
-                " manipulation of the panel's buttons and applets.");
+    return i18n(
+        "<h1>Panel</h1> Here you can configure the KDE panel (also"
+        " referred to as 'kicker'). This includes options like the position and"
+        " size of the panel, as well as its hiding behavior and its looks.<p>"
+        " Note that you can also access some of these options directly by clicking"
+        " on the panel, e.g. dragging it with the left mouse button or using the"
+        " context menu on right mouse button click. This context menu also offers you"
+        " manipulation of the panel's buttons and applets.");
 }
-

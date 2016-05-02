@@ -22,13 +22,12 @@
 
 #include "notifieraction.h"
 
-class NotifierOpenAction : public NotifierAction
-{
+class NotifierOpenAction : public NotifierAction {
 public:
-	NotifierOpenAction();
-	virtual QString id() const;
-	virtual void execute(KFileItem &medium);
-	bool supportsMimetype( const QString &mimetype ) const;
+    NotifierOpenAction();
+    virtual QString id() const;
+    virtual void execute(KFileItem &medium);
+    bool supportsMimetype(const QString &mimetype) const;
 };
 
 #endif

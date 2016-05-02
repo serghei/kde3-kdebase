@@ -22,9 +22,9 @@
 #ifndef dtime_included
 #define dtime_included
 
-#include <qdatetime.h> 
-#include <qlineedit.h> 
-#include <qspinbox.h> 
+#include <qdatetime.h>
+#include <qlineedit.h>
+#include <qspinbox.h>
 #include <qstring.h>
 #include <qtimer.h>
 #include <qvalidator.h>
@@ -36,90 +36,84 @@
 
 class Kclock;
 
-class HMSTimeWidget : public KIntSpinBox
-{
-  Q_OBJECT
- public:
-  HMSTimeWidget(QWidget *parent=0, const char *name=0);
- protected:
-  QString mapValueToText(int);
+class HMSTimeWidget : public KIntSpinBox {
+    Q_OBJECT
+public:
+    HMSTimeWidget(QWidget *parent = 0, const char *name = 0);
+
+protected:
+    QString mapValueToText(int);
 };
 
-class Dtime : public QWidget
-{
-  Q_OBJECT
- public:
-  Dtime( QWidget *parent=0, const char* name=0 );
+class Dtime : public QWidget {
+    Q_OBJECT
+public:
+    Dtime(QWidget *parent = 0, const char *name = 0);
 
-  void	save();
-  void	load();
+    void save();
+    void load();
 
-  QString quickHelp() const;
+    QString quickHelp() const;
 
 signals:
-  void	timeChanged(bool);
+    void timeChanged(bool);
 
- private slots:
-  void	configChanged();
-  void	serverTimeCheck(); 
-  void	timeout();
-  void	set_time();
-  void	changeDate(QDate);
+private slots:
+    void configChanged();
+    void serverTimeCheck();
+    void timeout();
+    void set_time();
+    void changeDate(QDate);
 
 private:
-  void	findNTPutility();
-  QString	ntpUtility;
+    void findNTPutility();
+    QString ntpUtility;
 
-  QWidget*	privateLayoutWidget;
-  QCheckBox	*setDateTimeAuto;
-  QComboBox	*timeServerList;
+    QWidget *privateLayoutWidget;
+    QCheckBox *setDateTimeAuto;
+    QComboBox *timeServerList;
 
-  KDatePicker	*cal;
-  QComboBox	*month;
-  QSpinBox	*year;
+    KDatePicker *cal;
+    QComboBox *month;
+    QSpinBox *year;
 
-  HMSTimeWidget	*hour;
-  HMSTimeWidget	*minute;
-  HMSTimeWidget	*second;
+    HMSTimeWidget *hour;
+    HMSTimeWidget *minute;
+    HMSTimeWidget *second;
 
-  Kclock	*kclock;
-  
-  QTime		time;
-  QDate		date;
-  QTimer	internalTimer;
-  
-  QString	BufS;
-  int		BufI;
-  bool		refresh;
-  bool		ontimeout;
+    Kclock *kclock;
+
+    QTime time;
+    QDate date;
+    QTimer internalTimer;
+
+    QString BufS;
+    int BufI;
+    bool refresh;
+    bool ontimeout;
 };
 
-class Kclock : public QWidget
-{
-  Q_OBJECT
+class Kclock : public QWidget {
+    Q_OBJECT
 
 public:
-  Kclock( QWidget *parent=0, const char *name=0 ) 
-    : QWidget(parent, name) {};
-  
-  void setTime(const QTime&);
-  
+    Kclock(QWidget *parent = 0, const char *name = 0) : QWidget(parent, name){};
+
+    void setTime(const QTime &);
+
 protected:
-  virtual void	paintEvent( QPaintEvent *event );
-  
-  
+    virtual void paintEvent(QPaintEvent *event);
+
+
 private:
-  QTime		time;
+    QTime time;
 };
 
-class KStrictIntValidator : public QIntValidator 
-{
+class KStrictIntValidator : public QIntValidator {
 public:
-  KStrictIntValidator(int bottom, int top, QWidget * parent,
-		      const char * name = 0 )
-    : QIntValidator(bottom, top, parent, name) {};
-  
-  QValidator::State validate( QString & input, int & d ) const; 
+    KStrictIntValidator(int bottom, int top, QWidget *parent, const char *name = 0) : QIntValidator(bottom, top, parent, name){};
+
+    QValidator::State validate(QString &input, int &d) const;
 };
 
 #endif // dtime_included

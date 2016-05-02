@@ -11,9 +11,7 @@
 
 #include <kpassdlg.h>
 
-class KDEpasswd1Dialog
-    : public KPasswordDialog
-{
+class KDEpasswd1Dialog : public KPasswordDialog {
     Q_OBJECT
 
 public:
@@ -25,11 +23,9 @@ public:
 protected:
     bool checkPassword(const char *password);
 };
-    
 
-class KDEpasswd2Dialog
-    : public KPasswordDialog
-{
+
+class KDEpasswd2Dialog : public KPasswordDialog {
     Q_OBJECT
 
 public:
@@ -38,12 +34,11 @@ public:
 
 protected:
     bool checkPassword(const char *password);
-    
+
 private:
     const char *m_Pass;
     QCString m_User;
 };
-    
 
 
 #endif // __PasswdDlg_h_Incluced__

@@ -37,31 +37,30 @@ class QButtonGroup;
 
 struct PluginPageListItem
 {
-  Kate::Plugin *plugin;
-  Kate::PluginConfigPage *page;
+    Kate::Plugin *plugin;
+    Kate::PluginConfigPage *page;
 };
 
-class KateConfigDialog : public KDialogBase
-{
-  Q_OBJECT
+class KateConfigDialog : public KDialogBase {
+    Q_OBJECT
 
-  public:
-    KateConfigDialog (KateMainWindow *parent, Kate::View *view);
-    ~KateConfigDialog ();
+public:
+    KateConfigDialog(KateMainWindow *parent, Kate::View *view);
+    ~KateConfigDialog();
 
-  public:
-    void addPluginPage (Kate::Plugin *plugin);
-    void removePluginPage (Kate::Plugin *plugin);
+public:
+    void addPluginPage(Kate::Plugin *plugin);
+    void removePluginPage(Kate::Plugin *plugin);
 
-  protected slots:
+protected slots:
     void slotOk();
     void slotApply();
     void slotChanged();
 
-  private:
+private:
     KateMainWindow *mainWindow;
 
-    Kate::View* v;
+    Kate::View *v;
     bool dataChanged;
 
     QCheckBox *cb_fullPath;
@@ -69,14 +68,14 @@ class KateConfigDialog : public KDialogBase
     QCheckBox *cb_modNotifications;
     QCheckBox *cb_saveMetaInfos;
     QSpinBox *sb_daysMetaInfos;
-    QCheckBox* cb_restoreVC;
+    QCheckBox *cb_restoreVC;
     QButtonGroup *sessions_start;
     QButtonGroup *sessions_exit;
     Kate::ConfigPage *fileSelConfigPage;
     Kate::ConfigPage *filelistConfigPage;
     Kate::ConfigPage *configExternalToolsPage;
-    QPtrList<PluginPageListItem> pluginPages;
-    QPtrList<KTextEditor::ConfigPage> editorPages;
+    QPtrList< PluginPageListItem > pluginPages;
+    QPtrList< KTextEditor::ConfigPage > editorPages;
 };
 
 #endif

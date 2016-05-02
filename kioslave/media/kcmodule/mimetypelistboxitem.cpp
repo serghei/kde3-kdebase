@@ -21,15 +21,13 @@
 
 #include <kmimetype.h>
 
-MimetypeListBoxItem::MimetypeListBoxItem(const QString &mimetype, QListBox *parent)
-	: QListBoxText(parent), m_mimetype(mimetype)
+MimetypeListBoxItem::MimetypeListBoxItem(const QString &mimetype, QListBox *parent) : QListBoxText(parent), m_mimetype(mimetype)
 {
-	KMimeType::Ptr mime = KMimeType::mimeType( mimetype );
-	setText( mime->comment() );
+    KMimeType::Ptr mime = KMimeType::mimeType(mimetype);
+    setText(mime->comment());
 }
 
 const QString &MimetypeListBoxItem::mimetype() const
 {
-	return m_mimetype;
+    return m_mimetype;
 }
-

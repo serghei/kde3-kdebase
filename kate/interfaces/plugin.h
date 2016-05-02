@@ -26,62 +26,58 @@
 
 #include <kurl.h>
 
-namespace Kate
-{
+namespace Kate {
 
 class Application;
 class MainWindow;
 
-class KDE_EXPORT Plugin : public QObject
-{
-  friend class PrivatePlugin;
+class KDE_EXPORT Plugin : public QObject {
+    friend class PrivatePlugin;
 
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    Plugin (Application *application = 0, const char *name = 0 );
-    virtual ~Plugin ();
+public:
+    Plugin(Application *application = 0, const char *name = 0);
+    virtual ~Plugin();
 
-    unsigned int pluginNumber () const;
+    unsigned int pluginNumber() const;
 
     Application *application() const;
 
-  private:
+private:
     class PrivatePlugin *d;
     static unsigned int globalPluginNumber;
     unsigned int myPluginNumber;
 };
 
-KDE_EXPORT Plugin *createPlugin ( const char* libname, Application *application = 0, const char *name = 0,const QStringList &args = QStringList() );
+KDE_EXPORT Plugin *createPlugin(const char *libname, Application *application = 0, const char *name = 0, const QStringList &args = QStringList());
 
 /*
  * view plugin class
  * this plugin will be bound to a ktexteditor::view
  */
-class KDE_EXPORT PluginViewInterface
-{
-  friend class PrivatePluginViewInterface;
+class KDE_EXPORT PluginViewInterface {
+    friend class PrivatePluginViewInterface;
 
-  public:
-    PluginViewInterface ();
-    virtual ~PluginViewInterface ();
+public:
+    PluginViewInterface();
+    virtual ~PluginViewInterface();
 
-    unsigned int pluginViewInterfaceNumber () const;
+    unsigned int pluginViewInterfaceNumber() const;
 
     /*
      * will be called from the part to bound the plugin to a view
      */
-    virtual void addView (MainWindow *) = 0;
-    virtual void removeView (MainWindow *) = 0;
+    virtual void addView(MainWindow *) = 0;
+    virtual void removeView(MainWindow *) = 0;
 
-  private:
+private:
     class PrivatePluginViewInterface *d;
     static unsigned int globalPluginViewInterfaceNumber;
     unsigned int myPluginViewInterfaceNumber;
 };
 
-KDE_EXPORT PluginViewInterface *pluginViewInterface (Plugin *plugin);
-
+KDE_EXPORT PluginViewInterface *pluginViewInterface(Plugin *plugin);
 }
 
 #endif

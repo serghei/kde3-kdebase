@@ -21,19 +21,17 @@
 
 #include <klocale.h>
 
-NotifierNothingAction::NotifierNothingAction()
-	: NotifierAction()
+NotifierNothingAction::NotifierNothingAction() : NotifierAction()
 {
-	setIconName("button_cancel");
-	setLabel(i18n("Do Nothing"));
+    setIconName("button_cancel");
+    setLabel(i18n("Do Nothing"));
 }
 
 QString NotifierNothingAction::id() const
 {
-	return "#NothinAction";
+    return "#NothinAction";
 }
 
-void NotifierNothingAction::execute(KFileItem &/*medium*/)
+void NotifierNothingAction::execute(KFileItem & /*medium*/)
 {
 }
-

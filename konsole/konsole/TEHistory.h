@@ -34,20 +34,19 @@
    An extendable tmpfile(1) based buffer.
 */
 
-class HistoryFile
-{
+class HistoryFile {
 public:
-  HistoryFile();
-  virtual ~HistoryFile();
+    HistoryFile();
+    virtual ~HistoryFile();
 
-  virtual void add(const unsigned char* bytes, int len);
-  virtual void get(unsigned char* bytes, int len, int loc);
-  virtual int  len();
+    virtual void add(const unsigned char *bytes, int len);
+    virtual void get(unsigned char *bytes, int len, int loc);
+    virtual int len();
 
 private:
-  int  ion;
-  int  length;
-  KTempFile tmpFile;
+    int ion;
+    int length;
+    KTempFile tmpFile;
 };
 #endif
 
@@ -58,32 +57,38 @@ private:
 //////////////////////////////////////////////////////////////////////
 class HistoryType;
 
-class HistoryScroll
-{
+class HistoryScroll {
 public:
-  HistoryScroll(HistoryType*);
- virtual ~HistoryScroll();
+    HistoryScroll(HistoryType *);
+    virtual ~HistoryScroll();
 
-  virtual bool hasScroll();
+    virtual bool hasScroll();
 
-  // access to history
-  virtual int  getLines() = 0;
-  virtual int  getLineLen(int lineno) = 0;
-  virtual void getCells(int lineno, int colno, int count, ca res[]) = 0;
-  virtual bool isWrappedLine(int lineno) = 0;
+    // access to history
+    virtual int getLines() = 0;
+    virtual int getLineLen(int lineno) = 0;
+    virtual void getCells(int lineno, int colno, int count, ca res[]) = 0;
+    virtual bool isWrappedLine(int lineno) = 0;
 
-  // backward compatibility (obsolete)
-  ca   getCell(int lineno, int colno) { ca res; getCells(lineno,colno,1,&res); return res; }
+    // backward compatibility (obsolete)
+    ca getCell(int lineno, int colno)
+    {
+        ca res;
+        getCells(lineno, colno, 1, &res);
+        return res;
+    }
 
-  // adding lines.
-  virtual void addCells(ca a[], int count) = 0;
-  virtual void addLine(bool previousWrapped=false) = 0;
+    // adding lines.
+    virtual void addCells(ca a[], int count) = 0;
+    virtual void addLine(bool previousWrapped = false) = 0;
 
-  const HistoryType& getType() { return *m_histType; }
+    const HistoryType &getType()
+    {
+        return *m_histType;
+    }
 
 protected:
-  HistoryType* m_histType;
-
+    HistoryType *m_histType;
 };
 
 #if 1
@@ -92,62 +97,62 @@ protected:
 // File-based history (e.g. file log, no limitation in length)
 //////////////////////////////////////////////////////////////////////
 
-class HistoryScrollFile : public HistoryScroll
-{
+class HistoryScrollFile : public HistoryScroll {
 public:
-  HistoryScrollFile(const QString &logFileName);
-  virtual ~HistoryScrollFile();
+    HistoryScrollFile(const QString &logFileName);
+    virtual ~HistoryScrollFile();
 
-  virtual int  getLines();
-  virtual int  getLineLen(int lineno);
-  virtual void getCells(int lineno, int colno, int count, ca res[]);
-  virtual bool isWrappedLine(int lineno);
+    virtual int getLines();
+    virtual int getLineLen(int lineno);
+    virtual void getCells(int lineno, int colno, int count, ca res[]);
+    virtual bool isWrappedLine(int lineno);
 
-  virtual void addCells(ca a[], int count);
-  virtual void addLine(bool previousWrapped=false);
+    virtual void addCells(ca a[], int count);
+    virtual void addLine(bool previousWrapped = false);
 
 private:
-  int startOfLine(int lineno);
+    int startOfLine(int lineno);
 
-  QString m_logFileName;
-  HistoryFile index; // lines Row(int)
-  HistoryFile cells; // text  Row(ca)
-  HistoryFile lineflags; // flags Row(unsigned char)
+    QString m_logFileName;
+    HistoryFile index;     // lines Row(int)
+    HistoryFile cells;     // text  Row(ca)
+    HistoryFile lineflags; // flags Row(unsigned char)
 };
 
 
 //////////////////////////////////////////////////////////////////////
 // Buffer-based history (limited to a fixed nb of lines)
 //////////////////////////////////////////////////////////////////////
-class HistoryScrollBuffer : public HistoryScroll
-{
+class HistoryScrollBuffer : public HistoryScroll {
 public:
-  typedef QMemArray<ca> histline;
+    typedef QMemArray< ca > histline;
 
-  HistoryScrollBuffer(unsigned int maxNbLines = 1000);
-  virtual ~HistoryScrollBuffer();
+    HistoryScrollBuffer(unsigned int maxNbLines = 1000);
+    virtual ~HistoryScrollBuffer();
 
-  virtual int  getLines();
-  virtual int  getLineLen(int lineno);
-  virtual void getCells(int lineno, int colno, int count, ca res[]);
-  virtual bool isWrappedLine(int lineno);
+    virtual int getLines();
+    virtual int getLineLen(int lineno);
+    virtual void getCells(int lineno, int colno, int count, ca res[]);
+    virtual bool isWrappedLine(int lineno);
 
-  virtual void addCells(ca a[], int count);
-  virtual void addLine(bool previousWrapped=false);
+    virtual void addCells(ca a[], int count);
+    virtual void addLine(bool previousWrapped = false);
 
-  void setMaxNbLines(unsigned int nbLines);
-  unsigned int maxNbLines() { return m_maxNbLines; }
-  
+    void setMaxNbLines(unsigned int nbLines);
+    unsigned int maxNbLines()
+    {
+        return m_maxNbLines;
+    }
+
 
 private:
-  int adjustLineNb(int lineno);
+    int adjustLineNb(int lineno);
 
-  QPtrVector<histline> m_histBuffer;
-  QBitArray m_wrappedLine;
-  unsigned int m_maxNbLines;
-  unsigned int m_nbLines;
-  unsigned int m_arrayIndex;
-
+    QPtrVector< histline > m_histBuffer;
+    QBitArray m_wrappedLine;
+    unsigned int m_maxNbLines;
+    unsigned int m_nbLines;
+    unsigned int m_arrayIndex;
 };
 
 #endif
@@ -155,21 +160,20 @@ private:
 //////////////////////////////////////////////////////////////////////
 // Nothing-based history (no history :-)
 //////////////////////////////////////////////////////////////////////
-class HistoryScrollNone : public HistoryScroll
-{
+class HistoryScrollNone : public HistoryScroll {
 public:
-  HistoryScrollNone();
-  virtual ~HistoryScrollNone();
+    HistoryScrollNone();
+    virtual ~HistoryScrollNone();
 
-  virtual bool hasScroll();
+    virtual bool hasScroll();
 
-  virtual int  getLines();
-  virtual int  getLineLen(int lineno);
-  virtual void getCells(int lineno, int colno, int count, ca res[]);
-  virtual bool isWrappedLine(int lineno);
+    virtual int getLines();
+    virtual int getLineLen(int lineno);
+    virtual void getCells(int lineno, int colno, int count, ca res[]);
+    virtual bool isWrappedLine(int lineno);
 
-  virtual void addCells(ca a[], int count);
-  virtual void addLine(bool previousWrapped=false);
+    virtual void addCells(ca a[], int count);
+    virtual void addLine(bool previousWrapped = false);
 };
 
 //////////////////////////////////////////////////////////////////////
@@ -177,95 +181,89 @@ public:
 //////////////////////////////////////////////////////////////////////
 #include "BlockArray.h"
 #include <qintdict.h>
-class HistoryScrollBlockArray : public HistoryScroll
-{
+class HistoryScrollBlockArray : public HistoryScroll {
 public:
-  HistoryScrollBlockArray(size_t size);
-  virtual ~HistoryScrollBlockArray();
+    HistoryScrollBlockArray(size_t size);
+    virtual ~HistoryScrollBlockArray();
 
-  virtual int  getLines();
-  virtual int  getLineLen(int lineno);
-  virtual void getCells(int lineno, int colno, int count, ca res[]);
-  virtual bool isWrappedLine(int lineno);
+    virtual int getLines();
+    virtual int getLineLen(int lineno);
+    virtual void getCells(int lineno, int colno, int count, ca res[]);
+    virtual bool isWrappedLine(int lineno);
 
-  virtual void addCells(ca a[], int count);
-  virtual void addLine(bool previousWrapped=false);
+    virtual void addCells(ca a[], int count);
+    virtual void addLine(bool previousWrapped = false);
 
 protected:
-  BlockArray m_blockArray;
-  QIntDict<size_t> m_lineLengths;
+    BlockArray m_blockArray;
+    QIntDict< size_t > m_lineLengths;
 };
 
 //////////////////////////////////////////////////////////////////////
 // History type
 //////////////////////////////////////////////////////////////////////
 
-class HistoryType
-{
+class HistoryType {
 public:
-  HistoryType();
-  virtual ~HistoryType();
+    HistoryType();
+    virtual ~HistoryType();
 
-  virtual bool isOn()                const = 0;
-  virtual unsigned int getSize()     const = 0;
+    virtual bool isOn() const = 0;
+    virtual unsigned int getSize() const = 0;
 
-  virtual HistoryScroll* getScroll(HistoryScroll *) const = 0;
+    virtual HistoryScroll *getScroll(HistoryScroll *) const = 0;
 };
 
-class HistoryTypeNone : public HistoryType
-{
+class HistoryTypeNone : public HistoryType {
 public:
-  HistoryTypeNone();
+    HistoryTypeNone();
 
-  virtual bool isOn() const;
-  virtual unsigned int getSize() const;
+    virtual bool isOn() const;
+    virtual unsigned int getSize() const;
 
-  virtual HistoryScroll* getScroll(HistoryScroll *) const;
+    virtual HistoryScroll *getScroll(HistoryScroll *) const;
 };
 
-class HistoryTypeBlockArray : public HistoryType
-{
+class HistoryTypeBlockArray : public HistoryType {
 public:
-  HistoryTypeBlockArray(size_t size);
-  
-  virtual bool isOn() const;
-  virtual unsigned int getSize() const;
+    HistoryTypeBlockArray(size_t size);
 
-  virtual HistoryScroll* getScroll(HistoryScroll *) const;
+    virtual bool isOn() const;
+    virtual unsigned int getSize() const;
+
+    virtual HistoryScroll *getScroll(HistoryScroll *) const;
 
 protected:
-  size_t m_size;
+    size_t m_size;
 };
 
-#if 1 // Disabled for now 
-class HistoryTypeFile : public HistoryType
-{
+#if 1 // Disabled for now
+class HistoryTypeFile : public HistoryType {
 public:
-  HistoryTypeFile(const QString& fileName=QString::null);
+    HistoryTypeFile(const QString &fileName = QString::null);
 
-  virtual bool isOn() const;
-  virtual const QString& getFileName() const;
-  virtual unsigned int getSize() const;
+    virtual bool isOn() const;
+    virtual const QString &getFileName() const;
+    virtual unsigned int getSize() const;
 
-  virtual HistoryScroll* getScroll(HistoryScroll *) const;
+    virtual HistoryScroll *getScroll(HistoryScroll *) const;
 
 protected:
-  QString m_fileName;
+    QString m_fileName;
 };
 
 
-class HistoryTypeBuffer : public HistoryType
-{
+class HistoryTypeBuffer : public HistoryType {
 public:
-  HistoryTypeBuffer(unsigned int nbLines);
-  
-  virtual bool isOn() const;
-  virtual unsigned int getSize() const;
+    HistoryTypeBuffer(unsigned int nbLines);
 
-  virtual HistoryScroll* getScroll(HistoryScroll *) const;
+    virtual bool isOn() const;
+    virtual unsigned int getSize() const;
+
+    virtual HistoryScroll *getScroll(HistoryScroll *) const;
 
 protected:
-  unsigned int m_nbLines;
+    unsigned int m_nbLines;
 };
 
 #endif

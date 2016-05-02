@@ -41,17 +41,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #define DEFAULT_FRAMES_PER_SECOND 30
 
-AddAppletVisualFeedback::AddAppletVisualFeedback(AppletWidget* widget,
-                                                 const QWidget* target,
-                                                 KPanelApplet::Direction direction)
-    : QWidget(0, "animtt", WX11BypassWM),
-      m_target(target),
-      m_direction(direction),
-      m_icon(*widget->itemPixmap->pixmap()),
-      m_richText(0),
-      m_dissolveDelta(-1),
-      m_frames(1),
-      m_dirty(false)
+AddAppletVisualFeedback::AddAppletVisualFeedback(AppletWidget *widget, const QWidget *target, KPanelApplet::Direction direction)
+    : QWidget(0, "animtt", WX11BypassWM)
+    , m_target(target)
+    , m_direction(direction)
+    , m_icon(*widget->itemPixmap->pixmap())
+    , m_richText(0)
+    , m_dissolveDelta(-1)
+    , m_frames(1)
+    , m_dirty(false)
 {
     setFocusPolicy(NoFocus);
     setBackgroundMode(NoBackground);
@@ -59,7 +57,7 @@ AddAppletVisualFeedback::AddAppletVisualFeedback(AppletWidget* widget,
 
     QString m = "<qt><h3>" + i18n("%1 Added").arg(widget->info().name());
 
-    if (widget->info().name() != widget->info().comment())
+    if(widget->info().name() != widget->info().comment())
     {
         m += "</h3><p>" + widget->info().comment() + "</p></qt>";
     }
@@ -85,9 +83,9 @@ AddAppletVisualFeedback::~AddAppletVisualFeedback()
     delete m_richText;
 }
 
-void AddAppletVisualFeedback::paintEvent(QPaintEvent * e)
+void AddAppletVisualFeedback::paintEvent(QPaintEvent *e)
 {
-    if (m_dirty)
+    if(m_dirty)
     {
         displayInternal();
         m_dirty = false;
@@ -112,8 +110,7 @@ void AddAppletVisualFeedback::makeMask()
 
     maskPainter.setBrush(Qt::white);
     maskPainter.setPen(Qt::white);
-    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(),
-                              1600 / m_mask.rect().height());
+    maskPainter.drawRoundRect(m_mask.rect(), 1600 / m_mask.rect().width(), 1600 / m_mask.rect().height());
     setMask(m_mask);
 }
 
@@ -122,7 +119,7 @@ void AddAppletVisualFeedback::displayInternal()
     // determine text rectangle
     QRect textRect(0, 0, 0, 0);
 
-    if (m_frames < 1)
+    if(m_frames < 1)
     {
         textRect.setWidth(m_richText->widthUsed());
         textRect.setHeight(m_richText->height());
@@ -135,7 +132,7 @@ void AddAppletVisualFeedback::displayInternal()
     int textX = m_icon.isNull() ? margin : 2 + m_icon.width() + 2 * margin;
     int width = textX;
 
-    if (m_frames < 1)
+    if(m_frames < 1)
     {
         width += textRect.width() + margin;
     }
@@ -145,7 +142,7 @@ void AddAppletVisualFeedback::displayInternal()
     m_pixmap.resize(width, height);
     resize(width, height);
 
-    if (m_frames < 1)
+    if(m_frames < 1)
     {
         move(KickerLib::popupPosition(m_direction, this, m_target));
     }
@@ -157,19 +154,15 @@ void AddAppletVisualFeedback::displayInternal()
     QPainter bufferPainter(&m_pixmap);
     bufferPainter.setPen(Qt::black);
     bufferPainter.setBrush(colorGroup().background());
-    bufferPainter.drawRoundRect(0, 0, width, height,
-                                1600 / width, 1600 / height);
+    bufferPainter.drawRoundRect(0, 0, width, height, 1600 / width, 1600 / height);
 
     // draw icon if present
-    if (!m_icon.isNull())
+    if(!m_icon.isNull())
     {
-        bufferPainter.drawPixmap(margin,
-                                 margin,
-                                 m_icon, 0, 0,
-                                 m_icon.width(), m_icon.height());
+        bufferPainter.drawPixmap(margin, margin, m_icon, 0, 0, m_icon.width(), m_icon.height());
     }
 
-    if (m_frames < 1)
+    if(m_frames < 1)
     {
         int textY = (height - textRect.height()) / 2;
 
@@ -177,8 +170,7 @@ void AddAppletVisualFeedback::displayInternal()
         QColorGroup cg = colorGroup();
         cg.setColor(QColorGroup::Text, cg.background().dark(115));
         int shadowOffset = QApplication::reverseLayout() ? -1 : 1;
-        m_richText->draw(&bufferPainter, 5 + textX + shadowOffset,
-                         textY + 1, QRect(), cg);
+        m_richText->draw(&bufferPainter, 5 + textX + shadowOffset, textY + 1, QRect(), cg);
 
         // draw text
         cg = colorGroup();
@@ -188,24 +180,24 @@ void AddAppletVisualFeedback::displayInternal()
 
 void AddAppletVisualFeedback::swoopCloser()
 {
-    if (m_destination.isNull() || m_frames == 0)
+    if(m_destination.isNull() || m_frames == 0)
     {
         return;
     }
 
     QPoint loc = geometry().topLeft();
     bool isLeft = m_destination.x() > loc.x();
-    if (loc.x() != m_destination.x())
+    if(loc.x() != m_destination.x())
     {
         int newX = loc.x() + ((m_destination.x() - loc.x()) / m_frames * 2);
-        if ((m_destination.x() > newX) != isLeft)
+        if((m_destination.x() > newX) != isLeft)
         {
             newX = m_destination.x();
         }
         loc.setX(newX);
     }
 
-    if (loc.y() != m_destination.y())
+    if(loc.y() != m_destination.y())
     {
         loc.setY(loc.y() + ((m_destination.y() - loc.y()) / m_frames));
     }
@@ -213,7 +205,7 @@ void AddAppletVisualFeedback::swoopCloser()
     move(loc);
     --m_frames;
 
-    if (m_frames < 1)
+    if(m_frames < 1)
     {
         m_moveTimer.stop();
         displayInternal();

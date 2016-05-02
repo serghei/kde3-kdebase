@@ -45,46 +45,45 @@ class DocEntry;
 class SearchEngine;
 }
 
-class IndexDirDialog : public KDialogBase
-{
+class IndexDirDialog : public KDialogBase {
     Q_OBJECT
-  public:
-    IndexDirDialog( QWidget *parent );
+public:
+    IndexDirDialog(QWidget *parent);
 
-  protected slots:
+protected slots:
     void slotOk();
-    void slotUrlChanged( const QString &_url);    
-  private:
+    void slotUrlChanged(const QString &_url);
+
+private:
     KURLRequester *mIndexUrlRequester;
 };
 
-class IndexProgressDialog : public KDialog
-{
+class IndexProgressDialog : public KDialog {
     Q_OBJECT
-  public:
-    IndexProgressDialog( QWidget *parent );
+public:
+    IndexProgressDialog(QWidget *parent);
     ~IndexProgressDialog();
 
-    void setTotalSteps( int );
+    void setTotalSteps(int);
     void advanceProgress();
-    void setLabelText( const QString & );
-    void setMinimumLabelWidth( int width );
-    void setFinished( bool );
+    void setLabelText(const QString &);
+    void setMinimumLabelWidth(int width);
+    void setFinished(bool);
 
-    void appendLog( const QString &text );
+    void appendLog(const QString &text);
 
-  signals:
+signals:
     void closed();
     void cancelled();
 
-  protected:
+protected:
     void hideDetails();
 
-  protected slots:
+protected slots:
     void slotEnd();
     void toggleDetails();
 
-  private:
+private:
     QLabel *mLabel;
     QProgressBar *mProgressBar;
     QLabel *mLogLabel;
@@ -95,37 +94,33 @@ class IndexProgressDialog : public KDialog
     bool mFinished;
 };
 
-class KCMHelpCenterIface : virtual public DCOPObject
-{
+class KCMHelpCenterIface : virtual public DCOPObject {
     K_DCOP
-  k_dcop:
-    virtual void slotIndexProgress() = 0;
-    virtual void slotIndexError( const QString & ) = 0;
+    k_dcop : virtual void slotIndexProgress() = 0;
+    virtual void slotIndexError(const QString &) = 0;
 };
 
-class KCMHelpCenter : public KDialogBase, virtual public KCMHelpCenterIface
-{
+class KCMHelpCenter : public KDialogBase, virtual public KCMHelpCenterIface {
     Q_OBJECT
-  public:
-    KCMHelpCenter( KHC::SearchEngine *, QWidget *parent = 0,
-      const char *name = 0 );
+public:
+    KCMHelpCenter(KHC::SearchEngine *, QWidget *parent = 0, const char *name = 0);
     ~KCMHelpCenter();
-    
+
     void load();
     bool save();
     void defaults();
 
-  public slots:
+public slots:
 
-  signals:
+signals:
     void searchIndexUpdated();
 
-  protected slots:
+protected slots:
     bool buildIndex();
     void cancelBuildIndex();
-    void slotIndexFinished( KProcess * );
+    void slotIndexFinished(KProcess *);
     void slotIndexProgress();
-    void slotIndexError( const QString & );
+    void slotIndexError(const QString &);
     void slotReceivedStdout(KProcess *proc, char *buffer, int buflen);
     void slotReceivedStderr(KProcess *proc, char *buffer, int buflen);
     void slotProgressClosed();
@@ -136,8 +131,8 @@ class KCMHelpCenter : public KDialogBase, virtual public KCMHelpCenterIface
 
     void checkSelection();
 
-  protected:
-    void setupMainWidget( QWidget *parent );
+protected:
+    void setupMainWidget(QWidget *parent);
     void updateStatus();
     void startIndexProcess();
 
@@ -146,19 +141,19 @@ class KCMHelpCenter : public KDialogBase, virtual public KCMHelpCenterIface
 
     void advanceProgress();
 
-  private:
+private:
     KHC::SearchEngine *mEngine;
-  
+
     KListView *mListView;
     QLabel *mIndexDirLabel;
     QPushButton *mBuildButton;
     IndexProgressDialog *mProgressDialog;
-    
-    QValueList<KHC::DocEntry *> mIndexQueue;
-    QValueList<KHC::DocEntry *>::ConstIterator mCurrentEntry;
-    
+
+    QValueList< KHC::DocEntry * > mIndexQueue;
+    QValueList< KHC::DocEntry * >::ConstIterator mCurrentEntry;
+
     KConfig *mConfig;
-    
+
     KAboutData *mAboutData;
 
     KHC::HtmlSearchConfig *mHtmlSearchTab;

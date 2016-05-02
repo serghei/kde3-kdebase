@@ -22,8 +22,7 @@
 
 class LookAndFeelTab;
 
-class LookAndFeelConfig : public KCModule
-{
+class LookAndFeelConfig : public KCModule {
     Q_OBJECT
 
 public:
@@ -38,7 +37,7 @@ public slots:
     void configChanged();
 
 private:
-    LookAndFeelTab        *lookandfeeltab;
+    LookAndFeelTab *lookandfeeltab;
 };
 
 #endif // __lookandfeelconfig_h__

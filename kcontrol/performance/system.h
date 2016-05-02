@@ -23,22 +23,19 @@
 
 #include "system_ui.h"
 
-namespace KCMPerformance
-{
+namespace KCMPerformance {
 
-class SystemWidget
-    : public System_ui
-    {
+class SystemWidget : public System_ui {
     Q_OBJECT
-    public:
-        SystemWidget( QWidget* parent_P = NULL );
-        void load( bool useDefaults );
-        void save();
-        void defaults();
-    signals:
-        void changed();
-    };
+public:
+    SystemWidget(QWidget *parent_P = NULL);
+    void load(bool useDefaults);
+    void save();
+    void defaults();
+signals:
+    void changed();
+};
 
-}  // namespace 
+} // namespace
 
 #endif

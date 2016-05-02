@@ -35,38 +35,38 @@ authorization.
 #define _DM_SOCKET_H_ 1
 
 #ifndef __Lynx__
-# include <sys/socket.h>
+#include <sys/socket.h>
 #else
-# include <socket.h>
+#include <socket.h>
 #endif
 
 #ifdef TCPCONN
-# include <netinet/in.h>
+#include <netinet/in.h>
 #endif
 
 #ifdef UNIXCONN
-# ifndef __Lynx__
-#  include <sys/un.h>
-# else
-#  include <un.h>
-# endif
+#ifndef __Lynx__
+#include <sys/un.h>
+#else
+#include <un.h>
+#endif
 #endif
 
 #ifdef DNETCONN
-# include <netdnet/dn.h>
+#include <netdnet/dn.h>
 #endif
 
-#if (defined(__svr4__) && !defined(__sun__)) && defined(SIOCGIFCONF)
-# define SYSV_SIOCGIFCONF
-int ifioctl( int fd, int cmd, char *arg );
+#if(defined(__svr4__) && !defined(__sun__)) && defined(SIOCGIFCONF)
+#define SYSV_SIOCGIFCONF
+int ifioctl(int fd, int cmd, char *arg);
 #else
-# define ifioctl ioctl
+#define ifioctl ioctl
 #endif
 
 #ifdef BSD
-# if (BSD >= 199103)
-#  define VARIABLE_IFREQ
-# endif
+#if(BSD >= 199103)
+#define VARIABLE_IFREQ
+#endif
 #endif
 
 #endif /* _DM_SOCKET_H_ */

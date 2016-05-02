@@ -47,23 +47,27 @@ class LayoutMap;
     and switching layouts
 */
 
-class KXKBApp : public KUniqueApplication
-{
+class KXKBApp : public KUniqueApplication {
     Q_OBJECT
     K_DCOP
 
 public:
-	KXKBApp(bool allowStyles=true, bool GUIenabled=true);
-	~KXKBApp();
+    KXKBApp(bool allowStyles = true, bool GUIenabled = true);
+    ~KXKBApp();
 
-	virtual int newInstance();
+    virtual int newInstance();
 
-	bool setLayout(const LayoutUnit& layoutUnit, int group=-1);
-k_dcop:
-	bool setLayout(const QString& layoutPair);
-	QString getCurrentLayout() { return m_currentLayout.toPair(); }
-	QStringList getLayoutsList() { return kxkbConfig.getLayoutStringList(); }
-	void forceSetXKBMap( bool set );
+    bool setLayout(const LayoutUnit &layoutUnit, int group = -1);
+    k_dcop : bool setLayout(const QString &layoutPair);
+    QString getCurrentLayout()
+    {
+        return m_currentLayout.toPair();
+    }
+    QStringList getLayoutsList()
+    {
+        return kxkbConfig.getLayoutStringList();
+    }
+    void forceSetXKBMap(bool set);
 
 protected slots:
     void menuActivated(int id);
@@ -76,23 +80,23 @@ protected:
     // Read settings, and apply them.
     bool settingsRead();
     void layoutApply();
-    
-private:
-	void initTray();
 
 private:
-	KxkbConfig kxkbConfig;
+    void initTray();
 
-    WId m_prevWinId;	// for tricky part of saving xkb group
-    LayoutMap* m_layoutOwnerMap;
+private:
+    KxkbConfig kxkbConfig;
 
-	LayoutUnit m_currentLayout;
+    WId m_prevWinId; // for tricky part of saving xkb group
+    LayoutMap *m_layoutOwnerMap;
+
+    LayoutUnit m_currentLayout;
 
     XKBExtension *m_extension;
     XkbRules *m_rules;
     KxkbLabelController *m_tray;
     KGlobalAccel *keys;
-    KWinModule* kWinModule;
+    KWinModule *kWinModule;
     bool m_forceSetXKBMap;
 };
 

@@ -36,23 +36,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "panner.moc"
 
 
-Panner::Panner( QWidget* parent, const char* name )
-    : QScrollView( parent, name ),
-      _luSB(0),
-      _rdSB(0)
+Panner::Panner(QWidget *parent, const char *name) : QScrollView(parent, name), _luSB(0), _rdSB(0)
 {
     KGlobal::locale()->insertCatalogue("libkicker");
-    setBackgroundOrigin( AncestorOrigin );
+    setBackgroundOrigin(AncestorOrigin);
 
     _updateScrollButtonsTimer = new QTimer(this);
     connect(_updateScrollButtonsTimer, SIGNAL(timeout()), this, SLOT(reallyUpdateScrollButtons()));
-    
-    setResizePolicy(Manual);
-    setVScrollBarMode( QScrollView::AlwaysOff );
-    setHScrollBarMode( QScrollView::AlwaysOff );
 
-    viewport()->setBackgroundMode( PaletteBackground );
-    viewport()->setBackgroundOrigin( AncestorOrigin );
+    setResizePolicy(Manual);
+    setVScrollBarMode(QScrollView::AlwaysOff);
+    setHScrollBarMode(QScrollView::AlwaysOff);
+
+    viewport()->setBackgroundMode(PaletteBackground);
+    viewport()->setBackgroundOrigin(AncestorOrigin);
 
     // layout
     _layout = new QBoxLayout(this, QBoxLayout::LeftToRight);
@@ -60,15 +57,15 @@ Panner::Panner( QWidget* parent, const char* name )
     setOrientation(Horizontal);
 }
 
-Panner::~Panner() 
+Panner::~Panner()
 {
 }
 
 void Panner::setupButtons()
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        if (_luSB)
+        if(_luSB)
         {
             _luSB->setArrowType(Qt::LeftArrow);
             _rdSB->setArrowType(Qt::RightArrow);
@@ -82,7 +79,7 @@ void Panner::setupButtons()
     }
     else
     {
-        if (_luSB)
+        if(_luSB)
         {
             _luSB->setArrowType(Qt::UpArrow);
             _rdSB->setArrowType(Qt::DownArrow);
@@ -95,7 +92,7 @@ void Panner::setupButtons()
         _layout->setDirection(QBoxLayout::TopToBottom);
     }
 
-    if (isVisible())
+    if(isVisible())
     {
         // we need to manually redo the layout if we are visible
         // otherwise let the toolkit decide when to do this
@@ -110,31 +107,31 @@ void Panner::setOrientation(Orientation o)
     reallyUpdateScrollButtons();
 }
 
-void Panner::resizeEvent( QResizeEvent* e )
+void Panner::resizeEvent(QResizeEvent *e)
 {
-    QScrollView::resizeEvent( e );
+    QScrollView::resizeEvent(e);
     updateScrollButtons();
 }
 
 void Panner::scrollRightDown()
 {
     if(orientation() == Horizontal) // scroll right
-        scrollBy( 40, 0 );
+        scrollBy(40, 0);
     else // scroll down
-        scrollBy( 0, 40 );
+        scrollBy(0, 40);
 }
 
 void Panner::scrollLeftUp()
 {
     if(orientation() == Horizontal) // scroll left
-        scrollBy( -40, 0 );
+        scrollBy(-40, 0);
     else // scroll up
-        scrollBy( 0, -40 );
+        scrollBy(0, -40);
 }
 
 void Panner::createScrollButtons()
 {
-    if (_luSB)
+    if(_luSB)
     {
         return;
     }
@@ -164,10 +161,10 @@ void Panner::createScrollButtons()
 void Panner::reallyUpdateScrollButtons()
 {
     int delta = 0;
-    
+
     _updateScrollButtonsTimer->stop();
 
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         delta = contentsWidth() - width();
     }
@@ -176,7 +173,7 @@ void Panner::reallyUpdateScrollButtons()
         delta = contentsHeight() - height();
     }
 
-    if (delta > 1)
+    if(delta > 1)
     {
         createScrollButtons();
 
@@ -185,7 +182,7 @@ void Panner::reallyUpdateScrollButtons()
         _luSB->show();
         _rdSB->show();
 
-        if (orientation() == Horizontal)
+        if(orientation() == Horizontal)
         {
             setMargins(0, 0, _luSB->width() + _rdSB->width(), 0);
         }
@@ -194,7 +191,7 @@ void Panner::reallyUpdateScrollButtons()
             setMargins(0, 0, 0, _luSB->height() + _rdSB->height());
         }
     }
-    else if (_luSB && _luSB->isVisibleTo(this))
+    else if(_luSB && _luSB->isVisibleTo(this))
     {
         _luSB->hide();
         _rdSB->hide();
@@ -207,8 +204,8 @@ void Panner::updateScrollButtons()
     _updateScrollButtonsTimer->start(200, true);
 }
 
-void Panner::resizeContents( int w, int h )
+void Panner::resizeContents(int w, int h)
 {
-    QScrollView::resizeContents( w, h );
+    QScrollView::resizeContents(w, h);
     updateScrollButtons();
 }

@@ -34,6 +34,6 @@
 /*
  * Ensure all of data on socket comes through. f==read || f==write
  */
-ssize_t	atomicio(int fd, char *_s, size_t n, bool read = true);
+ssize_t atomicio(int fd, char *_s, size_t n, bool read = true);
 
 #endif

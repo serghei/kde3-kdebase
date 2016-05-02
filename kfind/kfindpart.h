@@ -29,76 +29,87 @@
 
 class KQuery;
 class KAboutData;
-//added
+// added
 class KonqPropsView;
 class KAction;
 class KToggleAction;
 class KActionMenu;
 class QIconViewItem;
 class IconViewBrowserExtension;
-//end added
+// end added
 
-class KFindPart : public KonqDirPart//KParts::ReadOnlyPart
+class KFindPart : public KonqDirPart // KParts::ReadOnlyPart
 {
-  friend class KFindPartBrowserExtension;
+    friend class KFindPartBrowserExtension;
     Q_OBJECT
-    Q_PROPERTY( bool showsResult READ showsResult )
+    Q_PROPERTY(bool showsResult READ showsResult)
 public:
-    KFindPart( QWidget * parentWidget, const char *widgetName, 
-	       QObject *parent, const char *name, const QStringList & /*args*/ );
+    KFindPart(QWidget *parentWidget, const char *widgetName, QObject *parent, const char *name, const QStringList & /*args*/);
     virtual ~KFindPart();
 
     static KAboutData *createAboutData();
 
-    virtual bool doOpenURL( const KURL &url );
-    virtual bool doCloseURL() { return true; }
-    virtual bool openFile() { return false; }
+    virtual bool doOpenURL(const KURL &url);
+    virtual bool doCloseURL()
+    {
+        return true;
+    }
+    virtual bool openFile()
+    {
+        return false;
+    }
 
-    bool showsResult() const { return m_bShowsResult; }
-    
-    virtual void saveState( QDataStream &stream );
-    virtual void restoreState( QDataStream &stream );
+    bool showsResult() const
+    {
+        return m_bShowsResult;
+    }
 
-  // "Cut" icons : disable those whose URL is in lst, enable the rest //added for konqdirpart
-  virtual void disableIcons( const KURL::List & ){};
-  virtual const KFileItem * currentItem(){return 0;};
+    virtual void saveState(QDataStream &stream);
+    virtual void restoreState(QDataStream &stream);
+
+    // "Cut" icons : disable those whose URL is in lst, enable the rest //added for konqdirpart
+    virtual void disableIcons(const KURL::List &){};
+    virtual const KFileItem *currentItem()
+    {
+        return 0;
+    };
 
 signals:
     // Konqueror connects directly to those signals
-    void started(); // started a search
-    void clear(); // delete all items
-    void newItems(const KFileItemList&); // found this/these item(s)
-    void finished(); // finished searching
-    void canceled(); // the user canceled the search
-    void findClosed(); // close us
-    void deleteItem( KFileItem *item);
+    void started();                       // started a search
+    void clear();                         // delete all items
+    void newItems(const KFileItemList &); // found this/these item(s)
+    void finished();                      // finished searching
+    void canceled();                      // the user canceled the search
+    void findClosed();                    // close us
+    void deleteItem(KFileItem *item);
 
 protected slots:
     void slotStarted();
     void slotDestroyMe();
-    void addFile(const KFileItem *item, const QString& matchingLine);
+    void addFile(const KFileItem *item, const QString &matchingLine);
     /* An item has been removed, so update konqueror's view */
     void removeFile(KFileItem *item);
     void slotResult(int errorCode);
-    void newFiles(const KFileItemList&);
-  // slots connected to the directory lister  //added for konqdirpart
-//  virtual void slotStarted();
-  virtual void slotCanceled(){};
-  virtual void slotCompleted(){};
-  virtual void slotNewItems( const KFileItemList& ){};
-  virtual void slotDeleteItem( KFileItem * ){};
-  virtual void slotRefreshItems( const KFileItemList& ){};
-  virtual void slotClear(){};
-  virtual void slotRedirection( const KURL & ){};
+    void newFiles(const KFileItemList &);
+    // slots connected to the directory lister  //added for konqdirpart
+    //  virtual void slotStarted();
+    virtual void slotCanceled(){};
+    virtual void slotCompleted(){};
+    virtual void slotNewItems(const KFileItemList &){};
+    virtual void slotDeleteItem(KFileItem *){};
+    virtual void slotRefreshItems(const KFileItemList &){};
+    virtual void slotClear(){};
+    virtual void slotRedirection(const KURL &){};
 
 private:
-    Kfind * m_kfindWidget;
+    Kfind *m_kfindWidget;
     KQuery *query;
     bool m_bShowsResult; // whether the dirpart shows the results of a search or not
-    /**
-     * The internal storage of file items
-     */
-    QPtrList<KFileItem> m_lstFileItems;
+                         /**
+                          * The internal storage of file items
+                          */
+    QPtrList< KFileItem > m_lstFileItems;
 };
 
 #endif

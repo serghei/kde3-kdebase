@@ -32,37 +32,34 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class BaseContainer;
 
-class KDE_EXPORT PanelDrag : public QDragObject
-{
-    public:
-        PanelDrag(BaseContainer* container, QWidget *dragSource);
-        ~PanelDrag();
+class KDE_EXPORT PanelDrag : public QDragObject {
+public:
+    PanelDrag(BaseContainer *container, QWidget *dragSource);
+    ~PanelDrag();
 
-        virtual const char * format(int i = 0) const;
-        virtual QByteArray encodedData(const char *) const;
+    virtual const char *format(int i = 0) const;
+    virtual QByteArray encodedData(const char *) const;
 
-        static bool canDecode(const QMimeSource * e);
-        static bool decode(const QMimeSource* e, BaseContainer** container);
+    static bool canDecode(const QMimeSource *e);
+    static bool decode(const QMimeSource *e, BaseContainer **container);
 
-    private:
-        QByteArray a;
+private:
+    QByteArray a;
 };
 
-class KDE_EXPORT AppletInfoDrag : public QDragObject
-{
-    public:
-        AppletInfoDrag(const AppletInfo& container, QWidget *dragSource);
-        ~AppletInfoDrag();
+class KDE_EXPORT AppletInfoDrag : public QDragObject {
+public:
+    AppletInfoDrag(const AppletInfo &container, QWidget *dragSource);
+    ~AppletInfoDrag();
 
-        virtual const char * format(int i = 0) const;
-        virtual QByteArray encodedData(const char *) const;
+    virtual const char *format(int i = 0) const;
+    virtual QByteArray encodedData(const char *) const;
 
-        static bool canDecode(const QMimeSource * e);
-        static bool decode(const QMimeSource* e, AppletInfo& container);
+    static bool canDecode(const QMimeSource *e);
+    static bool decode(const QMimeSource *e, AppletInfo &container);
 
-    private:
-        QByteArray a;
+private:
+    QByteArray a;
 };
 
 #endif
-

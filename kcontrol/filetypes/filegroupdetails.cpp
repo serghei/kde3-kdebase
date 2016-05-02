@@ -24,42 +24,40 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-FileGroupDetails::FileGroupDetails(QWidget *parent, const char *name )
-    : QWidget( parent, name )
+FileGroupDetails::FileGroupDetails(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  QWidget * parentWidget = this;
-  QVBoxLayout *secondLayout = new QVBoxLayout(parentWidget,
-      0, KDialog::spacingHint());
+    QWidget *parentWidget = this;
+    QVBoxLayout *secondLayout = new QVBoxLayout(parentWidget, 0, KDialog::spacingHint());
 
-  m_autoEmbed = new QVButtonGroup( i18n("Left Click Action"), parentWidget );
-  m_autoEmbed->layout()->setSpacing( KDialog::spacingHint() );
-  secondLayout->addWidget( m_autoEmbed );
-  // The order of those two items is very important. If you change it, fix typeslistitem.cpp !
-  new QRadioButton( i18n("Show file in embedded viewer"), m_autoEmbed );
-  new QRadioButton( i18n("Show file in separate viewer"), m_autoEmbed );
-  connect(m_autoEmbed, SIGNAL( clicked( int ) ), SLOT( slotAutoEmbedClicked( int ) ));
+    m_autoEmbed = new QVButtonGroup(i18n("Left Click Action"), parentWidget);
+    m_autoEmbed->layout()->setSpacing(KDialog::spacingHint());
+    secondLayout->addWidget(m_autoEmbed);
+    // The order of those two items is very important. If you change it, fix typeslistitem.cpp !
+    new QRadioButton(i18n("Show file in embedded viewer"), m_autoEmbed);
+    new QRadioButton(i18n("Show file in separate viewer"), m_autoEmbed);
+    connect(m_autoEmbed, SIGNAL(clicked(int)), SLOT(slotAutoEmbedClicked(int)));
 
-  QWhatsThis::add( m_autoEmbed, i18n("Here you can configure what the Konqueror file manager"
-    " will do when you click on a file belonging to this group. Konqueror can display the file in"
-    " an embedded viewer or start up a separate application. You can change this setting for a"
-    " specific file type in the 'Embedding' tab of the file type configuration.") );
+    QWhatsThis::add(m_autoEmbed, i18n("Here you can configure what the Konqueror file manager"
+                                      " will do when you click on a file belonging to this group. Konqueror can display the file in"
+                                      " an embedded viewer or start up a separate application. You can change this setting for a"
+                                      " specific file type in the 'Embedding' tab of the file type configuration."));
 
-  secondLayout->addStretch();
+    secondLayout->addStretch();
 }
 
-void FileGroupDetails::setTypeItem( TypesListItem * item )
+void FileGroupDetails::setTypeItem(TypesListItem *item)
 {
-  Q_ASSERT( item->isMeta() );
-  m_item = item;
-  m_autoEmbed->setButton( item ? item->autoEmbed() : -1 );
+    Q_ASSERT(item->isMeta());
+    m_item = item;
+    m_autoEmbed->setButton(item ? item->autoEmbed() : -1);
 }
 
 void FileGroupDetails::slotAutoEmbedClicked(int button)
 {
-  if ( !m_item )
-    return;
-  m_item->setAutoEmbed( button );
-  emit changed(true);
+    if(!m_item)
+        return;
+    m_item->setAutoEmbed(button);
+    emit changed(true);
 }
 
 #include "filegroupdetails.moc"

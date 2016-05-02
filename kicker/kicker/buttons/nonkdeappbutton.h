@@ -35,22 +35,20 @@ class PanelExeDialog;
  * Button that contains a non-KDE application
  * subclass of PanelButton
  */
-class NonKDEAppButton : public PanelButton
-{
+class NonKDEAppButton : public PanelButton {
     // the Q_OBJECT macro provides the magic glue for signals 'n slots
     Q_OBJECT
 
 public:
     // define our two constructors, one used for creating new buttons...
-    NonKDEAppButton(const QString& name, const QString& description,
-                    const QString& filePath, const QString& icon,
-                    const QString& cmdLine, bool inTerm, QWidget* parent);
+    NonKDEAppButton(const QString &name, const QString &description, const QString &filePath, const QString &icon, const QString &cmdLine,
+                    bool inTerm, QWidget *parent);
 
     // ... and once for restoring them at start up
-    NonKDEAppButton(const KConfigGroup& config, QWidget* parent);
+    NonKDEAppButton(const KConfigGroup &config, QWidget *parent);
 
     // reimplemented from PanelButton
-    virtual void saveConfig(KConfigGroup& config) const;
+    virtual void saveConfig(KConfigGroup &config) const;
     virtual void properties();
 
 protected slots:
@@ -58,35 +56,40 @@ protected slots:
     void slotExec();
 
     // called after the user reconfigures something
-    void updateSettings(PanelExeDialog* dlg);
+    void updateSettings(PanelExeDialog *dlg);
 
 protected:
     // used to set up our internal state, either when creating the button
     // or after reconfiguration
-    void initialize(const QString& name, const QString& description,
-                    const QString& filePath, const QString& icon,
-                    const QString& cmdLine, bool inTerm);
+    void initialize(const QString &name, const QString &description, const QString &filePath, const QString &icon, const QString &cmdLine,
+                    bool inTerm);
 
     // run the command!
     // the execStr parameter, which default to an empty string,
     // is used to provide additional command line options aside
     // from the ones in our config file; for instance a URL drag'd onto us
-    void runCommand(const QString& execStr = QString::null);
+    void runCommand(const QString &execStr = QString::null);
 
     // reimplemented from PanelButton
-    virtual QString tileName() { return "URL"; }
-    QString defaultIcon() const { return "exec"; };
+    virtual QString tileName()
+    {
+        return "URL";
+    }
+    QString defaultIcon() const
+    {
+        return "exec";
+    };
 
     // handle drag and drop actions
     virtual void dropEvent(QDropEvent *ev);
     virtual void dragEnterEvent(QDragEnterEvent *ev);
 
-    QString    nameStr; // the name given this button by the user
-    QString    descStr; // the description given this button by the user
-    QString    pathStr; // the path to the command
-    QString    iconStr; // the path to the icon for this button
-    QString    cmdStr;  // command line flags, if any
-    bool       term;    // whether to run this in a terminal or not
-}; // all done defining the class!
+    QString nameStr; // the name given this button by the user
+    QString descStr; // the description given this button by the user
+    QString pathStr; // the path to the command
+    QString iconStr; // the path to the icon for this button
+    QString cmdStr;  // command line flags, if any
+    bool term;       // whether to run this in a terminal or not
+};                   // all done defining the class!
 
 #endif

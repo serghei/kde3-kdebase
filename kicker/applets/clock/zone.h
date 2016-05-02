@@ -33,30 +33,42 @@ class KListView;
 class Zone {
 
 public:
-	Zone(KConfig* conf);
-	~Zone();
+    Zone(KConfig *conf);
+    ~Zone();
 
-	void writeSettings();
+    void writeSettings();
 
-	QString zone() const { return zone(_zoneIndex); };
-	QString zone(int z) const;
-	QStringList remoteZoneList() const { return _remotezonelist; };
-	int remoteZoneCount() { return _remotezonelist.count(); };
-	unsigned int zoneIndex() const { return _zoneIndex; }
-	void setZone(int z = 0);
+    QString zone() const
+    {
+        return zone(_zoneIndex);
+    };
+    QString zone(int z) const;
+    QStringList remoteZoneList() const
+    {
+        return _remotezonelist;
+    };
+    int remoteZoneCount()
+    {
+        return _remotezonelist.count();
+    };
+    unsigned int zoneIndex() const
+    {
+        return _zoneIndex;
+    }
+    void setZone(int z = 0);
 
-	void nextZone();
-	void prevZone();
-	int calc_TZ_offset(const QString& zone, bool reset=false);
-	void readZoneList(KListView *listView);
-	void getSelectedZonelist(KListView *listView);
+    void nextZone();
+    void prevZone();
+    int calc_TZ_offset(const QString &zone, bool reset = false);
+    void readZoneList(KListView *listView);
+    void getSelectedZonelist(KListView *listView);
 
 protected:
-        KTimezones m_zoneDb;
-	QStringList _remotezonelist;
-	KConfig *config;
-        QString _defaultTZ;
-	unsigned int _zoneIndex;
+    KTimezones m_zoneDb;
+    QStringList _remotezonelist;
+    KConfig *config;
+    QString _defaultTZ;
+    unsigned int _zoneIndex;
 };
 
 #endif

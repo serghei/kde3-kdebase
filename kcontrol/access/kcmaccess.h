@@ -24,87 +24,83 @@ class QSlider;
 class KNumInput;
 class KAboutData;
 
-class ExtendedIntNumInput : public KIntNumInput
-{
-	Q_OBJECT
-
-	public:
-    /**
-	  * Constructs an input control for integer values
-	  * with base 10 and initial value 0.
-	  */
-		ExtendedIntNumInput(QWidget *parent=0, const char *name=0);
-		
-    /**
-	  * Destructor
-	  */
-		virtual ~ExtendedIntNumInput();
-
-    /**
-	  * @param min  minimum value
-	  * @param max  maximum value
-	  * @param step step size for the QSlider
-	  * @param slider whether the slider is created or not
-	  */
-		void setRange(int min, int max, int step=1, bool slider=true);
-
-	private slots:
-		void slotSpinValueChanged(int);
-		void slotSliderValueChanged(int);
-	
-	private:
-		int min, max;
-		int sliderMax;
-};
-
-class KAccessConfig : public KCModule
-{
-  Q_OBJECT
+class ExtendedIntNumInput : public KIntNumInput {
+    Q_OBJECT
 
 public:
+    /**
+      * Constructs an input control for integer values
+      * with base 10 and initial value 0.
+      */
+    ExtendedIntNumInput(QWidget *parent = 0, const char *name = 0);
 
-  KAccessConfig(QWidget *parent = 0L, const char *name = 0L);
-  virtual ~KAccessConfig();
-  
-  void load();
-  void load(bool useDefaults);
-  void save();
-  void defaults();
+    /**
+      * Destructor
+      */
+    virtual ~ExtendedIntNumInput();
+
+    /**
+      * @param min  minimum value
+      * @param max  maximum value
+      * @param step step size for the QSlider
+      * @param slider whether the slider is created or not
+      */
+    void setRange(int min, int max, int step = 1, bool slider = true);
+
+private slots:
+    void slotSpinValueChanged(int);
+    void slotSliderValueChanged(int);
+
+private:
+    int min, max;
+    int sliderMax;
+};
+
+class KAccessConfig : public KCModule {
+    Q_OBJECT
+
+public:
+    KAccessConfig(QWidget *parent = 0L, const char *name = 0L);
+    virtual ~KAccessConfig();
+
+    void load();
+    void load(bool useDefaults);
+    void save();
+    void defaults();
 
 protected slots:
 
-  void configChanged();
-  void checkAccess();
-  void invertClicked();
-  void flashClicked();
-  void selectSound();
-  void changeFlashScreenColor();
-  void configureKNotify();
+    void configChanged();
+    void checkAccess();
+    void invertClicked();
+    void flashClicked();
+    void selectSound();
+    void changeFlashScreenColor();
+    void configureKNotify();
 
 private:
+    QCheckBox *systemBell, *customBell, *visibleBell;
+    QRadioButton *invertScreen, *flashScreen;
+    QLabel *soundLabel, *colorLabel;
+    QLineEdit *soundEdit;
+    QPushButton *soundButton;
+    KColorButton *colorButton;
+    ExtendedIntNumInput *durationSlider;
 
-  QCheckBox *systemBell, *customBell, *visibleBell;
-  QRadioButton *invertScreen, *flashScreen;
-  QLabel    *soundLabel, *colorLabel;
-  QLineEdit *soundEdit;
-  QPushButton *soundButton;
-  KColorButton *colorButton;
-  ExtendedIntNumInput *durationSlider;
+    QCheckBox *stickyKeys, *stickyKeysLock, *stickyKeysAutoOff;
+    QCheckBox *stickyKeysBeep, *toggleKeysBeep, *kNotifyModifiers;
+    QPushButton *kNotifyModifiersButton;
 
-  QCheckBox *stickyKeys, *stickyKeysLock, *stickyKeysAutoOff;
-  QCheckBox *stickyKeysBeep, *toggleKeysBeep, *kNotifyModifiers;
-  QPushButton *kNotifyModifiersButton;
+    QCheckBox *slowKeys, *bounceKeys;
+    ExtendedIntNumInput *slowKeysDelay, *bounceKeysDelay;
+    QCheckBox *slowKeysPressBeep, *slowKeysAcceptBeep;
+    QCheckBox *slowKeysRejectBeep, *bounceKeysRejectBeep;
 
-  QCheckBox *slowKeys, *bounceKeys;
-  ExtendedIntNumInput *slowKeysDelay, *bounceKeysDelay;
-  QCheckBox *slowKeysPressBeep, *slowKeysAcceptBeep;
-  QCheckBox *slowKeysRejectBeep, *bounceKeysRejectBeep;
-
-  QCheckBox *gestures, *gestureConfirmation;
-  QCheckBox *timeout;
-  KIntNumInput *timeoutDelay;
-  QCheckBox *accessxBeep, *kNotifyAccessX;
-  QPushButton *kNotifyAccessXButton;
+    QCheckBox *gestures, *gestureConfirmation;
+    QCheckBox *timeout;
+    KIntNumInput *timeoutDelay;
+    QCheckBox *accessxBeep, *kNotifyAccessX;
+    QPushButton *kNotifyAccessXButton;
 };
 
 

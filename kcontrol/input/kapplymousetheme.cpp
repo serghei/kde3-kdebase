@@ -23,7 +23,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+#include <config.h>
 #endif
 
 #include <stdlib.h>
@@ -31,51 +31,55 @@
 #include <X11/Xlib.h>
 
 #ifdef HAVE_XCURSOR
-#  include <X11/Xcursor/Xcursor.h>
+#include <X11/Xcursor/Xcursor.h>
 #endif
 
-static Display* dpy;
-static Display* qt_xdisplay() { return dpy; }\
-static Window qt_xrootwin() { return DefaultRootWindow( dpy ); }
+static Display *dpy;
+static Display *qt_xdisplay()
+{
+    return dpy;
+}
+static Window qt_xrootwin()
+{
+    return DefaultRootWindow(dpy);
+}
 
-bool isEmpty( const char* str )
-    {
-    if( str == NULL )
+bool isEmpty(const char *str)
+{
+    if(str == NULL)
         return true;
-    while( isspace( *str ))
+    while(isspace(*str))
         ++str;
     return *str == '\0';
-    }
+}
 
-int main( int argc, char* argv[] )
-    {
-    if( argc != 3 )
+int main(int argc, char *argv[])
+{
+    if(argc != 3)
         return 1;
-    dpy = XOpenDisplay( NULL );
-    if( dpy == NULL )
+    dpy = XOpenDisplay(NULL);
+    if(dpy == NULL)
         return 2;
     int ret = 0;
 #ifdef HAVE_XCURSOR
-    const char* theme = argv[ 1 ];
-    const char* size = argv[ 2 ];
+    const char *theme = argv[1];
+    const char *size = argv[2];
 
     // Note: If you update this code, update kapplymousetheme as well.
 
     // use a default value for theme only if it's not configured at all, not even in X resources
-    if( isEmpty( theme )
-        && isEmpty( XGetDefault( qt_xdisplay(), "Xcursor", "theme" ))
-        && isEmpty( XcursorGetTheme( qt_xdisplay())))
+    if(isEmpty(theme) && isEmpty(XGetDefault(qt_xdisplay(), "Xcursor", "theme")) && isEmpty(XcursorGetTheme(qt_xdisplay())))
     {
         theme = "default";
         ret = 10; // means to switch to default
     }
 
-     // Apply the KDE cursor theme to ourselves
-    if( !isEmpty( theme ))
-        XcursorSetTheme(qt_xdisplay(), theme );
+    // Apply the KDE cursor theme to ourselves
+    if(!isEmpty(theme))
+        XcursorSetTheme(qt_xdisplay(), theme);
 
-    if (!isEmpty( size ))
-    	XcursorSetDefaultSize(qt_xdisplay(), atoi( size ));
+    if(!isEmpty(size))
+        XcursorSetDefaultSize(qt_xdisplay(), atoi(size));
 
     // Load the default cursor from the theme and apply it to the root window.
     Cursor handle = XcursorLibraryLoadCursor(qt_xdisplay(), "left_ptr");
@@ -83,10 +87,10 @@ int main( int argc, char* argv[] )
     XFreeCursor(qt_xdisplay(), handle); // Don't leak the cursor
 
 #else
-    ( void ) qt_xdisplay();
-    ( void ) qt_xrootwin();
-    ( void ) argv;
+    (void)qt_xdisplay();
+    (void)qt_xrootwin();
+    (void)argv;
 #endif
-    XCloseDisplay( dpy );
+    XCloseDisplay(dpy);
     return ret;
-    }
+}

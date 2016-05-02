@@ -28,19 +28,18 @@
 
 class QStringList;
 
-class FindMenu : public KPanelMenu
-{
-	Q_OBJECT
+class FindMenu : public KPanelMenu {
+    Q_OBJECT
 
-  public:
-    FindMenu( QWidget* parent, const char* name, const QStringList &/*args*/ );
+public:
+    FindMenu(QWidget *parent, const char *name, const QStringList & /*args*/);
     ~FindMenu();
 
-  protected slots:
+protected slots:
     void initialize();
-    void slotExec( int );
+    void slotExec(int);
 
-  private:
+private:
     QStringList mConfigList;
 };
 

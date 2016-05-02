@@ -29,51 +29,53 @@ class KonqTreeViewWidget;
 /**
  * An item specialized for directories
  */
-class KonqListViewDir : public KonqListViewItem
-{
+class KonqListViewDir : public KonqListViewItem {
 public:
-  /**
-   * Create an item in the tree toplevel representing a directory
-   * @param _parent the parent widget, the tree view
-   * @param _fileitem the file item created by KDirLister
-   */
-  KonqListViewDir( KonqTreeViewWidget *_parent, KFileItem *_fileitem );
+    /**
+     * Create an item in the tree toplevel representing a directory
+     * @param _parent the parent widget, the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqListViewDir(KonqTreeViewWidget *_parent, KFileItem *_fileitem);
 
-  /**
-   * Create an item representing a directory, inside a directory
-   * @param _treeview the parent tree view
-   * @param _parent the parent widget, a directory item in the tree view
-   * @param _fileitem the file item created by KDirLister
-   */
-  KonqListViewDir( KonqTreeViewWidget *_treeview, KonqListViewDir *_parent, KFileItem *_fileitem );
+    /**
+     * Create an item representing a directory, inside a directory
+     * @param _treeview the parent tree view
+     * @param _parent the parent widget, a directory item in the tree view
+     * @param _fileitem the file item created by KDirLister
+     */
+    KonqListViewDir(KonqTreeViewWidget *_treeview, KonqListViewDir *_parent, KFileItem *_fileitem);
 
-  /**
-   * Called when user opens the directory (inherited from QListViewItem).
-   * Just calls @ref #open().
-   */
-  virtual void setOpen( bool _open );
+    /**
+     * Called when user opens the directory (inherited from QListViewItem).
+     * Just calls @ref #open().
+     */
+    virtual void setOpen(bool _open);
 
-  /**
-   * Called by setOpen, called when opening the directoy via restoreState and called
-   * when the user presses "Reload".
-   * Checks whether its contents are known (@see #setComplete) or whether
-   * to reload the directory.
-   */
-  void open( bool _open, bool _reload );
+    /**
+     * Called by setOpen, called when opening the directoy via restoreState and called
+     * when the user presses "Reload".
+     * Checks whether its contents are known (@see #setComplete) or whether
+     * to reload the directory.
+     */
+    void open(bool _open, bool _reload);
 
-  /**
-   * Set to true when contents are completely known (one sublevel only).
-   */
-  virtual void setComplete( bool _b ) { m_bComplete = _b; }
+    /**
+     * Set to true when contents are completely known (one sublevel only).
+     */
+    virtual void setComplete(bool _b)
+    {
+        m_bComplete = _b;
+    }
 
-  /**
-   * URL of this directory
-   * @param _trailing set to true for a trailing slash (see KURL)
-   */
-  QString url( int _trailing );
+    /**
+     * URL of this directory
+     * @param _trailing set to true for a trailing slash (see KURL)
+     */
+    QString url(int _trailing);
 
 protected:
-  bool m_bComplete;
+    bool m_bComplete;
 };
 
 #endif

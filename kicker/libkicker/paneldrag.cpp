@@ -28,38 +28,37 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "paneldrag.h"
 
-#define PANELDRAG_BUFSIZE sizeof(BaseContainer*) + sizeof(pid_t)
+#define PANELDRAG_BUFSIZE sizeof(BaseContainer *) + sizeof(pid_t)
 
-PanelDrag::PanelDrag(BaseContainer* container, QWidget* dragSource)
-    : QDragObject(dragSource, 0)
+PanelDrag::PanelDrag(BaseContainer *container, QWidget *dragSource) : QDragObject(dragSource, 0)
 {
     pid_t source_pid = getpid();
 
     a.resize(PANELDRAG_BUFSIZE);
-    memcpy(a.data(), &container, sizeof(BaseContainer*));
-    memcpy(a.data() + sizeof(BaseContainer*), &source_pid, sizeof(pid_t));
+    memcpy(a.data(), &container, sizeof(BaseContainer *));
+    memcpy(a.data() + sizeof(BaseContainer *), &source_pid, sizeof(pid_t));
 }
 
 PanelDrag::~PanelDrag()
 {
 }
 
-bool PanelDrag::decode(const QMimeSource* e, BaseContainer** container)
+bool PanelDrag::decode(const QMimeSource *e, BaseContainer **container)
 {
     QByteArray a = e->encodedData("application/basecontainerptr");
 
-    if (a.size() != PANELDRAG_BUFSIZE)
+    if(a.size() != PANELDRAG_BUFSIZE)
     {
         return false;
     }
 
     pid_t target_pid = getpid();
     pid_t source_pid;
-    memcpy(&source_pid, a.data() + sizeof(QObject*), sizeof(pid_t));
+    memcpy(&source_pid, a.data() + sizeof(QObject *), sizeof(pid_t));
 
-    if (source_pid == target_pid)
+    if(source_pid == target_pid)
     {
-        memcpy(container, a.data(), sizeof(QObject*));
+        memcpy(container, a.data(), sizeof(QObject *));
         return true;
     }
 
@@ -68,33 +67,32 @@ bool PanelDrag::decode(const QMimeSource* e, BaseContainer** container)
 
 bool PanelDrag::canDecode(const QMimeSource *e)
 {
-    if (!e->provides("application/basecontainerptr"))
+    if(!e->provides("application/basecontainerptr"))
     {
         return false;
     }
 
     QByteArray a = e->encodedData("application/basecontainerptr");
-    if (a.size() != PANELDRAG_BUFSIZE)
+    if(a.size() != PANELDRAG_BUFSIZE)
     {
         return false;
     }
 
-/*    pid_t target_pid = getpid();
-    pid_t source_pid;
-    memcpy(&source_pid, a.data() + sizeof(void*), sizeof(pid_t));
+    /*    pid_t target_pid = getpid();
+        pid_t source_pid;
+        memcpy(&source_pid, a.data() + sizeof(void*), sizeof(pid_t));
 
-    if (source_pid != target_pid)
-    {
-        return true;
-    } */
+        if (source_pid != target_pid)
+        {
+            return true;
+        } */
 
     return true;
 }
 
-QByteArray PanelDrag::encodedData(const char * mimeType) const
+QByteArray PanelDrag::encodedData(const char *mimeType) const
 {
-    if (QString("application/basecontainerptr") == mimeType &&
-        a.size() == PANELDRAG_BUFSIZE)
+    if(QString("application/basecontainerptr") == mimeType && a.size() == PANELDRAG_BUFSIZE)
     {
         return a;
     }
@@ -102,9 +100,9 @@ QByteArray PanelDrag::encodedData(const char * mimeType) const
     return QByteArray();
 }
 
-const char * PanelDrag::format(int i) const
+const char *PanelDrag::format(int i) const
 {
-    if (i == 0)
+    if(i == 0)
     {
         return "application/basecontainerptr";
     }
@@ -113,8 +111,7 @@ const char * PanelDrag::format(int i) const
 }
 
 
-AppletInfoDrag::AppletInfoDrag(const AppletInfo& info, QWidget *dragSource)
-    : QDragObject(dragSource, 0)
+AppletInfoDrag::AppletInfoDrag(const AppletInfo &info, QWidget *dragSource) : QDragObject(dragSource, 0)
 {
     QBuffer buff(a);
     buff.open(IO_WriteOnly);
@@ -126,9 +123,9 @@ AppletInfoDrag::~AppletInfoDrag()
 {
 }
 
-const char * AppletInfoDrag::format(int i) const
+const char *AppletInfoDrag::format(int i) const
 {
-    if (i == 0)
+    if(i == 0)
     {
         return "application/appletinfo";
     }
@@ -136,9 +133,9 @@ const char * AppletInfoDrag::format(int i) const
     return 0;
 }
 
-QByteArray AppletInfoDrag::encodedData(const char* mimeType) const
+QByteArray AppletInfoDrag::encodedData(const char *mimeType) const
 {
-    if (QString("application/appletinfo") == mimeType)
+    if(QString("application/appletinfo") == mimeType)
     {
         return a;
     }
@@ -146,9 +143,9 @@ QByteArray AppletInfoDrag::encodedData(const char* mimeType) const
     return QByteArray();
 }
 
-bool AppletInfoDrag::canDecode(const QMimeSource * e)
+bool AppletInfoDrag::canDecode(const QMimeSource *e)
 {
-    if (!e->provides("application/appletinfo"))
+    if(!e->provides("application/appletinfo"))
     {
         return false;
     }
@@ -156,11 +153,11 @@ bool AppletInfoDrag::canDecode(const QMimeSource * e)
     return true;
 }
 
-bool AppletInfoDrag::decode(const QMimeSource* e, AppletInfo& container)
+bool AppletInfoDrag::decode(const QMimeSource *e, AppletInfo &container)
 {
     QByteArray a = e->encodedData("application/appletinfo");
 
-    if (a.isEmpty())
+    if(a.isEmpty())
     {
         return false;
     }
@@ -177,4 +174,3 @@ bool AppletInfoDrag::decode(const QMimeSource* e, AppletInfo& container)
     container = info;
     return true;
 }
-

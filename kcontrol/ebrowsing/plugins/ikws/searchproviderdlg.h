@@ -25,14 +25,16 @@
 class SearchProvider;
 class SearchProviderDlgUI;
 
-class SearchProviderDialog : public KDialogBase
-{
+class SearchProviderDialog : public KDialogBase {
     Q_OBJECT
 
 public:
     SearchProviderDialog(SearchProvider *provider, QWidget *parent = 0, const char *name = 0);
 
-    SearchProvider *provider() { return m_provider; }
+    SearchProvider *provider()
+    {
+        return m_provider;
+    }
 
 protected slots:
     void slotChanged();

@@ -25,32 +25,31 @@
 #include <qvbox.h>
 #include <qlabel.h>
 
-KServiceSelectDlg::KServiceSelectDlg( const QString& /*serviceType*/, const QString& /*value*/, QWidget *parent )
-    : KDialogBase( parent, "serviceSelectDlg", true,
-                   i18n( "Add Service" ), Ok|Cancel, Ok )
+KServiceSelectDlg::KServiceSelectDlg(const QString & /*serviceType*/, const QString & /*value*/, QWidget *parent)
+    : KDialogBase(parent, "serviceSelectDlg", true, i18n("Add Service"), Ok | Cancel, Ok)
 {
-    QVBox *vbox = new QVBox ( this );
+    QVBox *vbox = new QVBox(this);
 
-    vbox->setSpacing( KDialog::spacingHint() );
-    new QLabel( i18n( "Select service:" ), vbox );
-    m_listbox=new KListBox( vbox );
+    vbox->setSpacing(KDialog::spacingHint());
+    new QLabel(i18n("Select service:"), vbox);
+    m_listbox = new KListBox(vbox);
 
     // Can't make a KTrader query since we don't have a servicetype to give,
     // we want all services that are not applications.......
     // So we have to do it the slow way
     // ### Why can't we query for KParts/ReadOnlyPart as the servicetype? Should work fine!
     KService::List allServices = KService::allServices();
-    QValueListIterator<KService::Ptr> it(allServices.begin());
-    for ( ; it != allServices.end() ; ++it )
-      if ( (*it)->hasServiceType( "KParts/ReadOnlyPart" ) )
-      {
-          m_listbox->insertItem( new KServiceListItem( (*it), KServiceListWidget::SERVICELIST_SERVICES ) );
-      }
+    QValueListIterator< KService::Ptr > it(allServices.begin());
+    for(; it != allServices.end(); ++it)
+        if((*it)->hasServiceType("KParts/ReadOnlyPart"))
+        {
+            m_listbox->insertItem(new KServiceListItem((*it), KServiceListWidget::SERVICELIST_SERVICES));
+        }
 
     m_listbox->sort();
     m_listbox->setMinimumHeight(350);
     m_listbox->setMinimumWidth(300);
-    connect(m_listbox,SIGNAL(doubleClicked ( QListBoxItem * )),SLOT(slotOk()));
+    connect(m_listbox, SIGNAL(doubleClicked(QListBoxItem *)), SLOT(slotOk()));
     setMainWidget(vbox);
 }
 
@@ -61,6 +60,6 @@ KServiceSelectDlg::~KServiceSelectDlg()
 KService::Ptr KServiceSelectDlg::service()
 {
     unsigned int selIndex = m_listbox->currentItem();
-    KServiceListItem *selItem = static_cast<KServiceListItem *>(m_listbox->item(selIndex));
-    return KService::serviceByDesktopPath( selItem->desktopPath );
+    KServiceListItem *selItem = static_cast< KServiceListItem * >(m_listbox->item(selIndex));
+    return KService::serviceByDesktopPath(selItem->desktopPath);
 }

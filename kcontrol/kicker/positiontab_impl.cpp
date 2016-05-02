@@ -50,13 +50,8 @@ extern const int maxX = 150;
 extern const int maxY = 114;
 extern const int margin = 1;
 
-PositionTab::PositionTab(QWidget *parent, const char* name)
-  : PositionTabBase(parent, name),
-    m_pretendPanel(0),
-    m_desktopPreview(0),
-    m_panelInfo(0),
-    m_panelPos(PosBottom),
-    m_panelAlign(AlignLeft)
+PositionTab::PositionTab(QWidget *parent, const char *name)
+    : PositionTabBase(parent, name), m_pretendPanel(0), m_desktopPreview(0), m_panelInfo(0), m_panelPos(PosBottom), m_panelAlign(AlignLeft)
 {
     QPixmap monitor(locate("data", "kcontrol/pics/monitor.png"));
     m_monitorImage->setPixmap(monitor);
@@ -65,58 +60,57 @@ PositionTab::PositionTab(QWidget *parent, const char* name)
     m_pretendDesktop = new QWidget(m_monitorImage, "pretendBG");
     m_pretendDesktop->setGeometry(offsetX, offsetY, maxX, maxY);
     m_pretendPanel = new QFrame(m_monitorImage, "pretendPanel");
-    m_pretendPanel->setGeometry(offsetX + margin, maxY + offsetY - 10,
-                                maxX - margin, 10 - margin);
+    m_pretendPanel->setGeometry(offsetX + margin, maxY + offsetY - 10, maxX - margin, 10 - margin);
     m_pretendPanel->setFrameShape(QFrame::MenuBarPanel);
 
     /*
      * set the tooltips on the buttons properly for RTL langs
      */
-    if (kapp->reverseLayout())
+    if(kapp->reverseLayout())
     {
-        QToolTip::add(locationTopRight,     i18n("Top left"));
-        QToolTip::add(locationTop,          i18n("Top center"));
-        QToolTip::add(locationTopLeft,      i18n("Top right" ) );
-        QToolTip::add(locationRightTop,     i18n("Left top"));
-        QToolTip::add(locationRight,        i18n("Left center"));
-        QToolTip::add(locationRightBottom,  i18n("Left bottom"));
-        QToolTip::add(locationBottomRight,  i18n("Bottom left"));
-        QToolTip::add(locationBottom,       i18n("Bottom center"));
-        QToolTip::add(locationBottomLeft,   i18n("Bottom right"));
-        QToolTip::add(locationLeftTop,      i18n("Right top"));
-        QToolTip::add(locationLeft,         i18n("Right center"));
-        QToolTip::add(locationLeftBottom,   i18n("Right bottom"));
+        QToolTip::add(locationTopRight, i18n("Top left"));
+        QToolTip::add(locationTop, i18n("Top center"));
+        QToolTip::add(locationTopLeft, i18n("Top right"));
+        QToolTip::add(locationRightTop, i18n("Left top"));
+        QToolTip::add(locationRight, i18n("Left center"));
+        QToolTip::add(locationRightBottom, i18n("Left bottom"));
+        QToolTip::add(locationBottomRight, i18n("Bottom left"));
+        QToolTip::add(locationBottom, i18n("Bottom center"));
+        QToolTip::add(locationBottomLeft, i18n("Bottom right"));
+        QToolTip::add(locationLeftTop, i18n("Right top"));
+        QToolTip::add(locationLeft, i18n("Right center"));
+        QToolTip::add(locationLeftBottom, i18n("Right bottom"));
     }
     else
     {
-        QToolTip::add(locationTopLeft,      i18n("Top left"));
-        QToolTip::add(locationTop,          i18n("Top center"));
-        QToolTip::add(locationTopRight,     i18n("Top right" ) );
-        QToolTip::add(locationLeftTop,      i18n("Left top"));
-        QToolTip::add(locationLeft,         i18n("Left center"));
-        QToolTip::add(locationLeftBottom,   i18n("Left bottom"));
-        QToolTip::add(locationBottomLeft,   i18n("Bottom left"));
-        QToolTip::add(locationBottom,       i18n("Bottom center"));
-        QToolTip::add(locationBottomRight,  i18n("Bottom right"));
-        QToolTip::add(locationRightTop,     i18n("Right top"));
-        QToolTip::add(locationRight,        i18n("Right center"));
-        QToolTip::add(locationRightBottom,  i18n("Right bottom"));
+        QToolTip::add(locationTopLeft, i18n("Top left"));
+        QToolTip::add(locationTop, i18n("Top center"));
+        QToolTip::add(locationTopRight, i18n("Top right"));
+        QToolTip::add(locationLeftTop, i18n("Left top"));
+        QToolTip::add(locationLeft, i18n("Left center"));
+        QToolTip::add(locationLeftBottom, i18n("Left bottom"));
+        QToolTip::add(locationBottomLeft, i18n("Bottom left"));
+        QToolTip::add(locationBottom, i18n("Bottom center"));
+        QToolTip::add(locationBottomRight, i18n("Bottom right"));
+        QToolTip::add(locationRightTop, i18n("Right top"));
+        QToolTip::add(locationRight, i18n("Right center"));
+        QToolTip::add(locationRightBottom, i18n("Right bottom"));
     }
 
     // connections
     connect(m_locationGroup, SIGNAL(clicked(int)), SIGNAL(changed()));
     connect(m_xineramaScreenComboBox, SIGNAL(highlighted(int)), SIGNAL(changed()));
 
-    connect(m_identifyButton,SIGNAL(clicked()),SLOT(showIdentify()));
+    connect(m_identifyButton, SIGNAL(clicked()), SLOT(showIdentify()));
 
-    for(int s=0; s < QApplication::desktop()->numScreens(); s++)
-    {   /* populate the combobox for the available screens */
-        m_xineramaScreenComboBox->insertItem(QString::number(s+1));
+    for(int s = 0; s < QApplication::desktop()->numScreens(); s++)
+    { /* populate the combobox for the available screens */
+        m_xineramaScreenComboBox->insertItem(QString::number(s + 1));
     }
     m_xineramaScreenComboBox->insertItem(i18n("All Screens"));
 
     // hide the xinerama chooser widgets if there is no need for them
-    if (QApplication::desktop()->numScreens() < 2)
+    if(QApplication::desktop()->numScreens() < 2)
     {
         m_identifyButton->hide();
         m_xineramaScreenComboBox->hide();
@@ -132,29 +126,19 @@ PositionTab::PositionTab(QWidget *parent, const char* name)
     connect(m_customSpinbox, SIGNAL(valueChanged(int)), SIGNAL(changed()));
 
     m_desktopPreview = new KVirtualBGRenderer(0);
-    connect(m_desktopPreview, SIGNAL(imageDone(int)),
-            SLOT(slotBGPreviewReady(int)));
+    connect(m_desktopPreview, SIGNAL(imageDone(int)), SLOT(slotBGPreviewReady(int)));
 
-    connect(KickerConfig::the(), SIGNAL(extensionInfoChanged()),
-            SLOT(infoUpdated()));
-    connect(KickerConfig::the(), SIGNAL(extensionAdded(ExtensionInfo*)),
-            SLOT(extensionAdded(ExtensionInfo*)));
-    connect(KickerConfig::the(), SIGNAL(extensionRemoved(ExtensionInfo*)),
-            SLOT(extensionRemoved(ExtensionInfo*)));
-    connect(KickerConfig::the(), SIGNAL(extensionChanged(const QString&)),
-            SLOT(extensionChanged(const QString&)));
-    connect(KickerConfig::the(), SIGNAL(extensionAboutToChange(const QString&)),
-            SLOT(extensionAboutToChange(const QString&)));
+    connect(KickerConfig::the(), SIGNAL(extensionInfoChanged()), SLOT(infoUpdated()));
+    connect(KickerConfig::the(), SIGNAL(extensionAdded(ExtensionInfo *)), SLOT(extensionAdded(ExtensionInfo *)));
+    connect(KickerConfig::the(), SIGNAL(extensionRemoved(ExtensionInfo *)), SLOT(extensionRemoved(ExtensionInfo *)));
+    connect(KickerConfig::the(), SIGNAL(extensionChanged(const QString &)), SLOT(extensionChanged(const QString &)));
+    connect(KickerConfig::the(), SIGNAL(extensionAboutToChange(const QString &)), SLOT(extensionAboutToChange(const QString &)));
     // position tab tells hiding tab about extension selections and vice versa
-    connect(KickerConfig::the(), SIGNAL(hidingPanelChanged(int)),
-            SLOT(jumpToPanel(int)));
-    connect(m_panelList, SIGNAL(activated(int)),
-            KickerConfig::the(), SIGNAL(positionPanelChanged(int)));
+    connect(KickerConfig::the(), SIGNAL(hidingPanelChanged(int)), SLOT(jumpToPanel(int)));
+    connect(m_panelList, SIGNAL(activated(int)), KickerConfig::the(), SIGNAL(positionPanelChanged(int)));
 
-    connect(m_panelSize, SIGNAL(activated(int)),
-            SLOT(sizeChanged(int)));
-    connect(m_panelSize, SIGNAL(activated(int)),
-            SIGNAL(changed()));
+    connect(m_panelSize, SIGNAL(activated(int)), SLOT(sizeChanged(int)));
+    connect(m_panelSize, SIGNAL(activated(int)), SIGNAL(changed()));
 }
 
 PositionTab::~PositionTab()
@@ -173,7 +157,7 @@ void PositionTab::load()
     m_desktopPreview->start();
 }
 
-void PositionTab::extensionAdded(ExtensionInfo* info)
+void PositionTab::extensionAdded(ExtensionInfo *info)
 {
     m_panelList->insertItem(info->_name);
     m_panelsGroupBox->setHidden(m_panelList->count() < 2);
@@ -187,13 +171,13 @@ void PositionTab::save()
 
 void PositionTab::defaults()
 {
-    m_panelPos= PosBottom; // bottom of the screen
-    m_percentSlider->setValue( 100 ); // use all space available
-    m_percentSpinBox->setValue( 100 ); // use all space available
-    m_expandCheckBox->setChecked( true ); // expand as required
+    m_panelPos = PosBottom;             // bottom of the screen
+    m_percentSlider->setValue(100);     // use all space available
+    m_percentSpinBox->setValue(100);    // use all space available
+    m_expandCheckBox->setChecked(true); // expand as required
     m_xineramaScreenComboBox->setCurrentItem(QApplication::desktop()->primaryScreen());
 
-    if (QApplication::reverseLayout())
+    if(QApplication::reverseLayout())
     {
         // RTL lang aligns right
         m_panelAlign = AlignRight;
@@ -220,125 +204,125 @@ void PositionTab::sizeChanged(int which)
 
 void PositionTab::movePanel(int whichButton)
 {
-    QPushButton* pushed = reinterpret_cast<QPushButton*>(m_locationGroup->find(whichButton));
+    QPushButton *pushed = reinterpret_cast< QPushButton * >(m_locationGroup->find(whichButton));
 
-    if (pushed == locationTopLeft)
+    if(pushed == locationTopLeft)
     {
-	if (!(m_panelInfo->_allowedPosition[PosTop])) 
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosTop]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = kapp->reverseLayout() ? AlignRight : AlignLeft;
         m_panelPos = PosTop;
     }
-    else if (pushed == locationTop)
+    else if(pushed == locationTop)
     {
-	if (!(m_panelInfo->_allowedPosition[PosTop]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosTop]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignCenter;
         m_panelPos = PosTop;
     }
-    else if (pushed == locationTopRight)
+    else if(pushed == locationTopRight)
     {
-	if (!(m_panelInfo->_allowedPosition[PosTop]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosTop]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = kapp->reverseLayout() ? AlignLeft : AlignRight;
         m_panelPos = PosTop;
     }
-    else if (pushed == locationLeftTop)
+    else if(pushed == locationLeftTop)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignLeft;
         m_panelPos = kapp->reverseLayout() ? PosRight : PosLeft;
     }
-    else if (pushed == locationLeft)
+    else if(pushed == locationLeft)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignCenter;
         m_panelPos = kapp->reverseLayout() ? PosRight : PosLeft;
     }
-    else if (pushed == locationLeftBottom)
+    else if(pushed == locationLeftBottom)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosRight : PosLeft]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignRight;
         m_panelPos = kapp->reverseLayout() ? PosRight : PosLeft;
     }
-    else if (pushed == locationBottomLeft)
+    else if(pushed == locationBottomLeft)
     {
-	if (!(m_panelInfo->_allowedPosition[PosBottom]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosBottom]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = kapp->reverseLayout() ? AlignRight : AlignLeft;
         m_panelPos = PosBottom;
     }
-    else if (pushed == locationBottom)
+    else if(pushed == locationBottom)
     {
-	if (!(m_panelInfo->_allowedPosition[PosBottom]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosBottom]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignCenter;
         m_panelPos = PosBottom;
     }
-    else if (pushed == locationBottomRight)
+    else if(pushed == locationBottomRight)
     {
-	if (!(m_panelInfo->_allowedPosition[PosBottom]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[PosBottom]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = kapp->reverseLayout() ? AlignLeft : AlignRight;
         m_panelPos = PosBottom;
     }
-    else if (pushed == locationRightTop)
+    else if(pushed == locationRightTop)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignLeft;
         m_panelPos = kapp->reverseLayout() ? PosLeft : PosRight;
     }
-    else if (pushed == locationRight)
+    else if(pushed == locationRight)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignCenter;
         m_panelPos = kapp->reverseLayout() ? PosLeft : PosRight;
     }
-    else if (pushed == locationRightBottom)
+    else if(pushed == locationRightBottom)
     {
-	if (!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
-	{
-	   setPositionButtons();
-	   return;
-	}
+        if(!(m_panelInfo->_allowedPosition[kapp->reverseLayout() ? PosLeft : PosRight]))
+        {
+            setPositionButtons();
+            return;
+        }
         m_panelAlign = AlignRight;
         m_panelPos = kapp->reverseLayout() ? PosLeft : PosRight;
     }
@@ -349,7 +333,7 @@ void PositionTab::movePanel(int whichButton)
 
 void PositionTab::lengthenPanel(int sizePercent)
 {
-    if (sizePercent < 0)
+    if(sizePercent < 0)
     {
         sizePercent = m_percentSlider->value();
     }
@@ -358,7 +342,7 @@ void PositionTab::lengthenPanel(int sizePercent)
     unsigned int diff = 0;
     unsigned int panelSize = 4;
 
-    switch (m_panelSize->currentItem())
+    switch(m_panelSize->currentItem())
     {
         case KPanelExtension::SizeTiny:
         case KPanelExtension::SizeSmall:
@@ -375,104 +359,104 @@ void PositionTab::lengthenPanel(int sizePercent)
             break;
     }
 
-    switch (m_panelPos)
+    switch(m_panelPos)
     {
         case PosTop:
-            x  = offsetX + margin;
+            x = offsetX + margin;
             x2 = maxX - margin;
-            y  = offsetY + margin;
+            y = offsetY + margin;
             y2 = panelSize;
 
-            diff =  x2 - ((x2 * sizePercent) / 100);
-            if (m_panelAlign == AlignLeft)
+            diff = x2 - ((x2 * sizePercent) / 100);
+            if(m_panelAlign == AlignLeft)
             {
-                x2  -= diff;
+                x2 -= diff;
             }
-            else if (m_panelAlign == AlignCenter)
+            else if(m_panelAlign == AlignCenter)
             {
-                x  += diff / 2;
+                x += diff / 2;
                 x2 -= diff;
             }
             else // m_panelAlign == AlignRight
             {
-                x  += diff;
+                x += diff;
                 x2 -= diff;
             }
             break;
         case PosLeft:
-            x  = offsetX + margin;
+            x = offsetX + margin;
             x2 = panelSize;
-            y  = offsetY + margin;
+            y = offsetY + margin;
             y2 = maxY - margin;
 
-            diff =  y2 - ((y2 * sizePercent) / 100);
-            if (m_panelAlign == AlignLeft)
+            diff = y2 - ((y2 * sizePercent) / 100);
+            if(m_panelAlign == AlignLeft)
             {
-                y2  -= diff;
+                y2 -= diff;
             }
-            else if (m_panelAlign == AlignCenter)
+            else if(m_panelAlign == AlignCenter)
             {
-                y  += diff / 2;
+                y += diff / 2;
                 y2 -= diff;
             }
             else // m_panelAlign == AlignRight
             {
-                y  += diff;
+                y += diff;
                 y2 -= diff;
             }
             break;
         case PosBottom:
-            x  = offsetX + margin;
+            x = offsetX + margin;
             x2 = maxX - margin;
-            y  = offsetY + maxY - panelSize;
+            y = offsetY + maxY - panelSize;
             y2 = panelSize;
 
-            diff =  x2 - ((x2 * sizePercent) / 100);
-            if (m_panelAlign == AlignLeft)
+            diff = x2 - ((x2 * sizePercent) / 100);
+            if(m_panelAlign == AlignLeft)
             {
-                x2  -= diff;
+                x2 -= diff;
             }
-            else if (m_panelAlign == AlignCenter)
+            else if(m_panelAlign == AlignCenter)
             {
-                x  += diff / 2;
+                x += diff / 2;
                 x2 -= diff;
             }
             else // m_panelAlign == AlignRight
             {
-                x  += diff;
+                x += diff;
                 x2 -= diff;
             }
             break;
         default: // case PosRight:
-            x  = offsetX + maxX - panelSize;
+            x = offsetX + maxX - panelSize;
             x2 = panelSize;
-            y  = offsetY + margin;
+            y = offsetY + margin;
             y2 = maxY - margin;
 
-            diff =  y2 - ((y2 * sizePercent) / 100);
-            if (m_panelAlign == AlignLeft)
+            diff = y2 - ((y2 * sizePercent) / 100);
+            if(m_panelAlign == AlignLeft)
             {
-                y2  -= diff;
+                y2 -= diff;
             }
-            else if (m_panelAlign == AlignCenter)
+            else if(m_panelAlign == AlignCenter)
             {
-                y  += diff / 2;
+                y += diff / 2;
                 y2 -= diff;
             }
             else // m_panelAlign == AlignRight
             {
-                y  += diff;
+                y += diff;
                 y2 -= diff;
             }
             break;
     }
 
-    if (x2 < 3)
+    if(x2 < 3)
     {
         x2 = 3;
     }
 
-    if (y2 < 3)
+    if(y2 < 3)
     {
         y2 = 3;
     }
@@ -506,38 +490,37 @@ void PositionTab::slotBGPreviewReady(int)
 void PositionTab::switchPanel(int panelItem)
 {
     blockSignals(true);
-    ExtensionInfo* panelInfo = (KickerConfig::the()->extensionsInfo())[panelItem];
+    ExtensionInfo *panelInfo = (KickerConfig::the()->extensionsInfo())[panelItem];
 
-    if (!panelInfo)
+    if(!panelInfo)
     {
         m_panelList->setCurrentItem(0);
         panelInfo = (KickerConfig::the()->extensionsInfo())[panelItem];
 
-        if (!panelInfo)
+        if(!panelInfo)
         {
             return;
         }
     }
 
-    if (m_panelInfo)
+    if(m_panelInfo)
     {
         storeInfo();
     }
 
     m_panelInfo = panelInfo;
 
-    // because this changes when panels come and go, we have 
+    // because this changes when panels come and go, we have
     // to be overly pedantic and remove the custom item every time and
     // decide to add it back again, or not
     m_panelSize->removeItem(KPanelExtension::SizeCustom);
-    if (m_panelInfo->_customSizeMin != m_panelInfo->_customSizeMax)
+    if(m_panelInfo->_customSizeMin != m_panelInfo->_customSizeMax)
     {
         m_panelSize->insertItem(i18n("Custom"), KPanelExtension::SizeCustom);
     }
 
-    if (m_panelInfo->_size >= KPanelExtension::SizeCustom ||
-        (!m_panelInfo->_useStdSizes &&
-         m_panelInfo->_customSizeMin != m_panelInfo->_customSizeMax)) // compat
+    if(m_panelInfo->_size >= KPanelExtension::SizeCustom
+       || (!m_panelInfo->_useStdSizes && m_panelInfo->_customSizeMin != m_panelInfo->_customSizeMax)) // compat
     {
         m_panelSize->setCurrentItem(KPanelExtension::SizeCustom);
         sizeChanged(KPanelExtension::SizeCustom);
@@ -562,7 +545,7 @@ void PositionTab::switchPanel(int panelItem)
     if(m_panelInfo->_xineramaScreen >= 0 && m_panelInfo->_xineramaScreen < QApplication::desktop()->numScreens())
         m_xineramaScreenComboBox->setCurrentItem(m_panelInfo->_xineramaScreen);
     else if(m_panelInfo->_xineramaScreen == -2) /* the All Screens option: qt uses -1 for default, so -2 for all */
-        m_xineramaScreenComboBox->setCurrentItem(m_xineramaScreenComboBox->count()-1);
+        m_xineramaScreenComboBox->setCurrentItem(m_xineramaScreenComboBox->count() - 1);
     else
         m_xineramaScreenComboBox->setCurrentItem(QApplication::desktop()->primaryScreen());
 
@@ -578,54 +561,44 @@ void PositionTab::switchPanel(int panelItem)
 }
 
 
-void PositionTab::setPositionButtons() {
-    if (m_panelPos == PosTop)
+void PositionTab::setPositionButtons()
+{
+    if(m_panelPos == PosTop)
     {
-        if (m_panelAlign == AlignLeft)
-            kapp->reverseLayout() ? locationTopRight->setOn(true) :
-                                    locationTopLeft->setOn(true);
-        else if (m_panelAlign == AlignCenter)
+        if(m_panelAlign == AlignLeft)
+            kapp->reverseLayout() ? locationTopRight->setOn(true) : locationTopLeft->setOn(true);
+        else if(m_panelAlign == AlignCenter)
             locationTop->setOn(true);
         else // if (m_panelAlign == AlignRight
-            kapp->reverseLayout() ? locationTopLeft->setOn(true) :
-                                    locationTopRight->setOn(true);
+            kapp->reverseLayout() ? locationTopLeft->setOn(true) : locationTopRight->setOn(true);
     }
-    else if (m_panelPos == PosRight)
+    else if(m_panelPos == PosRight)
     {
-        if (m_panelAlign == AlignLeft)
-            kapp->reverseLayout() ? locationLeftTop->setOn(true) :
-                                    locationRightTop->setOn(true);
-        else if (m_panelAlign == AlignCenter)
-            kapp->reverseLayout() ? locationLeft->setOn(true) :
-                                    locationRight->setOn(true);
+        if(m_panelAlign == AlignLeft)
+            kapp->reverseLayout() ? locationLeftTop->setOn(true) : locationRightTop->setOn(true);
+        else if(m_panelAlign == AlignCenter)
+            kapp->reverseLayout() ? locationLeft->setOn(true) : locationRight->setOn(true);
         else // if (m_panelAlign == AlignRight
-            kapp->reverseLayout() ? locationLeftBottom->setOn(true) :
-                                    locationRightBottom->setOn(true);
+            kapp->reverseLayout() ? locationLeftBottom->setOn(true) : locationRightBottom->setOn(true);
     }
-    else if (m_panelPos == PosBottom)
+    else if(m_panelPos == PosBottom)
     {
-        if (m_panelAlign == AlignLeft)
-            kapp->reverseLayout() ? locationBottomRight->setOn(true) :
-                                    locationBottomLeft->setOn(true);
-        else if (m_panelAlign == AlignCenter)
+        if(m_panelAlign == AlignLeft)
+            kapp->reverseLayout() ? locationBottomRight->setOn(true) : locationBottomLeft->setOn(true);
+        else if(m_panelAlign == AlignCenter)
             locationBottom->setOn(true);
         else // if (m_panelAlign == AlignRight
-            kapp->reverseLayout() ? locationBottomLeft->setOn(true) :
-                                    locationBottomRight->setOn(true);
+            kapp->reverseLayout() ? locationBottomLeft->setOn(true) : locationBottomRight->setOn(true);
     }
     else // if (m_panelPos == PosLeft
     {
-        if (m_panelAlign == AlignLeft)
-            kapp->reverseLayout() ? locationRightTop->setOn(true) :
-                                    locationLeftTop->setOn(true);
-        else if (m_panelAlign == AlignCenter)
-            kapp->reverseLayout() ? locationRight->setOn(true) :
-                                    locationLeft->setOn(true);
+        if(m_panelAlign == AlignLeft)
+            kapp->reverseLayout() ? locationRightTop->setOn(true) : locationLeftTop->setOn(true);
+        else if(m_panelAlign == AlignCenter)
+            kapp->reverseLayout() ? locationRight->setOn(true) : locationLeft->setOn(true);
         else // if (m_panelAlign == AlignRight
-            kapp->reverseLayout() ? locationRightBottom->setOn(true) :
-                                    locationLeftBottom->setOn(true);
+            kapp->reverseLayout() ? locationRightBottom->setOn(true) : locationLeftBottom->setOn(true);
     }
-
 }
 
 void PositionTab::infoUpdated()
@@ -633,19 +606,19 @@ void PositionTab::infoUpdated()
     switchPanel(0);
 }
 
-void PositionTab::extensionAboutToChange(const QString& configPath)
+void PositionTab::extensionAboutToChange(const QString &configPath)
 {
-    ExtensionInfo* extension = (KickerConfig::the()->extensionsInfo())[m_panelList->currentItem()];
-    if (extension && extension->_configPath == configPath)
+    ExtensionInfo *extension = (KickerConfig::the()->extensionsInfo())[m_panelList->currentItem()];
+    if(extension && extension->_configPath == configPath)
     {
         storeInfo();
     }
 }
 
-void PositionTab::extensionChanged(const QString& configPath)
+void PositionTab::extensionChanged(const QString &configPath)
 {
-    ExtensionInfo* extension = (KickerConfig::the()->extensionsInfo())[m_panelList->currentItem()];
-    if (extension && extension->_configPath == configPath)
+    ExtensionInfo *extension = (KickerConfig::the()->extensionsInfo())[m_panelList->currentItem()];
+    if(extension && extension->_configPath == configPath)
     {
         m_panelInfo = 0;
         switchPanel(m_panelList->currentItem());
@@ -654,14 +627,14 @@ void PositionTab::extensionChanged(const QString& configPath)
 
 void PositionTab::storeInfo()
 {
-    if (!m_panelInfo)
+    if(!m_panelInfo)
     {
         return;
     }
 
     // Magic numbers stolen from kdebase/kicker/core/global.cpp
     // PGlobal::sizeValue()
-    if (m_panelSize->currentItem() < KPanelExtension::SizeCustom)
+    if(m_panelSize->currentItem() < KPanelExtension::SizeCustom)
     {
         m_panelInfo->_size = m_panelSize->currentItem();
     }
@@ -673,7 +646,7 @@ void PositionTab::storeInfo()
 
     m_panelInfo->_position = m_panelPos;
     m_panelInfo->_alignment = m_panelAlign;
-    if(m_xineramaScreenComboBox->currentItem() == m_xineramaScreenComboBox->count()-1)
+    if(m_xineramaScreenComboBox->currentItem() == m_xineramaScreenComboBox->count() - 1)
         m_panelInfo->_xineramaScreen = -2; /* all screens */
     else
         m_panelInfo->_xineramaScreen = m_xineramaScreenComboBox->currentItem();
@@ -684,10 +657,10 @@ void PositionTab::storeInfo()
 
 void PositionTab::showIdentify()
 {
-    for(int s=0; s < QApplication::desktop()->numScreens();s++)
+    for(int s = 0; s < QApplication::desktop()->numScreens(); s++)
     {
 
-        QLabel *screenLabel = new QLabel(0,"Screen Identify", WDestructiveClose | WStyle_Customize | WX11BypassWM );
+        QLabel *screenLabel = new QLabel(0, "Screen Identify", WDestructiveClose | WStyle_Customize | WX11BypassWM);
 
         QFont identifyFont(KGlobalSettings::generalFont());
         identifyFont.setPixelSize(100);
@@ -703,7 +676,7 @@ void PositionTab::showIdentify()
         QTimer::singleShot(1500, screenLabel, SLOT(close()));
 
         QPoint screenCenter(QApplication::desktop()->screenGeometry(s).center());
-        QRect targetGeometry(QPoint(0,0),screenLabel->sizeHint());
+        QRect targetGeometry(QPoint(0, 0), screenLabel->sizeHint());
         targetGeometry.moveCenter(screenCenter);
 
         screenLabel->setGeometry(targetGeometry);
@@ -712,14 +685,14 @@ void PositionTab::showIdentify()
     }
 }
 
-void PositionTab::extensionRemoved(ExtensionInfo* info)
+void PositionTab::extensionRemoved(ExtensionInfo *info)
 {
     int count = m_panelList->count();
     int extensionCount = KickerConfig::the()->extensionsInfo().count();
     int index = 0;
-    for (; index < count && index < extensionCount; ++index)
+    for(; index < count && index < extensionCount; ++index)
     {
-        if (KickerConfig::the()->extensionsInfo()[index] == info)
+        if(KickerConfig::the()->extensionsInfo()[index] == info)
         {
             break;
         }
@@ -729,7 +702,7 @@ void PositionTab::extensionRemoved(ExtensionInfo* info)
     m_panelList->removeItem(index);
     m_panelsGroupBox->setHidden(m_panelList->count() < 2);
 
-    if (isCurrentlySelected)
+    if(isCurrentlySelected)
     {
         m_panelList->setCurrentItem(0);
     }

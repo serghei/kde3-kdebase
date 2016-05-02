@@ -25,28 +25,29 @@
 #include <time.h>
 
 /* This is the official ksysguardd port assigned by IANA. */
-#define PORT_NUMBER	3112
+#define PORT_NUMBER 3112
 
 /* Timer interval for checking modules */
-#define TIMERINTERVAL	1
+#define TIMERINTERVAL 1
 
 /* Timer interval for update modules */
-#define UPDATEINTERVAL	1
+#define UPDATEINTERVAL 1
 
 extern int RunAsDaemon;
 extern int QuitApp;
 
 /* This pointer give you access to the client which made the request */
-extern FILE* CurrentClient;
+extern FILE *CurrentClient;
 
-struct SensorModul {
-  const char *configName;
-  void (*initCommand)( struct SensorModul* );
-  void (*exitCommand)( void );
-  int (*updateCommand)( void );
-  void (*checkCommand)( void );
-  int available;
-  time_t time;
+struct SensorModul
+{
+    const char *configName;
+    void (*initCommand)(struct SensorModul *);
+    void (*exitCommand)(void);
+    int (*updateCommand)(void);
+    void (*checkCommand)(void);
+    int available;
+    time_t time;
 };
 
 #endif

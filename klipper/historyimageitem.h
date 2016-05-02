@@ -28,22 +28,31 @@
 /**
  * A image entry in the clipboard history.
  */
-class HistoryImageItem : public HistoryItem
-{
+class HistoryImageItem : public HistoryItem {
 public:
-    HistoryImageItem( const QPixmap& data );
-    virtual ~HistoryImageItem() {}
+    HistoryImageItem(const QPixmap &data);
+    virtual ~HistoryImageItem()
+    {
+    }
     virtual QString text() const;
-    virtual bool operator==( const HistoryItem& rhs) const {
-        if ( const HistoryImageItem* casted_rhs = dynamic_cast<const HistoryImageItem*>( &rhs ) ) {
+    virtual bool operator==(const HistoryItem &rhs) const
+    {
+        if(const HistoryImageItem *casted_rhs = dynamic_cast< const HistoryImageItem * >(&rhs))
+        {
             return &casted_rhs->m_data == &m_data; // Not perfect, but better than nothing.
         }
         return false;
     }
-    virtual const QPixmap& image() const { return m_data; }
-    virtual QMimeSource* mimeSource() const { return new QImageDrag( m_data.convertToImage()) ; }
+    virtual const QPixmap &image() const
+    {
+        return m_data;
+    }
+    virtual QMimeSource *mimeSource() const
+    {
+        return new QImageDrag(m_data.convertToImage());
+    }
 
-    virtual void write( QDataStream& stream ) const;
+    virtual void write(QDataStream &stream) const;
 
 private:
     /**
@@ -55,7 +64,6 @@ private:
      */
     mutable QString m_text;
 };
-
 
 
 #endif

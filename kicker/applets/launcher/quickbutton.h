@@ -46,15 +46,32 @@ class KToggleAction;
 class QuickURL {
 public:
     QuickURL(const QString &u);
-    KURL kurl() const {return _kurl;};
-    QString url() const {return _kurl.url();};
-    QString menuId() const  {return _menuId;};
-    QString genericName() const { return m_genericName; }
-    QString name() const { return m_name; }
-    KService::Ptr service() const {return _service;};
+    KURL kurl() const
+    {
+        return _kurl;
+    };
+    QString url() const
+    {
+        return _kurl.url();
+    };
+    QString menuId() const
+    {
+        return _menuId;
+    };
+    QString genericName() const
+    {
+        return m_genericName;
+    }
+    QString name() const
+    {
+        return m_name;
+    }
+    KService::Ptr service() const
+    {
+        return _service;
+    };
     void run() const;
-    QPixmap pixmap(mode_t _mode = 0, KIcon::Group _group = KIcon::Desktop,
-                   int _force_size = 0, int _state = 0, QString * _path = 0L) const;
+    QPixmap pixmap(mode_t _mode = 0, KIcon::Group _group = KIcon::Desktop, int _force_size = 0, int _state = 0, QString *_path = 0L) const;
 
 private:
     KURL _kurl;
@@ -65,19 +82,30 @@ private:
 };
 
 
-class QuickButton: public SimpleButton, public KickerTip::Client {
+class QuickButton : public SimpleButton, public KickerTip::Client {
     Q_OBJECT
 
 public:
-    enum { DEFAULT_ICON_DIM = 16 };
-    enum { ICON_MARGIN = 1 };
-    QuickButton(const QString &u, KAction* configAction,
-                QWidget *parent=0, const char *name=0);
+    enum
+    {
+        DEFAULT_ICON_DIM = 16
+    };
+    enum
+    {
+        ICON_MARGIN = 1
+    };
+    QuickButton(const QString &u, KAction *configAction, QWidget *parent = 0, const char *name = 0);
     ~QuickButton();
     QString url() const;
     QString menuId() const;
-    QPixmap icon() const{ return _icon;}
-    bool sticky() { return m_sticky; }
+    QPixmap icon() const
+    {
+        return _icon;
+    }
+    bool sticky()
+    {
+        return m_sticky;
+    }
     void setSticky(bool bSticky);
     void setPopupDirection(KPanelApplet::Direction d);
 
@@ -121,4 +149,3 @@ private:
 };
 
 #endif
-

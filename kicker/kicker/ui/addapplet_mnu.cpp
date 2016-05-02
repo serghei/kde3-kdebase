@@ -29,8 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "addapplet_mnu.h"
 #include "addapplet_mnu.moc"
 
-PanelAddAppletMenu::PanelAddAppletMenu(ContainerArea* cArea, QWidget *parent, const char *name)
-    : QPopupMenu(parent, name), containerArea(cArea)
+PanelAddAppletMenu::PanelAddAppletMenu(ContainerArea *cArea, QWidget *parent, const char *name) : QPopupMenu(parent, name), containerArea(cArea)
 {
     setCheckable(true);
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
@@ -44,32 +43,32 @@ void PanelAddAppletMenu::slotAboutToShow()
     applets = PluginManager::applets();
 
     AppletInfo::List::const_iterator it = applets.constBegin();
-    for (int i = 0; it != applets.constEnd(); ++it, ++i)
+    for(int i = 0; it != applets.constEnd(); ++it, ++i)
     {
-        const AppletInfo& ai = (*it);
-        if (ai.isHidden())
+        const AppletInfo &ai = (*it);
+        if(ai.isHidden())
         {
             continue;
         }
 
-        if (ai.icon().isEmpty() || ai.icon() == "unknown")
+        if(ai.icon().isEmpty() || ai.icon() == "unknown")
         {
-            insertItem(ai.name().replace( "&", "&&" ), i);
+            insertItem(ai.name().replace("&", "&&"), i);
         }
         else
         {
-            insertItem(SmallIconSet(ai.icon()), ai.name().replace( "&", "&&" ), i);
+            insertItem(SmallIconSet(ai.icon()), ai.name().replace("&", "&&"), i);
         }
 
-        if (ai.isUniqueApplet() && PluginManager::the()->hasInstance(ai))
+        if(ai.isUniqueApplet() && PluginManager::the()->hasInstance(ai))
         {
-            setItemEnabled( i, false );
-            setItemChecked( i, true );
+            setItemEnabled(i, false);
+            setItemChecked(i, true);
         }
     }
 }
 
 void PanelAddAppletMenu::slotExec(int id)
 {
-    containerArea->addApplet( applets[id].desktopFile() );
+    containerArea->addApplet(applets[id].desktopFile());
 }

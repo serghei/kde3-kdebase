@@ -25,17 +25,17 @@
 
 class QLineEdit;
 
-class FilterDlg : public KDialogBase
-{
-  	Q_OBJECT
+class FilterDlg : public KDialogBase {
+    Q_OBJECT
 public:
-	FilterDlg(QWidget *parent = 0, const char *name = 0);
+    FilterDlg(QWidget *parent = 0, const char *name = 0);
 
-	static bool doIt(QWidget *parent = 0, QString* mime = 0, QString *cmd = 0);
+    static bool doIt(QWidget *parent = 0, QString *mime = 0, QString *cmd = 0);
 protected slots:
     void slotTextFilterChanged();
+
 private:
-	QLineEdit	*m_mime, *m_cmd;
+    QLineEdit *m_mime, *m_cmd;
 };
 
 #endif

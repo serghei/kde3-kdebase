@@ -33,7 +33,7 @@ class KConfigBase;
 #define WINDOW_MINIMUM_ECART 200
 #define WINDOW_NUMBER 7
 #define WINDOW_SUPER 0.43
-#define WINDOW_UNIT sound.fs()/4
+#define WINDOW_UNIT sound.fs() / 4
 #define FOUR_NUMBER 7
 #define FOUR_SUPER 0
 
@@ -53,49 +53,46 @@ class KConfigBase;
 #define REJECT_FACTOR_DIFF 0.0018
 
 
-
 #define HAMMING false
 
 
-
-
-namespace KHotKeys
-{
+namespace KHotKeys {
 
 
 /**
 @author Olivier Goffart
 */
-class KDE_EXPORT VoiceSignature{
+class KDE_EXPORT VoiceSignature {
 public:
-    explicit VoiceSignature(const Sound& s);
+    explicit VoiceSignature(const Sound &s);
 
-	VoiceSignature(){}
-	~VoiceSignature();
+    VoiceSignature()
+    {
+    }
+    ~VoiceSignature();
 
-	QMap<int, QMap<int, double> > data;
-	
-	static QMap<int, QMap<int, double> > pond;
+    QMap< int, QMap< int, double > > data;
 
-	static float diff(const VoiceSignature &s1, const VoiceSignature &s2);
+    static QMap< int, QMap< int, double > > pond;
 
-
-	static int size1();
-	static int size2();
+    static float diff(const VoiceSignature &s1, const VoiceSignature &s2);
 
 
-	static QMemArray<double> fft(const Sound& sound, unsigned int start, unsigned int stop);
-	static bool window(const Sound& sound, unsigned int *start, unsigned int *stop);
+    static int size1();
+    static int size2();
 
-	void write(KConfigBase *cfg, const QString &key) const;
-	void read(KConfigBase *cfg, const QString &key);
-	
-	inline bool isNull() const
-	{
-		return data.isEmpty();
-	}
+
+    static QMemArray< double > fft(const Sound &sound, unsigned int start, unsigned int stop);
+    static bool window(const Sound &sound, unsigned int *start, unsigned int *stop);
+
+    void write(KConfigBase *cfg, const QString &key) const;
+    void read(KConfigBase *cfg, const QString &key);
+
+    inline bool isNull() const
+    {
+        return data.isEmpty();
+    }
 };
-
 }
 
 #endif

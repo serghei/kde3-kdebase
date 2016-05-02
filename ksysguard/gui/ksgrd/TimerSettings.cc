@@ -1,8 +1,8 @@
 /*
     KSysGuard, the KDE System Guard
-   
+
     Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
-    
+
     This program is free software; you can redistribute it and/or
     modify it under the terms of version 2 of the GNU General Public
     License as published by the Free Software Foundation.
@@ -32,63 +32,61 @@
 
 #include "TimerSettings.h"
 
-TimerSettings::TimerSettings( QWidget *parent, const char *name )
-  : KDialogBase( Plain, i18n( "Timer Settings" ), Ok | Cancel,
-                 Ok, parent, name, true, true )
+TimerSettings::TimerSettings(QWidget *parent, const char *name)
+    : KDialogBase(Plain, i18n("Timer Settings"), Ok | Cancel, Ok, parent, name, true, true)
 {
-  QFrame *page = plainPage();
+    QFrame *page = plainPage();
 
-  QGridLayout *layout = new QGridLayout( page, 2, 2, 0, spacingHint() );
+    QGridLayout *layout = new QGridLayout(page, 2, 2, 0, spacingHint());
 
-  mUseGlobalUpdate = new QCheckBox( i18n( "Use update interval of worksheet" ), page );
-  layout->addMultiCellWidget( mUseGlobalUpdate, 0, 0, 0, 1 );
+    mUseGlobalUpdate = new QCheckBox(i18n("Use update interval of worksheet"), page);
+    layout->addMultiCellWidget(mUseGlobalUpdate, 0, 0, 0, 1);
 
-  mLabel = new QLabel( i18n( "Update interval:" ), page );
-  layout->addWidget( mLabel, 1, 0 );
+    mLabel = new QLabel(i18n("Update interval:"), page);
+    layout->addWidget(mLabel, 1, 0);
 
-  mInterval = new QSpinBox( 1, 300, 1, page );
-  mInterval->setValue( 2 );
-  mInterval->setSuffix( i18n( " sec" ) );
-  layout->addWidget( mInterval, 1, 1 );
-  mLabel->setBuddy( mInterval );
-  QWhatsThis::add( mInterval, i18n( "All displays of the sheet are updated at the rate specified here." ) );
+    mInterval = new QSpinBox(1, 300, 1, page);
+    mInterval->setValue(2);
+    mInterval->setSuffix(i18n(" sec"));
+    layout->addWidget(mInterval, 1, 1);
+    mLabel->setBuddy(mInterval);
+    QWhatsThis::add(mInterval, i18n("All displays of the sheet are updated at the rate specified here."));
 
-  connect( mUseGlobalUpdate, SIGNAL( toggled( bool ) ),
-           SLOT( globalUpdateChanged( bool ) ) );
+    connect(mUseGlobalUpdate, SIGNAL(toggled(bool)), SLOT(globalUpdateChanged(bool)));
 
-  mUseGlobalUpdate->setChecked( true );
+    mUseGlobalUpdate->setChecked(true);
 
-  KAcceleratorManager::manage( this );
+    KAcceleratorManager::manage(this);
 }
 
 TimerSettings::~TimerSettings()
 {
 }
 
-void TimerSettings::setUseGlobalUpdate( bool value )
+void TimerSettings::setUseGlobalUpdate(bool value)
 {
-  mUseGlobalUpdate->setChecked( value );
+    mUseGlobalUpdate->setChecked(value);
 }
 
 bool TimerSettings::useGlobalUpdate() const
 {
-  return mUseGlobalUpdate->isChecked();
+    return mUseGlobalUpdate->isChecked();
 }
 
-void TimerSettings::setInterval( int interval )
+void TimerSettings::setInterval(int interval)
 {
-  mInterval->setValue( interval );
+    mInterval->setValue(interval);
 }
 
 int TimerSettings::interval() const
 {
-  return mInterval->value();
+    return mInterval->value();
 }
 
-void TimerSettings::globalUpdateChanged( bool value )
+void TimerSettings::globalUpdateChanged(bool value)
 {
-  mInterval->setEnabled( !value );
-  mLabel->setEnabled( !value );
+    mInterval->setEnabled(!value);
+    mLabel->setEnabled(!value);
 }
 
 #include "TimerSettings.moc"

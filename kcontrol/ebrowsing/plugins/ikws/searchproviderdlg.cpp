@@ -33,12 +33,10 @@
 #include "searchproviderdlg.h"
 #include "searchprovider.h"
 
-SearchProviderDialog::SearchProviderDialog(SearchProvider *provider,
-                                           QWidget *parent, const char *name)
-                     :KDialogBase(parent, name, true, QString::null, Ok|Cancel),
-                      m_provider(provider)
+SearchProviderDialog::SearchProviderDialog(SearchProvider *provider, QWidget *parent, const char *name)
+    : KDialogBase(parent, name, true, QString::null, Ok | Cancel), m_provider(provider)
 {
-    m_dlg = new SearchProviderDlgUI (this);
+    m_dlg = new SearchProviderDlgUI(this);
     setMainWidget(m_dlg);
 
     enableButtonSeparator(true);
@@ -54,7 +52,7 @@ SearchProviderDialog::SearchProviderDialog(SearchProvider *provider,
     charsets.prepend(i18n("Default"));
     m_dlg->cbCharset->insertStringList(charsets);
 
-    if (m_provider)
+    if(m_provider)
     {
         setPlainCaption(i18n("Modify Search Provider"));
         m_dlg->leName->setText(m_provider->name());
@@ -74,22 +72,20 @@ SearchProviderDialog::SearchProviderDialog(SearchProvider *provider,
 
 void SearchProviderDialog::slotChanged()
 {
-    enableButton(Ok, !(m_dlg->leName->text().isEmpty()
-                       || m_dlg->leShortcut->text().isEmpty()
-                       || m_dlg->leQuery->text().isEmpty()));
+    enableButton(Ok, !(m_dlg->leName->text().isEmpty() || m_dlg->leShortcut->text().isEmpty() || m_dlg->leQuery->text().isEmpty()));
 }
 
 void SearchProviderDialog::slotOk()
 {
-    if ((m_dlg->leQuery->text().find("\\{") == -1)
-        && KMessageBox::warningContinueCancel(0,
-            i18n("The URI does not contain a \\{...} placeholder for the user query.\n"
-                 "This means that the same page is always going to be visited, "
-                 "regardless of what the user types."),
-            QString::null, i18n("Keep It")) == KMessageBox::Cancel)
+    if((m_dlg->leQuery->text().find("\\{") == -1)
+       && KMessageBox::warningContinueCancel(0, i18n("The URI does not contain a \\{...} placeholder for the user query.\n"
+                                                     "This means that the same page is always going to be visited, "
+                                                     "regardless of what the user types."),
+                                             QString::null, i18n("Keep It"))
+              == KMessageBox::Cancel)
         return;
 
-    if (!m_provider)
+    if(!m_provider)
         m_provider = new SearchProvider;
     m_provider->setName(m_dlg->leName->text().stripWhiteSpace());
     m_provider->setQuery(m_dlg->leQuery->text().stripWhiteSpace());

@@ -31,10 +31,7 @@
 #include <kipc.h>
 #include <kstandarddirs.h>
 
-HideButton::HideButton(QWidget *parent, const char *name)
-    : QButton(parent, name),
-      m_highlight(false),
-      m_arrow(Qt::LeftArrow)
+HideButton::HideButton(QWidget *parent, const char *name) : QButton(parent, name), m_highlight(false), m_arrow(Qt::LeftArrow)
 {
     setBackgroundOrigin(AncestorOrigin);
 
@@ -49,22 +46,22 @@ HideButton::HideButton(QWidget *parent, const char *name)
 
 void HideButton::drawButton(QPainter *p)
 {
-    if (m_arrow == Qt::LeftArrow)
+    if(m_arrow == Qt::LeftArrow)
     {
         p->setPen(colorGroup().mid());
-        p->drawLine(width()-1, 0, width()-1, height());
+        p->drawLine(width() - 1, 0, width() - 1, height());
     }
-    else if (m_arrow == Qt::RightArrow)
+    else if(m_arrow == Qt::RightArrow)
     {
         p->setPen(colorGroup().mid());
         p->drawLine(0, 0, 0, height());
     }
-    else if (m_arrow == Qt::UpArrow)
+    else if(m_arrow == Qt::UpArrow)
     {
         p->setPen(colorGroup().mid());
-        p->drawLine(0, height()-1, width(), height()-1);
+        p->drawLine(0, height() - 1, width(), height() - 1);
     }
-    else if (m_arrow == Qt::DownArrow)
+    else if(m_arrow == Qt::DownArrow)
     {
         p->setPen(colorGroup().mid());
         p->drawLine(0, 0, width(), 0);
@@ -75,23 +72,23 @@ void HideButton::drawButton(QPainter *p)
 
 void HideButton::drawButtonLabel(QPainter *p)
 {
-    if (pixmap())
+    if(pixmap())
     {
-        QPixmap pix = m_highlight? m_activeIcon : m_normalIcon;
+        QPixmap pix = m_highlight ? m_activeIcon : m_normalIcon;
 
-        if (isOn() || isDown())
+        if(isOn() || isDown())
         {
             p->translate(2, 2);
         }
 
         QPoint origin(2, 2);
 
-        if (pix.height() < (height() - 4))
+        if(pix.height() < (height() - 4))
         {
             origin.setY(origin.y() + ((height() - pix.height()) / 2));
         }
 
-        if (pix.width() < (width() - 4))
+        if(pix.width() < (width() - 4))
         {
             origin.setX(origin.x() + ((width() - pix.width()) / 2));
         }
@@ -109,30 +106,30 @@ void HideButton::setPixmap(const QPixmap &pix)
 void HideButton::setArrowType(Qt::ArrowType arrow)
 {
     m_arrow = arrow;
-    switch (arrow)
+    switch(arrow)
     {
         case Qt::LeftArrow:
             setPixmap(SmallIcon("1leftarrow"));
-        break;
+            break;
 
         case Qt::RightArrow:
             setPixmap(SmallIcon("1rightarrow"));
-        break;
+            break;
 
         case Qt::UpArrow:
             setPixmap(SmallIcon("1uparrow"));
-        break;
+            break;
 
         case Qt::DownArrow:
         default:
             setPixmap(SmallIcon("1downarrow"));
-        break;
+            break;
     }
 }
 
 void HideButton::generateIcons()
 {
-    if (!pixmap())
+    if(!pixmap())
     {
         return;
     }
@@ -148,14 +145,14 @@ void HideButton::generateIcons()
 
 void HideButton::slotSettingsChanged(int category)
 {
-    if (category != KApplication::SETTINGS_MOUSE)
+    if(category != KApplication::SETTINGS_MOUSE)
     {
         return;
     }
 
     bool changeCursor = KGlobalSettings::changeCursorOverIcon();
 
-    if (changeCursor)
+    if(changeCursor)
     {
         setCursor(KCursor::handCursor());
     }
@@ -167,7 +164,7 @@ void HideButton::slotSettingsChanged(int category)
 
 void HideButton::slotIconChanged(int group)
 {
-    if (group != KIcon::Panel)
+    if(group != KIcon::Panel)
     {
         return;
     }

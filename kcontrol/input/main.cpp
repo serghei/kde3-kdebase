@@ -22,7 +22,7 @@
  */
 
 #ifdef HAVE_CONFIG_H
-#  include <config.h>
+#include <config.h>
 #endif
 
 #include <klocale.h>
@@ -34,20 +34,19 @@
 #include <X11/Xlib.h>
 
 #ifdef HAVE_XCURSOR
-#  include <X11/Xcursor/Xcursor.h>
+#include <X11/Xcursor/Xcursor.h>
 #endif
 
 #include "mouse.h"
 
-extern "C"
+extern "C" {
+KDE_EXPORT KCModule *create_mouse(QWidget *parent, const char *)
 {
-  KDE_EXPORT KCModule *create_mouse(QWidget *parent, const char *)
-  {
     return new MouseConfig(parent, "kcminput");
-  }
+}
 
-  KDE_EXPORT void init_mouse()
-  {
+KDE_EXPORT void init_mouse()
+{
     KConfig *config = new KConfig("kcminputrc", true, false); // Read-only, no globals
     MouseSettings settings;
     settings.load(config);
@@ -61,19 +60,17 @@ extern "C"
     // Note: If you update this code, update kapplymousetheme as well.
 
     // use a default value for theme only if it's not configured at all, not even in X resources
-    if( theme.isEmpty()
-        && QCString( XGetDefault( qt_xdisplay(), "Xcursor", "theme" )).isEmpty()
-        && QCString( XcursorGetTheme( qt_xdisplay())).isEmpty())
+    if(theme.isEmpty() && QCString(XGetDefault(qt_xdisplay(), "Xcursor", "theme")).isEmpty() && QCString(XcursorGetTheme(qt_xdisplay())).isEmpty())
     {
         theme = "default";
     }
 
-     // Apply the KDE cursor theme to ourselves
-    if( !theme.isEmpty())
+    // Apply the KDE cursor theme to ourselves
+    if(!theme.isEmpty())
         XcursorSetTheme(qt_xdisplay(), theme.data());
 
-    if (!size.isEmpty())
-    	XcursorSetDefaultSize(qt_xdisplay(), size.toUInt());
+    if(!size.isEmpty())
+        XcursorSetDefaultSize(qt_xdisplay(), size.toUInt());
 
     // Load the default cursor from the theme and apply it to the root window.
     Cursor handle = XcursorLibraryLoadCursor(qt_xdisplay(), "left_ptr");
@@ -83,14 +80,12 @@ extern "C"
     // Tell klauncher to set the XCURSOR_THEME and XCURSOR_SIZE environment
     // variables when launching applications.
     DCOPRef klauncher("klauncher");
-    if( !theme.isEmpty())
+    if(!theme.isEmpty())
         klauncher.send("setLaunchEnv", QCString("XCURSOR_THEME"), theme);
-    if( !size.isEmpty())
+    if(!size.isEmpty())
         klauncher.send("setLaunchEnv", QCString("XCURSOR_SIZE"), size);
 #endif
 
     delete config;
-  }
 }
-
-
+}

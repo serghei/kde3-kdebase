@@ -35,16 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "extensionmanager.h"
 #include "containerarea.h"
 
-RemoveContainerMenu::RemoveContainerMenu( ContainerArea* cArea,
-					  QWidget *parent, const char *name)
-    : QPopupMenu( parent, name ), containerArea( cArea )
+RemoveContainerMenu::RemoveContainerMenu(ContainerArea *cArea, QWidget *parent, const char *name) : QPopupMenu(parent, name), containerArea(cArea)
 {
-    appletId = insertItem(i18n("&Applet"),
-                          new PanelRemoveAppletMenu(containerArea, this));
-    buttonId = insertItem(i18n("Appli&cation"),
-                          new PanelRemoveButtonMenu( containerArea, this ) );
+    appletId = insertItem(i18n("&Applet"), new PanelRemoveAppletMenu(containerArea, this));
+    buttonId = insertItem(i18n("Appli&cation"), new PanelRemoveButtonMenu(containerArea, this));
     adjustSize();
-    connect( this, SIGNAL( aboutToShow() ), SLOT( slotAboutToShow() ) );
+    connect(this, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
 }
 
 RemoveContainerMenu::~RemoveContainerMenu()
@@ -53,9 +49,6 @@ RemoveContainerMenu::~RemoveContainerMenu()
 
 void RemoveContainerMenu::slotAboutToShow()
 {
-    setItemEnabled(appletId, containerArea->containerCount("Applet") > 0 ||
-                             containerArea->containerCount("Special Button") > 0);
-    setItemEnabled(buttonId, (containerArea->containerCount("ServiceMenuButton") +
-                              containerArea->containerCount("ServiceButton")) > 0);
+    setItemEnabled(appletId, containerArea->containerCount("Applet") > 0 || containerArea->containerCount("Special Button") > 0);
+    setItemEnabled(buttonId, (containerArea->containerCount("ServiceMenuButton") + containerArea->containerCount("ServiceButton")) > 0);
 }
-

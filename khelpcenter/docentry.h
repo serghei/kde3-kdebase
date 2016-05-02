@@ -6,88 +6,86 @@
 
 namespace KHC {
 
-class DocEntry
-{
-  public:
-    typedef QValueList<DocEntry *> List;
+class DocEntry {
+public:
+    typedef QValueList< DocEntry * > List;
 
     DocEntry();
-    
-    DocEntry( const QString &name, const QString &url = QString::null,
-              const QString &icon = QString::null );
-    
-    void setName( const QString & );
+
+    DocEntry(const QString &name, const QString &url = QString::null, const QString &icon = QString::null);
+
+    void setName(const QString &);
     QString name() const;
-    
-    void setSearch( const QString & );
+
+    void setSearch(const QString &);
     QString search() const;
-    
-    void setIcon( const QString & );
+
+    void setIcon(const QString &);
     QString icon() const;
-    
-    void setUrl( const QString & );
+
+    void setUrl(const QString &);
     QString url() const;
 
-    void setInfo( const QString & );
+    void setInfo(const QString &);
     QString info() const;
 
-    void setLang( const QString & );
+    void setLang(const QString &);
     QString lang() const;
-    
-    void setIdentifier( const QString & );
+
+    void setIdentifier(const QString &);
     QString identifier() const;
 
-    void setIndexer( const QString & );
+    void setIndexer(const QString &);
     QString indexer() const;
 
-    void setIndexTestFile( const QString & );
+    void setIndexTestFile(const QString &);
     QString indexTestFile() const;
 
-    void setWeight( int );
+    void setWeight(int);
     int weight() const;
 
-    void setSearchMethod( const QString & );
+    void setSearchMethod(const QString &);
     QString searchMethod() const;
 
-    void enableSearch( bool enabled );
+    void enableSearch(bool enabled);
     bool searchEnabled() const;
 
-    void setSearchEnabledDefault( bool enabled );
+    void setSearchEnabledDefault(bool enabled);
     bool searchEnabledDefault() const;
 
-    void setDocumentType( const QString & );
+    void setDocumentType(const QString &);
     QString documentType() const;
 
-    void setDirectory( bool );
+    void setDirectory(bool);
     bool isDirectory() const;
 
-    bool readFromFile( const QString &fileName );
+    bool readFromFile(const QString &fileName);
 
-    bool indexExists( const QString &indexDir );
+    bool indexExists(const QString &indexDir);
 
     bool docExists() const;
 
-    void addChild( DocEntry * );
+    void addChild(DocEntry *);
     bool hasChildren();
     DocEntry *firstChild();
     List children();
-  
-    void setParent( DocEntry * );
+
+    void setParent(DocEntry *);
     DocEntry *parent();
-  
-    void setNextSibling( DocEntry * );
+
+    void setNextSibling(DocEntry *);
     DocEntry *nextSibling();
 
     QString khelpcenterSpecial() const;
 
     bool isSearchable();
-    
+
     void dump() const;
 
-  protected:
+protected:
     void init();
 
-  private:
+private:
     QString mName;
     QString mSearch;
     QString mIcon;
@@ -110,7 +108,6 @@ class DocEntry
     DocEntry *mParent;
     DocEntry *mNextSibling;
 };
-
 }
 
 #endif

@@ -21,7 +21,7 @@
 #define MEDIAAPPLET_H
 
 #ifdef HAVE_CONFIG_H
-        #include <config.h>
+#include <config.h>
 #endif
 
 #include <kpanelapplet.h>
@@ -33,47 +33,45 @@
 
 #include <qptrlist.h>
 #include "mediumbutton.h"
-typedef QValueList<MediumButton*> MediumButtonList;
+typedef QValueList< MediumButton * > MediumButtonList;
 
 
-class MediaApplet : public KPanelApplet
-{
-Q_OBJECT
+class MediaApplet : public KPanelApplet {
+    Q_OBJECT
 
 public:
-	MediaApplet(const QString& configFile, Type t = Normal, int actions = 0,
-	              QWidget *parent = 0, const char *name = 0);
-	~MediaApplet();
+    MediaApplet(const QString &configFile, Type t = Normal, int actions = 0, QWidget *parent = 0, const char *name = 0);
+    ~MediaApplet();
 
-	int widthForHeight(int height) const;
-	int heightForWidth(int width) const;
-	void about();
-	void preferences();
+    int widthForHeight(int height) const;
+    int heightForWidth(int width) const;
+    void about();
+    void preferences();
 
 protected:
-	void arrangeButtons();
-	void resizeEvent(QResizeEvent *e);
-	void positionChange(Position p);
-	void reloadList();
-	void loadConfig();
-	void saveConfig();
-	void mousePressEvent(QMouseEvent *e);
+    void arrangeButtons();
+    void resizeEvent(QResizeEvent *e);
+    void positionChange(Position p);
+    void reloadList();
+    void loadConfig();
+    void saveConfig();
+    void mousePressEvent(QMouseEvent *e);
 
 protected slots:
-	void slotClear();
-	void slotStarted(const KURL &url);
-	void slotCompleted();
-	void slotNewItems(const KFileItemList &entries);
-	void slotDeleteItem(KFileItem *fileItem);
-	void slotRefreshItems(const KFileItemList &entries);
+    void slotClear();
+    void slotStarted(const KURL &url);
+    void slotCompleted();
+    void slotNewItems(const KFileItemList &entries);
+    void slotDeleteItem(KFileItem *fileItem);
+    void slotRefreshItems(const KFileItemList &entries);
 
 private:
-	KDirLister *mpDirLister;
-	MediumButtonList mButtonList;
-	QStringList mExcludedTypesList;
-	QStringList mExcludedList;
-	KFileItemList mMedia;
-        int mButtonSizeSum;
+    KDirLister *mpDirLister;
+    MediumButtonList mButtonList;
+    QStringList mExcludedTypesList;
+    QStringList mExcludedList;
+    KFileItemList mMedia;
+    int mButtonSizeSum;
 };
 
 #endif

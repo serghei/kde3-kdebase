@@ -33,29 +33,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <kapplication.h>
 
-class PopupMenuTitle : public QCustomMenuItem
-{
+class PopupMenuTitle : public QCustomMenuItem {
 public:
     PopupMenuTitle(const QString &name, const QFont &font);
 
-    bool fullSpan () const { return true; }
+    bool fullSpan() const
+    {
+        return true;
+    }
 
-    void paint(QPainter* p, const QColorGroup& cg, 
-               bool /* act */, bool /*enabled*/, 
-               int x, int y, int w, int h)
+    void paint(QPainter *p, const QColorGroup &cg, bool /* act */, bool /*enabled*/, int x, int y, int w, int h)
     {
         p->save();
         QRect r(x, y, w, h);
-        kapp->style().drawPrimitive(QStyle::PE_HeaderSection, 
-                                    p, r, cg);
+        kapp->style().drawPrimitive(QStyle::PE_HeaderSection, p, r, cg);
 
-        if (!m_desktopName.isEmpty())
+        if(!m_desktopName.isEmpty())
         {
             p->setPen(cg.buttonText());
             p->setFont(m_font);
-            p->drawText(x, y, w, h,
-                        AlignCenter | SingleLine, 
-                        m_desktopName);
+            p->drawText(x, y, w, h, AlignCenter | SingleLine, m_desktopName);
         }
 
         p->setPen(cg.highlight());
@@ -71,13 +68,12 @@ public:
 
     QSize sizeHint()
     {
-      QSize size = QFontMetrics(m_font).size(AlignHCenter, m_desktopName);
-      size.setHeight(size.height() + 
-                     (kapp->style().pixelMetric(QStyle::PM_DefaultFrameWidth) * 2 + 1));
-      return size;
+        QSize size = QFontMetrics(m_font).size(AlignHCenter, m_desktopName);
+        size.setHeight(size.height() + (kapp->style().pixelMetric(QStyle::PM_DefaultFrameWidth) * 2 + 1));
+        return size;
     }
 
-  private:
+private:
     QString m_desktopName;
     QFont m_font;
 };

@@ -33,50 +33,48 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "container_applet.h"
 #include "container_button.h"
 
-class ContainerAreaLayoutIterator : public QGLayoutIterator
-{
-    public:
-        ContainerAreaLayoutIterator(ContainerAreaLayout::ItemList *l)
-            : m_idx(0), m_list(l)
-        {
-        }
+class ContainerAreaLayoutIterator : public QGLayoutIterator {
+public:
+    ContainerAreaLayoutIterator(ContainerAreaLayout::ItemList *l) : m_idx(0), m_list(l)
+    {
+    }
 
-        QLayoutItem* current()
-        {
-            return m_idx < int(m_list->count()) ? (*m_list->at(m_idx))->item : 0;
-        }
+    QLayoutItem *current()
+    {
+        return m_idx < int(m_list->count()) ? (*m_list->at(m_idx))->item : 0;
+    }
 
-        QLayoutItem* next()
-        {
-            m_idx++;
-            return current();
-        }
+    QLayoutItem *next()
+    {
+        m_idx++;
+        return current();
+    }
 
-        QLayoutItem* takeCurrent()
+    QLayoutItem *takeCurrent()
+    {
+        QLayoutItem *item = 0;
+        ContainerAreaLayout::ItemList::iterator b = m_list->at(m_idx);
+        if(b != m_list->end())
         {
-            QLayoutItem* item = 0;
-            ContainerAreaLayout::ItemList::iterator b = m_list->at(m_idx);
-            if (b != m_list->end())
-            {
-                ContainerAreaLayoutItem* layoutItem = *b;
-                item = layoutItem->item;
-                layoutItem->item = 0;
-                m_list->erase(b);
-                delete layoutItem;
-            }
-            return item;
+            ContainerAreaLayoutItem *layoutItem = *b;
+            item = layoutItem->item;
+            layoutItem->item = 0;
+            m_list->erase(b);
+            delete layoutItem;
         }
+        return item;
+    }
 
-    private:
-        int m_idx;
-        ContainerAreaLayout::ItemList* m_list;
+private:
+    int m_idx;
+    ContainerAreaLayout::ItemList *m_list;
 };
 
 
 int ContainerAreaLayoutItem::heightForWidth(int w) const
 {
-    BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
-    if (container)
+    BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
+    if(container)
     {
         return container->heightForWidth(w);
     }
@@ -88,8 +86,8 @@ int ContainerAreaLayoutItem::heightForWidth(int w) const
 
 int ContainerAreaLayoutItem::widthForHeight(int h) const
 {
-    BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
-    if (container)
+    BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
+    if(container)
     {
         return container->widthForHeight(h);
     }
@@ -101,14 +99,14 @@ int ContainerAreaLayoutItem::widthForHeight(int h) const
 
 bool ContainerAreaLayoutItem::isStretch() const
 {
-    BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
+    BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
     return container ? container->isStretch() : false;
 }
 
 double ContainerAreaLayoutItem::freeSpaceRatio() const
 {
-    BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
-    if (container)
+    BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
+    if(container)
         return kClamp(container->freeSpace(), 0.0, 1.0);
     else
         return m_freeSpaceRatio;
@@ -116,8 +114,8 @@ double ContainerAreaLayoutItem::freeSpaceRatio() const
 
 void ContainerAreaLayoutItem::setFreeSpaceRatio(double ratio)
 {
-    BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
-    if (container)
+    BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
+    if(container)
         container->setFreeSpace(ratio);
     else
         m_freeSpaceRatio = ratio;
@@ -133,14 +131,14 @@ QRect ContainerAreaLayoutItem::geometryR() const
     return m_layout->transform(geometry());
 }
 
-void ContainerAreaLayoutItem::setGeometryR(const QRect& r)
+void ContainerAreaLayoutItem::setGeometryR(const QRect &r)
 {
     setGeometry(m_layout->transform(r));
 }
 
 int ContainerAreaLayoutItem::widthForHeightR(int h) const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return widthForHeight(h);
     }
@@ -152,7 +150,7 @@ int ContainerAreaLayoutItem::widthForHeightR(int h) const
 
 int ContainerAreaLayoutItem::widthR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return geometry().width();
     }
@@ -164,7 +162,7 @@ int ContainerAreaLayoutItem::widthR() const
 
 int ContainerAreaLayoutItem::heightR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return geometry().height();
     }
@@ -176,9 +174,9 @@ int ContainerAreaLayoutItem::heightR() const
 
 int ContainerAreaLayoutItem::leftR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        if (QApplication::reverseLayout())
+        if(QApplication::reverseLayout())
             return m_layout->geometry().right() - geometry().right();
         else
             return geometry().left();
@@ -191,9 +189,9 @@ int ContainerAreaLayoutItem::leftR() const
 
 int ContainerAreaLayoutItem::rightR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        if (QApplication::reverseLayout())
+        if(QApplication::reverseLayout())
             return m_layout->geometry().right() - geometry().left();
         else
             return geometry().right();
@@ -205,29 +203,26 @@ int ContainerAreaLayoutItem::rightR() const
 }
 
 
-ContainerAreaLayout::ContainerAreaLayout(QWidget* parent)
-    : QLayout(parent),
-      m_orientation(Horizontal),
-      m_stretchEnabled(true)
+ContainerAreaLayout::ContainerAreaLayout(QWidget *parent) : QLayout(parent), m_orientation(Horizontal), m_stretchEnabled(true)
 {
 }
 
-void ContainerAreaLayout::addItem(QLayoutItem* item)
+void ContainerAreaLayout::addItem(QLayoutItem *item)
 {
     m_items.append(new ContainerAreaLayoutItem(item, this));
 }
 
-void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionPoint)
+void ContainerAreaLayout::insertIntoFreeSpace(QWidget *widget, QPoint insertionPoint)
 {
-    if (!widget)
+    if(!widget)
     {
         return;
     }
 
     add(widget);
-    ContainerAreaLayoutItem* item = m_items.last();
+    ContainerAreaLayoutItem *item = m_items.last();
 
-    if (!item)
+    if(!item)
     {
         // this should never happen as we just added the item above
         // but we do this to be safe.
@@ -235,7 +230,7 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
     }
 
     ItemList::iterator currentIt = m_items.begin();
-    if (currentIt == m_items.end())
+    if(currentIt == m_items.end())
     {
         // this shouldn't happen either, but again... we try and be safe
         return;
@@ -244,7 +239,7 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
     ItemList::iterator nextIt = m_items.begin();
     ++nextIt;
 
-    if (nextIt == m_items.end())
+    if(nextIt == m_items.end())
     {
         // first item in!
         item->setGeometryR(QRect(insertionPoint.x(), insertionPoint.y(), widget->width(), widget->height()));
@@ -252,22 +247,22 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
         return;
     }
 
-    int insPos = (orientation() == Horizontal) ? insertionPoint.x(): insertionPoint.y();
-    Item* current = *currentIt;
-    Item* next = *nextIt;
+    int insPos = (orientation() == Horizontal) ? insertionPoint.x() : insertionPoint.y();
+    Item *current = *currentIt;
+    Item *next = *nextIt;
 
-    for (; nextIt != m_items.end(); ++currentIt, ++nextIt)
+    for(; nextIt != m_items.end(); ++currentIt, ++nextIt)
     {
         next = *nextIt;
         current = *currentIt;
-        if (current == item || next == item)
+        if(current == item || next == item)
         {
             continue;
         }
 
-        if (insPos == 0)
+        if(insPos == 0)
         {
-            if (current->rightR() + 3 < next->leftR())
+            if(current->rightR() + 3 < next->leftR())
             {
                 insPos = current->rightR();
                 break;
@@ -275,22 +270,19 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
         }
         else
         {
-            if (currentIt == m_items.begin() &&
-                (current->leftR() > insPos ||
-                 (current->leftR() <= insPos) &&
-                 (current->rightR() > insPos)))
+            if(currentIt == m_items.begin() && (current->leftR() > insPos || (current->leftR() <= insPos) && (current->rightR() > insPos)))
             {
                 break;
             }
 
-            if ((current->rightR() < insPos) && (next->leftR() > insPos))
+            if((current->rightR() < insPos) && (next->leftR() > insPos))
             {
                 // Free space available at insertion point!
-                if (insPos + item->widthR() > next->leftR())
+                if(insPos + item->widthR() > next->leftR())
                 {
                     // We have overlap on the right, move to the left
                     insPos = next->leftR() - item->widthR();
-                    if (insPos < current->rightR())
+                    if(insPos < current->rightR())
                     {
                         // We have overlap on the left as well, move to the right
                         insPos = current->rightR();
@@ -301,7 +293,7 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
                 break;
             }
 
-            if ((next->leftR() <= insPos) && (next->rightR() > insPos))
+            if((next->leftR() <= insPos) && (next->rightR() > insPos))
             {
                 // Insert at the location of next
                 current = next;
@@ -316,16 +308,16 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
     item->setGeometryR(geom);
     widget->setGeometry(transform(geom)); // widget isn't shown, layout not active yet
 
-    if (current)
+    if(current)
     {
         m_items.erase(m_items.fromLast());
         ItemList::iterator insertIt = m_items.find(current);
 
-        if (insertIt == m_items.begin())
+        if(insertIt == m_items.begin())
         {
             m_items.push_front(item);
         }
-        else if (insertIt == m_items.end())
+        else if(insertIt == m_items.end())
         {
             // yes, we just removed it from the end, but
             // if we remove it afterwards and it insertIt
@@ -344,19 +336,18 @@ void ContainerAreaLayout::insertIntoFreeSpace(QWidget* widget, QPoint insertionP
 QStringList ContainerAreaLayout::listItems() const
 {
     QStringList items;
-    for (ItemList::const_iterator it = m_items.constBegin();
-         it != m_items.constEnd(); ++it)
+    for(ItemList::const_iterator it = m_items.constBegin(); it != m_items.constEnd(); ++it)
     {
-        QLayoutItem* item = (*it)->item;
-        BaseContainer* container = dynamic_cast<BaseContainer*>(item->widget());
+        QLayoutItem *item = (*it)->item;
+        BaseContainer *container = dynamic_cast< BaseContainer * >(item->widget());
 
-        if (!container)
+        if(!container)
         {
             continue;
         }
 
-        AppletContainer* applet = dynamic_cast<AppletContainer*>(container);
-        if (applet)
+        AppletContainer *applet = dynamic_cast< AppletContainer * >(container);
+        if(applet)
         {
             items.append(applet->info().desktopFile());
         }
@@ -374,9 +365,9 @@ QStringList ContainerAreaLayout::listItems() const
     return items;
 }
 
-QWidget* ContainerAreaLayout::widgetAt(int index) const
+QWidget *ContainerAreaLayout::widgetAt(int index) const
 {
-    if (index < 0 || index >= (int)m_items.count())
+    if(index < 0 || index >= (int)m_items.count())
     {
         return 0;
     }
@@ -388,7 +379,7 @@ QSize ContainerAreaLayout::sizeHint() const
 {
     const int size = KickerLib::sizeValue(KPanelExtension::SizeNormal);
 
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return QSize(widthForHeight(size), size);
     }
@@ -402,7 +393,7 @@ QSize ContainerAreaLayout::minimumSize() const
 {
     const int size = KickerLib::sizeValue(KPanelExtension::SizeTiny);
 
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return QSize(widthForHeight(size), size);
     }
@@ -417,9 +408,9 @@ QLayoutIterator ContainerAreaLayout::iterator()
     return QLayoutIterator(new ContainerAreaLayoutIterator(&m_items));
 }
 
-void ContainerAreaLayout::setGeometry(const QRect& rect)
+void ContainerAreaLayout::setGeometry(const QRect &rect)
 {
-    //RESEARCH: when can we short curcuit this?
+    // RESEARCH: when can we short curcuit this?
     //          maybe a dirty flag to be set when we have containers
     //          that needs laying out?
 
@@ -429,11 +420,11 @@ void ContainerAreaLayout::setGeometry(const QRect& rect)
     int occupiedSpace = 0;
 
     ItemList::const_iterator it = m_items.constBegin();
-    while (it != m_items.constEnd())
+    while(it != m_items.constEnd())
     {
-        ContainerAreaLayoutItem* cur  = *it;
+        ContainerAreaLayoutItem *cur = *it;
         ++it;
-        ContainerAreaLayoutItem* next = (it != m_items.constEnd()) ? *it : 0;
+        ContainerAreaLayoutItem *next = (it != m_items.constEnd()) ? *it : 0;
 
         double fs = cur->freeSpaceRatio();
         double freeSpace = fs * totalFreeSpace;
@@ -441,12 +432,12 @@ void ContainerAreaLayout::setGeometry(const QRect& rect)
 
         int w = cur->widthForHeightR(heightR());
         occupiedSpace += w;
-        if (m_stretchEnabled && cur->isStretch())
+        if(m_stretchEnabled && cur->isStretch())
         {
-            if (next)
+            if(next)
             {
                 double nfs = next->freeSpaceRatio();
-                w += int((nfs - fs)*totalFreeSpace);
+                w += int((nfs - fs) * totalFreeSpace);
             }
             else
             {
@@ -461,7 +452,7 @@ int ContainerAreaLayout::widthForHeight(int h) const
 {
     int width = 0;
     ItemList::const_iterator it = m_items.constBegin();
-    for (; it != m_items.constEnd(); ++it)
+    for(; it != m_items.constEnd(); ++it)
     {
         width += kMax(0, (*it)->widthForHeight(h));
     }
@@ -472,7 +463,7 @@ int ContainerAreaLayout::heightForWidth(int w) const
 {
     int height = 0;
     ItemList::const_iterator it = m_items.constBegin();
-    for (; it != m_items.constEnd(); ++it)
+    for(; it != m_items.constEnd(); ++it)
     {
         height += kMax(0, (*it)->heightForWidth(w));
     }
@@ -481,7 +472,7 @@ int ContainerAreaLayout::heightForWidth(int w) const
 
 void ContainerAreaLayout::setStretchEnabled(bool enable)
 {
-    if (m_stretchEnabled != enable)
+    if(m_stretchEnabled != enable)
     {
         m_stretchEnabled = enable;
         activate();
@@ -490,20 +481,20 @@ void ContainerAreaLayout::setStretchEnabled(bool enable)
 
 void ContainerAreaLayout::updateFreeSpaceValues()
 {
-    int freeSpace =
-        kMax(0, widthR() - widthForHeightR(heightR()));
+    int freeSpace = kMax(0, widthR() - widthForHeightR(heightR()));
 
     double fspace = 0;
-    for (ItemList::const_iterator it = m_items.constBegin();
-         it != m_items.constEnd();
-         ++it)
+    for(ItemList::const_iterator it = m_items.constBegin(); it != m_items.constEnd(); ++it)
     {
         int distance = distanceToPreviousItem(it);
-        if (distance < 0) distance = 0;
+        if(distance < 0)
+            distance = 0;
         fspace += distance;
-        double ssf = ( freeSpace == 0 ? 0 : fspace/freeSpace );
-        if (ssf > 1) ssf = 1;
-        if (ssf < 0) ssf = 0;
+        double ssf = (freeSpace == 0 ? 0 : fspace / freeSpace);
+        if(ssf > 1)
+            ssf = 1;
+        if(ssf < 0)
+            ssf = 0;
         (*it)->setFreeSpaceRatio(ssf);
     }
 }
@@ -512,47 +503,45 @@ int ContainerAreaLayout::distanceToPreviousItem(ItemList::const_iterator it) con
 {
     assert(it != m_items.constEnd());
 
-    ContainerAreaLayoutItem* cur  = *it;
+    ContainerAreaLayoutItem *cur = *it;
     --it;
-    ContainerAreaLayoutItem* prev = (it != m_items.constEnd()) ? *it : 0;
+    ContainerAreaLayoutItem *prev = (it != m_items.constEnd()) ? *it : 0;
 
-    return prev ? cur->leftR() - prev->leftR() - prev->widthForHeightR(heightR()) :
-                  cur->leftR() - leftR();
+    return prev ? cur->leftR() - prev->leftR() - prev->widthForHeightR(heightR()) : cur->leftR() - leftR();
 }
 
-void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
+void ContainerAreaLayout::moveContainerSwitch(QWidget *container, int distance)
 {
-    const bool horizontal    = orientation() == Horizontal;
+    const bool horizontal = orientation() == Horizontal;
     const bool reverseLayout = QApplication::reverseLayout();
 
-    if (horizontal && reverseLayout)
-        distance = - distance;
+    if(horizontal && reverseLayout)
+        distance = -distance;
 
     const bool forward = distance > 0;
 
     // Get the iterator 'it' pointing to 'moving'.
     ItemList::const_iterator it = m_items.constBegin();
-    while (it != m_items.constEnd() && (*it)->item->widget() != container)
+    while(it != m_items.constEnd() && (*it)->item->widget() != container)
     {
         ++it;
     }
 
-    if (it == m_items.constEnd())
+    if(it == m_items.constEnd())
     {
         return;
     }
 
-    ContainerAreaLayoutItem* moving = *it;
+    ContainerAreaLayoutItem *moving = *it;
     forward ? ++it : --it;
-    ContainerAreaLayoutItem* next = (it != m_items.constEnd()) ? *it : 0;
-    ContainerAreaLayoutItem* last = moving;
+    ContainerAreaLayoutItem *next = (it != m_items.constEnd()) ? *it : 0;
+    ContainerAreaLayoutItem *last = moving;
 
-    while (next)
+    while(next)
     {
         // Calculate the position and width of the virtual container
         // containing 'moving' and 'next'.
-        int tpos = forward ? next->leftR() - moving->widthR()
-                           : next->leftR();
+        int tpos = forward ? next->leftR() - moving->widthR() : next->leftR();
         int tsize = moving->widthR() + next->widthR();
 
         // Determine the middle of the containers.
@@ -561,13 +550,12 @@ void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
 
         // Check if the middle of 'moving' has moved past the middle of the
         // virtual container.
-        if (!forward && movingMiddle > tmiddle
-          || forward && movingMiddle < tmiddle)
+        if(!forward && movingMiddle > tmiddle || forward && movingMiddle < tmiddle)
             break;
 
         // Move 'next' to the other side of 'moving'.
         QRect geom = next->geometryR();
-        if (forward)
+        if(forward)
             geom.moveLeft(geom.left() - moving->widthR());
         else
             geom.moveLeft(geom.left() + moving->widthR());
@@ -581,19 +569,18 @@ void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
     }
 
     int newPos = moving->leftR() + distance;
-    if (last != moving)
+    if(last != moving)
     {
         // The case that moving has switched position with at least one other container.
-        newPos = forward ? kMax(newPos, last->rightR() + 1)
-                         : kMin(newPos, last->leftR() - moving->widthR());
+        newPos = forward ? kMax(newPos, last->rightR() + 1) : kMin(newPos, last->leftR() - moving->widthR());
 
         // Move 'moving' to its new position in the container list.
         ItemList::iterator itMoving = m_items.find(moving);
 
-        if (itMoving != m_items.end())
+        if(itMoving != m_items.end())
         {
             ItemList::iterator itLast = itMoving;
-            if (forward)
+            if(forward)
             {
                 ++itLast;
                 ++itLast;
@@ -605,9 +592,9 @@ void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
 
             m_items.erase(itMoving);
 
-            if (itLast == m_items.end())
+            if(itLast == m_items.end())
             {
-                if (forward)
+                if(forward)
                 {
                     m_items.append(moving);
                 }
@@ -622,11 +609,10 @@ void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
             }
         }
     }
-    else if (next)
+    else if(next)
     {
         // Make sure that the moving container will not overlap the next one.
-        newPos = forward ? kMin(newPos, next->leftR() - moving->widthR())
-                         : kMax(newPos, next->rightR() + 1);
+        newPos = forward ? kMin(newPos, next->leftR() - moving->widthR()) : kMax(newPos, next->rightR() + 1);
     }
 
     // Move the container to its new position and prevent it from moving outside the panel.
@@ -637,48 +623,46 @@ void ContainerAreaLayout::moveContainerSwitch(QWidget* container, int distance)
 
     // HACK - since the menuapplet is not movable by the user, make sure it's always left-aligned
     ItemList::const_iterator prev = m_items.constEnd();
-    for( ItemList::const_iterator it = m_items.constBegin();
-         it != m_items.constEnd();
-         ( prev = it ), ++it )
+    for(ItemList::const_iterator it = m_items.constBegin(); it != m_items.constEnd(); (prev = it), ++it)
     {
-        if( BaseContainer* container = dynamic_cast<BaseContainer*>((*it)->item->widget()))
-            if(AppletContainer* applet = dynamic_cast<AppletContainer*>(container))
-                if( applet->info().desktopFile() == "menuapplet.desktop" )
+        if(BaseContainer *container = dynamic_cast< BaseContainer * >((*it)->item->widget()))
+            if(AppletContainer *applet = dynamic_cast< AppletContainer * >(container))
+                if(applet->info().desktopFile() == "menuapplet.desktop")
                 {
                     QRect geom = (*it)->geometryR();
-                    if( prev != m_items.constEnd())
-                        geom.moveLeft( (*prev)->rightR() + 1 );
+                    if(prev != m_items.constEnd())
+                        geom.moveLeft((*prev)->rightR() + 1);
                     else
-                        geom.moveLeft( 0 );
-                    (*it)->setGeometryR( geom );
+                        geom.moveLeft(0);
+                    (*it)->setGeometryR(geom);
                 }
     }
 
     updateFreeSpaceValues();
 }
 
-int ContainerAreaLayout::moveContainerPush(QWidget* a, int distance)
+int ContainerAreaLayout::moveContainerPush(QWidget *a, int distance)
 {
-    const bool horizontal    = orientation() == Horizontal;
+    const bool horizontal = orientation() == Horizontal;
     const bool reverseLayout = QApplication::reverseLayout();
 
     // Get the iterator 'it' pointing to the layoutitem representing 'a'.
     ItemList::const_iterator it = m_items.constBegin();
-    while (it != m_items.constEnd() && (*it)->item->widget() != a)
+    while(it != m_items.constEnd() && (*it)->item->widget() != a)
     {
         ++it;
     }
 
-    if (it != m_items.constEnd())
+    if(it != m_items.constEnd())
     {
-        if (horizontal && reverseLayout)
+        if(horizontal && reverseLayout)
         {
             distance = -distance;
         }
 
         int retVal = moveContainerPushRecursive(it, distance);
         updateFreeSpaceValues();
-        if (horizontal && reverseLayout)
+        if(horizontal && reverseLayout)
         {
             retVal = -retVal;
         }
@@ -690,36 +674,31 @@ int ContainerAreaLayout::moveContainerPush(QWidget* a, int distance)
     }
 }
 
-int ContainerAreaLayout::moveContainerPushRecursive(ItemList::const_iterator it,
-                                                    int distance)
+int ContainerAreaLayout::moveContainerPushRecursive(ItemList::const_iterator it, int distance)
 {
-    if (distance == 0)
+    if(distance == 0)
         return 0;
 
     const bool forward = distance > 0;
 
     int available; // Space available for the container to move.
     int moved;     // The actual distance the container will move.
-    ContainerAreaLayoutItem* cur  = *it;
+    ContainerAreaLayoutItem *cur = *it;
     forward ? ++it : --it;
-    ContainerAreaLayoutItem* next = (it != m_items.constEnd()) ? *it : 0;
+    ContainerAreaLayoutItem *next = (it != m_items.constEnd()) ? *it : 0;
 
-    if (!next)
+    if(!next)
     {
-        available = forward ? rightR() - cur->rightR()
-                            : -cur->leftR();
+        available = forward ? rightR() - cur->rightR() : -cur->leftR();
     }
     else
     {
-        available = forward ? next->leftR()  - cur->rightR() - 1
-                            : next->rightR() - cur->leftR()  + 1;
+        available = forward ? next->leftR() - cur->rightR() - 1 : next->rightR() - cur->leftR() + 1;
 
-        if (!forward && distance < available
-          || forward && distance > available)
+        if(!forward && distance < available || forward && distance > available)
             available += moveContainerPushRecursive(it, distance - available);
     }
-    moved = forward ? kMin(distance, available)
-                    : kMax(distance, available);
+    moved = forward ? kMin(distance, available) : kMax(distance, available);
 
     QRect geom = cur->geometryR();
     geom.moveLeft(geom.left() + moved);
@@ -728,11 +707,11 @@ int ContainerAreaLayout::moveContainerPushRecursive(ItemList::const_iterator it,
     return moved;
 }
 
-QRect ContainerAreaLayout::transform(const QRect& r) const
+QRect ContainerAreaLayout::transform(const QRect &r) const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
-        if (QApplication::reverseLayout())
+        if(QApplication::reverseLayout())
         {
             QRect t = r;
             t.moveLeft(geometry().right() - r.right());
@@ -751,7 +730,7 @@ QRect ContainerAreaLayout::transform(const QRect& r) const
 
 int ContainerAreaLayout::widthForHeightR(int h) const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return widthForHeight(h);
     }
@@ -763,7 +742,7 @@ int ContainerAreaLayout::widthForHeightR(int h) const
 
 int ContainerAreaLayout::widthR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return geometry().width();
     }
@@ -775,7 +754,7 @@ int ContainerAreaLayout::widthR() const
 
 int ContainerAreaLayout::heightR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
     {
         return geometry().height();
     }
@@ -787,7 +766,7 @@ int ContainerAreaLayout::heightR() const
 
 int ContainerAreaLayout::leftR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
         return geometry().left();
     else
         return geometry().top();
@@ -795,9 +774,8 @@ int ContainerAreaLayout::leftR() const
 
 int ContainerAreaLayout::rightR() const
 {
-    if (orientation() == Horizontal)
+    if(orientation() == Horizontal)
         return geometry().right();
     else
         return geometry().bottom();
 }
-

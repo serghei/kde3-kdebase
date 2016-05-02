@@ -29,50 +29,52 @@
 
 struct StatInfo
 {
-   StatInfo():name(""),time(0),size(0),mode(0),freeSpace(0),isDir(false),isValid(false) {;}
-   QString name;
-   time_t time;
-   int size;
-   int mode;
-   int freeSpace;
-   bool isDir:1;
-   bool isValid:1;
+    StatInfo() : name(""), time(0), size(0), mode(0), freeSpace(0), isDir(false), isValid(false)
+    {
+        ;
+    }
+    QString name;
+    time_t time;
+    int size;
+    int mode;
+    int freeSpace;
+    bool isDir : 1;
+    bool isValid : 1;
 };
 
 
-class FloppyProtocol : public KIO::SlaveBase
-{
-   public:
-      FloppyProtocol (const QCString &pool, const QCString &app );
-      virtual ~FloppyProtocol();
+class FloppyProtocol : public KIO::SlaveBase {
+public:
+    FloppyProtocol(const QCString &pool, const QCString &app);
+    virtual ~FloppyProtocol();
 
-      virtual void listDir( const KURL& url);
-      virtual void stat( const KURL & url);
-      virtual void mkdir( const KURL& url, int);
-      virtual void del( const KURL& url, bool isfile);
-      virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
-      virtual void get( const KURL& url );
-      virtual void put( const KURL& url, int _mode,bool overwrite, bool _resume );
-      //virtual void copy( const KURL& src, const KURL &dest, int, bool overwrite );
-   protected:
-      Program *m_mtool;
-      int readStdout();
-      int readStderr();
+    virtual void listDir(const KURL &url);
+    virtual void stat(const KURL &url);
+    virtual void mkdir(const KURL &url, int);
+    virtual void del(const KURL &url, bool isfile);
+    virtual void rename(const KURL &src, const KURL &dest, bool overwrite);
+    virtual void get(const KURL &url);
+    virtual void put(const KURL &url, int _mode, bool overwrite, bool _resume);
+    // virtual void copy( const KURL& src, const KURL &dest, int, bool overwrite );
+protected:
+    Program *m_mtool;
+    int readStdout();
+    int readStderr();
 
-      StatInfo createStatInfo(const QString line, bool makeStat=false, const QString& dirName="");
-      void createUDSEntry(const StatInfo& info, KIO::UDSEntry& entry);
-      StatInfo _stat(const KURL& _url);
-      int freeSpace(const KURL& url);
+    StatInfo createStatInfo(const QString line, bool makeStat = false, const QString &dirName = "");
+    void createUDSEntry(const StatInfo &info, KIO::UDSEntry &entry);
+    StatInfo _stat(const KURL &_url);
+    int freeSpace(const KURL &url);
 
-      bool stopAfterError(const KURL& url, const QString& drive);
-      void errorMissingMToolsProgram(const QString& name);
+    bool stopAfterError(const KURL &url, const QString &drive);
+    void errorMissingMToolsProgram(const QString &name);
 
-      void clearBuffers();
-      void terminateBuffers();
-      char *m_stdoutBuffer;
-      char *m_stderrBuffer;
-      int m_stdoutSize;
-      int m_stderrSize;
+    void clearBuffers();
+    void terminateBuffers();
+    char *m_stdoutBuffer;
+    char *m_stderrBuffer;
+    int m_stdoutSize;
+    int m_stderrSize;
 };
 
 #endif

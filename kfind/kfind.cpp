@@ -42,90 +42,88 @@
 
 #include "kfind.moc"
 
-Kfind::Kfind(QWidget *parent, const char *name)
-  : QWidget( parent, name )
+Kfind::Kfind(QWidget *parent, const char *name) : QWidget(parent, name)
 {
-  kdDebug() << "Kfind::Kfind " << this << endl;
-  QBoxLayout * mTopLayout = new QBoxLayout( this, QBoxLayout::LeftToRight,
-                                            KDialog::marginHint(), KDialog::spacingHint() );
+    kdDebug() << "Kfind::Kfind " << this << endl;
+    QBoxLayout *mTopLayout = new QBoxLayout(this, QBoxLayout::LeftToRight, KDialog::marginHint(), KDialog::spacingHint());
 
-  // create tabwidget
-  tabWidget = new KfindTabWidget( this );
-  mTopLayout->addWidget(tabWidget);
+    // create tabwidget
+    tabWidget = new KfindTabWidget(this);
+    mTopLayout->addWidget(tabWidget);
 
-  /*
-   * This is ugly.  Might be a KSeparator bug, but it makes a small black
-   * pixel for me which is visually distracting (GS).
-  // create separator
-  KSeparator * mActionSep = new KSeparator( this );
-  mActionSep->setFocusPolicy( QWidget::ClickFocus );
-  mActionSep->setOrientation( QFrame::VLine );
-  mTopLayout->addWidget(mActionSep);
-  */
+    /*
+     * This is ugly.  Might be a KSeparator bug, but it makes a small black
+     * pixel for me which is visually distracting (GS).
+    // create separator
+    KSeparator * mActionSep = new KSeparator( this );
+    mActionSep->setFocusPolicy( QWidget::ClickFocus );
+    mActionSep->setOrientation( QFrame::VLine );
+    mTopLayout->addWidget(mActionSep);
+    */
 
-  // create button box
-  QVBox * mButtonBox = new QVBox( this );
-  QVBoxLayout *lay = (QVBoxLayout*)mButtonBox->layout();
-  lay->addStretch(1);
-  mTopLayout->addWidget(mButtonBox);
+    // create button box
+    QVBox *mButtonBox = new QVBox(this);
+    QVBoxLayout *lay = (QVBoxLayout *)mButtonBox->layout();
+    lay->addStretch(1);
+    mTopLayout->addWidget(mButtonBox);
 
-  mSearch = new KPushButton( KGuiItem(i18n("&Find"), "find"), mButtonBox );
-  mButtonBox->setSpacing( (tabWidget->sizeHint().height()-4*mSearch->sizeHint().height()) / 4);
-  connect( mSearch, SIGNAL(clicked()), this, SLOT( startSearch() ) );
-  mStop = new KPushButton( KGuiItem(i18n("Stop"), "stop"), mButtonBox );
-  connect( mStop, SIGNAL(clicked()), this, SLOT( stopSearch() ) );
-  mSave = new KPushButton( KStdGuiItem::saveAs(), mButtonBox );
-  connect( mSave, SIGNAL(clicked()), this, SLOT( saveResults() ) );
+    mSearch = new KPushButton(KGuiItem(i18n("&Find"), "find"), mButtonBox);
+    mButtonBox->setSpacing((tabWidget->sizeHint().height() - 4 * mSearch->sizeHint().height()) / 4);
+    connect(mSearch, SIGNAL(clicked()), this, SLOT(startSearch()));
+    mStop = new KPushButton(KGuiItem(i18n("Stop"), "stop"), mButtonBox);
+    connect(mStop, SIGNAL(clicked()), this, SLOT(stopSearch()));
+    mSave = new KPushButton(KStdGuiItem::saveAs(), mButtonBox);
+    connect(mSave, SIGNAL(clicked()), this, SLOT(saveResults()));
 
-  KPushButton * mClose = new KPushButton( KStdGuiItem::close(), mButtonBox );
-  connect( mClose, SIGNAL(clicked()), this, SIGNAL( destroyMe() ) );
+    KPushButton *mClose = new KPushButton(KStdGuiItem::close(), mButtonBox);
+    connect(mClose, SIGNAL(clicked()), this, SIGNAL(destroyMe()));
 
-  // react to search requests from widget
-  connect( tabWidget, SIGNAL(startSearch()), this, SLOT( startSearch() ) );
+    // react to search requests from widget
+    connect(tabWidget, SIGNAL(startSearch()), this, SLOT(startSearch()));
 
-  mSearch->setEnabled(true); // Enable "Search"
-  mStop->setEnabled(false);  // Disable "Stop"
-  mSave->setEnabled(false);  // Disable "Save..."
+    mSearch->setEnabled(true); // Enable "Search"
+    mStop->setEnabled(false);  // Disable "Stop"
+    mSave->setEnabled(false);  // Disable "Save..."
 
-  dirlister=new KDirLister();
+    dirlister = new KDirLister();
 }
 
 Kfind::~Kfind()
 {
-  stopSearch();
-  dirlister->stop();
-  delete dirlister;
-  kdDebug() << "Kfind::~Kfind" << endl;
+    stopSearch();
+    dirlister->stop();
+    delete dirlister;
+    kdDebug() << "Kfind::~Kfind" << endl;
 }
 
-void Kfind::setURL( const KURL &url )
+void Kfind::setURL(const KURL &url)
 {
-  tabWidget->setURL( url );
+    tabWidget->setURL(url);
 }
 
 void Kfind::startSearch()
 {
-  tabWidget->setQuery(query);
-  emit started();
+    tabWidget->setQuery(query);
+    emit started();
 
-  //emit resultSelected(false);
-  //emit haveResults(false);
+    // emit resultSelected(false);
+    // emit haveResults(false);
 
-  mSearch->setEnabled(false); // Disable "Search"
-  mStop->setEnabled(true);  // Enable "Stop"
-  mSave->setEnabled(false);  // Disable "Save..."
+    mSearch->setEnabled(false); // Disable "Search"
+    mStop->setEnabled(true);    // Enable "Stop"
+    mSave->setEnabled(false);   // Disable "Save..."
 
-  tabWidget->beginSearch();
+    tabWidget->beginSearch();
 
-  dirlister->openURL(KURL(tabWidget->dirBox->currentText().stripWhiteSpace()));
+    dirlister->openURL(KURL(tabWidget->dirBox->currentText().stripWhiteSpace()));
 
-  query->start();
+    query->start();
 }
 
 void Kfind::stopSearch()
 {
-  // will call KFindPart::slotResult, which calls searchFinished here
-  query->kill();
+    // will call KFindPart::slotResult, which calls searchFinished here
+    query->kill();
 }
 
 /*
@@ -145,48 +143,48 @@ void Kfind::newSearch()
 
 void Kfind::searchFinished()
 {
-  mSearch->setEnabled(true); // Enable "Search"
-  mStop->setEnabled(false);  // Disable "Stop"
-  // ## TODO mSave->setEnabled(true);  // Enable "Save..."
+    mSearch->setEnabled(true); // Enable "Search"
+    mStop->setEnabled(false);  // Disable "Stop"
+    // ## TODO mSave->setEnabled(true);  // Enable "Save..."
 
-  tabWidget->endSearch();
-  setFocus();
+    tabWidget->endSearch();
+    setFocus();
 }
 
 
 void Kfind::saveResults()
 {
-  // TODO
+    // TODO
 }
 
 void Kfind::setFocus()
 {
-  tabWidget->setFocus();
+    tabWidget->setFocus();
 }
 
-void Kfind::saveState( QDataStream *stream )
+void Kfind::saveState(QDataStream *stream)
 {
-  query->kill();
-  *stream << tabWidget->nameBox->currentText();
-  *stream << tabWidget->dirBox->currentText();
-  *stream << tabWidget->typeBox->currentItem();
-  *stream << tabWidget->textEdit->text();
-  *stream << (int)( tabWidget->subdirsCb->isChecked() ? 0 : 1 );
+    query->kill();
+    *stream << tabWidget->nameBox->currentText();
+    *stream << tabWidget->dirBox->currentText();
+    *stream << tabWidget->typeBox->currentItem();
+    *stream << tabWidget->textEdit->text();
+    *stream << (int)(tabWidget->subdirsCb->isChecked() ? 0 : 1);
 }
 
-void Kfind::restoreState( QDataStream *stream )
+void Kfind::restoreState(QDataStream *stream)
 {
-  QString namesearched, dirsearched,containing;
-  int typeIdx;
-  int subdirs;
-  *stream >> namesearched;
-  *stream >> dirsearched;
-  *stream >> typeIdx;
-  *stream >> containing;
-  *stream >> subdirs;
-  tabWidget->nameBox->insertItem( namesearched, 0);
-  tabWidget->dirBox->insertItem ( dirsearched, 0);
-  tabWidget->typeBox->setCurrentItem(typeIdx);
-  tabWidget->textEdit->setText ( containing );
-  tabWidget->subdirsCb->setChecked( ( subdirs==0 ? true : false ));
+    QString namesearched, dirsearched, containing;
+    int typeIdx;
+    int subdirs;
+    *stream >> namesearched;
+    *stream >> dirsearched;
+    *stream >> typeIdx;
+    *stream >> containing;
+    *stream >> subdirs;
+    tabWidget->nameBox->insertItem(namesearched, 0);
+    tabWidget->dirBox->insertItem(dirsearched, 0);
+    tabWidget->typeBox->setCurrentItem(typeIdx);
+    tabWidget->textEdit->setText(containing);
+    tabWidget->subdirsCb->setChecked((subdirs == 0 ? true : false));
 }

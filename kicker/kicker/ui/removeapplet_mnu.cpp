@@ -32,9 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "removeapplet_mnu.h"
 #include "removeapplet_mnu.moc"
 
-PanelRemoveAppletMenu::PanelRemoveAppletMenu(ContainerArea* cArea,
-                                             QWidget *parent,
-                                             const char *name)
+PanelRemoveAppletMenu::PanelRemoveAppletMenu(ContainerArea *cArea, QWidget *parent, const char *name)
     : QPopupMenu(parent, name), m_containerArea(cArea)
 {
     connect(this, SIGNAL(activated(int)), SLOT(slotExec(int)));
@@ -46,39 +44,33 @@ void PanelRemoveAppletMenu::slotAboutToShow()
     int id = 0;
 
     clear();
-    m_containers = m_containerArea->containers("Applet") +
-                   m_containerArea->containers("Special Button");
+    m_containers = m_containerArea->containers("Applet") + m_containerArea->containers("Special Button");
 
-    QValueList<PanelMenuItemInfo> items;
+    QValueList< PanelMenuItemInfo > items;
 
-    for (BaseContainer::List::const_iterator it = m_containers.constBegin();
-         it != m_containers.constEnd();)
+    for(BaseContainer::List::const_iterator it = m_containers.constBegin(); it != m_containers.constEnd();)
     {
-        BaseContainer* container = *it;
-        if (container->isImmutable())
+        BaseContainer *container = *it;
+        if(container->isImmutable())
         {
             ++it;
             m_containers.remove(container);
             continue;
         }
 
-        items.append(PanelMenuItemInfo(container->icon(),
-                                       container->visibleName().replace("&", "&&"),
-                                       id));
+        items.append(PanelMenuItemInfo(container->icon(), container->visibleName().replace("&", "&&"), id));
         ++id;
         ++it;
     }
 
     qHeapSort(items);
 
-    for (QValueList<PanelMenuItemInfo>::iterator it = items.begin();
-         it != items.end();
-         ++it)
+    for(QValueList< PanelMenuItemInfo >::iterator it = items.begin(); it != items.end(); ++it)
     {
         (*it).plug(this);
     }
 
-    if (m_containers.count() > 1)
+    if(m_containers.count() > 1)
     {
         insertSeparator();
         insertItem(i18n("All"), this, SLOT(slotRemoveAll()), 0, id);
@@ -87,7 +79,7 @@ void PanelRemoveAppletMenu::slotAboutToShow()
 
 void PanelRemoveAppletMenu::slotExec(int id)
 {
-    if (m_containers.at(id) != m_containers.end())
+    if(m_containers.at(id) != m_containers.end())
     {
         m_containerArea->removeContainer(*m_containers.at(id));
     }

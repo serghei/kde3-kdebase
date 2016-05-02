@@ -34,22 +34,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 class TaskBar;
 
-typedef QValueList<QPixmap*> PixmapList;
+typedef QValueList< QPixmap * > PixmapList;
 
-class TaskContainer : public QToolButton, public KickerTip::Client
-{
+class TaskContainer : public QToolButton, public KickerTip::Client {
     Q_OBJECT
 
 public:
-    typedef QValueList<TaskContainer*> List;
-    typedef QValueList<TaskContainer*>::iterator Iterator;
+    typedef QValueList< TaskContainer * > List;
+    typedef QValueList< TaskContainer * >::iterator Iterator;
 
-    TaskContainer(Task::Ptr, TaskBar*, QWidget *parent = 0, const char *name = 0);
-    TaskContainer(Startup::Ptr, PixmapList&, TaskBar*,
-                  QWidget *parent = 0, const char *name = 0);
+    TaskContainer(Task::Ptr, TaskBar *, QWidget *parent = 0, const char *name = 0);
+    TaskContainer(Startup::Ptr, PixmapList &, TaskBar *, QWidget *parent = 0, const char *name = 0);
     virtual ~TaskContainer();
 
-    void setArrowType( Qt::ArrowType at );
+    void setArrowType(Qt::ArrowType at);
 
     void init();
 
@@ -70,43 +68,49 @@ public:
     int desktop();
     QString name();
 
-    virtual QSizePolicy sizePolicy () const;
+    virtual QSizePolicy sizePolicy() const;
 
-    void publishIconGeometry( QPoint );
-    void desktopChanged( int );
+    void publishIconGeometry(QPoint);
+    void desktopChanged(int);
     void windowChanged(Task::Ptr);
     void settingsChanged();
-    bool eventFilter( QObject *o, QEvent *e );
+    bool eventFilter(QObject *o, QEvent *e);
 
-    int taskCount() const { return tasks.count(); }
-    int filteredTaskCount() const { return m_filteredTasks.count(); }
+    int taskCount() const
+    {
+        return tasks.count();
+    }
+    int filteredTaskCount() const
+    {
+        return m_filteredTasks.count();
+    }
 
-    bool activateNextTask( bool forward, bool& forcenext );
+    bool activateNextTask(bool forward, bool &forcenext);
 
-    void updateKickerTip(KickerTip::Data&);
+    void updateKickerTip(KickerTip::Data &);
 
     void finish();
-    
+
     void setBackground();
-    
+
 public slots:
     void updateNow();
 
 signals:
-    void showMe(TaskContainer*);
+    void showMe(TaskContainer *);
 
 protected:
-    void paintEvent(QPaintEvent*);
-    void drawButton(QPainter*);
-    void resizeEvent(QResizeEvent*);
-    void mousePressEvent(QMouseEvent*);
-    void mouseReleaseEvent(QMouseEvent*);
-    void mouseMoveEvent(QMouseEvent*);
-    void dragEnterEvent(QDragEnterEvent*);
-    void dragLeaveEvent(QDragLeaveEvent*);
-    void enterEvent(QEvent*);
-    void leaveEvent(QEvent*);
-    bool startDrag(const QPoint& pos);
+    void paintEvent(QPaintEvent *);
+    void drawButton(QPainter *);
+    void resizeEvent(QResizeEvent *);
+    void mousePressEvent(QMouseEvent *);
+    void mouseReleaseEvent(QMouseEvent *);
+    void mouseMoveEvent(QMouseEvent *);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragLeaveEvent(QDragLeaveEvent *);
+    void enterEvent(QEvent *);
+    void leaveEvent(QEvent *);
+    bool startDrag(const QPoint &pos);
     void stopTimers();
 
     void performAction(int);
@@ -125,29 +129,32 @@ protected slots:
 
 private:
     void checkAttention(const Task::Ptr changed_task = NULL);
-    QString                     sid;
-    QTimer                      animationTimer;
-    QTimer                      dragSwitchTimer;
-    QTimer                      attentionTimer;
-    QTimer                      m_paintEventCompressionTimer;
-    int                         currentFrame;
-    PixmapList                  frames;
-    int                         attentionState;
-    QRect                       iconRect;
-    QPixmap                     animBg;
-    Task::List                  tasks;
-    Task::List                  m_filteredTasks;
-    Task::Ptr                   lastActivated;
-    QPopupMenu*                 m_menu;
-    Startup::Ptr                m_startup;
-    ArrowType                   arrowType;
-    TaskBar*                    taskBar;
-    bool                        discardNextMouseEvent;
-    bool                        aboutToActivate;
-    bool                        m_mouseOver;
-    bool                        m_paintEventCompression;
-    enum                        { ATTENTION_BLINK_TIMEOUT = 4 };
-    QPoint                      m_dragStartPos;
+    QString sid;
+    QTimer animationTimer;
+    QTimer dragSwitchTimer;
+    QTimer attentionTimer;
+    QTimer m_paintEventCompressionTimer;
+    int currentFrame;
+    PixmapList frames;
+    int attentionState;
+    QRect iconRect;
+    QPixmap animBg;
+    Task::List tasks;
+    Task::List m_filteredTasks;
+    Task::Ptr lastActivated;
+    QPopupMenu *m_menu;
+    Startup::Ptr m_startup;
+    ArrowType arrowType;
+    TaskBar *taskBar;
+    bool discardNextMouseEvent;
+    bool aboutToActivate;
+    bool m_mouseOver;
+    bool m_paintEventCompression;
+    enum
+    {
+        ATTENTION_BLINK_TIMEOUT = 4
+    };
+    QPoint m_dragStartPos;
 };
 
 #endif

@@ -23,15 +23,14 @@
 #include <qlistbox.h>
 #include <qstring.h>
 
-class MimetypeListBoxItem : public QListBoxText
-{
+class MimetypeListBoxItem : public QListBoxText {
 public:
-	MimetypeListBoxItem(const QString &mimetype, QListBox *parent);
+    MimetypeListBoxItem(const QString &mimetype, QListBox *parent);
 
-	const QString &mimetype() const;
+    const QString &mimetype() const;
 
 private:
-	QString m_mimetype;
+    QString m_mimetype;
 };
 
 #endif

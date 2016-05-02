@@ -37,13 +37,8 @@
 #include "menutab_impl.h"
 #include "menutab_impl.moc"
 
-kSubMenuItem::kSubMenuItem(QListView* parent,
-                           const QString& visibleName,
-                           const QString& desktopFile,
-                           const QPixmap& icon,
-                           bool checked)
-    : QCheckListItem(parent, visibleName, QCheckListItem::CheckBox),
-      m_desktopFile(desktopFile)
+kSubMenuItem::kSubMenuItem(QListView *parent, const QString &visibleName, const QString &desktopFile, const QPixmap &icon, bool checked)
+    : QCheckListItem(parent, visibleName, QCheckListItem::CheckBox), m_desktopFile(desktopFile)
 {
     setPixmap(0, icon);
     setOn(checked);
@@ -59,74 +54,61 @@ void kSubMenuItem::stateChange(bool state)
     emit toggled(state);
 }
 
-MenuTab::MenuTab( QWidget *parent, const char* name )
-  : MenuTabBase (parent, name),
-    m_bookmarkMenu(0),
-    m_quickBrowserMenu(0)
+MenuTab::MenuTab(QWidget *parent, const char *name) : MenuTabBase(parent, name), m_bookmarkMenu(0), m_quickBrowserMenu(0)
 {
     // connections
     connect(m_editKMenuButton, SIGNAL(clicked()), SLOT(launchMenuEditor()));
 
-    m_browserGroupLayout->setColStretch( 1, 1 );
-    m_pRecentOrderGroupLayout->setColStretch( 1, 1 );
+    m_browserGroupLayout->setColStretch(1, 1);
+    m_pRecentOrderGroupLayout->setColStretch(1, 1);
 }
 
 void MenuTab::load()
 {
-   load( false );
+    load(false);
 }
 
-void MenuTab::load( bool useDefaults )
+void MenuTab::load(bool useDefaults)
 {
     KSharedConfig::Ptr c = KSharedConfig::openConfig(KickerConfig::the()->configName());
-    
-    c->setReadDefaults( useDefaults );
+
+    c->setReadDefaults(useDefaults);
 
     c->setGroup("menus");
 
     m_subMenus->clear();
 
     // show the bookmark menu?
-    m_bookmarkMenu = new kSubMenuItem(m_subMenus,
-                                      i18n("Bookmarks"),
-                                      QString::null,
-                                      SmallIcon("bookmark"),
-                                      c->readBoolEntry("UseBookmarks", false));
+    m_bookmarkMenu = new kSubMenuItem(m_subMenus, i18n("Bookmarks"), QString::null, SmallIcon("bookmark"), c->readBoolEntry("UseBookmarks", false));
     connect(m_bookmarkMenu, SIGNAL(toggled(bool)), SIGNAL(changed()));
 
     // show the quick menus menu?
-    m_quickBrowserMenu = new kSubMenuItem(m_subMenus,
-                                          i18n("Quick Browser"),
-                                          QString::null,
-                                          SmallIcon("kdisknav"),
-                                          c->readBoolEntry("UseBrowser", false));
+    m_quickBrowserMenu =
+        new kSubMenuItem(m_subMenus, i18n("Quick Browser"), QString::null, SmallIcon("kdisknav"), c->readBoolEntry("UseBrowser", false));
     connect(m_quickBrowserMenu, SIGNAL(toggled(bool)), SIGNAL(changed()));
 
     QStringList ext_default;
-    ext_default << "prefmenu.desktop" << "systemmenu.desktop";
+    ext_default << "prefmenu.desktop"
+                << "systemmenu.desktop";
     QStringList ext = c->readListEntry("Extensions", ext_default);
     QStringList dirs = KGlobal::dirs()->findDirs("data", "kicker/menuext");
-    kSubMenuItem* menuItem(0);
-    for (QStringList::ConstIterator dit=dirs.begin(); dit!=dirs.end(); ++dit)
+    kSubMenuItem *menuItem(0);
+    for(QStringList::ConstIterator dit = dirs.begin(); dit != dirs.end(); ++dit)
     {
         QDir d(*dit, "*.desktop");
         QStringList av = d.entryList();
-        for (QStringList::ConstIterator it=av.begin(); it!=av.end(); ++it)
+        for(QStringList::ConstIterator it = av.begin(); it != av.end(); ++it)
         {
             KDesktopFile df(d.absFilePath(*it), true);
-            menuItem = new kSubMenuItem(m_subMenus,
-                                        df.readName(),
-                                        *it,
-                                        SmallIcon(df.readIcon()),
-                                        qFind(ext.begin(), ext.end(), *it) != ext.end());
+            menuItem = new kSubMenuItem(m_subMenus, df.readName(), *it, SmallIcon(df.readIcon()), qFind(ext.begin(), ext.end(), *it) != ext.end());
             connect(menuItem, SIGNAL(toggled(bool)), SIGNAL(changed()));
         }
     }
 
     m_showFrequent->setChecked(true);
 
-    if ( useDefaults )
-       emit changed();
+    if(useDefaults)
+        emit changed();
 }
 
 void MenuTab::save()
@@ -137,20 +119,20 @@ void MenuTab::save()
 
     QStringList ext;
     QListViewItem *item(0);
-    for (item = m_subMenus->firstChild(); item; item = item->nextSibling())
+    for(item = m_subMenus->firstChild(); item; item = item->nextSibling())
     {
-        bool isOn = static_cast<kSubMenuItem*>(item)->isOn();
-        if (item == m_bookmarkMenu)
+        bool isOn = static_cast< kSubMenuItem * >(item)->isOn();
+        if(item == m_bookmarkMenu)
         {
             c->writeEntry("UseBookmarks", isOn);
         }
-        else if (item == m_quickBrowserMenu)
+        else if(item == m_quickBrowserMenu)
         {
             c->writeEntry("UseBrowser", isOn);
         }
-        else if (isOn)
+        else if(isOn)
         {
-            ext << static_cast<kSubMenuItem*>(item)->desktopFile();
+            ext << static_cast< kSubMenuItem * >(item)->desktopFile();
         }
     }
     c->writeEntry("Extensions", ext);
@@ -160,22 +142,17 @@ void MenuTab::save()
 
 void MenuTab::defaults()
 {
-   load( true );
+    load(true);
 }
 
 void MenuTab::launchMenuEditor()
 {
-    if ( KApplication::startServiceByDesktopName( "kmenuedit",
-                                                  QString::null /*url*/,
-                                                  0 /*error*/,
-                                                  0 /*dcopservice*/,
-                                                  0 /*pid*/,
-                                                  "" /*startup_id*/,
-                                                  true /*nowait*/ ) != 0 )
+    if(KApplication::startServiceByDesktopName("kmenuedit", QString::null /*url*/, 0 /*error*/, 0 /*dcopservice*/, 0 /*pid*/, "" /*startup_id*/,
+                                               true /*nowait*/)
+       != 0)
     {
-        KMessageBox::error(this,
-                           i18n("The KDE menu editor (kmenuedit) could not be launched.\n"
-                           "Perhaps it is not installed or not in your path."),
+        KMessageBox::error(this, i18n("The KDE menu editor (kmenuedit) could not be launched.\n"
+                                      "Perhaps it is not installed or not in your path."),
                            i18n("Application Missing"));
     }
 }

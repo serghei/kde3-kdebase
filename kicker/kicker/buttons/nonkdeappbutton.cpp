@@ -47,12 +47,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // this is one of the two constructors. gets called when creating a new button
 // e.g. via the "non-KDE Application" dialog, not one that was saved and then
 // restored.
-NonKDEAppButton::NonKDEAppButton(const QString& name,
-                                 const QString& description,
-                                 const QString& filePath, const QString& icon,
-                                 const QString &cmdLine, bool inTerm,
-                                 QWidget* parent)
-  : PanelButton(parent, "NonKDEAppButton") // call our superclass's constructor
+NonKDEAppButton::NonKDEAppButton(const QString &name, const QString &description, const QString &filePath, const QString &icon,
+                                 const QString &cmdLine, bool inTerm, QWidget *parent)
+    : PanelButton(parent, "NonKDEAppButton") // call our superclass's constructor
 {
     // call the initialization method
     initialize(name, description, filePath, icon, cmdLine, inTerm);
@@ -65,25 +62,19 @@ NonKDEAppButton::NonKDEAppButton(const QString& name,
 }
 
 // this constructor is used when restoring a button, usually at startup
-NonKDEAppButton::NonKDEAppButton( const KConfigGroup& config, QWidget* parent )
-  : PanelButton(parent, "NonKDEAppButton") // call our superclass's constructor
+NonKDEAppButton::NonKDEAppButton(const KConfigGroup &config, QWidget *parent)
+    : PanelButton(parent, "NonKDEAppButton") // call our superclass's constructor
 {
     // call the initialization method, this time with values from a config file
-    initialize(config.readEntry("Name"),
-               config.readEntry("Description"),
-               config.readPathEntry("Path"),
-               config.readEntry("Icon"),
-               config.readPathEntry("CommandLine"),
-               config.readBoolEntry("RunInTerminal"));
+    initialize(config.readEntry("Name"), config.readEntry("Description"), config.readPathEntry("Path"), config.readEntry("Icon"),
+               config.readPathEntry("CommandLine"), config.readBoolEntry("RunInTerminal"));
 
     // see comment on connect in above constructor
     connect(this, SIGNAL(clicked()), SLOT(slotExec()));
 }
 
-void NonKDEAppButton::initialize(const QString& name,
-                                 const QString& description,
-                                 const QString& filePath, const QString& icon,
-                                 const QString &cmdLine, bool inTerm )
+void NonKDEAppButton::initialize(const QString &name, const QString &description, const QString &filePath, const QString &icon,
+                                 const QString &cmdLine, bool inTerm)
 {
     // and now we actually set up most of the member variables with the
     // values passed in here. by doing this all in an initialize() method
@@ -101,13 +92,13 @@ void NonKDEAppButton::initialize(const QString& name,
     // assign the name or the description to a QString called tooltip
     QString tooltip = description.isEmpty() ? nameStr : descStr;
 
-    if (tooltip.isEmpty())
+    if(tooltip.isEmpty())
     {
         // we had nothing, so let's try the path
         tooltip = pathStr;
 
         // and add the command if we have one.
-        if (!cmdStr.isEmpty())
+        if(!cmdStr.isEmpty())
         {
             tooltip += " " + cmdStr;
         }
@@ -129,7 +120,7 @@ void NonKDEAppButton::initialize(const QString& name,
     setIcon(iconStr);
 }
 
-void NonKDEAppButton::saveConfig( KConfigGroup& config ) const
+void NonKDEAppButton::saveConfig(KConfigGroup &config) const
 {
     // this is called whenever we change something
     // the config object sent in will already be set to the
@@ -146,7 +137,7 @@ void NonKDEAppButton::dragEnterEvent(QDragEnterEvent *ev)
 {
     // when something is dragged onto this button, we'll accept it
     // if we aren't dragged onto ourselves, and if it's a URL
-    if ((ev->source() != this) && KURLDrag::canDecode(ev))
+    if((ev->source() != this) && KURLDrag::canDecode(ev))
     {
         ev->accept(rect());
     }
@@ -164,17 +155,15 @@ void NonKDEAppButton::dropEvent(QDropEvent *ev)
     // something has been droped on us!
     KURL::List fileList;
     QString execStr;
-    if (KURLDrag::decode(ev, fileList))
+    if(KURLDrag::decode(ev, fileList))
     {
         // according to KURLDrag, we've successfully retrieved
         // one or more URLs! now we iterate over them one by
         // one ....
-        for (KURL::List::ConstIterator it = fileList.begin();
-             it != fileList.end();
-             ++it)
+        for(KURL::List::ConstIterator it = fileList.begin(); it != fileList.end(); ++it)
         {
             const KURL &url(*it);
-            if (KDesktopFile::isDesktopFile(url.path()))
+            if(KDesktopFile::isDesktopFile(url.path()))
             {
                 // this URL is actually a .desktop file, so let's grab
                 // the URL it actually points to ...
@@ -205,7 +194,7 @@ void NonKDEAppButton::slotExec()
     runCommand();
 }
 
-void NonKDEAppButton::runCommand(const QString& execStr)
+void NonKDEAppButton::runCommand(const QString &execStr)
 {
     // run our command! this method is used both by the drag 'n drop
     // facilities as well as when the button is activated (usualy w/a click)
@@ -218,7 +207,7 @@ void NonKDEAppButton::runCommand(const QString& execStr)
     // accomlplished by doing:
     kapp->propagateSessionManager();
 
-    if (term)
+    if(term)
     {
         // run in a terminal? ok! we find this in the config file in the
         // [misc] group (this will usually be in kdeglobal, actually, which
@@ -228,33 +217,28 @@ void NonKDEAppButton::runCommand(const QString& execStr)
         QString termStr = config->readPathEntry("Terminal", "konsole");
 
         // and now we run the darn thing and store how we fared in result
-        result = KRun::runCommand(termStr + " -e " + pathStr + " " +
-                                  cmdStr + " " + execStr,
-                                  pathStr, iconStr);
+        result = KRun::runCommand(termStr + " -e " + pathStr + " " + cmdStr + " " + execStr, pathStr, iconStr);
     }
     else
     {
         // just run it...
-        result = KRun::runCommand(pathStr + " " + cmdStr  + " " + execStr,
-                                  pathStr, iconStr);
+        result = KRun::runCommand(pathStr + " " + cmdStr + " " + execStr, pathStr, iconStr);
     }
 
-    if (!result)
+    if(!result)
     {
         // something went wrong, so let's show an error msg to the user
-        KMessageBox::error(this, i18n("Cannot execute non-KDE application."),
-                           i18n("Kicker Error"));
+        KMessageBox::error(this, i18n("Cannot execute non-KDE application."), i18n("Kicker Error"));
         return;
     }
 }
 
-void NonKDEAppButton::updateSettings(PanelExeDialog* dlg)
+void NonKDEAppButton::updateSettings(PanelExeDialog *dlg)
 {
     // we were reconfigured via the confiugration dialog
     // re-setup our member variables using initialize(...),
     // this time using values from the dlg
-    initialize(dlg->title(), dlg->description(), dlg->command(),
-               dlg->iconPath(), dlg->commandLine(), dlg->useTerminal());
+    initialize(dlg->title(), dlg->description(), dlg->command(), dlg->iconPath(), dlg->commandLine(), dlg->useTerminal());
 
     // now delete the dialog so that it doesn't leak memory
     delete dlg;
@@ -273,15 +257,12 @@ void NonKDEAppButton::properties()
     // context menu is created and dealt with.
 
     // so we create a new config dialog ....
-    PanelExeDialog* dlg = new PanelExeDialog(nameStr, descStr, pathStr,
-                                             iconStr, cmdStr, term, this);
+    PanelExeDialog *dlg = new PanelExeDialog(nameStr, descStr, pathStr, iconStr, cmdStr, term, this);
 
     // ... connect the signal it emits when it has data for us to save
     // to our updateSettings slot (see above) ...
-    connect(dlg, SIGNAL(updateSettings(PanelExeDialog*)), this,
-            SLOT(updateSettings(PanelExeDialog*)));
+    connect(dlg, SIGNAL(updateSettings(PanelExeDialog *)), this, SLOT(updateSettings(PanelExeDialog *)));
 
     // ... and then show it to the user
     dlg->show();
 }
-

@@ -36,67 +36,64 @@ class KLanguageCombo;
 
 class StringPair;
 
-class KLocaleConfigTime : public QWidget
-{
-  Q_OBJECT
+class KLocaleConfigTime : public QWidget {
+    Q_OBJECT
 
 public:
-  KLocaleConfigTime( KLocale *_locale, QWidget *parent=0, const char *name=0);
-  virtual ~KLocaleConfigTime( );
+    KLocaleConfigTime(KLocale *_locale, QWidget *parent = 0, const char *name = 0);
+    virtual ~KLocaleConfigTime();
 
-  void save();
+    void save();
 
 protected:
-  void showEvent( QShowEvent *e );
+    void showEvent(QShowEvent *e);
 
 public slots:
-  /**
-   * Loads all settings from the current locale into the current widget.
-   */
-  void slotLocaleChanged();
-  /**
-   * Retranslate all objects owned by this object using the current locale.
-   */
-  void slotTranslate();
+    /**
+     * Loads all settings from the current locale into the current widget.
+     */
+    void slotLocaleChanged();
+    /**
+     * Retranslate all objects owned by this object using the current locale.
+     */
+    void slotTranslate();
 
 signals:
-  void localeChanged();
+    void localeChanged();
 
 private slots:
-  // Time & dates
-  void slotTimeFmtChanged(const QString &t);
-  void slotDateFmtChanged(const QString &t);
-  void slotDateFmtShortChanged(const QString &t);
-  void slotWeekStartDayChanged(int firstDay);
-  void slotDateMonthNamePossChanged();
-  void slotCalendarSystemChanged(int calendarSystem);
+    // Time & dates
+    void slotTimeFmtChanged(const QString &t);
+    void slotDateFmtChanged(const QString &t);
+    void slotDateFmtShortChanged(const QString &t);
+    void slotWeekStartDayChanged(int firstDay);
+    void slotDateMonthNamePossChanged();
+    void slotCalendarSystemChanged(int calendarSystem);
 
 private:
-  void updateWeekDayNames();
+    void updateWeekDayNames();
 
-  QValueList<StringPair> timeMap() const;
-  QValueList<StringPair> dateMap() const;
+    QValueList< StringPair > timeMap() const;
+    QValueList< StringPair > dateMap() const;
 
-  QString storeToUser(const QValueList<StringPair> & map,
-		      const QString & storeFormat) const;
-  QString userToStore(const QValueList<StringPair> & map,
-		      const QString & userFormat) const;
-  StringPair buildStringPair(const QChar &storeName, const QString &userName) const;
+    QString storeToUser(const QValueList< StringPair > &map, const QString &storeFormat) const;
+    QString userToStore(const QValueList< StringPair > &map, const QString &userFormat) const;
+    StringPair buildStringPair(const QChar &storeName, const QString &userName) const;
 
-  KLocale *m_locale;
+    KLocale *m_locale;
 
-  // Time & dates
-  QLabel *m_labTimeFmt;
-  QComboBox *m_comboTimeFmt;
-  QLabel *m_labDateFmt;
-  QComboBox * m_comboDateFmt;
-  QLabel *m_labDateFmtShort;
-  QComboBox * m_comboDateFmtShort;
-  QLabel * m_labWeekStartDay;
-  QComboBox * m_comboWeekStartDay;
-  QCheckBox *m_chDateMonthNamePossessive;
-  QLabel * m_labCalendarSystem;
-  QComboBox * m_comboCalendarSystem;
+    // Time & dates
+    QLabel *m_labTimeFmt;
+    QComboBox *m_comboTimeFmt;
+    QLabel *m_labDateFmt;
+    QComboBox *m_comboDateFmt;
+    QLabel *m_labDateFmtShort;
+    QComboBox *m_comboDateFmtShort;
+    QLabel *m_labWeekStartDay;
+    QComboBox *m_comboWeekStartDay;
+    QCheckBox *m_chDateMonthNamePossessive;
+    QLabel *m_labCalendarSystem;
+    QComboBox *m_comboCalendarSystem;
 };
 
 #endif

@@ -31,7 +31,9 @@
 class KonqFMSettings;
 class KFileIVI;
 class KonqIconDrag;
-namespace KIO { class Job; }
+namespace KIO {
+class Job;
+}
 
 /**
  * A file-aware icon view, implementing drag'n'drop, KDE icon sizes,
@@ -39,24 +41,27 @@ namespace KIO { class Job; }
  * Used by kdesktop and konq_iconview.
  *
  */
-class LIBKONQ_EXPORT KonqIconViewWidget : public KIconView
-{
+class LIBKONQ_EXPORT KonqIconViewWidget : public KIconView {
     Q_OBJECT
-    Q_PROPERTY( bool sortDirectoriesFirst READ sortDirectoriesFirst WRITE setSortDirectoriesFirst )
-    Q_PROPERTY( QRect iconArea READ iconArea WRITE setIconArea )
-    Q_PROPERTY( int lineupMode READ lineupMode WRITE setLineupMode )
-    Q_PROPERTY( QString url READ urlString WRITE setNewURL )
+    Q_PROPERTY(bool sortDirectoriesFirst READ sortDirectoriesFirst WRITE setSortDirectoriesFirst)
+    Q_PROPERTY(QRect iconArea READ iconArea WRITE setIconArea)
+    Q_PROPERTY(int lineupMode READ lineupMode WRITE setLineupMode)
+    Q_PROPERTY(QString url READ urlString WRITE setNewURL)
 
     friend class KFileIVI;
 
 public:
-
-    enum LineupMode { LineupHorizontal=1, LineupVertical, LineupBoth };
+    enum LineupMode
+    {
+        LineupHorizontal = 1,
+        LineupVertical,
+        LineupBoth
+    };
 
     /**
      * Constructor
      */
-    KonqIconViewWidget( QWidget *parent = 0L, const char *name = 0L, WFlags f = 0, bool kdesktop = FALSE );
+    KonqIconViewWidget(QWidget *parent = 0L, const char *name = 0L, WFlags f = 0, bool kdesktop = FALSE);
     virtual ~KonqIconViewWidget();
 
     /**
@@ -67,19 +72,19 @@ public:
      * be done so that the icon's texts don't run into each other).
      * However Konq and KDesktop handle this differently.
      */
-    bool initConfig( bool bInit );
+    bool initConfig(bool bInit);
 
     /**
      * Set the area that will be occupied by icons. It is still possible to
      * drag icons outside this area; this only applies to automatically placed
      * icons.
      */
-    void setIconArea( const QRect &rect );
+    void setIconArea(const QRect &rect);
 
     /**
      * Reimplemented to make the slotOnItem highlighting work.
      */
-    virtual void focusOutEvent( QFocusEvent * /* ev */ );
+    virtual void focusOutEvent(QFocusEvent * /* ev */);
 
     /**
      * Returns the icon area.
@@ -111,7 +116,7 @@ public:
      *        for a horizontal arrangement and QIconView::TopToBottom
      *        for vertical)
      */
-    void lineupIcons( QIconView::Arrangement arrangement );
+    void lineupIcons(QIconView::Arrangement arrangement);
 
     /**
      * Sets the icons of all items, and stores the @p size
@@ -123,14 +128,17 @@ public:
      * For instance "text/plain,image/wmf".
      * Can be set to "*" for "all mimetypes" and to "image/"+"*" for "all images".
      */
-    void setIcons( int size, const QStringList& stopImagePreviewFor = QStringList() );
+    void setIcons(int size, const QStringList &stopImagePreviewFor = QStringList());
 
     /**
      * Called on databaseChanged
      */
     void refreshMimeTypes();
 
-    int iconSize() { return m_size; }
+    int iconSize()
+    {
+        return m_size;
+    }
 
     void calculateGridX();
     /**
@@ -150,7 +158,7 @@ public:
      * @param nx Number of columns
      * @param ny Number of rows
      */
-    void gridValues( int* x, int* y, int* dx, int* dy, int* nx, int* ny );
+    void gridValues(int *x, int *y, int *dx, int *dy, int *nx, int *ny);
 
     /**
      * Start generating the previews.
@@ -160,45 +168,61 @@ public:
      *
      * @todo figure out the parameter meanings again
      */
-    void startImagePreview( const QStringList &ignored, bool force );
+    void startImagePreview(const QStringList &ignored, bool force);
     void stopImagePreview();
     bool isPreviewRunning() const;
     // unused
-    void setThumbnailPixmap( KFileIVI * item, const QPixmap & pixmap );
+    void setThumbnailPixmap(KFileIVI *item, const QPixmap &pixmap);
     void disableSoundPreviews();
 
-    void setURL ( const KURL & kurl );
+    void setURL(const KURL &kurl);
     // ### KDE4: make const
-    const KURL & url() { return m_url; }
-    QString urlString() const { return m_url.url(); }
-    void setRootItem ( const KFileItem * item ) { m_rootItem = item; }
+    const KURL &url()
+    {
+        return m_url;
+    }
+    QString urlString() const
+    {
+        return m_url.url();
+    }
+    void setRootItem(const KFileItem *item)
+    {
+        m_rootItem = item;
+    }
 
     /**
      * Get list of selected KFileItems
      */
     KFileItemList selectedFileItems();
 
-    void setItemColor( const QColor &c );
+    void setItemColor(const QColor &c);
     QColor itemColor() const;
 
     virtual void cutSelection();
     virtual void copySelection();
     virtual void pasteSelection();
     virtual KURL::List selectedUrls(); // KDE4: remove virtual + add const
-    enum UrlFlags { UserVisibleUrls = 0, MostLocalUrls = 1 };
-    KURL::List selectedUrls( UrlFlags flags ) const; // KDE4: merge with above, default is == UserVisibleUrls
-    void paste( const KURL &url );
+    enum UrlFlags
+    {
+        UserVisibleUrls = 0,
+        MostLocalUrls = 1
+    };
+    KURL::List selectedUrls(UrlFlags flags) const; // KDE4: merge with above, default is == UserVisibleUrls
+    void paste(const KURL &url);
 
     bool sortDirectoriesFirst() const;
-    void setSortDirectoriesFirst( bool b );
+    void setSortDirectoriesFirst(bool b);
 
-    void setCaseInsensitiveSort( bool b );
+    void setCaseInsensitiveSort(bool b);
     bool caseInsensitiveSort() const;
 
     /**
      * Cache of the dragged URLs over the icon view, used by KFileIVI
      */
-    const KURL::List & dragURLs() { return m_lstDragURLs; }
+    const KURL::List &dragURLs()
+    {
+        return m_lstDragURLs;
+    }
 
     /**
      * Reimplemented from QIconView
@@ -208,41 +232,52 @@ public:
     /**
      * Reimplemented from QIconView
      */
-    virtual void takeItem( QIconViewItem *item );
+    virtual void takeItem(QIconViewItem *item);
 
     /**
      * Reimplemented from QIconView to take into account iconArea.
      */
-    virtual void insertInGrid( QIconViewItem *item );
+    virtual void insertInGrid(QIconViewItem *item);
 
     /**
      * Reimplemented from QIconView to update the gridX
      */
-    virtual void setItemTextPos( ItemTextPos pos );
+    virtual void setItemTextPos(ItemTextPos pos);
 
     /**
      * Give feedback when item is activated.
      */
     virtual void visualActivate(QIconViewItem *);
 
-    bool isDesktop() const { return m_bDesktop; }
+    bool isDesktop() const
+    {
+        return m_bDesktop;
+    }
 
     /**
      * Provided for KDesktop.
      */
-    virtual void setWallpaper(const KURL&) { }
+    virtual void setWallpaper(const KURL &)
+    {
+    }
 
     bool maySetWallpaper();
     void setMaySetWallpaper(bool b);
 
-    void disableIcons( const KURL::List & lst );
+    void disableIcons(const KURL::List &lst);
 
-    QString iconPositionGroupPrefix() const { return m_iconPositionGroupPrefix; }
-    QString dotDirectoryPath() const { return m_dotDirectoryPath; }
+    QString iconPositionGroupPrefix() const
+    {
+        return m_iconPositionGroupPrefix;
+    }
+    QString dotDirectoryPath() const
+    {
+        return m_dotDirectoryPath;
+    }
 
-    void setPreviewSettings(const QStringList& mimeTypes);
-    const QStringList& previewSettings();
-    void setNewURL( const QString& url );
+    void setPreviewSettings(const QStringList &mimeTypes);
+    const QStringList &previewSettings();
+    void setNewURL(const QString &url);
 
 public slots:
     /**
@@ -255,14 +290,14 @@ public slots:
     void renameSelectedItem();
     void renameCurrentItem();
 
-    void slotToolTipPreview( const KFileItem *, const QPixmap & );  // ### unused - remove for KDE4
-    void slotToolTipPreviewResult() ;  // ### unused - remove for KDE4
+    void slotToolTipPreview(const KFileItem *, const QPixmap &); // ### unused - remove for KDE4
+    void slotToolTipPreviewResult();                             // ### unused - remove for KDE4
 
 signals:
     /**
      * For cut/copy/paste/move/delete (see kparts/browserextension.h)
      */
-    void enableAction( const char * name, bool enabled );
+    void enableAction(const char *name, bool enabled);
 
     void dropped();
     void imagePreviewFinished();
@@ -273,10 +308,10 @@ signals:
     /**
      * We need to track drag in icon views for the spring loading folders
      */
-    void dragEntered( bool accepted );
+    void dragEntered(bool accepted);
     void dragLeft();
 
-    void dragMove( bool accepted );
+    void dragMove(bool accepted);
     /**
      * Emited after the dropped() event. This way we know when the
      * drag'n'drop is really finished.
@@ -284,7 +319,7 @@ signals:
     void dragFinished();
 
 protected slots:
-    virtual void slotDropped( QDropEvent *e, const QValueList<QIconDragItem> & );
+    virtual void slotDropped(QDropEvent *e, const QValueList< QIconDragItem > &);
 
     void slotItemRenamed(QIconViewItem *item, const QString &name);
 
@@ -295,56 +330,55 @@ protected slots:
     void slotPreview(const KFileItem *, const QPixmap &);
     void slotPreviewResult();
 
-    void slotMovieUpdate( const QRect& rect );
-    void slotMovieStatus( int status );
+    void slotMovieUpdate(const QRect &rect);
+    void slotMovieStatus(int status);
     void slotReenableAnimation();
 
-    void slotAboutToCreate(const QPoint &pos, const QValueList<KIO::CopyInfo> &files);
+    void slotAboutToCreate(const QPoint &pos, const QValueList< KIO::CopyInfo > &files);
     void doubleClickTimeout();
 
 protected:
     virtual QDragObject *dragObject();
-    KonqIconDrag *konqDragObject( QWidget * dragSource = 0L );
-    bool mimeTypeMatch( const QString& mimeType, const QStringList& mimeList ) const;
+    KonqIconDrag *konqDragObject(QWidget *dragSource = 0L);
+    bool mimeTypeMatch(const QString &mimeType, const QStringList &mimeList) const;
 
-    virtual void drawBackground( QPainter *p, const QRect &r );
+    virtual void drawBackground(QPainter *p, const QRect &r);
     /**
      * r is the rectangle which you want to paint from the background.
      * pt is the upper left point in the painter device where you want to paint
      * the rectangle r.
      */
-    virtual void drawBackground( QPainter *p, const QRect &r,
-		 			const QPoint &pt );
-    virtual void contentsDragEnterEvent( QDragEnterEvent *e );
-    virtual void contentsDragLeaveEvent( QDragLeaveEvent *e );
-    virtual void contentsDragMoveEvent( QDragMoveEvent *e );
-    virtual void contentsDropEvent( QDropEvent *e );
-    virtual void contentsMousePressEvent( QMouseEvent *e );
-    virtual void contentsMouseReleaseEvent ( QMouseEvent * e );
-    virtual void contentsMouseMoveEvent( QMouseEvent *e );
-    virtual void backgroundPixmapChange( const QPixmap & );
-    virtual void wheelEvent( QWheelEvent* );
-    virtual void leaveEvent( QEvent *e );
+    virtual void drawBackground(QPainter *p, const QRect &r, const QPoint &pt);
+    virtual void contentsDragEnterEvent(QDragEnterEvent *e);
+    virtual void contentsDragLeaveEvent(QDragLeaveEvent *e);
+    virtual void contentsDragMoveEvent(QDragMoveEvent *e);
+    virtual void contentsDropEvent(QDropEvent *e);
+    virtual void contentsMousePressEvent(QMouseEvent *e);
+    virtual void contentsMouseReleaseEvent(QMouseEvent *e);
+    virtual void contentsMouseMoveEvent(QMouseEvent *e);
+    virtual void backgroundPixmapChange(const QPixmap &);
+    virtual void wheelEvent(QWheelEvent *);
+    virtual void leaveEvent(QEvent *e);
 
     void readAnimatedIconsConfig();
     void mousePressChangeValue();
 
     bool boostPreview() const;
-    int previewIconSize( int size ) const;
-    int largestPreviewIconSize( int size ) const;
-    bool canPreview( KFileItem* item );
+    int previewIconSize(int size) const;
+    int largestPreviewIconSize(int size) const;
+    bool canPreview(KFileItem *item);
     void updatePreviewMimeTypes();
 
 private:
     KURL m_url;
-    const KFileItem * m_rootItem;
+    const KFileItem *m_rootItem;
 
     KURL::List m_lstDragURLs;
 
     int m_size;
 
     /** Konqueror settings */
-    KonqFMSettings * m_pSettings;
+    KonqFMSettings *m_pSettings;
 
     bool m_bMousePressed;
     QPoint m_mousePos;
@@ -364,7 +398,6 @@ private:
 
 private:
     struct KonqIconViewWidgetPrivate *d;
-
 };
 
 #endif

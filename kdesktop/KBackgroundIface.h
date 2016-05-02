@@ -8,14 +8,13 @@
 #include <dcopobject.h>
 #include <qcolor.h>
 
-class KBackgroundIface : virtual public DCOPObject
-{
+class KBackgroundIface : virtual public DCOPObject {
     K_DCOP
 public:
-
-k_dcop:
-    /** Reread the configuration */
-    virtual void configure() = 0;
+    k_dcop :
+        /** Reread the configuration */
+        virtual void
+        configure() = 0;
 
     /** Enable/disable export of the background pixmap. */
     virtual void setExport(int xport) = 0;
@@ -59,7 +58,7 @@ k_dcop:
     /** Return the current wallpaper for specified desk.
      * @param desk desktop number, or 0 for the current visible desktop.
      */
-    virtual QString currentWallpaper( int desk ) = 0;
+    virtual QString currentWallpaper(int desk) = 0;
 
     /** Return the wallpaper list for specified desk.
      * @param desk desktop number, or 0 for the current visible desktop.
