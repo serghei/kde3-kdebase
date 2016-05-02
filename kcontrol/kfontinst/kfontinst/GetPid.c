@@ -41,7 +41,9 @@
 #ifndef __cplusplus
 #define bool unsigned int
 #define false 0
+// clang-format off
 #define true (!false)
+// clang-format on
 #endif
 
 #define BUFSIZE 1024
