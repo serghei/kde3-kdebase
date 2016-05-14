@@ -34,7 +34,7 @@
 
 #include <qcstring.h>
 #include <qvaluelist.h>
-typedef QValueList< QCString > QCStringList;
+typedef QValueList< QCString > KStringList;
 
 class QString;
 
@@ -107,7 +107,7 @@ public:
         return !isPositive() && !isNegative();
     }
 
-    QCStringList lines() const
+    KStringList lines() const
     {
         return mLines;
     }
@@ -152,7 +152,7 @@ public:
 
 private:
     unsigned int mCode;
-    QCStringList mLines;
+    KStringList mLines;
     bool mValid;
     bool mSawLastLine;
     bool mWellFormed;

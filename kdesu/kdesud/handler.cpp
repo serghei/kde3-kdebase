@@ -222,7 +222,7 @@ int ConnectionHandler::doCommand(QCString buf)
         case Lexer::Tok_exec: // "EXEC command:string user:string [options:string (env:string)*]\n"
         {
             QCString options;
-            QCStringList env;
+            KStringList env;
             tok = l->lex();
             if(tok != Lexer::Tok_str)
                 goto parse_error;

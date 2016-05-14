@@ -119,7 +119,7 @@ public:
     }
 
     virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
-    virtual QCStringList functionsDynamic();
+    virtual KStringList functionsDynamic();
     void enableFullScripting(bool b)
     {
         fullScripting = b;

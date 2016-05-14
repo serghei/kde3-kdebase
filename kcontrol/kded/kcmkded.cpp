@@ -229,7 +229,7 @@ void KDEDConfig::defaults()
 
 void KDEDConfig::getServiceStatus()
 {
-    QCStringList modules;
+    KStringList modules;
     QCString replyType;
     QByteArray replyData;
 
@@ -245,7 +245,7 @@ void KDEDConfig::getServiceStatus()
     else
     {
 
-        if(replyType == "QCStringList")
+        if(replyType == "KStringList")
         {
             QDataStream reply(replyData, IO_ReadOnly);
             reply >> modules;
@@ -256,7 +256,7 @@ void KDEDConfig::getServiceStatus()
         it.current()->setText(2, NOT_RUNNING);
     for(QListViewItemIterator it(_lvStartup); it.current() != 0; ++it)
         it.current()->setText(3, NOT_RUNNING);
-    for(QCStringList::Iterator it = modules.begin(); it != modules.end(); ++it)
+    for(KStringList::Iterator it = modules.begin(); it != modules.end(); ++it)
     {
         QListViewItem *item = _lvLoD->findItem(*it, 4);
         if(item)

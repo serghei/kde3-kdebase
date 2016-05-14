@@ -884,9 +884,9 @@ bool KonqSidebarTree::tabSupport()
     DCOPReply reply = ref.call("functions()");
     if(reply.isValid())
     {
-        QCStringList funcs;
-        reply.get(funcs, "QCStringList");
-        for(QCStringList::ConstIterator it = funcs.begin(); it != funcs.end(); ++it)
+        KStringList funcs;
+        reply.get(funcs, "KStringList");
+        for(KStringList::ConstIterator it = funcs.begin(); it != funcs.end(); ++it)
         {
             if((*it) == "void newTab(QString url)")
             {

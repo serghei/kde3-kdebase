@@ -62,8 +62,8 @@ static void continueInWindow(QString _wname)
     QCString wname = _wname.latin1();
     int id = -1;
 
-    QCStringList apps = kapp->dcopClient()->registeredApplications();
-    for(QCStringList::Iterator it = apps.begin(); it != apps.end(); ++it)
+    KStringList apps = kapp->dcopClient()->registeredApplications();
+    for(KStringList::Iterator it = apps.begin(); it != apps.end(); ++it)
     {
         QCString &clientId = *it;
 

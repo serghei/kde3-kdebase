@@ -224,8 +224,8 @@ void KRemoteEncodingPlugin::updateBrowser()
     QDataStream stream(data, IO_WriteOnly);
     stream << QString::null;
     // use call to make sure reparsing is done before reloading the url
-    QCStringList apps = client->registeredApplications();
-    for(QCStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
+    KStringList apps = client->registeredApplications();
+    for(KStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
     {
         QCString rtype;
         QByteArray rdata;

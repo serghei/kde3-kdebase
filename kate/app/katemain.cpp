@@ -110,7 +110,7 @@ extern "C" KDE_EXPORT int kdemain(int argc, char **argv)
         client.attach();
 
         // get all attached clients ;)
-        QCStringList allClients = client.registeredApplications();
+        KStringList allClients = client.registeredApplications();
 
         // search for a kate app client, use the first found
         QCString kateApp;

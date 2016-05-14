@@ -134,9 +134,9 @@ DCOPRef KonqMainWindowIface::action(const QCString &name)
     return DCOPRef(kapp->dcopClient()->appId(), m_dcopActionProxy->actionObjectId(name));
 }
 
-QCStringList KonqMainWindowIface::actions()
+KStringList KonqMainWindowIface::actions()
 {
-    QCStringList res;
+    KStringList res;
     QValueList< KAction * > lst = m_dcopActionProxy->actions();
     QValueList< KAction * >::ConstIterator it = lst.begin();
     QValueList< KAction * >::ConstIterator end = lst.end();
@@ -151,7 +151,7 @@ QMap< QCString, DCOPRef > KonqMainWindowIface::actionMap()
     return m_dcopActionProxy->actionMap();
 }
 
-QCStringList KonqMainWindowIface::functionsDynamic()
+KStringList KonqMainWindowIface::functionsDynamic()
 {
     return DCOPObject::functionsDynamic() + KDCOPPropertyProxy::functions(m_pMainWindow);
 }

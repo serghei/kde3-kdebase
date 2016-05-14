@@ -272,7 +272,7 @@ static int startApp()
     bool new_dcop = args->isSet("newdcop");
     bool withIgnoreButton = args->isSet("ignorebutton");
 
-    QCStringList env;
+    KStringList env;
     QCString options;
     env << ("DESKTOP_STARTUP_ID=" + kapp->startupId());
 

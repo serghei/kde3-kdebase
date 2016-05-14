@@ -82,7 +82,7 @@ int PasswdProcess::exec(const char *oldpass, const char *newpass, int check)
     // of `passwd' easier.
     setenv("LANG", "C", true /* override */);
 
-    QCStringList args;
+    KStringList args;
     if(bOtherUser)
         args += m_User;
     int ret = PtyProcess::exec("passwd", args);

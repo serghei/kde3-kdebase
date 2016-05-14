@@ -115,7 +115,7 @@ public:
     KURL baseURL() const;
 
     virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
-    virtual QCStringList functionsDynamic();
+    virtual KStringList functionsDynamic();
 
     void callReadPropertiesInternal(KConfig *config, int number)
     {

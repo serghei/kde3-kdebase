@@ -760,9 +760,9 @@ bool TESession::processDynamic(const QCString &fun, const QByteArray &data, QCSt
     return SessionIface::processDynamic(fun, data, replyType, replyData);
 }
 
-QCStringList TESession::functionsDynamic()
+KStringList TESession::functionsDynamic()
 {
-    QCStringList funcs = SessionIface::functionsDynamic();
+    KStringList funcs = SessionIface::functionsDynamic();
     if(fullScripting)
     {
         funcs << "void feedSession(QString text)";

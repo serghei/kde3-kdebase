@@ -71,7 +71,7 @@ public:
     DCOPRef part(int partNumber);
 
     DCOPRef action(const QCString &name);
-    QCStringList actions();
+    KStringList actions();
     QMap< QCString, DCOPRef > actionMap();
 
     /**
@@ -80,7 +80,7 @@ public:
     bool windowCanBeUsedForTab();
 
 public:
-    virtual QCStringList functionsDynamic();
+    virtual KStringList functionsDynamic();
     virtual bool processDynamic(const QCString &fun, const QByteArray &data, QCString &replyType, QByteArray &replyData);
 
 private:

@@ -48,9 +48,9 @@ Capabilities Capabilities::fromResponse(const Response &ehlo)
        || ehlo.lines().empty())
         return c;
 
-    QCStringList l = ehlo.lines();
+    KStringList l = ehlo.lines();
 
-    for(QCStringList::const_iterator it = ++l.begin(); it != l.end(); ++it)
+    for(KStringList::const_iterator it = ++l.begin(); it != l.end(); ++it)
         c.add(*it);
 
     return c;

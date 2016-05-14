@@ -95,13 +95,13 @@ void Response::parseLine(const char *line, int len)
 }
 
 
-// hackishly fixing QCStringList flaws...
-static QCString join(char sep, const QCStringList &list)
+// hackishly fixing KStringList flaws...
+static QCString join(char sep, const KStringList &list)
 {
     if(list.empty())
         return QCString();
     QCString result = list.front();
-    for(QCStringList::const_iterator it = ++list.begin(); it != list.end(); ++it)
+    for(KStringList::const_iterator it = ++list.begin(); it != list.end(); ++it)
         result += sep + *it;
     return result;
 }

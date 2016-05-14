@@ -194,7 +194,7 @@ void MyPtyProcess::unreadLineFrom(QCString inbuf, QCString line, bool addnl)
  * Fork and execute the command. This returns in the parent.
  */
 
-int MyPtyProcess::exec(QCString command, QCStringList args)
+int MyPtyProcess::exec(QCString command, KStringList args)
 {
     kdDebug(PTYPROC) << "MyPtyProcess::exec(): " << command << endl; // << ", args = " << args << endl;
 
@@ -278,7 +278,7 @@ int MyPtyProcess::exec(QCString command, QCStringList args)
     int i;
     const char *argp[32];
     argp[0] = path;
-    QCStringList::Iterator it;
+    KStringList::Iterator it;
     for(i = 1, it = args.begin(); it != args.end() && i < 31; it++)
     {
         argp[i++] = *it;

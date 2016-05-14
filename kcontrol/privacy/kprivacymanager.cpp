@@ -164,9 +164,9 @@ bool KPrivacyManager::clearFavIcons()
 bool KPrivacyManager::isApplicationRegistered(const QString &appName)
 {
 
-    QCStringList regApps = kapp->dcopClient()->registeredApplications();
+    KStringList regApps = kapp->dcopClient()->registeredApplications();
 
-    for(QCStringList::Iterator it = regApps.begin(); it != regApps.end(); ++it)
+    for(KStringList::Iterator it = regApps.begin(); it != regApps.end(); ++it)
         if((*it).find(appName.latin1()) != -1)
             return true;
 

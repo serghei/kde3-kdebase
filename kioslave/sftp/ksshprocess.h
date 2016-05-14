@@ -620,7 +620,7 @@ private:
     /**
      * List of arguments we start SSH with.
      */
-    QCStringList mArgs;
+    KStringList mArgs;
     void init();
 
     /**

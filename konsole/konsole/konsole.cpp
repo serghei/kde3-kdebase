@@ -4376,9 +4376,9 @@ bool Konsole::processDynamic(const QCString &fun, const QByteArray &data, QCStri
     return KonsoleIface::processDynamic(fun, data, replyType, replyData);
 }
 
-QCStringList Konsole::functionsDynamic()
+KStringList Konsole::functionsDynamic()
 {
-    QCStringList funcs = KonsoleIface::functionsDynamic();
+    KStringList funcs = KonsoleIface::functionsDynamic();
     if(b_fullScripting)
     {
         funcs << "void feedAllSessions(QString text)";

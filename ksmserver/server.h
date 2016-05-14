@@ -30,7 +30,6 @@ Copyright (C) 2000 Matthias Ettrich <ettrich@kde.org>
 #define SESSION_PREVIOUS_LOGOUT "saved at previous logout"
 #define SESSION_BY_USER "saved by user"
 
-typedef QValueList< QCString > QCStringList;
 class KSMListener;
 class KSMConnection;
 class KSMClient;

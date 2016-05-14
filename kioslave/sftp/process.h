@@ -20,7 +20,7 @@
 #define PTYPROC 7120
 
 class PTY;
-typedef QValueList< QCString > QCStringList;
+typedef QValueList< QCString > KStringList;
 
 /**
  * Synchronous communication with tty programs.
@@ -42,7 +42,7 @@ public:
      * @param command The command to execute.
      * @param args The arguments to the command.
      */
-    int exec(QCString command, QCStringList args);
+    int exec(QCString command, KStringList args);
 
     /**
      * Read a line from the program's standard out. Depending on the @em block

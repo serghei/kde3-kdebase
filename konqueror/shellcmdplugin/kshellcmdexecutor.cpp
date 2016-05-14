@@ -64,7 +64,7 @@ int KShellCommandExecutor::exec()
     m_shellProcess = new PtyProcess();
     m_shellProcess->setTerminal(true);
 
-    QCStringList args;
+    KStringList args;
     args += "-c";
     args += m_command.local8Bit();
     // kdDebug()<<"------- executing: "<<m_command.local8Bit()<<endl;

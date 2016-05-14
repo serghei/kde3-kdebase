@@ -158,7 +158,7 @@ void PrintWrapper::slotPrint()
     int ncopies = QString(args->getOption("n")).toInt();
     QString job_mode = args->getOption("j");
     QString system = args->getOption("system");
-    QCStringList optlist = args->getOptionList("o");
+    KStringList optlist = args->getOptionList("o");
     QMap< QString, QString > opts;
     KURL::List files;
     QStringList filestoprint;
@@ -173,7 +173,7 @@ void PrintWrapper::slotPrint()
     }
 
     // parse options
-    for(QCStringList::ConstIterator it = optlist.begin(); it != optlist.end(); ++it)
+    for(KStringList::ConstIterator it = optlist.begin(); it != optlist.end(); ++it)
     {
         QStringList l = QStringList::split('=', QString(*it), false);
         if(l.count() >= 1)

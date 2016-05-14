@@ -153,9 +153,9 @@ void DCOPBrowserApplicationItem::populate()
     bool ok = false;
     bool isDefault = false;
 
-    QCStringList objs = kapp->dcopClient()->remoteObjects(app_, &ok);
+    KStringList objs = kapp->dcopClient()->remoteObjects(app_, &ok);
 
-    for(QCStringList::ConstIterator it = objs.begin(); it != objs.end(); ++it)
+    for(KStringList::ConstIterator it = objs.begin(); it != objs.end(); ++it)
     {
         if(*it == "default")
         {
@@ -172,7 +172,7 @@ void DCOPBrowserApplicationItem::populate()
 void DCOPBrowserApplicationItem::slotGotWindowName(int /*callId*/, const QCString & /*replyType*/, const QByteArray &replyData)
 {
     QDataStream reply(replyData, IO_ReadOnly);
-    QCStringList mainswindows;
+    KStringList mainswindows;
     reply >> mainswindows;
     QStringList sl = QStringList::split("/", mainswindows.first());
     if(sl.count() >= 1)
@@ -225,10 +225,10 @@ void DCOPBrowserInterfaceItem::populate()
 
     bool ok = false;
 
-    QCStringList funcs = kapp->dcopClient()->remoteFunctions(app_, object_, &ok);
+    KStringList funcs = kapp->dcopClient()->remoteFunctions(app_, object_, &ok);
 
-    for(QCStringList::ConstIterator it = funcs.begin(); it != funcs.end(); ++it)
-        if((*it) != "QCStringList functions()")
+    for(KStringList::ConstIterator it = funcs.begin(); it != funcs.end(); ++it)
+        if((*it) != "KStringList functions()")
             new DCOPBrowserFunctionItem(this, app_, object_, *it);
 
     KApplication::restoreOverrideCursor();
@@ -793,12 +793,12 @@ void KDCOPWindow::slotFillApplications()
 {
     KApplication::setOverrideCursor(waitCursor);
 
-    QCStringList apps = dcopClient->registeredApplications();
+    KStringList apps = dcopClient->registeredApplications();
     QCString appId = dcopClient->appId();
 
     mainView->lv->clear();
 
-    for(QCStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
+    for(KStringList::ConstIterator it = apps.begin(); it != apps.end(); ++it)
     {
         if((*it) != appId && (*it).left(9) != "anonymous")
         {
@@ -893,12 +893,12 @@ bool KDCOPWindow::demarshal(QCString &replyType, QDataStream &reply, QListBox *t
         reply >> r;
         ret << QString::fromUtf8(r);
     }
-    else if(replyType == "QCStringList")
+    else if(replyType == "KStringList")
     {
-        QCStringList lst;
+        KStringList lst;
         reply >> lst;
 
-        for(QCStringList::ConstIterator it(lst.begin()); it != lst.end(); ++it)
+        for(KStringList::ConstIterator it(lst.begin()); it != lst.end(); ++it)
             ret << *it;
     }
     else if(replyType == "KURL")

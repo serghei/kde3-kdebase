@@ -30,7 +30,7 @@ int ChfnProcess::exec(const char *pass, const char *name)
     // of `chfn' easier.
     putenv((char *)"LC_ALL=C");
 
-    QCStringList args;
+    KStringList args;
     args += "-f";
     args += name;
     int ret = PtyProcess::exec("chfn", args);
