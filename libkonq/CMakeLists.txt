@@ -58,16 +58,6 @@ kde_add_library( konq SHARED AUTOMOC
 )
 
 
-##### konq_sound (module) #######################
-
-if( WITH_ARTS )
-  kde_add_kpart( konq_sound
-    SOURCES konq_sound.cc
-    LINK artskde-shared
-    DESTINATION ${PLUGIN_INSTALL_DIR} )
-endif( )
-
-
 ##### install import cmake modules ###############
 
 kde_install_export( )

@@ -38,6 +38,5 @@ add_subdirectory( kcontrol )
 add_subdirectory( app )
 add_subdirectory( data )
 add_subdirectory( update )
-kde_conditional_add_subdirectory( WITH_ARTS arts )
 
 install( FILES khotkeys.desktop DESTINATION ${AUTOSTART_INSTALL_DIR} )
