@@ -1028,7 +1028,7 @@ void KBackgroundRenderer::saveCacheFile()
         m_Image.save(f, "PNG");
         // remove old entries from the cache
         QDir dir(locateLocal("cache", "background/"));
-        if(const QFileInfoList *list = dir.entryInfoList("*.png", QDir::Files, QDir::Time | QDir::Reversed))
+        if(const QFileInfoList_qt3 *list = dir.entryInfoList_qt3("*.png", QDir::Files, QDir::Time | QDir::Reversed))
         {
             int size = 0;
             for(QFileInfoListIterator it(*list); QFileInfo *info = it.current(); ++it)

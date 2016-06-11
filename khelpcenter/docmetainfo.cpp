@@ -168,7 +168,7 @@ DocEntry *DocMetaInfo::scanMetaInfoDir(const QString &dirName, DocEntry *parent)
     if(!dir.exists())
         return 0;
 
-    const QFileInfoList *entryList = dir.entryInfoList();
+    const QFileInfoList_qt3 *entryList = dir.entryInfoList_qt3();
     QFileInfoListIterator it(*entryList);
     QFileInfo *fi;
     for(; (fi = it.current()); ++it)

@@ -240,7 +240,7 @@ static QString locateFile(const char *dir, const char *file, int level = 0)
 
         if(d.isReadable())
         {
-            const QFileInfoList *fList = d.entryInfoList();
+            const QFileInfoList_qt3 *fList = d.entryInfoList_qt3();
 
             if(fList)
             {

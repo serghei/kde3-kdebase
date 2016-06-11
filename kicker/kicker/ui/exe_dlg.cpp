@@ -128,7 +128,7 @@ void PanelExeDialog::fillCompletion()
         QDir d((*it));
         d.setFilter(QDir::Files | QDir::Executable);
 
-        const QFileInfoList *list = d.entryInfoList();
+        const QFileInfoList_qt3 *list = d.entryInfoList_qt3();
         if(!list)
             continue;
 

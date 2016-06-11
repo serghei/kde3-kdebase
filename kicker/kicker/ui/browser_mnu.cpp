@@ -124,7 +124,7 @@ void PanelBrowserMenu::initialize()
     }
 
     // get entry list
-    const QFileInfoList *list = dir.entryInfoList();
+    const QFileInfoList_qt3 *list = dir.entryInfoList_qt3();
 
     // no list -> read error
     if(!list)

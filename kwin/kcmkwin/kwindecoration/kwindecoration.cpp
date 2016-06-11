@@ -196,7 +196,7 @@ void KWinDecorationModule::findDecorations()
     {
         QDir d(*it);
         if(d.exists())
-            for(QFileInfoListIterator it(*d.entryInfoList()); it.current(); ++it)
+            for(QFileInfoListIterator it(*d.entryInfoList_qt3()); it.current(); ++it)
             {
                 QString filename(it.current()->absFilePath());
                 if(KDesktopFile::isDesktopFile(filename))
