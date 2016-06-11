@@ -30,7 +30,6 @@
 #include <dcopref.h>
 
 #include <kapplication.h>
-#include <kdatastream.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobalsettings.h>

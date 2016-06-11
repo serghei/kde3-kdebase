@@ -10,7 +10,6 @@
 
 #include <dcopclient.h>
 #include <klocale.h>
-#include <kdatastream.h>
 #include <kstdaction.h>
 #include <kaction.h>
 #include <kapplication.h>

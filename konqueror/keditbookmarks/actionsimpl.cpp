@@ -51,7 +51,6 @@
 #include <kinputdialog.h>
 #include <krun.h>
 
-#include <kdatastream.h>
 #include <ktempfile.h>
 #include <kstandarddirs.h>
 

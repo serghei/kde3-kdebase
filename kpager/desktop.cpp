@@ -27,7 +27,6 @@
 
 #include <dcopobject.h>
 #include <dcopclient.h>
-#include <kdatastream.h>
 #include <kapplication.h>
 #include <kglobalsettings.h>
 #include <kwinmodule.h>

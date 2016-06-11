@@ -26,7 +26,6 @@
 #include <qimage.h>
 #include <qtimer.h>
 
-#include <kdatastream.h> // DO NOT REMOVE, otherwise bool marshalling breaks
 #include <kicontheme.h>
 #include <kimageio.h>
 #include <ksimpleconfig.h>

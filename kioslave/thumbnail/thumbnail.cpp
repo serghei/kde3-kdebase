@@ -34,7 +34,6 @@
 #include <qimage.h>
 #include <qbuffer.h>
 
-#include <kdatastream.h> // Do not remove, needed for correct bool serialization
 #include <kurl.h>
 #include <kapplication.h>
 #include <kglobal.h>
