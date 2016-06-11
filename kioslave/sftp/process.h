@@ -12,15 +12,14 @@
 #ifndef __Process_h_Included__
 #define __Process_h_Included__
 
-#include <qcstring.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <qvaluelist.h>
+#include <kstringlist.h>
 
 #define PTYPROC 7120
 
 class PTY;
-typedef QValueList< QCString > KStringList;
 
 /**
  * Synchronous communication with tty programs.

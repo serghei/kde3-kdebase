@@ -33,8 +33,7 @@
 #define __KIOSMTP_RESPONSE_H__
 
 #include <qcstring.h>
-#include <qvaluelist.h>
-typedef QValueList< QCString > KStringList;
+#include <kstringlist.h>
 
 class QString;
 

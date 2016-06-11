@@ -45,12 +45,12 @@ Capabilities Capabilities::fromResponse(const Response &ehlo)
 
     // first, check whether the response was valid and indicates success:
     if(!ehlo.isOk() || ehlo.code() / 10 != 25 // ### restrict to 250 only?
-       || ehlo.lines().empty())
+       || ehlo.lines().isEmpty())
         return c;
 
     KStringList l = ehlo.lines();
 
-    for(KStringList::const_iterator it = ++l.begin(); it != l.end(); ++it)
+    for(KStringList::ConstIterator it = ++l.begin(); it != l.end(); ++it)
         c.add(*it);
 
     return c;

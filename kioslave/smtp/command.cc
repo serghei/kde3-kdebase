@@ -412,7 +412,7 @@ bool AuthCommand::processResponse(const Response &r, TransactionState *)
         return false;
     }
     mFirstTime = false;
-    mLastChallenge = r.lines().front(); // ### better join all lines with \n?
+    mLastChallenge = r.lines().first(); // ### better join all lines with \n?
     mNeedResponse = false;
     return true;
 }

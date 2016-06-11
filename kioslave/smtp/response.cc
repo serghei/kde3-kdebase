@@ -91,18 +91,21 @@ void Response::parseLine(const char *line, int len)
         return;
     }
 
-    mLines.push_back(len > 4 ? QCString(line + 4, len - 4 + 1).stripWhiteSpace() : QCString());
+    mLines.append(len > 4 ? QCString(line + 4, len - 4 + 1).stripWhiteSpace() : QCString());
 }
 
 
 // hackishly fixing KStringList flaws...
 static QCString join(char sep, const KStringList &list)
 {
-    if(list.empty())
+    if(list.isEmpty())
         return QCString();
-    QCString result = list.front();
-    for(KStringList::const_iterator it = ++list.begin(); it != list.end(); ++it)
+
+    QCString result = list.first();
+
+    for(KStringList::ConstIterator it = ++list.begin(); it != list.end(); ++it)
         result += sep + *it;
+
     return result;
 }
 
@@ -112,7 +115,7 @@ QString Response::errorMessage() const
     if(lines().count() > 1)
         msg = i18n("The server responded:\n%1").arg(join('\n', lines()));
     else
-        msg = i18n("The server responded: \"%1\"").arg(lines().front());
+        msg = i18n("The server responded: \"%1\"").arg(lines().first());
     if(first() == 4)
         msg += '\n' + i18n(
                           "This is a temporary failure. "

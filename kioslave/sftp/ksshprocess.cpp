@@ -436,11 +436,8 @@ bool KSshProcess::setOptions(const SshOptList &opts)
 
 void KSshProcess::printArgs()
 {
-    QValueListIterator< QCString > it;
-    for(it = mArgs.begin(); it != mArgs.end(); ++it)
-    {
-        kdDebug(KSSHPROC) << "arg: " << *it << endl;
-    }
+    for(const auto &arg : mArgs)
+        kdDebug(KSSHPROC) << "arg: " << arg << endl;
 }
 
 
