@@ -62,6 +62,12 @@ void Tooltip::addItem(const QString &label, const QString &value, const QString 
 }
 
 
+void Tooltip::addItemPercent(const QString &label, int value)
+{
+    addItem(label, QString::number(value), "%");
+}
+
+
 void Tooltip::addItemPercent(const QString &label, double value)
 {
     addItem(label, QString::number(value, 'f', decimals), "%");

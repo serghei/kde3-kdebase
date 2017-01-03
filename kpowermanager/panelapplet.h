@@ -28,6 +28,7 @@
 #include "backlight.h"
 #endif
 
+#include "cpumonitor.h"
 #include "upowerbackend.h"
 
 
@@ -48,6 +49,7 @@ public:
 
 protected slots:
     void about();
+    void updateCpuUsageIcon();
     void updateIcon(const PowerSources &ps);
 
 protected:
@@ -58,6 +60,7 @@ protected:
 
 private:
     QPixmap icon;
+    CpuMonitor cpuMonitor;
     PowerSources ps;
     UPowerBackend backend;
 #ifdef HAVE_XRANDR

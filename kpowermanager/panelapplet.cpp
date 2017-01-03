@@ -66,6 +66,7 @@ PanelApplet::PanelApplet(QWidget *parent, const QString &configFile)
 {
     updateIcon(PowerSources());
 
+    connect(&cpuMonitor, SIGNAL(cpuUsageChanged()), SLOT(updateCpuUsageIcon()));
     connect(&backend, SIGNAL(powerSourcesChanged(const PowerSources &)), SLOT(updateIcon(const PowerSources &)));
 
     installEventFilter(KickerTip::the());
@@ -79,7 +80,7 @@ PanelApplet::~PanelApplet()
 
 int PanelApplet::widthForHeight(int height) const
 {
-    return 22;
+    return 42;
 }
 
 
@@ -91,8 +92,8 @@ int PanelApplet::heightForWidth(int width) const
 
 void PanelApplet::about()
 {
-    KAboutData data(appName, I18N_NOOP("KPowerManager"), "1.0", I18N_NOOP("The KDE3 Power Manager"), KAboutData::License_GPL_V2,
-                    "(c) 2012, KDE3 Desktop Environment");
+    KAboutData data(appName, I18N_NOOP("KPowerManager"), "1.1", I18N_NOOP("The KDE3 Power Manager"), KAboutData::License_GPL_V2,
+                    "(c) 2012-2017, KDE3 Desktop Environment");
 
     data.setHomepage("http://github.com/serghei");
 
@@ -100,6 +101,16 @@ void PanelApplet::about()
 
     KAboutApplication dialog(&data);
     dialog.exec();
+}
+
+
+void PanelApplet::updateCpuUsageIcon()
+{
+    // update the tooltip
+    KickerTip::Client::updateKickerTip();
+
+    // repaint the applet area
+    update();
 }
 
 
@@ -155,7 +166,7 @@ void PanelApplet::updateKickerTip(KickerTip::Data &data)
 
     // Power AC
     tip.addGroup(i18n("Power AC"));
-    tip.addItem("Status", ps.powerLine.online ? i18n("online") : i18n("unplugged"));
+    tip.addItem(i18n("Status"), ps.powerLine.online ? i18n("online") : i18n("unplugged"));
 
     // Battery
     tip.addGroup(i18n("Battery"));
@@ -168,6 +179,10 @@ void PanelApplet::updateKickerTip(KickerTip::Data &data)
         tip.addItemTime(i18n("Time to full"), ps.battery.timeToFull);
     if(!ps.powerLine.online)
         tip.addItem(i18n("Energy rate"), QString::number(ps.battery.energyRate, 'f', 1), " W");
+
+    // CPU monitor
+    tip.addGroup(i18n("CPU Monitor"));
+    tip.addItemPercent(i18n("CPU Usage"), cpuMonitor.cpuUsage());
 
 // Backlight
 #ifdef HAVE_XRANDR
@@ -226,7 +241,19 @@ void PanelApplet::paintEvent(QPaintEvent *e)
     int y = (height() - icon.height()) / 2;
 
     // draw the icon on applet area
-    p.drawPixmap(KMAX(x, 0), KMAX(y, 0), icon);
+    p.drawPixmap(0, KMAX(y, 0), icon);
+
+    // draw "disabled" bars of cpu usage
+    p.setPen(QColor(0xb0, 0xb0, 0xb0));
+    for(int i = 0; i < 21; i += 2)
+        p.drawLine(26, y + 21 - i, 40, y + 21 - i);
+
+    int cpuUsageLines = static_cast<int>(ceil(static_cast<double>(cpuMonitor.cpuUsage()) * 21. / 100.));
+
+    // draw the "active" bars of cpu usage
+    p.setPen(QColor(0x00, 0x00, 0x00));
+    for(int i = 0; i < cpuUsageLines; i += 2)
+        p.drawLine(26, y + 21 - i, 40, y + 21 - i);
 }
 
 

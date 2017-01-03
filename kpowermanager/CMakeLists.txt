@@ -40,7 +40,7 @@ if( WITH_LOGIND )
 endif( )
 
 kde_add_kpart( kpowermanager_panelapplet AUTOMOC
-  SOURCES panelapplet.cpp upowerbackend.cpp tooltip.cpp ${backlight_SRC}
+  SOURCES panelapplet.cpp upowerbackend.cpp tooltip.cpp cpumonitor.cpp ${backlight_SRC}
   LINK kickermain-shared ${KDEDBUS_LIBRARY} ${XRANDR_LIBRARIES} ${UPOWER_GLIB_LIBRARIES}
   DESTINATION ${PLUGIN_INSTALL_DIR}
 )

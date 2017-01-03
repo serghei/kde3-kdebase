@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Serghei Amelian <serghei.amelian@gmail.com>
+ * Copyright (C) 2017 Serghei Amelian <serghei.amelian@gmail.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,24 +16,33 @@
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _TOOLTIP_H_
-#define _TOOLTIP_H_
+#ifndef _CPU_MONITOR_H_
+#define _CPU_MONITOR_H_
 
 
-class Tooltip {
+#include <qobject.h>
+
+
+class CpuMonitor : public QObject {
+
+    Q_OBJECT
+
 public:
-    Tooltip(const QString &title, const QString &icon, KickerTip::Data &data);
+    CpuMonitor();
+    ~CpuMonitor();
 
-    void addGroup(const QString &groupName);
-    void addItem(const QString &label, const QString &value, const QString &suffix = QString::null);
+    int cpuUsage() const;
 
-    void addItemPercent(const QString &label, int value);
-    void addItemPercent(const QString &label, double value);
-    void addItemTime(const QString &label, Q_INT64 seconds);
+protected:
+    // used for polling /proc/stat
+    void timerEvent(QTimerEvent*);
+
+signals:
+    void cpuUsageChanged();
 
 private:
-    QString &tip;
-    QString group;
+    struct Private;
+    Private *d;
 };
 
 
