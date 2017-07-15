@@ -331,6 +331,7 @@ public:
     void load(bool useDefaults);
     void save();
     void defaults();
+    virtual QString handbookSection() const;
 
 #ifdef HAVE_SSL
     bool loadCiphers();

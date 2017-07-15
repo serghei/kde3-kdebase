@@ -97,7 +97,7 @@ typedef KGenericFactory< KCryptoConfig, QWidget > KryptoFactory;
 K_EXPORT_COMPONENT_FACTORY(kcm_crypto, KryptoFactory("kcmcrypto"))
 
 CipherItem::CipherItem(QListView *view, const QString &cipher, int bits, int maxBits, KCryptoConfig *module)
-    : QCheckListItem(view, QString::null, CheckBox)
+    : QCheckListItem(view, QString(), CheckBox)
 {
     m_cipher = cipher;
     m_bits = bits;
@@ -120,7 +120,7 @@ QString CipherItem::configName() const
 
 
 OtherCertItem::OtherCertItem(QListView *view, const QString &sub, const QString &md5, bool perm, int policy, QDateTime exp, KCryptoConfig *module)
-    : QListViewItem(view, QString::null), _sub(sub), _md5(md5), _exp(exp), _perm(perm), _policy(policy)
+    : QListViewItem(view, QString()), _sub(sub), _md5(md5), _exp(exp), _perm(perm), _policy(policy)
 
 {
     m_module = module;
@@ -143,7 +143,7 @@ QString OtherCertItem::configName() const
 }
 
 
-YourCertItem::YourCertItem(QListView *view, QString pkcs, QString pass, QString name, KCryptoConfig *module) : QListViewItem(view, QString::null)
+YourCertItem::YourCertItem(QListView *view, QString pkcs, QString pass, QString name, KCryptoConfig *module) : QListViewItem(view, QString())
 
 {
     m_module = module;
@@ -168,7 +168,7 @@ QString YourCertItem::configName() const
 
 
 CAItem::CAItem(QListView *view, QString name, QString cert, bool site, bool email, bool code, KCryptoConfig *module)
-    : QListViewItem(view, QString::null)
+    : QListViewItem(view, QString())
 
 {
     m_module = module;
@@ -216,7 +216,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 
     setQuickHelp(
         i18n("<h1>Crypto</h1> This module allows you to configure SSL for"
-             " use with most KDE applications, as well as manage your personal"
+             " use with most KDE3 applications, as well as manage your personal"
              " certificates and the known certificate authorities."));
 
     ___lehack = false;
@@ -227,8 +227,8 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 
     _signers = new KSSLSigners;
 
-    KAboutData *about = new KAboutData(I18N_NOOP("kcmcrypto"), I18N_NOOP("KDE Crypto Control Module"), 0, 0, KAboutData::License_GPL,
-                                       I18N_NOOP("(c) 2000 - 2001 George Staikos"));
+    KAboutData *about = new KAboutData(I18N_NOOP("kcmcrypto"), I18N_NOOP("KDE3 Crypto Control Module"), 0, 0, KAboutData::License_GPL,
+                                           I18N_NOOP("(c) 2000 - 2001 George Staikos"));
     about->addAuthor("George Staikos", 0, "staikos@kde.org");
     about->addAuthor("Carsten Pfeiffer", 0, "pfeiffer@kde.org");
     setAboutData(about);
@@ -292,9 +292,9 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     connect(mUseSSLv2, SIGNAL(toggled(bool)), SSLv2Box, SLOT(setEnabled(bool)));
 #else
     QLabel *nossllabel = new QLabel(i18n("SSL ciphers cannot be configured"
-                                         " because this module was not linked"
-                                         " with OpenSSL."),
-                                    tabSSL);
+                                           " because this module was not linked"
+                                           " with OpenSSL."),
+                                      tabSSL);
     grid->addMultiCellWidget(nossllabel, 2, 2, 0, 1);
     grid->addRowSpacing(3, 100); // give minimum height to look better
 #endif
@@ -328,7 +328,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     QString whatStr =
         i18n("<qt>Use these preconfigurations to more easily configure the SSL encryption settings. You can choose among the following modes: <ul>");
 
-    cwcb->insertItem(QString::null);
+    cwcb->insertItem(QString());
     cwcb->insertItem(i18n("Most Compatible"));
     whatStr += i18n("<li><b>Most Compatible:</b> Select the settings found to be most compatible.</li>");
     cwcb->insertItem(i18n("US Ciphers Only"));
@@ -445,7 +445,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     yourSSLBox = new QListView(tabYourSSLCert);
     yourSSLBox->setAllColumnsShowFocus(true);
     whatstr = i18n(
-        "This list box shows which certificates of yours KDE"
+        "This list box shows which certificates of yours KDE3"
         " knows about. You can easily manage them from here.");
     QWhatsThis::add(yourSSLBox, whatstr);
     grid->addMultiCellWidget(yourSSLBox, 0, 5, 0, 4);
@@ -483,8 +483,8 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     grid->addWidget(yourSSLPass, 5, 5);
 
     grid->addMultiCellWidget(new KSeparator(KSeparator::HLine, tabYourSSLCert), 6, 6, 0, 5);
-    ySubject = KSSLInfoDlg::certInfoWidget(tabYourSSLCert, QString(QString::null));
-    yIssuer = KSSLInfoDlg::certInfoWidget(tabYourSSLCert, QString(QString::null));
+    ySubject = KSSLInfoDlg::certInfoWidget(tabYourSSLCert, QString(QString()));
+    yIssuer = KSSLInfoDlg::certInfoWidget(tabYourSSLCert, QString(QString()));
     grid->addMultiCellWidget(ySubject, 7, 11, 0, 2);
     grid->addMultiCellWidget(yIssuer, 7, 11, 3, 5);
     whatstr = i18n("This is the information known about the owner of the certificate.");
@@ -517,9 +517,9 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 #endif
 #else
     nossllabel = new QLabel(i18n("SSL certificates cannot be managed"
-                                 " because this module was not linked"
-                                 " with OpenSSL."),
-                            tabYourSSLCert);
+                                  " because this module was not linked"
+                                  " with OpenSSL."),
+                             tabYourSSLCert);
     grid->addMultiCellWidget(nossllabel, 3, 3, 0, 5);
 #endif
 
@@ -588,9 +588,9 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 
 #else
     nossllabel = new QLabel(i18n("SSL certificates cannot be managed"
-                                 " because this module was not linked"
-                                 " with OpenSSL."),
-                            tabAuth);
+                                  " because this module was not linked"
+                                  " with OpenSSL."),
+                             tabAuth);
     grid->addMultiCellWidget(nossllabel, 3, 3, 0, 5);
 #endif
 
@@ -607,7 +607,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     otherSSLBox->setAllColumnsShowFocus(true);
     connect(otherSSLBox, SIGNAL(selectionChanged()), SLOT(slotOtherCertSelect()));
     whatstr = i18n(
-        "This list box shows which site and person certificates KDE"
+        "This list box shows which site and person certificates KDE3"
         " knows about. You can easily manage them from here.");
     QWhatsThis::add(otherSSLBox, whatstr);
     otherSSLBox->addColumn(i18n("Organization"));
@@ -643,8 +643,8 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     otherSSLRemove->setEnabled(false);
 
     grid->addMultiCellWidget(new KSeparator(KSeparator::HLine, tabOtherSSLCert), 8, 8, 0, 5);
-    oSubject = KSSLInfoDlg::certInfoWidget(tabOtherSSLCert, QString(QString::null));
-    oIssuer = KSSLInfoDlg::certInfoWidget(tabOtherSSLCert, QString(QString::null));
+    oSubject = KSSLInfoDlg::certInfoWidget(tabOtherSSLCert, QString(QString()));
+    oIssuer = KSSLInfoDlg::certInfoWidget(tabOtherSSLCert, QString(QString()));
     grid->addMultiCellWidget(oSubject, 9, 13, 0, 2);
     grid->addMultiCellWidget(oIssuer, 9, 13, 3, 5);
     whatstr = i18n("This is the information known about the owner of the certificate.");
@@ -670,7 +670,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     cacheGroup = new QVButtonGroup(i18n("Cache"), tabOtherSSLCert);
     cachePerm = new QRadioButton(i18n("Permanentl&y"), cacheGroup);
     cacheUntil = new QRadioButton(i18n("&Until"), cacheGroup);
-    untilDate = new KURLLabel(QString::null, QString::null, cacheGroup);
+    untilDate = new KURLLabel(QString(), QString(), cacheGroup);
     cacheGroup->setEnabled(false);
     grid->addMultiCellWidget(cacheGroup, 16, 19, 0, 2);
 
@@ -708,9 +708,9 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 
 #else
     nossllabel = new QLabel(i18n("SSL certificates cannot be managed"
-                                 " because this module was not linked"
-                                 " with OpenSSL."),
-                            tabOtherSSLCert);
+                                  " because this module was not linked"
+                                  " with OpenSSL."),
+                             tabOtherSSLCert);
     grid->addMultiCellWidget(nossllabel, 1, 1, 0, 1);
 #endif
 
@@ -726,7 +726,7 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     caList = new QListView(tabSSLCA);
     caList->setAllColumnsShowFocus(true);
     whatstr = i18n(
-        "This list box shows which certificate authorities KDE"
+        "This list box shows which certificate authorities KDE3"
         " knows about. You can easily manage them from here.");
     QWhatsThis::add(caList, whatstr);
     grid->addMultiCellWidget(caList, 0, 3, 0, 6);
@@ -748,8 +748,8 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
     connect(caSSLRestore, SIGNAL(clicked()), SLOT(slotCARestore()));
     grid->addWidget(caSSLRestore, 2, 7);
 
-    caSubject = KSSLInfoDlg::certInfoWidget(tabSSLCA, QString(QString::null));
-    caIssuer = KSSLInfoDlg::certInfoWidget(tabSSLCA, QString(QString::null));
+    caSubject = KSSLInfoDlg::certInfoWidget(tabSSLCA, QString(QString()));
+    caIssuer = KSSLInfoDlg::certInfoWidget(tabSSLCA, QString(QString()));
     grid->addMultiCellWidget(caSubject, 4, 6, 0, 3);
     grid->addMultiCellWidget(caIssuer, 4, 6, 4, 7);
 
@@ -774,9 +774,9 @@ KCryptoConfig::KCryptoConfig(QWidget *parent, const char *name, const QStringLis
 
 #else
     nossllabel = new QLabel(i18n("SSL certificates cannot be managed"
-                                 " because this module was not linked"
-                                 " with OpenSSL."),
-                            tabSSLCA);
+                                  " because this module was not linked"
+                                  " with OpenSSL."),
+                             tabSSLCA);
     grid->addMultiCellWidget(nossllabel, 1, 1, 0, 1);
 #endif
 
@@ -883,9 +883,17 @@ void KCryptoConfig::load(bool useDefaults)
 
     config->setGroup("SSLv2");
     mUseSSLv2->setChecked(config->readBoolEntry("Enabled", true));
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    mUseSSLv2->setChecked(false);
+    mUseSSLv2->setEnabled(false);
+#endif
 
     config->setGroup("SSLv3");
     mUseSSLv3->setChecked(config->readBoolEntry("Enabled", true));
+#if defined(OPENSSL_NO_SSL3)
+    mUseSSLv3->setChecked(false);
+    mUseSSLv3->setEnabled(false);
+#endif
 
     config->setGroup("Warnings");
     mWarnOnEnter->setChecked(config->readBoolEntry("OnEnter", false));
@@ -937,8 +945,16 @@ void KCryptoConfig::load(bool useDefaults)
         item = static_cast< CipherItem * >(item->nextSibling());
     }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    SSLv2Box->setEnabled(false);
+#else
     SSLv2Box->setEnabled(mUseSSLv2->isChecked());
+#endif
+#if defined(OPENSSL_NO_SSL3)
+    SSLv3Box->setEnabled(false);
+#else
     SSLv3Box->setEnabled(mUseSSLv3->isChecked());
+#endif
 
     QStringList groups = policies->groupList();
 
@@ -948,7 +964,7 @@ void KCryptoConfig::load(bool useDefaults)
         if((*i).isEmpty() || *i == "<default>" || *i == "General")
             continue;
         policies->setGroup(*i);
-        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString::null).local8Bit());
+        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString()).local8Bit());
         if(cert)
         {
             new OtherCertItem(otherSSLBox, cert->getSubject(), *i, policies->readBoolEntry("Permanent", true), policies->readNumEntry("Policy", 3),
@@ -966,7 +982,7 @@ void KCryptoConfig::load(bool useDefaults)
             continue;
         pcerts->setGroup(*i);
         YourCertItem *j = new YourCertItem(yourSSLBox, pcerts->readEntry("PKCS12Base64"), pcerts->readEntry("Password"), *i, this);
-        j->setPassCache(QString::null);
+        j->setPassCache(QString());
     }
 
     setAuthCertLists();
@@ -1034,7 +1050,7 @@ void KCryptoConfig::load(bool useDefaults)
 void KCryptoConfig::save()
 {
 #ifdef HAVE_SSL
-    if(!mUseSSLv2->isChecked() && !mUseSSLv3->isChecked())
+    if(!mUseTLS->isChecked() && !mUseSSLv2->isChecked() && !mUseSSLv3->isChecked())
         KMessageBox::information(this, i18n("If you do not select at least one"
                                             " SSL algorithm, either SSL will not"
                                             " work or the application may be"
@@ -1045,10 +1061,18 @@ void KCryptoConfig::save()
     config->writeEntry("Enabled", mUseTLS->isChecked());
 
     config->setGroup("SSLv2");
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    config->writeEntry("Enabled", false);
+#else
     config->writeEntry("Enabled", mUseSSLv2->isChecked());
+#endif
 
     config->setGroup("SSLv3");
+#if defined(OPENSSL_NO_SSL3)
+    config->writeEntry("Enabled", false);
+#else
     config->writeEntry("Enabled", mUseSSLv3->isChecked());
+#endif
 
     config->setGroup("Warnings");
     config->writeEntry("OnEnter", mWarnOnEnter->isChecked());
@@ -1190,7 +1214,7 @@ void KCryptoConfig::save()
         config->writeEntry("AuthMethod", "none");
 
     if(defCertBox->currentItem() == 0)
-        config->writeEntry("DefaultCert", QString::null);
+        config->writeEntry("DefaultCert", QString());
     else
         config->writeEntry("DefaultCert", defCertBox->currentText());
 
@@ -1227,6 +1251,25 @@ void KCryptoConfig::save()
         ::chmod(QFile::encodeName(cfgName), 0600);
 
     emit changed(false);
+}
+
+QString KCryptoConfig::handbookSection() const
+{
+    int index = tabs->currentPageIndex();
+    if(index == 0)
+        return "ssl_tab";
+    else if(index == 1)
+        return "openssl";
+    else if(index == 2)
+        return "your-certificates";
+    else if(index == 3)
+        return "authentication";
+    else if(index == 4)
+        return "peer-ssl-certificates";
+    else if(index == 5)
+        return "ssl-signers";
+    else
+        return QString::null;
 }
 
 void KCryptoConfig::defaults()
@@ -1272,8 +1315,16 @@ void KCryptoConfig::cwCompatible()
     }
 
     mUseTLS->setChecked(true);
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    mUseSSLv2->setChecked(false);
+#else
     mUseSSLv2->setChecked(true);
+#endif
+#if defined(OPENSSL_NO_SSL3)
+    mUseSSLv3->setChecked(false);
+#else
     mUseSSLv3->setChecked(true);
+#endif
     configChanged();
 #endif
 }
@@ -1332,8 +1383,16 @@ void KCryptoConfig::cwAll()
     }
 
     mUseTLS->setChecked(true);
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L || defined(OPENSSL_NO_SSL2)
+    mUseSSLv2->setChecked(false);
+#else
     mUseSSLv2->setChecked(true);
+#endif
+#if defined(OPENSSL_NO_SSL3)
+    mUseSSLv3->setChecked(false);
+#else
     mUseSSLv3->setChecked(true);
+#endif
     configChanged();
 #endif
 }
@@ -1345,7 +1404,7 @@ void KCryptoConfig::slotExportCert()
     if(x)
     {
         policies->setGroup(x->getMD5());
-        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString::null).local8Bit());
+        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString()).local8Bit());
         if(cert)
         {
             KCertExport kce;
@@ -1384,7 +1443,7 @@ void KCryptoConfig::slotVerifyCert()
         return;
 
     policies->setGroup(x->getMD5());
-    KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString::null).local8Bit());
+    KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString()).local8Bit());
 
     if(!cert)
     {
@@ -1495,7 +1554,7 @@ void KCryptoConfig::slotDatePick()
 void KCryptoConfig::slotOtherCertSelect()
 {
     OtherCertItem *x = static_cast< OtherCertItem * >(otherSSLBox->selectedItem());
-    QString iss = QString::null;
+    QString iss = QString();
     if(x)
     {
         otherSSLExport->setEnabled(true);
@@ -1510,7 +1569,7 @@ void KCryptoConfig::slotOtherCertSelect()
         cacheUntil->setEnabled(true);
         policies->setGroup(x->getMD5());
 
-        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString::null).local8Bit());
+        KSSLCertificate *cert = KSSLCertificate::fromString(policies->readEntry("Certificate", QString()).local8Bit());
 
         if(cert)
         {
@@ -1548,8 +1607,8 @@ void KCryptoConfig::slotOtherCertSelect()
         }
         else
         {
-            validFrom->setText(QString::null);
-            validUntil->setText(QString::null);
+            validFrom->setText(QString());
+            validUntil->setText(QString());
             pHash->clear();
         }
 
@@ -1585,15 +1644,15 @@ void KCryptoConfig::slotOtherCertSelect()
         policyPrompt->setChecked(false);
         cachePerm->setEnabled(false);
         cacheUntil->setEnabled(false);
-        validFrom->setText(QString::null);
-        validUntil->setText(QString::null);
-        untilDate->setText(QString::null);
+        validFrom->setText(QString());
+        validUntil->setText(QString());
+        untilDate->setText(QString());
         untilDate->setEnabled(false);
         pHash->clear();
     }
 
 
-    oSubject->setValues(x ? x->getSub() : QString(QString::null));
+    oSubject->setValues(x ? x->getSub() : QString(QString()));
     oIssuer->setValues(iss);
 }
 
@@ -1601,7 +1660,7 @@ void KCryptoConfig::slotOtherCertSelect()
 void KCryptoConfig::slotYourImport()
 {
 
-    QString certFile = KFileDialog::getOpenFileName(QString::null, "application/x-pkcs12");
+    QString certFile = KFileDialog::getOpenFileName(QString(), "application/x-pkcs12");
     if(certFile.isEmpty())
         return;
 
@@ -1650,7 +1709,7 @@ TryImportPassAgain:
     }
 
     new YourCertItem(yourSSLBox, cert->toString(),
-                     QString::null, // the password - don't store it yet!
+                     QString(), // the password - don't store it yet!
                      name, this);
 
     setAuthCertLists();
@@ -1688,7 +1747,7 @@ void KCryptoConfig::slotYourExport()
     }
 
     // For now, we will only export to PKCS#12
-    QString certFile = KFileDialog::getSaveFileName(QString::null, "application/x-pkcs12");
+    QString certFile = KFileDialog::getSaveFileName(QString(), "application/x-pkcs12");
     if(certFile.isEmpty())
         return;
 
@@ -1783,7 +1842,7 @@ void KCryptoConfig::slotYourUnlock()
 
     // update the info
     iss = pkcs->getCertificate()->getIssuer();
-    ySubject->setValues(x ? x->getName() : QString(QString::null));
+    ySubject->setValues(x ? x->getName() : QString(QString()));
     yIssuer->setValues(iss);
     QPalette cspl;
     KSSLCertificate *cert = pkcs->getCertificate();
@@ -1874,7 +1933,7 @@ void KCryptoConfig::slotYourCertSelect()
         yHash->clear();
     }
 
-    ySubject->setValues(x ? x->getName() : QString(QString::null));
+    ySubject->setValues(x ? x->getName() : QString(QString()));
     yIssuer->setValues(iss);
 }
 
@@ -1927,15 +1986,12 @@ void KCryptoConfig::slotYourPass()
 
 void KCryptoConfig::slotCAImport()
 {
-    QString certFile = KFileDialog::getOpenFileName(QString::null, "application/x-x509-ca-cert");
+    QString certFile = KFileDialog::getOpenFileName(QString(), "application/x-x509-ca-cert");
 
     if(certFile.isEmpty())
         return;
 
 #ifdef HAVE_SSL
-#define sk_free KOSSL::self()->sk_free
-#define sk_num KOSSL::self()->sk_num
-#define sk_value KOSSL::self()->sk_value
 
     // First try to load using the OpenSSL method
     X509_STORE *certStore = KOSSL::self()->X509_STORE_new();
@@ -1943,16 +1999,17 @@ void KCryptoConfig::slotCAImport()
 
     if(certLookup && KOSSL::self()->X509_LOOKUP_load_file(certLookup, certFile.local8Bit(), X509_FILETYPE_PEM))
     {
-        for(int i = 0; i < sk_X509_OBJECT_num(certStore->objs); i++)
+        STACK_OF(X509_OBJECT) *certStore_objs = KOSSL::self()->X509_STORE_get0_objects(certStore);
+        for(int i = 0; i < KOSSL::self()->OPENSSL_sk_num(certStore_objs); i++)
         {
-            X509_OBJECT *x5o = sk_X509_OBJECT_value(certStore->objs, i);
+            X509_OBJECT *x5o = reinterpret_cast< X509_OBJECT * >(KOSSL::self()->OPENSSL_sk_value(certStore_objs, i));
             if(!x5o)
                 continue;
 
-            if(x5o->type != X509_LU_X509)
+            if(KOSSL::self()->X509_OBJECT_get_type(x5o) != X509_LU_X509)
                 continue;
 
-            X509 *x5 = x5o->data.x509;
+            X509 *x5 = KOSSL::self()->X509_OBJECT_get0_X509(x5o);
             if(!x5)
                 continue;
 
@@ -2016,24 +2073,24 @@ void KCryptoConfig::slotCAImport()
 
         if(certStore)
         {
-            KOSSL::self()->X509_STORE_free(certStore);
+            KOSSL::self()->OPENSSL_sk_free(certStore);
             certStore = NULL;
         }
 
         if(certtext.contains("-----BEGIN CERTIFICATE-----"))
         {
             qf.reset();
-            certtext = QString::null;
+            certtext = QString();
             while(!qf.atEnd())
             {
                 QString xx;
                 qf.readLine(xx, qf.size());
                 certtext += xx;
             }
-            certtext = certtext.replace("-----BEGIN CERTIFICATE-----", QString::null);
-            certtext = certtext.replace("-----END CERTIFICATE-----", QString::null);
+            certtext = certtext.replace("-----BEGIN CERTIFICATE-----", QString());
+            certtext = certtext.replace("-----END CERTIFICATE-----", QString());
             certtext = certtext.stripWhiteSpace();
-            certtext = certtext.replace("\n", QString::null);
+            certtext = certtext.replace("\n", QString());
         }
         else
         {
@@ -2092,12 +2149,9 @@ void KCryptoConfig::slotCAImport()
 
 
     if(certStore)
-        KOSSL::self()->X509_STORE_free(certStore);
+        KOSSL::self()->OPENSSL_sk_free(certStore);
 
     configChanged();
-#undef sk_free
-#undef sk_num
-#undef sk_value
 #endif
 
     offerImportToKMail(certFile);
@@ -2105,8 +2159,8 @@ void KCryptoConfig::slotCAImport()
 
 void KCryptoConfig::offerImportToKMail(const QString &certFile)
 {
-    if(KMessageBox::questionYesNo(this, i18n("Do you want to make this certificate available to KMail as well?"), QString::null,
-                                  i18n("Make Available"), i18n("Do Not Make Available"))
+    if(KMessageBox::questionYesNo(this, i18n("Do you want to make this certificate available to KMail as well?"), QString(), i18n("Make Available"),
+                                  i18n("Do Not Make Available"))
        == KMessageBox::Yes)
     {
         KProcess proc;
@@ -2114,7 +2168,7 @@ void KCryptoConfig::offerImportToKMail(const QString &certFile)
         proc << "--import-certificate";
         proc << certFile;
         if(!proc.start(KProcess::DontCare))
-            KMessageBox::error(this, i18n("Could not execute Kleopatra. You might have to install or update the kdepim package."));
+            KMessageBox::error(this, i18n("Could not execute Kleopatra. You might have to install or update the tdepim package."));
     }
 }
 
@@ -2135,7 +2189,7 @@ void KCryptoConfig::slotCARemove()
 void KCryptoConfig::slotCARestore()
 {
 
-    int rc = KMessageBox::warningContinueCancel(this, i18n("This will revert your certificate signers database to the KDE default.\nThis operation "
+    int rc = KMessageBox::warningContinueCancel(this, i18n("This will revert your certificate signers database to the KDE3 default.\nThis operation "
                                                            "cannot be undone.\nAre you sure you wish to continue?"),
                                                 i18n("SSL"), i18n("Revert"));
     if(rc == KMessageBox::Cancel)
@@ -2168,7 +2222,7 @@ void KCryptoConfig::slotCARestore()
         sigcfg.setGroup(*i);
         if(!sigcfg.hasKey("x509"))
             continue;
-        new CAItem(caList, (*i), sigcfg.readEntry("x509", QString::null), sigcfg.readBoolEntry("site", false), sigcfg.readBoolEntry("email", false),
+        new CAItem(caList, (*i), sigcfg.readEntry("x509", QString()), sigcfg.readBoolEntry("site", false), sigcfg.readBoolEntry("email", false),
                    sigcfg.readBoolEntry("code", false), this);
     }
 
@@ -2183,11 +2237,11 @@ void KCryptoConfig::slotCAItemChanged()
     if(x)
     {
         caSSLRemove->setEnabled(true);
-        caSubject->setValues(x ? x->getName() : QString(QString::null));
+        caSubject->setValues(x ? x->getName() : QString(QString()));
         KSSLCertificate *cert = KSSLCertificate::fromString(x->getCert().local8Bit());
         if(!cert)
         {
-            caIssuer->setValues(QString(QString::null));
+            caIssuer->setValues(QString(QString()));
             caSite->setEnabled(false);
             caEmail->setEnabled(false);
             caCode->setEnabled(false);
@@ -2215,8 +2269,8 @@ void KCryptoConfig::slotCAItemChanged()
         caSite->setEnabled(false);
         caEmail->setEnabled(false);
         caCode->setEnabled(false);
-        caSubject->setValues(QString(QString::null));
-        caIssuer->setValues(QString(QString::null));
+        caSubject->setValues(QString(QString()));
+        caIssuer->setValues(QString(QString()));
         cHash->clear();
     }
 }
@@ -2238,7 +2292,7 @@ void KCryptoConfig::slotCAChecked()
 
 void KCryptoConfig::slotNewHostAuth()
 {
-    HostAuthItem *j = new HostAuthItem(hostAuthList, QString::null, QString::null, this);
+    HostAuthItem *j = new HostAuthItem(hostAuthList, QString(), QString(), this);
     j->setAction(KSSLCertificateHome::AuthSend);
     hostAuthList->setSelected(j, true);
     authHost->setEnabled(true);
@@ -2371,7 +2425,7 @@ void KCryptoConfig::slotAuthCombo()
     if(x)
     {
         if(hostCertBox->currentItem() == 0)
-            x->setCertName(QString::null);
+            x->setCertName(QString());
         else
             x->setCertName(hostCertBox->currentText());
         configChanged();
@@ -2448,92 +2502,90 @@ void KCryptoConfig::slotGeneratePersonal()
 
 
 #ifdef HAVE_SSL
+
 // This gets all the available ciphers from OpenSSL
 bool KCryptoConfig::loadCiphers()
 {
-    unsigned int i;
+    unsigned int i, cnt;
     SSL_CTX *ctx;
     SSL *ssl;
-#if OPENSSL_VERSION_NUMBER < 0x00909000L
     SSL_METHOD *meth;
-#else
-    const SSL_METHOD *meth;
-#endif
+    STACK_OF(SSL_CIPHER) * sk;
 
     SSLv2Box->clear();
     SSLv3Box->clear();
-
-    meth = SSLv2_client_method();
-    SSLeay_add_ssl_algorithms();
-    ctx = SSL_CTX_new(meth);
-    if(ctx == NULL)
-        return false;
-
-    ssl = SSL_new(ctx);
-    if(!ssl)
-        return false;
-
     CipherItem *item;
-    for(i = 0;; i++)
-    {
-        int j, k;
-#if defined(OPENSSL_VERSION_NUMBER) && OPENSSL_VERSION_NUMBER >= 0x10000000L
-        const
-#endif
-            SSL_CIPHER *sc = (meth->get_cipher)(i);
-        if(!sc)
-            break;
-        // Leak of sc*?
-        QString scn(sc->name);
-        if(scn.contains("ADH-") || scn.contains("NULL-") || scn.contains("DES-CBC3-SHA") || scn.contains("FZA-"))
-        {
-            continue;
-        }
-        k = SSL_CIPHER_get_bits(sc, &j);
 
-        item = new CipherItem(SSLv2Box, sc->name, k, j, this);
-    }
-
-    if(ctx)
-        SSL_CTX_free(ctx);
-    if(ssl)
-        SSL_free(ssl);
-
-    // We repeat for SSLv3
-    meth = SSLv3_client_method();
-    SSLeay_add_ssl_algorithms();
-    ctx = SSL_CTX_new(meth);
+#if OPENSSL_VERSION_NUMBER < 0x10100000L && !defined(OPENSSL_NO_SSL2)
+    meth = KOSSL::self()->SSLv2_client_method();
+    ctx = KOSSL::self()->SSL_CTX_new(meth);
     if(ctx == NULL)
         return false;
 
-    ssl = SSL_new(ctx);
+    ssl = KOSSL::self()->SSL_new(ctx);
     if(!ssl)
         return false;
+    sk = KOSSL::self()->SSL_get_ciphers(ssl);
+    cnt = KOSSL::self()->OPENSSL_sk_num(sk);
 
-    for(i = 0;; i++)
+    for(i = 0; i < cnt; i++)
     {
         int j, k;
-#if defined(OPENSSL_VERSION_NUMBER) && OPENSSL_VERSION_NUMBER >= 0x10000000L
-        const
-#endif
-            SSL_CIPHER *sc = (meth->get_cipher)(i);
+        SSL_CIPHER *sc = reinterpret_cast< SSL_CIPHER * >(KOSSL::self()->OPENSSL_sk_value(sk, i));
         if(!sc)
             break;
         // Leak of sc*?
-        QString scn(sc->name);
+        QString scn(KOSSL::self()->SSL_CIPHER_get_name(sc));
         if(scn.contains("ADH-") || scn.contains("NULL-") || scn.contains("DES-CBC3-SHA") || scn.contains("FZA-"))
         {
             continue;
         }
-        k = SSL_CIPHER_get_bits(sc, &j);
+        k = KOSSL::self()->SSL_CIPHER_get_bits(sc, &j);
 
-        item = new CipherItem(SSLv3Box, sc->name, k, j, this);
+        item = new CipherItem(SSLv2Box, scn, k, j, this);
     }
 
     if(ctx)
-        SSL_CTX_free(ctx);
+        KOSSL::self()->SSL_CTX_free(ctx);
     if(ssl)
-        SSL_free(ssl);
+        KOSSL::self()->SSL_free(ssl);
+#endif
+
+#ifndef OPENSSL_NO_SSL3_METHOD
+    // We repeat for SSLv3
+    meth = KOSSL::self()->SSLv3_client_method();
+    ctx = KOSSL::self()->SSL_CTX_new(meth);
+    if(ctx == NULL)
+        return false;
+
+    ssl = KOSSL::self()->SSL_new(ctx);
+    if(!ssl)
+        return false;
+    sk = KOSSL::self()->SSL_get_ciphers(ssl);
+    cnt = KOSSL::self()->OPENSSL_sk_num(sk);
+
+    for(i = 0; i < cnt; i++)
+    {
+        int j, k;
+        SSL_CIPHER *sc = reinterpret_cast< SSL_CIPHER * >(KOSSL::self()->OPENSSL_sk_value(sk, i));
+        if(!sc)
+            break;
+        // Leak of sc*?
+        QString scn(KOSSL::self()->SSL_CIPHER_get_name(sc));
+        if(scn.contains("ADH-") || scn.contains("NULL-") || scn.contains("DES-CBC3-SHA") || scn.contains("FZA-"))
+        {
+            continue;
+        }
+        k = KOSSL::self()->SSL_CIPHER_get_bits(sc, &j);
+
+        item = new CipherItem(SSLv3Box, scn, k, j, this);
+    }
+
+    if(ctx)
+        KOSSL::self()->SSL_CTX_free(ctx);
+    if(ssl)
+        KOSSL::self()->SSL_free(ssl);
+#endif
 
     return true;
 }
@@ -2600,7 +2652,7 @@ void KCryptoConfig::setAuthCertLists()
     // Update the host entries too
     for(HostAuthItem *x = static_cast< HostAuthItem * >(hostAuthList->firstChild()); x; x = static_cast< HostAuthItem * >(x->nextSibling()))
     {
-        QString newValue = QString::null;
+        QString newValue = QString();
         for(int i = 1; i < hostCertBox->count(); i++)
         {
             if(hostCertBox->text(i) == x->getCertName())
